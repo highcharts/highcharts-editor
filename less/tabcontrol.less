@@ -1,0 +1,62 @@
+.highed-tab-control {
+	
+	.highed-box-size;
+}
+
+.highed-tab-control .tabs {
+	height:48px;
+	position: relative;
+	font-weight: 100;
+	font-size: 22px;
+	line-height: 40px;
+	padding:5px;
+
+	.highed-box-size;
+	.highed-nosel;
+}
+
+.highed-tab-control .tab {
+	float:left;
+	font-weight: 100;
+	padding-left:24px;
+	padding-right:24px;
+//	margin-right: 15px;
+	
+	text-align: center;
+}
+
+.highed-tab-control .tab-body {
+	opacity: 0;
+	pointer-events: none;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left:0px;
+	top:0px;
+	padding-left:4px;
+	padding-bottom:4px;
+	padding-right:4px;
+	padding-top:10px;
+	overflow-y: auto;
+	.highed-box-size;
+	.highed-transition;
+}
+
+.highed-tab-control .tab-selected {
+	font-weight: 400;
+}
+
+.highed-tab-control .body {
+	position: relative;
+	.highed-box-size;
+}
+
+.highed-tab-control .indicator {
+	position: absolute;
+	bottom:0px;
+	left:0px;
+	width: 100px;
+	height: 5px;
+	background: @accent-color;
+	.highed-transition;
+}

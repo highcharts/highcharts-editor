@@ -1,0 +1,10 @@
+{
+	"name": "highcharts-editor",
+	"author": "Chris Vasseng <christer@highsoft.com>",
+	"private": true,
+	"license": "MIT",
+	"dependencies": {
+		"express": "*",
+		"express-less": "*"
+	}
+}
