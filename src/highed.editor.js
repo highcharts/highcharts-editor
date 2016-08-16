@@ -25,28 +25,62 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 highed.Editor = function (parent) {
 	var events = highed.events(),
+		customizedOptions = {},
+		exports = {
+			customizedOptions: customizedOptions,
+			flatOptions: {}
+		},
 
 		container = highed.dom.cr('div', 'highed-container'),
 		titlebar = highed.dom.cr('div', 'titlebar'),
-		titleLabel = highed.dom.cr('span', '', 'HIGHCHARTS EDITOR'),
-		settingsBtn = highed.dom.cr('div', 'settings highed-icon fa fa-gear'),
+		titleLabel = highed.dom.cr('span', '', ''),
 
-		splitter = false
+		titlebarIcons = highed.dom.cr('div', 'icons'),
+
+		settingsBtn = highed.dom.cr('div', 'settings highed-icon fa fa-gear'),
+		fullscreenBtn = highed.dom.cr('div', 'settings highed-icon fa fa-desktop'),
+		resetOptionsBtn = highed.dom.cr('div', 'settings highed-icon fa fa-file-o')
+
+		splitter = highed.HSplitter(container),
+		tabControl = highed.TabControl(splitter.left),
+		//dataTab = tabControl.createTab({title: 'DATA'}),
+		chartTemplateTab = tabControl.createTab({title: 'CHART'}),
+		customizeTab = tabControl.createTab({title: 'CUSTOMIZE'}),
+
+		chartTemplateSelector = highed.ChartTemplateSelector(chartTemplateTab.body),
+		chartContainer = highed.dom.cr('div', 'highed-box-size'),
+
+		chartCustomizer = highed.ChartCustomizer(customizeTab.body, exports),
+
+		chart = new Highcharts.Chart({
+			chart: {
+				type: 'bar',
+				renderTo: chartContainer				
+			},
+			xAxis: {
+		        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+		            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+		    },
+
+		    series: [{
+		        data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+		    }]
+
+		}),
+
+		cleanOptions = highed.merge({}, chart.options)
 	;
 
 	///////////////////////////////////////////////////////////////////////////
 	
 	/* Resize the editor */
 	function resize() {
-		var cs = highed.dom.size(container),
-			ts = highed.dom.size(titlebar)
-		;
+		var cs = highed.dom.size(container);
 
-		// highed.dom.style(container, {
-		// 	height: cs.h + 'px'
-		// });
-
-		splitter.resize(cs.w, cs.h - ts.h - 10);
+		chartCustomizer.resize();
+		tabControl.resize();
+		chartTemplateSelector.resize(undefined, cs.h);
+		splitter.resize(cs.w, cs.h);
 		events.emit('Resized');
 	}
 
@@ -59,41 +93,76 @@ highed.Editor = function (parent) {
 	parent = highed.dom.get(parent);
 	if (parent) {
 		highed.dom.ap(parent, 
-			highed.dom.ap(container,
-				highed.dom.ap(titlebar,
-					titleLabel,
-					settingsBtn
-				)
-			)
+			container							
 		);
 
-		splitter = highed.HSplitter(container);
-
-
 		highed.dom.ap(splitter.right, 
-			highed.dom.cr('span', '', 'This is where the chart preview goes')
+			highed.dom.ap(titlebar,
+				titleLabel,
+				highed.dom.ap(titlebarIcons,
+					fullscreenBtn,
+					resetOptionsBtn,
+					settingsBtn
+				)
+			),
+			chartContainer
 		);
 
 		resize();
-		highed.TabControl(splitter.left).resize();
 	} else {
 		highed.log(1, 'no valid parent supplied to editor');
 	}
 
 	///////////////////////////////////////////////////////////////////////////
+	
+	//Handle chart template selection
+	chartTemplateSelector.on('Select', function (template) {
+		//Need to apply template.config to the chart.
+		//This is sort of silly, fix later - there may be a way in the API
+		//to reset the options without recreating the whole thing.
+		//Modifying chart.options and doing chart.redraw did not work however.
+
+		var options = highed.merge(highed.merge({}, cleanOptions), customizedOptions);
+
+		Object.keys(template.config).forEach(function (key) {
+			highed.setAttr(options, key, template.config[key]);
+			exports.flatOptions[key] = template.config[key];
+		});
+
+		console.log(options);		
+		options.chart.renderTo = chartContainer;
+		chart = new Highcharts.Chart(options);
+		resize();
+		//chart.redraw();
+		//chart.reflow();
+	});
+
+	//Handle property change
+	chartCustomizer.on('PropertyChange', function (id, value) {
+		console.log('changing', id, 'to', value);
+		highed.setAttr(chart.options, id, value);
+		highed.setAttr(customizedOptions, id, value);
+
+		exports.flatOptions[id] = value;
+		//chart.options[id] = value;
+		chart = new Highcharts.Chart(chart.options);
+		resize();
+	});
+
+	///////////////////////////////////////////////////////////////////////////
 
 	//Public interface
-	return {
-		/* Attach an event listener
-		 * @event - the event to listen for
-		 * @callback - the callback to execute when the event is emitted
-		 * @context (optional) - the value of the this reference in the callback
-		 *
-		 * @returns a function that can be called to unbind the listener
-		 */
-		 on: events.on,
-
-		 /* Force a resize of the editor */
-		 resize: resize
-	};
+ 
+	/* Attach an event listener
+	 * @event - the event to listen for
+	 * @callback - the callback to execute when the event is emitted
+	 * @context (optional) - the value of the this reference in the callback
+	 *
+	 * @returns a function that can be called to unbind the listener
+	 */
+	exports.on = events.on;
+	/* Force a resize of the editor */
+	exports.resize = resize;
+	
+	return exports;
 };

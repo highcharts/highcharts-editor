@@ -11,6 +11,13 @@
 
     <link href="/css/theme.default.css" type="text/css" rel="stylesheet"/>
 
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+
+    <script src="http://code.highcharts.com/adapters/standalone-framework.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+
     <script src="/src/highcharts-editor.js" type="text/javascript" charset="utf-8" async defer></script>
     <script src="/src/highed.dom.js" type="text/javascript" charset="utf-8" async defer></script>
     <script src="/src/highed.events.js" type="text/javascript" charset="utf-8" async defer></script>
@@ -23,6 +30,12 @@
     <script src="/src/highed.tabcontrol.js" type="text/javascript" charset="utf-8" async defer></script>
     <script src="/src/highed.inspector.js" type="text/javascript" charset="utf-8" async defer></script>
     <script src="/src/highed.inspector.field.js" type="text/javascript" charset="utf-8" async defer></script>
+    <script src="/src/highed.list.js" type="text/javascript" charset="utf-8" async defer></script>
+    <script src="/src/meta/highed.meta.charts.js" type="text/javascript" charset="utf-8" async defer></script>
+    <script src="/src/meta/highed.meta.options.js" type="text/javascript" charset="utf-8" async defer></script>
+    <script src="/src/meta/highed.meta.options.extended.js" type="text/javascript" charset="utf-8" async defer></script>
+    <script src="/src/highed.chart.template.selector.js" type="text/javascript" charset="utf-8" async defer></script>
+    <script src="/src/highed.chart.customizer.js" type="text/javascript" charset="utf-8" async defer></script>
 
     <style>
     	html, body {
@@ -42,6 +55,13 @@
 
 </body>
 <script>
-	var editor = highed.Editor('main-container');
+	function checkIfReady() {
+		if (typeof highed !== 'undefined') {
+			highed.Editor('main-container');
+		} else {
+			setTimeout(checkIfReady, 200);
+		}
+	}
+	checkIfReady();
 </script>
 </html>

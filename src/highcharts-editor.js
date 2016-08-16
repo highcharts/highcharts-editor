@@ -27,6 +27,51 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 var highed = {
 	schemas: {},
+	meta: {},
+
+	/* Set a property based on -- delimited path  */
+	setAttr: function (obj, path, value) {
+		var current = obj;
+
+		path = path.replace(/\-\-/g, '.').replace(/\-/g, '.').split('.')
+
+		path.forEach(function(p, i) {
+			if (i === path.length - 1) {	
+				current[p] = value;					
+			} else {
+				if (typeof current[p] === 'undefined') {
+					current = current[p] = {};
+				} else {
+					current = current[p];						
+				}
+			}
+		});
+	},
+
+	/* Deep merge two objects */
+	merge: function (a, b) {
+		if (!a || !b) return a || b;    
+		Object.keys(b).forEach(function (bk) {
+		 if (highed.isNull(b[bk]) || highed.isBasic(b[bk])) {
+		    a[bk] = b[bk];
+		 } else if (highed.isArr(b[bk])) {
+		   
+		   a[bk] = [];
+		   
+		   b[bk].forEach(function (i) {
+		     if (highed.isNull(i) || highed.isBasic(i)) {
+		       a[bk].push(i);
+		     } else {
+		       a[bk].push(highed.merge({}, i));
+		     }
+		   });
+		   
+		 } else {
+		    a[bk] = highed.merge({}, b[bk]);
+		  }
+		});    
+		return a;
+	},
 
 	/* Check if something is null or undefined
 	 * @what - the value to check

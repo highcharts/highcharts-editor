@@ -33,7 +33,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.InspectorField = function (type, value, properties, fn) {
 	var 
 		fields = {
-			text: function () {
+			string: function () {
 				var input = highed.dom.cr('input');
 
 				highed.dom.on(input, 'change', function () {
@@ -42,38 +42,44 @@ highed.InspectorField = function (type, value, properties, fn) {
 					}
 				});
 
+				input.value = value;
+
 				return input;
 			},
 			number: function () {
-
+				return fields.string();				
 			},
 			range: function () {
+				return fields.string();				
 
 			},
-			bool: function () {
-
+			boolean: function () {
+				var input = fields.string();				
+				input.type = 'checkbox';
 			},
 			color: function () {
-
+				return fields.string();				
 			},
 			font: function () {
+				return fields.string();				
 
 			},
 			configset: function () {
+				return fields.string();				
 				
 			}
 		}
 	;
 
-	return highed.ap(
-		highed.ap(highed.dom.cr('tr'),
-			highed.ap(highed.dom.cr('td'),
+	return highed.dom.ap(
+		highed.dom.ap(highed.dom.cr('tr'),
+			highed.dom.ap(highed.dom.cr('td'),
 				highed.dom.cr('span', '', properties.title)
 			),
-			highed.ap(highed.dom.cr('td'),
-				field[type] ? field[type]() : field['text']
+			highed.dom.ap(highed.dom.cr('td'),
+				fields[type] ? fields[type]() : fields['string']
 			),
-			highed.ap(highed.dom.cr('td'),
+			highed.dom.ap(highed.dom.cr('td'),
 				highed.dom.cr('span', 'fa fa-help')	
 			)
 		)

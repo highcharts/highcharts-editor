@@ -51,6 +51,26 @@ highed.dom = {
 		return target;
 	},
 
+	/* Show a node when another is hovered
+	 * @parent - the node to listen for the hover on
+	 * @child - the node to show when the parent is hovered
+	 */
+	showOnHover: function (parent, child) {
+		highed.dom.on(parent, 'mouseover', function () {
+			highed.dom.style(child, {
+				opacity: 1,
+				'pointer-events': 'all'
+			});
+		});
+
+		highed.dom.on(parent, 'mouseout', function () {
+			highed.dom.style(child, {
+				opacity: 0,
+				'pointer-events': 'none'
+			});
+		});
+	},
+
 	/* Create a new HTML node
 	 * @type - the type of node to create
 	 * @cssClass (optional) - the css class to use for the node

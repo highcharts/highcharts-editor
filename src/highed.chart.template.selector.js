@@ -23,40 +23,77 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-highed.HSplitter = function (parent) {
-	var container = highed.dom.cr('div', 'highed-hsplitter'),
-		left = highed.dom.cr('div', 'panel left'),
-		right = highed.dom.cr('div', 'panel right'),
-		leftBody = highed.dom.cr('div', 'highed-hsplitter-body'),
-		rightBody = highed.dom.cr('div', 'highed-hsplitter-body')
+/* UI for selecting a chart template from the ones defined in meta/highed.meta.charts.js
+ * @parent - the parent to attach the selector to
+ */
+highed.ChartTemplateSelector = function (parent) {
+	var events = highed.events(),
+		splitter = highed.HSplitter(parent),
+		list = highed.List(splitter.left),
+		templates = splitter.right,
+		selected
 	;
 
 	///////////////////////////////////////////////////////////////////////////
 
-	//Force a resize of the splitter
-	function resize(w, h) {
-		var s = highed.dom.size(parent);
+	function showTemplates(templateList) {
+		templates.innerHTML = '';
 
-		highed.dom.style([left, right, container], {
-			height: (h || s.h) + 'px'
+		Object.keys(templateList).forEach(function (key) {
+			var t = templateList[key],
+				node = highed.dom.cr('div', 'highed-chart-template-preview'),
+				titleBar = highed.dom.cr('div', 'highed-chart-template-title', t.title)
+			;
+
+			highed.dom.style(node, {
+				'background-image': 'url(' + t.urlImg + ')'			
+			});
+
+			highed.dom.showOnHover(node, titleBar);
+
+			highed.dom.on(node, 'click', function () {
+				events.emit('Select', templateList[key]);
+			});
+
+			highed.dom.ap(templates, 
+				highed.dom.ap(node,
+					titleBar
+				)
+			);
 		});
 	}
 	
+	function show() {
+		list.addItems(Object.keys(highed.meta.chartTemplates).map(function (key) {
+			return {
+				id: key,
+				title: highed.meta.chartTemplates[key].title,
+				click: function () {
+					showTemplates(highed.meta.chartTemplates[key].templates);
+				}
+			};
+		}));
+	}
+
+	function hide() {
+		
+	}
+
+	function resize() {
+		list.resize();
+		splitter.resize();
+	}
+
 	///////////////////////////////////////////////////////////////////////////
 
-	highed.dom.ap(highed.dom.get(parent), 
-		highed.dom.ap(container, 
-			highed.dom.ap(left, leftBody),
-			highed.dom.ap(right, rightBody)
-		)
-	);
+	show();
 
 	///////////////////////////////////////////////////////////////////////////
 
-	// Public interface
 	return {
-		resize: resize,
-		left: leftBody,
-		right: rightBody
+		on: events.on,
+		show: show,
+		hide: hide,
+		resize: resize
 	};
 };
