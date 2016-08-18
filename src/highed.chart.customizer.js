@@ -61,9 +61,10 @@ highed.ChartCustomizer = function (parent, owner) {
 				highed.dom.ap(sub, 
 					highed.InspectorField(
 						referenced.returnType.toLowerCase(), 
-						owner.flatOptions[referenced._id] || referenced.defaults, 
+						(owner.flatOptions[referenced._id] || referenced.defaults), 
 						{
-							title: group.text	
+							title: group.text,
+							tooltip: group.tooltipText || referenced.description	
 						},
 						function (newValue) {
 							console.log(newValue);

@@ -56,9 +56,30 @@ highed.InspectorField = function (type, value, properties, fn) {
 			boolean: function () {
 				var input = fields.string();				
 				input.type = 'checkbox';
+				return input;
 			},
 			color: function () {
-				return fields.string();				
+				var input = fields.string();	
+
+				function update(col) {
+					input.value = col;
+					highed.dom.style(input, {
+						background: col
+					});
+				}			
+
+				highed.dom.on(input, 'click', function (e) {
+					highed.pickColor(e.clientX, e.clientY, value, function (col) {
+						update(col);
+						if (highed.isFn(fn)) {
+							fn(col);
+						}
+					});
+				});
+
+				update(value);
+
+				return input;
 			},
 			font: function () {
 				return fields.string();				
@@ -80,7 +101,7 @@ highed.InspectorField = function (type, value, properties, fn) {
 				fields[type] ? fields[type]() : fields['string']
 			),
 			highed.dom.ap(highed.dom.cr('td'),
-				highed.dom.cr('span', 'fa fa-help')	
+				highed.dom.cr('span', 'fa fa-help', properties.tooltip)	
 			)
 		)
 	);

@@ -23,76 +23,54 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-/* UI for selecting a chart template from the ones defined in meta/highed.meta.charts.js
- * @parent - the parent to attach the selector to
- *
- * Emitted events:
- *   - Select : templateDefinition
+/* A standard toolbar.
+ * @parent - the node to attach the toolbar to
  */
-highed.ChartTemplateSelector = function (parent) {
-	var events = highed.events(),
-		splitter = highed.HSplitter(parent, {leftWidth: 30}),
-		list = highed.List(splitter.left),
-		templates = splitter.right,
-		selected
+highed.Toolbar = function (parent, attributes) {
+	var properties = highed.merge({
+			additionalCSS: []
+		}, attributes),
+		container = highed.dom.cr('div', 'highed-toolbar ' + properties.additionalCSS.join(' ')),
+		left = highed.dom.cr('div', 'left'),
+		right = highed.dom.cr('div', 'right'),
+		center = highed.dom.cr('div', 'center'),
+		iconsRight = highed.dom.cr('div', 'icons')
 	;
 
 	///////////////////////////////////////////////////////////////////////////
+	
+	/* Add an icon to the toolbar
+	 * @icon - an object containing the icon settings. Valid properties are:
+	 *  		  * css: the additional css class(s) to use
+	 * 			  * click: the function to call when the icon is clicked
+	 */
+	function addIcon(icon) {
+		var i = highed.dom.cr('div', 'highed-icon fa ' + (icon.css || ''));
 
-	function showTemplates(templateList) {
-		templates.innerHTML = '';
-
-		Object.keys(templateList).forEach(function (key) {
-			var t = templateList[key],
-				node = highed.dom.cr('div', 'highed-chart-template-preview'),
-				titleBar = highed.dom.cr('div', 'highed-chart-template-title', t.title)
-			;
-
-			highed.dom.style(node, {
-				'background-image': 'url(' + t.urlImg + ')'			
-			});
-
-			highed.dom.showOnHover(node, titleBar);
-
-			highed.dom.on(node, 'click', function () {
-				events.emit('Select', templateList[key]);
-			});
-
-			highed.dom.ap(templates, 
-				highed.dom.ap(node,
-					titleBar
-				)
-			);
+		highed.dom.on(i, 'click', function (e) {
+			if (highed.isFn(icon.click)) {
+				icon.click(e);
+			}
 		});
 	}
+
+	///////////////////////////////////////////////////////////////////////////
+
+	highed.dom.ap(parent,
+		highed.dom.ap(container,
+			left,
+			center,
+			right
+		)
+	);
+
+	///////////////////////////////////////////////////////////////////////////
 	
-	/* Force a resize */
-	function resize() {
-		splitter.resize();
-	}
-
-	/* Build the UI */
-	function build() {
-		list.addItems(Object.keys(highed.meta.chartTemplates).map(function (key) {
-			return {
-				id: key,
-				title: highed.meta.chartTemplates[key].title,
-				click: function () {
-					showTemplates(highed.meta.chartTemplates[key].templates);
-				}
-			};
-		}));
-	}
-
-	///////////////////////////////////////////////////////////////////////////
-
-	build();
-
-	///////////////////////////////////////////////////////////////////////////
-
 	return {
-		on: events.on,
-		resize: resize,
-		rebuild: build
+		container: container,
+		addIcon: addIcon,
+		left: left,
+		center: center,
+		right: right
 	};
 };

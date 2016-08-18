@@ -23,76 +23,75 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-/* UI for selecting a chart template from the ones defined in meta/highed.meta.charts.js
- * @parent - the parent to attach the selector to
+/* A data table
+ * @parent - the node to attach the table to
  *
- * Emitted events:
- *   - Select : templateDefinition
+ * The table must be scrollable.
+ * Column headings are edited in-place.
+ * Each column heading needs an option to delete the column in question
+ * Each row should have a delete icon to delete the row in question
  */
-highed.ChartTemplateSelector = function (parent) {
-	var events = highed.events(),
-		splitter = highed.HSplitter(parent, {leftWidth: 30}),
-		list = highed.List(splitter.left),
-		templates = splitter.right,
-		selected
+highed.DataTable = function (parent) {
+	var container = highed.dom.cr('div', 'highed-data-table'),
+		header = highed.dom.cr('div'),
+		body = highed.dom.cr('div'),
+
+		//Array of the column titles
+		columnMeta = [],
+		//The data 
+		series = [],
+		//Row instance counter
+		rowInstanceCount = 0
 	;
 
 	///////////////////////////////////////////////////////////////////////////
-
-	function showTemplates(templateList) {
-		templates.innerHTML = '';
-
-		Object.keys(templateList).forEach(function (key) {
-			var t = templateList[key],
-				node = highed.dom.cr('div', 'highed-chart-template-preview'),
-				titleBar = highed.dom.cr('div', 'highed-chart-template-title', t.title)
-			;
-
-			highed.dom.style(node, {
-				'background-image': 'url(' + t.urlImg + ')'			
-			});
-
-			highed.dom.showOnHover(node, titleBar);
-
-			highed.dom.on(node, 'click', function () {
-				events.emit('Select', templateList[key]);
-			});
-
-			highed.dom.ap(templates, 
-				highed.dom.ap(node,
-					titleBar
-				)
-			);
-		});
-	}
 	
-	/* Force a resize */
-	function resize() {
-		splitter.resize();
+	//Add a new series
+	function addSeries() {
+		var data = [];
+
+		series.push({
+			data: data
+		}); 
 	}
 
-	/* Build the UI */
-	function build() {
-		list.addItems(Object.keys(highed.meta.chartTemplates).map(function (key) {
-			return {
-				id: key,
-				title: highed.meta.chartTemplates[key].title,
-				click: function () {
-					showTemplates(highed.meta.chartTemplates[key].templates);
-				}
+	//Remove column
+
+	//Create a new row
+	function Row() {
+		var id = ++rowInstanceCount,
+			columns = [],
+			rexport = {},
+			dataEntry = {}
+		;
+
+		//Add columns
+		columnMeta.forEach(function () {
+			var col = {
+				input: highed.dom.cr('input')				
 			};
-		}));
+
+			highed.dom.on(col.input, 'change', function () {
+				dataEntry
+			});
+
+			columns.push(col);
+		});
+
+		rexport {
+			delete: function () {
+
+			}
+		};
+
+		return rexport;
 	}
 
 	///////////////////////////////////////////////////////////////////////////
-
-	build();
 
 	///////////////////////////////////////////////////////////////////////////
 
 	return {
-		on: events.on,
-		resize: resize,
-		rebuild: build
+		Row: Row
 	};
 };

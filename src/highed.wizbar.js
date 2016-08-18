@@ -23,51 +23,62 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-highed.HSplitter = function (parent, attributes) {
-	var properties = highed.merge({
-			leftWidth: 40
-		}, attributes),
-		container = highed.dom.cr('div', 'highed-hsplitter'),
-		left = highed.dom.cr('div', 'panel left'),
-		right = highed.dom.cr('div', 'panel right'),
-		leftBody = highed.dom.cr('div', 'highed-hsplitter-body'),
-		rightBody = highed.dom.cr('div', 'highed-hsplitter-body')
+/* This is a component that implements a toolbar with wizard steps */
+highed.WizardBar = function (parent, bodyParent, attributes) {
+	var toolbar = highed.Toolbar(parent, { 
+			additionalCSS: ['highed-wizstepper-bar'] 
+		}),
+		stepper = highed.WizardStepper(bodyParent, toolbar.center),
+		next = highed.dom.cr('span', 'highed-wizstepper-next-prev fa fa-arrow-right'),
+		previous = highed.dom.cr('span', 'highed-wizstepper-next-prev fa fa-arrow-left')
 	;
 
 	///////////////////////////////////////////////////////////////////////////
 
-	//Force a resize of the splitter
-	function resize(w, h) {
-		var s = highed.dom.size(parent);
+	stepper.on('Step', function (step, count) {
+		if (step.number > 1) {
+			highed.dom.style(previous, {
+				opacity: 1,
+				'pointer-events': 'all'
+			});
+		} else {
+			highed.dom.style(previous, {
+				opacity: 0,
+				'pointer-events': 'none'
+			});
+		}
 
-		highed.dom.style([left, right, container], {
-			height: (h || s.h) + 'px'
-		});
-	}
-	
-	///////////////////////////////////////////////////////////////////////////
-
-	highed.dom.ap(highed.dom.get(parent), 
-		highed.dom.ap(container, 
-			highed.dom.ap(left, leftBody),
-			highed.dom.ap(right, rightBody)
-		)
-	);
-
-	highed.dom.style(left, {
-		width: properties.leftWidth + '%'
+		if (step.number < count) {
+			highed.dom.style(next, {
+				opacity: 1,
+				'pointer-events': 'all'
+			});
+		} else {
+			highed.dom.style(next, {
+				opacity: 0,
+				'pointer-events': 'none'
+			});
+		}
 	});
 
-	highed.dom.style(right, {
-		width: (100 - properties.leftWidth) + '%'
-	});
+	highed.dom.on(next, 'click', stepper.next);
+	highed.dom.on(previous, 'click', stepper.previous);
 
 	///////////////////////////////////////////////////////////////////////////
 
-	// Public interface
+	highed.dom.ap(toolbar.right, next);
+	highed.dom.ap(toolbar.left, previous);
+
+	highed.dom.style(previous, {
+		opacity: 0,
+		'pointer-events': 'none'
+	});
+
 	return {
-		resize: resize,
-		left: leftBody,
-		right: rightBody
+		container: toolbar.container,
+		on: stepper.on,
+		next: stepper.next,
+		previous: stepper.previous,
+		addStep: stepper.addStep
 	};
 };

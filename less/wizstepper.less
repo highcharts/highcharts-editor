@@ -1,0 +1,92 @@
+.highed-wizstepper-item {
+	position: relative;
+	padding-left:15px;
+	padding-right:15px;
+	padding-top:20px;
+	line-height: 50px;
+	font-weight: 100;
+	font-family: @font-secondary;
+	float:left;
+}
+
+.highed-wizstepper-item .bubble {
+	line-height: 28px;
+	position: absolute;
+	left:50%;
+	text-align: center;
+	border-radius: 50%;
+	transform: translate(-50%, 0);
+	background-color: @accent-color;
+	color: @accent-text;
+	width:15px;
+	height:15px;
+	.highed-transition;
+}
+
+.highed-wizstepper-item .bubble-bottom {
+	bottom:-8px;
+}
+
+.highed-wizstepper-item .bubble-top {
+	top:-6px;
+}
+
+.highed-wizstepper-item .bar {
+	position: absolute;
+	left:0px;
+	width:100%;
+	height:5px;
+	background: @accent-color;
+}
+
+.highed-wizstepper-item .bar-top {
+	top: 0px;
+}
+
+.highed-wizstepper-item .bar-bottom {
+	bottom: 5px;
+}
+
+.highed-wizstepper-item .bar-first {
+	width: 50% !important;
+	left: 50% !important;
+}
+
+.highed-wizstepper-item .bar-last {
+	width: 50% !important;
+}
+
+.highed-wizstepper-item .label {
+	padding:5px;
+	.highed-transition;
+}
+
+.highed-wizstepper-item .label-selected {
+	font-weight: bold;
+}
+
+.highed-wizstepper-bar {
+	background: @wiz-bar-background !important;
+	color: @wiz-bar-color !important;
+	height: 80px !important;
+}
+
+.highed-wizstepper-next-prev {
+	font-size: 30px;
+	height:100%;
+	padding:10px;
+	text-align: center;
+	background: @accent-color !important;
+	color: @accent-text !important;
+	margin-top:15px;
+	margin-left: 15px;
+	margin-right: 15px;
+	border-radius: 50%;
+	.highed-transition;
+	.highed-box-size;
+}
+
+.highed-wizstepper-next-prev:hover {
+	color: @wiz-bar-background !important;
+	background: @accent-color !important;
+}

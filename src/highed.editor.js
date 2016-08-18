@@ -35,15 +35,19 @@ highed.Editor = function (parent) {
 		titlebar = highed.dom.cr('div', 'titlebar'),
 		titleLabel = highed.dom.cr('span', '', ''),
 
+		mainToolbar = highed.Toolbar(container, {
+			additionalCSS: ['highed-header']
+		}),
+		
 		titlebarIcons = highed.dom.cr('div', 'icons'),
 
 		settingsBtn = highed.dom.cr('div', 'settings highed-icon fa fa-gear'),
 		fullscreenBtn = highed.dom.cr('div', 'settings highed-icon fa fa-desktop'),
 		resetOptionsBtn = highed.dom.cr('div', 'settings highed-icon fa fa-file-o')
 
-		splitter = highed.HSplitter(container),
+		splitter = highed.HSplitter(container, {leftWidth: 60}),
 		tabControl = highed.TabControl(splitter.left),
-		//dataTab = tabControl.createTab({title: 'DATA'}),
+	
 		chartTemplateTab = tabControl.createTab({title: 'CHART'}),
 		customizeTab = tabControl.createTab({title: 'CUSTOMIZE'}),
 
@@ -68,19 +72,24 @@ highed.Editor = function (parent) {
 
 		}),
 
-		cleanOptions = highed.merge({}, chart.options)
+		cleanOptions = highed.merge({}, chart.options),
+
+		wizbar = highed.WizardBar(container, undefined)
 	;
 
 	///////////////////////////////////////////////////////////////////////////
 	
 	/* Resize the editor */
 	function resize() {
-		var cs = highed.dom.size(container);
+		var cs = highed.dom.size(container),
+			ms = highed.dom.size(mainToolbar.container),
+			wb = highed.dom.size(wizbar.container)
+		;
 
 		chartCustomizer.resize();
 		tabControl.resize();
-		chartTemplateSelector.resize(undefined, cs.h);
-		splitter.resize(cs.w, cs.h);
+		chartTemplateSelector.resize(undefined, cs.h - ms.h - wb.h);
+		splitter.resize(cs.w, cs.h - ms.h - wb.h);
 		events.emit('Resized');
 	}
 
@@ -98,14 +107,19 @@ highed.Editor = function (parent) {
 
 		highed.dom.ap(splitter.right, 
 			highed.dom.ap(titlebar,
-				titleLabel,
-				highed.dom.ap(titlebarIcons,
-					fullscreenBtn,
-					resetOptionsBtn,
-					settingsBtn
-				)
+				titleLabel
 			),
 			chartContainer
+		);
+
+		highed.dom.ap(mainToolbar.left,
+			highed.dom.cr('div', 'highed-logo')
+		);
+
+		highed.dom.ap(mainToolbar.right, 
+			fullscreenBtn,
+					resetOptionsBtn,
+					settingsBtn
 		);
 
 		resize();

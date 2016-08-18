@@ -1,0 +1,26 @@
+.highed-colorpicker {
+	position: fixed;
+	background: @background-panel;
+	color: @text-panel;
+	border: @border-main;
+	z-index: 1000;
+	width:200px;
+	height:200px;
+	opacity: 0;
+	padding:5px;
+	pointer-events: none;
+	.highed-transition-opacity;
+}
+
+.highed-colorpicker .picker {
+	width: 100%;
+	height:180px;
+	border: @border-main;
+	.highed-box-size;
+}
+
+.highed-colorpicker .manual {
+	width: 100%;
+	outline: none;
+	.highed-box-size;
+}

@@ -23,56 +23,33 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-(function () {
-	var dimmer = false,
-		unbinder = false
+highed.Drawer = function (parent, attributes) {
+	var properties = highed.merge({
+			collapseFrom: 200			
+		}, attributes),
+		container = highed.dom.cr('div', 'highed-drawer')
 	;
-	
-	/* Show the dimmer backdrop 
-	 * @fn - the function to call when the dimmer is clicked
-	 * @autohide - set to true to hide the dimmer when it's clicked
-	 */
-	highed.showDimmer = function (fn, autohide, transparent) {
-		if (!dimmer) {
-			dimmer = highed.dom.cr('div', 'highed-dimmer');
-			highed.dom.ap(document.body, dimmer);
-		}
 
-		highed.dom.style(dimmer, {
-			'opacity': 0.7,
-			'pointer-events': 'all'
-		});
+	///////////////////////////////////////////////////////////////////////////
 
-		if (transparent) {
-			highed.dom.style(dimmer, {
-				'opacity': 0
-			});
-		}
-
-		unbinder = highed.dom.on(dimmer, 'click', function (e) {
+	/* Expand the drawer */
+	function expand() {
+		highed.dom.style(container, {
 			
-			if (highed.isFn(fn)) {
-				fn();
-			}
-			
-			if (autohide) {
-				highed.hideDimmer();
-			}
+			width: 90%
 		});
-	};
+	}
 
-	/* Hide the dimmer backdrop */
-	highed.hideDimmer = function () {
-		if (dimmer) {
-			highed.dom.style(dimmer, {
-				'opacity': 0,
-				'pointer-events': 'none'
-			});
+	/* Collapse the drawer */
+	function collapse() {
+		highed.dom.style(container, {
 
-			if (highed.isFn(unbinder)) {
-				unbinder();
-				unbinder = false;
-			}
-		}
+		});
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+
+	return {
+		expand: expand
 	};
-})();
+};
