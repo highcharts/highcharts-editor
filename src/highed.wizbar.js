@@ -35,7 +35,7 @@ highed.WizardBar = function (parent, bodyParent, attributes) {
 
 	///////////////////////////////////////////////////////////////////////////
 
-	stepper.on('Step', function (step, count) {
+	function handleStepEvent(step, count) {
 		if (step.number > 1) {
 			highed.dom.style(previous, {
 				opacity: 1,
@@ -59,7 +59,10 @@ highed.WizardBar = function (parent, bodyParent, attributes) {
 				'pointer-events': 'none'
 			});
 		}
-	});
+	}
+
+	stepper.on('Step', handleStepEvent);
+	stepper.on('AddStep', handleStepEvent);
 
 	highed.dom.on(next, 'click', stepper.next);
 	highed.dom.on(previous, 'click', stepper.previous);

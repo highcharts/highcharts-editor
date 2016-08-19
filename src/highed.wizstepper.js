@@ -132,6 +132,8 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
 
 		highed.dom.ap(body, stepexports.body);
 
+		events.emit('AddStep', activeStep, stepCount);
+
 		return stepexports;
 	}
 
@@ -147,6 +149,15 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
 		if (activeStep && activeStep.number > 1) {
 			steps[activeStep.number - 2].activate();
 		}
+	}
+
+	/* Resize */
+	function resize(w, h) {
+		var ps = highed.dom.size(bodyParent);
+
+		highed.dom.style(body, {
+			height: (h || ps.h) + 'px'
+		});
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -165,6 +176,8 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
 		on: events.on,
 		addStep: addStep,
 		next: next,
-		previous: previous
+		previous: previous,
+		body: body,
+		resize: resize
 	};
 };

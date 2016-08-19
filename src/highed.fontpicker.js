@@ -50,8 +50,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		style = highed.merge({
 			'font-family': 'Courier',
-			'color': '#000',
-			'font-size': '12px',
+			'color': '#333',
+			'font-size': '18px',
 			'font-weight': 'normal',
 			'font-style': 'normal'
 		}, style);

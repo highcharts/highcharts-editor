@@ -54,14 +54,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		/* Draws the color picker itself */
 		function drawPicker() {
 			//There's 14 hues per. color, 19 colors in total.
-			var tx = pickerSize.w / 14,
-				ty = pickerSize.h / 19,				
+			var tx = Math.floor(pickerSize.w / 14),
+				ty = Math.floor(pickerSize.h / 19),				
 				col = -1
 			; 
 
 			canvas.width = pickerSize.w;
 			canvas.height = pickerSize.h;
-
 
 			for (var y = 0; y < 19; y++) {
 				for (var x = 0; x < 15; x++) {
@@ -82,7 +81,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 
 		function rgbToHex(r, g, b){
-		    return ((r << 16) | (g << 8) | b).toString(16);
+			var res = '#' + ((r << 16) | (g << 8) | b).toString(16);
+			if (res.length === 5) {
+				return res.replace('#', '#00');
+			} else if (res.length === 6) {
+				return res.replace('#', '#0');
+			}
+			return res;
 		}
 
 		function pickColor(e) {
@@ -90,8 +95,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				py = e.clientY,
 				cp = highed.dom.pos(canvas),
 				id = ctx.getImageData(px - cp.x - x, py - cp.y - y, 1, 1).data,
-				col = '#' + rgbToHex(id[0], id[1], id[2])
+				col = rgbToHex(id[0] || 0, id[1], id[2])
 			;
+
+			console.log(id[0]);
 
 			manualInput.value = col;
 
@@ -101,8 +108,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 
 		///////////////////////////////////////////////////////////////////////
-
-		
 
 		//Make sure we're not off screen
 		if (x > windowSize.w - containerSize.w) {

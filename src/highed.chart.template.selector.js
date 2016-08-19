@@ -67,8 +67,8 @@ highed.ChartTemplateSelector = function (parent) {
 	}
 	
 	/* Force a resize */
-	function resize() {
-		splitter.resize();
+	function resize(w, h) {
+		splitter.resize(w, h);
 	}
 
 	/* Build the UI */

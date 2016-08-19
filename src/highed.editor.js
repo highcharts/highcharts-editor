@@ -46,7 +46,7 @@ highed.Editor = function (parent) {
 		wizbar = highed.WizardBar(container, splitter.left),
 	
 		chartTemplateSelector = highed.ChartTemplateSelector(wizbar.addStep({title: 'Templates'}).body),
-		chartContainer = highed.dom.cr('div', 'highed-box-size'),
+		chartContainer = highed.dom.cr('div', 'highed-box-size highed-chart-container'),
 
 		chartCustomizer = highed.ChartCustomizer(wizbar.addStep({title: 'Customize'}).body, exports),
 
@@ -78,7 +78,8 @@ highed.Editor = function (parent) {
 			wb = highed.dom.size(wizbar.container)
 		;
 
-		chartCustomizer.resize();
+		//wizbar.resize(undefined, cs.h - ms.h - wb.h);
+		chartCustomizer.resize(undefined, cs.h - ms.h - wb.h);
 		chartTemplateSelector.resize(undefined, cs.h - ms.h - wb.h);
 		splitter.resize(cs.w, cs.h - ms.h - wb.h);
 		events.emit('Resized');
@@ -114,6 +115,8 @@ highed.Editor = function (parent) {
 	} else {
 		highed.log(1, 'no valid parent supplied to editor');
 	}
+
+	highed.dom.on(window, 'resize', resize);
 
 	///////////////////////////////////////////////////////////////////////////
 	

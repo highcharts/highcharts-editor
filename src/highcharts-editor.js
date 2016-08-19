@@ -34,12 +34,13 @@ var highed = {
 	 * @returns an object {r, g, b}
 	 */
 	hexToRgb: function (hex) {
-	    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-	    return result ? {
-	        r: parseInt(result[1], 16),
-	        g: parseInt(result[2], 16),
-	        b: parseInt(result[3], 16)
-	    } : null;
+		hex = parseInt(hex, 16);
+
+		return {
+			r: hex >> 16,
+	    	g: hex >> 8 & 0xFF,
+	    	b: hex & 0xFF
+		};
 	},
 
 	/* Invert a color 

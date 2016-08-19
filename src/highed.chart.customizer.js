@@ -32,9 +32,9 @@ highed.ChartCustomizer = function (parent, owner) {
 
 	///////////////////////////////////////////////////////////////////////////
 
-	function resize() {
-		list.resize();
-		splitter.resize();
+	function resize(w, h) {
+		list.resize(w, h);
+		splitter.resize(w, h);
 	}
 
 	function selectGroup(group) {
