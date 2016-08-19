@@ -128,7 +128,7 @@ highed.InspectorField = function (type, value, properties, fn) {
 
 				if (properties.subType === 'color') {
 
-					highed.dom.on(add, 'click', function () {
+					function addItem(col) {
 						var thing = highed.dom.cr('span', 'highed-field-colorpicker-compact', '&nbsp;'),
 							rem = highed.dom.cr('span', 'highed-field-array-remove fa fa-trash'),
 							id = ++itemCounter
@@ -152,7 +152,7 @@ highed.InspectorField = function (type, value, properties, fn) {
 						}
 
 						highed.dom.on(thing, 'click', function (e) {
-							highed.pickColor(e.clientX, e.clientY, '#000', function (col) {
+							highed.pickColor(e.clientX, e.clientY, 'col', function (col) {
 								update(col);
 							});
 						});
@@ -169,25 +169,38 @@ highed.InspectorField = function (type, value, properties, fn) {
 							return false;
 						});
 
-						update('#000');
+						update(col);
 
 						highed.dom.showOnHover(thing, rem);
 
 						highed.dom.ap(itemsNode, highed.dom.ap(thing, rem));
+					}
+
+					highed.dom.on(add, 'click', function () {
+						addItem('#000')
 					});
+
+					if (highed.isArr(value)) {
+						value.forEach(addItem);
+					}
 				}
 
-				highed.dom.ap(container, add, itemsNode);
+				highed.dom.ap(container, itemsNode, add);
 
 				return container;
 			}
-		}
+		},
+		help = highed.dom.cr('span', 'highed-icon fa fa-question-circle')
 	;
 
 	if (type.indexOf('array') === 0) {
 		properties.subType = type.substr(6, type.length - 7);
 		type = 'array';
 	}
+
+	highed.dom.on(help, 'mouseover', function (e) {
+		highed.Tooltip(e.clientX, e.clientY, properties.tooltip);
+	});
 
 	return highed.dom.ap(
 		highed.dom.ap(highed.dom.cr('tr'),
@@ -199,7 +212,7 @@ highed.InspectorField = function (type, value, properties, fn) {
 			),
 			highed.dom.ap(highed.dom.cr('td'),
 				//highed.dom.cr('span', 'highed-field-tooltip', properties.tooltip)	
-				highed.dom.cr('span', 'highed-icon fa fa-question-circle')
+				help
 			)
 		)
 	);
