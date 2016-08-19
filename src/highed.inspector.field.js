@@ -51,7 +51,6 @@ highed.InspectorField = function (type, value, properties, fn) {
 			},
 			range: function () {
 				return fields.string();				
-
 			},
 			boolean: function () {
 				var input = highed.dom.cr('input');				
@@ -103,6 +102,7 @@ highed.InspectorField = function (type, value, properties, fn) {
 				var picker = highed.FontPicker(fn, value);
 
 
+
 				return picker.container;
 			},
 			options: function () {
@@ -117,9 +117,77 @@ highed.InspectorField = function (type, value, properties, fn) {
 				highed.dom.options(options, properties.values);
 
 				return options;
+			},
+			array: function () {
+				var container = highed.dom.cr('div')
+					add = highed.dom.cr('span', 'highed-field-array-add fa fa-plus', ''),
+					itemsNode = highed.dom.cr('div', 'highed-inline-blocks'),
+					items = {},
+					itemCounter = 0
+				;
+
+				if (properties.subType === 'color') {
+
+					highed.dom.on(add, 'click', function () {
+						var thing = highed.dom.cr('span', 'highed-field-colorpicker-compact', '&nbsp;'),
+							rem = highed.dom.cr('span', 'highed-field-array-remove fa fa-trash'),
+							id = ++itemCounter
+						;
+
+						function update(col) {
+							highed.dom.style(thing, {
+								background: col
+							});
+
+							items[id] = col;
+							doCallback();
+						}
+
+						function doCallback() {
+							if (highed.isFn(fn)) {
+								fn(Object.keys(items).map(function (key) {
+									return items[key];	
+								}));
+							}
+						}
+
+						highed.dom.on(thing, 'click', function (e) {
+							highed.pickColor(e.clientX, e.clientY, '#000', function (col) {
+								update(col);
+							});
+						});
+
+						highed.dom.on(rem, 'click', function (e) {
+							delete items[id];
+							itemsNode.removeChild(thing);
+							doCallback();
+
+							e.cancelBubble = true;
+							e.preventDefault();
+							e.stopPropagation();
+							e.stopImmediatePropagation();
+							return false;
+						});
+
+						update('#000');
+
+						highed.dom.showOnHover(thing, rem);
+
+						highed.dom.ap(itemsNode, highed.dom.ap(thing, rem));
+					});
+				}
+
+				highed.dom.ap(container, add, itemsNode);
+
+				return container;
 			}
 		}
 	;
+
+	if (type.indexOf('array') === 0) {
+		properties.subType = type.substr(6, type.length - 7);
+		type = 'array';
+	}
 
 	return highed.dom.ap(
 		highed.dom.ap(highed.dom.cr('tr'),
