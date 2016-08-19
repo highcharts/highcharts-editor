@@ -129,7 +129,6 @@ highed.Editor = function (parent) {
 			exports.flatOptions[key] = template.config[key];
 		});
 
-		console.log(options);		
 		options.chart.renderTo = chartContainer;
 		chart = new Highcharts.Chart(options);
 
@@ -147,6 +146,9 @@ highed.Editor = function (parent) {
 		exports.flatOptions[id] = value;
 
 		chart = new Highcharts.Chart(chart.options);
+		
+		events.emit('ChartChange', chart.options);
+
 		resize();
 	});
 

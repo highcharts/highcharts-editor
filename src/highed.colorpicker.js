@@ -62,6 +62,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			canvas.width = pickerSize.w;
 			canvas.height = pickerSize.h;
 
+			//To avoid picking null
+			ctx.fillStyle = '#FFF';
+			ctx.fillRect(0, 0, pickerSize.w, pickerSize.h);
+
 			for (var y = 0; y < 19; y++) {
 				for (var x = 0; x < 15; x++) {
 					ctx.fillStyle = highed.meta.colors[++col];//highed.meta.colors[x + y * tx];

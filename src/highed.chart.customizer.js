@@ -49,12 +49,9 @@ highed.ChartCustomizer = function (parent, owner) {
 				table
 			);
 
-
 			group.options.forEach(function (sub) {
 				selectGroup(sub, table);
 			});
-
-			return;
 		} else if (typeof group.id !== 'undefined') {
 			//Get the actual meta - need to format the dictionary better..
 			referenced = highed.meta.options.filter(function (b) {
@@ -79,8 +76,6 @@ highed.ChartCustomizer = function (parent, owner) {
 					)
 				);
 			}
-
-			
 		}
 	}
 
@@ -106,6 +101,7 @@ highed.ChartCustomizer = function (parent, owner) {
 	build();
 
 	return {
+		/* Listen to an event */
 		on: events.on,
 		resize: resize
 	};
