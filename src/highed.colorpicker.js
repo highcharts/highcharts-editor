@@ -85,6 +85,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		    return ((r << 16) | (g << 8) | b).toString(16);
 		}
 
+		function pickColor(e) {
+			var px = e.clientX,
+				py = e.clientY,
+				cp = highed.dom.pos(canvas),
+				id = ctx.getImageData(px - cp.x - x, py - cp.y - y, 1, 1).data,
+				col = '#' + rgbToHex(id[0], id[1], id[2])
+			;
+
+			manualInput.value = col;
+
+			if (highed.isFn(fn)) {
+				fn(col)
+			}
+		}
+
 		///////////////////////////////////////////////////////////////////////
 
 		
@@ -114,18 +129,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		});
 
 		pbinder = highed.dom.on(canvas, 'mousedown', function (e) {
-			var cp = highed.dom.pos(canvas),
-				id = ctx.getImageData(e.clientX - cp.x - x, e.clientY - cp.y - y, 1, 1).data,
-				col = '#' + rgbToHex(id[0], id[1], id[2])
+			var mover = highed.dom.on(canvas, 'mousemove', pickColor),
+				cancel = highed.dom.on(document.body, 'mouseup', function () {
+					mover();
+					cancel();
+				});
 			;
 
-			manualInput.value = col;
-
-			if (highed.isFn(fn)) {
-				fn(col)
-			}
-
-			console.log(cp);
+			pickColor(e);
 		});
 
 		manualInput.value = current;

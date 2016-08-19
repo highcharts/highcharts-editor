@@ -64,6 +64,12 @@ highed.dom = {
 					highed.dom.cr('option', '', option, option)
 				);
 			});
+		} else if (highed.isStr(options)) {
+			try {
+				highed.dom.options(select, JSON.parse(options));
+			} catch (e) {
+				highed.log(e + ' in highed.options (json parser)');
+			}
 		} else {
 			Object.keys(options).forEach(function (key) {
 				highed.dom.ap(select,

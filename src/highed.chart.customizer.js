@@ -60,14 +60,14 @@ highed.ChartCustomizer = function (parent, owner) {
 				//highed.dom.ap(sub, highed.dom.cr('span', '', referenced[0].returnType));
 				highed.dom.ap(sub, 
 					highed.InspectorField(
-						referenced.returnType.toLowerCase(), 
+						referenced.values ? 'options' : referenced.returnType.toLowerCase(), 
 						(owner.flatOptions[referenced._id] || referenced.defaults), 
 						{
 							title: group.text,
-							tooltip: group.tooltipText || referenced.description	
+							tooltip: group.tooltipText || referenced.description,
+							values: referenced.values	
 						},
 						function (newValue) {
-							console.log(newValue);
 							events.emit('PropertyChange', referenced._id, newValue);
 						}
 					)

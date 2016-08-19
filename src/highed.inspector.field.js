@@ -104,6 +104,19 @@ highed.InspectorField = function (type, value, properties, fn) {
 
 
 				return picker.container;
+			},
+			options: function () {
+				var options = highed.dom.cr('select', 'highed-field-select');
+
+				highed.dom.on(options, 'change', function () {
+					if (highed.isFn(fn)) {
+						fn(highed.dom.val(options));
+					}
+				});
+
+				highed.dom.options(options, properties.values);
+
+				return options;
 			}
 		}
 	;
