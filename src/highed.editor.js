@@ -32,29 +32,23 @@ highed.Editor = function (parent) {
 		},
 
 		container = highed.dom.cr('div', 'highed-container'),
-		titlebar = highed.dom.cr('div', 'titlebar'),
-		titleLabel = highed.dom.cr('span', '', ''),
 
 		mainToolbar = highed.Toolbar(container, {
 			additionalCSS: ['highed-header']
 		}),
-		
-		titlebarIcons = highed.dom.cr('div', 'icons'),
 
 		settingsBtn = highed.dom.cr('div', 'settings highed-icon fa fa-gear'),
 		fullscreenBtn = highed.dom.cr('div', 'settings highed-icon fa fa-desktop'),
 		resetOptionsBtn = highed.dom.cr('div', 'settings highed-icon fa fa-file-o')
 
 		splitter = highed.HSplitter(container, {leftWidth: 60}),
-		tabControl = highed.TabControl(splitter.left),
-	
-		chartTemplateTab = tabControl.createTab({title: 'CHART'}),
-		customizeTab = tabControl.createTab({title: 'CUSTOMIZE'}),
 
-		chartTemplateSelector = highed.ChartTemplateSelector(chartTemplateTab.body),
+		wizbar = highed.WizardBar(container, splitter.left),
+	
+		chartTemplateSelector = highed.ChartTemplateSelector(wizbar.addStep({title: 'Templates'}).body),
 		chartContainer = highed.dom.cr('div', 'highed-box-size'),
 
-		chartCustomizer = highed.ChartCustomizer(customizeTab.body, exports),
+		chartCustomizer = highed.ChartCustomizer(wizbar.addStep({title: 'Customize'}).body, exports),
 
 		chart = new Highcharts.Chart({
 			chart: {
@@ -72,9 +66,7 @@ highed.Editor = function (parent) {
 
 		}),
 
-		cleanOptions = highed.merge({}, chart.options),
-
-		wizbar = highed.WizardBar(container, undefined)
+		cleanOptions = highed.merge({}, chart.options)
 	;
 
 	///////////////////////////////////////////////////////////////////////////
@@ -87,7 +79,6 @@ highed.Editor = function (parent) {
 		;
 
 		chartCustomizer.resize();
-		tabControl.resize();
 		chartTemplateSelector.resize(undefined, cs.h - ms.h - wb.h);
 		splitter.resize(cs.w, cs.h - ms.h - wb.h);
 		events.emit('Resized');
@@ -106,9 +97,6 @@ highed.Editor = function (parent) {
 		);
 
 		highed.dom.ap(splitter.right, 
-			highed.dom.ap(titlebar,
-				titleLabel
-			),
 			chartContainer
 		);
 

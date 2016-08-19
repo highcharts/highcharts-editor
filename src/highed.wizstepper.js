@@ -25,10 +25,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
 	var properties = highed.merge({
-			indicatorPos: 'top'
+			indicatorPos: 'top'			
 		}, attributes),
 		events = highed.events(),
-		body = highed.dom.cr('div'),
+		body = highed.dom.cr('div', 'highed-wizstepper-body'),
 		indicators = highed.dom.cr('div'),
 
 		activeStep = false,
@@ -58,7 +58,7 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
 			label: highed.dom.cr('div', '', step.title, 'label'),
 			bubble: highed.dom.cr('div', 'bubble ' + (properties.indicatorPos === 'bottom' ? 'bubble-bottom' : 'bubble-top')),
 			bar: highed.dom.cr('div', 'bar ' + (properties.indicatorPos === 'bottom' ? 'bar-bottom' : 'bar-top')),
-			body: highed.dom.cr('div', 'body')
+			body: highed.dom.cr('div', 'highed-step-body')
 		};
 
 		function activate() {
@@ -71,6 +71,11 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
 					width: '',
 					bottom: '-4px',
 					'font-size': '0px'
+				});
+
+				highed.dom.style(activeStep.body, {
+					opacity: 0,
+					'pointer-events': 'none'
 				});
 
 				if (properties.indicatorPos === 'top') {
@@ -88,6 +93,11 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
 				width: "25px",
 				bottom: '-8px',
 				'font-size': '16px'
+			});
+
+			highed.dom.style(stepexports.body, {
+				opacity: 1,
+				'pointer-events': 'all'
 			});
 
 			if (properties.indicatorPos === 'top') {
@@ -120,6 +130,8 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
 			)
 		);
 
+		highed.dom.ap(body, stepexports.body);
+
 		return stepexports;
 	}
 
@@ -140,11 +152,12 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
 	///////////////////////////////////////////////////////////////////////////
 	
 	highed.dom.ap(indicatorParent, indicators);
+	highed.dom.ap(bodyParent, body);
 
-	addStep({title: 'Data'});
-	addStep({title: 'Templates'});
-	addStep({title: 'Customize'});
-	addStep({title: 'Use!'});
+	// addStep({title: 'Data'});
+	// addStep({title: 'Templates'});
+	// addStep({title: 'Customize'});
+	// addStep({title: 'Use!'});
 
 	///////////////////////////////////////////////////////////////////////////
 

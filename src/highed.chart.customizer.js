@@ -25,7 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 highed.ChartCustomizer = function (parent, owner) {
 	var events = highed.events(),
-		splitter = highed.HSplitter(parent),
+		splitter = highed.HSplitter(parent, {leftWidth: 30}),
 		list = highed.List(splitter.left),
 		body = splitter.right
 	;
