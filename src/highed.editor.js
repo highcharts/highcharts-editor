@@ -122,11 +122,6 @@ highed.Editor = function (parent) {
 	
 	//Handle chart template selection
 	chartTemplateSelector.on('Select', function (template) {
-		//Need to apply template.config to the chart.
-		//This is sort of silly, fix later - there may be a way in the API
-		//to reset the options without recreating the whole thing.
-		//Modifying chart.options and doing chart.redraw did not work however.
-
 		var options = highed.merge(highed.merge({}, cleanOptions), customizedOptions);
 
 		Object.keys(template.config).forEach(function (key) {
@@ -137,9 +132,10 @@ highed.Editor = function (parent) {
 		console.log(options);		
 		options.chart.renderTo = chartContainer;
 		chart = new Highcharts.Chart(options);
+
+		events.emit('ChartChange', options);
+
 		resize();
-		//chart.redraw();
-		//chart.reflow();
 	});
 
 	//Handle property change

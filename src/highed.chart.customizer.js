@@ -37,17 +37,23 @@ highed.ChartCustomizer = function (parent, owner) {
 		splitter.resize(w, h);
 	}
 
-	function selectGroup(group) {
-		var sub = highed.dom.cr('table', 'highed-customizer-table'),
-			referenced
+	function selectGroup(group, table) {
+		var referenced
 		;
 
 		if (highed.isArr(group.options)) {
-			highed.dom.ap(body, highed.dom.cr('div', 'highed-customizer-table-heading', group.text));
+			table = highed.dom.cr('table', 'highed-customizer-table');
+
+			highed.dom.ap(body, 
+				highed.dom.cr('div', 'highed-customizer-table-heading', group.text),
+				table
+			);
+
 
 			group.options.forEach(function (sub) {
-				selectGroup(sub);
+				selectGroup(sub, table);
 			});
+
 			return;
 		} else if (typeof group.id !== 'undefined') {
 			//Get the actual meta - need to format the dictionary better..
@@ -58,7 +64,7 @@ highed.ChartCustomizer = function (parent, owner) {
 			if (referenced.length > 0) {
 				referenced = referenced[0];
 				//highed.dom.ap(sub, highed.dom.cr('span', '', referenced[0].returnType));
-				highed.dom.ap(sub, 
+				highed.dom.ap(table, 
 					highed.InspectorField(
 						referenced.values ? 'options' : referenced.returnType.toLowerCase(), 
 						(owner.flatOptions[referenced._id] || referenced.defaults), 
@@ -74,7 +80,7 @@ highed.ChartCustomizer = function (parent, owner) {
 				);
 			}
 
-			highed.dom.ap(body, sub);
+			
 		}
 	}
 

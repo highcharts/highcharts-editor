@@ -26,6 +26,10 @@
 	//border-bottom: @border-main;
 }
 
+.highed-customizer-table tr:hover {
+	background: darken(@background-panel, 2);
+}
+
 .highed-customizer-table td:first-child {
 	min-width: 30%;
 	width:30%;	
@@ -40,10 +44,10 @@
 	width:20px;
 }
 
-.highed-customizer-table tr:nth-child(odd) {
+.highed-customizer-table tr:nth-child(even) {
 	background: @background-panel;
 }
 
-.highed-customizer-table tr:nth-child(even) {
-	background: darken(@background-panel, 50);
+.highed-customizer-table tr:nth-child(odd) {
+	background: darken(@background-panel, 2);
 }
