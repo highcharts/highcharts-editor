@@ -51,6 +51,28 @@ highed.dom = {
 		return target;
 	},
 
+	/* Create a set of options for a select
+	 * @select - the dropdown to add options to
+	 * @options - the options as an array or as an object keyed on ID
+	 */
+	options: function (select, options) {
+		if (highed.isNull(options)) {
+
+		} else if (highed.isArr(options)) {
+			options.forEach(function (option) {
+				highed.dom.ap(select,
+					highed.dom.cr('option', '', option, option)
+				);
+			});
+		} else {
+			Object.keys(options).forEach(function (key) {
+				highed.dom.ap(select,
+					highed.dom.cr('option', '', options[key], key)
+				);
+			});
+		}
+	},
+
 	/* Show a node when another is hovered
 	 * @parent - the node to listen for the hover on
 	 * @child - the node to show when the parent is hovered
@@ -173,6 +195,45 @@ highed.dom = {
 	        target.detachEvent('on' + event, actualCallback);
 	      }
 	    };
+	},
+
+	/* Get or set the value of a node
+	 * @node - the node to get the value of
+	 * @value (optional) - the value to set
+	 * @returns the value
+	 */
+	val: function (node, value) {
+		if (node.tagName === 'SELECT') {
+			if (node.selectedIndex >= 0) {
+				if (!highed.isNull(value)) {
+					for (var i = 0; i < node.options.length; i++) {
+						if (node.options[i].id === value) {
+							node.selectedIndex = i;
+							break;
+						}
+					}
+				}
+				return node.options[node.selectedIndex].id;
+			}			
+		} else if (node.tagName === 'INPUT') {
+			if (node.type === 'checkbox') {
+				if (!highed.isNull(value)) {
+					node.checked = highed.toBool(value);
+				}
+				return node.checked;
+			}
+			if (!highed.isNull(value)) {
+				node.value = value;
+			}
+			return node.value;
+		} else {
+			if (!highed.isNull(value)) {
+				node.innerHTML = value;
+			}
+			return node.innerText;
+		}
+
+		return false;
 	},
 
 	/* Get the size of a node

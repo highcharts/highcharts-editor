@@ -153,12 +153,12 @@ highed.Editor = function (parent) {
 
 	//Handle property change
 	chartCustomizer.on('PropertyChange', function (id, value) {
-		console.log('changing', id, 'to', value);
 		highed.setAttr(chart.options, id, value);
 		highed.setAttr(customizedOptions, id, value);
+		highed.setAttr(chart.options, 'plotOptions--series--animation', false);
 
 		exports.flatOptions[id] = value;
-		//chart.options[id] = value;
+
 		chart = new Highcharts.Chart(chart.options);
 		resize();
 	});

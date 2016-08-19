@@ -30,6 +30,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		manualInput = highed.dom.cr('input', 'manual')		
 	;
 
+	//Attach the container to the document when the document is ready
+	highed.ready(function () {
+		highed.dom.ap(document.body, container);
+	});
+
 	/* Color picker 
 	 * @x - the x position to display the picker at
 	 * @y - the y position to display the picker at
@@ -82,9 +87,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		///////////////////////////////////////////////////////////////////////
 
-		if (!container.parentNode) {
-			highed.dom.ap(document.body, container);
-		}
+		
 
 		//Make sure we're not off screen
 		if (x > windowSize.w - containerSize.w) {
@@ -110,7 +113,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			}
 		});
 
-		pbinder = highed.dom.on(canvas, 'click', function (e) {
+		pbinder = highed.dom.on(canvas, 'mousedown', function (e) {
 			var cp = highed.dom.pos(canvas),
 				id = ctx.getImageData(e.clientX - cp.x - x, e.clientY - cp.y - y, 1, 1).data,
 				col = '#' + rgbToHex(id[0], id[1], id[2])

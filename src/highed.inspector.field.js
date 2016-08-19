@@ -34,7 +34,7 @@ highed.InspectorField = function (type, value, properties, fn) {
 	var 
 		fields = {
 			string: function () {
-				var input = highed.dom.cr('input');
+				var input = highed.dom.cr('input', 'highed-field-input');
 
 				highed.dom.on(input, 'change', function () {
 					if (highed.isFn(fn)) {
@@ -54,21 +54,31 @@ highed.InspectorField = function (type, value, properties, fn) {
 
 			},
 			boolean: function () {
-				var input = fields.string();				
+				var input = highed.dom.cr('input');				
 				input.type = 'checkbox';
+
+				highed.dom.on(input, 'change', function () {
+					if (highed.isFn(fn)) {
+						fn(input.checked);
+					}
+				});
+
+				input.checked = highed.toBool(value);
+
 				return input;
 			},
 			color: function () {
-				var input = fields.string();	
+				var box = highed.dom.cr('div', 'highed-field-colorpicker');	
 
 				function update(col) {
-					input.value = col;
-					highed.dom.style(input, {
-						background: col
+					box.innerHTML = col;
+					highed.dom.style(box, {
+						background: col,
+						color: highed.getContrastedColor(col)
 					});
 				}			
 
-				highed.dom.on(input, 'click', function (e) {
+				highed.dom.on(box, 'click', function (e) {
 					highed.pickColor(e.clientX, e.clientY, value, function (col) {
 						update(col);
 						if (highed.isFn(fn)) {
@@ -79,7 +89,7 @@ highed.InspectorField = function (type, value, properties, fn) {
 
 				update(value);
 
-				return input;
+				return box;
 			},
 			font: function () {
 				return fields.string();				
@@ -88,6 +98,12 @@ highed.InspectorField = function (type, value, properties, fn) {
 			configset: function () {
 				return fields.string();				
 				
+			},
+			cssobject: function () {
+				var picker = highed.FontPicker(fn, value);
+
+
+				return picker.container;
 			}
 		}
 	;
@@ -101,7 +117,8 @@ highed.InspectorField = function (type, value, properties, fn) {
 				fields[type] ? fields[type]() : fields['string']
 			),
 			highed.dom.ap(highed.dom.cr('td'),
-				highed.dom.cr('span', 'fa fa-help', properties.tooltip)	
+				//highed.dom.cr('span', 'highed-field-tooltip', properties.tooltip)	
+				highed.dom.cr('span', 'highed-icon fa fa-question-circle')
 			)
 		)
 	);

@@ -43,7 +43,7 @@ highed.ChartCustomizer = function (parent, owner) {
 		;
 
 		if (highed.isArr(group.options)) {
-			highed.dom.ap(body, highed.dom.cr('h2', '', group.text));
+			highed.dom.ap(body, highed.dom.cr('div', 'highed-customizer-table-heading', group.text));
 
 			group.options.forEach(function (sub) {
 				selectGroup(sub);

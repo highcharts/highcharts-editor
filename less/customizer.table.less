@@ -1,9 +1,49 @@
-.highed-customizer-table {
+.highed-customizer-table-heading {
+	text-align: center;
+	padding-top:5px;
+	padding-bottom: 5px;
+	background:@accent-color;
+	color:@accent-text;
+	font-weight: 100;
+	font-family: @font-secondary;
+	font-size: 18px;
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
 
+.highed-customizer-table {
+	padding:0px;
+	border-collapse: collapse;
+	width:100%;
+	.highed-box-size;
+}
+
+.highed-customizer-table td {
+	padding:2px;
+}
+
+.highed-customizer-table tr {
+	//border-bottom: @border-main;
 }
 
 .highed-customizer-table td:first-child {
-	padding-left: 20px;
-	width:200px;	
+	min-width: 30%;
+	width:30%;	
 	font-weight: 100;
+}
+
+.highed-customizer-table td:nth-child(2) {
+	//width: 200px;
+}
+
+.highed-customizer-table td:last-child {
+	width:20px;
+}
+
+.highed-customizer-table tr:nth-child(odd) {
+	background: @background-panel;
+}
+
+.highed-customizer-table tr:nth-child(even) {
+	background: darken(@background-panel, 50);
 }
