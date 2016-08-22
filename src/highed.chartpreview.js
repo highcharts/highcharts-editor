@@ -32,7 +32,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.ChartPreview = function (attributes) {
 	var events = highed.events(),
 		customizedOptions = {},
-		flatOptions = {},*		
+		flatOptions = {},	
 		properties = highed.merge({
 
 		}, attributes)
@@ -55,6 +55,9 @@ highed.ChartPreview = function (attributes) {
 	}
 
 	/* Load JSON data
+	 * Functionally, this only instances a new
+	 * chart with the supplied data as its options.
+	 * It accepts both a string and and object
 	 * @data - the data to load
 	 */
 	function loadJSONData(data) {
@@ -62,8 +65,13 @@ highed.ChartPreview = function (attributes) {
 			try {
 				loadJSONData(JSON.parse(data));
 			} catch (e) {
-
+				highed.snackBar('invalid json: ' + e);
 			}
+		} else (!highed.isBasic(data)) {
+
+
+		} else {
+			highed.snackBar('the data is not valid json');
 		}
 	}
 

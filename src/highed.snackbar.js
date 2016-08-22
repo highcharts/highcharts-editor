@@ -40,14 +40,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  		);
  	});
 
- 	function hide() {
- 		timeout = setTimeout(function () {
- 			highed.dom.style(container, {
- 				bottom: '-58px'
- 			});
- 		}, 2000);
- 	}
-
  	highed.dom.on(container, 'mouseover', function () {
  		clearTimeout(timeout);
  	});
@@ -56,14 +48,29 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  		hide();
  	});
 
-	/* Show a snackbar 
-		@stitle - the snackbar title
-		@saction - the snackbar action text
-		@fn - the function to call when clicking the action
+ 	///////////////////////////////////////////////////////////////////////////
+ 	
+ 	function hide() {
+ 		timeout = setTimeout(function () {
+ 			highed.dom.style(container, {
+ 				bottom: '-58px'
+ 			});
+ 		}, 2000);
+ 	}
+
+ 	///////////////////////////////////////////////////////////////////////////
+
+	/* 	Show a snackbar 
+	 *	@stitle - the snackbar title
+	 *	@saction - the snackbar action text
+	 *	@fn - the function to call when clicking the action
 	 */
  	highed.snackBar = function (stitle, saction, fn) {
- 		title.innerHTML = stitle;
- 		action.innerHTML = saction;
+ 		title.innerHTML = stitle.toUpperCase();
+ 		
+ 		if (saction) {
+ 			action.innerHTML = saction.toUpperCase(); 			
+ 		}
 
  		if (callback) {
  			callback();

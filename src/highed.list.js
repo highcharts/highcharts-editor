@@ -80,7 +80,6 @@ highed.List = function (parent) {
 		if (highed.isArr(items)) {
 			items.forEach(addItem);
 		}
-		console.log(items);
 	}
 
 	/* Clear all the items in the list
@@ -101,7 +100,7 @@ highed.List = function (parent) {
 	/* Show the list */
 	function show() {
 		highed.dom.style(container, {
-			
+
 		});
 	}
 

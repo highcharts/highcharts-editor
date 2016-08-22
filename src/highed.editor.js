@@ -53,25 +53,29 @@ highed.Editor = function (parent, attributes) {
 		splitter = highed.HSplitter(container, {leftWidth: 60}),
 
 		wizbar = highed.WizardBar(container, splitter.left),
+
+		dataImp = highed.DataImporter(wizbar.addStep({title: 'Import'}).body),
 	
 		chartTemplateSelector = highed.ChartTemplateSelector(wizbar.addStep({title: 'Templates'}).body),
 		chartContainer = highed.dom.cr('div', 'highed-box-size highed-chart-container'),
 
 		chartCustomizer = highed.ChartCustomizer(wizbar.addStep({title: 'Customize'}).body, exports),
 
+
 		chart = new Highcharts.Chart({
 			chart: {
 				type: 'bar',
 				renderTo: chartContainer				
-			},
-			xAxis: {
-		        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-		            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-		    },
+			}
+			// ,
+			// xAxis: {
+		 //        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+		 //            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+		 //    },
 
-		    series: [{
-		        data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
-		    }]
+		 //    series: [{
+		 //        data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+		 //    }]
 
 		}),
 
@@ -153,6 +157,23 @@ highed.Editor = function (parent, attributes) {
 		highed.setAttr(chart.options, 'plotOptions--series--animation', false);
 
 		exports.flatOptions[id] = value;
+
+		chart = new Highcharts.Chart(chart.options);
+		
+		events.emit('ChartChange', chart.options);
+
+		resize();
+	});
+
+	dataImp.on('ImportCSV', function (data) {
+		highed.setAttr([chart.options, cleanOptions], 'plotOptions--series--animation', true);
+		highed.setAttr([chart.options, cleanOptions], 'data--csv', data.csv);
+		highed.setAttr([chart.options, cleanOptions], 'data--itemDelimiter', data.itemDelimiter);
+		highed.setAttr([chart.options, cleanOptions], 'data--firstRowAsNames', data.firstRowAsNames);
+
+		cleanOptions.series = chart.options.series;
+
+		chartContainer.innerHTML = '';
 
 		chart = new Highcharts.Chart(chart.options);
 		

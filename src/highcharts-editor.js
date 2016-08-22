@@ -89,6 +89,13 @@ var highed = {
 	setAttr: function (obj, path, value) {
 		var current = obj;
 
+		if (highed.isArr(obj)) {
+			obj.forEach(function (thing) {
+				highed.setAttr(thing, path, value);
+			});
+			return;
+		}
+
 		path = path.replace(/\-\-/g, '.').replace(/\-/g, '.').split('.')
 
 		path.forEach(function(p, i) {
