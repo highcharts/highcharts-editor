@@ -36,13 +36,13 @@ highed.InspectorField = function (type, value, properties, fn) {
 			string: function () {
 				var input = highed.dom.cr('input', 'highed-field-input');
 
+				input.value = value;
+
 				highed.dom.on(input, 'change', function () {
 					if (highed.isFn(fn)) {
 						fn(input.value);
 					}
 				});
-
-				input.value = value;
 
 				return input;
 			},
@@ -56,13 +56,13 @@ highed.InspectorField = function (type, value, properties, fn) {
 				var input = highed.dom.cr('input');				
 				input.type = 'checkbox';
 
+				input.checked = highed.toBool(value);
+
 				highed.dom.on(input, 'change', function () {
 					if (highed.isFn(fn)) {
 						fn(input.checked);
 					}
 				});
-
-				input.checked = highed.toBool(value);
 
 				return input;
 			},
@@ -100,21 +100,18 @@ highed.InspectorField = function (type, value, properties, fn) {
 			},
 			cssobject: function () {
 				var picker = highed.FontPicker(fn, value);
-
-
-
 				return picker.container;
 			},
 			options: function () {
 				var options = highed.dom.cr('select', 'highed-field-select');
+
+				highed.dom.options(options, properties.values);
 
 				highed.dom.on(options, 'change', function () {
 					if (highed.isFn(fn)) {
 						fn(highed.dom.val(options));
 					}
 				});
-
-				highed.dom.options(options, properties.values);
 
 				return options;
 			},

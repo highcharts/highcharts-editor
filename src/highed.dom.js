@@ -84,10 +84,18 @@ highed.dom = {
 	 * @child - the node to show when the parent is hovered
 	 */
 	showOnHover: function (parent, child) {
+		if (highed.isArr(child)) {
+			child.forEach(function (c) {
+				highed.dom.showOnHover(parent, c);
+			});
+			return;
+		}
+
 		highed.dom.on(parent, 'mouseover', function () {
 			highed.dom.style(child, {
 				//display: 'block',
 				opacity: 1,
+			//	background: 'rgba(46, 46, 46, 0.85)',
 				'pointer-events': 'all'
 			});
 		});
@@ -96,6 +104,7 @@ highed.dom = {
 			highed.dom.style(child, {
 				//display: 'none',
 				opacity: 0,
+				//background: 'rgba(0, 0, 0, 0)',
 				'pointer-events': 'none'
 			});
 		});

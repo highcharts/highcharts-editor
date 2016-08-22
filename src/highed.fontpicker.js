@@ -64,13 +64,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			}
 		}
 
-		function updateColor(ncol) {
+		function updateColor(ncol, supressCallback) {
 			highed.dom.style(color, {
 				background: ncol
 			});
 
 			style.color = ncol;
-			callback();
+			if (!supressCallback) {
+				callback();				
+			}
 		}
 
 		///////////////////////////////////////////////////////////////////////
