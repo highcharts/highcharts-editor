@@ -93,7 +93,8 @@ highed.List = function (parent) {
 		var ps = highed.dom.size(parent);
 
 		highed.dom.style(container, {
-			height: ps.height + 'px'
+			//height: ps.height + 'px'
+			height: '100%'
 		});	
 	}
 

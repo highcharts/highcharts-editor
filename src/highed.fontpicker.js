@@ -89,7 +89,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		highed.dom.val(fontFamily, style['font-family']);
 		highed.dom.val(fontSize, style['font-size'].replace('px', ''));
 
-
 		//Listen to font changes
 		highed.dom.on(fontFamily, 'change', function () {
 			if (fontFamily.selectedIndex >= 0) {
