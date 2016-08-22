@@ -76,15 +76,18 @@ highed.ChartTemplateSelector = function (parent) {
 		list.addItems(Object.keys(highed.meta.chartTemplates).map(function (key) {
 			return {
 				id: key,
-				title: highed.meta.chartTemplates[key].title,
-				click: function () {
-					showTemplates(highed.meta.chartTemplates[key].templates);
-				}
+				title: highed.meta.chartTemplates[key].title
 			};
 		}));
+
+		list.selectFirst();
 	}
 
 	///////////////////////////////////////////////////////////////////////////
+
+	list.on('Select', function (id) {
+		showTemplates(highed.meta.chartTemplates[id].templates);
+	});
 
 	build();
 

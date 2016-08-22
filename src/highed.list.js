@@ -26,7 +26,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.List = function (parent) {
 	var container = highed.dom.cr('div', 'highed-list'),
 		selectedItem = false,
-		events = highed.events()
+		events = highed.events(),
+		items = []
 	;
 
 	///////////////////////////////////////////////////////////////////////////
@@ -53,11 +54,11 @@ highed.List = function (parent) {
 
 			selectedItem = iexports;
 			node.className = 'item item-selected';
+			events.emit('Select', item.id);
 		}
 
 		highed.dom.on(node, 'click', function (e) {
 			select();
-			events.emit('Select', item.id);
 			if (highed.isFn(item.click)) {
 				return item.click(e);
 			}
@@ -67,8 +68,15 @@ highed.List = function (parent) {
 
 		iexports = {
 			node: node,
+
 			select: select
 		};
+
+		items.push(iexports);
+
+		if (!selectedItem) {
+			select();
+		}
 
 		return iexports;
 	}
@@ -110,6 +118,13 @@ highed.List = function (parent) {
 
 	}
 
+	/* Select the first item */
+	function selectFirst() {
+		if (items.length > 0) {
+			items[0].select();
+		}
+	}
+
 	///////////////////////////////////////////////////////////////////////////
 	
 	highed.dom.ap(parent, container);
@@ -124,6 +139,7 @@ highed.List = function (parent) {
 		clear: clear,
 		resize: resize,
 		show: show,
-		hide: hide
+		hide: hide,
+		selectFirst: selectFirst
 	};
 };

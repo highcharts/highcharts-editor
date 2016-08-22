@@ -81,13 +81,9 @@ highed.ChartCustomizer = function (parent, owner) {
 
 	function build() {
 		Object.keys(highed.meta.optionsExtended.options).forEach(function (key) {
-			var entry = highed.meta.optionsExtended.options[key];
 			list.addItem({
-				title: key,
-				click: function () {
-					body.innerHTML = '';
-					entry.forEach(selectGroup);
-				}
+				id: key,
+				title: key
 			});
 		});
 	}
@@ -98,6 +94,12 @@ highed.ChartCustomizer = function (parent, owner) {
 
 	///////////////////////////////////////////////////////////////////////////
 	
+	list.on('Select', function (id){
+		var entry = highed.meta.optionsExtended.options[id];
+		body.innerHTML = '';
+		entry.forEach(selectGroup);
+	});
+
 	build();
 
 	return {
