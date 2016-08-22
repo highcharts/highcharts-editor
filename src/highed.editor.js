@@ -23,13 +23,22 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-highed.Editor = function (parent) {
+/* The main chart editor object 
+ * @parent - the node to attach the editor to
+ * @attributes - the editor settings
+ * @returns an instance of an editor
+ */
+highed.Editor = function (parent, attributes) {
 	var events = highed.events(),
 		customizedOptions = {},
 		exports = {
 			customizedOptions: customizedOptions,
 			flatOptions: {}
 		},
+
+		properties = highed.merge({
+
+		}, attributes),
 
 		container = highed.dom.cr('div', 'highed-container'),
 

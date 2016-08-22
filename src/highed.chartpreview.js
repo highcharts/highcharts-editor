@@ -24,28 +24,65 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /* Basic chart preview
- *
+ * This is just a facade to Highcharts.Chart mostly.
+ * It implements a sliding drawer type widget,
+ * where the initial state can be as part of the main DOM,
+ * and where the expanded state covers most of the screen (90%)
  */
-highed.ChartPreview = function () {
+highed.ChartPreview = function (attributes) {
 	var events = highed.events(),
 		customizedOptions = {},
-		flatOptions = {}
+		flatOptions = {},*		
+		properties = highed.merge({
+
+		}, attributes)
 	;
 
 	///////////////////////////////////////////////////////////////////////////
 
+	/* Load a template from the meta
+	 * @template - the template object
+	 */
 	function loadTemplate(template) {
 
 	}
 
+	/* Load CSV data
+	 * @data - the data to load
+	 */
+	function loadCSVData(data) {
+
+	}
+
+	/* Load JSON data
+	 * @data - the data to load
+	 */
+	function loadJSONData(data) {
+		if (highed.isStr(data)) {
+			try {
+				loadJSONData(JSON.parse(data));
+			} catch (e) {
+
+			}
+		}
+	}
+
+	/* Set an attribute
+	 * @id - the path of the attribute
+	 * @value - the value to set
+	 */
 	function set(id, value) {
 
 	}
 
+	/* Expand the chart from its drawer
+	 */
 	function expand() {
 
 	}
 
+	/* Collapse the chart into its drawer
+	*/
 	function collapse() {
 
 	}

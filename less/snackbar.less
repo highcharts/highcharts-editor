@@ -1,0 +1,34 @@
+.highed-snackbar {
+	position: fixed;
+	bottom: -58px;
+	left:10px;
+
+	height:48px;
+
+	border:@border-main;
+	background:@background-main;
+	color:@text-main;
+	font-family:@font-main;
+	
+	padding-left:24px;
+	padding-right:24px;
+
+	line-height: 48px;
+
+	cursor:default;
+
+	.highed-transition;
+}
+
+.highed-snackbar .snackbar-title {
+	padding-right:24px;
+}
+
+.highed-snackbar .snackbar-action {
+	color:@accent-color;
+	.highed-transition;
+}
+
+.highed-snackbar .snackbar-action:hover {
+	color:darken(@accent-color, 20);
+}
