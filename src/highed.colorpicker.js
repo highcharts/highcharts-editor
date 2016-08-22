@@ -102,8 +102,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				col = rgbToHex(id[0] || 0, id[1], id[2])
 			;
 
-			console.log(id[0]);
-
 			manualInput.value = col;
 
 			if (highed.isFn(fn)) {
@@ -129,7 +127,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			'pointer-events': 'all'
 		});
 
-		highed.showDimmer(hide, true, true);
+		highed.showDimmer(hide, true, true, 5);
 
 		binder = highed.dom.on(manualInput, 'keyup', function () {
 			if (highed.isFn(fn)) {

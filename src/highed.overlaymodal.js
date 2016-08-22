@@ -29,25 +29,48 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 highed.OverlayModal = function (contents, attributes) {
 	var container = highed.dom.cr('div', 'highed-overlay-modal'),
-		events = highed.events()
+		events = highed.events(),
+		properties = highed.merge({
+			width: 200,
+			height: 200,
+			minWidth: 690,
+			minHeight: 0
+		}, attributes),
+		hideDimmer = false,
+		visible = false
 	;
 
 	///////////////////////////////////////////////////////////////////////////
 
 	function show() {
+		if (visible) return;
+
 		highed.dom.style(container, {
-			width: '200px',
-			height: '200px',
+			width: properties.width + (properties.width.indexOf('%') > 0 ? '' : 'px'),
+			height: properties.height + (properties.height.indexOf('%') > 0 ? '' : 'px'),
 			opacity: 1,
-			'pointer-events': 'all'
+			'pointer-events': 'all',
+			'min-width': properties.minWidth + 'px',
+			'min-height': properties.minHeight + 'px'
 		});
 
-		highed.showDimmer(hide, true);
+		highed.dom.style(document.body, {
+			'overflow-x': 'hidden',
+			'overflow-y': 'hidden'
+		});
 
-		events.emit('Show');
+		hideDimmer = highed.showDimmer(hide, true);
+
+		setTimeout(function () {
+			events.emit('Show');			
+		}, 300);
+
+		visible = true;
 	}
 
 	function hide() {
+		if (!visible) return;
+
 		highed.dom.style(container, {
 			width: '0px',
 			height: '0px',
@@ -55,7 +78,16 @@ highed.OverlayModal = function (contents, attributes) {
 			'pointer-events': 'none'
 		});
 
-		highed.hideDimmer();
+		highed.dom.style(document.body, {
+			'overflow-x': '',
+			'overflow-y': ''
+		});
+
+		if (highed.isFn(hideDimmer)) {
+			hideDimmer();
+		}
+
+		visible = false;
 
 		events.emit('Hide');
 	}
@@ -63,10 +95,14 @@ highed.OverlayModal = function (contents, attributes) {
 	///////////////////////////////////////////////////////////////////////////
 	
 	highed.dom.ap(document.body, 
+		container
+	);
+
+	if (contents) {
 		highed.dom.ap(container,
 			contents
-		)
-	);
+		);
+	}
 
 	///////////////////////////////////////////////////////////////////////////
 
@@ -74,6 +110,7 @@ highed.OverlayModal = function (contents, attributes) {
 	return {
 		on: events.on,
 		show: show,
-		hide: hide
+		hide: hide,
+		body: container
 	}
 };

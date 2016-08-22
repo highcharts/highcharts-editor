@@ -86,6 +86,7 @@ highed.dom = {
 	showOnHover: function (parent, child) {
 		highed.dom.on(parent, 'mouseover', function () {
 			highed.dom.style(child, {
+				//display: 'block',
 				opacity: 1,
 				'pointer-events': 'all'
 			});
@@ -93,6 +94,7 @@ highed.dom = {
 
 		highed.dom.on(parent, 'mouseout', function () {
 			highed.dom.style(child, {
+				//display: 'none',
 				opacity: 0,
 				'pointer-events': 'none'
 			});

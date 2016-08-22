@@ -49,6 +49,7 @@
     <script src="/src/highed.snackbar.js" type="text/javascript" charset="utf-8" async defer></script>
     <script src="/src/highed.dataimporter.js" type="text/javascript" charset="utf-8" async defer></script>
     <script src="/src/highed.fileupload.js" type="text/javascript" charset="utf-8" async defer></script>
+    <script src="/src/highed.modaleditor.js" type="text/javascript" charset="utf-8" async defer></script>
 
     <style>
     	html, body {
@@ -61,20 +62,30 @@
 
 </head>
 
-<div id="main-container" style="width:100%; height:100%;"></div>
-
 <body>
 
+	<button id="modal-btn">Click me!</button>
+	<br/><br/>
+	Result:
+	<div id="chart-result"></div>
 
 </body>
+
 <script>
 	function checkIfReady() {
 		if (typeof highed !== 'undefined') {
-			highed.Editor('main-container');
+			
+			highed.ready(function () {
+				highed.ModalEditor('modal-btn', {}, function (html) {
+					highed.dom.get('chart-result').innerHTML = html;
+				});
+			});
+
 		} else {
 			setTimeout(checkIfReady, 200);
 		}
 	}
 	checkIfReady();
+
 </script>
 </html>

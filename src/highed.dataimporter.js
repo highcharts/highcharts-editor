@@ -35,6 +35,7 @@ highed.DataImporter = function (parent) {
 		importFileBtn = highed.dom.cr('button', 'highed-imp-button', 'Upload & Import File'),
 		delimiter = highed.dom.cr('input', 'highed-imp-input'),
 		dateFormat = highed.dom.cr('input', 'highed-imp-input'),
+		decimalPoint = highed.dom.cr('input', 'highed-imp-input'),
 		firstAsNames = highed.dom.cr('input', 'highed-imp-input')
 	;
 
@@ -184,7 +185,8 @@ highed.DataImporter = function (parent) {
 			itemDelimiter: delimiter.value,
 			firstRowAsNames: firstAsNames.checked,
 			dateFormat: dateFormat.value,
-			csv: pasteArea.value
+			csv: pasteArea.value,
+			decimalPoint: decimalPoint.value
 		});
 	}
 
@@ -197,12 +199,16 @@ highed.DataImporter = function (parent) {
 		delimiter,
 		highed.dom.cr('br'),
 
-		highed.dom.cr('span', 'highed-imp-label', 'First Row Is Series Names'),
-		firstAsNames,
-		highed.dom.cr('br'),
-
 		highed.dom.cr('span', 'highed-imp-label', 'Date Format'),
 		dateFormat,
+		highed.dom.cr('br'),
+
+		highed.dom.cr('span', 'highed-imp-label', 'Decimal Point Notation'),
+		decimalPoint,
+		highed.dom.cr('br'),
+
+		highed.dom.cr('span', 'highed-imp-label', 'First Row Is Series Names'),
+		firstAsNames,
 		highed.dom.cr('br'),
 		
 		importFileBtn,
@@ -225,6 +231,7 @@ highed.DataImporter = function (parent) {
 	delimiter.value = ',';
 	dateFormat.value = 'YYYY-mm-dd';
 	firstAsNames.type = 'checkbox';
+	decimalPoint.value = '.';
 	firstAsNames.checked = true;
 
 	///////////////////////////////////////////////////////////////////////////

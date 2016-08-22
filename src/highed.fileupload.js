@@ -33,7 +33,7 @@ highed.ready(function () {
 	highed.dom.ap(document.body, uploader);
 
 	highed.dom.style(uploader, {
-		visible: false
+		display: 'none'
 	});
 
 

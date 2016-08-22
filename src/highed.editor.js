@@ -46,10 +46,6 @@ highed.Editor = function (parent, attributes) {
 			additionalCSS: ['highed-header']
 		}),
 
-		settingsBtn = highed.dom.cr('div', 'settings highed-icon fa fa-gear'),
-		fullscreenBtn = highed.dom.cr('div', 'settings highed-icon fa fa-desktop'),
-		resetOptionsBtn = highed.dom.cr('div', 'settings highed-icon fa fa-file-o')
-
 		splitter = highed.HSplitter(container, {leftWidth: 60}),
 
 		wizbar = highed.WizardBar(container, splitter.left),
@@ -95,13 +91,44 @@ highed.Editor = function (parent, attributes) {
 		chartCustomizer.resize(undefined, cs.h - ms.h - wb.h);
 		chartTemplateSelector.resize(undefined, cs.h - ms.h - wb.h);
 		splitter.resize(cs.w, cs.h - ms.h - wb.h);
+		chart.reflow();
 		events.emit('Resized');
 	}
 
-	///////////////////////////////////////////////////////////////////////////
+	function getEmbeddable() {
+		var	id = 'chart',
+			jsIncludes = [
+				'https://code.highcharts.com/highcharts.js',
+				'http://code.highcharts.com/adapters/standalone-framework.js',
+				'https://code.highcharts.com/highcharts-more.js',
+				'https://code.highcharts.com/highcharts-3d.js',
+				'https://code.highcharts.com/modules/data.js'
+			],
+			cssIncludes = [
+				'https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css'
+			]
+		;
 
-	//Handle settings click
-	highed.dom.on(settingsBtn, 'click', highed.showSettings);
+		return [
+			'<iframe><html><head>',
+
+			//Write JS includes
+			jsIncludes.map(function (include) {
+				return '<script src="' + include + '"></script>'
+			}).join(''),
+
+			//Write instancer
+			'<script>',
+			'(function(){',
+			'new Highcharts.chart("', id, '", JSON.parse(\'', 
+				JSON.stringify(highed.merge(highed.merge({}, chart.options), {chart: {renderTo: id}})), '\'));',
+			'})();',
+			'</script></head><body><div id="' + id + '"></div></body></html></iframe>'
+
+		].join('');
+	}
+
+	///////////////////////////////////////////////////////////////////////////
 
 	//Attach to parent node
 	parent = highed.dom.get(parent);
@@ -116,12 +143,6 @@ highed.Editor = function (parent, attributes) {
 
 		highed.dom.ap(mainToolbar.left,
 			highed.dom.cr('div', 'highed-logo')
-		);
-
-		highed.dom.ap(mainToolbar.right, 
-			fullscreenBtn,
-					resetOptionsBtn,
-					settingsBtn
 		);
 
 		resize();
@@ -175,9 +196,8 @@ highed.Editor = function (parent, attributes) {
 		highed.setAttr([chart.options, cleanOptions], 'data--itemDelimiter', data.itemDelimiter);
 		highed.setAttr([chart.options, cleanOptions], 'data--firstRowAsNames', data.firstRowAsNames);
 		highed.setAttr([chart.options, cleanOptions], 'data--dateFormat', data.dateFormat);
+		highed.setAttr([chart.options, cleanOptions], 'data--decimalPoint', data.decimalPoint);
 		highed.setAttr([chart.options, cleanOptions], 'series', {});
-
-		cleanOptions.series = chart.options.series;
 
 		chartContainer.innerHTML = '';
 
@@ -202,6 +222,8 @@ highed.Editor = function (parent, attributes) {
 	exports.on = events.on;
 	/* Force a resize of the editor */
 	exports.resize = resize;
+	/* Get embeddable javascript */
+	exports.getEmbeddable = getEmbeddable;
 	
 	return exports;
 };

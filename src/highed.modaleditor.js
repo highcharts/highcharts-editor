@@ -23,60 +23,38 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-(function () {
+/* A modal editor
+ * @summoner - the node which spawns the editor
+ * @attributes - properties sent to the editor
+ * @fn - function to call when done editing, argument is embeddable HTML
+ * @returns a highed.ModalEditor instance.
+ */
+highed.ModalEditor = function (summoner, attributes, fn) {
+	var modal = highed.OverlayModal(false, {
+			width: '90%',
+			height: '90%'
+		}),
+		editor = highed.Editor(modal.body, attributes)
+	;
 
-	/* Show the dimmer backdrop 
-	 * @fn - the function to call when the dimmer is clicked
-	 * @autohide - set to true to hide the dimmer when it's clicked
-	 */
-	highed.showDimmer = function (fn, autohide, transparent, zIndex) {
-		var dimmer = highed.dom.cr('div', 'highed-dimmer'),
-			unbinder = false
-		;
+	///////////////////////////////////////////////////////////////////////////
 
+	//Resize the editor when showing the modal
+	modal.on('Show', editor.resize);
+	//Show the modal when clicking the summoner 
+	highed.dom.on(highed.dom.get(summoner), 'click', modal.show);
 
-		highed.dom.ap(document.body, dimmer);
-
-		highed.dom.style(dimmer, {
-			'opacity': 0.7,
-			'pointer-events': 'all',
-			'z-index': 999 + (zIndex || 0)
-		});
-
-		if (transparent) {
-			highed.dom.style(dimmer, {
-				'opacity': 0
-			});
+	modal.on('Hide', function () {
+		if (highed.isFn(fn)) {
+			fn(editor.getEmbeddable());
 		}
+	});
 
-		function hide () {
-			highed.dom.style(dimmer, {
-				'opacity': 0,
-				'pointer-events': 'none'
-			});
+	///////////////////////////////////////////////////////////////////////////
 
-			if (highed.isFn(unbinder)) {
-				unbinder();
-				unbinder = false;
-			}
-
-			setTimeout(function () {
-				document.body.removeChild(dimmer);
-			}, 300);
-		}
-
-		unbinder = highed.dom.on(dimmer, 'click', function (e) {
-			
-			if (highed.isFn(fn)) {
-				fn();
-			}
-			
-			if (autohide) {
-				hide();
-			}
-		});
-
-		return hide;
-	};
-
-})();
+	return {
+		show: modal.show,
+		hide: modal.hide,
+		on: editor.on		
+	}
+};
