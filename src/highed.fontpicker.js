@@ -85,7 +85,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		//Set the current values
 		boldBtn.set(style['font-weight'] === 'bold');
 		italicBtn.set(style['font-style'] === 'italic');
-		updateColor(style['color']);
+		updateColor(style['color'], true);
 		highed.dom.val(fontFamily, style['font-family']);
 		highed.dom.val(fontSize, style['font-size'].replace('px', ''));
 

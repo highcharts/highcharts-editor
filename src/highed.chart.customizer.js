@@ -70,7 +70,7 @@ highed.ChartCustomizer = function (parent, owner) {
 							tooltip: group.tooltipText || referenced.description,
 							values: referenced.values	
 						},
-						function (newValue) {
+						function (newValue) {			
 							events.emit('PropertyChange', referenced._id, newValue);
 						}
 					)
