@@ -31,9 +31,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.DataImporter = function (parent) {
 	var events = highed.events(),
 		pasteArea = highed.dom.cr('textarea', 'highed-imp-pastearea'),
-		importBtn = highed.dom.cr('button', '', 'Import'),
-		importFileBtn = highed.dom.cr('button', '', 'Upload File'),
-		delimiter = highed.dom.cr('input')
+		importBtn = highed.dom.cr('button', 'highed-imp-button', 'Import'),
+		importFileBtn = highed.dom.cr('button', 'highed-imp-button', 'Upload & Import File'),
+		delimiter = highed.dom.cr('input', 'highed-imp-input'),
+		dateFormat = highed.dom.cr('input', 'highed-imp-input'),
+		firstAsNames = highed.dom.cr('input', 'highed-imp-input')
 	;
 
 	///////////////////////////////////////////////////////////////////////////
@@ -177,30 +179,53 @@ highed.DataImporter = function (parent) {
 
 	///////////////////////////////////////////////////////////////////////////
 
+	function emitImport() {
+		events.emit('ImportCSV', {
+			itemDelimiter: delimiter.value,
+			firstRowAsNames: firstAsNames.checked,
+			dateFormat: dateFormat.value,
+			csv: pasteArea.value
+		});
+	}
+
 	highed.dom.ap(parent, 
 		highed.dom.cr('div', 'highed-imp-headline', 'Import CSV'),
+		highed.dom.cr('div', 'highed-imp-help', 'Paste CSV into the below box, or upload a file. Click Import to import your data.'),
 		pasteArea,
-		highed.dom.cr('div', 'highed-imp-help', 'Paste CSV into the above box, or upload a file by clicking the below button.'),
+
+		highed.dom.cr('span', 'highed-imp-label', 'Delimiter'),
+		delimiter,
+		highed.dom.cr('br'),
+
+		highed.dom.cr('span', 'highed-imp-label', 'First Row Is Series Names'),
+		firstAsNames,
+		highed.dom.cr('br'),
+
+		highed.dom.cr('span', 'highed-imp-label', 'Date Format'),
+		dateFormat,
+		highed.dom.cr('br'),
+		
 		importFileBtn,
 		importBtn
 	);
 
-	highed.dom.on(importBtn, 'click', function () {
-		events.emit('ImportCSV', {
-			itemDelimiter: ',',
-			firstRowAsNames: true,
-			csv: pasteArea.value
-		});
-	});
+	highed.dom.on(importBtn, 'click', emitImport);
 
 	highed.dom.on(importFileBtn, 'click', function () {
 		highed.readLocalFile({
 			type: 'text',
 			success: function (info) {
 				pasteArea.value = info.data;
+				highed.snackBar('File uploaded')
+				emitImport();
 			}
 		});
 	});
+
+	delimiter.value = ',';
+	dateFormat.value = 'YYYY-mm-dd';
+	firstAsNames.type = 'checkbox';
+	firstAsNames.checked = true;
 
 	///////////////////////////////////////////////////////////////////////////
 	

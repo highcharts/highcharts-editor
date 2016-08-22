@@ -166,10 +166,16 @@ highed.Editor = function (parent, attributes) {
 	});
 
 	dataImp.on('ImportCSV', function (data) {
+		if (!chart || !chart.options) {
+			chart = {options: {}};
+		}
+
 		highed.setAttr([chart.options, cleanOptions], 'plotOptions--series--animation', true);
 		highed.setAttr([chart.options, cleanOptions], 'data--csv', data.csv);
 		highed.setAttr([chart.options, cleanOptions], 'data--itemDelimiter', data.itemDelimiter);
 		highed.setAttr([chart.options, cleanOptions], 'data--firstRowAsNames', data.firstRowAsNames);
+		highed.setAttr([chart.options, cleanOptions], 'data--dateFormat', data.dateFormat);
+		highed.setAttr([chart.options, cleanOptions], 'series', {});
 
 		cleanOptions.series = chart.options.series;
 

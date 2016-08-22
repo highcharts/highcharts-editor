@@ -55,7 +55,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  			highed.dom.style(container, {
  				bottom: '-58px'
  			});
- 		}, 2000);
+ 		}, 4000);
  	}
 
  	///////////////////////////////////////////////////////////////////////////
