@@ -152,6 +152,10 @@ highed.Editor = function (parent, attributes) {
 
 	highed.dom.on(window, 'resize', resize);
 
+	highed.dom.ap(mainToolbar.right,
+		highed.dom.cr('span', 'highed-credits', 'Highcharts Editor Beta')
+	);
+
 	///////////////////////////////////////////////////////////////////////////
 	
 	//Handle chart template selection

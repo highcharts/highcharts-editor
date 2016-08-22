@@ -24,7 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 
-(function () {
+highed.ready(function () {
 	var container = highed.dom.cr('div'),
 		modal = highed.OverlayModal(container)
 	;
@@ -45,4 +45,4 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	//Hide settings
 	highed.hideSettings = modal.hide;
 
-})();
+});

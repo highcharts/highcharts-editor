@@ -215,6 +215,8 @@ var highed = {
 				initQueue.forEach(function (fn) {
 					fn();
 				});
+			} else {
+				setTimeout(pollForReady, 100);
 			}
 		}
 	}

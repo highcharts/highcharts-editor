@@ -36,7 +36,7 @@ highed.dom = {
 		var children = (Array.prototype.slice.call(arguments));
 		children.splice(0, 1);
 
-		if (typeof target !== 'undefined' && typeof target.appendChild !== 'undefined') {
+		if (!highed.isNull(target) && typeof target.appendChild !== 'undefined') {
 			children.forEach(function (child) {
 				if (typeof child !== 'undefined' && typeof child.appendChild !== 'undefined') {
 					target.appendChild(child);					

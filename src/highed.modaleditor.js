@@ -32,7 +32,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.ModalEditor = function (summoner, attributes, fn) {
 	var modal = highed.OverlayModal(false, {
 			width: '90%',
-			height: '90%'
+			height: '580'
 		}),
 		editor = highed.Editor(modal.body, attributes)
 	;
