@@ -38,9 +38,6 @@ highed.ChartCustomizer = function (parent, owner) {
     }
 
     function selectGroup(group, table) {
-        var referenced
-        ;
-
         if (highed.isArr(group.options)) {
             table = highed.dom.cr('table', 'highed-customizer-table');
 

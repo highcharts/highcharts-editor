@@ -11,7 +11,7 @@ It requires no back-end service to operate.
 ## Features
 	
 	* No dependencies except from Highcharts
-	* Lightweight: weighs in at <xxkb
+	* Lightweight: weighs in at less than 100kb
 	* 100% client-side
 	* Outputs both HTML and JSON
 	* Optional wizard-style interface
@@ -75,6 +75,7 @@ Properties is an object as such:
   * `Editor.on(<event>, <callback>)`: Listen for an event emitted by the editor. See list of events below.
   * `Editor.resize()`: Force a resize of the editor widget.
   * `Editor.getEmbeddableHTML()`: Get a string containing HTML to replicate the current chart.
+  * `Editor.getEmbeddableJSON()`: Get a json string containing the current charts properties that can be used to initialize a duplicate chart.
 
 **Editor Events**
 

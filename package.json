@@ -16,7 +16,8 @@
 		"less-plugin-clean-css": "*",
         "async": "*",
         "request": "*",
-        "colors": "*"		
+        "colors": "*",
+        "yargs": "*"		
 	},
 
 	"dependencies": {

@@ -57,7 +57,6 @@ highed.Editor = function (parent, attributes) {
 
         chartCustomizer = highed.ChartCustomizer(wizbar.addStep({title: 'Customize'}).body, exports),
 
-
         chart = new Highcharts.Chart({
             chart: {
                 type: 'bar',
@@ -111,11 +110,15 @@ highed.Editor = function (parent, attributes) {
             '<script>',
             '(function(){',
             'new Highcharts.chart("', id, '", JSON.parse(\'', 
-                JSON.stringify(highed.merge(highed.merge({}, chart.options), {chart: {renderTo: id}})), '\'));',
+                JSON.stringify(highed.merge(highed.merge({}, exports.customizedOptions), {chart: {renderTo: id}})), '\'));',
             '})();',
             '</script></head><body><div id="' + id + '"></div></body></html></iframe>'
 
         ].join('');
+    }
+
+    function getEmbeddableJSON() {
+        return JSON.stringify(exports.customizedOptions);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -154,6 +157,7 @@ highed.Editor = function (parent, attributes) {
 
         Object.keys(template.config).forEach(function (key) {
             highed.setAttr(options, key, template.config[key]);
+            highed.setAttr(exports.customizedOptions, key, template.config[key]);
             exports.flatOptions[key] = template.config[key];
         });
 
@@ -167,8 +171,7 @@ highed.Editor = function (parent, attributes) {
 
     //Handle property change
     chartCustomizer.on('PropertyChange', function (id, value) {
-        highed.setAttr(chart.options, id, value);
-        highed.setAttr(customizedOptions, id, value);
+        highed.setAttr([chart.options, customizedOptions], id, value);        
         highed.setAttr(chart.options, 'plotOptions--series--animation', false);
 
         exports.flatOptions[id] = value;
@@ -185,12 +188,12 @@ highed.Editor = function (parent, attributes) {
             chart = {options: {}};
         }
 
-        highed.setAttr([chart.options, cleanOptions], 'plotOptions--series--animation', true);
-        highed.setAttr([chart.options, cleanOptions], 'data--csv', data.csv);
-        highed.setAttr([chart.options, cleanOptions], 'data--itemDelimiter', data.itemDelimiter);
-        highed.setAttr([chart.options, cleanOptions], 'data--firstRowAsNames', data.firstRowAsNames);
-        highed.setAttr([chart.options, cleanOptions], 'data--dateFormat', data.dateFormat);
-        highed.setAttr([chart.options, cleanOptions], 'data--decimalPoint', data.decimalPoint);
+        highed.setAttr([chart.options, cleanOptions, exports.customizedOptions], 'plotOptions--series--animation', true);
+        highed.setAttr([chart.options, cleanOptions, exports.customizedOptions], 'data--csv', data.csv);
+        highed.setAttr([chart.options, cleanOptions, exports.customizedOptions], 'data--itemDelimiter', data.itemDelimiter);
+        highed.setAttr([chart.options, cleanOptions, exports.customizedOptions], 'data--firstRowAsNames', data.firstRowAsNames);
+        highed.setAttr([chart.options, cleanOptions, exports.customizedOptions], 'data--dateFormat', data.dateFormat);
+        highed.setAttr([chart.options, cleanOptions, exports.customizedOptions], 'data--decimalPoint', data.decimalPoint);
         highed.setAttr([chart.options, cleanOptions], 'series', {});
 
         chartContainer.innerHTML = '';
@@ -218,6 +221,8 @@ highed.Editor = function (parent, attributes) {
     exports.resize = resize;
     /* Get embeddable javascript */
     exports.getEmbeddableHTML = getEmbeddableHTML;
+    /* Get embeddable json */
+    exports.getEmbeddableJSON = getEmbeddableJSON;
     
     return exports;
 };

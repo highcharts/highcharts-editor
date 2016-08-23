@@ -40,10 +40,24 @@ var meta = require(__dirname + '/../dictionaries/meta.js'),
     async = require('async'),
     license = fs.readFileSync(__dirname + '/../LICENSE'),
     request = require('request'),
-    apiDumpURL = 'http://api.highcharts.com/highcharts/option/dump.json'
+    apiDumpURL = 'http://api.highcharts.com/highcharts/option/dump.json',
+    argv = require('yargs')
+                .string('exposed')
+                .default('exposed', 'exposed', __dirname + '/../dictionaries/exposed.settings.json')
+                argv  
 ;
 
 require('colors');
+
+function mapIncludedProperties(includedProperties) {
+   var res = {};
+
+   includedProperties.forEach(function (thing) {
+        res[thing] = true;
+   });
+
+   return res;
+}
 
 function isArray(what) {
     return what !== null && typeof what !== 'undefined' && what.constructor.toString().indexOf("Array") > -1;
@@ -55,20 +69,42 @@ function sortAPI() {
     });
 }
 
-function update(entry) {
-    var aentry;
+function filterEachOption(root, fn, parent) {
+    if (isArray(root)) {
+        root.forEach(function (e) {
+            filterEachOption(e, fn, root);
+        });
+    } else if (isArray(root.options)) {
+        root.options.forEach(function (option) {
+            filterEachOption(option, fn, root);
+        });
+    } else if (typeof root.options !== 'undefined') {
+        Object.keys(root.options).forEach(function (key) {
+            filterEachOption(root.options[key], fn);
+        });
+    } else if (typeof root.id !== 'undefined') {
+        if (!fn(root, apiSorted[root.id])) {
+            //This is not very efficient
+            if (isArray(parent.options)) {
+                parent.options = parent.options.filter(function (b) {
+                    return b.id !== root.id;
+                });
+            }
+        }
+    }
+}
 
-    if (isArray(entry)) {
-        entry.forEach(update);
-    } else if (isArray(entry.options)) {
-        entry.options.forEach(function (option) {
-            update(option);
-        });
-    } else if (typeof entry.options !== 'undefined') {
-        Object.keys(entry.options).forEach(function (key) {
-            update(entry.options[key]);
-        });
-    } else if (typeof entry.id !== 'undefined') {
+function update(root) {
+    var included = mapIncludedProperties(
+            JSON.parse(fs.readFileSync(argv.exposed || __dirname + '/../dictionaries/exposed.settings.json'))
+        )
+    ;
+
+    filterEachOption(root, function (entry, aentry) {   
+        if (!included[entry.id]) {
+            return false;
+        }
+
         if (typeof apiSorted[entry.id] !== 'undefined') {
             aentry = apiSorted[entry.id];
             entry.dataType = (aentry.returnType || '').toLowerCase();
@@ -77,17 +113,19 @@ function update(entry) {
             entry.defaults = aentry.defaults;
             entry.parent = aentry.parent;
             entry.values = aentry.values;
+            return true;
         } else {    
             console.log('[warn]'.yellow, 'Unknown property:', entry.id, 'skipping...');
+            return false;
         }
-    }
+    });
 }
 
 function process() {
     sortAPI();
     update(meta);
 
-    fs.writeFile(__dirname + '/../dictionaries/test.js', '/*\n' + license + '\n*/\n\nhighed.meta.optionsExtended = ' + JSON.stringify(meta, undefined, '  ') + ';', function (err) {
+    fs.writeFile(__dirname + '/../src/meta/highed.meta.options.extended.js', '/*\n' + license + '\n*/\n\nhighed.meta.optionsExtended = ' + JSON.stringify(meta, undefined, '  ') + ';', function (err) {
         if (err) {
             console.log('[error]'.red, err);
         }
