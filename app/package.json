@@ -1,0 +1,25 @@
+{
+  "name": "highcharts-editor",
+  "version": "1.0.0",
+  "description": "Editor for Highcharts",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/highcharts/highcharts-editor.git"
+  },
+  "keywords": [
+    "Highcharts"
+  ],
+  "author": "Highsoft",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/highcharts/highcharts-editor/issues"
+  },
+  "homepage": "https://github.com/highcharts/highcharts-editor#readme",
+  "devDependencies": {
+    "electron-prebuilt": "^1.2.0"
+  }
+}

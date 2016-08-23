@@ -7,7 +7,36 @@ module.exports = function(grunt) {
         separator: ';'
       },
       dist: {
-        src: ['src/**/*.js'],
+        src: [
+          "./src/highcharts-editor.js",
+          "./src/highed.dom.js",
+          "./src/highed.events.js",
+          "./src/highed.editor.js",
+          "./src/highed.dimmer.js",
+          "./src/highed.overlaymodal.js",
+          "./src/highed.hsplitter.js",
+          "./src/highed.tabcontrol.js",
+          "./src/highed.inspector.js",
+          "./src/highed.inspector.field.js",
+          "./src/highed.list.js",
+          "./src/meta/highed.meta.charts.js",
+          "./src/meta/highed.meta.options.extended.js",
+          "./src/meta/highed.meta.colors.js",
+          "./src/meta/highed.meta.fonts.js",
+          "./src/highed.chart.template.selector.js",
+          "./src/highed.chart.customizer.js",
+          "./src/highed.wizstepper.js",
+          "./src/highed.toolbar.js",
+          "./src/highed.wizbar.js",
+          "./src/highed.colorpicker.js",
+          "./src/highed.fontpicker.js",
+          "./src/highed.pushbutton.js",
+          "./src/highed.tooltip.js",
+          "./src/highed.snackbar.js",
+          "./src/highed.dataimporter.js",
+          "./src/highed.fileupload.js",
+          "./src/highed.modaleditor.js"
+        ],
         dest: 'dist/<%= pkg.name %>.js'
       }
     },
@@ -18,7 +47,21 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
+          'dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>'],
+          'app/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
+        }
+      }
+    },
+
+    electron: {
+      macosBuild: {
+        options: {
+          name: 'Highcarts Editor',
+          dir: 'app',
+          out: 'dist/electron',
+          version: '1.3.4',
+          platform: 'darwin',
+          arch: 'x64'
         }
       }
     },
@@ -29,7 +72,8 @@ module.exports = function(grunt) {
           paths: 'less/'     
         },
         files: {
-          'dist/<%= pkg.name %>.min.css': 'less/theme.default.less'
+          'dist/<%= pkg.name %>.min.css': 'less/theme.default.less',
+          'app/<%= pkg.name %>.min.css': 'less/theme.default.less'
         }        
       },
       production: {
@@ -41,7 +85,8 @@ module.exports = function(grunt) {
           ]        
         },
         files: {
-          'dist/<%= pkg.name %>.min.css': 'less/theme.default.less'
+          'dist/<%= pkg.name %>.min.css': 'less/theme.default.less',
+          'app/<%= pkg.name %>.min.css': 'less/theme.default.less'
         }        
       }    
     },
@@ -70,9 +115,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-electron');
 
   grunt.registerTask('test', ['jshint']);
 
-  grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'less']);
+  grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'less', 'electron']);
 
 };

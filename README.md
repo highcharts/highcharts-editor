@@ -86,6 +86,14 @@ Properties is an object as such:
 
 Sometimes, only a sub-set of editable settings is required. 
 
+To that end, the `update.meta` tool in the `tools/` folder can be used to create a custom build of the editor which only includes the required parameters.
+
+**Usage**
+        
+        node tools/update.meta.js --exposed <JSON file with an array of options to include>
+
+After running the tool, run `grunt` in the project root to bake your custom build.
+
 ## License
 
 [MIT](LICENSE).
