@@ -25,58 +25,58 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 (function () {
 
-	/* Show the dimmer backdrop 
-	 * @fn - the function to call when the dimmer is clicked
-	 * @autohide - set to true to hide the dimmer when it's clicked
-	 */
-	highed.showDimmer = function (fn, autohide, transparent, zIndex) {
-		var dimmer = highed.dom.cr('div', 'highed-dimmer'),
-			unbinder = false
-		;
+    /* Show the dimmer backdrop 
+     * @fn - the function to call when the dimmer is clicked
+     * @autohide - set to true to hide the dimmer when it's clicked
+     */
+    highed.showDimmer = function (fn, autohide, transparent, zIndex) {
+        var dimmer = highed.dom.cr('div', 'highed-dimmer'),
+            unbinder = false
+        ;
 
 
-		highed.dom.ap(document.body, dimmer);
+        highed.dom.ap(document.body, dimmer);
 
-		highed.dom.style(dimmer, {
-			'opacity': 0.7,
-			'pointer-events': 'all',
-			'z-index': 999 + (zIndex || 0)
-		});
+        highed.dom.style(dimmer, {
+            'opacity': 0.7,
+            'pointer-events': 'all',
+            'z-index': 999 + (zIndex || 0)
+        });
 
-		if (transparent) {
-			highed.dom.style(dimmer, {
-				'opacity': 0
-			});
-		}
+        if (transparent) {
+            highed.dom.style(dimmer, {
+                'opacity': 0
+            });
+        }
 
-		function hide () {
-			highed.dom.style(dimmer, {
-				'opacity': 0,
-				'pointer-events': 'none'
-			});
+        function hide () {
+            highed.dom.style(dimmer, {
+                'opacity': 0,
+                'pointer-events': 'none'
+            });
 
-			if (highed.isFn(unbinder)) {
-				unbinder();
-				unbinder = false;
-			}
+            if (highed.isFn(unbinder)) {
+                unbinder();
+                unbinder = false;
+            }
 
-			setTimeout(function () {
-				document.body.removeChild(dimmer);
-			}, 300);
-		}
+            setTimeout(function () {
+                document.body.removeChild(dimmer);
+            }, 300);
+        }
 
-		unbinder = highed.dom.on(dimmer, 'click', function (e) {
-			
-			if (highed.isFn(fn)) {
-				fn();
-			}
-			
-			if (autohide) {
-				hide();
-			}
-		});
+        unbinder = highed.dom.on(dimmer, 'click', function (e) {
+            
+            if (highed.isFn(fn)) {
+                fn();
+            }
+            
+            if (autohide) {
+                hide();
+            }
+        });
 
-		return hide;
-	};
+        return hide;
+    };
 
 })();

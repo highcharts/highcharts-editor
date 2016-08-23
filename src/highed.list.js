@@ -24,122 +24,122 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 highed.List = function (parent) {
-	var container = highed.dom.cr('div', 'highed-list'),
-		selectedItem = false,
-		events = highed.events(),
-		items = []
-	;
+    var container = highed.dom.cr('div', 'highed-list'),
+        selectedItem = false,
+        events = highed.events(),
+        items = []
+    ;
 
-	///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-	/* Add an item to the list
-	 * @item - the item meta for the item to add
-	 *
-	 * Meta definition: {
-	 *   title: '',
-	 *   click: <function callback>
-	 * }
-	 *
-	 * @returns an interface to interact with the item
-	 */
-	function addItem(item) {
-		var node = highed.dom.cr('a', 'item', item.title),
-			iexports = {}
-		;
+    /* Add an item to the list
+     * @item - the item meta for the item to add
+     *
+     * Meta definition: {
+     *   title: '',
+     *   click: <function callback>
+     * }
+     *
+     * @returns an interface to interact with the item
+     */
+    function addItem(item) {
+        var node = highed.dom.cr('a', 'item', item.title),
+            iexports = {}
+        ;
 
-		function select() {
-			if (selectedItem) {
-				selectedItem.node.className = 'item';
-			}
+        function select() {
+            if (selectedItem) {
+                selectedItem.node.className = 'item';
+            }
 
-			selectedItem = iexports;
-			node.className = 'item item-selected';
-			events.emit('Select', item.id);
-		}
+            selectedItem = iexports;
+            node.className = 'item item-selected';
+            events.emit('Select', item.id);
+        }
 
-		highed.dom.on(node, 'click', function (e) {
-			select();
-			if (highed.isFn(item.click)) {
-				return item.click(e);
-			}
-		});
+        highed.dom.on(node, 'click', function (e) {
+            select();
+            if (highed.isFn(item.click)) {
+                return item.click(e);
+            }
+        });
 
-		highed.dom.ap(container, node);
+        highed.dom.ap(container, node);
 
-		iexports = {
-			node: node,
+        iexports = {
+            node: node,
 
-			select: select
-		};
+            select: select
+        };
 
-		items.push(iexports);
+        items.push(iexports);
 
-		if (!selectedItem) {
-			select();
-		}
+        if (!selectedItem) {
+            select();
+        }
 
-		return iexports;
-	}
+        return iexports;
+    }
 
-	/* Add a set of items to the list
-	 * @items - an array of items to add
-	 */
-	function addItems(items) {
-		if (highed.isArr(items)) {
-			items.forEach(addItem);
-		}
-	}
+    /* Add a set of items to the list
+     * @items - an array of items to add
+     */
+    function addItems(items) {
+        if (highed.isArr(items)) {
+            items.forEach(addItem);
+        }
+    }
 
-	/* Clear all the items in the list
-	 */
-	function clear() {
-		container.innerHTML = '';
-	}
+    /* Clear all the items in the list
+     */
+    function clear() {
+        container.innerHTML = '';
+    }
 
-	/* Force resize of the list */
-	function resize() {
-		var ps = highed.dom.size(parent);
+    /* Force resize of the list */
+    function resize() {
+        var ps = highed.dom.size(parent);
 
-		highed.dom.style(container, {
-			//height: ps.height + 'px'
-			height: '100%'
-		});	
-	}
+        highed.dom.style(container, {
+            //height: ps.height + 'px'
+            height: '100%'
+        }); 
+    }
 
-	/* Show the list */
-	function show() {
-		highed.dom.style(container, {
+    /* Show the list */
+    function show() {
+        highed.dom.style(container, {
 
-		});
-	}
+        });
+    }
 
-	/* Hide the list */
-	function hide() {
+    /* Hide the list */
+    function hide() {
 
-	}
+    }
 
-	/* Select the first item */
-	function selectFirst() {
-		if (items.length > 0) {
-			items[0].select();
-		}
-	}
+    /* Select the first item */
+    function selectFirst() {
+        if (items.length > 0) {
+            items[0].select();
+        }
+    }
 
-	///////////////////////////////////////////////////////////////////////////
-	
-	highed.dom.ap(parent, container);
+    ///////////////////////////////////////////////////////////////////////////
+    
+    highed.dom.ap(parent, container);
 
-	///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-	//Public interface
-	return {
-		on: events.on,
-		addItem: addItem,
-		addItems: addItems,
-		clear: clear,
-		resize: resize,
-		show: show,
-		hide: hide,
-		selectFirst: selectFirst
-	};
+    //Public interface
+    return {
+        on: events.on,
+        addItem: addItem,
+        addItems: addItems,
+        clear: clear,
+        resize: resize,
+        show: show,
+        hide: hide,
+        selectFirst: selectFirst
+    };
 };

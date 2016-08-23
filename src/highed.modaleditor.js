@@ -30,31 +30,31 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * @returns a highed.ModalEditor instance.
  */
 highed.ModalEditor = function (summoner, attributes, fn) {
-	var modal = highed.OverlayModal(false, {
-			width: '90%',
-			height: '580'
-		}),
-		editor = highed.Editor(modal.body, attributes)
-	;
+    var modal = highed.OverlayModal(false, {
+            width: '90%',
+            height: '580'
+        }),
+        editor = highed.Editor(modal.body, attributes)
+    ;
 
-	///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-	//Resize the editor when showing the modal
-	modal.on('Show', editor.resize);
-	//Show the modal when clicking the summoner 
-	highed.dom.on(highed.dom.get(summoner), 'click', modal.show);
+    //Resize the editor when showing the modal
+    modal.on('Show', editor.resize);
+    //Show the modal when clicking the summoner 
+    highed.dom.on(highed.dom.get(summoner), 'click', modal.show);
 
-	modal.on('Hide', function () {
-		if (highed.isFn(fn)) {
-			fn(editor.getEmbeddableHTML());
-		}
-	});
+    modal.on('Hide', function () {
+        if (highed.isFn(fn)) {
+            fn(editor.getEmbeddableHTML());
+        }
+    });
 
-	///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-	return {
-		show: modal.show,
-		hide: modal.hide,
-		on: editor.on		
-	};
+    return {
+        show: modal.show,
+        hide: modal.hide,
+        on: editor.on       
+    };
 };

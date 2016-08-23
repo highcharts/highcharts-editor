@@ -28,89 +28,89 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * @attributes - properties for the modal
  */
 highed.OverlayModal = function (contents, attributes) {
-	var container = highed.dom.cr('div', 'highed-overlay-modal'),
-		events = highed.events(),
-		properties = highed.merge({
-			width: 200,
-			height: 200,
-			minWidth: 690,
-			minHeight: 0
-		}, attributes),
-		hideDimmer = false,
-		visible = false
-	;
+    var container = highed.dom.cr('div', 'highed-overlay-modal'),
+        events = highed.events(),
+        properties = highed.merge({
+            width: 200,
+            height: 200,
+            minWidth: 690,
+            minHeight: 0
+        }, attributes),
+        hideDimmer = false,
+        visible = false
+    ;
 
-	///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-	function show() {
-		if (visible) return;
+    function show() {
+        if (visible) return;
 
-		highed.dom.style(container, {
-			width: properties.width + (properties.width.indexOf('%') > 0 ? '' : 'px'),
-			height: properties.height + (properties.height.indexOf('%') > 0 ? '' : 'px'),
-			opacity: 1,
-			'pointer-events': 'all',
-			'min-width': properties.minWidth + 'px',
-			'min-height': properties.minHeight + 'px'
-		});
+        highed.dom.style(container, {
+            width: properties.width + (properties.width.indexOf('%') > 0 ? '' : 'px'),
+            height: properties.height + (properties.height.indexOf('%') > 0 ? '' : 'px'),
+            opacity: 1,
+            'pointer-events': 'all',
+            'min-width': properties.minWidth + 'px',
+            'min-height': properties.minHeight + 'px'
+        });
 
-		highed.dom.style(document.body, {
-			'overflow-x': 'hidden',
-			'overflow-y': 'hidden'
-		});
+        highed.dom.style(document.body, {
+            'overflow-x': 'hidden',
+            'overflow-y': 'hidden'
+        });
 
-		hideDimmer = highed.showDimmer(hide, true);
+        hideDimmer = highed.showDimmer(hide, true);
 
-		setTimeout(function () {
-			events.emit('Show');			
-		}, 300);
+        setTimeout(function () {
+            events.emit('Show');            
+        }, 300);
 
-		visible = true;
-	}
+        visible = true;
+    }
 
-	function hide() {
-		if (!visible) return;
+    function hide() {
+        if (!visible) return;
 
-		highed.dom.style(container, {
-			width: '0px',
-			height: '0px',
-			opacity: 0,
-			'pointer-events': 'none'
-		});
+        highed.dom.style(container, {
+            width: '0px',
+            height: '0px',
+            opacity: 0,
+            'pointer-events': 'none'
+        });
 
-		highed.dom.style(document.body, {
-			'overflow-x': '',
-			'overflow-y': ''
-		});
+        highed.dom.style(document.body, {
+            'overflow-x': '',
+            'overflow-y': ''
+        });
 
-		if (highed.isFn(hideDimmer)) {
-			hideDimmer();
-		}
+        if (highed.isFn(hideDimmer)) {
+            hideDimmer();
+        }
 
-		visible = false;
+        visible = false;
 
-		events.emit('Hide');
-	}
+        events.emit('Hide');
+    }
 
-	///////////////////////////////////////////////////////////////////////////
-	
-	highed.dom.ap(document.body, 
-		container
-	);
+    ///////////////////////////////////////////////////////////////////////////
+    
+    highed.dom.ap(document.body, 
+        container
+    );
 
-	if (contents) {
-		highed.dom.ap(container,
-			contents
-		);
-	}
+    if (contents) {
+        highed.dom.ap(container,
+            contents
+        );
+    }
 
-	///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-	//Public interface
-	return {
-		on: events.on,
-		show: show,
-		hide: hide,
-		body: container
-	};
+    //Public interface
+    return {
+        on: events.on,
+        show: show,
+        hide: hide,
+        body: container
+    };
 };

@@ -24,50 +24,50 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 highed.HSplitter = function (parent, attributes) {
-	var properties = highed.merge({
-			leftWidth: 40
-		}, attributes),
-		container = highed.dom.cr('div', 'highed-hsplitter'),
-		left = highed.dom.cr('div', 'panel left'),
-		right = highed.dom.cr('div', 'panel right'),
-		leftBody = highed.dom.cr('div', 'highed-hsplitter-body'),
-		rightBody = highed.dom.cr('div', 'highed-hsplitter-body')
-	;
+    var properties = highed.merge({
+            leftWidth: 40
+        }, attributes),
+        container = highed.dom.cr('div', 'highed-hsplitter'),
+        left = highed.dom.cr('div', 'panel left'),
+        right = highed.dom.cr('div', 'panel right'),
+        leftBody = highed.dom.cr('div', 'highed-hsplitter-body'),
+        rightBody = highed.dom.cr('div', 'highed-hsplitter-body')
+    ;
 
-	///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-	//Force a resize of the splitter
-	function resize(w, h) {
-		var s = highed.dom.size(parent);
+    //Force a resize of the splitter
+    function resize(w, h) {
+        var s = highed.dom.size(parent);
 
-		highed.dom.style([left, right, container], {
-			height: (h || s.h) + 'px'
-		});
-	}
-	
-	///////////////////////////////////////////////////////////////////////////
+        highed.dom.style([left, right, container], {
+            height: (h || s.h) + 'px'
+        });
+    }
+    
+    ///////////////////////////////////////////////////////////////////////////
 
-	highed.dom.ap(highed.dom.get(parent), 
-		highed.dom.ap(container, 
-			highed.dom.ap(left, leftBody),
-			highed.dom.ap(right, rightBody)
-		)
-	);
+    highed.dom.ap(highed.dom.get(parent), 
+        highed.dom.ap(container, 
+            highed.dom.ap(left, leftBody),
+            highed.dom.ap(right, rightBody)
+        )
+    );
 
-	highed.dom.style(left, {
-		width: properties.leftWidth + '%'
-	});
+    highed.dom.style(left, {
+        width: properties.leftWidth + '%'
+    });
 
-	highed.dom.style(right, {
-		width: (100 - properties.leftWidth) + '%'
-	});
+    highed.dom.style(right, {
+        width: (100 - properties.leftWidth) + '%'
+    });
 
-	///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-	// Public interface
-	return {
-		resize: resize,
-		left: leftBody,
-		right: rightBody
-	};
+    // Public interface
+    return {
+        resize: resize,
+        left: leftBody,
+        right: rightBody
+    };
 };

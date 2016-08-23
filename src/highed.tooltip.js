@@ -24,42 +24,42 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 (function () {
-	var container = highed.dom.cr('div', 'highed-tooltip')
-	;
+    var container = highed.dom.cr('div', 'highed-tooltip')
+    ;
 
-	highed.ready(function () {
-		highed.dom.ap(document.body, container);
-	});
+    highed.ready(function () {
+        highed.dom.ap(document.body, container);
+    });
 
-	function hide() {
-		highed.dom.style(container, {
-			opacity: 0,
-			'pointer-events': 'none'
-		});
-	}
+    function hide() {
+        highed.dom.style(container, {
+            opacity: 0,
+            'pointer-events': 'none'
+        });
+    }
 
-	highed.dom.on(container, 'mouseout', hide);
-	highed.dom.on(container, 'click', hide);
+    highed.dom.on(container, 'mouseout', hide);
+    highed.dom.on(container, 'click', hide);
 
-	highed.Tooltip = function (x, y, tip, blowup) {
-		highed.dom.style(container, {
-			opacity: 1,
-			'pointer-events': 'all',
-			left: x - 20 + 'px',
-			top: y - 20 + 'px',
-			width: '200px'
-		});
+    highed.Tooltip = function (x, y, tip, blowup) {
+        highed.dom.style(container, {
+            opacity: 1,
+            'pointer-events': 'all',
+            left: x - 20 + 'px',
+            top: y - 20 + 'px',
+            width: '200px'
+        });
 
-		if (blowup) {
-			highed.dom.style(container, {
-				width: '90%',
-				height: '90%',
-				left: '50%',
-				top: '50%',
-				transform: 'translate(-50%, 0)'
-			});
-		}
+        if (blowup) {
+            highed.dom.style(container, {
+                width: '90%',
+                height: '90%',
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, 0)'
+            });
+        }
 
-		container.innerHTML = tip;
-	};
+        container.innerHTML = tip;
+    };
 })();

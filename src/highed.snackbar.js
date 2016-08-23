@@ -24,68 +24,68 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 (function () {
-	var container = highed.dom.cr('div', 'highed-snackbar'),
-		title = highed.dom.cr('span', 'snackbar-title', 'THIS IS A SNACKBAR'),
-		action = highed.dom.cr('span', 'snackbar-action', 'ACTION'),
-		timeout = false,
-		callback = false
-	;
+    var container = highed.dom.cr('div', 'highed-snackbar'),
+        title = highed.dom.cr('span', 'snackbar-title', 'THIS IS A SNACKBAR'),
+        action = highed.dom.cr('span', 'snackbar-action', 'ACTION'),
+        timeout = false,
+        callback = false
+    ;
 
- 	highed.ready(function () {
- 		highed.dom.ap(document.body, 
- 			highed.dom.ap(container,
- 				title,
- 				action
- 			)
- 		);
- 	});
+    highed.ready(function () {
+        highed.dom.ap(document.body, 
+            highed.dom.ap(container,
+                title,
+                action
+            )
+        );
+    });
 
- 	highed.dom.on(container, 'mouseover', function () {
- 		clearTimeout(timeout);
- 	});
+    highed.dom.on(container, 'mouseover', function () {
+        clearTimeout(timeout);
+    });
 
- 	highed.dom.on(container, 'mouseout', function () {
- 		hide();
- 	});
+    highed.dom.on(container, 'mouseout', function () {
+        hide();
+    });
 
- 	///////////////////////////////////////////////////////////////////////////
- 	
- 	function hide() {
- 		timeout = setTimeout(function () {
- 			highed.dom.style(container, {
- 				bottom: '-58px'
- 			});
- 		}, 4000);
- 	}
+    ///////////////////////////////////////////////////////////////////////////
+    
+    function hide() {
+        timeout = setTimeout(function () {
+            highed.dom.style(container, {
+                bottom: '-58px'
+            });
+        }, 4000);
+    }
 
- 	///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-	/* 	Show a snackbar 
-	 *	@stitle - the snackbar title
-	 *	@saction - the snackbar action text
-	 *	@fn - the function to call when clicking the action
-	 */
- 	highed.snackBar = function (stitle, saction, fn) {
- 		title.innerHTML = stitle.toUpperCase();
- 		
- 		if (saction) {
- 			action.innerHTML = saction.toUpperCase(); 			
- 		}
+    /*  Show a snackbar 
+     *  @stitle - the snackbar title
+     *  @saction - the snackbar action text
+     *  @fn - the function to call when clicking the action
+     */
+    highed.snackBar = function (stitle, saction, fn) {
+        title.innerHTML = stitle.toUpperCase();
+        
+        if (saction) {
+            action.innerHTML = saction.toUpperCase();           
+        }
 
- 		if (callback) {
- 			callback();
- 		}
+        if (callback) {
+            callback();
+        }
 
- 		highed.dom.style(container, {
- 			bottom: '10px'
- 		});
+        highed.dom.style(container, {
+            bottom: '10px'
+        });
 
- 		highed.dom.style(action, {
- 			display: saction ? '' : 'none'
- 		});
+        highed.dom.style(action, {
+            display: saction ? '' : 'none'
+        });
 
- 		callback = highed.dom.on(action, 'click', fn);
+        callback = highed.dom.on(action, 'click', fn);
 
- 		hide();
- 	};
+        hide();
+    };
 })();

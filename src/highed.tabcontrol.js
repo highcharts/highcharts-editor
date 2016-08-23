@@ -24,106 +24,106 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 highed.TabControl = function (parent) {
-	var container = highed.dom.cr('div', 'highed-tab-control'),
-		paneBar = highed.dom.cr('div', 'tabs'),
-		body = highed.dom.cr('div', 'body'),
-		indicator = highed.dom.cr('div', 'indicator'),
+    var container = highed.dom.cr('div', 'highed-tab-control'),
+        paneBar = highed.dom.cr('div', 'tabs'),
+        body = highed.dom.cr('div', 'body'),
+        indicator = highed.dom.cr('div', 'indicator'),
 
-		selectedTab = false
-	;
+        selectedTab = false
+    ;
 
-	///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-	//Force a resize of the tab control
-	function resize() {
-		var cs = highed.dom.size(parent),
-			ps = highed.dom.size(paneBar)
-		;
+    //Force a resize of the tab control
+    function resize() {
+        var cs = highed.dom.size(parent),
+            ps = highed.dom.size(paneBar)
+        ;
 
-		highed.dom.style(container, {
-			height: cs.h + 'px'
-		});
+        highed.dom.style(container, {
+            height: cs.h + 'px'
+        });
 
-		highed.dom.style(body, {
-			height: cs.h - ps.h + 'px'
-		});
-	}
+        highed.dom.style(body, {
+            height: cs.h - ps.h + 'px'
+        });
+    }
 
-	/* Create and return a new tab
-	 * @properties - the properties for the tab:
-	 *   {
-     *	    "title": "title of tab"
-	 *   }
-	 */
-	function Tab(properties) {
-		var tevents = highed.events(),
-			tab = highed.dom.cr('div', 'tab', properties.title),
-			tbody = highed.dom.cr('div', 'tab-body'),
-			texports = {}
-		;
+    /* Create and return a new tab
+     * @properties - the properties for the tab:
+     *   {
+     *      "title": "title of tab"
+     *   }
+     */
+    function Tab(properties) {
+        var tevents = highed.events(),
+            tab = highed.dom.cr('div', 'tab', properties.title),
+            tbody = highed.dom.cr('div', 'tab-body'),
+            texports = {}
+        ;
 
-		highed.dom.ap(paneBar, tab);
-		highed.dom.ap(body, tbody);
+        highed.dom.ap(paneBar, tab);
+        highed.dom.ap(body, tbody);
 
-		function focus() {
-			if (selectedTab) {
-				selectedTab.node.className = 'tab';
+        function focus() {
+            if (selectedTab) {
+                selectedTab.node.className = 'tab';
 
-				highed.dom.style(selectedTab.body, {
-					opacity: 0,
-					'pointer-events': 'none'
-				});
-			}
+                highed.dom.style(selectedTab.body, {
+                    opacity: 0,
+                    'pointer-events': 'none'
+                });
+            }
 
-			highed.dom.style(indicator, {
-				width: highed.dom.size(tab).w + 'px',
-				left: highed.dom.pos(tab).x + 'px'
-			});
+            highed.dom.style(indicator, {
+                width: highed.dom.size(tab).w + 'px',
+                left: highed.dom.pos(tab).x + 'px'
+            });
 
-			tab.className = 'tab tab-selected';
+            tab.className = 'tab tab-selected';
 
-			highed.dom.style(tbody, {
-				opacity: 1,
-				'pointer-events': 'all'
-			});
+            highed.dom.style(tbody, {
+                opacity: 1,
+                'pointer-events': 'all'
+            });
 
-			selectedTab = texports;
-			tevents.emit('Focus');
-		}
+            selectedTab = texports;
+            tevents.emit('Focus');
+        }
 
-		highed.dom.on(tab, 'click', focus);
+        highed.dom.on(tab, 'click', focus);
 
-		texports = {
-			on: tevents.on,
-			focus: focus,
-			node: tab,
-			body: tbody
-		};
+        texports = {
+            on: tevents.on,
+            focus: focus,
+            node: tab,
+            body: tbody
+        };
 
-		if (!selectedTab) {
-			focus();
-		}
+        if (!selectedTab) {
+            focus();
+        }
 
-		return texports;
-	}
+        return texports;
+    }
 
-	///////////////////////////////////////////////////////////////////////////
-	
-	highed.dom.ap(parent,
-		highed.dom.ap(container, 
-			highed.dom.ap(paneBar,
-				indicator
-			),
-			body
-		)
-	);
+    ///////////////////////////////////////////////////////////////////////////
+    
+    highed.dom.ap(parent,
+        highed.dom.ap(container, 
+            highed.dom.ap(paneBar,
+                indicator
+            ),
+            body
+        )
+    );
 
-	resize();
+    resize();
 
-	///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-	return {
-		createTab: Tab,
-		resize: resize
-	};
+    return {
+        createTab: Tab,
+        resize: resize
+    };
 };

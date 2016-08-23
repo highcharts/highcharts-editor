@@ -27,50 +27,50 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * @parent - the node to attach the toolbar to
  */
 highed.Toolbar = function (parent, attributes) {
-	var properties = highed.merge({
-			additionalCSS: []
-		}, attributes),
-		container = highed.dom.cr('div', 'highed-toolbar ' + properties.additionalCSS.join(' ')),
-		left = highed.dom.cr('div', 'left'),
-		right = highed.dom.cr('div', 'right'),
-		center = highed.dom.cr('div', 'center'),
-		iconsRight = highed.dom.cr('div', 'icons')
-	;
+    var properties = highed.merge({
+            additionalCSS: []
+        }, attributes),
+        container = highed.dom.cr('div', 'highed-toolbar ' + properties.additionalCSS.join(' ')),
+        left = highed.dom.cr('div', 'left'),
+        right = highed.dom.cr('div', 'right'),
+        center = highed.dom.cr('div', 'center'),
+        iconsRight = highed.dom.cr('div', 'icons')
+    ;
 
-	///////////////////////////////////////////////////////////////////////////
-	
-	/* Add an icon to the toolbar
-	 * @icon - an object containing the icon settings. Valid properties are:
-	 *  		  * css: the additional css class(s) to use
-	 * 			  * click: the function to call when the icon is clicked
-	 */
-	function addIcon(icon) {
-		var i = highed.dom.cr('div', 'highed-icon fa ' + (icon.css || ''));
+    ///////////////////////////////////////////////////////////////////////////
+    
+    /* Add an icon to the toolbar
+     * @icon - an object containing the icon settings. Valid properties are:
+     *            * css: the additional css class(s) to use
+     *            * click: the function to call when the icon is clicked
+     */
+    function addIcon(icon) {
+        var i = highed.dom.cr('div', 'highed-icon fa ' + (icon.css || ''));
 
-		highed.dom.on(i, 'click', function (e) {
-			if (highed.isFn(icon.click)) {
-				icon.click(e);
-			}
-		});
-	}
+        highed.dom.on(i, 'click', function (e) {
+            if (highed.isFn(icon.click)) {
+                icon.click(e);
+            }
+        });
+    }
 
-	///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-	highed.dom.ap(parent,
-		highed.dom.ap(container,
-			left,
-			center,
-			right
-		)
-	);
+    highed.dom.ap(parent,
+        highed.dom.ap(container,
+            left,
+            center,
+            right
+        )
+    );
 
-	///////////////////////////////////////////////////////////////////////////
-	
-	return {
-		container: container,
-		addIcon: addIcon,
-		left: left,
-		center: center,
-		right: right
-	};
+    ///////////////////////////////////////////////////////////////////////////
+    
+    return {
+        container: container,
+        addIcon: addIcon,
+        left: left,
+        center: center,
+        right: right
+    };
 };

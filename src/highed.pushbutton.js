@@ -29,38 +29,38 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * @state - the innitial state of the button
  */
 highed.PushButton = function (parent, icon, state) {
-	var button = highed.dom.cr('span', 'highed-pushbutton fa fa-' + icon),
-		events = highed.events()
-	;
+    var button = highed.dom.cr('span', 'highed-pushbutton fa fa-' + icon),
+        events = highed.events()
+    ;
 
-	function updateCSS() {
-		if (state) {
-			button.className += ' highed-pushbutton-active';
-		} else {			
-			button.className = button.className.replace(' highed-pushbutton-active', '');
-		}
-	}
+    function updateCSS() {
+        if (state) {
+            button.className += ' highed-pushbutton-active';
+        } else {            
+            button.className = button.className.replace(' highed-pushbutton-active', '');
+        }
+    }
 
-	function set(flag) {
-		state = flag;
-		updateCSS();
-	}
+    function set(flag) {
+        state = flag;
+        updateCSS();
+    }
 
-	highed.dom.on(button, 'click', function () {
-		state = !state;
-		updateCSS();
-		events.emit('Toggle', state);
-	});
+    highed.dom.on(button, 'click', function () {
+        state = !state;
+        updateCSS();
+        events.emit('Toggle', state);
+    });
 
-	if (!highed.isNull(parent)) {
-		highed.dom.ap(parent, button);
-	}
+    if (!highed.isNull(parent)) {
+        highed.dom.ap(parent, button);
+    }
 
-	updateCSS();
+    updateCSS();
 
-	return {
-		set: set,
-		button: button,
-		on: events.on
-	};
+    return {
+        set: set,
+        button: button,
+        on: events.on
+    };
 };

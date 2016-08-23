@@ -25,63 +25,63 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* This is a component that implements a toolbar with wizard steps */
 highed.WizardBar = function (parent, bodyParent, attributes) {
-	var toolbar = highed.Toolbar(parent, { 
-			additionalCSS: ['highed-wizstepper-bar'] 
-		}),
-		stepper = highed.WizardStepper(bodyParent, toolbar.center),
-		next = highed.dom.cr('span', 'highed-wizstepper-next-prev fa fa-arrow-right'),
-		previous = highed.dom.cr('span', 'highed-wizstepper-next-prev fa fa-arrow-left')
-	;
+    var toolbar = highed.Toolbar(parent, { 
+            additionalCSS: ['highed-wizstepper-bar'] 
+        }),
+        stepper = highed.WizardStepper(bodyParent, toolbar.center),
+        next = highed.dom.cr('span', 'highed-wizstepper-next-prev fa fa-arrow-right'),
+        previous = highed.dom.cr('span', 'highed-wizstepper-next-prev fa fa-arrow-left')
+    ;
 
-	///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-	function handleStepEvent(step, count) {
-		if (step.number > 1) {
-			highed.dom.style(previous, {
-				opacity: 1,
-				'pointer-events': 'all'
-			});
-		} else {
-			highed.dom.style(previous, {
-				opacity: 0,
-				'pointer-events': 'none'
-			});
-		}
+    function handleStepEvent(step, count) {
+        if (step.number > 1) {
+            highed.dom.style(previous, {
+                opacity: 1,
+                'pointer-events': 'all'
+            });
+        } else {
+            highed.dom.style(previous, {
+                opacity: 0,
+                'pointer-events': 'none'
+            });
+        }
 
-		if (step.number < count) {
-			highed.dom.style(next, {
-				opacity: 1,
-				'pointer-events': 'all'
-			});
-		} else {
-			highed.dom.style(next, {
-				opacity: 0,
-				'pointer-events': 'none'
-			});
-		}
-	}
+        if (step.number < count) {
+            highed.dom.style(next, {
+                opacity: 1,
+                'pointer-events': 'all'
+            });
+        } else {
+            highed.dom.style(next, {
+                opacity: 0,
+                'pointer-events': 'none'
+            });
+        }
+    }
 
-	stepper.on('Step', handleStepEvent);
-	stepper.on('AddStep', handleStepEvent);
+    stepper.on('Step', handleStepEvent);
+    stepper.on('AddStep', handleStepEvent);
 
-	highed.dom.on(next, 'click', stepper.next);
-	highed.dom.on(previous, 'click', stepper.previous);
+    highed.dom.on(next, 'click', stepper.next);
+    highed.dom.on(previous, 'click', stepper.previous);
 
-	///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-	highed.dom.ap(toolbar.right, next);
-	highed.dom.ap(toolbar.left, previous);
+    highed.dom.ap(toolbar.right, next);
+    highed.dom.ap(toolbar.left, previous);
 
-	highed.dom.style(previous, {
-		opacity: 0,
-		'pointer-events': 'none'
-	});
+    highed.dom.style(previous, {
+        opacity: 0,
+        'pointer-events': 'none'
+    });
 
-	return {
-		container: toolbar.container,
-		on: stepper.on,
-		next: stepper.next,
-		previous: stepper.previous,
-		addStep: stepper.addStep
-	};
+    return {
+        container: toolbar.container,
+        on: stepper.on,
+        next: stepper.next,
+        previous: stepper.previous,
+        addStep: stepper.addStep
+    };
 };

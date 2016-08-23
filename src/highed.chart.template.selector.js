@@ -30,72 +30,72 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *   - Select : templateDefinition
  */
 highed.ChartTemplateSelector = function (parent) {
-	var events = highed.events(),
-		splitter = highed.HSplitter(parent, {leftWidth: 30}),
-		list = highed.List(splitter.left),
-		templates = splitter.right,
-		selected
-	;
+    var events = highed.events(),
+        splitter = highed.HSplitter(parent, {leftWidth: 30}),
+        list = highed.List(splitter.left),
+        templates = splitter.right,
+        selected
+    ;
 
-	///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-	function showTemplates(templateList) {
-		templates.innerHTML = '';
+    function showTemplates(templateList) {
+        templates.innerHTML = '';
 
-		Object.keys(templateList).forEach(function (key) {
-			var t = templateList[key],
-				node = highed.dom.cr('div', 'highed-chart-template-preview'),
-				titleBar = highed.dom.cr('div', 'highed-chart-template-title', t.title)
-			;
+        Object.keys(templateList).forEach(function (key) {
+            var t = templateList[key],
+                node = highed.dom.cr('div', 'highed-chart-template-preview'),
+                titleBar = highed.dom.cr('div', 'highed-chart-template-title', t.title)
+            ;
 
-			highed.dom.style(node, {
-				'background-image': 'url(' + t.urlImg + ')'			
-			});
+            highed.dom.style(node, {
+                'background-image': 'url(' + t.urlImg + ')'         
+            });
 
-			highed.dom.showOnHover(node, titleBar);
+            highed.dom.showOnHover(node, titleBar);
 
-			highed.dom.on(node, 'click', function () {
-				events.emit('Select', templateList[key]);
-			});
+            highed.dom.on(node, 'click', function () {
+                events.emit('Select', templateList[key]);
+            });
 
-			highed.dom.ap(templates, 
-				highed.dom.ap(node,
-					titleBar
-				)
-			);
-		});
-	}
-	
-	/* Force a resize */
-	function resize(w, h) {
-		splitter.resize(w, h);
-	}
+            highed.dom.ap(templates, 
+                highed.dom.ap(node,
+                    titleBar
+                )
+            );
+        });
+    }
+    
+    /* Force a resize */
+    function resize(w, h) {
+        splitter.resize(w, h);
+    }
 
-	/* Build the UI */
-	function build() {
-		list.addItems(Object.keys(highed.meta.chartTemplates).map(function (key) {
-			return {
-				id: key,
-				title: highed.meta.chartTemplates[key].title
-			};
-		}));
+    /* Build the UI */
+    function build() {
+        list.addItems(Object.keys(highed.meta.chartTemplates).map(function (key) {
+            return {
+                id: key,
+                title: highed.meta.chartTemplates[key].title
+            };
+        }));
 
-		list.selectFirst();
-	}
+        list.selectFirst();
+    }
 
-	///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-	list.on('Select', function (id) {
-		showTemplates(highed.meta.chartTemplates[id].templates);
-	});
+    list.on('Select', function (id) {
+        showTemplates(highed.meta.chartTemplates[id].templates);
+    });
 
-	build();
+    build();
 
-	///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-	return {
-		on: events.on,
-		resize: resize,
-		rebuild: build
-	};
+    return {
+        on: events.on,
+        resize: resize,
+        rebuild: build
+    };
 };

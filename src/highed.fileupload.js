@@ -24,28 +24,28 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 highed.ready(function () {
-	var uploader = highed.dom.cr('input'),
-		cb = false
-	;
+    var uploader = highed.dom.cr('input'),
+        cb = false
+    ;
 
-	uploader.type = 'file';
+    uploader.type = 'file';
 
-	highed.dom.ap(document.body, uploader);
+    highed.dom.ap(document.body, uploader);
 
-	highed.dom.style(uploader, {
-		display: 'none'
-	});
+    highed.dom.style(uploader, {
+        display: 'none'
+    });
 
 
  /* Upload and parse a local file
   * Borrowed from almostvanilla which is licensed under MIT.
   *
   * {
-  * 	type: json|text|b64|binary,
-  * 	multiple: true|false,
-  * 	progress: fn,
-  * 	success: fn,
-  * 	error: fn
+  *     type: json|text|b64|binary,
+  *     multiple: true|false,
+  *     progress: fn,
+  *     success: fn,
+  *     error: fn
   * }
   */  
   highed.readLocalFile = function (props) {

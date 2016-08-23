@@ -30,38 +30,38 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 highed.Inspector = function (parent) {
-	var events = highed.events(),
-		table = highed.dom.cr('table')
-	;
+    var events = highed.events(),
+        table = highed.dom.cr('table')
+    ;
 
-	///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-	/* Inspect an object
-	 * @object - the object containing the data
-	 * @schema - the schema used to build the UI
-	 * @fn (optional) - the function to call when the object changes
-	 */
-	function inspect(object, schema, fn) {
-		table.innerHTML = '';
+    /* Inspect an object
+     * @object - the object containing the data
+     * @schema - the schema used to build the UI
+     * @fn (optional) - the function to call when the object changes
+     */
+    function inspect(object, schema, fn) {
+        table.innerHTML = '';
 
-		if (typeof schema !== 'undefined') {
-			Object.keys(schema).forEach(function (key) {
-				var value = schema[key].default;
+        if (typeof schema !== 'undefined') {
+            Object.keys(schema).forEach(function (key) {
+                var value = schema[key].default;
 
-				if (typeof object[key] !== 'undefined') {
-					value = object[key];
-				}
-			});
-		}
-	}
+                if (typeof object[key] !== 'undefined') {
+                    value = object[key];
+                }
+            });
+        }
+    }
 
-	///////////////////////////////////////////////////////////////////////////
-	
-	highed.ap(parent, table);
+    ///////////////////////////////////////////////////////////////////////////
+    
+    highed.ap(parent, table);
 
-	///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-	return {
-		on: events.on
-	};
+    return {
+        on: events.on
+    };
 };

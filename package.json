@@ -13,7 +13,10 @@
 		"grunt-contrib-concat": "*",
 		"grunt-contrib-less": "*",
 		"less-plugin-autoprefix": "*",
-		"less-plugin-clean-css": "*"		
+		"less-plugin-clean-css": "*",
+        "async": "*",
+        "request": "*",
+        "colors": "*"		
 	},
 
 	"dependencies": {

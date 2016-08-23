@@ -25,24 +25,24 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 highed.ready(function () {
-	var container = highed.dom.cr('div'),
-		modal = highed.OverlayModal(container)
-	;
-	
-	///////////////////////////////////////////////////////////////////////////
-	
+    var container = highed.dom.cr('div'),
+        modal = highed.OverlayModal(container)
+    ;
+    
+    ///////////////////////////////////////////////////////////////////////////
+    
 
-	highed.dom.ap(container, 
-		highed.dom.cr('span', '', 'This is where the settings goes.')
-	);
+    highed.dom.ap(container, 
+        highed.dom.cr('span', '', 'This is where the settings goes.')
+    );
 
-	///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
-	// Exported interface
+    // Exported interface
 
-	//Show settings
-	highed.showSettings = modal.show;
-	//Hide settings
-	highed.hideSettings = modal.hide;
+    //Show settings
+    highed.showSettings = modal.show;
+    //Hide settings
+    highed.hideSettings = modal.hide;
 
 });
