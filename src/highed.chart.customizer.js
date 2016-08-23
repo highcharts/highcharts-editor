@@ -88,10 +88,6 @@ highed.ChartCustomizer = function (parent, owner) {
 		});
 	}
 
-	function clear() {
-
-	}
-
 	///////////////////////////////////////////////////////////////////////////
 	
 	list.on('Select', function (id){

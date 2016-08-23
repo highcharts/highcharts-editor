@@ -444,4 +444,4 @@ highed.meta.optionsExtended = {
 			]
 		}]
 	}
-}
+};

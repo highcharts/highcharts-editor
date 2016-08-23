@@ -96,7 +96,7 @@ var highed = {
 			return;
 		}
 
-		path = path.replace(/\-\-/g, '.').replace(/\-/g, '.').split('.')
+		path = path.replace(/\-\-/g, '.').replace(/\-/g, '.').split('.');
 
 		path.forEach(function(p, i) {
 			if (i === path.length - 1) {	
@@ -141,7 +141,7 @@ var highed = {
 	 * @returns true or false
 	 */
 	isNull: function (what) {
-		return (typeof what === 'undefined' || what == null);
+		return (typeof what === 'undefined' || what === null);
 	},
 
 	/* Check if something is a string 

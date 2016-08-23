@@ -100,7 +100,9 @@ highed.TabControl = function (parent) {
 			body: tbody
 		};
 
-		selectedTab === false && focus();
+		if (!selectedTab) {
+			focus();
+		}
 
 		return texports;
 	}

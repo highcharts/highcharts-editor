@@ -112,5 +112,5 @@ highed.OverlayModal = function (contents, attributes) {
 		show: show,
 		hide: hide,
 		body: container
-	}
+	};
 };

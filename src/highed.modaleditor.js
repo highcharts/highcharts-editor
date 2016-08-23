@@ -46,7 +46,7 @@ highed.ModalEditor = function (summoner, attributes, fn) {
 
 	modal.on('Hide', function () {
 		if (highed.isFn(fn)) {
-			fn(editor.getEmbeddable());
+			fn(editor.getEmbeddableHTML());
 		}
 	});
 
@@ -56,5 +56,5 @@ highed.ModalEditor = function (summoner, attributes, fn) {
 		show: modal.show,
 		hide: modal.hide,
 		on: editor.on		
-	}
+	};
 };

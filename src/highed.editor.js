@@ -63,16 +63,6 @@ highed.Editor = function (parent, attributes) {
 				type: 'bar',
 				renderTo: chartContainer				
 			}
-			// ,
-			// xAxis: {
-		 //        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-		 //            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-		 //    },
-
-		 //    series: [{
-		 //        data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
-		 //    }]
-
 		}),
 
 		cleanOptions = highed.merge({}, chart.options)
@@ -95,7 +85,7 @@ highed.Editor = function (parent, attributes) {
 		events.emit('Resized');
 	}
 
-	function getEmbeddable() {
+	function getEmbeddableHTML() {
 		var	id = 'chart',
 			jsIncludes = [
 				'https://code.highcharts.com/highcharts.js',
@@ -114,7 +104,7 @@ highed.Editor = function (parent, attributes) {
 
 			//Write JS includes
 			jsIncludes.map(function (include) {
-				return '<script src="' + include + '"></script>'
+				return '<script src="' + include + '"></script>';
 			}).join(''),
 
 			//Write instancer
@@ -227,7 +217,7 @@ highed.Editor = function (parent, attributes) {
 	/* Force a resize of the editor */
 	exports.resize = resize;
 	/* Get embeddable javascript */
-	exports.getEmbeddable = getEmbeddable;
+	exports.getEmbeddableHTML = getEmbeddableHTML;
 	
 	return exports;
 };

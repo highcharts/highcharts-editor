@@ -222,7 +222,7 @@ highed.DataImporter = function (parent) {
 			type: 'text',
 			success: function (info) {
 				pasteArea.value = info.data;
-				highed.snackBar('File uploaded')
+				highed.snackBar('File uploaded');
 				emitImport();
 			}
 		});

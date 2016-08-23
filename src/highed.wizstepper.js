@@ -113,8 +113,9 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
 
 		highed.dom.on(stepexports.node, 'click', activate);
 
-
-		!activeStep && activate();
+		if (!activeStep) {
+			activate();
+		}		
 
 		stepexports.activate = activate;
 

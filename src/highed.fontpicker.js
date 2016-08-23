@@ -85,7 +85,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		//Set the current values
 		boldBtn.set(style['font-weight'] === 'bold');
 		italicBtn.set(style['font-style'] === 'italic');
-		updateColor(style['color'], true);
+		updateColor(style.color, true);
 		highed.dom.val(fontFamily, style['font-family']);
 		highed.dom.val(fontSize, style['font-size'].replace('px', ''));
 
@@ -119,7 +119,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		//Handle color picker
 		highed.dom.on(color, 'click', function (e) {
-			highed.pickColor(e.clientX, e.clientY, style['color'], updateColor);
+			highed.pickColor(e.clientX, e.clientY, style.color, updateColor);
 		});
 
 		//Create DOM

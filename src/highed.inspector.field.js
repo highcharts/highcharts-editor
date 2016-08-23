@@ -116,65 +116,66 @@ highed.InspectorField = function (type, value, properties, fn) {
 				return options;
 			},
 			array: function () {
-				var container = highed.dom.cr('div')
+				var container = highed.dom.cr('div'),
 					add = highed.dom.cr('span', 'highed-field-array-add fa fa-plus', ''),
 					itemsNode = highed.dom.cr('div', 'highed-inline-blocks'),
 					items = {},
 					itemCounter = 0
 				;
 
-				if (properties.subType === 'color') {
+				function addItem(col) {
+					var thing = highed.dom.cr('span', 'highed-field-colorpicker-compact', '&nbsp;'),
+						rem = highed.dom.cr('span', 'highed-field-array-remove fa fa-trash'),
+						id = ++itemCounter
+					;
 
-					function addItem(col) {
-						var thing = highed.dom.cr('span', 'highed-field-colorpicker-compact', '&nbsp;'),
-							rem = highed.dom.cr('span', 'highed-field-array-remove fa fa-trash'),
-							id = ++itemCounter
-						;
-
-						function update(col) {
-							highed.dom.style(thing, {
-								background: col
-							});
-
-							items[id] = col;
-							doCallback();
-						}
-
-						function doCallback() {
-							if (highed.isFn(fn)) {
-								fn(Object.keys(items).map(function (key) {
-									return items[key];	
-								}));
-							}
-						}
-
-						highed.dom.on(thing, 'click', function (e) {
-							highed.pickColor(e.clientX, e.clientY, 'col', function (col) {
-								update(col);
-							});
+					function update(col) {
+						highed.dom.style(thing, {
+							background: col
 						});
 
-						highed.dom.on(rem, 'click', function (e) {
-							delete items[id];
-							itemsNode.removeChild(thing);
-							doCallback();
-
-							e.cancelBubble = true;
-							e.preventDefault();
-							e.stopPropagation();
-							e.stopImmediatePropagation();
-							return false;
-						});
-
-						update(col);
-
-						highed.dom.showOnHover(thing, rem);
-
-						highed.dom.ap(itemsNode, highed.dom.ap(thing, rem));
+						items[id] = col;
+						doCallback();
 					}
 
+					function doCallback() {
+						if (highed.isFn(fn)) {
+							fn(Object.keys(items).map(function (key) {
+								return items[key];	
+							}));
+						}
+					}
+
+					highed.dom.on(thing, 'click', function (e) {
+						highed.pickColor(e.clientX, e.clientY, 'col', function (col) {
+							update(col);
+						});
+					});
+
+					highed.dom.on(rem, 'click', function (e) {
+						delete items[id];
+						itemsNode.removeChild(thing);
+						doCallback();
+
+						e.cancelBubble = true;
+						e.preventDefault();
+						e.stopPropagation();
+						e.stopImmediatePropagation();
+						return false;
+					});
+
+					update(col);
+
+					highed.dom.showOnHover(thing, rem);
+
+					highed.dom.ap(itemsNode, highed.dom.ap(thing, rem));
+				}
+				
+				if (properties.subType === 'color') {
+
+
 					highed.dom.on(add, 'click', function () {
-						addItem('#000')
+						addItem('#000');
 					});
 
 					if (highed.isArr(value)) {
@@ -205,7 +206,7 @@ highed.InspectorField = function (type, value, properties, fn) {
 				highed.dom.cr('span', '', properties.title)
 			),
 			highed.dom.ap(highed.dom.cr('td'),
-				fields[type] ? fields[type]() : fields['string']
+				fields[type] ? fields[type]() : fields.string()
 			),
 			highed.dom.ap(highed.dom.cr('td'),
 				//highed.dom.cr('span', 'highed-field-tooltip', properties.tooltip)	

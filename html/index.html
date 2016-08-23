@@ -67,7 +67,7 @@
 	<button id="modal-btn">Click me!</button>
 	<br/><br/>
 	Result:
-	<pre id="chart-result"></pre>
+	<textarea id="chart-result"></textarea>
 
 </body>
 
@@ -75,7 +75,7 @@
 
 	highed.ready(function () {
 		highed.ModalEditor('modal-btn', {}, function (html) {
-			highed.dom.get('chart-result').innerHTML = html;
+			highed.dom.get('chart-result').value = html;
 		});
 	});
 

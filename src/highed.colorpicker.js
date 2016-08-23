@@ -105,7 +105,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			manualInput.value = col;
 
 			if (highed.isFn(fn)) {
-				fn(col)
+				fn(col);
 			}
 		}
 
@@ -140,7 +140,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 				cancel = highed.dom.on(document.body, 'mouseup', function () {
 					mover();
 					cancel();
-				});
+				})
 			;
 
 			pickColor(e);

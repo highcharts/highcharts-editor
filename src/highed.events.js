@@ -51,7 +51,7 @@ highed.events = function () {
 				callbacks[event] = callbacks[event].filter(function (e) {
 					return e.id !== id;
 				});
-			}
+			};
 		},
 
 		/* Emit an event
@@ -75,5 +75,5 @@ highed.events = function () {
 			}
 			return 0;
 		}
-	}
+	};
 };

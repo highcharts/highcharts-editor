@@ -62,5 +62,5 @@ highed.PushButton = function (parent, icon, state) {
 		set: set,
 		button: button,
 		on: events.on
-	}
+	};
 };

@@ -67,11 +67,10 @@ highed.ChartPreview = function (attributes) {
 			} catch (e) {
 				highed.snackBar('invalid json: ' + e);
 			}
-		} else (!highed.isBasic(data)) {
-
-
-		} else {
+		} else if (highed.isBasic(data)) {
 			highed.snackBar('the data is not valid json');
+		} else {
+
 		}
 	}
 
@@ -107,4 +106,4 @@ highed.ChartPreview = function (attributes) {
 		customizedOptions: customizedOptions,
 		flatOptions: flatOptions
 	};
-}
+};

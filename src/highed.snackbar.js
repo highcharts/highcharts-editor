@@ -26,7 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function () {
 	var container = highed.dom.cr('div', 'highed-snackbar'),
 		title = highed.dom.cr('span', 'snackbar-title', 'THIS IS A SNACKBAR'),
-		action = highed.dom.cr('span', 'snackbar-action', 'ACTION')
+		action = highed.dom.cr('span', 'snackbar-action', 'ACTION'),
 		timeout = false,
 		callback = false
 	;

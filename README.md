@@ -5,12 +5,36 @@ Highcharts Editor
 
 ## Introduction
 
-highcharts-editor is a lightweight chart editor for highcharts that can be embedded into existing frameworks and libraries, or used stand-alone.
-It requires no back-end services to operate.
+`highcharts-editor` is a lightweight chart editor for highcharts that can be embedded into existing frameworks and libraries, or used stand-alone.
+It requires no back-end service to operate.
 
 ## Features
+	
+	* No dependencies except from Highcharts
+	* Lightweight: weighs in at <xxkb
+	* 100% client-side
+	* Outputs both HTML and JSON
+	* Optional wizard-style interface
+	* Highly configurable
 
-## Building
+## Installing and Building
+
+**Pre-built**
+
+You can find pre-built stable releases [here](https://github.com/highcharts/highcharts-editor/releases).
+
+**Package Managers**
+
+The editor is pushed to NPM and Bower under `highcharts-editor`.
+
+**Cloning and building the repository**
+
+		git clone https://github.com/highcharts/highcharts-editor
+		cd highcharts-editor
+		npm install
+		grunt
+
+This will put a built version in the `dist` folder.
 
 ## Embedding Hello World
 
@@ -28,21 +52,38 @@ It requires no back-end services to operate.
 			</script>
 		</html>
 
-## API Reference
+## API Quick Reference
+
+**Full documentation can be found [here](#).**
 
 ### highed.Editor
 
-The `highed.Editor` object is the full chart editor, containing a wizard-style interface for chart creation.
+The `highed.Editor` object is the full chart editor, containing by default a wizard-style interface for chart creation.
 
-`highed.Editor(parent)` creates a new chart editor instance, and attaches it to the supplied parent node. The parent can either be a string containing the ID of a dom node, or a dom node instance.
+**Constructor**
+
+`highed.Editor(parent, properties)` creates a new chart editor instance, and attaches it to the supplied parent node. The `parent` argument can either be a string containing the ID of a DOM node, or a DOM node instance.
+
+Properties is an object as such:
+		
+		{
+
+		}
+
+**Interface**
 
   * `Editor.on(<event>, <callback>)`: Listen for an event emitted by the editor. See list of events below.
   * `Editor.resize()`: Force a resize of the editor widget.
+  * `Editor.getEmbeddableHTML()`: Get a string containing HTML to replicate the current chart.
 
-** Editor Events **
+**Editor Events**
 
   * `Resized`: Emitted when the editor is resized
-  * `ChartChange`: Emitted when the chart being edited changes. Argument is the chart settings. 
+  * `ChartChange`: Emitted when the chart being edited changes. Passed argument is the current chart settings. 
+
+## Customizing the exposed settings
+
+Sometimes, only a sub-set of editable settings is required. 
 
 ## License
 
