@@ -119,6 +119,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('test', ['jshint']);
 
-  grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'less', 'electron']);
-
+  grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'less']);
+  
+  grunt.registerTask('native', ['jshint', 'concat', 'uglify', 'less', 'electron']);
 };
