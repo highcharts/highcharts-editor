@@ -3,6 +3,8 @@ Highcharts Editor
 
 *Stand-alone and embeddable chart editor for Highcharts*
 
+![screenshots/customize.png](screenshots/customize.png)
+
 ## Introduction
 
 `highcharts-editor` is a lightweight chart editor for highcharts that can be embedded into existing frameworks and libraries, or used stand-alone.
