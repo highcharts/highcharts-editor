@@ -37,7 +37,7 @@ highed.Editor = function (parent, attributes) {
         },
 
         properties = highed.merge({
-
+            on: {}
         }, attributes),
 
         container = highed.dom.cr('div', 'highed-container'),
@@ -204,6 +204,21 @@ highed.Editor = function (parent, attributes) {
 
         resize();
     });
+
+    ///////////////////////////////////////////////////////////////////////////
+        
+    //Attach event listeners defined in the properties
+    if (highed.isBasic(properties.on)) {
+        Object.keys(properties.on).forEach(function (event) {
+            if (highed.isFn(properties.on[event])) {
+                events.on(event, properties.on[event]);
+            } else {
+                highed.log(2, 'tried attaching a non-function to' + event);
+            }
+        });
+    } else {
+        highed.log(2, 'on object in editor properties is not a valid object');
+    }
 
     ///////////////////////////////////////////////////////////////////////////
 
