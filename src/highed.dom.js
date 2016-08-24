@@ -1,4 +1,4 @@
-/******************************************************************************
+/*******************************************************************************
 
 Copyright (c) 2016, Highsoft
 
@@ -23,13 +23,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-//DOM helper functions 
+/** Namespace for DOM helper functions 
+ * @exports highed.dom
+ *
+ * @namespace highed.dom
+ * @alias highed.dom
+ */
 highed.dom = {
-    /* Append a set of nodes to another node
-     * @target - the node to append to
-     * 
-     * Arguments supplied after the @target represents the children to append.
-     *
+    /** Append a set of nodes to another node.
+     * Arguments supplied after the @param {} target represents the children to append.
+     * @memberof! highed.dom
+     * @param {object} target - the node to append to
      * @return the target
      */
     ap: function (target) {
@@ -51,9 +55,9 @@ highed.dom = {
         return target;
     },
 
-    /* Create a set of options for a select
-     * @select - the dropdown to add options to
-     * @options - the options as an array or as an object keyed on ID
+    /** Create a set of options for a select
+     * @param {object} select - the dropdown to add options to
+     * @param {(array|object)} options - the options as an array or as an object keyed on ID
      */
     options: function (select, options) {
         if (highed.isNull(options)) {
@@ -79,9 +83,9 @@ highed.dom = {
         }
     },
 
-    /* Show a node when another is hovered
-     * @parent - the node to listen for the hover on
-     * @child - the node to show when the parent is hovered
+    /** Show a node when another is hovered
+     * @param {object} parent - the node to listen for the hover on
+     * @param {object} child - the node to show when the parent is hovered
      */
     showOnHover: function (parent, child) {
         if (highed.isArr(child)) {
@@ -110,13 +114,13 @@ highed.dom = {
         });
     },
 
-    /* Create a new HTML node
-     * @type - the type of node to create
-     * @cssClass (optional) - the css class to use for the node
-     * @innerHTML (optional) - the inner html of the new node
-     * @id (optional) - the id of the new node
+    /** Create a new HTML node
+     * @param {string} type - the type of node to create
+     * @param {string} cssClass (optional) - the css class to use for the node
+     * @param {string} innerHTML (optional) - the inner html of the new node
+     * @param {string} id (optional) - the id of the new node
      *
-     * @returns the new dom node
+     * @return the new dom node
      */
     cr: function (type, cssClass, innerHTML, id) {
         var res = false;
@@ -142,11 +146,11 @@ highed.dom = {
         return res;
     },
 
-    /* Style a node
-     * @nodes - the node to style. Can also be an array
-     * @style - object containing style properties
+    /** Style a node
+     * @param {(object|array)} nodes - the node to style. Can also be an array
+     * @param {object} style - object containing style properties
      *
-     * @returns whatever was supplied to @nodes
+     * @return whatever was supplied to @param {} nodes
      */
     style: function (nodes, style) {
         if (highed.isArr(nodes)) {
@@ -163,13 +167,13 @@ highed.dom = {
         }
     },
 
-    /* Attach an event listener to a dom node
-     * @target - the dom node to attach to
-     * @event - the event to listen for
-     * @callback - the function to call when the event is emitted
-     * @context (optional) - the context of the callback function
+    /** Attach an event listener to a dom node
+     * @param {object} target - the dom node to attach to
+     * @param {string} event - the event to listen for
+     * @param {function} callback - the function to call when the event is emitted
+     * @param {object} context (optional) - the context of the callback function
      *
-     * @returns a function that can be called to unbind the handler
+     * @return a function that can be called to unbind the handler
      */
     on: function (target, event, callback, context) {
         var s = [];
@@ -214,10 +218,10 @@ highed.dom = {
         };
     },
 
-    /* Get or set the value of a node
-     * @node - the node to get the value of
-     * @value (optional) - the value to set
-     * @returns the value
+    /** Get or set the value of a node
+     * @param {object} node - the node to get the value of
+     * @param {(string|bool|number)} value (optional) - the value to set
+     * @return the value
      */
     val: function (node, value) {
         if (node.tagName === 'SELECT') {
@@ -253,9 +257,9 @@ highed.dom = {
         return false;
     },
 
-    /* Get the size of a node
-     * @node - the node to get the size of
-     * @returns the size as an object {w, h}
+    /** Get the size of a node
+     * @param {object} node - the node to get the size of
+     * @return {object} - the size as an object `{w, h}`
      */
     size: function (node) {
         return {
@@ -264,9 +268,9 @@ highed.dom = {
         };
     },
 
-    /* Get the position of a node
-     * @node - the node to get the position of
-     * @returns the position as an object {x, y}
+    /** Get the position of a node
+     * @param {object} node - the node to get the position of
+     * @return {object} - the position as an object `{x, y}`
      */
     pos: function (node) {
         return {
@@ -275,9 +279,9 @@ highed.dom = {
         };
     },
 
-    /* Find a node
-     * @node - the node to find. Either a string or an actual node instance
-     * @returns the node or false if the node was not found
+    /** Find a node
+     * @param {object} node - the node to find. Either a string or an actual node instance
+     * @return {object} - the node or false if the node was not found
      */
     get: function (node) {
         if (node && node.appendChild) {

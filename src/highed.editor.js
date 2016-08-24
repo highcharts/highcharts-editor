@@ -23,10 +23,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-/* The main chart editor object 
- * @parent - the node to attach the editor to
- * @attributes - the editor settings
- * @returns an instance of an editor
+/**
+ * The main chart editor object 
+ * @memberof! highed#
+ * @exports highed.Editor
+ * @param {object} parent - the node to attach the editor to
+ * @param {object} attributes - the editor settings
+ * @return {highed.Editor} - A new instance of an editor
  */
 highed.Editor = function (parent, attributes) {
     var events = highed.events(),
@@ -65,12 +68,16 @@ highed.Editor = function (parent, attributes) {
             }
         }),
 
-        cleanOptions = highed.merge({}, highed.merge(defaultChartOptions, chart.options))
+        cleanOptions = highed.merge({}, highed.merge(properties.defaultChartOptions, chart.options))
     ;
 
     ///////////////////////////////////////////////////////////////////////////
     
-    /* Resize the editor */
+    /** 
+     * Force a resize of the editor
+     * @inner
+     * @instance 
+     */
     function resize() {
         var cs = highed.dom.size(container),
             ms = highed.dom.size(mainToolbar.container),
@@ -85,6 +92,12 @@ highed.Editor = function (parent, attributes) {
         events.emit('Resized');
     }
 
+    /** 
+     * Get embeddable chart
+     * @inner
+     * @instance 
+     * @return {string} - String of HTML to reproduce the current chart.
+     */
     function getEmbeddableHTML() {
         var id = 'chart',
             jsIncludes = [
@@ -118,6 +131,12 @@ highed.Editor = function (parent, attributes) {
         ].join('');
     }
 
+    /** 
+     * Get chart JSON
+     * @inner
+     * @instance 
+     * @return {string} - String of JSON to reproduce the current chart.
+     */
     function getEmbeddableJSON() {
         return JSON.stringify(exports.customizedOptions);
     }
@@ -225,12 +244,15 @@ highed.Editor = function (parent, attributes) {
 
     //Public interface
  
-    /* Attach an event listener
-     * @event - the event to listen for
-     * @callback - the callback to execute when the event is emitted
-     * @context (optional) - the value of the this reference in the callback
+    /** 
+     * Attach an event listener
+     * @instance
+     * @inner
+     * @param {string} event - the event to listen for
+     * @param {function} callback - the callback to execute when the event is emitted
+     * @param {} context (optional) - the value of the this reference in the callback
      *
-     * @returns a function that can be called to unbind the listener
+     * @return a function that can be called to unbind the listener
      */
     exports.on = events.on;
     /* Force a resize of the editor */

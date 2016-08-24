@@ -23,18 +23,25 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+/** Event dispatcher object
+ * @description Constructs an instance of an event dispatcher when called. 
+ * Usage: `var events = highed.events();`.
+ * @memberof! highed#
+ * @exports highed.events
+ */
 highed.events = function () {
     var callbacks = {},
         listenerCounter = 0
     ;
 
     return {
-        /* Attach an event listener
-         * @event - the event to listen for
-         * @callback - the callback to execute when the event is emitted
-         * @context (optional) - the value of the this reference in the callback
+        /** Attach an event listener
+  
+         * @param {string} event - the event to listen for
+         * @param {function} callback - the callback to execute when the event is emitted
+         * @param {object} context (optional) - the value of the this reference in the callback
          *
-         * @returns a function that can be called to unbind the listener
+         * @return {function} - A function that can be called to unbind the listener
          */
         on: function (event, callback, context) {
             var id = ++listenerCounter;
@@ -54,10 +61,10 @@ highed.events = function () {
             };
         },
 
-        /* Emit an event
-         * @event - the event to emit
-         *
-         * @returns the number of events dispatched
+        /** Emit an event
+         * @description Note that the function accepts a variable amount of arguments. Any arguments after the event name will be passed on to any event listeners attached to the event being emitted.
+         * @param {string} event - the event to emit         
+         * @return {number} - The number of events dispatched
          */
         emit: function (event) {
             var args = Array.prototype.slice.call(arguments);

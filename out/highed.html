@@ -97,6 +97,13 @@
      
 
     
+        <h3 class="subsection-title">Namespaces</h3>
+
+        <dl>
+            <dt><a href="highed.dom.html">dom</a></dt>
+            <dd></dd>
+        </dl>
+    
 
     
 
@@ -2294,6 +2301,230 @@ Note: this modifies object <code>a</code>!</p>
 
     
 
+    <h4 class="name" id=".showDimmer"><span class="type-signature">(static) </span>showDimmer<span class="signature">(fn, autohide, transparent, zIndex)</span><span class="type-signature"> &rarr; {function}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Show a dimmer backdrop</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the function to call when the dimmer is clicked</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>autohide</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>set to true to hide the dimmer when it's clicked</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>transparent</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>set to true for the dimmer to be transparent</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>zIndex</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the z index <em>offset</em></p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="highed.dimmer.js.html">highed.dimmer.js</a>, <a href="highed.dimmer.js.html#line35">line 35</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>A function that can be called to hide the dimmer</li>
+</ul>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">function</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id=".toBool"><span class="type-signature">(static) </span>toBool<span class="signature">(what)</span><span class="type-signature"> &rarr; {bool}</span></h4>
 
     
@@ -2439,6 +2670,184 @@ Note: this modifies object <code>a</code>!</p>
 
 
         
+            
+
+    
+
+    <h4 class="name" id=".OverlayModal"><span class="type-signature"></span>.OverlayModal<span class="signature">(contents, attributes)</span><span class="type-signature"> &rarr; {object}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Turn a DOM node into an overlay</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>contents</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the DOM node to wrap. Properties is an object as such: <code>{wdith, height, minWidth, minHeight}</code></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>attributes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>properties for the modal</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="highed.overlaymodal.js.html">highed.overlaymodal.js</a>, <a href="highed.overlaymodal.js.html#line26">line 26</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>A new instance of OverlayModal</li>
+</ul>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
     
 
     
@@ -2454,13 +2863,13 @@ Note: this modifies object <code>a</code>!</p>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="highed.html">highed</a></li></ul><h3><a href="global.html">Global</a></h3>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="highed_highed.module_Editor.html">highed.Editor</a></li><li><a href="highed_highed.module_events.html">highed.events</a></li></ul><h3>Namespaces</h3><ul><li><a href="highed.html">highed</a></li><li><a href="highed.dom.html">dom</a></li></ul><h3>Global</h3><ul><li><a href="global.html#body">body</a></li><li><a href="global.html#hide">hide</a></li><li><a href="global.html#on">on</a></li><li><a href="global.html#show">show</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Aug 24 2016 10:12:56 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Aug 24 2016 15:09:32 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

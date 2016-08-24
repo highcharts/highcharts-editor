@@ -23,9 +23,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-/* Turn a DOM node into an overlay 
- * @contents - the DOM node to wrap
- * @attributes - properties for the modal
+/** Turn a DOM node into an overlay 
+ * @memberof! highed#
+ * @function highed.OverlayModal
+ * @param {object} contents - the DOM node to wrap. Properties is an object as such: `{wdith, height, minWidth, minHeight}`
+ * @param {object} attributes - properties for the modal
+ * @return {object} - A new instance of OverlayModal
  */
 highed.OverlayModal = function (contents, attributes) {
     var container = highed.dom.cr('div', 'highed-overlay-modal'),
@@ -108,9 +111,25 @@ highed.OverlayModal = function (contents, attributes) {
 
     //Public interface
     return {
+        /** 
+         * Attach an event listener
+         * @instance
+         * @inner
+         * @param {string} event - the event to listen for
+         * @param {function} callback - the callback to execute when the event is emitted
+         * @param {} context (optional) - the value of the this reference in the callback
+         *
+         * @return a function that can be called to unbind the listener
+         */
         on: events.on,
+        /** Show the modal
+         */
         show: show,
+        /** Hide the modal
+         */
         hide: hide,
+        /** The container DOM node
+         */
         body: container
     };
 };

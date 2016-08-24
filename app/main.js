@@ -13,7 +13,10 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     width: 800, 
     height: 600, 
-    title: 'Highcharts Editor'
+    title: 'Highcharts Editor',
+    webPreferences: {
+      nodeIntegration: false
+    }
   });
 
   // and load the index.html of the app.
