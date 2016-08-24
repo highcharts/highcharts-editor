@@ -37,6 +37,7 @@ highed.Editor = function (parent, attributes) {
         },
 
         properties = highed.merge({
+            defaultChartOptions: {},
             on: {}
         }, attributes),
 
@@ -64,7 +65,7 @@ highed.Editor = function (parent, attributes) {
             }
         }),
 
-        cleanOptions = highed.merge({}, chart.options)
+        cleanOptions = highed.merge({}, highed.merge(defaultChartOptions, chart.options))
     ;
 
     ///////////////////////////////////////////////////////////////////////////

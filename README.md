@@ -69,6 +69,8 @@ The `highed.Editor` object is the full chart editor, containing by default a wiz
 Properties is an object as such:
 		
 	{
+        //The initial chart options
+        defaultChartOptions: <object>,
         //Events to listen for - same as calling Editor.on(...)
         on: {
             'EventName': <function>
