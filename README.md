@@ -102,6 +102,18 @@ To that end, the `update.meta` tool in the `tools/` folder can be used to create
 After running the tool, run `grunt` in the project root to bake your custom build.
 Take a look at [dictionaries/exposed.settings.json](dictionaries/exposed.settings.json) to see how to format the input JSON file. 
 
+## Enabling the Advanced Property Editor
+
+The advanced editor allows for editing every property in the Highcharts API. When enabled, it appears in a separate tab --- ADVANCED --- in the customize wizard step.
+
+By default, only the simple property editor is included in baked sources. This is because the required meta data to enable the advanced editor is large enough to be inconvenient in most cases (adds around 400kb to the minified sources).
+
+To enable the advanced editor:
+    
+    node tools/updatebake.advanced.js
+
+This will create the required meta in the source tree. Call `grunt` afterwards to bake sources with the advanced editor enabled.
+
 ## License
 
 [MIT](LICENSE).
