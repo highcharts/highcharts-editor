@@ -106,7 +106,8 @@ highed.TabControl = function (parent, noOverflow) {
 
                 highed.dom.style(selectedTab.body, {
                     opacity: 0,
-                    'pointer-events': 'none'
+  //                  'pointer-events': 'none',
+                    'display': 'none'
                 });
             }
 
@@ -119,7 +120,8 @@ highed.TabControl = function (parent, noOverflow) {
 
             highed.dom.style(tbody, {
                 opacity: 1,
-                'pointer-events': 'auto'
+//                'pointer-events': 'auto',
+                'display': 'block'
             });
 
             selectedTab = texports;
@@ -181,7 +183,7 @@ highed.TabControl = function (parent, noOverflow) {
         createTab: Tab,
         resize: resize,
         barSize: function () {
-            return highed.dom.size(paneBar)
+            return highed.dom.size(paneBar);
         }
     };
 };

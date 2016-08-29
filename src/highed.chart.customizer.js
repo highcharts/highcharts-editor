@@ -105,7 +105,7 @@ highed.ChartCustomizer = function (parent, owner) {
         item.entries.forEach(function (entry) {
             highed.dom.ap(table,
                 highed.InspectorField(
-                    entry.dataType, 
+                    entry.dataType || 'string', 
                     (owner.flatOptions[entry.id] || entry.defaults), 
                     {
                         title: highed.uncamelize(entry.shortName),

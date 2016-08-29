@@ -35,6 +35,8 @@ module.exports = function(grunt) {
           "./src/highed.snackbar.js",
           "./src/highed.dataimporter.js",
           "./src/highed.fileupload.js",
+          "./src/highed.tree.js",
+          "./src/highed.exporter.js",
           "./src/highed.modaleditor.js"
         ],
         dest: 'dist/<%= pkg.name %>.js'

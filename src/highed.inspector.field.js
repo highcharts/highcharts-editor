@@ -33,43 +33,39 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.InspectorField = function (type, value, properties, fn) {
     var 
         fields = {
-            string: function (val) {
+            string: function (val, callback) {
                 var input = highed.dom.cr('input', 'highed-field-input');
 
-                input.value = val || value;
-
                 highed.dom.on(input, 'change', function () {
-                    if (highed.isFn(fn)) {
-                        fn(input.value);
-                    }
+                    tryCallback(callback, input.value);
                 });
 
+                input.value = val || value;
+                
                 return input;
             },
-            number: function (val) {
-                return fields.string(val);             
+            number: function (val, callback) {
+                return fields.string(val, callback);             
             },
-            range: function (val) {
-                return fields.string(val);             
+            range: function (val, callback) {
+                return fields.string(val, callback);             
             },
-            boolean: function (val) {
+            boolean: function (val, callback) {
                 var input = highed.dom.cr('input');             
                 input.type = 'checkbox';
 
                 input.checked = highed.toBool(val || value);
 
-                highed.dom.on(input, 'change', function () {
-                    if (highed.isFn(fn)) {
-                        fn(input.checked);
-                    }
+                highed.dom.on(input, 'change', function () {                    
+                    tryCallback(callback, input.checked);
                 });
 
                 return input;
             },
-            color: function (val) {
+            color: function (val, callback) {
                 var box = highed.dom.cr('div', 'highed-field-colorpicker'); 
 
-                function update(col) {
+                function update(col, callback) {
                     box.innerHTML = col;
                     highed.dom.style(box, {
                         background: col,
@@ -80,9 +76,7 @@ highed.InspectorField = function (type, value, properties, fn) {
                 highed.dom.on(box, 'click', function (e) {
                     highed.pickColor(e.clientX, e.clientY, value, function (col) {
                         update(col);
-                        if (highed.isFn(fn)) {
-                            fn(col);
-                        }
+                        tryCallback(callback, col);
                     });
                 });
 
@@ -90,26 +84,24 @@ highed.InspectorField = function (type, value, properties, fn) {
 
                 return box;
             },
-            font: function (val) {
-                return fields.string(val);             
+            font: function (val, callback) {
+                return fields.string(val, callback);             
 
             },
-            configset: function (val) {
-                return fields.string(val);              
+            configset: function (val, callback) {
+                return fields.string(val, callback);              
             },
-            cssobject: function (val) {
-                var picker = highed.FontPicker(fn, val || value);
+            cssobject: function (val, callback) {
+                var picker = highed.FontPicker(callback || fn, val || value);
                 return picker.container;
             },
-            options: function () {
+            options: function (val, callback) {
                 var options = highed.dom.cr('select', 'highed-field-select');
 
                 highed.dom.options(options, properties.values);
 
-                highed.dom.on(options, 'change', function () {
-                    if (highed.isFn(fn)) {
-                        fn(highed.dom.val(options));
-                    }
+                highed.dom.on(options, 'change', function () {                    
+                    tryCallback(callback, highed.dom.val(options));
                 });
 
                 return options;
@@ -119,17 +111,67 @@ highed.InspectorField = function (type, value, properties, fn) {
                     add = highed.dom.cr('span', 'highed-field-array-add fa fa-plus', ''),
                     itemsNode = highed.dom.cr('div', 'highed-inline-blocks'),
                     items = {},
-                    itemCounter = 0
+                    itemCounter = 0,
+                    itemTable = highed.dom.cr('table', 'highed-field-table')
                 ;         
 
-                function addCompositeItem(val) {
-                    var item;
+                function addCompositeItem(val, supressCallback) {
+                    var item,
+                        rem = highed.dom.cr('span', 'highed-icon fa fa-trash'),
+                        row = highed.dom.cr('tr'),
+                        id = ++itemCounter
+                    ;
+
+                    function processChange(newVal) {
+                        items[id].value = newVal;
+                        doEmitCallback();
+                    }
+
+                    function doEmitCallback() {
+                        if (highed.isFn(fn)) {
+                            fn(Object.keys(items).map(function (key) {
+                                return items[key].value;  
+                            }));
+                        }    
+                    }
 
                     item = fields[properties.subType] ? 
-                           fields[properties.subType](val) : 
-                           fields['string'](val);
+                           fields[properties.subType](val, processChange) : 
+                           fields.string(val, processChange);
                     
-                    highed.dom.ap(container, item);       
+                    highed.dom.ap(itemTable, 
+                        highed.dom.ap(row,
+                            highed.dom.ap(highed.dom.cr('td'),
+                                item
+                            ),
+                            highed.dom.ap(highed.dom.cr('td'),
+                                rem
+                            )
+                        )
+                    );      
+
+                    highed.dom.on(rem, 'click', function (e) {
+                        delete items[id];
+                        itemTable.removeChild(row);
+
+                        doEmitCallback();
+
+                        e.cancelBubble = true;
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        return false;
+                    });
+
+                    items[id] = {
+                        id: id,
+                        row: row,
+                        value: val
+                    };
+
+                    if (!supressCallback) {
+                        processChange();
+                    }
 
                 }       
 
@@ -190,7 +232,11 @@ highed.InspectorField = function (type, value, properties, fn) {
                         value.forEach(addColorItem);
                     }
                 } else {
+                    highed.dom.ap(container, itemTable);
 
+                    highed.dom.on(add, 'click', function () {
+                        addCompositeItem();
+                    });
                 }
 
                 highed.dom.ap(container, itemsNode, add);
@@ -200,6 +246,13 @@ highed.InspectorField = function (type, value, properties, fn) {
         },
         help = highed.dom.cr('span', 'highed-icon fa fa-question-circle')
     ;
+
+    function tryCallback(cb, val) {
+        cb = cb || fn;
+        if (highed.isFn(cb)) {
+            cb(val);
+        }
+    }
 
     if (highed.isNull(value)) {
         value = '';
