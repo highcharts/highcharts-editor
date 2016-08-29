@@ -89,6 +89,7 @@ highed.Editor = function (parent, attributes) {
         chartTemplateSelector.resize(undefined, cs.h - ms.h - wb.h);
         splitter.resize(cs.w, cs.h - ms.h - wb.h);
         chart.reflow();
+        dataImp.resize();
         events.emit('Resized');
     }
 
@@ -225,10 +226,26 @@ highed.Editor = function (parent, attributes) {
         resize();
     });
 
+    dataImp.on('ImportJSON', function (data) {
+        if (!chart || !chart.options) {
+            chart = {options: {}};
+        }
+        
+
+        highed.merge(exports.customizedOptions, data);
+        highed.merge(chart.options, data);
+
+        highed.setAttr(chart.options, 'chart--renderTo', chartContainer);
+        
+        chart = new Highcharts.Chart(chart.options);
+        events.emit('ChartChange', chart.options);
+        resize();
+    });
+
     ///////////////////////////////////////////////////////////////////////////
         
     //Attach event listeners defined in the properties
-    if (highed.isBasic(properties.on)) {
+    if (!highed.isBasic(properties.on)) {
         Object.keys(properties.on).forEach(function (event) {
             if (highed.isFn(properties.on[event])) {
                 events.on(event, properties.on[event]);

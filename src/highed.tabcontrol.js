@@ -109,16 +109,19 @@ highed.TabControl = function (parent) {
 
     ///////////////////////////////////////////////////////////////////////////
     
-    highed.dom.ap(parent,
-        highed.dom.ap(container, 
-            highed.dom.ap(paneBar,
-                indicator
-            ),
-            body
-        )
-    );
+    if (!highed.isNull(parent)) {
+        
+        highed.dom.ap(parent,
+            highed.dom.ap(container, 
+                highed.dom.ap(paneBar,
+                    indicator
+                ),
+                body
+            )
+        );
 
-    resize();
+        resize();
+    }
 
     ///////////////////////////////////////////////////////////////////////////
 
