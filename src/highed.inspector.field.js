@@ -236,6 +236,12 @@ highed.InspectorField = function (type, value, properties, fn) {
                     highed.dom.on(add, 'click', function () {
                         addCompositeItem();
                     });
+
+                    if (highed.isArr(value)) {
+                        value.forEach(function (item) {
+                            addCompositeItem(item, true);
+                        });
+                    }
                 //}
 
                 highed.dom.ap(container, itemsNode, add);
