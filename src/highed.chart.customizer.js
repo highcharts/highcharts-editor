@@ -25,7 +25,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 highed.ChartCustomizer = function (parent, owner) {
     var events = highed.events(),
-        splitter = highed.HSplitter(parent, {leftWidth: 30}),
+        tabs = highed.TabControl(parent, true),
+        simpleTab = tabs.createTab({title: 'SIMPLE'}),
+        advancedTab = tabs.createTab({title: 'ADVANCED'}),
+        splitter = highed.HSplitter(simpleTab.body, {leftWidth: 30}),
         list = highed.List(splitter.left),
         body = splitter.right
     ;
@@ -33,8 +36,13 @@ highed.ChartCustomizer = function (parent, owner) {
     ///////////////////////////////////////////////////////////////////////////
 
     function resize(w, h) {
-        list.resize(w, h);
-        splitter.resize(w, h);
+        var bsize;
+        
+        tabs.resize(w, h);
+        bsize = tabs.barSize();
+
+        list.resize(w, h - bsize.h);
+        splitter.resize(w, h - bsize.h - 10);
     }
 
     function selectGroup(group, table) {

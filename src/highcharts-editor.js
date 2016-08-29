@@ -43,6 +43,16 @@ var highed = {
     schemas: {},
     meta: {},
 
+    /** Clamp a number between min/max
+     * @param {number} - minimum value
+     * @param {number} - maximum value
+     */
+    clamp: function (min, max, value) {
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
+    },
+
     /** 
      * Convert a hex value to RGB
      *

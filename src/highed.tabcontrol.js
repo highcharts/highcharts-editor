@@ -23,34 +23,51 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-highed.TabControl = function (parent) {
+highed.TabControl = function (parent, noOverflow) {
     var container = highed.dom.cr('div', 'highed-tab-control'),
         paneBar = highed.dom.cr('div', 'tabs'),
         body = highed.dom.cr('div', 'body'),
         indicator = highed.dom.cr('div', 'indicator'),
 
-        selectedTab = false
+        selectedTab = false,
+        tabs = []
     ;
 
     ///////////////////////////////////////////////////////////////////////////
 
     //Force a resize of the tab control
-    function resize() {
+    function resize(w, h) {
         var cs = highed.dom.size(parent),
             ps = highed.dom.size(paneBar)
         ;
 
         highed.dom.style(container, {
-            height: cs.h + 'px'
+            height: (h || cs.h) + 'px'
         });
 
         highed.dom.style(body, {
-            height: cs.h - ps.h + 'px'
+            height: (h || cs.h) - ps.h + 'px'
         });
     
         //Also re-focus the active tab
         if (selectedTab) {
             selectedTab.focus();
+        }
+    }
+
+    function updateVisibility() {
+        var c = tabs.filter(function (a) {
+            return a.visible();
+        }).length;
+
+        if (c < 2) {
+            highed.dom.style(paneBar, {
+                display: 'none'
+            });
+        } else {
+            highed.dom.style(paneBar, {
+                display: ''
+            });
         }
     }
 
@@ -64,11 +81,24 @@ highed.TabControl = function (parent) {
         var tevents = highed.events(),
             tab = highed.dom.cr('div', 'tab', properties.title),
             tbody = highed.dom.cr('div', 'tab-body'),
+            visible = true,
             texports = {}
         ;
 
         highed.dom.ap(paneBar, tab);
         highed.dom.ap(body, tbody);
+
+        function hide() {
+            visible = false;
+            highed.dom.style(tab, {display: 'none'});
+            updateVisibility();
+        }
+
+        function show() {
+            visible = true;
+            highed.dom.style(tab, {display: ''});
+            updateVisibility();
+        }
 
         function focus() {
             if (selectedTab) {
@@ -102,12 +132,28 @@ highed.TabControl = function (parent) {
             on: tevents.on,
             focus: focus,
             node: tab,
-            body: tbody
+            body: tbody,
+            hide: hide,
+            show: show,
+            visible: function () {
+                return visible;
+            }
         };
 
         if (!selectedTab) {
             focus();
         }
+
+        if (noOverflow) {
+            highed.dom.style(tbody, {
+                overflow: 'hidden'
+            });
+        }
+
+        tabs.push(texports);
+
+        resize();
+        updateVisibility();
 
         return texports;
     }
@@ -126,12 +172,16 @@ highed.TabControl = function (parent) {
         );
 
         resize();
+        updateVisibility();
     }
 
     ///////////////////////////////////////////////////////////////////////////
 
     return {
         createTab: Tab,
-        resize: resize
+        resize: resize,
+        barSize: function () {
+            return highed.dom.size(paneBar)
+        }
     };
 };

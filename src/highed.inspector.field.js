@@ -33,10 +33,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.InspectorField = function (type, value, properties, fn) {
     var 
         fields = {
-            string: function () {
+            string: function (val) {
                 var input = highed.dom.cr('input', 'highed-field-input');
 
-                input.value = value;
+                input.value = val || value;
 
                 highed.dom.on(input, 'change', function () {
                     if (highed.isFn(fn)) {
@@ -46,17 +46,17 @@ highed.InspectorField = function (type, value, properties, fn) {
 
                 return input;
             },
-            number: function () {
-                return fields.string();             
+            number: function (val) {
+                return fields.string(val);             
             },
-            range: function () {
-                return fields.string();             
+            range: function (val) {
+                return fields.string(val);             
             },
-            boolean: function () {
+            boolean: function (val) {
                 var input = highed.dom.cr('input');             
                 input.type = 'checkbox';
 
-                input.checked = highed.toBool(value);
+                input.checked = highed.toBool(val || value);
 
                 highed.dom.on(input, 'change', function () {
                     if (highed.isFn(fn)) {
@@ -66,7 +66,7 @@ highed.InspectorField = function (type, value, properties, fn) {
 
                 return input;
             },
-            color: function () {
+            color: function (val) {
                 var box = highed.dom.cr('div', 'highed-field-colorpicker'); 
 
                 function update(col) {
@@ -86,20 +86,19 @@ highed.InspectorField = function (type, value, properties, fn) {
                     });
                 });
 
-                update(value);
+                update(val || value);
 
                 return box;
             },
-            font: function () {
-                return fields.string();             
+            font: function (val) {
+                return fields.string(val);             
 
             },
-            configset: function () {
-                return fields.string();             
-                
+            configset: function (val) {
+                return fields.string(val);              
             },
-            cssobject: function () {
-                var picker = highed.FontPicker(fn, value);
+            cssobject: function (val) {
+                var picker = highed.FontPicker(fn, val || value);
                 return picker.container;
             },
             options: function () {
@@ -121,9 +120,20 @@ highed.InspectorField = function (type, value, properties, fn) {
                     itemsNode = highed.dom.cr('div', 'highed-inline-blocks'),
                     items = {},
                     itemCounter = 0
-                ;
+                ;         
 
-                function addItem(col) {
+                function addCompositeItem(val) {
+                    var item;
+
+                    item = fields[properties.subType] ? 
+                           fields[properties.subType](val) : 
+                           fields['string'](val);
+                    
+                    highed.dom.ap(container, item);       
+
+                }       
+
+                function addColorItem(col) {
                     var thing = highed.dom.cr('span', 'highed-field-colorpicker-compact', '&nbsp;'),
                         rem = highed.dom.cr('span', 'highed-field-array-remove fa fa-trash'),
                         id = ++itemCounter
@@ -172,15 +182,15 @@ highed.InspectorField = function (type, value, properties, fn) {
                 }
                 
                 if (properties.subType === 'color') {
-
-
                     highed.dom.on(add, 'click', function () {
-                        addItem('#000');
+                        addColorItem('#000');
                     });
 
                     if (highed.isArr(value)) {
-                        value.forEach(addItem);
+                        value.forEach(addColorItem);
                     }
+                } else {
+
                 }
 
                 highed.dom.ap(container, itemsNode, add);
