@@ -100,7 +100,7 @@ highed.dom = {
                 //display: 'block',
                 opacity: 1,
             //  background: 'rgba(46, 46, 46, 0.85)',
-                'pointer-events': 'all'
+                'pointer-events': 'auto'
             });
         });
 

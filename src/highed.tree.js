@@ -24,8 +24,95 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 highed.Tree = function (parent) {
+    var container = highed.dom.cr('div', 'highed-tree'),
+        selectedNode = false,
+        events = highed.events()
+    ;
 
+    ///////////////////////////////////////////////////////////////////////////
+    
+    function build(tree, level, pnode) {
+
+        level = level || 0;
+
+        if (tree && tree.children) {
+            Object.keys(tree.children).forEach(function (key) {
+                var child = tree.children[key],
+                    title = highed.dom.cr('div', 'parent-title', highed.uncamelize(key)),
+                    icon = highed.dom.cr('div', 'exp-col-icon fa fa-arrow-down'),
+                    body = highed.dom.cr('div', 'parent-body'),
+                    expanded = true
+                ;
+
+                if (child.entries.length === 0 && Object.keys(child.children).length === 0) {
+                    return;
+                }
+
+                highed.dom.ap(pnode,
+                    highed.dom.ap(highed.dom.cr('div', 'node'),
+                        icon,
+                        title
+                    ),
+                    body
+                );
+
+                function toggle() {
+                    expanded = !expanded;
+                    if (expanded) {
+                        highed.dom.style(icon, {
+                            transform: '',
+                            top: ''
+                        });
+                        highed.dom.style(body, {display: ''});
+                    } else {
+                        highed.dom.style(icon, {
+                            transform: 'rotate(-90deg)',
+                            top: '-5px'
+                        });
+                        
+                        highed.dom.style(body, {display: 'none'});
+                    }
+                }
+
+                highed.dom.on(icon, 'click', toggle);
+
+                if (Object.keys(child.children).length === 0) {
+                    highed.dom.style(icon, {
+                        display: 'none'
+                    });
+                }
+
+                highed.dom.on(title, 'click', function () {
+                    if (Object.keys(child.children).length > 0) {
+                        toggle();
+                        return;
+                    }
+
+                    if (selectedNode) {
+                        selectedNode.className = 'parent-title';
+                    }
+                    title.className = 'parent-title parent-title-selected';
+                    selectedNode = title;
+
+                    events.emit('Select', child, highed.uncamelize(key));
+                });
+
+                build(child, ++level, body);
+
+            });
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    highed.dom.ap(parent, container);
+
+    ///////////////////////////////////////////////////////////////////////////
+    
     return {
-
+        on: events.on,
+        build: function (tree) {
+            build(tree, 0, container);
+        }
     };
 };

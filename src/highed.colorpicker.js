@@ -124,7 +124,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             left: x + 'px',
             top: y + 'px',
             opacity: 1,
-            'pointer-events': 'all'
+            'pointer-events': 'auto'
         });
 
         highed.showDimmer(hide, true, true, 5);

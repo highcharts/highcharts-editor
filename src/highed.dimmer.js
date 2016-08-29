@@ -42,7 +42,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         highed.dom.style(dimmer, {
             'opacity': 0.7,
-            'pointer-events': 'all',
+            'pointer-events': 'auto',
             'z-index': 999 + (zIndex || 0)
         });
 

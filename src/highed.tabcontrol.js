@@ -119,7 +119,7 @@ highed.TabControl = function (parent, noOverflow) {
 
             highed.dom.style(tbody, {
                 opacity: 1,
-                'pointer-events': 'all'
+                'pointer-events': 'auto'
             });
 
             selectedTab = texports;

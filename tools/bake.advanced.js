@@ -36,34 +36,6 @@ require('colors');
 console.log('Higcharts Advanced Options Updater'.green);
 console.log('Fetching latest API dump...'.bold);
 
-function setAttr (obj, path, value) {
-    var current = obj,
-        res = false
-    ;
-
-    if (highed.isArr(obj)) {
-        obj.forEach(function (thing) {
-            highed.setAttr(thing, path, value);
-        });
-        return;
-    }
-
-    path.forEach(function(p, i) {
-        if (i === path.length - 1) {    
-            current[p] = value;
-            res = current[p];                 
-        } else {
-            if (typeof current[p] === 'undefined') {
-                current = current[p] = {};
-            } else {
-                current = current[p];                       
-            }
-        }
-    });
-
-    return res;
-}
-
 function writeMeta(data) {
     var body = [
         '/*',
@@ -99,6 +71,11 @@ function process(data) {
             nitm
         ;
 
+        //For now we skip functions and multi-types
+        if (entry.returnType === 'Function' || entry.name.indexOf('<') >= 0) {
+            return;
+        }
+
         path = parent.replace(/\-\-/g, '.').replace(/\-/g, '.').split('.');
 
         path.forEach(function(p, i) {
@@ -113,7 +90,8 @@ function process(data) {
                     id: entry.name,
                     shortName: entry.name.substr(entry.name.lastIndexOf('-') + 1),
                     dataType: (entry.returnType || '').toLowerCase(),
-                    description: entry.description
+                    description: entry.description,
+                    values: entry.values || ''
                 });
 
             } else {

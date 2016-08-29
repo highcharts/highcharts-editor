@@ -1,4 +1,5 @@
-/*
+/******************************************************************************
+
 Copyright (c) 2016, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
@@ -19,13 +20,15 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
 CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+
+******************************************************************************/
 
 highed.meta.optionsExtended = {
   "options": {
     "Titles": [
       {
         "text": "Main titles",
+        "group": true,
         "options": [
           {
             "text": "Chart title",
@@ -59,6 +62,7 @@ highed.meta.optionsExtended = {
     "General": [
       {
         "text": "Chart size",
+        "group": true,
         "options": [
           {
             "id": "chart--width",
@@ -92,6 +96,7 @@ highed.meta.optionsExtended = {
       },
       {
         "text": "Chart Interaction",
+        "group": true,
         "options": [
           {
             "id": "chart--zoomType",
@@ -99,8 +104,7 @@ highed.meta.optionsExtended = {
             "dataType": "string",
             "context": "General",
             "tooltipText": "Decides in what dimensions the user can zoom by dragging the mouse. Can be one of <code>x</code>, <code>y</code> or <code>xy</code>.",
-            "parent": "chart",
-            "values": "[null, \"x\", \"y\", \"xy\"]"
+            "parent": "chart"
           },
           {
             "id": "chart--polar",
@@ -110,6 +114,15 @@ highed.meta.optionsExtended = {
             "tooltipText": "When true, cartesian charts like line, spline, area and column are transformed into the polar coordinate system. Requires <code>highcharts-more.js</code>.",
             "defaults": "false",
             "parent": "chart"
+          },
+          {
+            "id": "chart--reflow",
+            "text": "Reflow on window resize",
+            "dataType": "boolean",
+            "context": "General",
+            "tooltipText": "Whether to reflow the chart to fit the width of the container div on resizing the window.",
+            "defaults": "true",
+            "parent": "chart"
           }
         ]
       }
@@ -117,6 +130,7 @@ highed.meta.optionsExtended = {
     "Appearance": [
       {
         "text": "Fonts",
+        "group": true,
         "options": [
           {
             "id": "chart--style",
@@ -131,6 +145,7 @@ highed.meta.optionsExtended = {
       },
       {
         "text": "Titles",
+        "group": true,
         "options": [
           {
             "id": "title--style",
@@ -154,6 +169,7 @@ highed.meta.optionsExtended = {
       },
       {
         "text": "Series colors",
+        "group": true,
         "options": [
           {
             "id": "colors",
@@ -167,6 +183,7 @@ highed.meta.optionsExtended = {
       },
       {
         "text": "Chart area",
+        "group": true,
         "options": [
           {
             "id": "chart--backgroundColor",
@@ -214,6 +231,7 @@ highed.meta.optionsExtended = {
       },
       {
         "text": "Plot area",
+        "group": true,
         "options": [
           {
             "id": "chart--plotBackgroundColor",
@@ -255,6 +273,7 @@ highed.meta.optionsExtended = {
     "Axes": [
       {
         "text": "Axes setup",
+        "group": true,
         "options": [
           {
             "id": "chart--inverted",
@@ -270,6 +289,7 @@ highed.meta.optionsExtended = {
       {
         "id": "xAxis",
         "text": "Horizontal Axis",
+        "group": true,
         "options": [
           {
             "id": "xAxis-title--style",
@@ -294,8 +314,7 @@ highed.meta.optionsExtended = {
             "dataType": "string",
             "context": "General",
             "defaults": "linear",
-            "parent": "xAxis",
-            "values": "[\"linear\", \"logarithmic\", \"datetime\", \"category\"]"
+            "parent": "xAxis"
           },
           {
             "id": "xAxis--opposite",
@@ -343,6 +362,7 @@ highed.meta.optionsExtended = {
       {
         "id": "yAxis",
         "text": "Vertical Axis",
+        "group": true,
         "options": [
           {
             "id": "yAxis-title--style",
@@ -360,8 +380,7 @@ highed.meta.optionsExtended = {
             "dataType": "string",
             "context": "General",
             "defaults": "linear",
-            "parent": "yAxis",
-            "values": "[\"linear\", \"logarithmic\", \"datetime\", \"category\"]"
+            "parent": "yAxis"
           },
           {
             "id": "yAxis--opposite",
@@ -380,6 +399,15 @@ highed.meta.optionsExtended = {
             "tooltipText": "Whether to reverse the axis so that the highest number is closest to the origin. If the chart is inverted, the x axis is reversed by default.",
             "defaults": "false",
             "parent": "yAxis"
+          },
+          {
+            "id": "yAxis-labels--format",
+            "text": "Axis labels format",
+            "tooltipText": "<p>A format string for the axis labels. The value is available through a variable <code>{value}</code>.</p><p><b>Units</b> can be added for example like <code>{value} USD</code>.</p><p><b>Formatting</b> can be added after a colon inside the variable, for example <code>USD {value:.2f}</code> to display two decimals, or <code>{value:%Y-%m-%d}</code> for a certain time format.",
+            "dataType": "string",
+            "context": "General",
+            "defaults": "{value}",
+            "parent": "yAxis-labels"
           }
         ]
       }
@@ -396,8 +424,70 @@ highed.meta.optionsExtended = {
             "tooltipText": "The type of series",
             "dataType": "string",
             "context": "General",
-            "parent": "series",
-            "values": "[null, \"line\", \"spline\", \"column\", \"area\", \"areaspline\", \"pie\", \"arearange\", \"areasplinerange\", \"boxplot\", \"bubble\", \"columnrange\", \"errorbar\", \"funnel\", \"gauge\", \"scatter\", \"waterfall\"]"
+            "parent": "series"
+          },
+          {
+            "id": "series--color",
+            "text": "Color",
+            "tooltipText": "The main color of the series. If no color is given here, the color is pulled from the array of default colors as given in the \"Appearance\" section."
+          },
+          {
+            "id": "series--colors",
+            "text": "Colors"
+          },
+          {
+            "id": "series--negativeColor",
+            "text": "Negative color",
+            "tooltipText": "The negative color of the series below the threshold. Threshold is default zero, this can be changed in the advanced settings."
+          },
+          {
+            "id": "series--colorByPoint",
+            "text": "Color by point",
+            "tooltipText": "Use one color per point. Colors can be changed in the \"Appearance\" section."
+          },
+          {
+            "id": "series--dashStyle",
+            "text": "Dash style"
+          },
+          {
+            "id": "series-marker--enabled",
+            "text": "Enable point markers"
+          },
+          {
+            "id": "series-marker--symbol",
+            "text": "Marker symbol"
+          },
+          {
+            "id": "series-tooltip--valuePrefix",
+            "text": "Prefix in tooltip",
+            "tooltipText": "Text to prepend before the value in the tooltip"
+          },
+          {
+            "id": "series-tooltip--valueSuffix",
+            "text": "Suffix (unit) in tooltip",
+            "tooltipText": "Text to append after the value in the tooltip"
+          },
+          {
+            "id": "series-seriesMapping--x",
+            "text": "Explicit x column"
+          },
+          {
+            "id": "series-seriesMapping--label",
+            "text": "Explicit label column"
+          },
+          {
+            "id": "series--width",
+            "text": "Funnel width"
+          },
+          {
+            "id": "series--neckWidth",
+            "text": "Neck width",
+            "tooltipText": "The width of the neck, the lower part of the funnel. A number defines pixel width, a percentage string, f. eks. '25%', defines a percentage of the plot area width. Defaults to 25%."
+          },
+          {
+            "id": "series--neckHeight",
+            "text": "Neck height",
+            "tooltipText": "The height of the neck, the lower part of the funnel. A number defines pixel width, a percentage string, f. eks. '25%', defines a percentage of the plot area height. Defaults to 25%."
           }
         ]
       }
@@ -406,6 +496,7 @@ highed.meta.optionsExtended = {
       {
         "id": "data-labels",
         "text": "Value labels",
+        "group": true,
         "options": [
           {
             "id": "plotOptions-series-dataLabels--enabled",
@@ -414,6 +505,15 @@ highed.meta.optionsExtended = {
             "dataType": "boolean",
             "context": "General",
             "defaults": "false",
+            "parent": "plotOptions-series-dataLabels"
+          },
+          {
+            "id": "plotOptions-series-dataLabels--format",
+            "text": "Data label format",
+            "tooltipText": "<p>A format string for the value labels. The value is available through a variable <code>{y}</code>. Other available variables are <code>{x}</code> and <code>{key}</code> for the category.</p><p><b>Units</b> can be added for example like <code>{y} USD</code>.</p><p><b>Formatting</b> can be added after a colon inside the variable, for example <code>USD {y:.2f}</code> to display two decimals, or <code>{x:%Y-%m-%d}</code> for a certain time format.",
+            "dataType": "string",
+            "context": "General",
+            "defaults": "{y}",
             "parent": "plotOptions-series-dataLabels"
           },
           {
@@ -431,6 +531,7 @@ highed.meta.optionsExtended = {
     "Legend": [
       {
         "text": "General",
+        "group": true,
         "options": [
           {
             "id": "legend--enabled",
@@ -448,13 +549,13 @@ highed.meta.optionsExtended = {
             "context": "General",
             "tooltipText": "The layout of the legend items. Can be one of \"horizontal\" or \"vertical\".",
             "defaults": "horizontal",
-            "parent": "legend",
-            "values": "[\"horizontal\", \"vertical\"]"
+            "parent": "legend"
           }
         ]
       },
       {
         "text": "Placement",
+        "group": true,
         "options": [
           {
             "id": "legend--align",
@@ -463,8 +564,7 @@ highed.meta.optionsExtended = {
             "context": "General",
             "tooltipText": "<p>The horizontal alignment of the legend box within the chart area. Valid values are <code>left</code>, <code>center</code> and <code>right</code>.</p>\r\n\r\n<p>In the case that the legend is aligned in a corner position, the <code>layout</code> option will determine whether to place it above/below or on the side of the plot area.</p>",
             "defaults": "center",
-            "parent": "legend",
-            "values": "[\"left\", \"center\", \"right\"]"
+            "parent": "legend"
           },
           {
             "id": "legend--x",
@@ -482,8 +582,7 @@ highed.meta.optionsExtended = {
             "context": "General",
             "tooltipText": "<p>The vertical alignment of the legend box. Can be one of <code>top</code>, <code>middle</code> or  <code>bottom</code>. Vertical position can be further determined by the <code>y</code> option.</p>\r\n\r\n<p>In the case that the legend is aligned in a corner position, the <code>layout</code> option will determine whether to place it above/below or on the side of the plot area.</p>",
             "defaults": "bottom",
-            "parent": "legend",
-            "values": "[\"top\", \"middle\", \"bottom\"]"
+            "parent": "legend"
           },
           {
             "id": "legend--y",
@@ -507,6 +606,7 @@ highed.meta.optionsExtended = {
       },
       {
         "text": "Appearance",
+        "group": true,
         "options": [
           {
             "id": "legend--itemStyle",
@@ -566,6 +666,7 @@ highed.meta.optionsExtended = {
     "Tooltip": [
       {
         "text": "General",
+        "group": true,
         "options": [
           {
             "id": "tooltip--enabled",
@@ -589,6 +690,7 @@ highed.meta.optionsExtended = {
       },
       {
         "text": "Color and border",
+        "group": true,
         "options": [
           {
             "id": "tooltip--backgroundColor",
@@ -638,6 +740,7 @@ highed.meta.optionsExtended = {
     "Exporting": [
       {
         "text": "Exporting",
+        "group": true,
         "options": [
           {
             "id": "exporting--enabled",
@@ -660,8 +763,21 @@ highed.meta.optionsExtended = {
             "dataType": "number",
             "context": "General",
             "defaults": "",
-            "parent": "exporting",
-            "values": ""
+            "parent": "exporting"
+          },
+          {
+            "id": "exporting--sourceHeight",
+            "text": "Exported height",
+            "custom": {
+              "minValue": 10,
+              "maxValue": 2000,
+              "step": 10
+            },
+            "tooltipText": "Analogous to the <em>Exported width</em>",
+            "dataType": "number",
+            "context": "General",
+            "defaults": "",
+            "parent": "exporting"
           },
           {
             "id": "exporting--scale",
@@ -674,8 +790,7 @@ highed.meta.optionsExtended = {
             "context": "General",
             "tooltipText": "Defines the scale or zoom factor for the exported image compared to the on-screen display. While for instance a 600px wide chart may look good on a website, it will look bad in print. The default scale of 2 makes this chart export to a 1200px PNG or JPG. ",
             "defaults": "2",
-            "parent": "exporting",
-            "values": ""
+            "parent": "exporting"
           }
         ]
       }
@@ -683,6 +798,7 @@ highed.meta.optionsExtended = {
     "Localization": [
       {
         "text": "Number formatting",
+        "group": true,
         "options": [
           {
             "id": "lang--decimalPoint",
@@ -706,6 +822,7 @@ highed.meta.optionsExtended = {
       },
       {
         "text": "Exporting button and menu",
+        "group": true,
         "options": [
           {
             "id": "lang--contextButtonTitle",
@@ -714,8 +831,7 @@ highed.meta.optionsExtended = {
             "context": "General",
             "tooltipText": "Exporting module menu. The tooltip title for the context menu holding print and export menu items.",
             "defaults": "Chart context menu",
-            "parent": "lang",
-            "values": ""
+            "parent": "lang"
           },
           {
             "id": "lang--printChart",
@@ -724,8 +840,7 @@ highed.meta.optionsExtended = {
             "context": "General",
             "tooltipText": "Exporting module only. The text for the menu item to print the chart.",
             "defaults": "Print chart",
-            "parent": "lang",
-            "values": ""
+            "parent": "lang"
           },
           {
             "id": "lang--downloadPNG",
@@ -767,6 +882,7 @@ highed.meta.optionsExtended = {
       },
       {
         "text": "Zoom button",
+        "group": true,
         "options": [
           {
             "id": "lang--resetZoom",
@@ -776,6 +892,15 @@ highed.meta.optionsExtended = {
             "tooltipText": "The text for the label appearing when a chart is zoomed.",
             "defaults": "Reset zoom",
             "parent": "lang"
+          },
+          {
+            "id": "lang--resetZoomTitle",
+            "text": "Reset zoom button title",
+            "dataType": "string",
+            "context": "General",
+            "tooltipText": "The tooltip title for the label appearing when a chart is zoomed.",
+            "defaults": "Reset zoom level 1:1",
+            "parent": "lang"
           }
         ]
       }
@@ -783,6 +908,7 @@ highed.meta.optionsExtended = {
     "Credits": [
       {
         "text": "Chart credits (Requires license)",
+        "group": true,
         "options": [
           {
             "id": "credits--enabled",

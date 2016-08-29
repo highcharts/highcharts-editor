@@ -44,7 +44,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     highed.Tooltip = function (x, y, tip, blowup) {
         highed.dom.style(container, {
             opacity: 1,
-            'pointer-events': 'all',
+            'pointer-events': 'auto',
             left: x - 20 + 'px',
             top: y - 20 + 'px',
             width: '200px'

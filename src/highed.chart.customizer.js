@@ -28,9 +28,14 @@ highed.ChartCustomizer = function (parent, owner) {
         tabs = highed.TabControl(parent, true),
         simpleTab = tabs.createTab({title: 'SIMPLE'}),
         advancedTab = tabs.createTab({title: 'ADVANCED'}),
+        
         splitter = highed.HSplitter(simpleTab.body, {leftWidth: 30}),
         list = highed.List(splitter.left),
-        body = splitter.right
+        body = splitter.right,
+
+        advSplitter = highed.HSplitter(advancedTab.body, {leftWidth: 30}),
+        advBody = advSplitter.right,
+        advTree = highed.Tree(advSplitter.left)
     ;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -93,7 +98,40 @@ highed.ChartCustomizer = function (parent, owner) {
         entry.forEach(selectGroup);
     });
 
+    advTree.on('Select', function (item, selected) {
+        var table = highed.dom.cr('table', 'highed-customizer-table');
+        advBody.innerHTML = '';
+
+        item.entries.forEach(function (entry) {
+            highed.dom.ap(table,
+                highed.InspectorField(
+                    entry.dataType, 
+                    (owner.flatOptions[entry.id] || entry.defaults), 
+                    {
+                        title: highed.uncamelize(entry.shortName),
+                        tooltip: entry.description,
+                        values: entry.values
+                    },
+                    function (newValue) {           
+                        events.emit('PropertyChange', entry.id, newValue);
+                    }
+                )
+            );
+        });
+
+        highed.dom.ap(advBody, 
+            highed.dom.cr('div', 'highed-customizer-table-heading', selected),
+            table
+        );
+    });
+
     build();
+
+    if (highed.isNull(highed.meta.optionsAdvanced)) {
+        advancedTab.hide();
+    } else {
+        advTree.build(highed.meta.optionsAdvanced);        
+    }
 
     return {
         /* Listen to an event */

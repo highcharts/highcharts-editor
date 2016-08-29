@@ -201,6 +201,10 @@ highed.InspectorField = function (type, value, properties, fn) {
         help = highed.dom.cr('span', 'highed-icon fa fa-question-circle')
     ;
 
+    if (highed.isNull(value)) {
+        value = '';
+    }
+
     if (type.indexOf('array') === 0) {
         properties.subType = type.substr(6, type.length - 7);
         type = 'array';

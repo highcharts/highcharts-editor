@@ -52,7 +52,7 @@ highed.OverlayModal = function (contents, attributes) {
             width: properties.width + (properties.width.indexOf('%') > 0 ? '' : 'px'),
             height: properties.height + (properties.height.indexOf('%') > 0 ? '' : 'px'),
             opacity: 1,
-            'pointer-events': 'all',
+            'pointer-events': 'auto',
             'min-width': properties.minWidth + 'px',
             'min-height': properties.minHeight + 'px'
         });

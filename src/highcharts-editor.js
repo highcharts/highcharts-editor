@@ -43,6 +43,27 @@ var highed = {
     schemas: {},
     meta: {},
 
+    /** Make a camel back string pretty
+     * @param {string} - the input string
+     * @return {string} - the transformed string
+     */
+    uncamelize: function (str) {
+        var s = '';
+
+        if (str.length < 0 || !str) {
+            return str;
+        }
+
+        for (var i = 0; i < str.length; i++) {
+            if (str[i] === str[i].toUpperCase()) {
+                s += ' ';
+            }
+            s += str[i];            
+        }
+
+        return s[0].toUpperCase() + s.substr(1);
+    },
+
     /** Clamp a number between min/max
      * @param {number} - minimum value
      * @param {number} - maximum value
@@ -67,7 +88,9 @@ var highed = {
             r: parseInt(result[1], 16),
             g: parseInt(result[2], 16),
             b: parseInt(result[3], 16)
-        } : null;
+        } : {
+            r: 0, g: 0, b: 0
+        };
     },
 
     /** Invert a color 

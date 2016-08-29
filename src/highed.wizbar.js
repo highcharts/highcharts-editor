@@ -39,24 +39,28 @@ highed.WizardBar = function (parent, bodyParent, attributes) {
         if (step.number > 1) {
             highed.dom.style(previous, {
                 opacity: 1,
-                'pointer-events': 'all'
+                'pointer-events': 'auto',
+                'visibility': 'visible'
             });
         } else {
             highed.dom.style(previous, {
                 opacity: 0,
-                'pointer-events': 'none'
+                'pointer-events': 'none',
+                'visibility': 'hidden'
             });
         }
 
         if (step.number < count) {
             highed.dom.style(next, {
                 opacity: 1,
-                'pointer-events': 'all'
+                'pointer-events': 'auto',
+                'visibility': 'visible'
             });
         } else {
             highed.dom.style(next, {
                 opacity: 0,
-                'pointer-events': 'none'
+                'pointer-events': 'none',
+                'visibility': 'hidden'
             });
         }
     }
