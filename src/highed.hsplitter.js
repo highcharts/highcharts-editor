@@ -25,7 +25,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 highed.HSplitter = function (parent, attributes) {
     var properties = highed.merge({
-            leftWidth: 40
+            leftWidth: 40,
+            noOverflow: false
         }, attributes),
         container = highed.dom.cr('div', 'highed-hsplitter'),
         left = highed.dom.cr('div', 'panel left'),
@@ -61,6 +62,12 @@ highed.HSplitter = function (parent, attributes) {
     highed.dom.style(right, {
         width: (100 - properties.leftWidth) + '%'
     });
+
+    if (properties.noOverflow) {
+        highed.dom.style([container, left, right], {
+            'overflow-y': 'hidden'
+        });
+    }
 
     ///////////////////////////////////////////////////////////////////////////
 

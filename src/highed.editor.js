@@ -61,6 +61,9 @@ highed.Editor = function (parent, attributes) {
 
         chartCustomizer = highed.ChartCustomizer(wizbar.addStep({title: 'Customize'}).body, exports),
 
+
+        dataExp = highed.Exporter(wizbar.addStep({title: 'Export', id: 'export'}).body),
+
         chart = new Highcharts.Chart({
             chart: {
                 type: 'bar',
@@ -88,6 +91,7 @@ highed.Editor = function (parent, attributes) {
         chartCustomizer.resize(undefined, cs.h - ms.h - wb.h);
         chartTemplateSelector.resize(undefined, cs.h - ms.h - wb.h);
         splitter.resize(cs.w, cs.h - ms.h - wb.h);
+        dataExp.resize(cs.w, cs.h - ms.h - wb.h);
         chart.reflow();
         dataImp.resize();
         events.emit('Resized');
@@ -240,6 +244,12 @@ highed.Editor = function (parent, attributes) {
         chart = new Highcharts.Chart(chart.options);
         events.emit('ChartChange', chart.options);
         resize();
+    });
+
+    wizbar.on('Step', function (step, count, thing) {
+        if (thing.id === 'export') {
+            dataExp.init(exports.customizedOptions, getEmbeddableHTML());
+        }
     });
 
     ///////////////////////////////////////////////////////////////////////////

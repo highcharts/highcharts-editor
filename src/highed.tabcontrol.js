@@ -47,6 +47,11 @@ highed.TabControl = function (parent) {
         highed.dom.style(body, {
             height: cs.h - ps.h + 'px'
         });
+    
+        //Also re-focus the active tab
+        if (selectedTab) {
+            selectedTab.focus();
+        }
     }
 
     /* Create and return a new tab
@@ -110,7 +115,7 @@ highed.TabControl = function (parent) {
     ///////////////////////////////////////////////////////////////////////////
     
     if (!highed.isNull(parent)) {
-        
+
         highed.dom.ap(parent,
             highed.dom.ap(container, 
                 highed.dom.ap(paneBar,
