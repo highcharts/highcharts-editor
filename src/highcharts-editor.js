@@ -328,9 +328,12 @@ var highed = {
      * @param {number} level - the log level 1..4
      * @param {string} msg - the log message
      */
-    highed.log = function (level, msg) {
+    highed.log = function (level) {
+        var things = (Array.prototype.slice.call(arguments));
+        things.splice(0, 1);
+
         if (level <= currentLogLevel) {
-            console.log(logLevels[level - 1] + ':', msg);
+            console.log.apply(undefined, [logLevels[level - 1] + ':'].concat(things));
         }
     };
 

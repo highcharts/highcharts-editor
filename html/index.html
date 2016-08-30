@@ -27,7 +27,6 @@
     <script src="/src/highed.overlaymodal.js" type="text/javascript" charset="utf-8" ></script>
     <script src="/src/highed.hsplitter.js" type="text/javascript" charset="utf-8" ></script>
     <script src="/src/highed.tabcontrol.js" type="text/javascript" charset="utf-8" ></script>
-    <script src="/src/highed.inspector.js" type="text/javascript" charset="utf-8" ></script>
     <script src="/src/highed.inspector.field.js" type="text/javascript" charset="utf-8" ></script>
     <script src="/src/highed.list.js" type="text/javascript" charset="utf-8" ></script>
     
@@ -53,7 +52,7 @@
     <script src="/src/highed.exporter.js" type="text/javascript" charset="utf-8" ></script>
     <script src="/src/highed.tree.js" type="text/javascript" charset="utf-8" ></script>
     
-    <script src="/src/highed.tree.js" type="text/javascript" charset="utf-8" ></script>
+    <script src="/plugins/jquery-simple-rest.js" type="text/javascript" charset="utf-8" ></script>
 
     <style>
     	html, body {
@@ -83,7 +82,11 @@
 <script>
 
 	highed.ready(function () {
-		highed.ModalEditor('modal-btn', {}, function (html) {
+		highed.ModalEditor('modal-btn', {
+            plugins: {
+                'jquery-simple-rest': {}
+            }
+        }, function (html) {
 			highed.dom.get('chart-result').value = html;
 		});
 	});

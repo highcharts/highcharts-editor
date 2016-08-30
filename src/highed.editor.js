@@ -24,7 +24,91 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 (function () {
-    var instanceCount = 0;
+    var instanceCount = 0,
+        installedPlugins = {},
+        activePlugins = {},
+        pluginEvents = highed.events()
+    ;
+
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    //We embed the plugin system here because we want to access it in the
+    //editor, but there shouldn't be any access to the internals outside.
+
+     function install(name, definition) {
+        var properties = highed.merge({
+                meta: {
+                    version: 'unknown',
+                    author: 'unknown',
+                    homepage: 'unknown'
+                },
+                dependencies: [],
+                options: {}
+            }, definition)
+        ;
+
+        properties.dependencies.forEach(function (script) {
+            var t = highed.dom.cr('script');
+            t.src = script;
+            highed.dom.ap(document.head, t);
+        });
+
+        if (!highed.isNull(installedPlugins[name])) {
+            return highed.log(1, 'plugin -', name, 'is already installed');
+        }
+
+        installedPlugins[name] = properties;
+    }
+
+    function use(name, options) {
+        var plugin = installedPlugins[name],
+            filteredOptions = {}
+        ;
+
+        if (!highed.isNull(plugin)) {
+            if (activePlugins[name]) {
+                return highed.log(2, 'plugin -', name, 'is already active');
+            }
+
+            //Verify options
+            Object.keys(plugin.options).forEach(function (key) {
+                var option = plugin.options[key];
+                if (highed.isBasic(option) || highed.isArr(option)) {
+                    highed.log(2, 'plugin -', name, 'unexpected type definition for option', key, 'expected object');
+                } else {
+
+                    filteredOptions[key] = options[key] || plugin.options[key].default || '';
+
+                    if (option.required && highed.isNull(options[key])) {
+                        highed.log(1, 'plugin -', name, 'option', key, 'is required');
+                    }
+                }
+            });
+
+            activePlugins[name] = {
+                definition: plugin,
+                options: filteredOptions
+            };
+
+            if (highed.isFn(plugin.activate)) {
+                activePlugins[name].definition.activate(filteredOptions);
+            }    
+
+            pluginEvents.emit('Use', activePlugins[name]);
+
+        } else {
+            highed.log(2, 'plugin -', name, 'is not installed');
+        }
+    }
+
+    //Public interface
+    highed.plugins = {
+        install: install,
+        use: use
+    };
+
+    ///////////////////////////////////////////////////////////////////////////
 
     /**
      * The main chart editor object 
@@ -45,7 +129,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             properties = highed.merge({
                 defaultChartOptions: {},
-                on: {}
+                on: {},
+                plugins: {}
             }, attributes),
 
             container = highed.dom.cr('div', 'highed-container'),
@@ -291,6 +376,23 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         } else {
             highed.log(2, 'on object in editor properties is not a valid object');
         }
+
+        //Activate plugins
+        Object.keys(properties.plugins).forEach(function (name) {
+            highed.plugins.use(name, properties.plugins[name] || {});
+        });
+
+        //Dispatch change events to the active plugins
+        events.on('ChartChange', function (options) {
+            Object.keys(activePlugins).forEach(function (key) {
+                var plugin = activePlugins[key];
+                if (highed.isFn(plugin.definition.chartchange)) {
+                    plugin.definition.chartchange.apply(plugin.options, [{
+                        json: exports.customizedOptions
+                    }, plugin.options]);
+                }
+            });
+        });
 
         ///////////////////////////////////////////////////////////////////////////
 
