@@ -58,7 +58,7 @@ This will put a built version in the `dist` folder.
 
 ### TinyMCE
 
-If you're using TinyMCE, and would like to be able to insert Highchart charts into your documents, simply include `dist/highcharts-editor.tinymce.min.js` in your page. Remember to bake first!
+If you're using TinyMCE, and would like to be able to insert Highchart charts into your documents, simply include `dist/highcharts-editor.tinymce.min.js` in your page. Remember to bake first! **Do not include `highcharts-editor.min.js` when including the tinymce plugin! The editor is baked into the same script for your convinience!**
 
 After the script is included, create your editor with the highcharts plugin enabled:
     
