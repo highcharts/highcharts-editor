@@ -82,7 +82,7 @@ You should also use the `noneditable` plug-in to avoid accidentally deleting par
 
 ### Wordpress
 
-Once `gulp` has been ran, a wordpress plugin will appear at `dist/plugins/highcharts-wp.zip`. This can be uploaded straight to your installation.
+Once `gulp` has been ran, a wordpress plugin will appear at `dist/highcharts-editor.wordpress.zip`. This can be uploaded straight to your installation.
 
 Alternatively you can find a pre-built version [here](#).
 

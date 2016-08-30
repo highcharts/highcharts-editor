@@ -1,5 +1,6 @@
 var dest = 'dist/',
     electronDest = 'app/',
+    wpPluginDest = 'integrations/wordpress/highcharts-editor/',
     name = 'highcharts-editor',
     gulp = require('gulp'),
     rename = require('gulp-rename'),
@@ -9,6 +10,7 @@ var dest = 'dist/',
     electron = require('gulp-electron'),
     packageJson = require('./package.json'),
     jshint = require('gulp-jshint'),
+    zip = require('gulp-zip'),
     //The order is important, so we don't do wildcard
     sources =[
         "./src/highcharts-editor.js",
@@ -53,6 +55,7 @@ gulp.task('less', function () {
                .pipe(rename(name + '.min.css'))
                .pipe(gulp.dest(dest))
                .pipe(gulp.dest(electronDest))
+               .pipe(gulp.dest(wpPluginDest))
     ; 
 });
 
@@ -66,6 +69,13 @@ gulp.task('plugins', function () {
     ;
 });
 
+gulp.task('wordpress', function () {
+    return gulp.src(wpPluginDest + '*')
+               .pipe(zip(name + '.wordpress.zip'))
+               .pipe(gulp.dest(dest))
+    ;
+});
+
 
 gulp.task('minify', function () {
     return gulp.src(sources)
@@ -75,6 +85,7 @@ gulp.task('minify', function () {
                .pipe(uglify())
                .pipe(gulp.dest(dest))
                .pipe(gulp.dest(electronDest))
+               .pipe(gulp.dest(wpPluginDest))
     ;
 });
 
@@ -122,5 +133,5 @@ gulp.task('tinymce', function () {
 });
 
 gulp.task('default', function () {
-    gulp.start('minify', 'tinymce', 'less', 'plugins');
+    gulp.start('minify', 'tinymce', 'less', 'plugins', 'wordpress');
 });

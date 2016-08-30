@@ -14,6 +14,7 @@
     "gulp-less": "*",
     "gulp-rename": "*",
     "gulp-uglify": "*",
+    "gulp-zip": "*",
     "jshint": "^2.9.3",
     "request": "*",
     "yargs": "*"
