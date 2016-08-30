@@ -80,6 +80,12 @@ Both plug-ins add entries into the `Insert` menu in TinyMCE. Note that the inter
 
 You should also use the `noneditable` plug-in to avoid accidentally deleting parts of the chart, and to make it easy to delete charts when required.
 
+### Wordpress
+
+Once `gulp` has been ran, a wordpress plugin will appear at `dist/plugins/highcharts-wp.zip`. This can be uploaded straight to your installation.
+
+Alternatively you can find a pre-built version [here](#).
+
 ## API Quick Reference
 
 **Full documentation can be found [here](#).**
