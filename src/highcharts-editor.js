@@ -277,7 +277,16 @@ var highed = {
         ],
         currentLogLevel = 4,
         initQueue = [],
-        isReady = false
+        isReady = false,
+        cdnScripts = [
+            "https://code.highcharts.com/highcharts.js",    
+            "http://code.highcharts.com/adapters/standalone-framework.js",  
+            "https://code.highcharts.com/highcharts-more.js",   
+            "https://code.highcharts.com/highcharts-3d.js", 
+            "https://code.highcharts.com/stock/highstock.js",   
+            "https://code.highcharts.com/modules/data.js",  
+            "https://code.highcharts.com/modules/exporting.js"
+        ]
     ;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -296,6 +305,7 @@ var highed = {
     }
 
     pollForReady();
+
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -324,4 +334,21 @@ var highed = {
         }
     };
 
+    ///////////////////////////////////////////////////////////////////////////
+
+ //   highed.ready(function () {
+        //Include the highcharts scripts
+    function tryAddScripts() {
+        if (document.head) {
+            cdnScripts.forEach(function (script) {
+                var s = document.createElement('script');
+                s.src = script;
+                document.head.appendChild(s);
+            });            
+        } else {
+            setTimeout(tryAddScripts, 10);            
+        }
+    }
+
+    tryAddScripts();
 })();

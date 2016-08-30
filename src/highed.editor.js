@@ -23,283 +23,301 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-/**
- * The main chart editor object 
- * @memberof! highed#
- * @exports highed.Editor
- * @param {object} parent - the node to attach the editor to
- * @param {object} attributes - the editor settings
- * @return {highed.Editor} - A new instance of an editor
- */
-highed.Editor = function (parent, attributes) {
-    var events = highed.events(),
-        customizedOptions = {},
-        exports = {
-            customizedOptions: customizedOptions,
-            flatOptions: {}
-        },
-
-        properties = highed.merge({
-            defaultChartOptions: {},
-            on: {}
-        }, attributes),
-
-        container = highed.dom.cr('div', 'highed-container'),
-
-        mainToolbar = highed.Toolbar(container, {
-            additionalCSS: ['highed-header']
-        }),
-
-        splitter = highed.HSplitter(container, {leftWidth: 60}),
-
-        wizbar = highed.WizardBar(container, splitter.left),
-
-        dataImp = highed.DataImporter(wizbar.addStep({title: 'Import'}).body),
-    
-        chartTemplateSelector = highed.ChartTemplateSelector(wizbar.addStep({title: 'Templates'}).body),
-        chartContainer = highed.dom.cr('div', 'highed-box-size highed-chart-container'),
-
-        chartCustomizer = highed.ChartCustomizer(wizbar.addStep({title: 'Customize'}).body, exports),
-
-
-        dataExp = highed.Exporter(wizbar.addStep({title: 'Export', id: 'export'}).body),
-
-        chart = new Highcharts.Chart({
-            chart: {
-                type: 'bar',
-                renderTo: chartContainer                
-            }
-        }),
-
-        cleanOptions = highed.merge({}, highed.merge(properties.defaultChartOptions, chart.options))
-    ;
-
-    ///////////////////////////////////////////////////////////////////////////
-    
-    /** 
-     * Force a resize of the editor
-     * @inner
-     * @instance 
-     */
-    function resize() {
-        var cs = highed.dom.size(container),
-            ms = highed.dom.size(mainToolbar.container),
-            wb = highed.dom.size(wizbar.container)
-        ;
-
-        //wizbar.resize(undefined, cs.h - ms.h - wb.h);
-        chartCustomizer.resize(undefined, cs.h - ms.h - wb.h);
-        chartTemplateSelector.resize(undefined, cs.h - ms.h - wb.h);
-        splitter.resize(cs.w, cs.h - ms.h - wb.h);
-        dataExp.resize(cs.w, cs.h - ms.h - wb.h);
-        chart.reflow();
-        dataImp.resize();
-        events.emit('Resized');
-    }
-
-    /** 
-     * Get embeddable chart
-     * @inner
-     * @instance 
-     * @return {string} - String of HTML to reproduce the current chart.
-     */
-    function getEmbeddableHTML() {
-        var id = 'chart',
-            jsIncludes = [
-                'https://code.highcharts.com/highcharts.js',
-                'http://code.highcharts.com/adapters/standalone-framework.js',
-                'https://code.highcharts.com/highcharts-more.js',
-                'https://code.highcharts.com/highcharts-3d.js',
-                'https://code.highcharts.com/modules/data.js'
-            ],
-            title = chart.options.titles ? chart.options.titles.text || 'untitled chart' : 'untitled chart'
-        ;
-
-        return '\n' + [
-         //   '<iframe><html><head>',
-            '<div>',
-            //Write JS includes
-            jsIncludes.map(function (include) {
-                return '<script src="' + include + '"></script>';
-            }).join(''),
-
-            '<div id="', id, '" style="min-width:100px;font-family:sans-serif;background:#eee;line-height:50px;color:#242424;text-align:center"><span style="font-size:24px;">Highcharts Chart</span><br/>',
-            title,
-            '<br/></div>',
-           // '</head><body>',
-
-            //Write instancer
-            '<script type="text/javascript">',
-            '(function(){',
-            'new Highcharts.chart("', id, '", ', 
-                JSON.stringify(highed.merge(highed.merge({}, exports.customizedOptions), {chart: {renderTo: id}})), ');',
-            '})();', 'console.log("helloworld");',
-            '</script></div><i>Fig 1: ', title, '</i>'//</head><body><div id="' + id + '"></div></body></html></iframe>'
-
-        ].join('') + '\n';
-    }
+(function () {
+    var instanceCount = 0;
 
     /**
-     * Get SVG chart
+     * The main chart editor object 
+     * @memberof! highed#
+     * @exports highed.Editor
+     * @param {object} parent - the node to attach the editor to
+     * @param {object} attributes - the editor settings
+     * @return {highed.Editor} - A new instance of an editor
      */
-    function getEmbeddableSVG() {
-        return chart.getSVG();
-    }
+    highed.Editor = function (parent, attributes) {
+        var events = highed.events(),
+            customizedOptions = {},
+            exports = {
+                customizedOptions: customizedOptions,
+                flatOptions: {},
+                features: 'import export templates customize'
+            },
 
-    /** 
-     * Get chart JSON
-     * @inner
-     * @instance 
-     * @return {string} - String of JSON to reproduce the current chart.
-     */
-    function getEmbeddableJSON() {
-        return JSON.stringify(exports.customizedOptions);
-    }
+            properties = highed.merge({
+                defaultChartOptions: {},
+                on: {}
+            }, attributes),
 
-    ///////////////////////////////////////////////////////////////////////////
+            container = highed.dom.cr('div', 'highed-container'),
 
-    //Attach to parent node
-    parent = highed.dom.get(parent);
-    if (parent) {
-        highed.dom.ap(parent, 
-            container                           
+            mainToolbar = highed.Toolbar(container, {
+                additionalCSS: ['highed-header']
+            }),
+
+            splitter = highed.HSplitter(container, {leftWidth: 60}),
+
+            wizbar = highed.WizardBar(container, splitter.left),
+
+            dataImp = highed.DataImporter(wizbar.addStep({title: 'Import'}).body),
+        
+            chartTemplateSelector = highed.ChartTemplateSelector(wizbar.addStep({title: 'Templates'}).body),
+            chartContainer = highed.dom.cr('div', 'highed-box-size highed-chart-container'),
+
+            chartCustomizer = highed.ChartCustomizer(wizbar.addStep({title: 'Customize'}).body, exports),
+
+            dataStep = wizbar.addStep({title: 'Export', id: 'export'}),
+            dataExp = highed.Exporter(dataStep.body),
+
+            chart = new Highcharts.Chart({
+                chart: {
+                    type: 'bar',
+                    renderTo: chartContainer                
+                }
+            }),
+
+            cleanOptions = highed.merge({}, highed.merge(properties.defaultChartOptions, chart.options))
+        ;
+
+        ///////////////////////////////////////////////////////////////////////////
+
+        
+        /** 
+         * Force a resize of the editor
+         * @inner
+         * @instance 
+         */
+        function resize() {
+            var cs = highed.dom.size(container),
+                ms = highed.dom.size(mainToolbar.container),
+                wb = highed.dom.size(wizbar.container)
+            ;
+
+            //wizbar.resize(undefined, cs.h - ms.h - wb.h);
+            chartCustomizer.resize(undefined, cs.h - ms.h - wb.h);
+            chartTemplateSelector.resize(undefined, cs.h - ms.h - wb.h);
+            splitter.resize(cs.w, cs.h - ms.h - wb.h);
+            dataExp.resize(cs.w, cs.h - ms.h - wb.h);
+            chart.reflow();
+            dataImp.resize();
+            events.emit('Resized');
+        }
+
+        /** 
+         * Get embeddable chart
+         * @inner
+         * @instance 
+         * @return {string} - String of HTML to reproduce the current chart.
+         */
+        function getEmbeddableHTML(placehold) {
+            var id = 'highchart-' + (++instanceCount),
+                jsIncludes = [
+                    'https://code.highcharts.com/highcharts.js',
+                    'http://code.highcharts.com/adapters/standalone-framework.js',
+                    'https://code.highcharts.com/highcharts-more.js',
+                    'https://code.highcharts.com/highcharts-3d.js',
+                    'https://code.highcharts.com/modules/data.js'
+                ],
+                title = chart.options.titles ? chart.options.titles.text || 'untitled chart' : 'untitled chart'
+            ;
+
+            return '\n' + [
+             //   '<iframe><html><head>',
+                '<div class="mceNonEditable">',
+                //Write JS includes
+                jsIncludes.map(function (include) {
+                    return '<script src="' + include + '"></script>';
+                }).join(''),
+
+                '<div id="', id, '">',
+                getEmbeddableSVG(),
+                '</div>',
+               // '</head><body>',
+
+                //Write instancer
+                '<script type="text/javascript">',
+                '(function(){',
+                'new Highcharts.chart("', id, '", ', 
+                    JSON.stringify(highed.merge(highed.merge({}, exports.customizedOptions), {chart: {renderTo: id}})), ');',
+                '})();',
+                '</script></div>'//</head><body><div id="' + id + '"></div></body></html></iframe>'
+
+            ].join('') + '\n';
+        }
+
+        /**
+         * Get SVG chart
+         */
+        function getEmbeddableSVG() {
+            if (highed.isFn(chart.getSVG)) {
+                return chart.getSVG();            
+            } else {
+                highed.log(1, 'tried to export to SVG, but exporter module is not loaded');
+            }
+        }
+
+        /** 
+         * Get chart JSON
+         * @inner
+         * @instance 
+         * @return {string} - String of JSON to reproduce the current chart.
+         */
+        function getEmbeddableJSON() {
+            return JSON.stringify(exports.customizedOptions);
+        }
+
+        function destroy() {
+            if (container.parentNode) {
+                container.parentNode.removeChild(container);
+            }
+        }
+
+        ///////////////////////////////////////////////////////////////////////////
+
+        //Attach to parent node
+        parent = highed.dom.get(parent);
+        if (parent) {
+            highed.dom.ap(parent, 
+                container                           
+            );
+
+            highed.dom.ap(splitter.right, 
+                chartContainer
+            );
+
+            highed.dom.ap(mainToolbar.left,
+                highed.dom.cr('div', 'highed-logo')
+            );
+
+            resize();
+        } else {
+            highed.log(1, 'no valid parent supplied to editor');
+        }
+
+        highed.dom.on(window, 'resize', resize);
+
+        highed.dom.ap(mainToolbar.right,
+            highed.dom.cr('span', 'highed-credits', 'Highcharts Editor Beta')
         );
 
-        highed.dom.ap(splitter.right, 
-            chartContainer
-        );
+        ///////////////////////////////////////////////////////////////////////////
+        
+        //Handle chart template selection
+        chartTemplateSelector.on('Select', function (template) {
+            var options = highed.merge(highed.merge({}, cleanOptions), customizedOptions);
 
-        highed.dom.ap(mainToolbar.left,
-            highed.dom.cr('div', 'highed-logo')
-        );
+            Object.keys(template.config).forEach(function (key) {
+                highed.setAttr(options, key, template.config[key]);
+                highed.setAttr(exports.customizedOptions, key, template.config[key]);
+                exports.flatOptions[key] = template.config[key];
+            });
 
-        resize();
-    } else {
-        highed.log(1, 'no valid parent supplied to editor');
-    }
+            options.chart.renderTo = chartContainer;
+            chart = new Highcharts.Chart(options);
 
-    highed.dom.on(window, 'resize', resize);
+            events.emit('ChartChange', options);
 
-    highed.dom.ap(mainToolbar.right,
-        highed.dom.cr('span', 'highed-credits', 'Highcharts Editor Beta')
-    );
-
-    ///////////////////////////////////////////////////////////////////////////
-    
-    //Handle chart template selection
-    chartTemplateSelector.on('Select', function (template) {
-        var options = highed.merge(highed.merge({}, cleanOptions), customizedOptions);
-
-        Object.keys(template.config).forEach(function (key) {
-            highed.setAttr(options, key, template.config[key]);
-            highed.setAttr(exports.customizedOptions, key, template.config[key]);
-            exports.flatOptions[key] = template.config[key];
+            resize();
         });
 
-        options.chart.renderTo = chartContainer;
-        chart = new Highcharts.Chart(options);
+        //Handle property change
+        chartCustomizer.on('PropertyChange', function (id, value) {
+            highed.setAttr([chart.options, customizedOptions], id, value);        
+            highed.setAttr(chart.options, 'plotOptions--series--animation', false);
 
-        events.emit('ChartChange', options);
+            exports.flatOptions[id] = value;
 
-        resize();
-    });
+            chart = new Highcharts.Chart(chart.options);
+            
+            events.emit('ChartChange', chart.options);
 
-    //Handle property change
-    chartCustomizer.on('PropertyChange', function (id, value) {
-        highed.setAttr([chart.options, customizedOptions], id, value);        
-        highed.setAttr(chart.options, 'plotOptions--series--animation', false);
+            resize();
+        });
 
-        exports.flatOptions[id] = value;
+        dataImp.on('ImportCSV', function (data) {
+            if (!chart || !chart.options) {
+                chart = {options: {}};
+            }
 
-        chart = new Highcharts.Chart(chart.options);
-        
-        events.emit('ChartChange', chart.options);
+            highed.setAttr([chart.options, cleanOptions, exports.customizedOptions], 'plotOptions--series--animation', true);
+            highed.setAttr([chart.options, cleanOptions, exports.customizedOptions], 'data--csv', data.csv);
+            highed.setAttr([chart.options, cleanOptions, exports.customizedOptions], 'data--itemDelimiter', data.itemDelimiter);
+            highed.setAttr([chart.options, cleanOptions, exports.customizedOptions], 'data--firstRowAsNames', data.firstRowAsNames);
+            highed.setAttr([chart.options, cleanOptions, exports.customizedOptions], 'data--dateFormat', data.dateFormat);
+            highed.setAttr([chart.options, cleanOptions, exports.customizedOptions], 'data--decimalPoint', data.decimalPoint);
+            highed.setAttr([chart.options, cleanOptions], 'series', {});
 
-        resize();
-    });
+            chartContainer.innerHTML = '';
 
-    dataImp.on('ImportCSV', function (data) {
-        if (!chart || !chart.options) {
-            chart = {options: {}};
-        }
+            chart = new Highcharts.Chart(chart.options);
+            
+            events.emit('ChartChange', chart.options);
 
-        highed.setAttr([chart.options, cleanOptions, exports.customizedOptions], 'plotOptions--series--animation', true);
-        highed.setAttr([chart.options, cleanOptions, exports.customizedOptions], 'data--csv', data.csv);
-        highed.setAttr([chart.options, cleanOptions, exports.customizedOptions], 'data--itemDelimiter', data.itemDelimiter);
-        highed.setAttr([chart.options, cleanOptions, exports.customizedOptions], 'data--firstRowAsNames', data.firstRowAsNames);
-        highed.setAttr([chart.options, cleanOptions, exports.customizedOptions], 'data--dateFormat', data.dateFormat);
-        highed.setAttr([chart.options, cleanOptions, exports.customizedOptions], 'data--decimalPoint', data.decimalPoint);
-        highed.setAttr([chart.options, cleanOptions], 'series', {});
+            resize();
+        });
 
-        chartContainer.innerHTML = '';
+        dataImp.on('ImportJSON', function (data) {
+            if (!chart || !chart.options) {
+                chart = {options: {}};
+            }
+            
 
-        chart = new Highcharts.Chart(chart.options);
-        
-        events.emit('ChartChange', chart.options);
+            highed.merge(exports.customizedOptions, data);
+            highed.merge(chart.options, data);
 
-        resize();
-    });
+            highed.setAttr(chart.options, 'chart--renderTo', chartContainer);
+            
+            chart = new Highcharts.Chart(chart.options);
+            events.emit('ChartChange', chart.options);
+            resize();
+        });
 
-    dataImp.on('ImportJSON', function (data) {
-        if (!chart || !chart.options) {
-            chart = {options: {}};
-        }
-        
-
-        highed.merge(exports.customizedOptions, data);
-        highed.merge(chart.options, data);
-
-        highed.setAttr(chart.options, 'chart--renderTo', chartContainer);
-        
-        chart = new Highcharts.Chart(chart.options);
-        events.emit('ChartChange', chart.options);
-        resize();
-    });
-
-    wizbar.on('Step', function (step, count, thing) {
-        if (thing.id === 'export') {
-            dataExp.init(exports.customizedOptions, getEmbeddableHTML());
-        }
-    });
-
-    ///////////////////////////////////////////////////////////////////////////
-        
-    //Attach event listeners defined in the properties
-    if (!highed.isBasic(properties.on)) {
-        Object.keys(properties.on).forEach(function (event) {
-            if (highed.isFn(properties.on[event])) {
-                events.on(event, properties.on[event]);
-            } else {
-                highed.log(2, 'tried attaching a non-function to' + event);
+        wizbar.on('Step', function (step, count, thing) {
+            if (thing.id === 'export') {
+                dataExp.init(exports.customizedOptions, getEmbeddableHTML());
             }
         });
-    } else {
-        highed.log(2, 'on object in editor properties is not a valid object');
-    }
 
-    ///////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////
+            
+        //Attach event listeners defined in the properties
+        if (!highed.isBasic(properties.on)) {
+            Object.keys(properties.on).forEach(function (event) {
+                if (highed.isFn(properties.on[event])) {
+                    events.on(event, properties.on[event]);
+                } else {
+                    highed.log(2, 'tried attaching a non-function to' + event);
+                }
+            });
+        } else {
+            highed.log(2, 'on object in editor properties is not a valid object');
+        }
 
-    //Public interface
- 
-    /** 
-     * Attach an event listener
-     * @instance
-     * @inner
-     * @param {string} event - the event to listen for
-     * @param {function} callback - the callback to execute when the event is emitted
-     * @param {} context (optional) - the value of the this reference in the callback
-     *
-     * @return a function that can be called to unbind the listener
-     */
-    exports.on = events.on;
-    /* Force a resize of the editor */
-    exports.resize = resize;
-    /* Get embeddable javascript */
-    exports.getEmbeddableHTML = getEmbeddableHTML;
-    /* Get embeddable json */
-    exports.getEmbeddableJSON = getEmbeddableJSON;
-    /* Get embeddable SVG */
-    exports.getEmbeddableSVG = getEmbeddableSVG;
-    
-    return exports;
-};
+        ///////////////////////////////////////////////////////////////////////////
+
+        //Public interface
+     
+        /** 
+         * Attach an event listener
+         * @instance
+         * @inner
+         * @param {string} event - the event to listen for
+         * @param {function} callback - the callback to execute when the event is emitted
+         * @param {} context (optional) - the value of the this reference in the callback
+         *
+         * @return a function that can be called to unbind the listener
+         */
+        exports.on = events.on;
+        /* Force a resize of the editor */
+        exports.resize = resize;
+        /* Get embeddable javascript */
+        exports.getEmbeddableHTML = getEmbeddableHTML;
+        /* Get embeddable json */
+        exports.getEmbeddableJSON = getEmbeddableJSON;
+        /* Get embeddable SVG */
+        exports.getEmbeddableSVG = getEmbeddableSVG;
+        /* Destroy the editor */
+        exports.destroy = destroy;
+        
+        return exports;
+    };
+})();
