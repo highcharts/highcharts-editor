@@ -1,26 +1,25 @@
 {
-	"name": "highcharts-editor",
-	"author": "Chris Vasseng <christer@highsoft.com>",
-	"version": "0.0.1",
-    "private": true,
-	"license": "MIT",
-
-	"devDependencies": {
-        "gulp": "*",
-        "gulp-rename": "*",
-        "gulp-uglify": "*",
-        "gulp-concat": "*",
-        "gulp-less": "*",
-        "gulp-electron": "*",
-
-        "async": "*",
-        "request": "*",
-        "colors": "*",
-        "yargs": "*"		
-	},
-
-	"dependencies": {
-		"express": "*",
-		"express-less": "*"		
-	}
+  "name": "highcharts-editor",
+  "author": "Chris Vasseng <christer@highsoft.com>",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MIT",
+  "devDependencies": {
+    "async": "*",
+    "colors": "*",
+    "gulp": "*",
+    "gulp-concat": "*",
+    "gulp-electron": "*",
+    "gulp-jshint": "^2.0.1",
+    "gulp-less": "*",
+    "gulp-rename": "*",
+    "gulp-uglify": "*",
+    "jshint": "^2.9.3",
+    "request": "*",
+    "yargs": "*"
+  },
+  "dependencies": {
+    "express": "*",
+    "express-less": "*"
+  }
 }

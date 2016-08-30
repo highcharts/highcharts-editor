@@ -8,6 +8,7 @@ var dest = 'dist/',
     less = require('gulp-less'),
     electron = require('gulp-electron'),
     packageJson = require('./package.json'),
+    jshint = require('gulp-jshint'),
     //The order is important, so we don't do wildcard
     sources =[
         "./src/highcharts-editor.js",

@@ -24,7 +24,7 @@
     * Array types in the property customizer
     * Advanced options in the property customizer
     * Basic responsiveness
-    * Simple plugin API
+    * Simple data fetcher plugin API
 
 **Ecosystem/Tooling**
     

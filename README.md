@@ -58,14 +58,16 @@ This will put a built version in the `dist` folder.
 
 ### TinyMCE
 
-If you're using TinyMCE, and would like to be able to insert Highchart charts into your documents, simply include `dist/highcharts-editor.tinymce.min.js` in your page. Remember to bake first! **Do not include `highcharts-editor.min.js` when including the tinymce plugin! The editor is baked into the same script for your convinience!**
+If you're using TinyMCE, and would like to be able to insert Highchart charts from it, simply include `dist/highcharts-editor.tinymce.min.js` in your page. Remember to bake first! 
+
+**Do not include `highcharts-editor.min.js` when including the tinymce plugin! The editor is baked into the same script for your convinience!**
 
 After the script is included, create your editor with the highcharts plugin enabled:
     
     tinymce.init({
         selector: "textarea",
         plugins: [
-            "highcharts highchartssvg"
+            "highcharts highchartssvg noneditable"
         ]
     });
 
@@ -76,7 +78,7 @@ The static version may therefore be more suitable to applications where the edit
 
 Both plug-ins add entries into the `Insert` menu in TinyMCE. Note that the interactive version will insert an SVG chart which will be overridden when viewing the page you're editing. This is to provide a fallback in cases where JavaScript isn't available (e.g. NoScript etc.).
 
-You should also use the `noneditable` plug-in to avoid accidentally deleting parts of the chart.
+You should also use the `noneditable` plug-in to avoid accidentally deleting parts of the chart, and to make it easy to delete charts when required.
 
 ## API Quick Reference
 
