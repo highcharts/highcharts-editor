@@ -23,45 +23,48 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-/* UI component to change the attributes of an object
- * from a schema.
- *
- * @parent - the node to attach the inspector to
- */
+(function () {
 
-highed.Inspector = function (parent) {
-    var events = highed.events(),
-        table = highed.dom.cr('table')
-    ;
 
-    ///////////////////////////////////////////////////////////////////////////
-
-    /* Inspect an object
-     * @object - the object containing the data
-     * @schema - the schema used to build the UI
-     * @fn (optional) - the function to call when the object changes
-     */
-    function inspect(object, schema, fn) {
-        table.innerHTML = '';
-
-        if (typeof schema !== 'undefined') {
-            Object.keys(schema).forEach(function (key) {
-                var value = schema[key].default;
-
-                if (typeof object[key] !== 'undefined') {
-                    value = object[key];
-                }
-            });
-        }
-    }
 
     ///////////////////////////////////////////////////////////////////////////
     
-    highed.ap(parent, table);
+    /*
+        - chart change event
+        - done editing event
+        - start editing event
+
+
+    */
+    function reg(name, definition) {
+        var properties = highed.merge({
+                meta: {
+                    version: 'unknown',
+                    author: 'unknown',
+                    homepage: 'unknown'
+                },
+                dependencies: [],
+                options: {}
+            }, definition)
+        ;
+
+
+    }
+
+    function active() {
+
+    }
+
+    function use(name, options) {
+
+    }
 
     ///////////////////////////////////////////////////////////////////////////
 
-    return {
-        on: events.on
+    //Public interface
+    highed.plugins = {
+        reg: reg,
+        active: active,
+        use: use
     };
-};
+})();
