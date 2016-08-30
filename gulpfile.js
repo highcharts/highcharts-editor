@@ -55,6 +55,17 @@ gulp.task('less', function () {
     ; 
 });
 
+gulp.task('plugins', function () {
+    return gulp.src('plugins/*.js')
+               //.pipe(concat(name + '.js'))
+              // .pipe(gulp.dest(dest))               
+               //.pipe(rename(name + '.min.js'))
+               .pipe(uglify())
+               .pipe(gulp.dest(dest + 'plugins'))
+    ;
+});
+
+
 gulp.task('minify', function () {
     return gulp.src(sources)
                .pipe(concat(name + '.js'))
@@ -110,5 +121,5 @@ gulp.task('tinymce', function () {
 });
 
 gulp.task('default', function () {
-    gulp.start('minify', 'tinymce', 'less');
+    gulp.start('minify', 'tinymce', 'less', 'plugins');
 });

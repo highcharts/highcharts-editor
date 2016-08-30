@@ -98,6 +98,10 @@ Properties is an object as such:
         //Events to listen for - same as calling Editor.on(...)
         on: {
             'EventName': <function>
+        },
+        //Plugins to use
+        plugins: {
+            <name of plugin>: <object with plugin options>
         }
 	}
 
@@ -137,6 +141,12 @@ To enable the advanced editor:
     node tools/updatebake.advanced.js
 
 This will create the required meta in the source tree. Run `gulp` afterwards to bake sources with the advanced editor enabled.
+
+## Plugins
+
+The editor supports data handling plugins. Plugins are registered using the `highed.plugins.install` function. They must also be activated, either by calling `highed.plugins.use(<plugin name>, <plugin options>)`, or by supplying the name of the plugin in the editor constructor (see editor section above).
+
+See [plugins/jquery-simple-rest.js](plugins/jquery-simple-rest.js) for an example on how to write plugins.
 
 ## License
 
