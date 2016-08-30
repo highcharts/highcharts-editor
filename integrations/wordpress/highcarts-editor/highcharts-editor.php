@@ -18,6 +18,12 @@ function add_tinymce_toolbar_button( $buttons ) {
     return $buttons;
 }
 
+function highcharts_allow_stuff($initArray) {
+    $initArray['valid_elements'] .= 'script[type|src],div[id|style]a[*],altGlyph[*],altGlyphDef[*],altGlyphItem[*],animate[*],animateColor[*],animateMotion[*],animateTransform[*],circle[*],clipPath[*],color-profile[*],cursor[*],defs[*],desc[*],ellipse[*],feBlend[*],feColorMatrix[*],feComponentTransfer[*],feComposite[*],feConvolveMatrix[*],feDiffuseLighting[*],feDisplacementMap[*],feDistantLight[*],feFlood[*],feFuncA[*],feFuncB[*],feFuncG[*],feFuncR[*],feGaussianBlur[*],feImage[*],feMerge[*],feMergeNode[*],feMorphology[*],feOffset[*],fePointLight[*],feSpecularLighting[*],feSpotLight[*],feTile[*],feTurbulence[*],filter[*],font[*],font-face[*],font-face-format[*],font-face-name[*],font-face-src[*],font-face-uri[*],foreignObject[*],g[*],glyph[*],glyphRef[*],hkern[*],image[*],line[*],linearGradient[*],marker[*],mask[*],metadata[*],missing-glyph[*],mpath[*],path[*],pattern[*],polygon[*],polyline[*],radialGradient[*],rect[*],script[*],set[*],stop[*],style[*],svg[*],switch[*],symbol[*],text[*],textPath[*],title[*],tref[*],tspan[*],use[*],view[*],vkern[*]';
+
+    return $initArray;
+}
+
 function setup_highcharts_plugin () {
     if (!current_user_can('edit_posts') && !current_user_can('edit_pages')) {
          return;
@@ -29,6 +35,7 @@ function setup_highcharts_plugin () {
 
     add_filter('mce_external_plugins','init_highcharts_plugin');
     add_filter('mce_buttons', 'add_tinymce_toolbar_button');
+    add_filter('tiny_mce_before_init', 'highcharts_allow_stuff');
 
     wp_enqueue_script("highcharts-highcharts", "https://code.highcharts.com/highcharts.js");    
     wp_enqueue_script("highcharts-framework", "http://code.highcharts.com/adapters/standalone-framework.js");  
