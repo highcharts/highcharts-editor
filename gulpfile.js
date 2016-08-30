@@ -69,7 +69,7 @@ gulp.task('plugins', function () {
     ;
 });
 
-gulp.task('wordpress', function () {
+gulp.task('wordpress', ['less', 'minify'], function () {
     return gulp.src(wpPluginDest + '*')
                .pipe(zip(name + '.wordpress.zip'))
                .pipe(gulp.dest(dest))
@@ -89,7 +89,7 @@ gulp.task('minify', function () {
     ;
 });
 
-gulp.task('electron', function () {
+gulp.task('electron', ['less', 'minify'], function () {
     return gulp.src('')
                .pipe(electron({
                     src: './app',
