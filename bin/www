@@ -41,6 +41,7 @@ app.use('/', express.static(__dirname + '/../html'));
 app.use('/img', express.static(__dirname + '/../img'));
 app.use('/docs', express.static(__dirname + '/../out'));
 app.use('/plugins', express.static(__dirname + '/../plugins'));
+app.use('/integrations', express.static(__dirname + '/../integrations'));
 
 
 app.listen(3005);

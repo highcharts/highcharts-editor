@@ -100,7 +100,7 @@ gulp.task('electron', function () {
 });
 
 gulp.task('tinymce', function () {
-    return gulp.src(sources.concat('plugins/tinymce.js'))
+    return gulp.src(sources.concat('integrations/tinymce.js'))
                .pipe(concat(name + '.tinymce.js'))
                .pipe(gulp.dest(dest))
                .pipe(rename(name + '.tinymce.min.js'))
