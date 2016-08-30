@@ -64,7 +64,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             }
 
             setTimeout(function () {
-                document.body.removeChild(dimmer);
+                if (dimmer.parentNode) {
+                    dimmer.parentNode.removeChild(dimmer);                    
+                }
             }, 300);
         }
 

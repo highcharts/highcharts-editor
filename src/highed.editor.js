@@ -112,28 +112,38 @@ highed.Editor = function (parent, attributes) {
                 'https://code.highcharts.com/highcharts-3d.js',
                 'https://code.highcharts.com/modules/data.js'
             ],
-            cssIncludes = [
-                'https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css'
-            ]
+            title = chart.options.titles ? chart.options.titles.text || 'untitled chart' : 'untitled chart'
         ;
 
-        return [
-            '<iframe><html><head>',
-
+        return '\n' + [
+         //   '<iframe><html><head>',
+            '<div>',
             //Write JS includes
             jsIncludes.map(function (include) {
                 return '<script src="' + include + '"></script>';
             }).join(''),
 
-            //Write instancer
-            '<script>',
-            '(function(){',
-            'new Highcharts.chart("', id, '", JSON.parse(\'', 
-                JSON.stringify(highed.merge(highed.merge({}, exports.customizedOptions), {chart: {renderTo: id}})), '\'));',
-            '})();',
-            '</script></head><body><div id="' + id + '"></div></body></html></iframe>'
+            '<div id="', id, '" style="min-width:100px;font-family:sans-serif;background:#eee;line-height:50px;color:#242424;text-align:center"><span style="font-size:24px;">Highcharts Chart</span><br/>',
+            title,
+            '<br/></div>',
+           // '</head><body>',
 
-        ].join('');
+            //Write instancer
+            '<script type="text/javascript">',
+            '(function(){',
+            'new Highcharts.chart("', id, '", ', 
+                JSON.stringify(highed.merge(highed.merge({}, exports.customizedOptions), {chart: {renderTo: id}})), ');',
+            '})();', 'console.log("helloworld");',
+            '</script></div><i>Fig 1: ', title, '</i>'//</head><body><div id="' + id + '"></div></body></html></iframe>'
+
+        ].join('') + '\n';
+    }
+
+    /**
+     * Get SVG chart
+     */
+    function getEmbeddableSVG() {
+        return chart.getSVG();
     }
 
     /** 
@@ -288,6 +298,8 @@ highed.Editor = function (parent, attributes) {
     exports.getEmbeddableHTML = getEmbeddableHTML;
     /* Get embeddable json */
     exports.getEmbeddableJSON = getEmbeddableJSON;
+    /* Get embeddable SVG */
+    exports.getEmbeddableSVG = getEmbeddableSVG;
     
     return exports;
 };

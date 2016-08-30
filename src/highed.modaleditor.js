@@ -32,29 +32,48 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.ModalEditor = function (summoner, attributes, fn) {
     var modal = highed.OverlayModal(false, {
             width: '90%',
-            height: '580'
+            height: '580',
+            showOnInit: false
         }),
-        editor = highed.Editor(modal.body, attributes)
+        editor = highed.Editor(modal.body, attributes),
+        //We don't always know the summoner at create time..
+        sumFn = false
     ;
 
     ///////////////////////////////////////////////////////////////////////////
 
+    function attachToSummoner(nn) {
+        nn = nn || summoner;
+
+        if (!nn) {
+            return;
+        }
+
+        if (highed.isFn(sumFn)) {
+            sumFn();
+        }
+
+        //Show the modal when clicking the summoner 
+        sumFn = highed.dom.on(highed.dom.get(nn), 'click', modal.show);
+    }
+
     //Resize the editor when showing the modal
     modal.on('Show', editor.resize);
-    //Show the modal when clicking the summoner 
-    highed.dom.on(highed.dom.get(summoner), 'click', modal.show);
-
+    
     modal.on('Hide', function () {
         if (highed.isFn(fn)) {
-            fn(editor.getEmbeddableHTML());
+            fn(editor.getEmbeddableHTML(), editor.getEmbeddableSVG());
         }
     });
+
+    attachToSummoner();
 
     ///////////////////////////////////////////////////////////////////////////
 
     return {
         show: modal.show,
         hide: modal.hide,
-        on: editor.on       
+        on: editor.on,
+        attachToSummoner: attachToSummoner       
     };
 };

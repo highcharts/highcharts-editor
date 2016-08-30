@@ -11,13 +11,15 @@
 
     <link href="/css/theme.default.css" type="text/css" rel="stylesheet"/>
 
-    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
 
+    <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="http://code.highcharts.com/adapters/standalone-framework.js"></script>
     <script src="https://code.highcharts.com/highcharts-more.js"></script>
     <script src="https://code.highcharts.com/highcharts-3d.js"></script>
     <script src="https://code.highcharts.com/stock/highstock.js"></script>
     <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
     <script src="/src/highcharts-editor.js" type="text/javascript" charset="utf-8" ></script>
     <script src="/src/highed.dom.js" type="text/javascript" charset="utf-8" ></script>
@@ -53,7 +55,7 @@
     <script src="/src/highed.exporter.js" type="text/javascript" charset="utf-8" ></script>
     <script src="/src/highed.tree.js" type="text/javascript" charset="utf-8" ></script>
     
-    <script src="/src/highed.tree.js" type="text/javascript" charset="utf-8" ></script>
+    <script src="/plugins/tinymce.js" type="text/javascript" charset="utf-8" ></script>
 
     <style>
     	html, body {
@@ -70,23 +72,25 @@
 
 <body>
 <div style="padding:10px;" class="highed-box-size">
-    <div style="font-size:26px; font-weight:100;">Highcharts Editor Test</div>
+    <div style="font-size:26px; font-weight:100;">TinyMCE Integration Test</div>
     <br/><br/>
-    Result:
-    <br/><br/>
-    <textarea id="chart-result" class="highed-box-size" style="font-family:monospace;width:100%;height:400px"></textarea>
-    <br/><br/>
-    <button id="modal-btn" class="highed-imp-button">Create a chart</button>
+    <textarea id="chart-result" class="highed-box-size" style="font-family:monospace;width:100%;height:200px"></textarea>
+
 </div>
 </body>
 
 <script>
 
-	highed.ready(function () {
-		highed.ModalEditor('modal-btn', {}, function (html) {
-			highed.dom.get('chart-result').value = html;
-		});
-	});
+    tinymce.init({
+        selector: "#chart-result",
+        plugins: [
+            "advlist autolink lists link image charmap print preview anchor",
+            "searchreplace visualblocks code fullscreen",
+            "insertdatetime media table contextmenu paste",
+            "highcharts highchartssvg"
+        ],
+        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+    });
 
 </script>
 </html>

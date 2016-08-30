@@ -37,7 +37,8 @@ highed.OverlayModal = function (contents, attributes) {
             width: 200,
             height: 200,
             minWidth: 690,
-            minHeight: 0
+            minHeight: 0,
+            showOnInit: true
         }, attributes),
         hideDimmer = false,
         visible = false
@@ -71,7 +72,7 @@ highed.OverlayModal = function (contents, attributes) {
         visible = true;
     }
 
-    function hide() {
+    function hide(supress) {
         if (!visible) return;
 
         highed.dom.style(container, {
@@ -92,7 +93,9 @@ highed.OverlayModal = function (contents, attributes) {
 
         visible = false;
 
-        events.emit('Hide');
+        if (!supress) {
+            events.emit('Hide');            
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -106,6 +109,8 @@ highed.OverlayModal = function (contents, attributes) {
             contents
         );
     }
+
+    hide(true);
 
     ///////////////////////////////////////////////////////////////////////////
 

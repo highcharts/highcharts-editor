@@ -40,6 +40,7 @@ app.use('/src', express.static(__dirname + '/../src'));
 app.use('/', express.static(__dirname + '/../html'));
 app.use('/img', express.static(__dirname + '/../img'));
 app.use('/docs', express.static(__dirname + '/../out'));
+app.use('/plugins', express.static(__dirname + '/../plugins'));
 
 
 app.listen(3005);
