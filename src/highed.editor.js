@@ -202,8 +202,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     'https://code.highcharts.com/highcharts-3d.js',
                     'https://code.highcharts.com/modules/data.js'
                 ],
-                title = chart.options.titles ? chart.options.titles.text || 'untitled chart' : 'untitled chart'
+                title = chart.options.titles ? chart.options.titles.text || 'untitled chart' : 'untitled chart',
+                exportedJson = highed.merge({}, exports.customizedOptions)
             ;
+
+            highed.setAttr(exportedJson, 'chart--renderTo', id);
 
             return '\n' + [
              //   '<iframe><html><head>',
@@ -222,7 +225,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 '<script type="text/javascript">',
                 '(function(){',
                 'new Highcharts.chart("', id, '", ', 
-                    JSON.stringify(highed.merge(highed.merge({}, exports.customizedOptions), {chart: {renderTo: id}})), ');',
+                    JSON.stringify(exportedJson), ');',
                 '})();',
                 '</script></div>'//</head><body><div id="' + id + '"></div></body></html></iframe>'
 

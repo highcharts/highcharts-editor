@@ -40,8 +40,8 @@ highed.plugins.install('jquery-simple-rest', {
             success: function () {
                 highed.snackBar('CHART SAVED');
             },
-            error: function (err) {
-                highed.snackBar('unable to save chart ' + err);
+            error: function (xhr, errString) {
+                highed.snackBar('unable to save chart: ' + errString);
             }
         })
     }
