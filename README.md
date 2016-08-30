@@ -34,7 +34,7 @@ The editor is pushed to NPM and Bower under `highcharts-editor`.
 	git clone https://github.com/highcharts/highcharts-editor
 	cd highcharts-editor
 	npm install
-	grunt
+	gulp
 
 This will put a built version in the `dist` folder.
 
@@ -66,8 +66,7 @@ After the script is included, create your editor with the highcharts plugin enab
         selector: "textarea",
         plugins: [
             "highcharts highchartssvg"
-        ],
-        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+        ]
     });
 
 Notice that there are two plugins - highcarts and highchartssvg. The former will embed an interactive chart, whereas the later will embed a static SVG chart.
@@ -124,7 +123,7 @@ To that end, the `update.meta` tool in the `tools/` folder can be used to create
         
         node tools/update.meta.js --exposed <JSON file with an array of options to include>
 
-After running the tool, run `grunt` in the project root to bake your custom build.
+After running the tool, run `gulp` in the project root to bake your custom build.
 Take a look at [dictionaries/exposed.settings.json](dictionaries/exposed.settings.json) to see how to format the input JSON file. 
 
 ## Enabling the Advanced Property Editor
@@ -137,7 +136,7 @@ To enable the advanced editor:
     
     node tools/updatebake.advanced.js
 
-This will create the required meta in the source tree. Call `grunt` afterwards to bake sources with the advanced editor enabled.
+This will create the required meta in the source tree. Run `gulp` afterwards to bake sources with the advanced editor enabled.
 
 ## License
 
