@@ -263,7 +263,7 @@ highed.InspectorField = function (type, value, properties, fn) {
         value = '';
     }
 
-    if (type.indexOf('array') === 0) {
+    if (type && type.indexOf('array') === 0) {
         properties.subType = type.substr(6, type.length - 7);
         type = 'array';
     }
