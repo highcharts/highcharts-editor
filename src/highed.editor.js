@@ -202,14 +202,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     'https://code.highcharts.com/highcharts-3d.js',
                     'https://code.highcharts.com/modules/data.js'
                 ],
-                cdnIncludes = [
-                    "https://code.highcharts.com/stock/highstock.js",   
-                    "http://code.highcharts.com/adapters/standalone-framework.js",  
-                    "https://code.highcharts.com/highcharts-more.js",   
-                    "https://code.highcharts.com/highcharts-3d.js", 
-                    "https://code.highcharts.com/modules/data.js",  
-                    "https://code.highcharts.com/modules/exporting.js"
-                ],
+                cdnIncludes = {
+                    "https://code.highcharts.com/stock/highstock.js": 1,   
+                    "https://code.highcharts.com/adapters/standalone-framework.js": 1,  
+                    "https://code.highcharts.com/highcharts-more.js": 1,   
+                    "https://code.highcharts.com/highcharts-3d.js": 1, 
+                    "https://code.highcharts.com/modules/data.js": 1,  
+                    "https://code.highcharts.com/modules/exporting.js": 1
+                },
                 title = chart.options.titles ? chart.options.titles.text || 'untitled chart' : 'untitled chart',
                 exportedJson = highed.merge({}, exports.customizedOptions)
             ;
@@ -220,9 +220,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
              //   '<iframe><html><head>',
                 '<div class="mceNonEditable">',
                 //Write JS includes
-                jsIncludes.map(function (include) {
-                    return '<script src="' + include + '"></script>';
-                }).join(''),
+                // jsIncludes.map(function (include) {
+                //     return '<script src="' + include + '"></script>';
+                // }).join(''),
 
                 '<div id="', id, '">',
                 getEmbeddableSVG(),
@@ -231,9 +231,35 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
                 //Write instancer
                 '<script type="text/javascript">',
-                '(function(){',
-                'new Highcharts.chart("', id, '", ', 
-                    JSON.stringify(exportedJson), ');',
+                '(function(){ ',
+
+                'function include(script, next) {',
+                    'var sc=document.createElement("script");',
+                    'sc.src = script;',
+                    'sc.type="text/javascript";',
+                    'sc.onload=function() {',
+                        'if (++next < incl.length) include(incl[next], next);',
+                    '};',
+                    'document.head.appendChild(sc);',
+                '}',
+
+                'var inc = {},incl=[]; document.querySelectorAll("script").forEach(function(t) {inc[t.src.substr(0, t.src.indexOf("?"))] = 1;});',
+                'Object.keys(', JSON.stringify(cdnIncludes), ').forEach(function (k){',
+                    'if (!inc[k]) {',
+                        'incl.push(k)',
+                    '}',
+                '});',
+
+                'if (incl.length > 0) { include(incl[0], 0); }',
+
+                ' function cl() {',
+                    'typeof window["Highcharts"] !== "undefined" && Highcharts.Data ? ',
+                        'new Highcharts.chart("', id, '", ', 
+                            JSON.stringify(exportedJson), ')',
+                    ' : ',
+                    'setTimeout(cl, 20);',
+                '}',
+                'cl();',
                 '})();',
                 '</script></div>'//</head><body><div id="' + id + '"></div></body></html></iframe>'
 

@@ -46,11 +46,11 @@ function setup_highcharts_plugin () {
     wp_enqueue_script("highcharts-exporting", "https://code.highcharts.com/modules/exporting.js");
 
     wp_enqueue_script('highcharts-editor', plugin_dir_url(__FILE__) . 'highcharts-editor.min.js', array(
-        "highcharts-highcharts",
+        //"highcharts-highcharts",
+        "highcharts-highstock",
         "highcharts-framework",
         "highcharts-more",
         "highcharts-3d",
-        "highcharts-highstock",
         "highcharts-data",
         "highcharts-exporting"
     ));        
