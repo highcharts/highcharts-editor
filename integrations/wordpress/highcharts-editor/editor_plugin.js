@@ -32,7 +32,7 @@ tinymce.PluginManager.add('highcharts', function (editor, url) {
     
     editor.addButton('highcharts', {
         title: 'Highcharts (Interactive)',
-        icon: false,
+        image: WPURLS.pluginurl + '/logo.png',
         onclick: function (e) {
             modal.attachToSummoner(this._id);
             modal.show();

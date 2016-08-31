@@ -279,11 +279,10 @@ var highed = {
         initQueue = [],
         isReady = false,
         cdnScripts = [
-            "https://code.highcharts.com/highcharts.js",    
+            "https://code.highcharts.com/stock/highstock.js",   
             "http://code.highcharts.com/adapters/standalone-framework.js",  
             "https://code.highcharts.com/highcharts-more.js",   
             "https://code.highcharts.com/highcharts-3d.js", 
-            "https://code.highcharts.com/stock/highstock.js",   
             "https://code.highcharts.com/modules/data.js",  
             "https://code.highcharts.com/modules/exporting.js"
         ]

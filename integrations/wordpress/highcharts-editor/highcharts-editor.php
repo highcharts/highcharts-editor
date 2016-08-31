@@ -59,6 +59,11 @@ function setup_highcharts_plugin () {
 
     wp_enqueue_style('highcharts-gfonts', 'https://fonts.googleapis.com/css?family=Roboto:400,300,100,700|Source Sans:400,300,100');
     wp_enqueue_style('fontawesome', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
+
+    wp_localize_script('highcharts-editor', 'WPURLS', array( 
+        'siteurl' => get_option('siteurl'),
+        'pluginurl' => plugin_dir_url(__FILE__) 
+    ));
 }
 
 add_action('init', 'setup_highcharts_plugin');
