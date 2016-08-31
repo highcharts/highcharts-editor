@@ -124,7 +124,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             exports = {
                 customizedOptions: customizedOptions,
                 flatOptions: {},
-                features: 'import export templates customize'
+                features: 'import export templates customize',
+                includeSVGInHTMLEmbedding: true
             },
 
             properties = highed.merge({
@@ -219,15 +220,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             return '\n' + [
              //   '<iframe><html><head>',
                 '<div class="mceNonEditable">',
-                //Write JS includes
-                // jsIncludes.map(function (include) {
-                //     return '<script src="' + include + '"></script>';
-                // }).join(''),
 
                 '<div id="', id, '">',
-                getEmbeddableSVG(),
+                properties.includeSVGInHTMLEmbedding ? getEmbeddableSVG() : '',
                 '</div>',
-               // '</head><body>',
 
                 //Write instancer
                 '<script type="text/javascript">',

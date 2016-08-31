@@ -110,7 +110,10 @@ Properties is an object as such:
         //Plugins to use
         plugins: {
             <name of plugin>: <object with plugin options>
-        }
+        },
+        //If true, an SVG chart will be inserted when exporting to provide
+        //a fallback when js is not enabled/available.
+        includeSVGInHTMLEmbedding: bool
 	}
 
 **Interface**
