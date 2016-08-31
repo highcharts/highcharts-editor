@@ -86,6 +86,10 @@ Once `gulp` has been ran, a wordpress plugin will appear at `dist/highcharts-edi
 
 Alternatively you can find a pre-built version [here](#).
 
+## Electron
+
+To build a native version, run `gulp electron`. This will create executables for windows and osx in the `dist/eleectron/` folder.
+
 ## API Quick Reference
 
 **Full documentation can be found [here](#).**

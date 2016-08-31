@@ -48,11 +48,7 @@ highed.DataImporter = function (parent) {
         jsonImportFileBtn = highed.dom.cr('button', 'highed-imp-button', 'Upload & Import File')
     ;
 
-    jsonPasteArea.value = JSON.stringify({
-        title: {
-            text: 'Hello world!'
-        }
-    }, undefined, 2);
+    jsonPasteArea.value = JSON.stringify({}, undefined, 2);
 
     ///////////////////////////////////////////////////////////////////////////
 

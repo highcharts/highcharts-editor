@@ -1,9 +1,9 @@
 <?php
 /**
 * Plugin Name: Highcharts
-* Description: Highcharts 
+* Description: Highcharts editor integration
 * Version: 1.0
-* Author: Highsoft
+* Author: Highcharts
 * License: mit
 */
 
@@ -14,7 +14,7 @@ function init_highcharts_plugin( $plugins ) {
 }
 
 function add_tinymce_toolbar_button( $buttons ) {
-    array_push($buttons, '|', 'highcharts');
+    array_push($buttons, '|', 'highcharts', '|');
     return $buttons;
 }
 

@@ -63,7 +63,6 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
 
         function activate() {
             if (activeStep) {
-                
                 activeStep.bubble.innerHTML = '';
                 
                 highed.dom.style(activeStep.bubble, {
@@ -76,7 +75,6 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
                 highed.dom.style(activeStep.body, {
                     opacity: 0,
                     'pointer-events': 'none'
-                  //  'z-index': 0
                 });
 
                 if (properties.indicatorPos === 'top') {
@@ -99,8 +97,6 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
             highed.dom.style(stepexports.body, {
                 opacity: 1,
                 'pointer-events': 'auto'
-               // 'z-index': 1
-                //'top': '0px'
             });
 
             if (properties.indicatorPos === 'top') {
