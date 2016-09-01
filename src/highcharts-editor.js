@@ -354,17 +354,46 @@ var highed = {
 
  //   highed.ready(function () {
         //Include the highcharts scripts
-    function tryAddScripts() {
-        if (document.head) {
-            cdnScripts.forEach(function (script) {
-                var s = document.createElement('script');
-                s.src = script;
-                document.head.appendChild(s);
-            });            
-        } else {
-            setTimeout(tryAddScripts, 10);            
-        }
-    }
+    // function tryAddScripts() {
+    //     if (document.head) {
+    //         cdnScripts.forEach(function (script) {
+    //             var s = document.createElement('script');
+    //             s.src = script;
+    //             document.head.appendChild(s);
+    //         });            
+    //     } else {
+    //         setTimeout(tryAddScripts, 10);            
+    //     }
+    // }
 
-    tryAddScripts();
+    // tryAddScripts();
+
+
+    // function include(script, next) {
+    //     var sc=document.createElement("script");
+    //     sc.src = script;
+    //     sc.type="text/javascript";
+    //     sc.onload=function() {
+    //         if (++next < incl.length) {
+    //             include(incl[next], next);
+    //         } else {
+    //             loadedScripts = true;
+    //         }
+    //     };
+    //     document.head.appendChild(sc);
+    // }
+
+    // var inc = {},
+    //     incl = []
+    // ; 
+
+    // document.querySelectorAll("script").forEach(function(t) {inc[t.src.substr(0, t.src.indexOf("?"))] = 1;});
+
+    // Object.keys(cdnScripts).forEach(function (k){
+    //     if (!inc[k] && k && k.length > 0) {
+    //         incl.push(k)
+    //     }
+    // });
+
+    // if (incl.length > 0) { include(incl[0], 0); } else {loadedScripts = true;}
 })();
