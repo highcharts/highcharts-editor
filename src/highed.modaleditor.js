@@ -37,7 +37,8 @@ highed.ModalEditor = function (summoner, attributes, fn) {
         }),
         editor = highed.Editor(modal.body, attributes),
         //We don't always know the summoner at create time..
-        sumFn = false
+        sumFn = false,
+        doneEditing = highed.dom.cr('button', 'highed-done-button', 'Close &amp; Use')
     ;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -60,13 +61,18 @@ highed.ModalEditor = function (summoner, attributes, fn) {
     //Resize the editor when showing the modal
     modal.on('Show', editor.resize);
     
-    modal.on('Hide', function () {
+    highed.dom.on(doneEditing, 'click', function () {
         if (highed.isFn(fn)) {
             fn(editor.getEmbeddableHTML(), editor.getEmbeddableSVG());
         }
+        modal.hide();
     });
 
     attachToSummoner();
+
+    if (attributes && attributes.allowDone) {
+        highed.dom.ap(editor.toolbar.center, doneEditing);           
+    }
 
     ///////////////////////////////////////////////////////////////////////////
 

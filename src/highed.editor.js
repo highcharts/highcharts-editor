@@ -131,7 +131,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 on: {},
                 plugins: {},
                 features: 'import export templates customize',
-                includeSVGInHTMLEmbedding: true            
+                includeSVGInHTMLEmbedding: true   
             }, attributes),
 
             container = highed.dom.cr('div', 'highed-container'),
@@ -335,9 +335,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         highed.dom.on(window, 'resize', resize);
 
-        highed.dom.ap(mainToolbar.right,
-            highed.dom.cr('span', 'highed-credits', 'Highcharts Editor Beta')
-        );
+        // highed.dom.ap(mainToolbar.right,
+        //     highed.dom.cr('span', 'highed-credits', 'Highcharts Editor Beta')
+        // );
 
         ///////////////////////////////////////////////////////////////////////////
         
@@ -476,6 +476,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         exports.getEmbeddableSVG = getEmbeddableSVG;
         /* Destroy the editor */
         exports.destroy = destroy;
+        /* Toolbar */
+        exports.toolbar = mainToolbar;
         
         return exports;
     };

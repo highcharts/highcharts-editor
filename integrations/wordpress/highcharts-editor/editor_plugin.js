@@ -25,7 +25,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 tinymce.PluginManager.add('highcharts', function (editor, url) {
     var modal = highed.ModalEditor(false, {
-                    features: 'import templates customize'
+                    features: 'import templates customize',
+                    allowDone: true
                 }, function (html) {
                    editor.insertContent(html + '<p></p>');                
                 })
