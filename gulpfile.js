@@ -108,13 +108,13 @@ gulp.task('electron', ['less', 'minify'], function () {
                             CFBundleIdentifier: packageJson.name,
                             CFBundleName: packageJson.name,
                             CFBundleVersion: packageJson.version,
-                            icon: false
+                            "icon": 'res/logo.png'
                         },
                         win: {
                             "version-string": packageJson.version,
                             "file-version": packageJson.version,
                             "product-version": packageJson.version,
-                            "icon": false
+                            "icon": 'res/logo.ico'
                         }
                     }
                }))

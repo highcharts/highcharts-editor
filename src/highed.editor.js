@@ -217,7 +217,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
          * @return {string} - String of HTML to reproduce the current chart.
          */
         function getEmbeddableHTML(placehold) {
-            var id = 'highchart-' + (++instanceCount),
+            //Yeah, I don't know.
+            var id = 'highchart-' + (++instanceCount) + '-' + Math.round(Math.random() * 9999) + '-' + (new Date()).getTime(),
                 jsIncludes = [
                     'https://code.highcharts.com/highcharts.js',
                     'http://code.highcharts.com/adapters/standalone-framework.js',
