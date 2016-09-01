@@ -40,9 +40,10 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
 
     /* Update the bar CSS - this is more stable than doing it in pure CS */
     function updateBarCSS() {
-        steps.forEach(function (step, i) {
+        var fsteps = steps.filter(function (t) { return t.visible; });
+        fsteps.forEach(function (step, i) {
             if (i === 0) step.bar.className = 'bar bar-first';
-            else if (i === steps.length - 1) step.bar.className = 'bar bar-last';
+            else if (i === fsteps.length - 1) step.bar.className = 'bar bar-last';
             else step.bar.className = 'bar';
             step.bar.className += ' ' + (properties.indicatorPos === 'bottom' ? 'bar-bottom' : 'bar-top');
         });
@@ -58,7 +59,8 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
             label: highed.dom.cr('div', '', step.title, 'label'),
             bubble: highed.dom.cr('div', 'bubble ' + (properties.indicatorPos === 'bottom' ? 'bubble-bottom' : 'bubble-top')),
             bar: highed.dom.cr('div', 'bar ' + (properties.indicatorPos === 'bottom' ? 'bar-bottom' : 'bar-top')),
-            body: highed.dom.cr('div', 'highed-step-body')
+            body: highed.dom.cr('div', 'highed-step-body'),
+            visible: true
         };
 
         function activate() {
@@ -109,6 +111,14 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
 
             events.emit('Step', stepexports, stepCount, step);
         }
+
+        stepexports.hide = function () {
+            highed.dom.style(stepexports.node, {
+                display: 'none'
+            });
+            stepexports.visible = false;
+            updateBarCSS();
+        };
 
         highed.dom.on(stepexports.node, 'click', activate);
 

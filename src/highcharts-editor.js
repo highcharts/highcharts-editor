@@ -43,6 +43,20 @@ var highed = {
     schemas: {},
     meta: {},
 
+    /** Map an array to an object
+     * @param {array} arr - the array to map
+     * @return {object}
+     */
+    arrToObj: function (arr) {
+        var obj = {};
+
+        arr.forEach(function (thing) {
+            obj[thing] = true;
+        });
+
+        return obj;
+    },
+
     /** Make a camel back string pretty
      * @param {string} - the input string
      * @return {string} - the transformed string

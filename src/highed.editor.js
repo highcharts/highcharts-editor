@@ -123,15 +123,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             customizedOptions = {},
             exports = {
                 customizedOptions: customizedOptions,
-                flatOptions: {},
-                features: 'import export templates customize',
-                includeSVGInHTMLEmbedding: true
+                flatOptions: {}
             },
 
             properties = highed.merge({
                 defaultChartOptions: {},
                 on: {},
-                plugins: {}
+                plugins: {},
+                features: 'import export templates customize',
+                includeSVGInHTMLEmbedding: true            
             }, attributes),
 
             container = highed.dom.cr('div', 'highed-container'),
@@ -151,8 +151,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             chartCustomizer = highed.ChartCustomizer(wizbar.addStep({title: 'Customize'}).body, exports),
 
-            dataStep = wizbar.addStep({title: 'Export', id: 'export'}),
-            dataExp = highed.Exporter(dataStep.body),
+            dataExpStep = wizbar.addStep({title: 'Export', id: 'export'}),
+            dataExp = highed.Exporter(dataExpStep.body),
 
             chart = new Highcharts.Chart({
                 chart: {
@@ -165,6 +165,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         ;
 
         ///////////////////////////////////////////////////////////////////////////
+
+        function applyFeatures() {
+            var things = highed.arrToObj(properties.features.split(' '));
+
+            if (!things.export) {
+                dataExpStep.hide();
+            }
+        }
 
         
         /** 
@@ -426,6 +434,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 }
             });
         });
+
+        applyFeatures();
 
         ///////////////////////////////////////////////////////////////////////////
 
