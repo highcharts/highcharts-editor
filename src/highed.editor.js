@@ -144,12 +144,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             wizbar = highed.WizardBar(container, splitter.left),
 
-            dataImp = highed.DataImporter(wizbar.addStep({title: 'Import'}).body),
+            dataImpStep = wizbar.addStep({title: 'Import'}),
+            dataImp = highed.DataImporter(dataImpStep.body),
         
-            chartTemplateSelector = highed.ChartTemplateSelector(wizbar.addStep({title: 'Templates'}).body),
+            templateStep = wizbar.addStep({title: 'Templates'}),
+            chartTemplateSelector = highed.ChartTemplateSelector(templateStep.body),
             chartContainer = highed.dom.cr('div', 'highed-box-size highed-chart-container'),
 
-            chartCustomizer = highed.ChartCustomizer(wizbar.addStep({title: 'Customize'}).body, exports),
+            customizerStep = wizbar.addStep({title: 'Customize'}),
+            chartCustomizer = highed.ChartCustomizer(customizerStep.body, exports),
 
             dataExpStep = wizbar.addStep({title: 'Export', id: 'export'}),
             dataExp = highed.Exporter(dataExpStep.body),
@@ -172,9 +175,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             if (!things.export) {
                 dataExpStep.hide();
             }
+
+            if (!things.import) {
+                dataImpStep.hide();
+            }
+
+            if (!things.templates) {
+                templateStep.hide();
+            }
+
+            if (!things.customize) {
+                customizerStep.hide();
+            }
         }
 
-        
         /** 
          * Force a resize of the editor
          * @inner

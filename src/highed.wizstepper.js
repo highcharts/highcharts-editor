@@ -116,8 +116,12 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
             highed.dom.style(stepexports.node, {
                 display: 'none'
             });
-            stepexports.visible = false;
-            updateBarCSS();
+            if (stepexports.visible) {
+                //This needs fixing
+                stepCount--;
+                stepexports.visible = false;
+                updateBarCSS();                
+            }
         };
 
         highed.dom.on(stepexports.node, 'click', activate);

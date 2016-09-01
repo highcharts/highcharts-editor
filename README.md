@@ -117,7 +117,9 @@ Properties is an object as such:
         },
         //If true, an SVG chart will be inserted when exporting to provide
         //a fallback when js is not enabled/available.
-        includeSVGInHTMLEmbedding: bool
+        includeSVGInHTMLEmbedding: bool,
+        //Features to use
+        features: 'import export templates customize'
 	}
 
 **Interface**
