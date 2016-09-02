@@ -24,18 +24,26 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 highed.Exporter = function (parent) {
-    var splitter = highed.HSplitter(parent, {leftWidth: 50, noOverflow: true}),
+    var //splitter = highed.HSplitter(parent, {leftWidth: 50, noOverflow: true}),
+        tctrl = highed.TabControl(parent),
+        htmlTab = tctrl.createTab({title: 'Export HTML'})
+        jsonTab = tctrl.createTab({title: 'Export JSON'}),
+        svgTab = tctrl.createTab({title: 'Export SVG'}),
+
         exportJSON = highed.dom.cr('a', '', 'Download'),
         exportHTML = highed.dom.cr('a', '', 'Download'),
-        jsonValue = highed.dom.cr('textarea', 'highed-imp-pastearea-small'),
-        htmlValue = highed.dom.cr('textarea', 'highed-imp-pastearea-small')
+        exportSVG = highed.dom.cr('a', '', 'Download'),
+        jsonValue = highed.dom.cr('textarea', 'highed-imp-pastearea'),
+        htmlValue = highed.dom.cr('textarea', 'highed-imp-pastearea'),
+        svgValue = highed.dom.cr('textarea', 'highed-imp-pastearea')
+
     ;
 
     ///////////////////////////////////////////////////////////////////////////
     
 
     //Set the export boxes based on chart JSON data (chart.options)
-    function init(chartData, chartHTML) {
+    function init(chartData, chartHTML, chartSVG) {
         var title = '_export';
 
         if (chartData.title && chartData.title.text) {
@@ -50,12 +58,17 @@ highed.Exporter = function (parent) {
         htmlValue.value = chartHTML;
         exportHTML.href = 'data:application/octet-stream,' + encodeURIComponent(chartHTML);
 
+        svgValue.value = chartSVG;
+        exportSVG.href = 'data:application/octet-stream,' + encodeURIComponent(chartHTML);
+
         exportJSON.download = title + '.json';
         exportHTML.download = title + '.html';
+        exportSVG.download = title + '.svg';
     }   
 
     function resize(w, h) {
-        splitter.resize(w, h);
+        //splitter.resize(w, h);
+        tctrl.resize();
     }
 
     function doSelectOnClick(thing) {
@@ -67,8 +80,8 @@ highed.Exporter = function (parent) {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    highed.dom.ap(splitter.left,
-        highed.dom.cr('div', 'highed-imp-headline', 'Export HTML'),
+    highed.dom.ap(htmlTab.body,
+       // highed.dom.cr('div', 'highed-imp-headline', 'Export HTML'),
         highed.dom.ap(highed.dom.cr('div', 'highed-imp-spacer'),
             htmlValue
         ),
@@ -77,8 +90,8 @@ highed.Exporter = function (parent) {
         )
     );
 
-    highed.dom.ap(splitter.right,
-        highed.dom.cr('div', 'highed-imp-headline', 'Export JSON'),
+    highed.dom.ap(jsonTab.body,
+       // highed.dom.cr('div', 'highed-imp-headline', 'Export JSON'),
         highed.dom.ap(highed.dom.cr('div', 'highed-imp-spacer'),
             jsonValue
         ),
@@ -87,10 +100,21 @@ highed.Exporter = function (parent) {
         )
     );
 
+    highed.dom.ap(svgTab.body,
+       // highed.dom.cr('div', 'highed-imp-headline', 'Export JSON'),
+        highed.dom.ap(highed.dom.cr('div', 'highed-imp-spacer'),
+            svgValue
+        ),
+        highed.dom.ap(highed.dom.cr('button', 'highed-imp-button'),
+            exportSVG
+        )
+    );
+
     resize();
 
     doSelectOnClick(jsonValue);
     doSelectOnClick(htmlValue);
+    doSelectOnClick(svgValue);
 
     ///////////////////////////////////////////////////////////////////////////
 

@@ -208,3 +208,7 @@ gulp.task('default', function () {
 gulp.task('with-advanced', function () {
     gulp.start('minify-advanced', 'tinymce', 'less', 'plugins', 'wordpress', 'zip-standalone', 'zip-dist', 'zip-standalone-nominify', 'zip-tinymce');
 });
+
+gulp.task('all', function () {
+  gulp.start('default', 'electron');
+});

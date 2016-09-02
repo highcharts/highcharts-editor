@@ -241,7 +241,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             if (thing.id === 'export') {
                 dataExp.init(
                     chartPreview.export.json(), 
-                    chartPreview.export.html(properties.includeSVGInHTMLEmbedding)
+                    chartPreview.export.html(properties.includeSVGInHTMLEmbedding),
+                    chartPreview.export.svg()
                 );
             } else if (thing.id === 'customize') {
                 chartCustomizer.init(chartPreview.options.flat);
