@@ -68,7 +68,6 @@ highed.List = function (parent) {
 
         iexports = {
             node: node,
-
             select: select
         };
 

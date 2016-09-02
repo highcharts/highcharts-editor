@@ -63,7 +63,7 @@ highed.ModalEditor = function (summoner, attributes, fn) {
     
     highed.dom.on(doneEditing, 'click', function () {
         if (highed.isFn(fn)) {
-            fn(editor.getEmbeddableHTML(), editor.getEmbeddableSVG());
+            fn(editor.getEmbeddableHTML(true), editor.getEmbeddableSVG());
         }
         modal.hide();
     });

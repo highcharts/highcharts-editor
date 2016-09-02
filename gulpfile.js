@@ -13,36 +13,41 @@ var dest = 'dist/',
     zip = require('gulp-zip'),
     //The order is important, so we don't do wildcard
     sources =[
-        "./src/highcharts-editor.js",
-        "./src/highed.dom.js",
-        "./src/highed.events.js",
-        "./src/highed.editor.js",
-        "./src/highed.dimmer.js",
-        "./src/highed.overlaymodal.js",
-        "./src/highed.hsplitter.js",
-        "./src/highed.tabcontrol.js",
-        "./src/highed.inspector.js",
-        "./src/highed.inspector.field.js",
-        "./src/highed.list.js",
+        "./src/core/highcharts-editor.js",
+        "./src/core/highed.dom.js",
+        "./src/core/highed.events.js",
+        "./src/core/highed.fileupload.js",
+
+        "./src/core-ui/highed.dimmer.js",
+        "./src/core-ui/highed.overlaymodal.js",
+        "./src/core-ui/highed.hsplitter.js",
+        "./src/core-ui/highed.tabcontrol.js",
+        "./src/core-ui/highed.inspector.field.js",
+        "./src/core-ui/highed.list.js",
+        "./src/core-ui/highed.colorpicker.js",
+        "./src/core-ui/highed.toolbar.js",
+        "./src/core-ui/highed.fontpicker.js",
+        "./src/core-ui/highed.wizstepper.js",
+        "./src/core-ui/highed.tooltip.js",
+        "./src/core-ui/highed.pushbutton.js",
+        "./src/core-ui/highed.tree.js",
+        "./src/core-ui/highed.snackbar.js",
+            
         "./src/meta/highed.meta.charts.js",
         "./src/meta/highed.meta.options.extended.js",
         "./src/meta/highed.meta.colors.js",
         "./src/meta/highed.meta.fonts.js",
-        "./src/highed.chart.template.selector.js",
-        "./src/highed.chart.customizer.js",
-        "./src/highed.wizstepper.js",
-        "./src/highed.toolbar.js",
-        "./src/highed.wizbar.js",
-        "./src/highed.colorpicker.js",
-        "./src/highed.fontpicker.js",
-        "./src/highed.pushbutton.js",
-        "./src/highed.tooltip.js",
-        "./src/highed.snackbar.js",
-        "./src/highed.dataimporter.js",
-        "./src/highed.fileupload.js",
-        "./src/highed.tree.js",
-        "./src/highed.exporter.js",
-        "./src/highed.modaleditor.js"
+       // "./src/meta/highed.meta.options.advanced.js",
+            
+        "./src/ui/highed.chart.template.selector.js",
+        "./src/ui/highed.chart.customizer.js",
+        "./src/ui/highed.wizbar.js",
+        "./src/ui/highed.dataimporter.js",
+        "./src/ui/highed.exporter.js",
+        "./src/ui/highed.chartpreview.js",
+            
+        "./src/editors/highed.editor.js",
+        "./src/editors/highed.modaleditor.js"
     ]
 ;
 
@@ -79,6 +84,18 @@ gulp.task('wordpress', ['less', 'minify'], function () {
 
 gulp.task('minify', function () {
     return gulp.src(sources)
+               .pipe(concat(name + '.js'))
+               .pipe(gulp.dest(dest))               
+               .pipe(rename(name + '.min.js'))
+               .pipe(uglify())
+               .pipe(gulp.dest(dest))
+               .pipe(gulp.dest(electronDest))
+               .pipe(gulp.dest(wpPluginDest))
+    ;
+});
+
+gulp.task('minify-advanced', function () {
+    return gulp.src(sources.concat(['./src/meta/highed.meta.options.advanced.js']))
                .pipe(concat(name + '.js'))
                .pipe(gulp.dest(dest))               
                .pipe(rename(name + '.min.js'))
@@ -134,4 +151,8 @@ gulp.task('tinymce', function () {
 
 gulp.task('default', function () {
     gulp.start('minify', 'tinymce', 'less', 'plugins', 'wordpress');
+});
+
+gulp.task('with-advanced', function () {
+    gulp.start('minify-advanced', 'tinymce', 'less', 'plugins', 'wordpress');
 });

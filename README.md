@@ -157,7 +157,7 @@ To enable the advanced editor:
     
     node tools/updatebake.advanced.js
 
-This will create the required meta in the source tree. Run `gulp` afterwards to bake sources with the advanced editor enabled.
+This will create the required meta in the source tree. Run `gulp with-advanced` afterwards to bake sources with the advanced editor enabled.
 
 ## Plugins
 

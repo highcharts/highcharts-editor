@@ -35,7 +35,9 @@ highed.ChartCustomizer = function (parent, owner) {
 
         advSplitter = highed.HSplitter(advancedTab.body, {leftWidth: 30}),
         advBody = advSplitter.right,
-        advTree = highed.Tree(advSplitter.left)
+        advTree = highed.Tree(advSplitter.left),
+
+        flatOptions = {}
     ;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -48,6 +50,10 @@ highed.ChartCustomizer = function (parent, owner) {
 
         list.resize(w, h - bsize.h);
         splitter.resize(w, h - bsize.h - 10);
+    }
+
+    function init(foptions) {
+        flatOptions = foptions || {};
     }
 
     function selectGroup(group, table) {
@@ -67,7 +73,7 @@ highed.ChartCustomizer = function (parent, owner) {
             highed.dom.ap(table, 
                 highed.InspectorField(
                     group.values ? 'options' : group.dataType, 
-                    (owner.flatOptions[group.id] || group.defaults), 
+                    (flatOptions[group.id] || group.defaults), 
                     {
                         title: group.text,
                         tooltip: group.tooltipText,
@@ -106,7 +112,7 @@ highed.ChartCustomizer = function (parent, owner) {
             highed.dom.ap(table,
                 highed.InspectorField(
                     entry.dataType || 'string', 
-                    (owner.flatOptions[entry.id] || entry.defaults), 
+                    (flatOptions[entry.id] || entry.defaults), 
                     {
                         title: highed.uncamelize(entry.shortName),
                         tooltip: entry.description,
@@ -136,6 +142,7 @@ highed.ChartCustomizer = function (parent, owner) {
     return {
         /* Listen to an event */
         on: events.on,
-        resize: resize
+        resize: resize,
+        init: init
     };
 };

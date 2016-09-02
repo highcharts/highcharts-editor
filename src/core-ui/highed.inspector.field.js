@@ -173,64 +173,6 @@ highed.InspectorField = function (type, value, properties, fn) {
                         processChange();
                     }
                 }       
-
-                // function addColorItem(col) {
-                //     var thing = highed.dom.cr('span', 'highed-field-colorpicker-compact', '&nbsp;'),
-                //         rem = highed.dom.cr('span', 'highed-field-array-remove fa fa-trash'),
-                //         id = ++itemCounter
-                //     ;
-
-                //     function update(col) {
-                //         highed.dom.style(thing, {
-                //             background: col
-                //         });
-
-                //         items[id] = col;
-                //         doCallback();
-                //     }
-
-                //     function doCallback() {
-                //         if (highed.isFn(fn)) {
-                //             fn(Object.keys(items).map(function (key) {
-                //                 return items[key];  
-                //             }));
-                //         }
-                //     }
-
-                //     highed.dom.on(thing, 'click', function (e) {
-                //         highed.pickColor(e.clientX, e.clientY, 'col', function (col) {
-                //             update(col);
-                //         });
-                //     });
-
-                //     highed.dom.on(rem, 'click', function (e) {
-                //         delete items[id];
-                //         itemsNode.removeChild(thing);
-                //         doCallback();
-
-                //         e.cancelBubble = true;
-                //         e.preventDefault();
-                //         e.stopPropagation();
-                //         e.stopImmediatePropagation();
-                //         return false;
-                //     });
-
-                //     update(col);
-
-                //     highed.dom.showOnHover(thing, rem);
-
-                //     highed.dom.ap(itemsNode, highed.dom.ap(thing, rem));
-                // }
-                
-                // if (properties.subType === 'color' && 1 == 2) {
-                //     highed.dom.on(add, 'click', function () {
-                //         addColorItem('#000');
-                //     });
-
-                //     if (highed.isArr(value)) {
-                //         value.forEach(addColorItem);
-                //     }
-                // } else {
                     highed.dom.ap(container, itemTable);
 
                     highed.dom.on(add, 'click', function () {
@@ -242,8 +184,7 @@ highed.InspectorField = function (type, value, properties, fn) {
                             addCompositeItem(item, true);
                         });
                     }
-                //}
-
+                    
                 highed.dom.ap(container, itemsNode, add);
 
                 return container;
