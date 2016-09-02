@@ -43,6 +43,24 @@ var highed = {
     schemas: {},
     meta: {},
 
+    /** Generate a uuid 
+     * Borrowed from http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+     */
+    uuid: function () {
+        var d = new Date().getTime(), uuid;
+        
+        if (window.performance && typeof window.performance.now === "function") {
+            d += performance.now(); //use high-precision timer if available
+        }
+        
+        uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = (d + Math.random()*16)%16 | 0;
+            d = Math.floor(d/16);
+            return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+        });
+        return uuid;
+    },
+
     /** Map an array to an object
      * @param {array} arr - the array to map
      * @return {object}
