@@ -41,7 +41,8 @@ highed.ChartPreview = function (parent, attributes) {
             }
         }, attributes),
         throttleTimeout = false,
-        chart = false
+        chart = false,
+        preExpandSize = false
     ;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -249,12 +250,23 @@ highed.ChartPreview = function (parent, attributes) {
 
     /* Expand the chart from its drawer */
     function expand() {
-
+        preExpandSize = highed.dom.size(parent);
+        highed.style(parent, {
+            position: 'absolute',
+            width: '90%',
+            height: '90%'
+        });
     }
 
     /* Collapse the chart into its drawer */
     function collapse() {
-
+        if (preExpandSize) {
+            highed.dom.style(parent, {
+                position: '',
+                width: preExpandSize.w + 'px',
+                height: preExpandSize.h + 'px'
+            });
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -268,6 +280,7 @@ highed.ChartPreview = function (parent, attributes) {
         on: events.on,
         expand: expand,
         collapse: collapse,
+
         loadTemplate: loadTemplate,
         resize: resize,
         
