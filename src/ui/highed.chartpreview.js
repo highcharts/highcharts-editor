@@ -184,9 +184,8 @@ highed.ChartPreview = function (parent, attributes) {
 
     /* Get embeddable HTML */
     function getEmbeddableHTML(placehold) {
-        return gc(function (chart) {
-            //Yeah, I don't know.
-            var id = 'highcharts-' + Math.round(Math.random() * 9999) + '-' + (new Date()).getTime(),
+        return gc(function (chart) {            
+            var id = 'highcharts-' + highed.uuid(),
                 cdnIncludes = {
                     "https://code.highcharts.com/stock/highstock.js": 1,   
                     "https://code.highcharts.com/adapters/standalone-framework.js": 1,  
@@ -200,12 +199,17 @@ highed.ChartPreview = function (parent, attributes) {
 
             highed.setAttr(customizedOptions, 'chart--renderTo', id);
 
+            /*
+                This magic code will generate an injection script that will
+                check if highcharts is included, and include it if not.
+                Afterwards, it will create the chart, and insert it into the page.
+            */
+
             return '\n' + [
                 '<div id="', id, '">',
                 placehold ? getEmbeddableSVG() : '',
                 '</div>',
 
-                //Write instancer
                 '<script type="text/javascript">',
                 
                 '(function(){ ',
