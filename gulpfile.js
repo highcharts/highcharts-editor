@@ -1,4 +1,5 @@
 var dest = 'dist/',
+    buildDest = dest + 'bundles/',
     electronDest = 'app/',
     wpPluginDest = 'integrations/wordpress/highcharts-editor/',
     packageJson = require('./package.json'),
@@ -51,6 +52,43 @@ var dest = 'dist/',
     ]
 ;
 
+gulp.task('zip-tinymce', ['less', 'minify', 'tinymce'], function () {
+    return gulp.src([
+                  'dist/' + name + '.min.css',
+                  'dist/' + name + '.tinymce.js'
+                ]).pipe(zip(name + '.tinymce.' + packageJson.version + '.zip'))
+                  .pipe(gulp.dest(buildDest))
+    ;
+});
+
+
+gulp.task('zip-standalone', ['less', 'minify'], function () {
+  return gulp.src([
+            'html/' + name + '.html',
+            'dist/' + name + '.min.css',
+            'dist/' + name + '.min.js'
+         ]).pipe(zip(name + '.standalone.' + packageJson.version + '.zip'))
+           .pipe(gulp.dest(buildDest))
+  ;
+});
+
+gulp.task('zip-standalone-nominify', ['less', 'minify'], function () {
+  return gulp.src([
+            'dist/' + name + '.css',
+            'dist/' + name + '.js'
+         ]).pipe(zip(name + '.dist.v' + packageJson.version + '.zip'))
+           .pipe(gulp.dest(buildDest))
+  ;
+});
+
+gulp.task('zip-dist', ['less', 'minify'], function () {
+  return gulp.src([
+            'dist/' + name + '.min.css',
+            'dist/' + name + '.min.js'
+         ]).pipe(zip(name + '.dist.minified.' + packageJson.version + '.zip'))
+           .pipe(gulp.dest(buildDest));
+});
+
 gulp.task('less', function () {
     return gulp.src('less/theme.default.less')
                .pipe(less({
@@ -76,8 +114,8 @@ gulp.task('plugins', function () {
 
 gulp.task('wordpress', ['less', 'minify'], function () {
     return gulp.src(wpPluginDest + '*')
-               .pipe(zip(name + '.wordpress.zip'))
-               .pipe(gulp.dest(dest))
+               .pipe(zip(name + '.wordpress.' + packageJson.version + '.zip'))
+               .pipe(gulp.dest(buildDest))
     ;
 });
 
@@ -106,7 +144,7 @@ gulp.task('minify-advanced', function () {
     ;
 });
 
-gulp.task('electron', ['less', 'minify'], function () {
+gulp.task('build-electron', ['less', 'minify'], function () {
     return gulp.src('')
                .pipe(electron({
                     src: './app',
@@ -118,7 +156,7 @@ gulp.task('electron', ['less', 'minify'], function () {
                     cache: './cache',
                     version: 'v1.3.4',
                     packaging: true,
-                    platforms: ['win32-ia32', 'darwin-x64'],
+                    platforms: ['win32-ia32', 'darwin-x64', 'linux-x64'],
                     platformResources: {
                         darwin: {
                             CFBundleDisplayName: packageJson.name,
@@ -136,7 +174,17 @@ gulp.task('electron', ['less', 'minify'], function () {
                     }
                }))
                .pipe(gulp.dest(''))
+  
     ;
+});
+
+gulp.task('move-electron', ['build-electron'], function () {
+  return gulp.src([
+            'dist/electron/v1.3.4/' + packageJson.name + '-' + packageJson.version + '-darwin-x64.zip',
+            'dist/electron/v1.3.4/' + packageJson.name + '-' + packageJson.version + '-linux-x64.zip',
+            'dist/electron/v1.3.4/' + packageJson.name + '-' + packageJson.version + '-win32-ia32.zip'
+          ])
+          .pipe(gulp.dest(buildDest))
 });
 
 gulp.task('tinymce', function () {
@@ -149,10 +197,14 @@ gulp.task('tinymce', function () {
     ;
 });
 
+gulp.task('electron', function () {
+  gulp.start('build-electron', 'move-electron');
+});
+
 gulp.task('default', function () {
-    gulp.start('minify', 'tinymce', 'less', 'plugins', 'wordpress');
+    gulp.start('minify', 'tinymce', 'less', 'plugins', 'wordpress', 'zip-standalone', 'zip-dist', 'zip-standalone-nominify', 'zip-tinymce');
 });
 
 gulp.task('with-advanced', function () {
-    gulp.start('minify-advanced', 'tinymce', 'less', 'plugins', 'wordpress');
+    gulp.start('minify-advanced', 'tinymce', 'less', 'plugins', 'wordpress', 'zip-standalone', 'zip-dist', 'zip-standalone-nominify', 'zip-tinymce');
 });

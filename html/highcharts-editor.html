@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+     <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100,700|Source Sans:400,300,100' rel='stylesheet' type='text/css'/>
+    
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css"/>
+
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="http://code.highcharts.com/adapters/standalone-framework.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    
+    <link href="highcharts-editor.min.css" type="text/css" rel="stylesheet"/>
+    <script src="highcharts-editor.min.js"></script>
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width:100%;
+            height:100%;
+            background:#F5F5F5;
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+
+</head>
+
+<body>
+<div id="editor"></div>
+</body>
+
+<script>
+
+    highed.ready(function () {
+        highed.Editor('editor', {
+            plugins: {
+         
+            }
+        });
+    });
+
+</script>
+</html>
