@@ -337,7 +337,6 @@ var highed = {
 
     pollForReady();
 
-
     ///////////////////////////////////////////////////////////////////////////
 
     /** Add a function to call when the document is ready

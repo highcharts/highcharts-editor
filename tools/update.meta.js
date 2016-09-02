@@ -115,9 +115,11 @@ function update(root) {
             entry.defaults = aentry.defaults;
             entry.parent = aentry.parent;
             entry.values = aentry.values;
+            //entry.custom = aentry.custom;
+
             return true;
         } else {    
-            console.log('[warn]'.yellow, 'Unknown property:', entry.id, 'skipping...');
+            console.log('[warn]'.yellow, 'Unknown property:', entry.id.bold, 'skipping...');
             return false;
         }
     });

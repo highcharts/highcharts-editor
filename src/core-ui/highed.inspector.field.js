@@ -45,10 +45,17 @@ highed.InspectorField = function (type, value, properties, fn) {
                 return input;
             },
             number: function (val, callback) {
-                return fields.string(val, callback);             
+                var f = fields.string(val, callback);             
+                f.type = 'number';
+                return f;
             },
             range: function (val, callback) {
-                return fields.string(val, callback);             
+                var f = fields.string(val, callback);             
+                f.type = 'range';
+                f.step = properties.custom.step;
+                f.min = properties.custom.minValue;
+                f.max = properties.custom.maxValue;
+                return f;
             },
             boolean: function (val, callback) {
                 var input = highed.dom.cr('input');             
@@ -202,6 +209,13 @@ highed.InspectorField = function (type, value, properties, fn) {
 
     if (highed.isNull(value)) {
         value = '';
+    }
+
+    if (!highed.isNull(properties.custom) && 
+        !highed.isNull(properties.custom.minValue) && 
+        !highed.isNull(properties.custom.maxValue) && 
+        !highed.isNull(properties.custom.step)) {
+        type = 'range';
     }
 
     if (type && type.indexOf('array') === 0) {
