@@ -56,6 +56,10 @@ highed.ChartCustomizer = function (parent, owner) {
         flatOptions = foptions || {};
     }
 
+    function buildBody(entry) {
+
+    }
+
     function selectGroup(group, table) {
         if (highed.isArr(group.options)) {
             table = highed.dom.cr('table', 'highed-customizer-table');
@@ -111,7 +115,7 @@ highed.ChartCustomizer = function (parent, owner) {
         item.entries.forEach(function (entry) {
             highed.dom.ap(table,
                 highed.InspectorField(
-                    entry.dataType || 'string', 
+                    entry.values ?  'options' : (entry.dataType || 'string'), 
                     (flatOptions[entry.id] || entry.defaults), 
                     {
                         title: highed.uncamelize(entry.shortName),

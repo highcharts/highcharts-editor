@@ -198,47 +198,47 @@ module.exports = {
 			options: [
 				{id: 'series--type', text: 'Series type', tooltipText: 'The type of series'},
 				{
-					id: 'series--color',
+					id: 'plotOptions-series--color',
 					text: 'Color',
 					tooltipText: 'The main color of the series. If no color is given here, the color ' +
 					'is pulled from the array of default colors as given in the "Appearance" section.'
 				},
-				{id: 'series--colors', text: 'Colors'},
+				{id: 'plotOptions-series--colors', text: 'Colors'},
 				{
-					id: 'series--negativeColor',
+					id: 'plotOptions-series--negativeColor',
 					text: 'Negative color',
 					tooltipText: 'The negative color of the series below the threshold. Threshold is default zero, this can be changed in the advanced settings.'
 				},
 				{
-					id: 'series--colorByPoint',
+					id: 'plotOptions-series--colorByPoint',
 					text: 'Color by point',
 					tooltipText: 'Use one color per point. Colors can be changed in the "Appearance" section.'
 				},
-				{id: 'series--dashStyle', text: 'Dash style'},
-				{id: 'series-marker--enabled', text: 'Enable point markers'},
-				{id: 'series-marker--symbol', text: 'Marker symbol'},
+				{id: 'plotOptions-series--dashStyle', text: 'Dash style'},
+				{id: 'plotOptions-series-marker--enabled', text: 'Enable point markers'},
+				{id: 'plotOptions-series-marker--symbol', text: 'Marker symbol'},
 				//{id: 'series<*>-dataLabels--enabled', text: 'Enable data labels'},
 				{
-					id: 'series-tooltip--valuePrefix',
+					id: 'plotOptions-series-tooltip--valuePrefix',
 					text: 'Prefix in tooltip',
 					tooltipText: 'Text to prepend before the value in the tooltip'
 				},
 				{
-					id: 'series-tooltip--valueSuffix',
+					id: 'plotOptions-series-tooltip--valueSuffix',
 					text: 'Suffix (unit) in tooltip',
 					tooltipText: 'Text to append after the value in the tooltip'
 				},
-				{id: 'series-seriesMapping--x', text: 'Explicit x column'},
-				{id: 'series-seriesMapping--label', text: 'Explicit label column'},
+				{id: 'plotOptions-series-seriesMapping--x', text: 'Explicit x column'},
+				{id: 'plotOptions-series-seriesMapping--label', text: 'Explicit label column'},
 				/*funnel*/
-				{id: 'series--width', text: 'Funnel width'},
+				{id: 'plotOptions-series--width', text: 'Funnel width'},
 				{
-					id: 'series--neckWidth',
+					id: 'plotOptions-series--neckWidth',
 					text: 'Neck width',
 					tooltipText: 'The width of the neck, the lower part of the funnel. A number defines pixel width, a percentage string, f. eks. \'25%\', defines a percentage of the plot area width. Defaults to 25%.'
 				},
 				{
-					id: 'series--neckHeight',
+					id: 'plotOptions-series--neckHeight',
 					text: 'Neck height',
 					tooltipText: 'The height of the neck, the lower part of the funnel. A number defines pixel width, a percentage string, f. eks. \'25%\', defines a percentage of the plot area height. Defaults to 25%.'
 				}

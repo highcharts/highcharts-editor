@@ -91,6 +91,8 @@ function filterEachOption(root, fn, parent) {
                 });
             }
         }
+    } else {
+        console.log('[warn]'.yellow, 'No id for object', root);
     }
 }
 

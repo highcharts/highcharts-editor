@@ -204,6 +204,9 @@ highed.ChartPreview = function (parent, attributes) {
                 This magic code will generate an injection script that will
                 check if highcharts is included, and include it if not.
                 Afterwards, it will create the chart, and insert it into the page.
+
+                It's quite messy, could to client-side templating or something,
+                but it works.
             */
 
             return '\n' + [
