@@ -31,7 +31,8 @@ highed.meta.chartTemplates = {
 				title: 'Line chart',
 				urlImg: 'https://cloud.highcharts.com/images/abywon/0/136.svg',
 				config: {
-					'chart--type': 'line'
+					'chart--type': 'line',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one column for X values or categories, subsequently one column for each series\' Y values.'
 			},
@@ -40,7 +41,8 @@ highed.meta.chartTemplates = {
 				urlImg: 'https://cloud.highcharts.com/images/agonam/2/136.svg',
 				config: {
 					'chart--type': 'line',
-					'plotOptions-series-dataLabels--enabled': true
+					'plotOptions-series-dataLabels--enabled': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one column for X values or categories, subsequently one column for each series\' Y values. ' +
 				'Data labels by default displays the Y value.'
@@ -49,7 +51,8 @@ highed.meta.chartTemplates = {
 				title: 'Spline',
 				urlImg: 'https://cloud.highcharts.com/images/upafes/1/136.svg',
 				config: {
-					'chart--type': 'spline'
+					'chart--type': 'spline',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one column for X values or categories, subsequently one column for each series\' Y values.'
 			},
@@ -58,7 +61,8 @@ highed.meta.chartTemplates = {
 				urlImg: 'https://cloud.highcharts.com/images/odopic/2/136.svg',
 				config: {
 					'chart--type': 'spline',
-					'plotOptions-series-dataLabels--enabled': true
+					'plotOptions-series-dataLabels--enabled': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one column for X values or categories, subsequently one column for each series\' Y values.'
 			},
@@ -68,7 +72,8 @@ highed.meta.chartTemplates = {
 				config: {
 					'chart--type': 'line',
 					'yAxis--type': 'logarithmic',
-					'yAxis--minorTickInterval': 'auto'
+					'yAxis--minorTickInterval': 'auto',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one column for X values or categories, subsequently one column for each series\' Y values.'
 			},
@@ -77,7 +82,8 @@ highed.meta.chartTemplates = {
 				urlImg: 'https://cloud.highcharts.com/images/akeduw/0/136.svg',
 				config: {
 					'chart--type': 'line',
-					'plotOptions-line--step': 'left'
+					'plotOptions-line--step': 'left',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one column for X values or categories, subsequently one column for each series\' Y values.'
 			},
@@ -87,7 +93,8 @@ highed.meta.chartTemplates = {
 				config: {
 					'chart--type': 'line',
 					'plotOptions-series-dataLabels--enabled': true,
-					'plotOptions-line--step': 'left'
+					'plotOptions-line--step': 'left',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one column for X values or categories, subsequently one column for each series\' Y values.'
 			},
@@ -96,7 +103,8 @@ highed.meta.chartTemplates = {
 				urlImg: 'https://cloud.highcharts.com/images/ozojul/1/136.svg',
 				config: {
 					'chart--type': 'line',
-					'chart--inverted': true
+					'chart--inverted': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one column for X values or categories, subsequently one column for each series\' Y values.'
 			},
@@ -106,7 +114,8 @@ highed.meta.chartTemplates = {
 				config: {
 					'chart--type': 'line',
 					'series[0]--negativeColor': '#0088FF',
-					'series[0]--color': '#FF0000'
+					'series[0]--color': '#FF0000',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one column for X values or categories, subsequently one column for each series\' Y values.'
 			},
@@ -116,7 +125,8 @@ highed.meta.chartTemplates = {
 				config: {
 					'chart--type': 'line',
 					'series[0]--type': 'line',
-					'series[1]--type': 'errorbar'
+					'series[1]--type': 'errorbar',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories, subsequently one data column for the series\' Y values. ' +
 				'and two columns for the error bar series maximum and minimum.'
@@ -126,7 +136,8 @@ highed.meta.chartTemplates = {
 				urlImg: 'https://cloud.highcharts.com/images/ynikoc/0/136.svg',
 				config: {
 					'chart--type': 'line',
-					'series[0]--type': 'column'
+					'series[0]--type': 'column',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories, subsequently one data column for the series\' Y values. and two columns for the error bar series maximum and minimum.'
 			}
@@ -139,7 +150,8 @@ highed.meta.chartTemplates = {
 				title: 'Basic',
 				urlImg: 'https://cloud.highcharts.com/images/ecexev/2/136.svg',
 				config: {
-					'chart--type': 'area'
+					'chart--type': 'area',
+					'chart--polar': false
 				},
 				tooltipText: 'Non-stacked area chart. Requires one column for X values or categories, subsequently one column for each series\' Y values.'
 			},
@@ -148,7 +160,8 @@ highed.meta.chartTemplates = {
 				urlImg: 'https://cloud.highcharts.com/images/atikon/0/136.svg',
 				config: {
 					'chart--type': 'area',
-					'plotOptions-series-dataLabels--enabled': true
+					'plotOptions-series-dataLabels--enabled': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Non-stacked area chart with data labels. Requires one column for X values or categories, subsequently one column for each series\' Y values.'
 			},
@@ -157,7 +170,8 @@ highed.meta.chartTemplates = {
 				urlImg: 'https://cloud.highcharts.com/images/inebav/1/136.svg',
 				config: {
 					'chart--type': 'area',
-					'plotOptions-series--stacking': 'normal'
+					'plotOptions-series--stacking': 'normal',
+					'chart--polar': false
 				},
 				tooltipText: 'Stacked area chart. Requires one column for X values or categories, subsequently one column for each series\' Y values. ' +
 				'The first data series is in the top of the stack.'
@@ -168,7 +182,8 @@ highed.meta.chartTemplates = {
 				config: {
 					'chart--type': 'area',
 					'plotOptions-series--stacking': 'normal',
-					'plotOptions-series-dataLabels--enabled': true
+					'plotOptions-series-dataLabels--enabled': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Stacked area chart. Requires one column for X values or categories, subsequently one column for each series\' Y values. ' +
 				'The first data series is in the top of the stack.'
@@ -178,7 +193,8 @@ highed.meta.chartTemplates = {
 				urlImg: 'https://cloud.highcharts.com/images/iporos/1/136.svg',
 				config: {
 					'chart--type': 'area',
-					'plotOptions-series--stacking': 'percent'
+					'plotOptions-series--stacking': 'percent',
+					'chart--polar': false
 				},
 				tooltipText: 'Stacked percentage area chart. Requires one column for X values or categories, subsequently one column for each series\' Y values. ' +
 				'The first data series is in the top of the stack.'
@@ -188,7 +204,8 @@ highed.meta.chartTemplates = {
 				urlImg: 'https://cloud.highcharts.com/images/yqenid/0/136.svg',
 				config: {
 					'chart--type': 'area',
-					'chart--inverted': true
+					'chart--inverted': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Area chart with inverted axes. Requires one column for X values or categories, subsequently one column for each series\' Y values.'
 			},
@@ -198,7 +215,8 @@ highed.meta.chartTemplates = {
 				config: {
 					'chart--type': 'area',
 					'chart--inverted': true,
-					'plotOptions-series-dataLabels--enabled': true
+					'plotOptions-series-dataLabels--enabled': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Area chart with inverted axes and data labels. Requires one column for X values or categories, subsequently one column for each series\' Y values.'
 			},
@@ -207,7 +225,8 @@ highed.meta.chartTemplates = {
 				urlImg: 'https://cloud.highcharts.com/images/abutix/0/136.svg',
 				config: {
 					'chart--type': 'area',
-					'plotOptions-area--step': 'left'
+					'plotOptions-area--step': 'left',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one column for X values or categories, subsequently one column for each series\' Y values.'
 			},
@@ -217,7 +236,8 @@ highed.meta.chartTemplates = {
 				config: {
 					'chart--type': 'area',
 					'series[0]--negativeColor': '#0088FF',
-					'series[0]--color': '#FF0000'
+					'series[0]--color': '#FF0000',
+					'chart--polar': false
 				},
 				tooltipText: 'Displays negative values with an alternative color. Colors can be set in Customize -> Simple -> Data series. Requires one column for X values or categories, subsequently one column for each series\' Y values.'
 			},
@@ -225,7 +245,8 @@ highed.meta.chartTemplates = {
 				title: 'Arearange',
 				urlImg: 'https://cloud.highcharts.com/images/udepat/0/136.svg',
 				config: {
-					'chart--type': 'arearange'
+					'chart--type': 'arearange',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories, subsequently two data column for each arearange series\' Y values.'
 			}
@@ -238,7 +259,8 @@ highed.meta.chartTemplates = {
 				title: 'Basic',
 				urlImg: 'https://cloud.highcharts.com/images/ovobiq/1/136.svg',
 				config: {
-					'chart--type': 'column'
+					'chart--type': 'column',
+					'chart--polar': false
 				},
 				tooltipText: 'Grouped column chart. Requires one data column for X values or categories, subsequently one data column for each series\' Y values.'
 			},
@@ -247,7 +269,8 @@ highed.meta.chartTemplates = {
 				urlImg: 'https://cloud.highcharts.com/images/ivetir/1/136.svg',
 				config: {
 					'chart--type': 'column',
-					'plotOptions-series-dataLabels--enabled': true
+					'plotOptions-series-dataLabels--enabled': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Grouped column chart with datalabels. Requires one data column for X values or categories, subsequently one data column for each series\' Y values.'
 			},
@@ -262,7 +285,8 @@ highed.meta.chartTemplates = {
 					'chart-options3d--beta': 15,
 					'chart-options3d--depth': 50,
 					'chart-options3d--viewDistance': 15,
-					'plotOptions-column--depth': 25
+					'plotOptions-column--depth': 25,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories, subsequently one data column for each series\' Y values.'
 			},
@@ -271,7 +295,8 @@ highed.meta.chartTemplates = {
 				urlImg: 'https://cloud.highcharts.com/images/ycehiz/1/136.svg',
 				config: {
 					'chart--type': 'column',
-					'plotOptions-series--stacking': 'normal'
+					'plotOptions-series--stacking': 'normal',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories, subsequently one data column for each series\' Y values.'
 			},
@@ -281,7 +306,8 @@ highed.meta.chartTemplates = {
 				config: {
 					'chart--type': 'column',
 					'plotOptions-series--stacking': 'normal',
-					'plotOptions-series-dataLabels--enabled': true
+					'plotOptions-series-dataLabels--enabled': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories, subsequently one data column for each series\' Y values.'
 			},
@@ -297,7 +323,8 @@ highed.meta.chartTemplates = {
 					'chart-options3d--depth': 50,
 					'chart-options3d--viewDistance': 15,
 					'plotOptions-column--depth': 25,
-					'plotOptions-series--stacking': 'normal'
+					'plotOptions-series--stacking': 'normal',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories, subsequently one data column for each series\' Y values.'
 			},
@@ -316,7 +343,8 @@ highed.meta.chartTemplates = {
 				config: {
 					'chart--type': 'column',
 					'plotOptions-series--stacking': 'percent',
-					'plotOptions-series-dataLabels--enabled': true
+					'plotOptions-series-dataLabels--enabled': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Grouped column chart. Requires one data column for X values or categories, subsequently one data column for each series\' Y values.'
 			},
@@ -326,7 +354,8 @@ highed.meta.chartTemplates = {
 				config: {
 					'chart--type': 'column',
 					'series[0]--negativeColor': '#0088FF',
-					'series[0]--color': '#FF0000'
+					'series[0]--color': '#FF0000',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one column for X values or categories, subsequently one column for each series\' Y values.'
 			},
@@ -335,7 +364,8 @@ highed.meta.chartTemplates = {
 				urlImg: 'https://cloud.highcharts.com/images/alyqyz/0/136.svg',
 				config: {
 					'chart--type': 'column',
-					'plotOptions-series--colorByPoint': true
+					'plotOptions-series--colorByPoint': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories (vertical axis), subsequently ' +
 				'one data column for each series\' Y values (horizontal axis).'
@@ -346,7 +376,8 @@ highed.meta.chartTemplates = {
 				config: {
 					'chart--type': 'column',
 					'yAxis--type': 'logarithmic',
-					'yAxis--minorTickInterval': 'auto'
+					'yAxis--minorTickInterval': 'auto',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories (vertical axis), subsequently ' +
 				'one data column for each series\' Y values (horizontal axis).'
@@ -355,7 +386,8 @@ highed.meta.chartTemplates = {
 				title: 'Columnrange',
 				urlImg: 'https://cloud.highcharts.com/images/ihilaq/0/136.svg',
 				config: {
-					'chart--type': 'columnrange'
+					'chart--type': 'columnrange',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories (vertical axis), subsequently ' +
 				'two data column for each series\' Y values (horizontal axis).'
@@ -365,7 +397,8 @@ highed.meta.chartTemplates = {
 				urlImg: 'https://cloud.highcharts.com/images/ojykiw/0/136.svg',
 				config: {
 					'chart--type': 'columnrange',
-					'plotOptions-series-dataLabels--enabled': true
+					'plotOptions-series-dataLabels--enabled': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories (vertical axis), subsequently ' +
 				'two data column for each series\' Y values (horizontal axis).'
@@ -378,7 +411,8 @@ highed.meta.chartTemplates = {
 					'plotOptions-series--pointPadding': 0,
 					'plotOptions-series--groupPadding': 0,
 					'plotOptions-series--borderWidth': 0,
-					'plotOptions-series--shadow': false
+					'plotOptions-series--shadow': false,
+					'chart--polar': false
 				},
 				tooltiptext: 'Requires one data column for X values or categories, subsequently one data column for the series\' Y values.'
 			},
@@ -387,7 +421,8 @@ highed.meta.chartTemplates = {
 				urlImg: 'https://cloud.highcharts.com/images/icytes/0/136.svg',
 				config: {
 					'chart--type': 'column',
-					'series[1]--type': 'errorbar'
+					'series[1]--type': 'errorbar',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories, subsequently one data column for the series\' Y values. and two columns for the error bar series maximum and minimum.'
 			}
@@ -401,7 +436,8 @@ highed.meta.chartTemplates = {
 				urlImg: 'https://cloud.highcharts.com/images/ovuvul/1/137.svg',
 				config: {
 					'chart--type': 'column',
-					'chart--inverted': true
+					'chart--inverted': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories (vertical axis), subsequently ' +
 				'one data column for each series\' Y values (horizontal axis).'
@@ -412,7 +448,8 @@ highed.meta.chartTemplates = {
 				config: {
 					'chart--type': 'column',
 					'chart--inverted': true,
-					'plotOptions-series-dataLabels--enabled': true
+					'plotOptions-series-dataLabels--enabled': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories (vertical axis), subsequently ' +
 				'one data column for each series\' Y values (horizontal axis).'
@@ -423,7 +460,8 @@ highed.meta.chartTemplates = {
 				config: {
 					'chart--type': 'column',
 					'chart--inverted': true,
-					'plotOptions-series--stacking': 'normal'
+					'plotOptions-series--stacking': 'normal',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories (vertical axis), subsequently ' +
 				'one data column for each series\' Y values (horizontal axis).'
@@ -435,7 +473,8 @@ highed.meta.chartTemplates = {
 					'chart--type': 'column',
 					'chart--inverted': true,
 					'plotOptions-series--stacking': 'normal',
-					'plotOptions-series-dataLabels--enabled': true
+					'plotOptions-series-dataLabels--enabled': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories (vertical axis), subsequently ' +
 				'one data column for each series\' Y values (horizontal axis).'
@@ -446,7 +485,8 @@ highed.meta.chartTemplates = {
 				config: {
 					'chart--type': 'column',
 					'chart--inverted': true,
-					'plotOptions-series--stacking': 'percent'
+					'plotOptions-series--stacking': 'percent',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories (vertical axis), subsequently ' +
 				'one data column for each series\' Y values (horizontal axis).'
@@ -458,7 +498,8 @@ highed.meta.chartTemplates = {
 					'chart--type': 'column',
 					'chart--inverted': true,
 					'plotOptions-series--stacking': 'percent',
-					'plotOptions-series-dataLabels--enabled': true
+					'plotOptions-series-dataLabels--enabled': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories (vertical axis), subsequently ' +
 				'one data column for each series\' Y values (horizontal axis).'
@@ -470,7 +511,8 @@ highed.meta.chartTemplates = {
 					'chart--type': 'column',
 					'chart--inverted': true,
 					'series[0]--negativeColor': '#0088FF',
-					'series[0]--color': '#FF0000'
+					'series[0]--color': '#FF0000',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one column for X values or categories, subsequently one column for each series\' Y values.'
 			},
@@ -480,7 +522,8 @@ highed.meta.chartTemplates = {
 				config: {
 					'chart--type': 'column',
 					'chart--inverted': true,
-					'plotOptions-series-colorByPoint': true
+					'plotOptions-series-colorByPoint': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories (vertical axis), subsequently ' +
 				'one data column for each series\' Y values (horizontal axis).'
@@ -492,7 +535,8 @@ highed.meta.chartTemplates = {
 					'chart--type': 'column',
 					'chart--inverted': true,
 					'yAxis--type': 'logarithmic',
-					'yAxis--minorTickInterval': 'auto'
+					'yAxis--minorTickInterval': 'auto',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories (vertical axis), subsequently ' +
 				'one data column for each series\' Y values (horizontal axis).'
@@ -502,7 +546,8 @@ highed.meta.chartTemplates = {
 				urlImg: 'https://cloud.highcharts.com/images/iqagel/0/136.svg',
 				config: {
 					'chart--type': 'columnrange',
-					'chart--inverted': true
+					'chart--inverted': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories (vertical axis), subsequently ' +
 				'two data column for each series\' Y values (horizontal axis).'
@@ -513,7 +558,8 @@ highed.meta.chartTemplates = {
 				config: {
 					'chart--type': 'columnrange',
 					'chart--inverted': true,
-					'plotOptions-series-dataLabels--enabled': true
+					'plotOptions-series-dataLabels--enabled': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories (vertical axis), subsequently ' +
 				'two data column for each series\' Y values (horizontal axis).'
@@ -527,7 +573,8 @@ highed.meta.chartTemplates = {
 					'plotOptions-series--pointPadding': 0,
 					'plotOptions-series--groupPadding': 0,
 					'plotOptions-series--borderWidth': 0,
-					'plotOptions-series--shadow': false
+					'plotOptions-series--shadow': false,
+					'chart--polar': false
 				},
 				tooltiptext: 'Requires one data column for X values or categories, subsequently one data column for the series\' Y values.'
 			},
@@ -537,7 +584,8 @@ highed.meta.chartTemplates = {
 				config: {
 					'chart--type': 'column',
 					'chart--inverted': true,
-					'series[1]--type': 'errorbar'
+					'series[1]--type': 'errorbar',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values or categories, subsequently one data column for the series\' Y values. and two columns for the error bar series maximum and minimum.'
 			}
@@ -550,7 +598,8 @@ highed.meta.chartTemplates = {
 				title: 'Scatter chart',
 				urlImg: 'https://cloud.highcharts.com/images/ezatat/0/136.svg',
 				config: {
-					'chart--type': 'scatter'
+					'chart--type': 'scatter',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values and one for Y values.'
 			},
@@ -558,7 +607,8 @@ highed.meta.chartTemplates = {
 				title: 'Bubble chart',
 				urlImg: 'https://cloud.highcharts.com/images/usyfyw/0/136.svg',
 				config: {
-					'chart--type': 'bubble'
+					'chart--type': 'bubble',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires three data columns: one for X values, one for Y values and one for the size of the bubble (Z value).'
 			},
@@ -567,7 +617,8 @@ highed.meta.chartTemplates = {
 				urlImg: 'https://cloud.highcharts.com/images/ydaqok/0/136.svg',
 				config: {
 					'chart--type': 'scatter',
-					'plotOptions-series--lineWidth': 1
+					'plotOptions-series--lineWidth': 1,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values and one for Y values.'
 			},
@@ -576,7 +627,8 @@ highed.meta.chartTemplates = {
 				urlImg: 'https://cloud.highcharts.com/images/uvepiw/0/136.svg',
 				config: {
 					'chart--type': 'scatter',
-					'plotOptions-series--lineWidth': 1
+					'plotOptions-series--lineWidth': 1,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values and one for Y values.'
 			}
@@ -592,7 +644,8 @@ highed.meta.chartTemplates = {
 					'chart--type': 'pie',
 					'plotOptions-pie--allowPointSelect': true,
 					'plotOptions-pie--cursor': true,
-					'plotOptions-series-dataLabels--enabled': true
+					'plotOptions-series-dataLabels--enabled': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires two data columns: one for slice names (shown in data labels) and one for their values.'
 			},
@@ -607,7 +660,8 @@ highed.meta.chartTemplates = {
 					'plotOptions-pie--allowPointSelect': true,
 					'plotOptions-pie--depth': 35,
 					'plotOptions-pie--cursor': 'pointer',
-					'plotOptions-series-dataLabels--enabled': true
+					'plotOptions-series-dataLabels--enabled': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires two data columns: one for slice names (shown in data labels) and one for their values.'
 			},
@@ -619,7 +673,8 @@ highed.meta.chartTemplates = {
 					'plotOptions-pie--allowPointSelect': true,
 					'plotOptions-pie--cursor': true,
 					'plotOptions-pie--showInLegend': true,
-					'plotOptions-pie-dataLabels--enabled': false
+					'plotOptions-pie-dataLabels--enabled': false,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires two data columns: one for slice names (shown in the legend) and one for their values.'
 			},
@@ -635,7 +690,8 @@ highed.meta.chartTemplates = {
 					'plotOptions-pie--depth': 35,
 					'plotOptions-pie--cursor': 'pointer',
 					'plotOptions-pie--showInLegend': true,
-					'plotOptions-pie-dataLabels--enabled': false
+					'plotOptions-pie-dataLabels--enabled': false,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires two data columns: one for slice names (shown in legend) and one for their values.'
 			},
@@ -647,7 +703,8 @@ highed.meta.chartTemplates = {
 					'plotOptions-pie--allowPointSelect': true,
 					'plotOptions-pie--cursor': true,
 					'plotOptions-pie--innerSize': '60%',
-					'plotOptions-pie-dataLabels--enabled': true
+					'plotOptions-pie-dataLabels--enabled': true,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires two data columns: one for slice names (shown in data labels) and one for their values.'
 			},
@@ -660,7 +717,8 @@ highed.meta.chartTemplates = {
 					'plotOptions-pie--cursor': true,
 					'plotOptions-pie--showInLegend': true,
 					'plotOptions-pie--innerSize': '60%',
-					'plotOptions-pie-dataLabels--enabled': false
+					'plotOptions-pie-dataLabels--enabled': false,
+					'chart--polar': false
 				},
 				tooltipText: 'Donut with categories. Requires two data columns: one for slice names (shown in legend) and one for their values.'
 			},
@@ -676,7 +734,8 @@ highed.meta.chartTemplates = {
 					'plotOptions-pie--depth': 35,
 					'plotOptions-pie--cursor': 'pointer',
 					'plotOptions-series-dataLabels--enabled': true,
-					'plotOptions-pie--innerSize': '60%'
+					'plotOptions-pie--innerSize': '60%',
+					'chart--polar': false
 				},
 				tooltipText: 'Requires two data columns: one for slice names (shown in data labels) and one for their values.'
 			},
@@ -693,7 +752,8 @@ highed.meta.chartTemplates = {
 					'plotOptions-pie--cursor': 'pointer',
 					'plotOptions-series-dataLabels--enabled': false,
 					'plotOptions-pie--showInLegend': true,
-					'plotOptions-pie--innerSize': '60%'
+					'plotOptions-pie--innerSize': '60%',
+					'chart--polar': false
 				},
 				tooltipText: '3D Donut with categories. Requires two data columns: one for slice names (shown in data labels) and one for their values.'
 			},
@@ -713,7 +773,8 @@ highed.meta.chartTemplates = {
 					'plotOptions-pie--innerSize': '50%',
 					'plotOptions-pie--startAngle': -90,
 					'plotOptions-pie--endAngle': 90,
-					'plotOptions-pie--center': ['50%', '75%']
+					'plotOptions-pie--center': ['50%', '75%'],
+					'chart--polar': false
 				},
 				tooltipText: 'Requires two data columns: one for slice names (shown in data labels) and one for their values.'
 			}
@@ -781,7 +842,8 @@ highed.meta.chartTemplates = {
 				constr: 'StockChart',
 				config: {
 					'chart--type': 'line',
-					'rangeSelector--enabled': false
+					'rangeSelector--enabled': false,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one column for X values or categories, subsequently one column for each series\' Y values.'
 			},
@@ -791,7 +853,8 @@ highed.meta.chartTemplates = {
 				constr: 'StockChart',
 				config: {
 					'chart--type': 'area',
-					'rangeSelector--enabled': false
+					'rangeSelector--enabled': false,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one column for X values or categories, subsequently one column for each series\' Y values.'
 			},
@@ -801,7 +864,8 @@ highed.meta.chartTemplates = {
 				constr: 'StockChart',
 				config: {
 					'chart--type': 'column',
-					'rangeSelector--enabled': false
+					'rangeSelector--enabled': false,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one column for X values or categories, subsequently one column for each series\' Y values.'
 			},
@@ -811,7 +875,8 @@ highed.meta.chartTemplates = {
 				constr: 'StockChart',
 				config: {
 					'chart--type': 'ohlc',
-					'rangeSelector--enabled': false
+					'rangeSelector--enabled': false,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one column for X values or categories, subsequently four columns for each series\' Y values, e.g. open, high, low, close.'
 			},
@@ -821,7 +886,8 @@ highed.meta.chartTemplates = {
 				constr: 'StockChart',
 				config: {
 					'chart--type': 'candlestick',
-					'rangeSelector--enabled': false
+					'rangeSelector--enabled': false,
+					'chart--polar': false
 				},
 				tooltipText: 'Requires one column for X values or categories, subsequently four columns for each series\' Y values, e.g. open, high, low, close.'
 			}
