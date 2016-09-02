@@ -69,7 +69,7 @@ highed.ChartPreview = function (parent, attributes) {
         clearTimeout(throttleTimeout);
         throttleTimeout = setTimeout(function () {
             events.emit('ChartChangeLately', customizedOptions);
-        }, 200);
+        }, 800);
     }
 
     /* Init the chart */

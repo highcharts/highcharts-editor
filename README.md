@@ -18,6 +18,7 @@ It requires no back-end service to operate.
   * Outputs both HTML and JSON
   * Optional wizard-style interface
   * Highly configurable
+  * Plugin system
 
 ## Installing and Building
 
@@ -60,61 +61,13 @@ This will put a built version in the `dist` folder.
 
 ## Integrations
 
-### TinyMCE
+  * [TinyMCE](https://github.com/highcharts/highcharts-editor/wiki/TinyMCE)
+  * [Wiki](https://github.com/highcharts/highcharts-editor/wiki/Wordpress)
+  * [Electron](https://github.com/highcharts/highcharts-editor/wiki/Native_OSX_Windows_Linux)
 
-See [Wiki](https://github.com/highcharts/highcharts-editor/wiki/TinyMCE).
+## API Reference
 
-### Wordpress
-
-See [Wiki](https://github.com/highcharts/highcharts-editor/wiki/Wordpress).
-
-### Electron
-
-See (Wiki)[https://github.com/highcharts/highcharts-editor/wiki/Native_OSX_Windows_Linux].
-
-## API Quick Reference
-
-**Full documentation can be found [here](#).**
-
-### highed.Editor
-
-The `highed.Editor` object is the full chart editor, containing by default a wizard-style interface for chart creation.
-
-**Constructor**
-
-`highed.Editor(parent, properties)` creates a new chart editor instance, and attaches it to the supplied parent node. The `parent` argument can either be a string containing the ID of a DOM node, or a DOM node instance.
-
-Properties is an object as such:
-		
-	{
-        //The initial chart options
-        defaultChartOptions: <object>,
-        //Events to listen for - same as calling Editor.on(...)
-        on: {
-            'EventName': <function>
-        },
-        //Plugins to use
-        plugins: {
-            <name of plugin>: <object with plugin options>
-        },
-        //If true, an SVG chart will be inserted when exporting to provide
-        //a fallback when js is not enabled/available.
-        includeSVGInHTMLEmbedding: bool,
-        //Features to use
-        features: 'import export templates customize'
-	}
-
-**Interface**
-
-  * `Editor.on(<event>, <callback>)`: Listen for an event emitted by the editor. See list of events below.
-  * `Editor.resize()`: Force a resize of the editor widget.
-  * `Editor.getEmbeddableHTML()`: Get a string containing HTML to replicate the current chart.
-  * `Editor.getEmbeddableJSON()`: Get a json string containing the current charts properties that can be used to initialize a duplicate chart.
-
-**Editor Events**
-
-  * `Resized`: Emitted when the editor is resized
-  * `ChartChange`: Emitted when the chart being edited changes. Passed argument is the current chart settings. 
+See [wiki](https://github.com/highcharts/highcharts-editor/wiki/API).
 
 ## Customizing the exposed settings
 
