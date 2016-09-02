@@ -28,7 +28,7 @@ tinymce.PluginManager.add('highcharts', function (editor, url) {
                     features: 'import templates customize',
                     allowDone: true
                 }, function (html) {
-                   editor.insertContent(html + '<p></p>');                
+                   editor.insertContent('<div class="mceNonEditable">' + html + '</div><p></p>');                
                 })
     ; 
     

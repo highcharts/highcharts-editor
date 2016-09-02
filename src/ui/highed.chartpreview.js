@@ -201,8 +201,6 @@ highed.ChartPreview = function (parent, attributes) {
             highed.setAttr(customizedOptions, 'chart--renderTo', id);
 
             return '\n' + [
-                '<div class="mceNonEditable">',
-
                 '<div id="', id, '">',
                 placehold ? getEmbeddableSVG() : '',
                 '</div>',
@@ -239,7 +237,7 @@ highed.ChartPreview = function (parent, attributes) {
                 '}',
                 'cl();',
                 '})();',
-                '</script></div>'
+                '</script>'
 
             ].join('') + '\n';
         });
