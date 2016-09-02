@@ -59,7 +59,7 @@ highed.Exporter = function (parent) {
         exportHTML.href = 'data:application/octet-stream,' + encodeURIComponent(chartHTML);
 
         svgValue.value = chartSVG;
-        exportSVG.href = 'data:application/octet-stream,' + encodeURIComponent(chartHTML);
+        exportSVG.href = 'data:application/octet-stream,' + encodeURIComponent(chartSVG);
 
         exportJSON.download = title + '.json';
         exportHTML.download = title + '.html';
