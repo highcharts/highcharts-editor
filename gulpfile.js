@@ -74,9 +74,9 @@ gulp.task('zip-standalone', ['less', 'minify'], function () {
 
 gulp.task('zip-standalone-nominify', ['less', 'minify'], function () {
   return gulp.src([
-            'dist/' + name + '.css',
+            'dist/' + name + '.min.css',
             'dist/' + name + '.js'
-         ]).pipe(zip(name + '.dist.v' + packageJson.version + '.zip'))
+         ]).pipe(zip(name + '.dist.' + packageJson.version + '.zip'))
            .pipe(gulp.dest(buildDest))
   ;
 });
