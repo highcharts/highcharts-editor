@@ -112,7 +112,7 @@ function update(root) {
             entry.dataType = (aentry.returnType || '').toLowerCase();
             entry.context = aentry.context || 'General';
             entry.tooltipText = entry.tooltipText || aentry.description;
-            entry.defaults = aentry.defaults;
+            entry.defaults = aentry.defaults || entry.defaults;
             entry.parent = aentry.parent;
             entry.values = aentry.values;
             //entry.custom = aentry.custom;
