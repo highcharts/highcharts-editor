@@ -43,7 +43,11 @@ This will put a built version in the `dist` folder.
 	<!DOCTYPE html>
 	<html>
 		<head>
+      <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100,700|Source Sans:400,300,100' rel='stylesheet' type='text/css'/>
+      <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
 
+      <link href="./highcharts-editor.min.css" type="text/css" rel="stylesheet"/>
+      <script src="./highcharts-editor.min.js" type="text/javascript" charset="utf-8"></script>
 		</head>
 		<body>
 			<div id="highcharts-editor"></div>
@@ -58,15 +62,15 @@ This will put a built version in the `dist` folder.
 
 ### TinyMCE
 
-See [wiki](https://github.com/highcharts/highcharts-editor/wiki/TinyMCE).
+See [Wiki](https://github.com/highcharts/highcharts-editor/wiki/TinyMCE).
 
 ### Wordpress
 
-See [wiki](https://github.com/highcharts/highcharts-editor/wiki/Wordpress).
+See [Wiki](https://github.com/highcharts/highcharts-editor/wiki/Wordpress).
 
 ### Electron
 
-To build a native version, run `gulp electron`. This will create executables for windows and osx in the `dist/eleectron/` folder.
+See (Wiki)[https://github.com/highcharts/highcharts-editor/wiki/Native_OSX_Windows_Linux].
 
 ## API Quick Reference
 
