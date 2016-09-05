@@ -292,7 +292,8 @@ highed.ChartPreview = function (parent, attributes) {
         gc(function (chart) {
             if (!expanded) {            
                 highed.dom.style(properties.expandTo, {
-                    width: '100%'
+                    width: '100%',
+                    display: ''
                 });
 
                 preExpandSize = highed.dom.size(parent);
@@ -311,7 +312,8 @@ highed.ChartPreview = function (parent, attributes) {
             if (preExpandSize && expanded) {
 
                 highed.dom.style(properties.expandTo, {
-                    width: '0%'
+                    width: '0px',
+                    display: 'none'
                 });
 
                 toggleButton.className = 'highed-icon highed-chart-preview-expand fa fa-desktop';
