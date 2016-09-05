@@ -115,7 +115,26 @@ function update(root) {
             entry.defaults = aentry.defaults || entry.defaults;
             entry.parent = aentry.parent;
             entry.values = aentry.values;
+            entry.text = entry.text || aentry.title;
             //entry.custom = aentry.custom;
+
+            if (entry.dataType.indexOf('object') >= 0 && entry.dataType.indexOf('cssobject') < 0) {
+                entry.attributes = [];
+                //Need to gather the attributes.
+                //We do it the lazy way.
+                api.forEach(function (child) {
+                    if (child.parent === entry.id) {
+                        entry.attributes.push({
+                            dataType: (child.returnType || '').toLowerCase(),
+                            name: child.title,
+                            title: child.title,
+                            tooltipText: child.description,
+                            defaults: child.defaults,
+                            values: child.values
+                        });
+                    }
+                });
+            }
 
             return true;
         } else {    

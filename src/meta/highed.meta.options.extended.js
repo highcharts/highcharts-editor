@@ -58,6 +58,33 @@ highed.meta.optionsExtended = {
     ],
     "General": [
       {
+        "text": "Label Items",
+        "options": [
+          {
+            "text": "Label Items:",
+            "id": "labels-items",
+            "dataType": "array<object>",
+            "context": "General",
+            "tooltipText": "A HTML label that can be positioned anywhere in the chart area.",
+            "parent": "labels",
+            "attributes": [
+              {
+                "dataType": "string",
+                "name": "html",
+                "title": "html",
+                "tooltipText": "Inner HTML or text for the label."
+              },
+              {
+                "dataType": "cssobject",
+                "name": "style",
+                "title": "style",
+                "tooltipText": "CSS styles for each label. To position the label, use left and top like this:\n<pre>style: {\n\tleft: '100px',\n\ttop: '100px'\n}</pre>"
+              }
+            ]
+          }
+        ]
+      },
+      {
         "text": "Chart size",
         "options": [
           {
@@ -285,7 +312,8 @@ highed.meta.optionsExtended = {
             "dataType": "string",
             "context": "General",
             "tooltipText": "The actual text of the axis title. It can contain basic HTML text markup like &lt;b&gt;, &lt;i&gt; and spans with style.",
-            "parent": "xAxis-title"
+            "parent": "xAxis-title",
+            "text": "text"
           },
           {
             "id": "xAxis--type",
@@ -344,6 +372,58 @@ highed.meta.optionsExtended = {
         "id": "yAxis",
         "text": "Vertical Axis",
         "options": [
+          {
+            "id": "yAxis-crosshair",
+            "dataType": "boolean|object",
+            "context": "General",
+            "tooltipText": "Configure a crosshair that follows either the mouse pointer or the hovered point.",
+            "defaults": "false",
+            "parent": "yAxis",
+            "values": "",
+            "text": "crosshair",
+            "attributes": [
+              {
+                "dataType": "color",
+                "name": "color",
+                "title": "color",
+                "tooltipText": "The color of the crosshair. Defaults to <code>#C0C0C0</code> for numeric and datetime axes, and <code>rgba(155,200,255,0.2)</code> for category axes, where the crosshair by default highlights the whole category.",
+                "defaults": "",
+                "values": ""
+              },
+              {
+                "dataType": "string",
+                "name": "dashStyle",
+                "title": "dashStyle",
+                "tooltipText": "The dash style for the crosshair. See <a href=\"#plotOptions.series.dashStyle\">series.dashStyle</a> for possible values.",
+                "defaults": "Solid",
+                "values": "[\"Solid\", \"ShortDash\", \"ShortDot\", \"ShortDashDot\", \"ShortDashDotDot\", \"Dot\", \"Dash\" ,\"LongDash\", \"DashDot\", \"LongDashDot\", \"LongDashDotDot\"]"
+              },
+              {
+                "dataType": "boolean",
+                "name": "snap",
+                "title": "snap",
+                "tooltipText": "Whether the crosshair should snap to the point or follow the pointer independent of points.",
+                "defaults": "true",
+                "values": ""
+              },
+              {
+                "dataType": "number",
+                "name": "width",
+                "title": "width",
+                "tooltipText": "The pixel width of the crosshair. Defaults to 1 for numeric or datetime axes, and for one category width for category axes.",
+                "defaults": "",
+                "values": ""
+              },
+              {
+                "dataType": "number",
+                "name": "zIndex",
+                "title": "zIndex",
+                "tooltipText": "The Z index of the crosshair. Higher Z indices allow drawing the crosshair on top of the series or behind the grid lines.",
+                "defaults": "2",
+                "values": ""
+              }
+            ]
+          },
           {
             "id": "yAxis-title--style",
             "text": "Y axis title",
@@ -705,7 +785,6 @@ highed.meta.optionsExtended = {
             "tooltipText": "The width of the original chart when exported. The pixel width of the exported image is then multiplied by the <em>Scaling factor</em>.",
             "dataType": "number",
             "context": "General",
-            "defaults": "",
             "parent": "exporting",
             "values": ""
           },

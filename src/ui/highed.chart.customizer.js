@@ -82,7 +82,8 @@ highed.ChartCustomizer = function (parent, owner) {
                         title: group.text,
                         tooltip: group.tooltipText,
                         values: group.values,
-                        custom: group.custom   
+                        custom: group.custom,
+                        attributes: group.attributes || []   
                     },
                     function (newValue) {           
                         events.emit('PropertyChange', group.id, newValue);
@@ -122,7 +123,8 @@ highed.ChartCustomizer = function (parent, owner) {
                         title: highed.uncamelize(entry.shortName),
                         tooltip: entry.description,
                         values: entry.values,
-                        custom: {}
+                        custom: {},
+                        attributes: entry.attributes || []
                     },
                     function (newValue) {           
                         events.emit('PropertyChange', entry.id, newValue);

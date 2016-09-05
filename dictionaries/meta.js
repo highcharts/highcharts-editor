@@ -44,6 +44,12 @@ module.exports = {
 
 		'General': [
 			{
+				text: 'Label Items',
+				options: [
+					{text: 'Label Items:', id: 'labels-items'}
+				]
+			},
+			{
 				text: 'Chart size',				
 				options: [
 					{
@@ -171,6 +177,9 @@ module.exports = {
 			text: 'Vertical Axis',
 			
 			options: [
+				{
+					id: 'yAxis-crosshair'
+				},
 				{
 					id: 'yAxis-title--style',
 					text: 'Y axis title',

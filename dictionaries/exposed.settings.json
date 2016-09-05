@@ -4,6 +4,8 @@
     "subtitle--text",
     "yAxis-title--text",
 
+    "labels-items",
+
     "chart--width",
     "chart--height",
 
@@ -39,6 +41,7 @@
     "yAxis--type",
     "yAxis--opposite",
     "yAxis--reversed",
+    "yAxis-crosshair",
 
     "series--type",
     "plotOptions-series--color",

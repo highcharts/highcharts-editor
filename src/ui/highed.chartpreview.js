@@ -55,8 +55,9 @@ highed.ChartPreview = function (parent, attributes) {
         if (highed.isFn(fn)) {
             if (chart && chart.options) {
                 return fn(chart);
-            } else {
-                highed.log(1, 'chart is undefined: chart preview');
+            } else {                
+                return fn(init());
+                //highed.log(1, 'chart is undefined: chart preview');
             }
         } 
         return false;
@@ -80,9 +81,16 @@ highed.ChartPreview = function (parent, attributes) {
         //We want to work on a copy..
         options = highed.merge({}, options || properties.defaultChartOptions);
         highed.setAttr(options, 'chart--renderTo', pnode || parent);
-        chart = new Highcharts.Chart(options);
+        try {
+            chart = new Highcharts.Chart(options);            
+        } catch (e) {
+            highed.log(1, 'error initializing chart:', e);
+            highed.snackBar('Error creating chart preview: ' + e);
+        }
         resize();
         highed.dom.ap(pnode || parent, toggleButton);
+
+        return chart;
     }
 
     /* Resize the preview */

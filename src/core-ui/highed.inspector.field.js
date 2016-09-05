@@ -113,6 +113,34 @@ highed.InspectorField = function (type, value, properties, fn) {
 
                 return options;
             },
+            object: function (val, callback) {
+                //Create a sub-table of options
+                var stable = highed.dom.cr('table'),
+                    wasUndefined = highed.isNull(val)
+                ;
+
+                val = val || {};
+
+                if (properties && highed.isArr(properties.attributes)) {
+                    properties.attributes.forEach(function (attr) {
+
+                        val[attr.name] = val[attr.name] || attr.defaults || (attr.dataType.indexOf('object') >= 0 ? {} : '');
+
+                        highed.dom.ap(stable, 
+                            highed.InspectorField(attr.dataType, val[attr.name], attr, function (nval) {
+                                val[attr.name] = nval;
+                                tryCallback(callback, val);
+                            })
+                        );
+                    });
+                }
+
+                if (wasUndefined) {
+                    tryCallback(callback, val);
+                }
+
+                return stable;
+            },
             array: function () {
                 var container = highed.dom.cr('div'),
                     add = highed.dom.cr('span', 'highed-field-array-add fa fa-plus', ''),
@@ -130,8 +158,10 @@ highed.InspectorField = function (type, value, properties, fn) {
                     ;
 
                     function processChange(newVal) {
-                        items[id].value = newVal;
-                        doEmitCallback();
+                        if (newVal) {
+                            items[id].value = newVal;
+                            doEmitCallback();                            
+                        }
                     }
 
                     function doEmitCallback() {
@@ -141,6 +171,12 @@ highed.InspectorField = function (type, value, properties, fn) {
                             }));
                         }    
                     }
+
+                    items[id] = {
+                        id: id,
+                        row: row,
+                        value: val
+                    };
 
                     item = fields[properties.subType] ? 
                            fields[properties.subType](val, processChange) : 
@@ -170,28 +206,23 @@ highed.InspectorField = function (type, value, properties, fn) {
                         return false;
                     });
 
-                    items[id] = {
-                        id: id,
-                        row: row,
-                        value: val
-                    };
-
                     if (!supressCallback) {
                         processChange();
                     }
                 }       
-                    highed.dom.ap(container, itemTable);
 
-                    highed.dom.on(add, 'click', function () {
-                        addCompositeItem();
+                highed.dom.ap(container, itemTable);
+
+                highed.dom.on(add, 'click', function () {
+                    addCompositeItem();
+                });
+
+                if (highed.isArr(value)) {
+                    value.forEach(function (item) {
+                        addCompositeItem(item, true);
                     });
+                }
 
-                    if (highed.isArr(value)) {
-                        value.forEach(function (item) {
-                            addCompositeItem(item, true);
-                        });
-                    }
-                    
                 highed.dom.ap(container, itemsNode, add);
 
                 return container;
@@ -211,6 +242,11 @@ highed.InspectorField = function (type, value, properties, fn) {
         value = '';
     }
 
+    //Choose a type
+    if (type && type.indexOf('|') >= 0) {
+        type = type.indexOf('object') ? 'object' : type.split('|')[0];
+    }
+
     if (!highed.isNull(properties.custom) && 
         !highed.isNull(properties.custom.minValue) && 
         !highed.isNull(properties.custom.maxValue) && 
@@ -223,9 +259,10 @@ highed.InspectorField = function (type, value, properties, fn) {
         type = 'array';
     }
 
+
     highed.dom.on(help, 'mouseover', function (e) {
-        highed.Tooltip(e.clientX, e.clientY, properties.tooltip);
-    });
+        highed.Tooltip(e.clientX, e.clientY, properties.tooltip || properties.tooltipText);
+    });        
 
     return highed.dom.ap(
         highed.dom.ap(highed.dom.cr('tr'),
