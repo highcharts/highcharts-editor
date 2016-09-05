@@ -147,7 +147,7 @@ module.exports = {
 			]
 		}, {
 			id: 'xAxis',
-			text: 'Horizontal Axis',
+			text: 'X-Axis',
 			
 			options: [
 				{
@@ -179,7 +179,7 @@ module.exports = {
 			]
 		}, {
 			id: 'yAxis',
-			text: 'Vertical Axis',
+			text: 'Y-Axis',
 			
 			options: [
 				{

@@ -30,7 +30,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * @fn - the function to call when the field is changed
  * @returns a DOM node containing the field + label
  */
-highed.InspectorField = function (type, value, properties, fn) {
+highed.InspectorField = function (type, value, properties, fn, nohint) {
     var 
         fields = {
             string: function (val, callback) {
@@ -107,6 +107,8 @@ highed.InspectorField = function (type, value, properties, fn) {
 
                 highed.dom.options(options, properties.values);
 
+                highed.dom.val(options, val || value);
+
                 highed.dom.on(options, 'change', function () {                    
                     tryCallback(callback, highed.dom.val(options));
                 });
@@ -115,7 +117,7 @@ highed.InspectorField = function (type, value, properties, fn) {
             },
             object: function (val, callback) {
                 //Create a sub-table of options
-                var stable = highed.dom.cr('table'),
+                var stable = highed.dom.cr('table', 'highed-customizer-table'),
                     wasUndefined = highed.isNull(val)
                 ;
 
@@ -125,6 +127,8 @@ highed.InspectorField = function (type, value, properties, fn) {
                     properties.attributes.forEach(function (attr) {
 
                         val[attr.name] = val[attr.name] || attr.defaults || (attr.dataType.indexOf('object') >= 0 ? {} : '');
+
+                        attr.title = highed.uncamelize(attr.title);
 
                         highed.dom.ap(stable, 
                             highed.InspectorField(attr.dataType, val[attr.name], attr, function (nval) {
@@ -149,6 +153,14 @@ highed.InspectorField = function (type, value, properties, fn) {
                     itemCounter = 0,
                     itemTable = highed.dom.cr('table', 'highed-field-table')
                 ;         
+
+                if (highed.isStr(value)) {
+                    try {
+                        value = JSON.parse(value);
+                    } catch (e) {
+
+                    }
+                }
 
                 function addCompositeItem(val, supressCallback) {
                     var item,
@@ -228,7 +240,10 @@ highed.InspectorField = function (type, value, properties, fn) {
                 return container;
             }
         },
-        help = highed.dom.cr('span', 'highed-icon fa fa-question-circle')
+        help = highed.dom.cr('span', 'highed-icon fa fa-question-circle'),
+        helpTD = highed.dom.cr('td'),
+        widgetTD = highed.dom.cr('td', 'widget-column'),
+        titleCol = highed.dom.cr('td')
     ;
 
     function tryCallback(cb, val) {
@@ -259,22 +274,33 @@ highed.InspectorField = function (type, value, properties, fn) {
         type = 'array';
     }
 
-    highed.dom.on(help, 'mouseover', function (e) {
+    if (type === 'object') {
+        nohint = true;
+    }
+
+    highed.dom.on([help], 'mouseover', function (e) {
         highed.Tooltip(e.clientX, e.clientY, properties.tooltip || properties.tooltipText);
     });        
 
+    if (nohint) {
+        highed.dom.style(help, {display: 'none'});
+        widgetTD.colSpan = 2;
+    }
+
     return highed.dom.ap(
         highed.dom.ap(highed.dom.cr('tr'),
-            highed.dom.ap(highed.dom.cr('td'),
+            highed.dom.ap(titleCol,
                 highed.dom.cr('span', '', properties.title)
             ),
-            highed.dom.ap(highed.dom.cr('td'),
+            highed.dom.ap(widgetTD,
                 fields[type] ? fields[type]() : fields.string()
-            ),
-            highed.dom.ap(highed.dom.cr('td'),
-                //highed.dom.cr('span', 'highed-field-tooltip', properties.tooltip) 
-                help
             )
+             ,
+             (!nohint ? 
+             highed.dom.ap(helpTD,
+                 //highed.dom.cr('span', 'highed-field-tooltip', properties.tooltip) 
+                 help
+            ) : false)
         )
     );
 };

@@ -32,7 +32,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.ChartPreview = function (parent, attributes) {
     var events = highed.events(),
         customizedOptions = {},
+        aggregatedOptions = {},
         flatOptions = {},   
+        templateOptions = {},
         properties = highed.merge({
             defaultChartOptions: {
                 titles: {
@@ -87,10 +89,10 @@ highed.ChartPreview = function (parent, attributes) {
         }
 
         try {
-            chart = new Highcharts.Chart(options);            
+            chart = new Highcharts.Chart(options);                 
         } catch (e) {
             highed.log(1, 'error initializing chart:', e);
-            highed.snackBar('Error creating chart preview: ' + e);
+            highed.snackBar('Error creating chart preview: ' + e);            
         }
         resize();
         highed.dom.ap(pnode || parent, toggleButton);
@@ -105,6 +107,10 @@ highed.ChartPreview = function (parent, attributes) {
         });
     }
 
+    function updateAggregated() {
+        aggregatedOptions = highed.merge(highed.merge({}, templateOptions), customizedOptions);
+    }
+
     /* Load a template from the meta
      * @template - the template object
      */
@@ -113,16 +119,19 @@ highed.ChartPreview = function (parent, attributes) {
             return highed.log(1, 'chart preview: templates must be an object {config: {...}}')
         }
 
+        templateOptions = {};
+
         gc(function (chart) {
             var options = highed.merge({}, customizedOptions);
 
             Object.keys(template.config).forEach(function (key) {
-                highed.setAttr([options, customizedOptions], key, template.config[key]);
+                highed.setAttr([options, templateOptions], key, template.config[key]);
                 flatOptions[key] = template.config[key];
             });
 
+            updateAggregated();
             init(options);
-            events.emit('ChartChange', customizedOptions);
+            emitChange();
         });
     }
 
@@ -142,6 +151,8 @@ highed.ChartPreview = function (parent, attributes) {
             highed.setAttr([chart.options, customizedOptions], 'data--dateFormat', data.dateFormat);
             highed.setAttr([chart.options, customizedOptions], 'data--decimalPoint', data.decimalPoint);
             highed.setAttr(chart.options, 'series', {});
+
+            updateAggregated();
 
             init(chart.options);
             emitChange();
@@ -166,6 +177,7 @@ highed.ChartPreview = function (parent, attributes) {
                 highed.snackBar('the data is not valid json');
             } else {
                 customizedOptions = highed.merge({}, data);
+                updateAggregated();
                 init(customizedOptions);
                 emitChange();
             }
@@ -183,14 +195,21 @@ highed.ChartPreview = function (parent, attributes) {
 
             flatOptions[id] = value;
 
-            init(customizedOptions, undefined, true);
+            updateAggregated();
+            init(aggregatedOptions, undefined, true);
             emitChange();
         });
+
+        if (id.indexOf('lang--') === 0 && customizedOptions.lang) {
+            Highcharts.setOptions({
+                lang: customizedOptions.lang
+            })
+        }
     }
 
     /* Get embeddable JSON */
     function getEmbeddableJSON() {
-        return highed.merge({}, customizedOptions);
+        return highed.merge({}, aggregatedOptions);
     }
 
     /* Get embeddable SVG */
@@ -215,7 +234,7 @@ highed.ChartPreview = function (parent, attributes) {
                 title = chart.options.titles ? chart.options.titles.text || 'untitled chart' : 'untitled chart'
             ;
 
-            highed.setAttr(customizedOptions, 'chart--renderTo', id);
+            highed.setAttr(aggregatedOptions, 'chart--renderTo', id);
 
             /*
                 This magic code will generate an injection script that will
@@ -256,7 +275,7 @@ highed.ChartPreview = function (parent, attributes) {
                 ' function cl() {',
                     'typeof window["Highcharts"] !== "undefined" && Highcharts.Data ? ',
                         'new Highcharts.chart("', id, '", ', 
-                            JSON.stringify(customizedOptions), ')',
+                            JSON.stringify(aggregatedOptions), ')',
                     ' : ',
                     'setTimeout(cl, 20);',
                 '}',
@@ -324,7 +343,7 @@ highed.ChartPreview = function (parent, attributes) {
         
         options: {
             set: set,
-            customized: customizedOptions,
+            customized: aggregatedOptions,
             flat: flatOptions
         },
 

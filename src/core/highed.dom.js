@@ -184,7 +184,7 @@ highed.dom = {
         
         if (target && target.forEach) {
           target.forEach(function (t) {
-            s.push(av.on(t, event, callback));
+            s.push(highed.dom.on(t, event, callback));
           });
         }
         
