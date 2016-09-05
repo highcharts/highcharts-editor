@@ -259,7 +259,6 @@ highed.InspectorField = function (type, value, properties, fn) {
         type = 'array';
     }
 
-
     highed.dom.on(help, 'mouseover', function (e) {
         highed.Tooltip(e.clientX, e.clientY, properties.tooltip || properties.tooltipText);
     });        

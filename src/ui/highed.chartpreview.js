@@ -77,10 +77,15 @@ highed.ChartPreview = function (parent, attributes) {
     }
 
     /* Init the chart */
-    function init(options, pnode) {
+    function init(options, pnode, noAnimation) {
         //We want to work on a copy..
         options = highed.merge({}, options || properties.defaultChartOptions);
         highed.setAttr(options, 'chart--renderTo', pnode || parent);
+
+        if (noAnimation) {
+            highed.setAttr(options, 'plotOptions--series--animation', false);
+        }
+
         try {
             chart = new Highcharts.Chart(options);            
         } catch (e) {
@@ -178,7 +183,7 @@ highed.ChartPreview = function (parent, attributes) {
 
             flatOptions[id] = value;
 
-            init(chart.options);
+            init(customizedOptions, undefined, true);
             emitChange();
         });
     }

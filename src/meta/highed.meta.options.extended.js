@@ -299,6 +299,58 @@ highed.meta.optionsExtended = {
         "text": "Horizontal Axis",
         "options": [
           {
+            "id": "xAxis-crosshair",
+            "text": "Crosshair",
+            "dataType": "boolean|object",
+            "context": "General",
+            "tooltipText": "Configure a crosshair that follows either the mouse pointer or the hovered point.",
+            "defaults": "false",
+            "parent": "xAxis",
+            "values": "",
+            "attributes": [
+              {
+                "dataType": "color",
+                "name": "color",
+                "title": "color",
+                "tooltipText": "The color of the crosshair. Defaults to <code>#C0C0C0</code> for numeric and datetime axes, and <code>rgba(155,200,255,0.2)</code> for category axes, where the crosshair by default highlights the whole category.",
+                "defaults": "",
+                "values": ""
+              },
+              {
+                "dataType": "string",
+                "name": "dashStyle",
+                "title": "dashStyle",
+                "tooltipText": "The dash style for the crosshair. See <a href=\"#plotOptions.series.dashStyle\">series.dashStyle</a> for possible values.",
+                "defaults": "Solid",
+                "values": "[\"Solid\", \"ShortDash\", \"ShortDot\", \"ShortDashDot\", \"ShortDashDotDot\", \"Dot\", \"Dash\" ,\"LongDash\", \"DashDot\", \"LongDashDot\", \"LongDashDotDot\"]"
+              },
+              {
+                "dataType": "boolean",
+                "name": "snap",
+                "title": "snap",
+                "tooltipText": "Whether the crosshair should snap to the point or follow the pointer independent of points.",
+                "defaults": "true",
+                "values": ""
+              },
+              {
+                "dataType": "number",
+                "name": "width",
+                "title": "width",
+                "tooltipText": "The pixel width of the crosshair. Defaults to 1 for numeric or datetime axes, and for one category width for category axes.",
+                "defaults": "",
+                "values": ""
+              },
+              {
+                "dataType": "number",
+                "name": "zIndex",
+                "title": "zIndex",
+                "tooltipText": "The Z index of the crosshair. Higher Z indices allow drawing the crosshair on top of the series or behind the grid lines.",
+                "defaults": "2",
+                "values": ""
+              }
+            ]
+          },
+          {
             "id": "xAxis-title--style",
             "text": "X axis title",
             "tooltipText": "Styling and text for the X axis title",
@@ -374,13 +426,13 @@ highed.meta.optionsExtended = {
         "options": [
           {
             "id": "yAxis-crosshair",
+            "text": "Crosshair",
             "dataType": "boolean|object",
             "context": "General",
             "tooltipText": "Configure a crosshair that follows either the mouse pointer or the hovered point.",
             "defaults": "false",
             "parent": "yAxis",
             "values": "",
-            "text": "crosshair",
             "attributes": [
               {
                 "dataType": "color",

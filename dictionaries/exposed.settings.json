@@ -36,6 +36,7 @@
     "xAxis--reversed",
     "xAxis-labels--format",
     "xAxis-labels--rotation",
+    "xAxis-crosshair",
 
     "yAxis-title--style",
     "yAxis--type",

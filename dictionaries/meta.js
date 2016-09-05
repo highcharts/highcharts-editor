@@ -151,6 +151,11 @@ module.exports = {
 			
 			options: [
 				{
+					id: 'xAxis-crosshair',
+					text: 'Crosshair'
+
+				},
+				{
 					id: 'xAxis-title--style',
 					text: 'X axis title',
 					tooltipText: 'Styling and text for the X axis title'
@@ -178,7 +183,8 @@ module.exports = {
 			
 			options: [
 				{
-					id: 'yAxis-crosshair'
+					id: 'yAxis-crosshair',
+					text: 'Crosshair'
 				},
 				{
 					id: 'yAxis-title--style',
