@@ -50,12 +50,32 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
                 return f;
             },
             range: function (val, callback) {
-                var f = fields.string(val, callback);             
+                var f = fields.string(val, callback),
+                    indicator = highed.dom.cr('div', 'highed-field-range-indicator'),
+                    nullIt = highed.dom.cr('span', 'highed-icon highed-field-range-null fa fa-undo', '')
+                ;  
+
+                f.className = 'highed-field-range';           
                 f.type = 'range';
                 f.step = properties.custom.step;
                 f.min = properties.custom.minValue;
                 f.max = properties.custom.maxValue;
-                return f;
+
+                highed.dom.on(f, 'change', function () {
+                    indicator.innerHTML = f.value;
+                });
+
+                indicator.innerHTML = val || value;
+
+                highed.dom.on(nullIt, 'click', function () {
+                    f.value = 0;
+                    indicator.innerHTML = 'null';
+                    tryCallback(callback, null);
+                });
+
+               // highed.dom.ap(f, indicator);
+
+                return [f, indicator, nullIt];
             },
             boolean: function (val, callback) {
                 var input = highed.dom.cr('input');             
@@ -242,7 +262,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
         },
         help = highed.dom.cr('span', 'highed-icon fa fa-question-circle'),
         helpTD = highed.dom.cr('td'),
-        widgetTD = highed.dom.cr('td', 'widget-column'),
+        widgetTD = highed.dom.cr('td', 'highed-field-table-widget-column'),
         titleCol = highed.dom.cr('td')
     ;
 

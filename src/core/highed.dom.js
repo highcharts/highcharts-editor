@@ -42,7 +42,11 @@ highed.dom = {
 
         if (!highed.isNull(target) && typeof target.appendChild !== 'undefined') {
             children.forEach(function (child) {
-                if (typeof child !== 'undefined' && typeof child.appendChild !== 'undefined') {
+                if (highed.isArr(child)) {
+                  child.forEach(function (sc) {
+                    highed.dom.ap(target, sc);
+                  });
+                } else if (typeof child !== 'undefined' && typeof child.appendChild !== 'undefined') {
                     target.appendChild(child);                  
                 } else {
                     highed.log(1, 'child is not valid (highed.dom.ap)');

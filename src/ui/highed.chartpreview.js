@@ -46,7 +46,7 @@ highed.ChartPreview = function (parent, attributes) {
         throttleTimeout = false,
         chart = false,
         preExpandSize = false,
-        toggleButton = highed.dom.cr('div', 'highed-icon highed-chart-preview-expand fa fa-arrow-left'),
+        toggleButton = highed.dom.cr('div', 'highed-icon highed-chart-preview-expand fa fa-desktop'),
         expanded = false
     ;
 
@@ -314,7 +314,7 @@ highed.ChartPreview = function (parent, attributes) {
                     width: '0%'
                 });
 
-                toggleButton.className = 'highed-icon highed-chart-preview-expand fa fa-arrow-left';
+                toggleButton.className = 'highed-icon highed-chart-preview-expand fa fa-desktop';
 
                 init(chart.options, parent);
                 expanded = false;
