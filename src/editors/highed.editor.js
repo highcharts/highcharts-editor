@@ -130,6 +130,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             }, attributes),
 
             container = highed.dom.cr('div', 'highed-container'),
+            expandContainer = highed.dom.cr('div', 'highed-expand-container'),
 
             mainToolbar = highed.Toolbar(container, {
                 additionalCSS: ['highed-header']
@@ -146,13 +147,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             chartTemplateSelector = highed.ChartTemplateSelector(templateStep.body),
 
             chartContainer = highed.dom.cr('div', 'highed-box-size highed-chart-container'),
-            chartPreview = highed.ChartPreview(chartContainer, properties.defaultChartOptions),
+            chartPreview = highed.ChartPreview(chartContainer, {defaultChartOptions: properties.defaultChartOptions, expandTo: expandContainer}),
 
             customizerStep = wizbar.addStep({title: 'Customize', id: 'customize'}),
             chartCustomizer = highed.ChartCustomizer(customizerStep.body),
 
             dataExpStep = wizbar.addStep({title: 'Export', id: 'export'}),
             dataExp = highed.Exporter(dataExpStep.body)
+
         ;
 
         ///////////////////////////////////////////////////////////////////////////
@@ -211,7 +213,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         parent = highed.dom.get(parent);
         if (parent) {
             highed.dom.ap(parent, 
-                container                           
+                highed.dom.ap(container,
+                    expandContainer
+                )                           
             );
 
             highed.dom.ap(splitter.right, 

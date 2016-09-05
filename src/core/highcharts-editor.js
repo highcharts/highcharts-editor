@@ -227,10 +227,11 @@ var highed = {
                a[bk].push(highed.merge({}, i));
              }
            });
-           
+         } else if (b[bk].tagName && b[bk].appendChild && b[bk].removeChild && b[bk].style) {  
+            a[bk] = b[bk];
          } else {
             a[bk] = highed.merge({}, b[bk]);
-          }
+         }          
         });    
         return a;
     },

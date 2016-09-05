@@ -160,7 +160,7 @@ highed.dom = {
             return nodes;
         }
 
-        if (nodes) {
+        if (nodes && nodes.style) {
             Object.keys(style).forEach(function (p) {
                 nodes.style[p] = style[p];
             });

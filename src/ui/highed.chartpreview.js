@@ -38,11 +38,14 @@ highed.ChartPreview = function (parent, attributes) {
                 titles: {
                     text: 'Untitled Chart'
                 }
-            }
+            },
+            expandTo: parent
         }, attributes),
         throttleTimeout = false,
         chart = false,
-        preExpandSize = false
+        preExpandSize = false,
+        toggleButton = highed.dom.cr('div', 'highed-icon highed-chart-preview-expand fa fa-arrow-left'),
+        expanded = false
     ;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -73,12 +76,13 @@ highed.ChartPreview = function (parent, attributes) {
     }
 
     /* Init the chart */
-    function init(options) {
+    function init(options, pnode) {
         //We want to work on a copy..
         options = highed.merge({}, options || properties.defaultChartOptions);
-        highed.setAttr(options, 'chart--renderTo', parent);
+        highed.setAttr(options, 'chart--renderTo', pnode || parent);
         chart = new Highcharts.Chart(options);
         resize();
+        highed.dom.ap(pnode || parent, toggleButton);
     }
 
     /* Resize the preview */
@@ -253,29 +257,47 @@ highed.ChartPreview = function (parent, attributes) {
 
     /* Expand the chart from its drawer */
     function expand() {
-        preExpandSize = highed.dom.size(parent);
-        highed.style(parent, {
-            position: 'absolute',
-            width: '90%',
-            height: '90%'
+        gc(function (chart) {
+            if (!expanded) {            
+                highed.dom.style(properties.expandTo, {
+                    width: '100%'
+                });
+
+                preExpandSize = highed.dom.size(parent);
+                init(chart.options, properties.expandTo);
+                expanded = true;
+
+                toggleButton.className = 'highed-icon highed-chart-preview-expand fa fa-arrow-right';
+
+            }
         });
     }
 
     /* Collapse the chart into its drawer */
     function collapse() {
-        if (preExpandSize) {
-            highed.dom.style(parent, {
-                position: '',
-                width: preExpandSize.w + 'px',
-                height: preExpandSize.h + 'px'
-            });
-        }
+        gc(function (chart) {
+            if (preExpandSize && expanded) {
+
+                highed.dom.style(properties.expandTo, {
+                    width: '0%'
+                });
+
+                toggleButton.className = 'highed-icon highed-chart-preview-expand fa fa-arrow-left';
+
+                init(chart.options, parent);
+                expanded = false;
+            }
+        });
     }
 
     ///////////////////////////////////////////////////////////////////////////
 
     //Init the initial chart
     init();
+
+    highed.dom.on(toggleButton, 'click', function () {
+        return expanded ? collapse() : expand();
+    });
     
     ///////////////////////////////////////////////////////////////////////////
 
