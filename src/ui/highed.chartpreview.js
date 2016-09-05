@@ -293,7 +293,7 @@ highed.ChartPreview = function (parent, attributes) {
             if (!expanded) {            
                 highed.dom.style(properties.expandTo, {
                     width: '100%',
-                    display: ''
+                    display: 'block'
                 });
 
                 preExpandSize = highed.dom.size(parent);
@@ -332,6 +332,7 @@ highed.ChartPreview = function (parent, attributes) {
     highed.dom.on(toggleButton, 'click', function () {
         return expanded ? collapse() : expand();
     });
+
     
     ///////////////////////////////////////////////////////////////////////////
 

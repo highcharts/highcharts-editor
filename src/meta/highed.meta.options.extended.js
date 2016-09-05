@@ -59,30 +59,7 @@ highed.meta.optionsExtended = {
     "General": [
       {
         "text": "Label Items",
-        "options": [
-          {
-            "text": "Label Items:",
-            "id": "labels-items",
-            "dataType": "array<object>",
-            "context": "General",
-            "tooltipText": "A HTML label that can be positioned anywhere in the chart area.",
-            "parent": "labels",
-            "attributes": [
-              {
-                "dataType": "string",
-                "name": "html",
-                "title": "html",
-                "tooltipText": "Inner HTML or text for the label."
-              },
-              {
-                "dataType": "cssobject",
-                "name": "style",
-                "title": "style",
-                "tooltipText": "CSS styles for each label. To position the label, use left and top like this:\n<pre>style: {\n\tleft: '100px',\n\ttop: '100px'\n}</pre>"
-              }
-            ]
-          }
-        ]
+        "options": []
       },
       {
         "text": "Chart size",
@@ -296,7 +273,7 @@ highed.meta.optionsExtended = {
       },
       {
         "id": "xAxis",
-        "text": "Horizontal Axis",
+        "text": "X-Axis",
         "options": [
           {
             "id": "xAxis-crosshair",
@@ -422,7 +399,7 @@ highed.meta.optionsExtended = {
       },
       {
         "id": "yAxis",
-        "text": "Vertical Axis",
+        "text": "Y-Axis",
         "options": [
           {
             "id": "yAxis-crosshair",
