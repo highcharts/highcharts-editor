@@ -43,7 +43,18 @@ function createWindow () {
         submenu: [            
             { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
             { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" }
-        ]}
+        ]},
+        {
+          label: 'View',
+          submenu: [
+            {
+              label: 'Toggle Developer Tools',
+              accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+              click (item, focusedWindow) {
+                if (focusedWindow) focusedWindow.webContents.toggleDevTools()
+              }
+            }]
+          }
     ];
 
    const menu = Menu.buildFromTemplate(template)

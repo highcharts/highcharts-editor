@@ -2,8 +2,8 @@
 	text-align: center;
 	padding-top:5px;
 	padding-bottom: 5px;
-	background:@accent-color;
-	color:@accent-text;
+	background:@wiz-bar-background;
+	color:@wiz-bar-color;
 	font-weight: 100;
 	font-family: @font-secondary;
 	font-size: 18px;
@@ -14,8 +14,8 @@
 	padding:0px;
 	border-collapse: collapse;
 	width:100%;
-    margin-bottom: 12px;
-    margin-top: 12px;
+    margin-bottom: 22px;
+    margin-top: 22px;
 	.highed-box-size;
 }
 
@@ -26,6 +26,9 @@
 
 .highed-customizer-table tr {
 	//border-bottom: @border-main;
+	height:30px;
+	padding-top:4px;
+	padding-bottom:4px;
 }
 
 .highed-customizer-table tr:hover {
@@ -33,9 +36,11 @@
 }
 
 .highed-customizer-table td:first-child {
+	font-family: @font-secondary;
 	min-width: 30%;
 	width:30%;	
 	font-weight: 100;
+	font-size:14px;
 }
 
 .highed-customizer-table td:nth-child(2) {
