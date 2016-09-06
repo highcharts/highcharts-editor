@@ -67,6 +67,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      */
     highed.snackBar = function (stitle, saction, fn) {
         title.innerHTML = stitle.toUpperCase();
+
+        clearTimeout(timeout);
         
         if (saction) {
             action.innerHTML = saction.toUpperCase();           
