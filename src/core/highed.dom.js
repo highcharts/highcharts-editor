@@ -168,7 +168,9 @@ highed.dom = {
             Object.keys(style).forEach(function (p) {
                 nodes.style[p] = style[p];
             });
+          return nodes;
         }
+        return false;
     },
 
     /** Attach an event listener to a dom node

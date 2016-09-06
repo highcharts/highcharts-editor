@@ -23,6 +23,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+if (typeof highed === 'undefined') {var highed = {meta: {}}};
+
 highed.meta.chartTemplates = {
 	line: {
 		title: 'Line charts',
@@ -1069,3 +1071,7 @@ highed.meta.chartTemplates = {
 		} // templates-combinations
 	} 
 };
+
+if (typeof module !== 'undefined') {
+	module.exports = highed.meta.chartTemplates;
+}
