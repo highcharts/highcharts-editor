@@ -80,6 +80,8 @@ highed.ChartPreview = function (parent, attributes) {
 
     /* Init the chart */
     function init(options, pnode, noAnimation) {
+        var i;
+
         //We want to work on a copy..
         options = highed.merge({}, options || properties.defaultChartOptions);
         highed.setAttr(options, 'chart--renderTo', pnode || parent);
@@ -91,8 +93,22 @@ highed.ChartPreview = function (parent, attributes) {
         try {
             chart = new Highcharts.Chart(options);                 
         } catch (e) {
+            e = e.toString();
+
+            //So we know that the return here is likely to be an
+            //url with the error code. so extract it.
             highed.log(1, 'error initializing chart:', e);
-            highed.snackBar('Error creating chart preview: ' + e);            
+
+            i = e.indexOf('www.');
+            
+            if (i > 0) {
+                highed.snackBar('There\'s a problem with your chart!', e.substr(i), function () {
+                    window.open('http://' + e.substr(i));
+                });
+            } else {
+                //Our assumption was wrong. The world is ending.
+                highed.snackBar(e);            
+            }
         }
         resize();
         highed.dom.ap(pnode || parent, toggleButton);

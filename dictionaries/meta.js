@@ -43,12 +43,12 @@ module.exports = {
 		}],
 
 		'General': [
-			{
-				text: 'Label Items',
-				options: [
-					{text: 'Label Items:', id: 'labels-items'}
-				]
-			},
+			// {
+			// 	text: 'Label Items',
+			// 	options: [
+			// 		{text: 'Label Items:', id: 'labels-items'}
+			// 	]
+			// },
 			{
 				text: 'Chart size',				
 				options: [

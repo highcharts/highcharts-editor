@@ -58,10 +58,6 @@ highed.meta.optionsExtended = {
     ],
     "General": [
       {
-        "text": "Label Items",
-        "options": []
-      },
-      {
         "text": "Chart size",
         "options": [
           {

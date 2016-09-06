@@ -65,15 +65,17 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
                     indicator.innerHTML = f.value;
                 });
 
-                indicator.innerHTML = val || value;
+                if ((val || value) == null || ((val || value)) == 'null') {
+                    indicator.innerHTML = 'auto';
+                } else {
+                    indicator.innerHTML = val || value;                    
+                }
 
                 highed.dom.on(nullIt, 'click', function () {
                     f.value = 0;
-                    indicator.innerHTML = 'null';
+                    indicator.innerHTML = 'auto';
                     tryCallback(callback, null);
                 });
-
-               // highed.dom.ap(f, indicator);
 
                 return [f, indicator, nullIt];
             },
