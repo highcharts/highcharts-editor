@@ -29,6 +29,7 @@ highed.ready(function () {
     ;
 
     uploader.type = 'file';
+    uploader.accept = '.csv';
 
     highed.dom.ap(document.body, uploader);
 
