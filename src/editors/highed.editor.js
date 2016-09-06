@@ -125,7 +125,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 defaultChartOptions: {},
                 on: {},
                 plugins: {},
-                features: 'import export templates customize',
+                features: 'import export templates customize welcome',
                 includeSVGInHTMLEmbedding: true   
             }, attributes),
 
@@ -139,6 +139,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             splitter = highed.HSplitter(container, {leftWidth: 60}),
 
             wizbar = highed.WizardBar(container, splitter.left),
+
+            welcomeStep = wizbar.addStep({title: 'Welcome'}),
 
             dataImpStep = wizbar.addStep({title: 'Import'}),
             dataImp = highed.DataImporter(dataImpStep.body),
@@ -177,6 +179,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             if (!things.customize) {
                 customizerStep.hide();
+            }
+
+            if (!things.welcome) {
+                welcomeStep.hide();
             }
         }
 
@@ -236,6 +242,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         } else {
             highed.log(1, 'no valid parent supplied to editor');
         }
+
+        highed.dom.style(welcomeStep.body, {padding: '4px'});
+
+        highed.dom.ap(welcomeStep.body, 
+            highed.dom.cr('h2', '', 'Welcome'),
+            highed.dom.cr('div', '', 'This wizard will take you through the process of creating your very own chart.'),
+            highed.dom.cr('br'),
+            highed.dom.cr('div', '', 'Insert more help text and explanations here...')
+        );
 
         ///////////////////////////////////////////////////////////////////////////
         
