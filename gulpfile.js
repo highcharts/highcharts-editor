@@ -38,6 +38,7 @@ var dest = 'dist/',
         "./src/meta/highed.meta.options.extended.js",
         "./src/meta/highed.meta.colors.js",
         "./src/meta/highed.meta.fonts.js",
+        "./src/meta/highed.meta.sample.data.js",
        // "./src/meta/highed.meta.options.advanced.js",
             
         "./src/ui/highed.chart.template.selector.js",

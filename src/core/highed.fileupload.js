@@ -52,9 +52,12 @@ highed.ready(function () {
   highed.readLocalFile = function (props) {
     var p = highed.merge({
           type: 'text',
-          multiple: false            
+          multiple: false,
+          accept: '.csv'            
         }, props)
     ;
+
+    uploader.accept = p.accept;
     
     if (highed.isFn(cb)) {
       cb();

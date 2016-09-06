@@ -34,6 +34,7 @@ highed.DataImporter = function (parent) {
         tabs = highed.TabControl(parent),
         csvTab = tabs.createTab({title: 'CSV Import'}),
         jsonTab = tabs.createTab({title: 'JSON Import'}),
+        samplesTab = tabs.createTab({title: 'Sample Data'}),
 
         csvPasteArea = highed.dom.cr('textarea', 'highed-imp-pastearea'),
         csvImportBtn = highed.dom.cr('button', 'highed-imp-button', 'Import'),
@@ -51,6 +52,40 @@ highed.DataImporter = function (parent) {
     jsonPasteArea.value = JSON.stringify({}, undefined, 2);
 
     ///////////////////////////////////////////////////////////////////////////
+
+    highed.dom.style(samplesTab.body, {overflow: 'hidden'});
+
+    function buildSampleTab() {
+        samplesTab.innerHTML = '';
+
+        if (!highed.isNull(highed.meta.sampleData)) {
+            Object.keys(highed.meta.sampleData).forEach(function (name) {
+                var data = highed.meta.sampleData[name].join('\n'),
+
+                    loadBtn = highed.dom.cr('button', 'highed-box-size highed-imp-button', name)
+                ;
+
+                highed.dom.style(loadBtn, {width: '99%'});
+
+                highed.dom.on(loadBtn, 'click', function () {
+                    events.emit('ImportCSV', {
+                        itemDelimiter: delimiter.value,
+                        firstRowAsNames: firstAsNames.checked,
+                        dateFormat: dateFormat.value,
+                        csv: data,
+                        decimalPoint: decimalPoint.value
+                    });
+                });
+
+                highed.dom.ap(samplesTab.body, 
+                    //highed.dom.cr('div', '', name),
+                    //highed.dom.cr('br'),
+                    loadBtn, 
+                    highed.dom.cr('br')
+                );
+            });
+        }
+    }
 
     function emitCSVImport() {
         events.emit('ImportCSV', {
@@ -137,6 +172,8 @@ highed.DataImporter = function (parent) {
             }
         });
     });
+
+    buildSampleTab();
 
     delimiter.value = ',';
     dateFormat.value = 'YYYY-mm-dd';
