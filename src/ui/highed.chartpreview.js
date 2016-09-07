@@ -124,7 +124,10 @@ highed.ChartPreview = function (parent, attributes) {
     }
 
     function updateAggregated() {
-        aggregatedOptions = highed.merge(highed.merge({}, templateOptions), customizedOptions);
+        aggregatedOptions = highed.merge(
+            highed.merge({}, templateOptions), 
+            customizedOptions
+        );
     }
 
     /* Load a template from the meta
@@ -138,7 +141,7 @@ highed.ChartPreview = function (parent, attributes) {
         templateOptions = {};
 
         gc(function (chart) {
-            
+
             Object.keys(template.config).forEach(function (key) {
                 highed.setAttr(templateOptions, key, template.config[key]);
                 flatOptions[key] = template.config[key];
@@ -208,7 +211,7 @@ highed.ChartPreview = function (parent, attributes) {
             });
 
             updateAggregated();
-            init(customizedOptions);
+            init(aggregatedOptions);
             emitChange();
         });
     }

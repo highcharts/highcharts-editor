@@ -306,7 +306,8 @@ var highed = {
          } else if (b[bk].tagName && b[bk].appendChild && b[bk].removeChild && b[bk].style) {  
             a[bk] = b[bk];
          } else {
-            a[bk] = highed.merge({}, b[bk]);
+            a[bk] = a[bk] || {};
+            highed.merge(a[bk], b[bk]);
          }          
         });    
         return a;
