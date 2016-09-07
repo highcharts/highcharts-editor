@@ -61,7 +61,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
                 f.min = properties.custom.minValue;
                 f.max = properties.custom.maxValue;
 
-                highed.dom.on(f, 'change', function () {
+                highed.dom.on(f, 'input', function () {
                     indicator.innerHTML = f.value;
                 });
 
