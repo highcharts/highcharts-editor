@@ -34,12 +34,12 @@ highed.ChartTemplateSelector = function (parent) {
         splitter = highed.HSplitter(parent, {leftWidth: 30}),
         list = highed.List(splitter.left),
         templates = splitter.right,
-        selected
+        selected = false
     ;
 
     ///////////////////////////////////////////////////////////////////////////
 
-    function showTemplates(templateList) {
+    function showTemplates(templateList, masterID) {
         templates.innerHTML = '';
 
         Object.keys(templateList).forEach(function (key) {
@@ -48,6 +48,11 @@ highed.ChartTemplateSelector = function (parent) {
                 titleBar = highed.dom.cr('div', 'highed-chart-template-title', t.title)
             ;
 
+            if (selected && selected.id === masterID + key + t.title) {
+                node.className = 'highed-chart-template-preview highed-chart-template-preview-selected';
+                selected.node = node;
+            }
+
             highed.dom.style(node, {
                 'background-image': 'url(' + t.urlImg + ')'         
             });
@@ -55,6 +60,17 @@ highed.ChartTemplateSelector = function (parent) {
             highed.dom.showOnHover(node, titleBar);
 
             highed.dom.on(node, 'click', function () {
+                if (selected) {
+                    selected.node.className = 'highed-chart-template-preview';
+                }
+
+                node.className = 'highed-chart-template-preview highed-chart-template-preview-selected';
+
+                selected = {
+                    id: masterID + key + t.title,
+                    node: node
+                };
+
                 events.emit('Select', templateList[key]);
             });
 
@@ -86,7 +102,7 @@ highed.ChartTemplateSelector = function (parent) {
     ///////////////////////////////////////////////////////////////////////////
 
     list.on('Select', function (id) {
-        showTemplates(highed.meta.chartTemplates[id].templates);
+        showTemplates(highed.meta.chartTemplates[id].templates, id);
     });
 
     build();

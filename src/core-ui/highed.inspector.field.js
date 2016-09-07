@@ -48,6 +48,9 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
                 var input = highed.dom.cr('input', 'highed-field-input');
 
                 input.type = 'number';
+                input.step = properties.custom.step;
+                input.min = properties.custom.minValue;
+                input.max = properties.custom.maxValue;
 
                 highed.dom.on(input, 'change', function () {
                     tryCallback(callback, parseFloat(input.value));
