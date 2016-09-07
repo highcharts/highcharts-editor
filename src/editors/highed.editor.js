@@ -140,7 +140,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             wizbar = highed.WizardBar(container, splitter.left),
 
-            welcomeStep = wizbar.addStep({title: 'Welcome'}),
+            welcomeStep = wizbar.addStep({title: 'Start'}),
 
             dataImpStep = wizbar.addStep({title: 'Import'}),
             dataImp = highed.DataImporter(dataImpStep.body),
