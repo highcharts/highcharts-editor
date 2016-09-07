@@ -162,6 +162,7 @@ highed.ChartPreview = function (parent, attributes) {
         gc(function (chart) {
             highed.setAttr([chart.options, customizedOptions], 'plotOptions--series--animation', true);
             highed.setAttr([chart.options, customizedOptions], 'data--csv', data.csv);
+            highed.setAttr([chart.options, customizedOptions], 'data--googleSpreadsheetKey', undefined);
             highed.setAttr([chart.options, customizedOptions], 'data--itemDelimiter', data.itemDelimiter);
             highed.setAttr([chart.options, customizedOptions], 'data--firstRowAsNames', data.firstRowAsNames);
             highed.setAttr([chart.options, customizedOptions], 'data--dateFormat', data.dateFormat);

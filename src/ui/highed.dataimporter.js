@@ -84,7 +84,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 fn(false, [header.join(',')].concat(csv).join('\n'));
             }
         },
-        'Google Spreadsheet': {
+        'Google Spreadsheets': {
             description: 'Import from Google Spreadsheets. The worksheet option may be left blank to load the first sheet.',   
             supressURL: true,         
             options: {
