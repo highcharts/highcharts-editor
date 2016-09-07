@@ -138,15 +138,14 @@ highed.ChartPreview = function (parent, attributes) {
         templateOptions = {};
 
         gc(function (chart) {
-            var options = highed.merge({}, customizedOptions);
-
+            
             Object.keys(template.config).forEach(function (key) {
-                highed.setAttr([options, templateOptions], key, template.config[key]);
+                highed.setAttr(templateOptions, key, template.config[key]);
                 flatOptions[key] = template.config[key];
             });
 
             updateAggregated();
-            init(options);
+            init(aggregatedOptions);
             emitChange();
         });
     }
@@ -160,18 +159,18 @@ highed.ChartPreview = function (parent, attributes) {
         }
 
         gc(function (chart) {
-            highed.setAttr([chart.options, customizedOptions], 'plotOptions--series--animation', true);
-            highed.setAttr([chart.options, customizedOptions], 'data--csv', data.csv);
-            highed.setAttr([chart.options, customizedOptions], 'data--googleSpreadsheetKey', undefined);
-            highed.setAttr([chart.options, customizedOptions], 'data--itemDelimiter', data.itemDelimiter);
-            highed.setAttr([chart.options, customizedOptions], 'data--firstRowAsNames', data.firstRowAsNames);
-            highed.setAttr([chart.options, customizedOptions], 'data--dateFormat', data.dateFormat);
-            highed.setAttr([chart.options, customizedOptions], 'data--decimalPoint', data.decimalPoint);
-            highed.setAttr(chart.options, 'series', {});
+            highed.setAttr(customizedOptions, 'plotOptions--series--animation', true);
+            highed.setAttr(customizedOptions, 'data--csv', data.csv);
+            highed.setAttr(customizedOptions, 'data--googleSpreadsheetKey', undefined);
+            highed.setAttr(customizedOptions, 'data--itemDelimiter', data.itemDelimiter);
+            highed.setAttr(customizedOptions, 'data--firstRowAsNames', data.firstRowAsNames);
+            highed.setAttr(customizedOptions, 'data--dateFormat', data.dateFormat);
+            highed.setAttr(customizedOptions, 'data--decimalPoint', data.decimalPoint);
+            //highed.setAttr(hart.options, 'series', {});
 
             updateAggregated();
 
-            init(chart.options);
+            init(aggregatedOptions);
             emitChange();
         });
     }
