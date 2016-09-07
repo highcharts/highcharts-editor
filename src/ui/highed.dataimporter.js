@@ -153,6 +153,7 @@ highed.DataImporter = function (parent) {
     highed.dom.on(csvImportFileBtn, 'click', function () {
         highed.readLocalFile({
             type: 'text',
+            accept: '.csv',
             success: function (info) {
                 csvPasteArea.value = info.data;
                 highed.snackBar('File uploaded');
@@ -168,6 +169,7 @@ highed.DataImporter = function (parent) {
     highed.dom.on(jsonImportFileBtn, 'click', function () {
         highed.readLocalFile({
             type: 'text',
+            accept: '.json',
             success: function (info) {
                 jsonPasteArea.value = info.data;
                 processJSONImport(info.data);
