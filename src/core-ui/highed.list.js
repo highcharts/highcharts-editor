@@ -47,7 +47,7 @@ highed.List = function (parent) {
             iexports = {}
         ;
 
-        function select() {
+        function select(e) {
             if (selectedItem) {
                 selectedItem.node.className = 'item';
             }
@@ -55,14 +55,13 @@ highed.List = function (parent) {
             selectedItem = iexports;
             node.className = 'item item-selected';
             events.emit('Select', item.id);
-        }
 
-        highed.dom.on(node, 'click', function (e) {
-            select();
             if (highed.isFn(item.click)) {
                 return item.click(e);
             }
-        });
+        }
+
+        highed.dom.on(node, 'click', select);
 
         highed.dom.ap(container, node);
 

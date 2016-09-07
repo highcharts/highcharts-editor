@@ -54,6 +54,31 @@ function createWindow () {
                 if (focusedWindow) focusedWindow.webContents.toggleDevTools()
               }
             }]
+          },
+          {
+            label: "File",
+            submenu: [
+              {
+                label: "New" 
+              }
+              {
+                label: "Save"   
+              },
+              {
+                label: "Export",
+                submenu: [
+                  {
+                    label: "HTML"
+                  },
+                  {
+                    label: "JSON"
+                  },
+                  {
+                    label: "SVG"
+                  }
+                ]
+              }
+            ]
           }
     ];
 

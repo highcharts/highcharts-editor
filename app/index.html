@@ -36,5 +36,20 @@
     	highed.ready(function () {
     		highed.Editor('main', {});
     	});
+
+        window.onbeforeunload = function(e) {
+            var remote = require('remote');
+            var dialog = remote.require('dialog');
+            var choice = dialog.showMessageBox(
+                    remote.getCurrentWindow(),
+                    {
+                        type: 'question',
+                        buttons: ['Yes', 'No'],
+                        title: 'Confirm',
+                        message: 'Are you sure you want to quit?'
+                    });
+
+            return choice === 0;
+        };
     </script>
 </html>

@@ -203,7 +203,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             splitter.resize(cs.w, cs.h - ms.h - wb.h);
             dataExp.resize(cs.w, cs.h - ms.h - wb.h);
             chartPreview.resize();
-            dataImp.resize();
+            dataImp.resize(cs.w, cs.h - ms.h - wb.h);
             events.emit('Resized');
         }
 
