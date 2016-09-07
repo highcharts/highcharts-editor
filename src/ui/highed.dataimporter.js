@@ -75,6 +75,8 @@ highed.DataImporter = function (parent) {
                         csv: data,
                         decimalPoint: decimalPoint.value
                     });
+                    csvPasteArea.value = data;
+                    csvTab.focus();
                 });
 
                 highed.dom.ap(samplesTab.body, 
