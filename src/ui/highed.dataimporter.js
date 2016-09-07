@@ -26,7 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function () {
     var webImports = {
         CSV: {
-            description: '',
+            description: 'Import a standard formatted CSV file.',
             treatAs: 'csv',
             filter: function (data, options, fn) {
                 fn(false, data);
@@ -82,6 +82,26 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 }
 
                 fn(false, [header.join(',')].concat(csv).join('\n'));
+            }
+        },
+        'Google Spreadsheet': {
+            description: 'Import from Google Spreadsheets. The worksheet option may be left blank to load the first sheet.',   
+            supressURL: true,         
+            options: {
+                key: {
+                    type: 'string',
+                    label: 'Spreadsheet key'
+                },
+                sheet: {
+                    type: 'string',
+                    label: 'Worksheet'
+                }
+            },
+            request: function (url, options, fn) {
+                fn(false, {
+                    'data--googleSpreadsheetKey': options.key,
+                    'data--googleSpreadsheetWorksheet': options.sheet   
+                });
             }
         }
     };
@@ -146,7 +166,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 function buildBody() {            
                     var options = webImports[name],
                         url = highed.dom.cr('input', 'highed-imp-input-stretch'),
-                        importBtn = highed.dom.cr('button', 'highed-imp-button', 'Import ' + name + ' from URL'),
+                        urlTitle = highed.dom.cr('div', '', 'URL'),
+                        importBtn = highed.dom.cr('button', 'highed-imp-button highed-imp-button-right', 'Import ' + name + ' from URL'),
                         dynamicOptionsContainer = highed.dom.cr('table', 'highed-customizer-table'),
                         dynamicOptions = {};
                     ;
@@ -163,10 +184,23 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         );
                     });
 
+                    if (options.supressURL) {
+                        highed.dom.style([url, urlTitle], {
+                            display: 'none'
+                        });
+                    }
+
                     url.placeholder = 'Enter URL';
 
                     highed.dom.on(importBtn, 'click', function () {
-                        highed.snackBar('Importing data');
+                        highed.snackBar('Importing ' + name + ' data');
+
+                        if (highed.isFn(options.request)) {
+                            return options.request(url.value, dynamicOptions, function (err, chartProperties) {
+                                if (err) return highed.snackBar('import error: ' + err);
+                                events.emit('ImportChartSettings', chartProperties);
+                            });
+                        }
 
                         highed.ajax({
                             url: url.value,
@@ -193,9 +227,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     webSplitter.right.innerHTML = '';
 
                     highed.dom.ap(webSplitter.right,
-                     //   highed.dom.cr('div', 'highed-customizer-table-heading', name),
+                        highed.dom.cr('div', 'highed-customizer-table-heading', name),
                         highed.dom.cr('div', 'highed-imp-help', options.description),
-                        highed.dom.cr('div', '', 'URL'),
+                        urlTitle,
                         url,
                         Object.keys(options.options || {}).length ? dynamicOptionsContainer : false,
                         highed.dom.cr('br'),
@@ -352,6 +386,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         firstAsNames.type = 'checkbox';
         decimalPoint.value = '.';
         firstAsNames.checked = true;
+
+
+        //Should hide the web tab if running where cross-origin is an issue
 
         resize();
 

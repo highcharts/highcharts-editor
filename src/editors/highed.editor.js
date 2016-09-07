@@ -258,6 +258,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         chartCustomizer.on('PropertyChange', chartPreview.options.set);
         dataImp.on('ImportCSV', chartPreview.data.csv);
         dataImp.on('ImportJSON', chartPreview.data.json);
+        dataImp.on('ImportChartSettings', chartPreview.data.settings);
 
         ///////////////////////////////////////////////////////////////////////////
 

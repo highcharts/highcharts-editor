@@ -200,6 +200,19 @@ highed.ChartPreview = function (parent, attributes) {
         });
     }
 
+    function loadChartSettings(settings) {
+        gc(function (chart) {
+
+            Object.keys(settings || {}).forEach(function (key) {
+                highed.setAttr(customizedOptions, key, settings[key]);
+            });
+
+            updateAggregated();
+            init(customizedOptions);
+            emitChange();
+        });
+    }
+
     /* Set an attribute
      * @id - the path of the attribute
      * @value - the value to set
@@ -370,7 +383,8 @@ highed.ChartPreview = function (parent, attributes) {
 
         data: {
             csv: loadCSVData,
-            json: loadJSONData
+            json: loadJSONData,
+            settings: loadChartSettings
         },
 
         export: {
