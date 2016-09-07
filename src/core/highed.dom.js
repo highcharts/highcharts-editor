@@ -48,7 +48,7 @@ highed.dom = {
                   });
                 } else if (typeof child !== 'undefined' && typeof child.appendChild !== 'undefined') {
                     target.appendChild(child);                  
-                } else {
+                } else if (child !== false) {
                     highed.log(1, 'child is not valid (highed.dom.ap)');
                 }
             });
