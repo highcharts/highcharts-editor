@@ -45,9 +45,17 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
                 return input;
             },
             number: function (val, callback) {
-                var f = fields.string(val, callback);             
-                f.type = 'number';
-                return f;
+                var input = highed.dom.cr('input', 'highed-field-input');
+
+                input.type = 'number';
+
+                highed.dom.on(input, 'change', function () {
+                    tryCallback(callback, parseFloat(input.value));
+                });
+
+                input.value = val || value;
+                
+                return input;
             },
             range: function (val, callback) {
                 var f = fields.string(val, callback),
