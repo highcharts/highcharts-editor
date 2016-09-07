@@ -110,6 +110,9 @@ gulp.task('plugins', function () {
                //.pipe(rename(name + '.min.js'))
                .pipe(uglify())
                .pipe(gulp.dest(dest + 'plugins'))
+               .pipe(gulp.dest(electronDest + 'plugins'))
+               .pipe(zip(name + '.plugins.' + packageJson.version + '.zip'))
+               .pipe(gulp.dest(buildDest))
     ;
 });
 
