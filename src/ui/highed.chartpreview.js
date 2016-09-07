@@ -245,7 +245,9 @@ highed.ChartPreview = function (parent, attributes) {
                     "https://code.highcharts.com/highcharts-more.js": 1,   
                     "https://code.highcharts.com/highcharts-3d.js": 1, 
                     "https://code.highcharts.com/modules/data.js": 1,  
-                    "https://code.highcharts.com/modules/exporting.js": 1
+                    "https://code.highcharts.com/modules/exporting.js": 1,
+                    "http://code.highcharts.com/modules/funnel.js": 1,
+                    "http://code.highcharts.com/modules/solid-gauge.js": 1
                 },
                 title = chart.options.titles ? chart.options.titles.text || 'untitled chart' : 'untitled chart'
             ;
