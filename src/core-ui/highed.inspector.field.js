@@ -59,7 +59,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
             },
             range: function (val, callback) {
                 var f = fields.string(val, callback),
-                    indicator = highed.dom.cr('div', 'highed-field-range-indicator'),
+                    indicator = highed.dom.cr('div', 'highed-field-range-indicator', '&nbsp;'),
                     nullIt = highed.dom.cr('span', 'highed-icon highed-field-range-null fa fa-undo', '')
                 ;  
 
@@ -75,8 +75,10 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
 
                 if ((val || value) == null || ((val || value)) == 'null') {
                     indicator.innerHTML = 'auto';
-                } else {
+                } else if (!highed.isNull(val || value)) {
                     indicator.innerHTML = val || value;                    
+                } else {
+                    indicator.innerHTML = '&nbsp;';
                 }
 
                 highed.dom.on(nullIt, 'click', function () {
