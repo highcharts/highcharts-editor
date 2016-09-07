@@ -150,6 +150,12 @@ highed.DataImporter = function (parent) {
 
     highed.dom.on(csvImportBtn, 'click', emitCSVImport);
 
+    highed.dom.on(csvPasteArea, 'keyup', function (e) {
+        if (e.keyCode === 13) {
+            emitCSVImport();
+        }
+    });
+
     highed.dom.on(csvImportFileBtn, 'click', function () {
         highed.readLocalFile({
             type: 'text',
