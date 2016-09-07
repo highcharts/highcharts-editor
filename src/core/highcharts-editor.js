@@ -43,6 +43,82 @@ var highed = {
     schemas: {},
     meta: {},
 
+    /* Preform an AJAX request. Same syntax as jQuery. */
+    ajax: function (p) {
+        var props = highed.merge({
+            url: false,
+            type: 'GET',
+            dataType: 'json',
+            success: function () {},
+            error: function () {},
+            data: {},
+            autoFire: true
+          }, p),
+          headers = {
+            json: 'application/json',
+            xml: 'application/xml',
+            text: 'text/plain',
+            octet: 'application/octet-stream'
+          },
+          r = new XMLHttpRequest(),
+          events = highed.events()
+        ;
+
+        if (!props.url) return false;
+
+        r.open(props.type, props.url, true);
+        r.setRequestHeader('Content-Type', headers[props.dataType] || headers.text);
+
+        r.onreadystatechange = function () {
+            events.emit('ReadyStateChange', r.readyState, r.status);
+
+            if (r.readyState === 4 && r.status === 200) {         
+              if (props.dataType === 'json') {        
+                try {
+                  var json = JSON.parse(r.responseText);
+                  if (highed.isFn(props.success)) {
+                    props.success(json);        
+                  }
+                  events.emit('OK', json);
+                } catch(e) {
+                  if (highed.isFn(props.error)) {
+                    props.error(e.toString(), r.responseText);
+                  }
+                  events.emit('Error', e.toString(), r.status);
+                }      
+              } else {
+                if (highed.isFn(props.success)) {
+                  props.success(r.responseText);
+                }        
+                events.emit('OK', r.responseText);
+              }         
+            } else if (r.readyState === 4) {
+              events.emit('Error', r.status, r.statusText);
+              if (highed.isFn(props.error)) {
+                props.error(r.status, r.statusText);
+              }
+            }
+        };
+
+        function fire() {
+            try {
+              r.send(JSON.stringify(props.data));            
+            } catch (e) {
+              r.send(props.data || true);      
+            }    
+        }
+
+        if (props.autoFire) {
+            fire();    
+        }
+
+        return {
+            on: events.on,
+            fire: fire,
+            request: r
+        };
+    },
+
     /** Generate a uuid 
      * Borrowed from http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
      */
