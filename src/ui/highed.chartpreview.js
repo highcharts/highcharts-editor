@@ -361,6 +361,7 @@ highed.ChartPreview = function (parent, attributes) {
     function newChart() {
         templateOptions = {};
         customizedOptions = {};
+        flatOptions = {};
         updateAggregated();
         init(aggregatedOptions);
         emitChange();
