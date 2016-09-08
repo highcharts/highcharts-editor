@@ -12,6 +12,7 @@ var dest = 'dist/',
     electron = require('gulp-electron'),
     jshint = require('gulp-jshint'),
     zip = require('gulp-zip'),
+    run = require('gulp-run'),
     //The order is important, so we don't do wildcard
     sources =[
         "./src/core/highcharts-editor.js",
@@ -52,6 +53,10 @@ var dest = 'dist/',
         "./src/editors/highed.modaleditor.js"
     ]
 ;
+
+gulp.task('update-deps', function () {
+  return run('node tools/update.deps.js').exec();
+});
 
 gulp.task('zip-tinymce', ['less', 'minify', 'tinymce'], function () {
     return gulp.src([
@@ -148,7 +153,7 @@ gulp.task('minify-advanced', function () {
     ;
 });
 
-gulp.task('build-electron', ['less', 'minify'], function () {
+gulp.task('build-electron', ['less', 'minify', 'update-deps'], function () {
     return gulp.src('')
                .pipe(electron({
                     src: './app',
@@ -202,7 +207,7 @@ gulp.task('tinymce', function () {
 });
 
 gulp.task('electron', function () {
-  gulp.start('build-electron', 'move-electron');
+  gulp.start('update-deps', 'build-electron', 'move-electron');
 });
 
 gulp.task('default', function () {

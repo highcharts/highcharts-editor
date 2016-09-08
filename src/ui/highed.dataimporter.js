@@ -266,7 +266,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         highed.dom.on(csvImportBtn, 'click', emitCSVImport);
 
         highed.dom.on(csvPasteArea, 'keyup', function (e) {
-            if (e.keyCode === 13) {
+            if (e.keyCode === 13 || ((e.metaKey || e.ctrlKey) && e.key === 'z')) {
                 emitCSVImport();
             }
         });

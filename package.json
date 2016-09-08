@@ -8,6 +8,7 @@
     "async": "*",
     "colors": "*",
     "gulp": "*",
+    "gulp-run": "*",
     "gulp-concat": "*",
     "gulp-electron": "*",
     "gulp-jshint": "^2.0.1",
@@ -17,7 +18,8 @@
     "gulp-zip": "*",
     "jshint": "^2.9.3",
     "request": "*",
-    "yargs": "*"
+    "yargs": "*",
+    "mkdirp": "*"
   },
   "dependencies": {
     "express": "*",

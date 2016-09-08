@@ -43,6 +43,7 @@
     	});
 
         window.onbeforeunload = function(e) {
+            var electron = require('electron');
             var remote = require('remote');
             var dialog = remote.require('dialog');
             var choice = dialog.showMessageBox(

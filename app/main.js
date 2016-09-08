@@ -13,11 +13,11 @@ let mainWindow;
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 800, 
+    width: 1000, 
     height: 600, 
     title: 'Highcharts Editor',
     webPreferences: {
-      nodeIntegration: false
+     // nodeIntegration: false
     }
   });
 
@@ -38,7 +38,33 @@ function createWindow () {
          //   { label: "About Application", selector: "orderFrontStandardAboutPanel:" },
          //   { type: "separator" },
             { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
-        ]}, {
+        ]}, 
+        {
+          label: "File",
+          submenu: [
+            {
+              label: "New" 
+            },
+            {
+              label: "Save"   
+            },
+            {
+              label: "Export",
+              submenu: [
+                {
+                  label: "HTML"
+                },
+                {
+                  label: "JSON"
+                },
+                {
+                  label: "SVG"
+                }
+              ]
+            }
+          ]
+        },
+        {
         label: "Edit",
         submenu: [            
             { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
@@ -54,31 +80,6 @@ function createWindow () {
                 if (focusedWindow) focusedWindow.webContents.toggleDevTools()
               }
             }]
-          },
-          {
-            label: "File",
-            submenu: [
-              {
-                label: "New" 
-              }
-              {
-                label: "Save"   
-              },
-              {
-                label: "Export",
-                submenu: [
-                  {
-                    label: "HTML"
-                  },
-                  {
-                    label: "JSON"
-                  },
-                  {
-                    label: "SVG"
-                  }
-                ]
-              }
-            ]
           }
     ];
 
