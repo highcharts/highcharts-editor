@@ -249,7 +249,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             highed.dom.cr('h2', '', 'Welcome'),
             highed.dom.cr('div', '', 'This wizard will take you through the process of creating your very own chart.'),
             highed.dom.cr('br'),
-            highed.dom.cr('div', '', 'Insert more help text and explanations here...')
+            highed.dom.cr('div', '', '')
         );
 
         ///////////////////////////////////////////////////////////////////////////
