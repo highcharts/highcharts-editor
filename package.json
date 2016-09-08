@@ -5,24 +5,23 @@
   "private": true,
   "license": "MIT",
   "devDependencies": {
-    "async": "*",
-    "colors": "*",
-    "gulp": "*",
-    "gulp-run": "*",
-    "gulp-concat": "*",
-    "gulp-electron": "*",
+    "async": "2.0.4",
+    "colors": "1.1.2",
+    "gulp": "3.9.1",
+    "gulp-run": "1.7.1",
+    "gulp-concat": "2.6.0",
+    "gulp-electron": "0.1.3",
     "gulp-jshint": "^2.0.1",
-    "gulp-less": "*",
-    "gulp-rename": "*",
-    "gulp-uglify": "*",
-    "gulp-zip": "*",
+    "gulp-less": "3.1.0",
+    "gulp-rename": "1.2.2",
+    "gulp-uglify": "2.0.0",
+    "gulp-zip": "3.2.0",
     "jshint": "^2.9.3",
-    "request": "*",
-    "yargs": "*",
-    "mkdirp": "*"
+    "request": "2.74.0",
+    "mkdirp": "0.5.1"
   },
   "dependencies": {
     "express": "*",
-    "express-less": "*"
+    "express-less": "0.1.0"
   }
 }
