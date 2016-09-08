@@ -312,6 +312,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         applyFeatures();
 
+        mainToolbar.addIcon({
+            css: 'fa-file',
+            click: function () {
+                if (confirm('Are you sure you want to abandon the current chart and start over?')) {
+                    chartPreview.new();  
+                    dataImpStep.activate();                  
+                }
+            }
+        })
+
         ///////////////////////////////////////////////////////////////////////////
 
         //Public interface

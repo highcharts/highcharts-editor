@@ -52,6 +52,8 @@ highed.Toolbar = function (parent, attributes) {
                 icon.click(e);
             }
         });
+
+        highed.dom.ap(right, i);
     }
 
     ///////////////////////////////////////////////////////////////////////////

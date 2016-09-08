@@ -358,6 +358,14 @@ highed.ChartPreview = function (parent, attributes) {
         });
     }
 
+    function newChart() {
+        templateOptions = {};
+        customizedOptions = {};
+        updateAggregated();
+        init(aggregatedOptions);
+        emitChange();
+    }
+
     ///////////////////////////////////////////////////////////////////////////
 
     //Init the initial chart
@@ -374,6 +382,7 @@ highed.ChartPreview = function (parent, attributes) {
         on: events.on,
         expand: expand,
         collapse: collapse,
+        new: newChart,
 
         loadTemplate: loadTemplate,
         resize: resize,
