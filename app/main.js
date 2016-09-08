@@ -17,7 +17,7 @@ function createWindow () {
     height: 600, 
     title: 'Highcharts Editor',
     webPreferences: {
-     // nodeIntegration: false
+      nodeIntegration: false
     }
   });
 

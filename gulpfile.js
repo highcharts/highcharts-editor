@@ -121,7 +121,7 @@ gulp.task('plugins', function () {
     ;
 });
 
-gulp.task('wordpress', ['less', 'minify'], function () {
+gulp.task('wordpress', ['less', 'minify', 'update-deps'], function () {
     return gulp.src(wpPluginDest + '*')
                .pipe(zip(name + '.wordpress.' + packageJson.version + '.zip'))
                .pipe(gulp.dest(buildDest))
@@ -211,7 +211,7 @@ gulp.task('electron', function () {
 });
 
 gulp.task('default', function () {
-    gulp.start('minify', 'tinymce', 'less', 'plugins', 'wordpress', 'zip-standalone', 'zip-dist', 'zip-standalone-nominify', 'zip-tinymce');
+    gulp.start('minify', 'tinymce', 'less', 'update-deps', 'plugins', 'wordpress', 'zip-standalone', 'zip-dist', 'zip-standalone-nominify', 'zip-tinymce');
 });
 
 gulp.task('with-advanced', function () {

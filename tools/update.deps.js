@@ -30,7 +30,8 @@ const fs = require('fs');
 const mkdir = require('mkdirp');
 
 const output =  [
-    'app/dependencies/'
+    'app/dependencies/',
+    'integrations/wordpress/highcharts-editor/dependencies/'
 ];
 
 const cdnScripts = [
