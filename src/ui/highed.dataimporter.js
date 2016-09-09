@@ -208,7 +208,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         function processJSONImport(jsonString) {
             var json = jsonString;
-            if (highed.isString(json)) {            
+            if (highed.isStr(json)) {            
                 try {
                     json = JSON.parse(jsonString);
                 } catch(e) {
