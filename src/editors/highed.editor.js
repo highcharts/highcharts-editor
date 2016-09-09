@@ -289,7 +289,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     chartPreview.export.svg()
                 );
             } else if (thing.id === 'customize') {
-                chartCustomizer.init(chartPreview.options.flat);
+                chartCustomizer.init(chartPreview.options.customized);
             }
         });
 

@@ -67,14 +67,14 @@ highed.ChartPreview = function (parent, attributes) {
 
     /* Emit change events */
     function emitChange() {
-        events.emit('ChartChange', customizedOptions);
+        events.emit('ChartChange', aggregatedOptions);
 
         //Throttled event - we use this when doing server stuff in the handler
         //since e.g. using the color picker can result in quite a lot of updates
         //within a short amount of time
         clearTimeout(throttleTimeout);
         throttleTimeout = setTimeout(function () {
-            events.emit('ChartChangeLately', customizedOptions);
+            events.emit('ChartChangeLately', aggregatedOptions);
         }, 800);
     }
 
@@ -124,10 +124,11 @@ highed.ChartPreview = function (parent, attributes) {
     }
 
     function updateAggregated() {
-        aggregatedOptions = highed.merge(
+        //Merge fest
+        highed.merge(aggregatedOptions, highed.merge(
             highed.merge({}, templateOptions), 
             customizedOptions
-        );
+        ));
     }
 
     /* Load a template from the meta
@@ -195,7 +196,10 @@ highed.ChartPreview = function (parent, attributes) {
             } else if (highed.isBasic(data)) {
                 highed.snackBar('the data is not valid json');
             } else {
-                customizedOptions = highed.merge({}, data);
+
+                templateOptions = {};
+                highed.clearObj(customizedOptions);
+                highed.merge(customizedOptions, highed.merge({}, data));
                 updateAggregated();
                 init(customizedOptions);
                 emitChange();

@@ -77,7 +77,7 @@ highed.ChartCustomizer = function (parent, owner) {
             highed.dom.ap(table, 
                 highed.InspectorField(
                     group.values ? 'options' : group.dataType, 
-                    (flatOptions[group.id] || group.defaults), 
+                    (highed.getAttr(flatOptions, group.id) || group.defaults), 
                     {
                         title: group.text,
                         tooltip: group.tooltipText,
@@ -118,7 +118,7 @@ highed.ChartCustomizer = function (parent, owner) {
             highed.dom.ap(table,
                 highed.InspectorField(
                     entry.values ?  'options' : (entry.dataType || 'string'), 
-                    (flatOptions[entry.id] || entry.defaults), 
+                    (highed.getAttr(flatOptions, entry.id)  || entry.defaults), 
                     {
                         title: highed.uncamelize(entry.shortName),
                         tooltip: entry.description,

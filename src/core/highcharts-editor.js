@@ -286,6 +286,35 @@ var highed = {
         });
     },
 
+    getAttr: function (obj, path) {
+        var current = obj,
+            result = false
+        ;
+
+        if (highed.isArr(obj)) {
+            obj.forEach(function (thing) {
+                result = highed.getAttr(thing, path);
+            });
+            return result;
+        }
+
+        path = path.replace(/\-\-/g, '.').replace(/\-/g, '.').split('.');
+
+        path.forEach(function(p, i) {
+            if (i === path.length - 1) {    
+                result = current[p];                 
+            } else {
+                if (typeof current[p] === 'undefined') {
+                    current = current[p] = {};
+                } else {
+                    current = current[p];                       
+                }
+            }
+        });
+
+        return result;
+    },
+
     /**
      * Deep merge two objects.
      * Note: this modifies object `a`!
