@@ -623,6 +623,17 @@ highed.meta.chartTemplates = {
 					'chart--polar': false
 				},
 				tooltipText: 'Requires one data column for X values and one for Y values.'
+			},
+			scatterLineNoMarker: {
+				title: 'Scatter with line, no marker',
+				urlImg: 'https://cloud.highcharts.com/images/uvepiw/0/136.svg',
+				config: {
+					'chart--type': 'scatter',
+					'plotOptions-series--lineWidth': 1,
+					'plotOptions-series-marker--enabled': false,
+					'chart--polar': false
+				},
+				tooltipText: 'Requires one data column for X values and one for Y values.'
 			}
 		}
 	},

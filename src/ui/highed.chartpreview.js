@@ -359,11 +359,14 @@ highed.ChartPreview = function (parent, attributes) {
     }
 
     function newChart() {
-        templateOptions = {};
-        customizedOptions = {};
-        flatOptions = {};
+        highed.clearObj(templateOptions);
+        highed.clearObj(customizedOptions);
+        highed.clearObj(flatOptions);
+
         updateAggregated();
+        
         init(aggregatedOptions);
+        
         emitChange();
     }
 

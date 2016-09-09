@@ -93,11 +93,7 @@
 <script>
 
 	highed.ready(function () {
-		highed.ModalEditor('modal-btn', {
-            plugins: {
-               // 'jquery-simple-rest': {}
-            }
-        }, function (html) {
+		highed.ModalEditor('modal-btn', {}, function (html) {
 			highed.dom.get('chart-result').value = html;
 		});
 	});

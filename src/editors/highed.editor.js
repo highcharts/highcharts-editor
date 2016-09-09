@@ -30,12 +30,31 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         pluginEvents = highed.events()
     ;
 
-
     ///////////////////////////////////////////////////////////////////////////
 
     //We embed the plugin system here because we want to access it in the
     //editor, but there shouldn't be any access to the internals outside.
 
+     /** Install an editor plugin
+      *
+      *  Note that plugins must be enabled when creating the editor
+      *  for it to be active.
+      *
+      *  @namespace highed.plugins
+      *
+      *  @param name       {string} - the name of the plugin
+      *  @param definition {object} - the plugin definition 
+      *     > meta {object}
+      *         > version {string}
+      *         > author {string}
+      *         > homepage {string}
+      *     > dependencies {array<string>} - URLs of script dependencies
+      *     > options {object}
+      *         > <option_name> {object}
+      *             > type {string} - the type of the option
+      *             > label {string} - the label
+      *             > default {anything} - the default value
+      */
      function install(name, definition) {
         var properties = highed.merge({
                 meta: {
@@ -320,7 +339,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     dataImpStep.activate();                  
                 }
             }
-        })
+        });
+
+        mainToolbar.addIcon({
+            css: 'fa-question-circle',
+            click: function() {
+
+            }
+        });
 
         ///////////////////////////////////////////////////////////////////////////
 

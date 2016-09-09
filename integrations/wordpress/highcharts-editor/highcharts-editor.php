@@ -38,12 +38,12 @@ function setup_highcharts_plugin () {
     add_filter('tiny_mce_before_init', 'highcharts_allow_stuff');
 
   
-    wp_enqueue_script("highcharts-highstock",  plugin_dir_url(__FILE__) . "dependencies/highstock.js");   
-    wp_enqueue_script("highcharts-framework",  plugin_dir_url(__FILE__) . "dependencies/standalone-framework.js");  
-    wp_enqueue_script("highcharts-more",       plugin_dir_url(__FILE__) . "dependencies/highcharts-more.js");   
-    wp_enqueue_script("highcharts-3d",         plugin_dir_url(__FILE__) . "dependencies/highcharts-3d.js"); 
-    wp_enqueue_script("highcharts-data",       plugin_dir_url(__FILE__) . "dependencies/data.js");  
-    wp_enqueue_script("highcharts-exporting",  plugin_dir_url(__FILE__) . "dependencies/exporting.js");
+    wp_enqueue_script("highcharts-highstock",  plugin_dir_url(__FILE__) . "highstock.js");   
+    wp_enqueue_script("highcharts-framework",  plugin_dir_url(__FILE__) . "standalone-framework.js");  
+    wp_enqueue_script("highcharts-more",       plugin_dir_url(__FILE__) . "highcharts-more.js");   
+    wp_enqueue_script("highcharts-3d",         plugin_dir_url(__FILE__) . "highcharts-3d.js"); 
+    wp_enqueue_script("highcharts-data",       plugin_dir_url(__FILE__) . "data.js");  
+    wp_enqueue_script("highcharts-exporting",  plugin_dir_url(__FILE__) . "exporting.js");
 
     wp_enqueue_script('highcharts-editor', plugin_dir_url(__FILE__) . 'highcharts-editor.min.js', array(
         "highcharts-highstock",

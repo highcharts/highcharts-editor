@@ -43,6 +43,13 @@ var highed = {
     schemas: {},
     meta: {},
 
+    /* Clear an object */
+    clearObj: function (obj) {
+        Object.keys(obj).forEach(function (key) {
+            delete obj[key];
+        });
+    },
+
     /* Preform an AJAX request. Same syntax as jQuery. */
     ajax: function (p) {
         var props = highed.merge({

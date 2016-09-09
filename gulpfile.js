@@ -122,7 +122,7 @@ gulp.task('plugins', function () {
 });
 
 gulp.task('wordpress', ['less', 'minify', 'update-deps'], function () {
-    return gulp.src(wpPluginDest + '*')
+    return gulp.src([wpPluginDest + '*', wpPluginDest + 'dependencies/*'])
                .pipe(zip(name + '.wordpress.' + packageJson.version + '.zip'))
                .pipe(gulp.dest(buildDest))
     ;
