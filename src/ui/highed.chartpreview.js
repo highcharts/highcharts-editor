@@ -125,8 +125,9 @@ highed.ChartPreview = function (parent, attributes) {
 
     function updateAggregated() {
         //Merge fest
-        highed.merge(aggregatedOptions, highed.merge(
-            highed.merge({}, templateOptions), 
+        highed.clearObj(aggregatedOptions);
+        highed.merge(aggregatedOptions, 
+            highed.merge(highed.merge({}, templateOptions), 
             customizedOptions
         ));
     }
@@ -139,7 +140,7 @@ highed.ChartPreview = function (parent, attributes) {
             return highed.log(1, 'chart preview: templates must be an object {config: {...}}')
         }
 
-        templateOptions = {};
+        highed.clearObj(templateOptions);
 
         gc(function (chart) {
 
