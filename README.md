@@ -37,6 +37,8 @@ The editor is pushed to NPM and Bower under `highcharts-editor`.
 	npm install
 	gulp
 
+*Notice for windows users:** You need [7zip]() installed and added to your path for `gulp electron` to work!
+
 This will put a built version in the `dist` folder.
 
 ## Embedding Hello World
