@@ -174,7 +174,51 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             chartCustomizer = highed.ChartCustomizer(customizerStep.body),
 
             dataExpStep = wizbar.addStep({title: 'Export', id: 'export'}),
-            dataExp = highed.Exporter(dataExpStep.body)
+            dataExp = highed.Exporter(dataExpStep.body),
+
+            cmenu = highed.ContextMenu([
+                {
+                title: 'New Chart',
+                icon: 'file',
+                click: function () {
+                    if (confirm('Are you sure you want to abandon the current chart and start over?')) {
+                        chartPreview.new();  
+                        dataImpStep.activate();                  
+                    }
+                }
+                },
+                '-',
+                {
+                    title: 'Save as JSON',
+                    icon: 'file-code-o'
+                },
+                {
+                    title: 'Save as HTML',
+                    icon: 'file-code-o'
+                },
+                '-',
+                {
+                    title: 'Export as PNG',
+                    icon: 'file-image-o'
+                },
+                {
+                    title: 'Export as SVG',
+                    icon: 'file-image-o'
+                },
+                {
+                    title: 'Export as PDF',
+                    icon: 'file-pdf-o'
+                },
+                '-',
+                {
+                    title: 'Help',
+                    icon: 'question-circle'
+                },
+                {
+                    title: 'License Information',
+                    icon: 'key'
+                }
+            ])
 
         ;
 
@@ -332,19 +376,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         applyFeatures();
 
         mainToolbar.addIcon({
-            css: 'fa-file',
-            click: function () {
-                if (confirm('Are you sure you want to abandon the current chart and start over?')) {
-                    chartPreview.new();  
-                    dataImpStep.activate();                  
-                }
-            }
-        });
-
-        mainToolbar.addIcon({
-            css: 'fa-question-circle',
-            click: function() {
-
+            css: 'fa-gear',
+            click: function(e) {
+                cmenu.show(e.clientX, e.clientY);
             }
         });
 

@@ -40,31 +40,6 @@ function createWindow () {
             { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
         ]}, 
         {
-          label: "File",
-          submenu: [
-            {
-              label: "New" 
-            },
-            {
-              label: "Save"   
-            },
-            {
-              label: "Export",
-              submenu: [
-                {
-                  label: "HTML"
-                },
-                {
-                  label: "JSON"
-                },
-                {
-                  label: "SVG"
-                }
-              ]
-            }
-          ]
-        },
-        {
         label: "Edit",
         submenu: [            
             { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },

@@ -1,0 +1,51 @@
+.highed-ctx-container {
+    position: fixed;
+    border:@border-main;
+    background:@background-main;
+    color:@text-main;
+    z-index: 10500;
+    opacity: 0;
+    pointer-events: none;
+    .highed-box-size;
+    .highed-transition-opacity;
+}
+
+.highed-ctx-item {
+    position: relative;
+    height:20px;
+    padding:3px;
+    padding-left:30px;
+    font-size: 12px;
+    line-height: 20px;
+    font-family: @font-secondary;
+    min-width: 100px;
+    .highed-nosel;
+}
+
+.highed-ctx-item:hover {
+    background:@accent-color;
+    color:@accent-text;
+}
+
+.highed-ctx-sep {
+    border-bottom: @border-main;
+    margin-bottom:4px;
+    margin-top:4px;
+}
+
+
+.highed-ctx-item .ctx-child-icon {
+    position: absolute;
+    right:10px;
+    top:10px;
+    font-size: 12px;
+}
+
+.highed-ctx-item .ctx-child-licon {
+    width:30px;
+    text-align: left;
+    position: absolute;
+    left:10px;
+    top:8px;
+    font-size: 12px;
+}

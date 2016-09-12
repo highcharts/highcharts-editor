@@ -34,6 +34,7 @@ var dest = 'dist/',
         "./src/core-ui/highed.pushbutton.js",
         "./src/core-ui/highed.tree.js",
         "./src/core-ui/highed.snackbar.js",
+        "./src/core-ui/highed.contextmenu.js",
             
         "./src/meta/highed.meta.charts.js",
         "./src/meta/highed.meta.options.extended.js",
