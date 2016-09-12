@@ -54,7 +54,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             properties = highed.merge({
                 options: ['csv', 'json', 'web', 'samples'],
-                plugins: ''
+                plugins: ['CSV', 'JSON', 'Difi', 'Socrata', 'Google Spreadsheets']
             }, attributes),
 
             tabs = highed.TabControl(parent),
@@ -85,11 +85,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         highed.dom.style(samplesTab.body, {overflow: 'hidden'});
 
-        if (highed.isStr(properties.options)) {
-            properties.options = properties.options.split(' ');
-        }
-
         properties.options = highed.arrToObj(properties.options);
+        properties.plugins = highed.arrToObj(properties.plugins);
 
         function updateOptions() {
             if (!properties.options.csv) {
@@ -110,6 +107,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         function buildWebTab() {
             Object.keys(webImports).forEach(function (name) {
+
+                if (!properties.plugins[name]) {
+                    return;
+                }
 
                 function buildBody() {            
                     var options = webImports[name],

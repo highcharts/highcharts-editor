@@ -152,6 +152,10 @@ var highed = {
     arrToObj: function (arr) {
         var obj = {};
 
+        if (highed.isStr(arr)) {
+            arr = arr.split(' ');
+        }
+
         arr.forEach(function (thing) {
             obj[thing] = true;
         });
