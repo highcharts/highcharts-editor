@@ -8,7 +8,7 @@
 
 */
 
-highed.plugins.install('jquery-simple-rest', {
+highed.plugins.editor.install('jquery-simple-rest', {
 
     //Contains information about the plugin - optional
     meta: {

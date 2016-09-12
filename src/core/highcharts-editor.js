@@ -42,6 +42,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 var highed = {
     schemas: {},
     meta: {},
+    plugins: {},
 
     /* Clear an object */
     clearObj: function (obj) {

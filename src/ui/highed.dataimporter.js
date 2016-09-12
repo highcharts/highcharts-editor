@@ -26,7 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function () {
     var webImports = {};
 
-    highed.importPlugins = {
+    highed.plugins.import = {
         /* Install a data import plugin */
         install: function (name, defintion) {
             if (highed.isNull(webImports[name])) {
@@ -53,7 +53,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         var events = highed.events(),
 
             properties = highed.merge({
-                options: ['csv', 'json', 'web', 'samples']
+                options: ['csv', 'json', 'web', 'samples'],
+                plugins: ''
             }, attributes),
 
             tabs = highed.TabControl(parent),

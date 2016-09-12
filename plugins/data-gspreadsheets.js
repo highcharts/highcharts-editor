@@ -6,7 +6,7 @@
 
 */
 
-highed.importPlugins.install('Google Spreadsheets', {
+highed.plugins.import.install('Google Spreadsheets', {
     description: 'Import from Google Spreadsheets. The worksheet option may be left blank to load the first sheet.',   
     supressURL: true,         
     options: {

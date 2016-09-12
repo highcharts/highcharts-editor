@@ -6,7 +6,7 @@
 
 */
 
-highed.importPlugins.install('Difi', {
+highed.plugins.import.install('Difi', {
     description: 'Imports data from the Norwegian Agency for Public Management and eGovernment. <a href="http://difi.no" target="_blank">www.difi.no</a>',
     treatAs: 'csv',
     fetchAs: false,

@@ -122,7 +122,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     }
 
     //Public interface
-    highed.plugins = {
+    highed.plugins.editor = {
         install: install,
         use: use
     };

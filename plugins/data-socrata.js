@@ -6,7 +6,7 @@
 
 */
 
-highed.importPlugins.install('Socrata',  {
+highed.plugins.import.install('Socrata',  {
     description: 'Socrata is an open data format commonly used for various government sources. <a href="http://www.opendatanetwork.com/" target="_blank">http://www.opendatanetwork.com/</a>',
     treatAs: 'csv',
     fetchAs: 'json',
