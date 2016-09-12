@@ -375,6 +375,12 @@ highed.ChartPreview = function (parent, attributes) {
         emitChange();
     }
 
+    function exportChart(options) {
+        gc(function (chart) {
+            chart.exportChart(options, aggregatedOptions);
+        });
+    }
+
     ///////////////////////////////////////////////////////////////////////////
 
     //Init the initial chart
@@ -405,7 +411,8 @@ highed.ChartPreview = function (parent, attributes) {
         data: {
             csv: loadCSVData,
             json: loadJSONData,
-            settings: loadChartSettings
+            settings: loadChartSettings,
+            export: exportChart
         },
 
         export: {

@@ -199,15 +199,31 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 '-',
                 {
                     title: 'Export as PNG',
-                    icon: 'file-image-o'
+                    icon: 'file-image-o',
+                    click: function () {
+                        chartPreview.data.export({});
+                    }
+                },
+                {
+                    title: 'Export as JPEG',
+                    icon: 'file-image-o',
+                    click: function () {
+                        chartPreview.data.export({type: 'image/jpeg'});
+                    }
                 },
                 {
                     title: 'Export as SVG',
-                    icon: 'file-image-o'
+                    icon: 'file-image-o',
+                    click: function () {
+                        chartPreview.data.export({type: 'image/svg+xml'});
+                    }
                 },
                 {
                     title: 'Export as PDF',
-                    icon: 'file-pdf-o'
+                    icon: 'file-pdf-o',
+                    click: function () {
+                        chartPreview.data.export({type: 'application/pdf'});
+                    }
                 },
                 '-',
                 {
