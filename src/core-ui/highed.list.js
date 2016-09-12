@@ -77,6 +77,12 @@ highed.List = function (parent) {
             select();
         }
 
+        if (items.length < 2) {
+            highed.dom.style(container, {display: 'none'});
+        } else {
+            highed.dom.style(container, {display: ''});
+        }
+
         return iexports;
     }
 
@@ -139,6 +145,10 @@ highed.List = function (parent) {
         }
     }
 
+    function countItems() {
+        return items.length;
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     
     highed.dom.ap(parent, container);
@@ -156,6 +166,7 @@ highed.List = function (parent) {
         hide: hide,
         selectFirst: selectFirst,
         select: select,
-        reselect: reselect
+        reselect: reselect,
+        count: countItems
     };
 };
