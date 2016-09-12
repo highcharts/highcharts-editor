@@ -261,12 +261,12 @@ var highed = {
      * @param {string} path - the path to the attribute to change
      * @param {(String|Bool|Object|Number)} value - the value to set
      */
-    setAttr: function (obj, path, value) {
+    setAttr: function (obj, path, value, index) {
         var current = obj;
 
         if (highed.isArr(obj)) {
             obj.forEach(function (thing) {
-                highed.setAttr(thing, path, value);
+                highed.setAttr(thing, path, value, index);
             });
             return;
         }
@@ -274,19 +274,23 @@ var highed = {
         path = path.replace(/\-\-/g, '.').replace(/\-/g, '.').split('.');
 
         path.forEach(function(p, i) {
-            if (i === path.length - 1) {    
-                current[p] = value;                 
+            if (i === path.length - 1) {  
+                current[p] = value;                                     
             } else {
                 if (typeof current[p] === 'undefined') {
                     current = current[p] = {};
                 } else {
-                    current = current[p];                       
+                    current = current[p]; 
+
+                    if (highed.isArr(current) && index >= 0 && index < current.length) {
+                        current = current[index];
+                    }                      
                 }
             }
         });
     },
 
-    getAttr: function (obj, path) {
+    getAttr: function (obj, path, index) {
         var current = obj,
             result = false
         ;
@@ -307,7 +311,11 @@ var highed = {
                 if (typeof current[p] === 'undefined') {
                     current = current[p] = {};
                 } else {
-                    current = current[p];                       
+                    current = current[p];         
+
+                    if (highed.isArr(current) && index >= 0 && index < current.length) {
+                        current = current[index];
+                    }               
                 }
             }
         });

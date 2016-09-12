@@ -65,7 +65,21 @@ function isArray(what) {
 
 function sortAPI() {
     api.forEach(function (entry) {
-        apiSorted[entry.name] = entry;
+        var st = extractType(entry.name);
+        entry.name = removeType(entry.name);
+
+        if (!apiSorted[entry.name]) {            
+
+            apiSorted[entry.name] = entry;
+
+            if (st !== false) {
+                entry.subType = [st];            
+            }
+        } else if (st) {
+            apiSorted[entry.name].subType = apiSorted[entry.name].subType || [];
+            apiSorted[entry.name].subType.push(st);
+            apiSorted[entry.name].values = apiSorted[entry.name].values || entry.values;
+        }
     });
 }
 
@@ -96,6 +110,26 @@ function filterEachOption(root, fn, parent) {
     }
 }
 
+function extractType(str) {
+    var s = str.indexOf('<'),
+        st 
+    ;
+
+    if (s >= 0) {
+        return str.substr(s + 1, str.indexOf('>') - s - 1);
+    }
+
+    return false;
+}
+function removeType(str) {
+    var t = extractType(str);
+
+    if (t) {
+        return str.replace('<' + t + '>', '');
+    }
+    return str;
+}
+
 function update(root) {
     var included = mapIncludedProperties(
             JSON.parse(fs.readFileSync(argv.exposed || __dirname + '/../dictionaries/exposed.settings.json'))
@@ -116,6 +150,10 @@ function update(root) {
             entry.parent = aentry.parent;
             entry.values = aentry.values;
             entry.text = entry.text || aentry.title;
+
+            if (aentry.subType) {
+                entry.subType = aentry.subType;                
+            }
             //entry.custom = aentry.custom;
 
             if (entry.dataType.indexOf('object') >= 0 && entry.dataType.indexOf('cssobject') < 0) {
@@ -147,6 +185,10 @@ function update(root) {
 function process() {
     sortAPI();
     update(meta);
+
+    fs.writeFile(__dirname + '/../api.js', JSON.stringify(apiSorted, false, '  '), function () {
+
+    });
 
     fs.writeFile(__dirname + '/../src/meta/highed.meta.options.extended.js', '/*\n' + license + '\n*/\n\nhighed.meta.optionsExtended = ' + JSON.stringify(meta, undefined, '  ') + ';', function (err) {
         if (err) {

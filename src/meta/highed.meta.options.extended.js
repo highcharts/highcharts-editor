@@ -494,6 +494,11 @@ highed.meta.optionsExtended = {
         "id": "series",
         "array": true,
         "text": "Series",
+        "controlledBy": {
+          "title": "Select Series",
+          "options": "series",
+          "optionsTitle": "name"
+        },
         "options": [
           {
             "id": "series--type",
@@ -501,54 +506,163 @@ highed.meta.optionsExtended = {
             "tooltipText": "The type of series",
             "dataType": "string",
             "context": "General",
-            "parent": "series",
-            "values": "[null, \"line\", \"spline\", \"column\", \"area\", \"areaspline\", \"pie\", \"arearange\", \"areasplinerange\", \"boxplot\", \"bubble\", \"columnrange\", \"errorbar\", \"funnel\", \"gauge\", \"scatter\", \"waterfall\"]"
+            "parent": "series<line>",
+            "values": "[null, \"line\", \"spline\", \"column\", \"area\", \"areaspline\", \"pie\", \"arearange\", \"areasplinerange\", \"boxplot\", \"bubble\", \"columnrange\", \"errorbar\", \"funnel\", \"gauge\", \"scatter\", \"waterfall\"]",
+            "subType": [
+              "line",
+              "area",
+              "funnel",
+              "solidgauge",
+              "spline",
+              "bubble",
+              "boxplot",
+              "errorbar",
+              "scatter",
+              "polygon",
+              "areaspline",
+              "pie",
+              "arearange",
+              "heatmap",
+              "treemap",
+              "gauge",
+              "pyramid",
+              "areasplinerange",
+              "column",
+              "columnrange",
+              "bar",
+              "waterfall"
+            ]
           },
           {
-            "id": "plotOptions-series--color",
+            "id": "series--color",
             "text": "Color",
             "tooltipText": "The main color of the series. If no color is given here, the color is pulled from the array of default colors as given in the \"Appearance\" section.",
             "dataType": "color",
             "context": "General",
-            "parent": "plotOptions-series"
+            "parent": "series<columnrange>",
+            "subType": [
+              "columnrange",
+              "heatmap",
+              "errorbar",
+              "waterfall",
+              "boxplot",
+              "gauge",
+              "area",
+              "line",
+              "areasplinerange",
+              "arearange",
+              "bubble",
+              "scatter",
+              "column",
+              "areaspline",
+              "spline",
+              "polygon",
+              "treemap",
+              "bar"
+            ]
           },
           {
-            "id": "plotOptions-series--negativeColor",
+            "id": "series--negativeColor",
             "text": "Negative color",
             "tooltipText": "The negative color of the series below the threshold. Threshold is default zero, this can be changed in the advanced settings.",
             "dataType": "color",
             "context": "General",
             "defaults": "null",
-            "parent": "plotOptions-series",
-            "values": ""
+            "parent": "series<area>",
+            "values": "",
+            "subType": [
+              "area",
+              "areaspline",
+              "scatter",
+              "polygon",
+              "spline",
+              "gauge",
+              "arearange",
+              "line",
+              "errorbar",
+              "bar",
+              "boxplot",
+              "areasplinerange",
+              "bubble",
+              "column"
+            ]
           },
           {
-            "id": "plotOptions-series--dashStyle",
+            "id": "series--colorByPoint",
+            "text": "Color by point",
+            "tooltipText": "Use one color per point. Colors can be changed in the \"Appearance\" section.",
+            "dataType": "boolean",
+            "context": "General",
+            "defaults": "false",
+            "parent": "series<column>",
+            "subType": [
+              "column",
+              "treemap",
+              "heatmap",
+              "bar",
+              "columnrange",
+              "waterfall",
+              "boxplot",
+              "errorbar"
+            ]
+          },
+          {
+            "id": "series--dashStyle",
             "text": "Dash style",
             "dataType": "string",
             "context": "General",
             "tooltipText": "A name for the dash style to use for the graph. Applies only to series type having a graph, like <code>line</code>, <code>spline</code>, <code>area</code> and <code>scatter</code> in  case it has a <code>lineWidth</code>. The value for the <code>dashStyle</code> include:\r\n\t\t    <ul>\r\n\t\t    \t<li>Solid</li>\r\n\t\t    \t<li>ShortDash</li>\r\n\t\t    \t<li>ShortDot</li>\r\n\t\t    \t<li>ShortDashDot</li>\r\n\t\t    \t<li>ShortDashDotDot</li>\r\n\t\t    \t<li>Dot</li>\r\n\t\t    \t<li>Dash</li>\r\n\t\t    \t<li>LongDash</li>\r\n\t\t    \t<li>DashDot</li>\r\n\t\t    \t<li>LongDashDot</li>\r\n\t\t    \t<li>LongDashDotDot</li>\r\n\t\t    </ul>",
             "defaults": "Solid",
-            "parent": "plotOptions-series",
-            "values": "[\"Solid\", \"ShortDash\", \"ShortDot\", \"ShortDashDot\", \"ShortDashDotDot\", \"Dot\", \"Dash\" ,\"LongDash\", \"DashDot\", \"LongDashDot\", \"LongDashDotDot\"]"
+            "parent": "series<arearange>",
+            "values": "[\"Solid\", \"ShortDash\", \"ShortDot\", \"ShortDashDot\", \"ShortDashDotDot\", \"Dot\", \"Dash\" ,\"LongDash\", \"DashDot\", \"LongDashDot\", \"LongDashDotDot\"]",
+            "subType": [
+              "arearange",
+              "spline",
+              "areaspline",
+              "scatter",
+              "line",
+              "bubble",
+              "area",
+              "polygon",
+              "waterfall",
+              "areasplinerange"
+            ]
           },
           {
-            "id": "plotOptions-series-marker--enabled",
+            "id": "series-marker--enabled",
             "text": "Enable point markers",
             "dataType": "boolean",
             "context": "General",
             "tooltipText": "Enable or disable the point marker. If <code>null</code>, the markers are hidden when the data is dense, and shown for more widespread data points.",
             "defaults": "null",
-            "parent": "plotOptions-series-marker"
+            "parent": "series<areaspline>-marker",
+            "subType": [
+              "areaspline",
+              "bubble",
+              "polygon",
+              "area",
+              "line",
+              "scatter",
+              "spline"
+            ]
           },
           {
-            "id": "plotOptions-series-marker--symbol",
+            "id": "series-marker--symbol",
             "text": "Marker symbol",
             "dataType": "string",
             "context": "General",
             "tooltipText": "<p>A predefined shape or symbol for the marker. When null, the symbol is pulled from options.symbols. Other possible values are \"circle\", \"square\", \"diamond\", \"triangle\" and \"triangle-down\".</p>\r\n\r\n<p>Additionally, the URL to a graphic can be given on this form:  \"url(graphic.png)\". Note that for the image to be applied to exported charts, its URL needs to be accessible by the export server.</p>\r\n\r\n<p>Custom callbacks for symbol path generation can also be added to <code>Highcharts.SVGRenderer.prototype.symbols</code>. The callback is then used by its method name, as shown in the demo.</p>",
-            "parent": "plotOptions-series-marker",
-            "values": "[null, \"circle\", \"square\", \"diamond\", \"triangle\", \"triangle-down\"]"
+            "parent": "series<polygon>-marker",
+            "values": "[null, \"circle\", \"square\", \"diamond\", \"triangle\", \"triangle-down\"]",
+            "subType": [
+              "polygon",
+              "areaspline",
+              "area",
+              "scatter",
+              "bubble",
+              "spline",
+              "line"
+            ]
           }
         ]
       }

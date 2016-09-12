@@ -60,24 +60,66 @@ highed.ChartCustomizer = function (parent, owner) {
 
     }
 
-    function selectGroup(group, table) {
+    function selectGroup(group, table, options, detailIndex) {
+        var master, vals;
+
+        options = options || flatOptions;
+
         if (highed.isArr(group.options)) {
             table = highed.dom.cr('table', 'highed-customizer-table');
 
             highed.dom.ap(body, 
-                highed.dom.cr('div', 'highed-customizer-table-heading', group.text),
-                table
+                highed.dom.cr('div', 'highed-customizer-table-heading', group.text)
             );
 
+            if (group.controlledBy) {
+                master = highed.dom.cr('select', 'highed-box-size highed-stretch');
+            
+                if (highed.isStr(group.controlledBy.options)) {
+                    vals = highed.getAttr(options, group.controlledBy.options);
+
+                    if (highed.isArr(vals)) {
+                        if (vals.length === 0) {
+                            highed.dom.ap(body, highed.dom.cr('i', '', 'No data to display..'));
+                            return;
+                        }
+
+                        highed.dom.options(master,
+                            vals.map(function (t) {
+                                return group.controlledBy.optionsTitle ? t[group.controlledBy.optionsTitle] : t;
+                            })
+                        );  
+
+                        highed.dom.on(master, 'change', function () {
+                            detailIndex = master.selectedIndex;
+
+                            table.innerHTML = '';
+
+                            group.options.forEach(function (sub) {
+                                selectGroup(sub, table, options, detailIndex);
+                            });
+                        });
+
+                        highed.dom.ap(body, master);               
+                        detailIndex = 0;
+                    } else {
+                        return;
+                    }
+                }
+            } 
+
+            highed.dom.ap(body, table);
+
             group.options.forEach(function (sub) {
-                selectGroup(sub, table);
+                selectGroup(sub, table, options, detailIndex);
             });
+                   
         } else if (typeof group.id !== 'undefined') {          
             //highed.dom.ap(sub, highed.dom.cr('span', '', referenced[0].returnType));
             highed.dom.ap(table, 
                 highed.InspectorField(
                     group.values ? 'options' : group.dataType, 
-                    (highed.getAttr(flatOptions, group.id) || group.defaults), 
+                    (highed.getAttr(options, group.id, detailIndex) || group.defaults), 
                     {
                         title: group.text,
                         tooltip: group.tooltipText,
@@ -85,8 +127,8 @@ highed.ChartCustomizer = function (parent, owner) {
                         custom: group.custom,
                         attributes: group.attributes || []   
                     },
-                    function (newValue) {           
-                        events.emit('PropertyChange', group.id, newValue);
+                    function (newValue) {        
+                        events.emit('PropertyChange', group.id, newValue, detailIndex);
                     }
                 )
             );
@@ -107,7 +149,9 @@ highed.ChartCustomizer = function (parent, owner) {
     list.on('Select', function (id){
         var entry = highed.meta.optionsExtended.options[id];
         body.innerHTML = '';
-        entry.forEach(selectGroup);
+        entry.forEach(function (thing) {
+            selectGroup(thing);
+        });
     });
 
     advTree.on('Select', function (item, selected) {

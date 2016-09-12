@@ -91,7 +91,11 @@ highed.ChartPreview = function (parent, attributes) {
         }
 
         try {
-            chart = new Highcharts.Chart(options);                 
+            chart = new Highcharts.Chart(options);   
+            //This is super ugly.
+            customizedOptions.series = customizedOptions.series || [];
+            highed.merge(customizedOptions.series, chart.options.series);
+            updateAggregated();           
         } catch (e) {
             e = e.toString();
 
@@ -224,11 +228,12 @@ highed.ChartPreview = function (parent, attributes) {
     /* Set an attribute
      * @id - the path of the attribute
      * @value - the value to set
+     * @index - used if the option is an array
      */
-    function set(id, value) {
+    function set(id, value, index) {
         gc(function (chart) {
-            highed.setAttr([chart.options, customizedOptions], id, value);        
-            highed.setAttr(chart.options, 'plotOptions--series--animation', false);
+            highed.setAttr([chart.options, customizedOptions], id, value, index);        
+            highed.setAttr(chart.options, 'plotOptions--series--animation', false, index);
 
             flatOptions[id] = value;
 
@@ -246,7 +251,14 @@ highed.ChartPreview = function (parent, attributes) {
 
     /* Get embeddable JSON */
     function getEmbeddableJSON() {
-        return highed.merge({}, aggregatedOptions);
+        var r = highed.merge({}, aggregatedOptions);
+
+        //This should be part of the series
+        if (!highed.isNull(r.data)) {
+            delete r['data'];
+        }
+
+        return r;
     }
 
     /* Get embeddable SVG */
@@ -314,7 +326,7 @@ highed.ChartPreview = function (parent, attributes) {
                 ' function cl() {',
                     'typeof window["Highcharts"] !== "undefined" && Highcharts.Data ? ',
                         'new Highcharts.chart("', id, '", ', 
-                            JSON.stringify(aggregatedOptions), ')',
+                            getEmbeddableJSON(), ')',
                     ' : ',
                     'setTimeout(cl, 20);',
                 '}',

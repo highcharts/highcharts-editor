@@ -4,3 +4,4 @@ dist/
 out/
 cache/
 *.zip
+api.js
