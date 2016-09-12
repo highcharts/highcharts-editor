@@ -183,6 +183,10 @@ highed.dom = {
      */
     on: function (target, event, callback, context) {
         var s = [];
+
+        if (!target) {
+          return function () {};
+        }
     
         if (target === document.body && event === 'resize') {
           //Need some special magic here eventually.

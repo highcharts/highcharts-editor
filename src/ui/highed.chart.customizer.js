@@ -37,7 +37,9 @@ highed.ChartCustomizer = function (parent, owner) {
         advBody = advSplitter.right,
         advTree = highed.Tree(advSplitter.left),
 
-        flatOptions = {}
+        flatOptions = {},
+
+        highlighted = false
     ;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -54,6 +56,7 @@ highed.ChartCustomizer = function (parent, owner) {
 
     function init(foptions) {
         flatOptions = foptions || {};
+        list.reselect();
     }
 
     function buildBody(entry) {
@@ -144,6 +147,18 @@ highed.ChartCustomizer = function (parent, owner) {
         });
     }
 
+    function focus(thing, x, y) {
+        list.select(thing);
+        // var entry = highed.meta.optionsExtended.options[thing];
+
+        // if (entry) {
+        //     body.innerHTML = '';
+        //     entry.forEach(function (thing) {
+        //         selectGroup(thing);
+        //     });
+        // }
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     
     list.on('Select', function (id){
@@ -152,6 +167,7 @@ highed.ChartCustomizer = function (parent, owner) {
         entry.forEach(function (thing) {
             selectGroup(thing);
         });
+        highlighted = false;
     });
 
     advTree.on('Select', function (item, selected) {
@@ -195,6 +211,8 @@ highed.ChartCustomizer = function (parent, owner) {
         /* Listen to an event */
         on: events.on,
         resize: resize,
-        init: init
+        init: init,
+        focus: focus,
+        reselect: list.reselect
     };
 };

@@ -339,6 +339,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         dataImp.on('ImportJSON', chartPreview.data.json);
         dataImp.on('ImportChartSettings', chartPreview.data.settings);
 
+        chartPreview.on('RequestEdit', function (event, x, y) {
+            chartCustomizer.focus(event, x, y);
+        });
+
         ///////////////////////////////////////////////////////////////////////////
 
         wizbar.on('Step', function (step, count, thing) {
@@ -349,7 +353,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     chartPreview.export.svg()
                 );
             } else if (thing.id === 'customize') {
-                chartCustomizer.init(chartPreview.options.customized);
+                chartCustomizer.init(chartPreview.options.customized);                
             }
         });
 

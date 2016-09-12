@@ -47,10 +47,27 @@ highed.ChartPreview = function (parent, attributes) {
         chart = false,
         preExpandSize = false,
         toggleButton = highed.dom.cr('div', 'highed-icon highed-chart-preview-expand fa fa-angle-double-left'),
-        expanded = false
+        expanded = false,
+        wysiwyg = {
+            'highcharts-legend': 'Legend',
+            'highcharts-title': 'Titles',
+            'highcharts-subtitle': 'Titles',
+            'highcharts-yaxis-labels': 'Axes',
+            'highcharts-xaxis-labels': 'Axes',
+            'highcharts-yaxis-title': 'Axes'
+        }
     ;
 
     ///////////////////////////////////////////////////////////////////////////
+
+    function attachWYSIWYG() {
+        Object.keys(wysiwyg).forEach(function (key) {            
+            highed.dom.on(parent.querySelector('.' + key), 'click', function (e) {
+                events.emit('RequestEdit', wysiwyg[key], e.clientX, e.clientY);
+                console.log(key, wysiwyg[key]);
+            });
+        });
+    }
 
     /* Get the chart if it's initied */
     function gc(fn) {
@@ -96,6 +113,8 @@ highed.ChartPreview = function (parent, attributes) {
             customizedOptions.series = customizedOptions.series || [];
             highed.merge(customizedOptions.series, chart.options.series);
             updateAggregated();           
+
+            attachWYSIWYG();
         } catch (e) {
             e = e.toString();
 

@@ -79,6 +79,7 @@ function sortAPI() {
             apiSorted[entry.name].subType = apiSorted[entry.name].subType || [];
             apiSorted[entry.name].subType.push(st);
             apiSorted[entry.name].values = apiSorted[entry.name].values || entry.values;
+            apiSorted[entry.name].defaults = apiSorted[entry.name].defaults || entry.defaults;
         }
     });
 }

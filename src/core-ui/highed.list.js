@@ -66,6 +66,7 @@ highed.List = function (parent) {
         highed.dom.ap(container, node);
 
         iexports = {
+            title: item.title,
             node: node,
             select: select
         };
@@ -123,6 +124,21 @@ highed.List = function (parent) {
         }
     }
 
+    function select(which) {
+        items.some(function (item) {
+            if (which === item.title) {
+                item.select();
+                return true;
+            }
+        });
+    }
+
+    function reselect() {
+        if (selectedItem) {
+            selectedItem.select();
+        }
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     
     highed.dom.ap(parent, container);
@@ -138,6 +154,8 @@ highed.List = function (parent) {
         resize: resize,
         show: show,
         hide: hide,
-        selectFirst: selectFirst
+        selectFirst: selectFirst,
+        select: select,
+        reselect: reselect
     };
 };
