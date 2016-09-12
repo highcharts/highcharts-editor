@@ -64,7 +64,6 @@ highed.ChartPreview = function (parent, attributes) {
         Object.keys(wysiwyg).forEach(function (key) {            
             highed.dom.on(parent.querySelector('.' + key), 'click', function (e) {
                 events.emit('RequestEdit', wysiwyg[key], e.clientX, e.clientY);
-                console.log(key, wysiwyg[key]);
             });
         });
     }
