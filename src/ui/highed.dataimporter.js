@@ -49,8 +49,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      *
      * @returns an instance of DataImporter
      */
-    highed.DataImporter = function (parent) {
+    highed.DataImporter = function (parent, attributes) {
         var events = highed.events(),
+
+            properties = highed.merge({
+                options: ['csv', 'json', 'web', 'samples']
+            }, attributes),
 
             tabs = highed.TabControl(parent),
             csvTab = tabs.createTab({title: 'CSV'}),
@@ -79,6 +83,29 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         ///////////////////////////////////////////////////////////////////////////
 
         highed.dom.style(samplesTab.body, {overflow: 'hidden'});
+
+        if (highed.isStr(properties.options)) {
+            properties.options = properties.options.split(' ');
+        }
+
+        properties.options = highed.arrToObj(properties.options);
+
+        function updateOptions() {
+            if (!properties.options.csv) {
+                csvTab.hide();
+            }
+            if (!properties.options.json) {
+                jsonTab.hide();
+            }
+            if (!properties.options.web) {
+                webTab.hide();
+            }
+            if (!properties.options.samples) {
+                samplesTab.hide();
+            }
+
+            tabs.selectFirst();
+        }
 
         function buildWebTab() {
             Object.keys(webImports).forEach(function (name) {
@@ -300,6 +327,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         buildSampleTab();
         buildWebTab();
+        updateOptions();
 
         delimiter.value = ',';
         //dateFormat.value = 'YYYY-mm-dd';

@@ -63,7 +63,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     homepage: 'unknown'
                 },
                 dependencies: [],
-                options: {}
+                options: {}                
             }, definition)
         ;
 
@@ -145,7 +145,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 on: {},
                 plugins: {},
                 features: 'import export templates customize welcome',
-                includeSVGInHTMLEmbedding: true   
+                includeSVGInHTMLEmbedding: true,
+                importer: {}   
             }, attributes),
 
             container = highed.dom.cr('div', 'highed-container'),
@@ -162,7 +163,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             welcomeStep = wizbar.addStep({title: 'Start'}),
 
             dataImpStep = wizbar.addStep({title: 'Import'}),
-            dataImp = highed.DataImporter(dataImpStep.body),
+            dataImp = highed.DataImporter(dataImpStep.body, properties.importer),
         
             templateStep = wizbar.addStep({title: 'Templates'}),
             chartTemplateSelector = highed.ChartTemplateSelector(templateStep.body),

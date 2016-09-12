@@ -71,6 +71,15 @@ highed.TabControl = function (parent, noOverflow) {
         }
     }
 
+    function selectFirst() {
+        tabs.some(function (tab) {
+            if (tab.visible()) {
+                tab.focus();
+                return true;
+            }
+        });
+    }
+
     /* Create and return a new tab
      * @properties - the properties for the tab:
      *   {
@@ -101,6 +110,10 @@ highed.TabControl = function (parent, noOverflow) {
         }
 
         function focus() {
+            if (!visible) {
+                return;
+            }
+
             if (selectedTab) {
                 selectedTab.node.className = 'tab';
 
@@ -182,6 +195,7 @@ highed.TabControl = function (parent, noOverflow) {
     return {
         createTab: Tab,
         resize: resize,
+        selectFirst: selectFirst,
         barSize: function () {
             return highed.dom.size(paneBar);
         }

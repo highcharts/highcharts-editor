@@ -94,7 +94,11 @@
 <script>
 
 	highed.ready(function () {
-		highed.ModalEditor('modal-btn', {}, function (html) {
+		highed.ModalEditor('modal-btn', {
+            importer: {
+                options: 'web csv json samples'
+            }
+        }, function (html) {
 			highed.dom.get('chart-result').value = html;
 		});
 	});
