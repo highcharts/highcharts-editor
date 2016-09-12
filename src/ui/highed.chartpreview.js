@@ -326,7 +326,7 @@ highed.ChartPreview = function (parent, attributes) {
                 ' function cl() {',
                     'typeof window["Highcharts"] !== "undefined" && Highcharts.Data ? ',
                         'new Highcharts.chart("', id, '", ', 
-                            getEmbeddableJSON(), ')',
+                            JSON.stringify(getEmbeddableJSON()), ')',
                     ' : ',
                     'setTimeout(cl, 20);',
                 '}',
@@ -402,7 +402,6 @@ highed.ChartPreview = function (parent, attributes) {
         return expanded ? collapse() : expand();
     });
 
-    
     ///////////////////////////////////////////////////////////////////////////
 
     return {
