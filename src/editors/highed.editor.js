@@ -351,7 +351,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 dataExp.init(
                     chartPreview.export.json(), 
                     chartPreview.export.html(properties.includeSVGInHTMLEmbedding),
-                    chartPreview.export.svg()
+                    chartPreview.export.svg(),
+                    chartPreview
                 );
             } else if (thing.id === 'customize') {
                 chartCustomizer.init(chartPreview.options.customized);                

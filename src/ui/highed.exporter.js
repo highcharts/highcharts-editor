@@ -26,7 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function () {
     var exportPlugins = {
             Test: {
-                description: 'A test plugin. Will export to JSON',
+                description: 'A test plugin. Will export to JSON.',
                 options: {
                     test: {
                         type: 'string',
@@ -40,8 +40,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         }
     ;
 
-    highed.plugins.export.install = function (name, definition) {
-        if (highed.isNull(exportPlugins[name])) {
+    highed.plugins.export = {
+        install: function (name, definition) {
+            if (highed.isNull(exportPlugins[name])) {
                 exportPlugins[name] = highed.merge({
                     description: '',
                     options: {},
@@ -50,12 +51,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             } else {
                 highed.log(1, 'tried to register an export plugin which already exists:', name);
             }
+        }
     };
 
     highed.Exporter = function (parent, attributes) {
         var //splitter = highed.HSplitter(parent, {leftWidth: 50, noOverflow: true}),
             properties = highed.merge({
-
+                options: 'csv html json plugins',
+                plugins: 'Test'
             }, attributes),    
 
             tctrl = highed.TabControl(parent),
@@ -72,16 +75,42 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             exportSVG = highed.dom.cr('a', '', 'Download'),
             jsonValue = highed.dom.cr('textarea', 'highed-imp-pastearea'),
             htmlValue = highed.dom.cr('textarea', 'highed-imp-pastearea'),
-            svgValue = highed.dom.cr('textarea', 'highed-imp-pastearea')
+            svgValue = highed.dom.cr('textarea', 'highed-imp-pastearea'),
+
+            currentChartPreview = false
         ;
 
+        properties.options = highed.arrToObj(properties.options);
+        properties.plugins = highed.arrToObj(properties.plugins);
+
         ///////////////////////////////////////////////////////////////////////////        
+
+        function updateOptions() {
+            if (!properties.options.html) {
+                htmlTab.hide();
+            }
+            if (!properties.options.json) {
+                jsonTab.hide();
+            }
+            if (!properties.options.html) {
+                htmlTab.hide();
+            }
+            if (!properties.options.plugins) {
+                pluginTab.hide();
+            }
+
+            tctrl.selectFirst();
+        }
 
         //Build plugin panel
         function buildPlugins() {
 
             Object.keys(exportPlugins).forEach(function (name) {
                 var options = exportPlugins[name];
+
+                if (!properties.plugins[name]) {
+                    return false;
+                }
 
                 function buildBody() {                      
                     var executeBtn = highed.dom.cr('button', 'highed-imp-button highed-imp-button-right', 'Export'),
@@ -108,8 +137,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     });
 
                     highed.dom.on(executeBtn, 'click', function () {
-                        if (highed.isFn(options.export)) {
-                            options.export(dynamicOptions, {}, function (err) {
+                        if (highed.isFn(options.export && currentChartPreview)) {
+                            options.export(dynamicOptions, currentChartPreview, function (err) {
                                 if (err) return highed.snackBar('Export error: ' + err);
                             });
                         }
@@ -135,7 +164,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         }
 
         //Set the export boxes based on chart JSON data (chart.options)
-        function init(chartData, chartHTML, chartSVG) {
+        function init(chartData, chartHTML, chartSVG, chartPreview) {
             var title = '_export';
 
             if (chartData.title && chartData.title.text) {
@@ -156,6 +185,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             exportJSON.download = title + '.json';
             exportHTML.download = title + '.html';
             exportSVG.download = title + '.svg';
+
+            currentChartPreview = chartPreview;
         }   
 
         function resize(w, h) {
@@ -209,6 +240,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         );
 
         resize();
+        updateOptions();
         buildPlugins();
 
         doSelectOnClick(jsonValue);
