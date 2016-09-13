@@ -92,7 +92,7 @@ By default, only the simple property editor is included in baked sources. This i
 
 To enable the advanced editor:
     
-    node tools/updatebake.advanced.js
+    node tools/bake.advanced.js
 
 This will create the required meta in the source tree. Run `gulp with-advanced` afterwards to bake sources with the advanced editor enabled.
 
