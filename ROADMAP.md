@@ -32,6 +32,7 @@
   * Gulp build script to bake sources
   * Electron build option
   * Custom property sub-set baking
+  * Plugin samples
   * Integration demos
     * TinyMCE
     * Wordpress

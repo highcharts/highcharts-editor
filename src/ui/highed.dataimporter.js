@@ -53,14 +53,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         var events = highed.events(),
 
             properties = highed.merge({
-                options: ['csv', 'json', 'web', 'samples'],
+                options: ['csv', 'json', 'plugins', 'samples'],
                 plugins: ['CSV', 'JSON', 'Difi', 'Socrata', 'Google Spreadsheets']
             }, attributes),
 
             tabs = highed.TabControl(parent),
             csvTab = tabs.createTab({title: 'CSV'}),
             jsonTab = tabs.createTab({title: 'JSON'}),
-            webTab = tabs.createTab({title: 'Web'}),
+            webTab = tabs.createTab({title: 'Plugins'}),
             samplesTab = tabs.createTab({title: 'Sample Data'}),
 
             csvPasteArea = highed.dom.cr('textarea', 'highed-imp-pastearea'),

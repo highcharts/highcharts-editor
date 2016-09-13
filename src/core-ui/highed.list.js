@@ -77,11 +77,11 @@ highed.List = function (parent) {
             select();
         }
 
-        if (items.length < 2) {
-            highed.dom.style(container, {display: 'none'});
-        } else {
-            highed.dom.style(container, {display: ''});
-        }
+        // if (items.length < 2) {
+        //     highed.dom.style(container, {display: 'none'});
+        // } else {
+        //     highed.dom.style(container, {display: ''});
+        // }
 
         return iexports;
     }

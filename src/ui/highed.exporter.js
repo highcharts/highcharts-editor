@@ -23,103 +23,203 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-highed.Exporter = function (parent) {
-    var //splitter = highed.HSplitter(parent, {leftWidth: 50, noOverflow: true}),
-        tctrl = highed.TabControl(parent),
-        htmlTab = tctrl.createTab({title: 'Export HTML'})
-        jsonTab = tctrl.createTab({title: 'Export JSON'}),
-        svgTab = tctrl.createTab({title: 'Export SVG'}),
+(function () {
+    var exportPlugins = {
+            Test: {
+                description: 'A test plugin. Will export to JSON',
+                options: {
+                    test: {
+                        type: 'string',
+                        label: 'Test Option'
+                    }
+                },
+                export: function (options, chart, fn) {
 
-        exportJSON = highed.dom.cr('a', '', 'Download'),
-        exportHTML = highed.dom.cr('a', '', 'Download'),
-        exportSVG = highed.dom.cr('a', '', 'Download'),
-        jsonValue = highed.dom.cr('textarea', 'highed-imp-pastearea'),
-        htmlValue = highed.dom.cr('textarea', 'highed-imp-pastearea'),
-        svgValue = highed.dom.cr('textarea', 'highed-imp-pastearea')
-
+                }
+            }
+        }
     ;
 
-    ///////////////////////////////////////////////////////////////////////////
-    
+    highed.plugins.export.install = function (name, definition) {
+        if (highed.isNull(exportPlugins[name])) {
+                exportPlugins[name] = highed.merge({
+                    description: '',
+                    options: {},
+                    export: function (){}
+                }, defintion);
+            } else {
+                highed.log(1, 'tried to register an export plugin which already exists:', name);
+            }
+    };
 
-    //Set the export boxes based on chart JSON data (chart.options)
-    function init(chartData, chartHTML, chartSVG) {
-        var title = '_export';
+    highed.Exporter = function (parent, attributes) {
+        var //splitter = highed.HSplitter(parent, {leftWidth: 50, noOverflow: true}),
+            properties = highed.merge({
 
-        if (chartData.title && chartData.title.text) {
-            title = chartData.title.text.replace(/\s/g, '_') + title;
-        } else {
-            title = 'untitled' + title;
+            }, attributes),    
+
+            tctrl = highed.TabControl(parent),
+            htmlTab = tctrl.createTab({title: 'Export HTML'})
+            jsonTab = tctrl.createTab({title: 'Export JSON'}),
+            svgTab = tctrl.createTab({title: 'Export SVG'}),
+            pluginTab = tctrl.createTab({title: 'Plugins'}),
+
+            pluginSplitter = highed.HSplitter(pluginTab.body, {leftWidth: 30}),
+            pluginList = highed.List(pluginSplitter.left),
+
+            exportJSON = highed.dom.cr('a', '', 'Download'),
+            exportHTML = highed.dom.cr('a', '', 'Download'),
+            exportSVG = highed.dom.cr('a', '', 'Download'),
+            jsonValue = highed.dom.cr('textarea', 'highed-imp-pastearea'),
+            htmlValue = highed.dom.cr('textarea', 'highed-imp-pastearea'),
+            svgValue = highed.dom.cr('textarea', 'highed-imp-pastearea')
+        ;
+
+        ///////////////////////////////////////////////////////////////////////////        
+
+        //Build plugin panel
+        function buildPlugins() {
+
+            Object.keys(exportPlugins).forEach(function (name) {
+                var options = exportPlugins[name];
+
+                function buildBody() {                      
+                    var executeBtn = highed.dom.cr('button', 'highed-imp-button highed-imp-button-right', 'Export'),
+                        dynamicOptionsContainer = highed.dom.cr('table', 'highed-customizer-table'),
+                        dynamicOptions = {}
+                    ;
+                    
+                    pluginSplitter.right.innerHTML = '';            
+
+                    Object.keys(options.options || {}).forEach(function (name) {
+                        dynamicOptions[name] = options.options[name].default;
+
+                        highed.dom.ap(dynamicOptionsContainer,
+                            highed.InspectorField(
+                                options.options[name].type, 
+                                options.options[name].default, 
+                                {
+                                    title: options.options[name].label
+                                }, 
+                                function (nval) {
+                                    dynamicOptions[name] = nval;
+                                }, true)
+                        );
+                    });
+
+                    highed.dom.on(executeBtn, 'click', function () {
+                        if (highed.isFn(options.export)) {
+                            options.export(dynamicOptions, {}, function (err) {
+                                if (err) return highed.snackBar('Export error: ' + err);
+                            });
+                        }
+                    });
+
+                    highed.dom.ap(pluginSplitter.right,
+                        highed.dom.cr('div', 'highed-customizer-table-heading', name),
+                        highed.dom.cr('div', 'highed-imp-help', options.description),
+                        Object.keys(options.options || {}).length ? dynamicOptionsContainer : false,
+                        executeBtn
+                    );                
+                }
+                
+                pluginList.addItem({
+                    id: name,
+                    title: name,
+                    click: buildBody
+                });
+
+            });
+
+            pluginList.selectFirst();
         }
 
-        jsonValue.value = JSON.stringify(chartData);
-        exportJSON.href = 'data:application/octet-stream,' + jsonValue.value;
-    
-        htmlValue.value = chartHTML;
-        exportHTML.href = 'data:application/octet-stream,' + encodeURIComponent(chartHTML);
+        //Set the export boxes based on chart JSON data (chart.options)
+        function init(chartData, chartHTML, chartSVG) {
+            var title = '_export';
 
-        svgValue.value = chartSVG;
-        exportSVG.href = 'data:application/octet-stream,' + encodeURIComponent(chartSVG);
+            if (chartData.title && chartData.title.text) {
+                title = chartData.title.text.replace(/\s/g, '_') + title;
+            } else {
+                title = 'untitled' + title;
+            }
 
-        exportJSON.download = title + '.json';
-        exportHTML.download = title + '.html';
-        exportSVG.download = title + '.svg';
-    }   
+            jsonValue.value = JSON.stringify(chartData);
+            exportJSON.href = 'data:application/octet-stream,' + jsonValue.value;
+        
+            htmlValue.value = chartHTML;
+            exportHTML.href = 'data:application/octet-stream,' + encodeURIComponent(chartHTML);
 
-    function resize(w, h) {
-        //splitter.resize(w, h);
-        tctrl.resize();
-    }
+            svgValue.value = chartSVG;
+            exportSVG.href = 'data:application/octet-stream,' + encodeURIComponent(chartSVG);
 
-    function doSelectOnClick(thing) {
-        highed.dom.on(thing, 'click', function () {
-            thing.focus();
-            thing.select();
-        });
-    }
+            exportJSON.download = title + '.json';
+            exportHTML.download = title + '.html';
+            exportSVG.download = title + '.svg';
+        }   
 
-    ///////////////////////////////////////////////////////////////////////////
+        function resize(w, h) {
+            var bsize;
 
-    highed.dom.ap(htmlTab.body,
-       // highed.dom.cr('div', 'highed-imp-headline', 'Export HTML'),
-        highed.dom.ap(highed.dom.cr('div', 'highed-imp-spacer'),
-            htmlValue
-        ),
-        highed.dom.ap(highed.dom.cr('button', 'highed-imp-button'),
-            exportHTML
-        )
-    );
+            //splitter.resize(w, h);
+            tctrl.resize(w, h);
+            bsize = tctrl.barSize();
 
-    highed.dom.ap(jsonTab.body,
-       // highed.dom.cr('div', 'highed-imp-headline', 'Export JSON'),
-        highed.dom.ap(highed.dom.cr('div', 'highed-imp-spacer'),
-            jsonValue
-        ),
-        highed.dom.ap(highed.dom.cr('button', 'highed-imp-button'),
-            exportJSON
-        )
-    );
+            pluginSplitter.resize(w, h - bsize.h - 20);
+            pluginList.resize(w, h - bsize.h);
+        }
 
-    highed.dom.ap(svgTab.body,
-       // highed.dom.cr('div', 'highed-imp-headline', 'Export JSON'),
-        highed.dom.ap(highed.dom.cr('div', 'highed-imp-spacer'),
-            svgValue
-        ),
-        highed.dom.ap(highed.dom.cr('button', 'highed-imp-button'),
-            exportSVG
-        )
-    );
+        function doSelectOnClick(thing) {
+            highed.dom.on(thing, 'click', function () {
+                thing.focus();
+                thing.select();
+            });
+        }
 
-    resize();
+        ///////////////////////////////////////////////////////////////////////////
 
-    doSelectOnClick(jsonValue);
-    doSelectOnClick(htmlValue);
-    doSelectOnClick(svgValue);
+        highed.dom.ap(htmlTab.body,
+           // highed.dom.cr('div', 'highed-imp-headline', 'Export HTML'),
+            highed.dom.ap(highed.dom.cr('div', 'highed-imp-spacer'),
+                htmlValue
+            ),
+            highed.dom.ap(highed.dom.cr('button', 'highed-imp-button'),
+                exportHTML
+            )
+        );
 
-    ///////////////////////////////////////////////////////////////////////////
+        highed.dom.ap(jsonTab.body,
+           // highed.dom.cr('div', 'highed-imp-headline', 'Export JSON'),
+            highed.dom.ap(highed.dom.cr('div', 'highed-imp-spacer'),
+                jsonValue
+            ),
+            highed.dom.ap(highed.dom.cr('button', 'highed-imp-button'),
+                exportJSON
+            )
+        );
 
-    return {
-        init: init,
-        resize: resize
+        highed.dom.ap(svgTab.body,
+           // highed.dom.cr('div', 'highed-imp-headline', 'Export JSON'),
+            highed.dom.ap(highed.dom.cr('div', 'highed-imp-spacer'),
+                svgValue
+            ),
+            highed.dom.ap(highed.dom.cr('button', 'highed-imp-button'),
+                exportSVG
+            )
+        );
+
+        resize();
+        buildPlugins();
+
+        doSelectOnClick(jsonValue);
+        doSelectOnClick(htmlValue);
+        doSelectOnClick(svgValue);
+
+        ///////////////////////////////////////////////////////////////////////////
+
+        return {
+            init: init,
+            resize: resize
+        };
     };
-};
+})();
