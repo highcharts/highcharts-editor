@@ -273,7 +273,7 @@ highed.ChartPreview = function (parent, attributes) {
 
         //This should be part of the series
         if (!highed.isNull(r.data)) {
-            delete r['data'];
+            //delete r['data'];
         }
 
         return r;

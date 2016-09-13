@@ -176,7 +176,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             chartCustomizer = highed.ChartCustomizer(customizerStep.body),
 
             dataExpStep = wizbar.addStep({title: 'Export', id: 'export'}),
-            dataExp = highed.Exporter(dataExpStep.body, exporter),
+            dataExp = highed.Exporter(dataExpStep.body, properties.exporter),
 
             cmenu = highed.ContextMenu([
                 {

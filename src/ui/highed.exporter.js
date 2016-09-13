@@ -85,6 +85,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         ///////////////////////////////////////////////////////////////////////////        
 
+        //Hides unwanted stuff
         function updateOptions() {
             if (!properties.options.html) {
                 htmlTab.hide();
