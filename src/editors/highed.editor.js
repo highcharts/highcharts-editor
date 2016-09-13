@@ -146,7 +146,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 plugins: {},
                 features: 'import export templates customize welcome',
                 includeSVGInHTMLEmbedding: true,
-                importer: {}   
+                importer: {},
+                exporter: {}   
             }, attributes),
 
             container = highed.dom.cr('div', 'highed-container'),
@@ -175,7 +176,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             chartCustomizer = highed.ChartCustomizer(customizerStep.body),
 
             dataExpStep = wizbar.addStep({title: 'Export', id: 'export'}),
-            dataExp = highed.Exporter(dataExpStep.body),
+            dataExp = highed.Exporter(dataExpStep.body, exporter),
 
             cmenu = highed.ContextMenu([
                 {
