@@ -62,7 +62,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             }, attributes),    
 
             tctrl = highed.TabControl(parent),
-            htmlTab = tctrl.createTab({title: 'Export HTML'})
+            htmlTab = tctrl.createTab({title: 'Export HTML'}),
             jsonTab = tctrl.createTab({title: 'Export JSON'}),
             svgTab = tctrl.createTab({title: 'Export SVG'}),
             pluginTab = tctrl.createTab({title: 'Plugins'}),
@@ -140,6 +140,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         if (highed.isFn(options.export && currentChartPreview)) {
                             options.export(dynamicOptions, currentChartPreview, function (err) {
                                 if (err) return highed.snackBar('Export error: ' + err);
+                                highed.snackBar(name + ' export complete');
                             });
                         }
                     });
