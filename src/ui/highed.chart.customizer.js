@@ -156,7 +156,7 @@ highed.ChartCustomizer = function (parent, owner) {
             highed.dom.ap(table, 
                 highed.InspectorField(
                     group.values ? 'options' : group.dataType, 
-                    (highed.getAttr(options, group.id, detailIndex) || group.defaults), 
+                    (highed.getAttr(options, group.id, detailIndex) || (filter && group.subTypeDefaults[filter] ? group.subTypeDefaults[filter] : group.defaults)), 
                     {
                         title: group.text,
                         tooltip: group.tooltipText,

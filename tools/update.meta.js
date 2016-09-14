@@ -80,6 +80,9 @@ function sortAPI() {
             apiSorted[entry.name].subType.push(st);
             apiSorted[entry.name].values = apiSorted[entry.name].values || entry.values;
             apiSorted[entry.name].defaults = apiSorted[entry.name].defaults || entry.defaults;
+
+            apiSorted[entry.name].subTypeDefaults = apiSorted[entry.name].subTypeDefaults || {};
+            apiSorted[entry.name].subTypeDefaults[st] = entry.defaults;
         }
     });
 }
@@ -154,6 +157,7 @@ function update(root) {
 
             if (aentry.subType) {
                 entry.subType = aentry.subType;                
+                entry.subTypeDefaults = aentry.subTypeDefaults;
             }
             //entry.custom = aentry.custom;
 
