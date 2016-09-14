@@ -24,45 +24,71 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 (function () {
-    var exportPlugins = {
-            'Beautified HTML': {
-                description: 'A test plugin. Will export to JSON.',
-                dependencies: [],                                
-                options: {
-                    test: {
-                        type: 'string',
-                        label: 'Test Option'
-                    }
-                },
-                show: function (chart, node) {
-
-                },
-                export: function (options, chart, fn) {
-
-                }
-            }
-        }
-    ;
+    var exportPlugins = {};
 
     highed.plugins.export = {
         install: function (name, definition) {
             if (highed.isNull(exportPlugins[name])) {
                 exportPlugins[name] = highed.merge({
                     description: '',
-                    options: {},
-                    export: function (){}
-                }, defintion);
+                    options: {}
+                }, definition);
+
+                if (exportPlugins[name].dependencies) {
+                    highed.include(exportPlugins[name].dependencies);
+                }
+
             } else {
                 highed.log(1, 'tried to register an export plugin which already exists:', name);
             }
         }
     };
 
+    highed.plugins.export.install('Beautified HTML', {
+        description: 'Exports well-formatted HTML',
+        dependencies: [
+            'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/codemirror.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/codemirror.min.css',
+            'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/theme/monokai.min.css',
+            'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/mode/xml/xml.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/mode/htmlmixed/htmlmixed.min.js',
+            'https://cdn.rawgit.com/beautify-web/js-beautify/master/js/lib/beautify.js',
+            'https://cdn.rawgit.com/beautify-web/js-beautify/master/js/lib/beautify-css.js',
+            'https://cdn.rawgit.com/beautify-web/js-beautify/master/js/lib/beautify-html.js'        
+        ],           
+        create: function (chart, node) {
+            this.textarea = highed.dom.cr('textarea');
+            highed.dom.ap(node, this.textarea);
+
+            this.cm = CodeMirror.fromTextArea(this.textarea, {
+                lineNumbers: true,
+               // value: chart.export.html(),
+                mode: 'htmlmixed',
+                readOnly: true,
+                theme: 'monokai'
+            });
+
+            this.update = function (chart) {
+                this.cm.setValue(js_beautify(chart.export.html(true)));
+                this.cm.refresh();
+                this.cm.focus();
+            };
+
+            this.update(chart);
+        },                  
+        show: function (chart) {
+            this.update(chart);
+        },
+        export: function (options, chart, fn) {
+
+        }
+    });
+
     highed.Exporter = function (parent, attributes) {
         var //splitter = highed.HSplitter(parent, {leftWidth: 50, noOverflow: true}),
             properties = highed.merge({
                 options: 'csv html json plugins',
-                plugins: 'Test'
+                plugins: ['Beautified HTML']
             }, attributes),    
 
             tctrl = highed.TabControl(parent),
@@ -81,7 +107,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             htmlValue = highed.dom.cr('textarea', 'highed-imp-pastearea'),
             svgValue = highed.dom.cr('textarea', 'highed-imp-pastearea'),
 
-            currentChartPreview = false
+            currentChartPreview = false,
+            hasBuiltPlugins = false,
+            pluginData = {}
         ;
 
         properties.options = highed.arrToObj(properties.options);
@@ -107,18 +135,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             tctrl.selectFirst();
         }
 
+
         //Build plugin panel
         function buildPlugins() {
+            if (hasBuiltPlugins) return;
+            hasBuiltPlugins = true;
 
             Object.keys(exportPlugins).forEach(function (name) {
-                var options = exportPlugins[name];
+                var options = exportPlugins[name]
+                ;
+
+                pluginData[name] = {};
 
                 if (!properties.plugins[name]) {
                     return false;
-                }
-
-                if (options.dependencies) {
-                    options.dependencies.forEach(highed.include);
                 }
 
                 function buildBody() {                      
@@ -148,10 +178,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
                     highed.dom.on(executeBtn, 'click', function () {
                         if (highed.isFn(options.export && currentChartPreview)) {
-                            options.export(dynamicOptions, currentChartPreview, function (err) {
+                            options.export.apply(pluginData[name], [dynamicOptions, currentChartPreview, function (err) {
                                 if (err) return highed.snackBar('Export error: ' + err);
                                 highed.snackBar(name + ' export complete');
-                            }, additionalUI);
+                            }, additionalUI]);
                         }
                     });
 
@@ -160,11 +190,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         highed.dom.cr('div', 'highed-imp-help', options.description),
                         Object.keys(options.options || {}).length ? dynamicOptionsContainer : false,
                         additionalUI,
-                        executeBtn
+                        options.export ? executeBtn : false
                     );              
 
-                    if (highed.isFn(options.show)) {
-                        options.show(currentChartPreview, additionalUI);
+                    if (highed.isFn(options.create)) {
+                        options.create.apply(pluginData[name], [currentChartPreview, additionalUI]);
                     }
                 }
                 
@@ -203,6 +233,19 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             exportSVG.download = title + '.svg';
 
             currentChartPreview = chartPreview;
+
+            buildPlugins();
+
+            Object.keys(exportPlugins).forEach(function (name) {
+                var options = exportPlugins[name];
+
+                if (!properties.plugins[name]) {
+                    return false;
+                }
+                if (highed.isFn(options.show)) {
+                    options.show.apply(pluginData[name], [currentChartPreview]);
+                }
+            });
         }   
 
         function resize(w, h) {
@@ -257,7 +300,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         resize();
         updateOptions();
-        buildPlugins();
 
         doSelectOnClick(jsonValue);
         doSelectOnClick(htmlValue);
@@ -267,7 +309,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         return {
             init: init,
-            resize: resize
+            resize: resize,
+            buildPluginUI: buildPlugins
         };
     };
 })();

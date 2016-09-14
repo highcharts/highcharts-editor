@@ -45,17 +45,34 @@ var highed = {
     plugins: {},
 
     /* Include something */
-    include: function (what) {
+    include: function (what, fn) {
         var n;
 
-        if (what.indexOf('.css') === what.length - 4) {
-            n = highed.dom.cr('style');
+        function next() {
+            if (n < what.length - 1) {
+                highed.include(what[++n], next);
+            }
+
+            return highed.isFn(fn) && fn();
+        }
+
+        if (highed.isArr(what)) {
+            n = -1;
+            return next();            
+        };
+
+        highed.log(3, 'including script', what);
+
+        if (what.lastIndexOf('.css') === what.length - 4) {
+            n = highed.dom.cr('link');
             n.rel = 'stylesheet';
             n.type = 'text/css';
             n.href = what;
+            n.onload = fn;
         } else {
             n = highed.dom.cr('script');
             n.src = what;
+            n.onload = fn;
         }
 
         highed.dom.ap(document.head, n);
