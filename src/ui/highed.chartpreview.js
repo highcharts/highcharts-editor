@@ -164,6 +164,8 @@ highed.ChartPreview = function (parent, attributes) {
 
         highed.clearObj(templateOptions);
 
+        highed.setAttr(customizedOptions, 'series', []);
+
         gc(function (chart) {
 
             Object.keys(template.config).forEach(function (key) {
@@ -186,6 +188,7 @@ highed.ChartPreview = function (parent, attributes) {
         }
 
         gc(function (chart) {
+            highed.setAttr(customizedOptions, 'series', []);
             highed.setAttr(customizedOptions, 'plotOptions--series--animation', true);
             highed.setAttr(customizedOptions, 'data--csv', data.csv);
             highed.setAttr(customizedOptions, 'data--googleSpreadsheetKey', undefined);
@@ -193,7 +196,6 @@ highed.ChartPreview = function (parent, attributes) {
             highed.setAttr(customizedOptions, 'data--firstRowAsNames', data.firstRowAsNames);
             highed.setAttr(customizedOptions, 'data--dateFormat', data.dateFormat);
             highed.setAttr(customizedOptions, 'data--decimalPoint', data.decimalPoint);
-            //highed.setAttr(hart.options, 'series', {});
 
             updateAggregated();
 
