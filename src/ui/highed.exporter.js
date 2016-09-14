@@ -25,13 +25,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 (function () {
     var exportPlugins = {
-            Test: {
+            'Beautified HTML': {
                 description: 'A test plugin. Will export to JSON.',
+                dependencies: [],                                
                 options: {
                     test: {
                         type: 'string',
                         label: 'Test Option'
                     }
+                },
+                show: function (chart, node) {
+
                 },
                 export: function (options, chart, fn) {
 
@@ -113,9 +117,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     return false;
                 }
 
+                if (options.dependencies) {
+                    options.dependencies.forEach(highed.include);
+                }
+
                 function buildBody() {                      
                     var executeBtn = highed.dom.cr('button', 'highed-imp-button highed-imp-button-right', 'Export'),
                         dynamicOptionsContainer = highed.dom.cr('table', 'highed-customizer-table'),
+                        additionalUI = highed.dom.cr('div'),
                         dynamicOptions = {}
                     ;
                     
@@ -142,7 +151,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                             options.export(dynamicOptions, currentChartPreview, function (err) {
                                 if (err) return highed.snackBar('Export error: ' + err);
                                 highed.snackBar(name + ' export complete');
-                            });
+                            }, additionalUI);
                         }
                     });
 
@@ -150,8 +159,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         highed.dom.cr('div', 'highed-customizer-table-heading', name),
                         highed.dom.cr('div', 'highed-imp-help', options.description),
                         Object.keys(options.options || {}).length ? dynamicOptionsContainer : false,
+                        additionalUI,
                         executeBtn
-                    );                
+                    );              
+
+                    if (highed.isFn(options.show)) {
+                        options.show(currentChartPreview, additionalUI);
+                    }
                 }
                 
                 pluginList.addItem({

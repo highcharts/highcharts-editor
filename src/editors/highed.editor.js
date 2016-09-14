@@ -67,11 +67,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             }, definition)
         ;
 
-        properties.dependencies.forEach(function (script) {
-            var t = highed.dom.cr('script');
-            t.src = script;
-            highed.dom.ap(document.head, t);
-        });
+        properties.dependencies.forEach(highed.include);
 
         if (!highed.isNull(installedPlugins[name])) {
             return highed.log(1, 'plugin -', name, 'is already installed');

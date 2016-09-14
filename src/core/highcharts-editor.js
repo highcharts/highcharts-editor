@@ -44,6 +44,23 @@ var highed = {
     meta: {},
     plugins: {},
 
+    /* Include something */
+    include: function (what) {
+        var n;
+
+        if (what.indexOf('.css') === what.length - 4) {
+            n = highed.dom.cr('style');
+            n.rel = 'stylesheet';
+            n.type = 'text/css';
+            n.href = what;
+        } else {
+            n = highed.dom.cr('script');
+            n.src = what;
+        }
+
+        highed.dom.ap(document.head, n);
+    },
+
     /* Clear an object */
     clearObj: function (obj) {
         Object.keys(obj).forEach(function (key) {
