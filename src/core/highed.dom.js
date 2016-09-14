@@ -63,7 +63,7 @@ highed.dom = {
      * @param {object} select - the dropdown to add options to
      * @param {(array|object)} options - the options as an array or as an object keyed on ID
      */
-    options: function (select, options) {
+    options: function (select, options, selected) {
         if (highed.isNull(options)) {
 
         } else if (highed.isArr(options)) {
@@ -72,6 +72,10 @@ highed.dom = {
                     highed.dom.cr('option', '', option, option)
                 );
             });
+
+            if (selected) {
+              select.selectedIndex = selected;
+            }
         } else if (highed.isStr(options)) {
             try {
                 highed.dom.options(select, JSON.parse(options));

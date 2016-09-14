@@ -1,1 +1,0 @@
-highed.plugins.import.install("CSV",{description:"Import a standard formatted CSV file.",treatAs:"csv",filter:function(t,i,r){r(!1,t)}});

@@ -66,6 +66,7 @@ highed.List = function (parent) {
         highed.dom.ap(container, node);
 
         iexports = {
+            id: item.id,
             title: item.title,
             node: node,
             select: select
@@ -149,6 +150,9 @@ highed.List = function (parent) {
         return items.length;
     }
 
+    function selected() {
+        return selectedItem;
+    }
     ///////////////////////////////////////////////////////////////////////////
     
     highed.dom.ap(parent, container);
@@ -167,6 +171,7 @@ highed.List = function (parent) {
         selectFirst: selectFirst,
         select: select,
         reselect: reselect,
+        selected: selected,
         count: countItems
     };
 };

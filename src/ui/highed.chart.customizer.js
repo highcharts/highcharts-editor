@@ -63,7 +63,25 @@ highed.ChartCustomizer = function (parent, owner) {
 
     }
 
-    function selectGroup(group, table, options, detailIndex) {
+    function applyFilter(detailIndex, filteredBy, filter) {       
+        var selected = list.selected(),
+            id = selected.id,
+            entry = highed.meta.optionsExtended.options[id]
+        ;
+
+        if (!selected) return false;
+        
+        body.innerHTML = '';
+
+        entry.forEach(function (thing) {
+            selectGroup(thing, false, false, detailIndex, filteredBy, filter);
+        });
+        
+        highlighted = false;
+    }
+
+    //This function has mutated into a proper mess. Needs refactoring.
+    function selectGroup(group, table, options, detailIndex, filteredBy, filter) {
         var master, vals;
 
         options = options || flatOptions;
@@ -75,11 +93,15 @@ highed.ChartCustomizer = function (parent, owner) {
                 highed.dom.cr('div', 'highed-customizer-table-heading', group.text)
             );
 
+            if (group.filteredBy) {
+                filter = highed.getAttr(options, group.filteredBy, detailIndex);
+            }
+
             if (group.controlledBy) {
                 master = highed.dom.cr('select', 'highed-box-size highed-stretch');
             
                 if (highed.isStr(group.controlledBy.options)) {
-                    vals = highed.getAttr(options, group.controlledBy.options);
+                    vals = highed.getAttr(options, group.controlledBy.options, detailIndex);
 
                     if (highed.isArr(vals)) {
                         if (vals.length === 0) {
@@ -90,7 +112,8 @@ highed.ChartCustomizer = function (parent, owner) {
                         highed.dom.options(master,
                             vals.map(function (t) {
                                 return group.controlledBy.optionsTitle ? t[group.controlledBy.optionsTitle] : t;
-                            })
+                            }),
+                            detailIndex
                         );  
 
                         highed.dom.on(master, 'change', function () {
@@ -99,25 +122,36 @@ highed.ChartCustomizer = function (parent, owner) {
                             table.innerHTML = '';
 
                             group.options.forEach(function (sub) {
-                                selectGroup(sub, table, options, detailIndex);
+                                if (group.filteredBy) {
+                                    filter = highed.getAttr(options, group.filteredBy, detailIndex);                                    
+                                }
+                                selectGroup(sub, table, options, detailIndex, group.filteredBy, filter);
                             });
                         });
 
                         highed.dom.ap(body, master);               
-                        detailIndex = 0;
+                        detailIndex = detailIndex || 0;
                     } else {
                         return;
                     }
                 }
-            } 
+            }
 
             highed.dom.ap(body, table);
 
             group.options.forEach(function (sub) {
-                selectGroup(sub, table, options, detailIndex);
+                selectGroup(sub, table, options, detailIndex, group.filteredBy, filter);
             });
                    
-        } else if (typeof group.id !== 'undefined') {          
+        } else if (typeof group.id !== 'undefined') {     
+
+            //Check if we should filter out this column
+            if (filter && group.subType && group.subType.length) {
+                if (!highed.arrToObj(group.subType)[filter]) {
+                    return;
+                }
+            }
+
             //highed.dom.ap(sub, highed.dom.cr('span', '', referenced[0].returnType));
             highed.dom.ap(table, 
                 highed.InspectorField(
@@ -132,6 +166,13 @@ highed.ChartCustomizer = function (parent, owner) {
                     },
                     function (newValue) {        
                         events.emit('PropertyChange', group.id, newValue, detailIndex);
+                        
+                        if (group.id === filteredBy) {
+                            //This is a master for the rest of the childs,
+                            //which means that we need to rebuild everything 
+                            //here somehow and check their subType
+                            applyFilter(detailIndex, filteredBy, newValue);
+                        }
                     }
                 )
             );

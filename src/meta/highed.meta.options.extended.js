@@ -499,6 +499,7 @@ highed.meta.optionsExtended = {
           "options": "series",
           "optionsTitle": "name"
         },
+        "filteredBy": "series--type",
         "options": [
           {
             "id": "series--type",
@@ -506,31 +507,31 @@ highed.meta.optionsExtended = {
             "tooltipText": "The type of series",
             "dataType": "string",
             "context": "General",
-            "parent": "series<gauge>",
+            "parent": "series<columnrange>",
             "values": "[null, \"line\", \"spline\", \"column\", \"area\", \"areaspline\", \"pie\", \"arearange\", \"areasplinerange\", \"boxplot\", \"bubble\", \"columnrange\", \"errorbar\", \"funnel\", \"gauge\", \"scatter\", \"waterfall\"]",
             "subType": [
-              "gauge",
+              "columnrange",
+              "areasplinerange",
+              "boxplot",
               "bubble",
-              "solidgauge",
-              "pie",
               "funnel",
-              "treemap",
-              "areaspline",
-              "line",
-              "column",
+              "errorbar",
+              "gauge",
               "scatter",
               "area",
-              "errorbar",
-              "arearange",
-              "bar",
-              "heatmap",
+              "column",
               "polygon",
-              "columnrange",
-              "boxplot",
-              "areasplinerange",
               "spline",
+              "line",
+              "heatmap",
+              "bar",
+              "arearange",
+              "pie",
               "waterfall",
-              "pyramid"
+              "solidgauge",
+              "areaspline",
+              "pyramid",
+              "treemap"
             ]
           },
           {
@@ -540,26 +541,26 @@ highed.meta.optionsExtended = {
             "dataType": "color",
             "context": "General",
             "defaults": "null",
-            "parent": "series<spline>",
+            "parent": "series<heatmap>",
             "subType": [
-              "spline",
-              "treemap",
-              "errorbar",
-              "line",
-              "waterfall",
-              "arearange",
-              "bubble",
-              "polygon",
-              "gauge",
-              "areaspline",
-              "areasplinerange",
-              "area",
-              "boxplot",
-              "columnrange",
+              "heatmap",
               "column",
+              "area",
+              "errorbar",
+              "spline",
+              "boxplot",
+              "treemap",
+              "arearange",
+              "line",
+              "polygon",
+              "areaspline",
               "scatter",
               "bar",
-              "heatmap"
+              "bubble",
+              "columnrange",
+              "areasplinerange",
+              "gauge",
+              "waterfall"
             ]
           },
           {
@@ -569,23 +570,23 @@ highed.meta.optionsExtended = {
             "dataType": "color",
             "context": "General",
             "defaults": "null",
-            "parent": "series<arearange>",
+            "parent": "series<bubble>",
             "values": "",
             "subType": [
+              "bubble",
               "arearange",
               "scatter",
-              "polygon",
-              "areaspline",
-              "bubble",
+              "spline",
               "boxplot",
               "area",
-              "spline",
-              "bar",
-              "line",
               "gauge",
-              "areasplinerange",
+              "column",
               "errorbar",
-              "column"
+              "areasplinerange",
+              "polygon",
+              "line",
+              "bar",
+              "areaspline"
             ]
           },
           {
@@ -595,16 +596,16 @@ highed.meta.optionsExtended = {
             "dataType": "boolean",
             "context": "General",
             "defaults": "false",
-            "parent": "series<errorbar>",
+            "parent": "series<waterfall>",
             "subType": [
-              "errorbar",
-              "columnrange",
-              "boxplot",
+              "waterfall",
               "column",
-              "heatmap",
+              "boxplot",
+              "errorbar",
               "bar",
+              "heatmap",
               "treemap",
-              "waterfall"
+              "columnrange"
             ]
           },
           {
@@ -612,19 +613,19 @@ highed.meta.optionsExtended = {
             "text": "Dash style",
             "dataType": "string",
             "context": "General",
-            "tooltipText": "A name for the dash style to use for the line connecting the columns of the waterfall series. Possible values:\r\n\t\t    <ul>\r\n\t\t    \t<li>Solid</li>\r\n\t\t    \t<li>ShortDash</li>\r\n\t\t    \t<li>ShortDot</li>\r\n\t\t    \t<li>ShortDashDot</li>\r\n\t\t    \t<li>ShortDashDotDot</li>\r\n\t\t    \t<li>Dot</li>\r\n\t\t    \t<li>Dash</li>\r\n\t\t    \t<li>LongDash</li>\r\n\t\t    \t<li>DashDot</li>\r\n\t\t    \t<li>LongDashDot</li>\r\n\t\t    \t<li>LongDashDotDot</li>\r\n\t\t    </ul>.",
-            "defaults": "Dot",
-            "parent": "series<waterfall>",
+            "tooltipText": "A name for the dash style to use for the graph. Applies only to series type having a graph, like <code>line</code>, <code>spline</code>, <code>area</code> and <code>scatter</code> in  case it has a <code>lineWidth</code>. The value for the <code>dashStyle</code> include:\r\n\t\t    <ul>\r\n\t\t    \t<li>Solid</li>\r\n\t\t    \t<li>ShortDash</li>\r\n\t\t    \t<li>ShortDot</li>\r\n\t\t    \t<li>ShortDashDot</li>\r\n\t\t    \t<li>ShortDashDotDot</li>\r\n\t\t    \t<li>Dot</li>\r\n\t\t    \t<li>Dash</li>\r\n\t\t    \t<li>LongDash</li>\r\n\t\t    \t<li>DashDot</li>\r\n\t\t    \t<li>LongDashDot</li>\r\n\t\t    \t<li>LongDashDotDot</li>\r\n\t\t    </ul>",
+            "defaults": "Solid",
+            "parent": "series<scatter>",
             "values": "[\"Solid\", \"ShortDash\", \"ShortDot\", \"ShortDashDot\", \"ShortDashDotDot\", \"Dot\", \"Dash\" ,\"LongDash\", \"DashDot\", \"LongDashDot\", \"LongDashDotDot\"]",
             "subType": [
-              "waterfall",
-              "arearange",
+              "scatter",
               "spline",
               "polygon",
-              "scatter",
+              "area",
               "areaspline",
               "areasplinerange",
-              "area",
+              "arearange",
+              "waterfall",
               "line",
               "bubble"
             ]
@@ -636,15 +637,15 @@ highed.meta.optionsExtended = {
             "context": "General",
             "tooltipText": "Enable or disable the point marker. If <code>null</code>, the markers are hidden when the data is dense, and shown for more widespread data points.",
             "defaults": "null",
-            "parent": "series<areaspline>-marker",
+            "parent": "series<spline>-marker",
             "subType": [
-              "areaspline",
-              "area",
               "spline",
-              "line",
-              "polygon",
               "scatter",
-              "bubble"
+              "line",
+              "areaspline",
+              "bubble",
+              "polygon",
+              "area"
             ]
           },
           {
@@ -653,16 +654,16 @@ highed.meta.optionsExtended = {
             "dataType": "string",
             "context": "General",
             "tooltipText": "<p>A predefined shape or symbol for the marker. When null, the symbol is pulled from options.symbols. Other possible values are \"circle\", \"square\", \"diamond\", \"triangle\" and \"triangle-down\".</p>\r\n\r\n<p>Additionally, the URL to a graphic can be given on this form:  \"url(graphic.png)\". Note that for the image to be applied to exported charts, its URL needs to be accessible by the export server.</p>\r\n\r\n<p>Custom callbacks for symbol path generation can also be added to <code>Highcharts.SVGRenderer.prototype.symbols</code>. The callback is then used by its method name, as shown in the demo.</p>",
-            "parent": "series<polygon>-marker",
+            "parent": "series<bubble>-marker",
             "values": "[null, \"circle\", \"square\", \"diamond\", \"triangle\", \"triangle-down\"]",
             "subType": [
+              "bubble",
+              "spline",
               "polygon",
               "line",
-              "spline",
-              "bubble",
-              "areaspline",
               "scatter",
-              "area"
+              "area",
+              "areaspline"
             ]
           }
         ]

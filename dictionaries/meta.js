@@ -215,6 +215,7 @@ module.exports = {
 				options: 'series',
 				optionsTitle: 'name'
 			},
+			filteredBy: 'series--type',
 			options: [
 				{id: 'series--type', text: 'Series type', tooltipText: 'The type of series'},
 				{
