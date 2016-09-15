@@ -30,12 +30,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * @returns a highed.ModalEditor instance.
  */
 highed.ModalEditor = function (summoner, attributes, fn) {
-    var modal = highed.OverlayModal(false, {
+    var properties = highed.merge({
+            type: 'full'
+        }, attributes), 
+        modal = highed.OverlayModal(false, {
             width: '90%',
-            height: '580',
+            height: '80%',
             showOnInit: false
         }),
-        editor = highed.Editor(modal.body, attributes),
+        editor = properties.type === 'full' ? highed.Editor(modal.body, attributes) : highed.SimpleEditor(modal.body, attributes),
         //We don't always know the summoner at create time..
         sumFn = false,
         doneEditing = highed.dom.cr('button', 'highed-done-button', 'Close &amp; Use')
@@ -63,7 +66,7 @@ highed.ModalEditor = function (summoner, attributes, fn) {
     
     highed.dom.on(doneEditing, 'click', function () {
         if (highed.isFn(fn)) {
-            fn(editor.getEmbeddableHTML(true), editor.getEmbeddableSVG());
+            fn(editor.chart.export.html(true), editor.chart.export.svg());
         }
         modal.hide();
     });
@@ -73,6 +76,8 @@ highed.ModalEditor = function (summoner, attributes, fn) {
     if (attributes && attributes.allowDone) {
         highed.dom.ap(editor.toolbar.center, doneEditing);           
     }
+
+    editor.resize();
 
     ///////////////////////////////////////////////////////////////////////////
 

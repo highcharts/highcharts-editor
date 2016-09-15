@@ -52,6 +52,7 @@ var dest = 'dist/',
         "./src/ui/highed.chartpreview.js",
             
         "./src/editors/highed.editor.js",
+        "./src/editors/highed.simple.editor.js",
         "./src/editors/highed.modaleditor.js"
     ]
 ;

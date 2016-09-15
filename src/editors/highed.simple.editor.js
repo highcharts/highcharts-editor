@@ -61,7 +61,66 @@ highed.SimpleEditor = function (parent, attributes) {
         customizer = highed.ChartCustomizer(hsplitter.left, {
             noAdvanced: true,
             availableSettings: properties.availableSettings
-        })
+        }),
+
+        cmenu = highed.ContextMenu([
+            {
+            title: 'New Chart',
+            icon: 'file',
+            click: function () {
+                if (confirm('Are you sure you want to abandon the current chart and start over?')) {
+                    preview.new();                  
+                }
+            }
+            },
+            '-',
+            {
+                title: 'Save as JSON',
+                icon: 'file-code-o'
+            },
+            {
+                title: 'Save as HTML',
+                icon: 'file-code-o'
+            },
+            '-',
+            {
+                title: 'Export as PNG',
+                icon: 'file-image-o',
+                click: function () {
+                    preview.data.export({});
+                }
+            },
+            {
+                title: 'Export as JPEG',
+                icon: 'file-image-o',
+                click: function () {
+                    preview.data.export({type: 'image/jpeg'});
+                }
+            },
+            {
+                title: 'Export as SVG',
+                icon: 'file-image-o',
+                click: function () {
+                    preview.data.export({type: 'image/svg+xml'});
+                }
+            },
+            {
+                title: 'Export as PDF',
+                icon: 'file-pdf-o',
+                click: function () {
+                    preview.data.export({type: 'application/pdf'});
+                }
+            },
+            '-',
+            {
+                title: 'Help',
+                icon: 'question-circle'
+            },
+            {
+                title: 'License Information',
+                icon: 'key'
+            }
+        ])
     ;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -116,8 +175,8 @@ highed.SimpleEditor = function (parent, attributes) {
 
     mainToolbar.addIcon({
         css: 'fa-gear',
-        click: function () {
-            
+        click: function (e) {
+            cmenu.show(e.clientX, e.clientY);
         }
     });
 
@@ -128,6 +187,8 @@ highed.SimpleEditor = function (parent, attributes) {
     //Public interface
     return {
         resize: resize,
-        on: events.on
+        on: events.on,
+        toolbar: mainToolbar,
+        chart: preview
     };
 };

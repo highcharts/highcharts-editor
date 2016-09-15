@@ -430,7 +430,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             /* Destroy the editor */
             destroy: destroy,
             /* Toolbar */
-            toolbar: mainToolbar            
+            toolbar: mainToolbar,
+            chart: chartPreview            
         };
     };
 })();
