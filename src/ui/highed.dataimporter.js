@@ -107,6 +107,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 samplesTab.hide();
             }
 
+            if (Object.keys(properties.plugins) === 0) {
+                webTab.hide();
+            }
+
             tabs.selectFirst();
         }
 

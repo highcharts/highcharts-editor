@@ -131,6 +131,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             if (!properties.options.plugins) {
                 pluginTab.hide();
             }
+            if (Object.keys(properties.plugins) === 0) {
+                pluginTab.hide();
+            }
 
             tctrl.selectFirst();
         }
