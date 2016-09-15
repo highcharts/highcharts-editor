@@ -34,6 +34,30 @@ highed.events = function () {
         listenerCounter = 0
     ;
 
+    function on(event, callback, context) {
+        var id = ++listenerCounter;
+
+        if (highed.isArr(callback)) {
+            return callback.forEach(function (cb) {
+                on(event, cb, context);
+            });
+        };
+
+        callbacks[event] = callbacks[event] || [];
+
+        callbacks[event].push({
+            id: id,
+            fn: callback,
+            context: context
+        });
+
+        return function () {
+            callbacks[event] = callbacks[event].filter(function (e) {
+                return e.id !== id;
+            });
+        };
+    }
+
     return {
         /** Attach an event listener
   
@@ -43,23 +67,7 @@ highed.events = function () {
          *
          * @return {function} - A function that can be called to unbind the listener
          */
-        on: function (event, callback, context) {
-            var id = ++listenerCounter;
-
-            callbacks[event] = callbacks[event] || [];
-
-            callbacks[event].push({
-                id: id,
-                fn: callback,
-                context: context
-            });
-
-            return function () {
-                callbacks[event] = callbacks[event].filter(function (e) {
-                    return e.id !== id;
-                });
-            };
-        },
+        on: on,
 
         /** Emit an event
          * @description Note that the function accepts a variable amount of arguments. Any arguments after the event name will be passed on to any event listeners attached to the event being emitted.

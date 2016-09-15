@@ -28,23 +28,30 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @param parent {domnode} - the node to attach to
  *  @param attributes {object} - the options for the editor
  *    > importer {object} - options passed to the importer widget
- *      > options {string|array} - the options to include
- *      > plugins {string|array} - the plugins to enable
+ *      > options {string|array<string>} - the options to include
+ *      > plugins {string|array<sting>} - the plugins to enable
+ *    > availableSettings {array<string>} - the settings to include
  */
 highed.SimpleEditor = function (parent, attributes) {
     var properties = highed.merge({
-            importer: {}
+            importer: {},
+            availableSettings: [
+                'title--text',
+                'subtitle--text',
+                'colors',
+                'chart--backgroundColor'
+            ]
         }, attributes),
 
         hsplitter = highed.HSplitter(parent, {leftWidth: 60}),
 
         vsplitterRight = highed.VSplitter(hsplitter.right),
         preview = highed.ChartPreview(vsplitterRight.top, properties.chart),
-        importer = highed.DataImporter(vsplitterRight.bottom, properties.importer),
-
+        importer = highed.DataImporter(vsplitterRight.bottom, properties.importer),        
 
         customizer = highed.ChartCustomizer(hsplitter.left, {
-            noAdvanced: true
+            noAdvanced: true,
+            availableSettings: properties.availableSettings
         })
     ;
 
@@ -65,12 +72,16 @@ highed.SimpleEditor = function (parent, attributes) {
         customizer.resize(ps.w, ps.h);
     }
 
+    function attachToCustomizer() {
+        customizer.init(preview.options.customized);
+    }
+
     ///////////////////////////////////////////////////////////////////////////
 
     customizer.on('PropertyChange', preview.options.set);
-    importer.on('ImportCSV', preview.data.csv);
-    importer.on('ImportJSON', preview.data.json);
-    importer.on('ImportChartSettings', preview.data.settings);
+    importer.on('ImportCSV', [preview.data.csv, attachToCustomizer]);
+    importer.on('ImportJSON', [preview.data.json, attachToCustomizer]);
+    importer.on('ImportChartSettings', [preview.data.settings, attachToCustomizer]);
 
     ///////////////////////////////////////////////////////////////////////////
 

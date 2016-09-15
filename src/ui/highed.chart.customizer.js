@@ -25,7 +25,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 highed.ChartCustomizer = function (parent, attributes) {
     var properties = highed.merge({
-            noAdvanced: false
+            noAdvanced: false,
+            availableSettings: []
         }, attributes),
         events = highed.events(),
         tabs = highed.TabControl(parent, true),
@@ -44,6 +45,8 @@ highed.ChartCustomizer = function (parent, attributes) {
 
         highlighted = false
     ;
+
+    properties.availableSettings = highed.arrToObj(properties.availableSettings);
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -83,14 +86,46 @@ highed.ChartCustomizer = function (parent, attributes) {
         highlighted = false;
     }
 
+    function shouldInclude(group) {
+        var doInclude = false;
+
+        if (Object.keys(properties.availableSettings).length > 0) {
+            if (highed.isArr(group)) {
+                group.forEach(function (sub) {
+                    if (shouldInclude(sub)) {
+                        doInclude = true;
+                    }
+                });
+            } else if (highed.isArr(group.options)) {
+                group.options.forEach(function (sub) {
+                    if (shouldInclude(sub)) {
+                        doInclude = true;
+                    }
+                });
+            } else if (properties.availableSettings[group.id]) {
+                doInclude = true;
+            } 
+
+            return doInclude;
+        }
+        
+        return true;
+    }
+
     //This function has mutated into a proper mess. Needs refactoring.
     function selectGroup(group, table, options, detailIndex, filteredBy, filter) {
-        var master, vals;
+        var master, vals, doInclude = true;
 
         options = options || flatOptions;
 
         if (highed.isArr(group.options)) {
             table = highed.dom.cr('table', 'highed-customizer-table');
+
+            doInclude = shouldInclude(group);
+
+            if (!doInclude) {
+                return;
+            }
 
             highed.dom.ap(body, 
                 highed.dom.cr('div', 'highed-customizer-table-heading', group.text)
@@ -155,6 +190,12 @@ highed.ChartCustomizer = function (parent, attributes) {
                 }
             }
 
+            if (Object.keys(properties.availableSettings).length > 0) {
+                if (!properties.availableSettings[group.id]) {
+                    return;
+                }
+            }
+
             //highed.dom.ap(sub, highed.dom.cr('span', '', referenced[0].returnType));
             highed.dom.ap(table, 
                 highed.InspectorField(
@@ -184,6 +225,10 @@ highed.ChartCustomizer = function (parent, attributes) {
 
     function build() {
         Object.keys(highed.meta.optionsExtended.options).forEach(function (key) {
+            if (!shouldInclude(highed.meta.optionsExtended.options[key])) {
+                return;
+            }
+
             list.addItem({
                 id: key,
                 title: key
