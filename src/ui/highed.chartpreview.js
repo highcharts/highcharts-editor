@@ -275,6 +275,7 @@ highed.ChartPreview = function (parent, attributes) {
 
         //This should be part of the series
         if (!highed.isNull(r.data)) {
+            r.data = undefined;
             //delete r['data'];
         }
 
