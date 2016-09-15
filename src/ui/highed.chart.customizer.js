@@ -288,6 +288,10 @@ highed.ChartCustomizer = function (parent, attributes) {
         );
     });
 
+    tabs.on('Focus', function () {
+        init(flatOptions);
+    });
+
     build();
 
     if (properties.noAdvanced || highed.isNull(highed.meta.optionsAdvanced)) {

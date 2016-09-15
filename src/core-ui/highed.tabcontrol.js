@@ -29,6 +29,7 @@ highed.TabControl = function (parent, noOverflow) {
         body = highed.dom.cr('div', 'body'),
         indicator = highed.dom.cr('div', 'indicator'),
 
+        events = highed.events(),
         selectedTab = false,
         tabs = []
     ;
@@ -139,6 +140,8 @@ highed.TabControl = function (parent, noOverflow) {
 
             selectedTab = texports;
             tevents.emit('Focus');
+
+            events.emit('Focus', texports);
         }
 
         highed.dom.on(tab, 'click', focus);
@@ -193,6 +196,7 @@ highed.TabControl = function (parent, noOverflow) {
     ///////////////////////////////////////////////////////////////////////////
 
     return {
+        on: events.on,
         createTab: Tab,
         resize: resize,
         selectFirst: selectFirst,
