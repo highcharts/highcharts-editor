@@ -4,11 +4,18 @@
 
 .highed-tree .node {
     position: relative;
+    color:@text-main;
+   // border-bottom: @border-main;
+  // .highed-transition;
+}
+
+.highed-tree .node:hover {
+    // background:@wiz-bar-background;
+    // color: @wiz-bar-color;
 }
 
 .highed-tree .parent-title {
-    font-family: @font-main;
-    font-weight: 100;
+    font-family: @font-secondary;
     padding:4px;
     padding-left:30px;
     font-size: 12px;
@@ -18,6 +25,8 @@
 
 .highed-tree .parent-title-selected {
     font-weight: normal;
+    background:@accent-color !important;
+    color: @accent-text !important;
 }
 
 .highed-tree .parent-body {
@@ -33,6 +42,6 @@
     text-align: center;
     font-size: 14px;
     top:-2px;
-    color:@wiz-bar-background;
+
     .highed-transition;
 }

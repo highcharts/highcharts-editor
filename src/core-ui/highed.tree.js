@@ -39,9 +39,9 @@ highed.Tree = function (parent) {
             Object.keys(tree.children).forEach(function (key) {
                 var child = tree.children[key],
                     title = highed.dom.cr('div', 'parent-title', highed.uncamelize(key)),
-                    icon = highed.dom.cr('div', 'exp-col-icon fa fa-arrow-down'),
+                    icon = highed.dom.cr('div', 'exp-col-icon fa fa-plus'),
                     body = highed.dom.cr('div', 'parent-body'),
-                    expanded = true
+                    expanded = false
                 ;
 
                 if (child.entries.length === 0 && Object.keys(child.children).length === 0) {
@@ -56,19 +56,23 @@ highed.Tree = function (parent) {
                     body
                 );
 
+                highed.dom.style(body, {display: 'none'});
+
                 function toggle() {
                     expanded = !expanded;
                     if (expanded) {
-                        highed.dom.style(icon, {
-                            transform: '',
-                            top: ''
-                        });
-                        highed.dom.style(body, {display: ''});
+                        // highed.dom.style(icon, {
+                        //     transform: 'rotate(90deg)',
+                        //     left: '-5px'
+                        // });
+                        icon.className = 'exp-col-icon fa fa-minus';
+                        highed.dom.style(body, {display: 'block'});
                     } else {
-                        highed.dom.style(icon, {
-                            transform: 'rotate(-90deg)',
-                            top: '-5px'
-                        });
+                        // highed.dom.style(icon, {
+                        //     transform: '',
+                        //     left: ''
+                        // });
+                        icon.className = 'exp-col-icon fa fa-plus';
                         
                         highed.dom.style(body, {display: 'none'});
                     }
@@ -77,9 +81,10 @@ highed.Tree = function (parent) {
                 highed.dom.on(icon, 'click', toggle);
 
                 if (Object.keys(child.children).length === 0) {
-                    highed.dom.style(icon, {
-                        display: 'none'
-                    });
+                    icon.className = 'exp-col-icon fa fa-sliders'
+                    // highed.dom.style(icon, {
+                    //     display: 'none'
+                    // });
                 }
 
                 highed.dom.on(title, 'click', function () {
