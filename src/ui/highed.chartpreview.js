@@ -119,6 +119,9 @@ highed.ChartPreview = function (parent, attributes) {
             updateAggregated();           
 
             attachWYSIWYG();
+
+            resize();
+            highed.dom.ap(pnode || parent, toggleButton);
         } catch (e) {
             e = e.toString();
 
@@ -137,8 +140,7 @@ highed.ChartPreview = function (parent, attributes) {
                 highed.snackBar(e);            
             }
         }
-        resize();
-        highed.dom.ap(pnode || parent, toggleButton);
+       
 
         return chart;
     }
