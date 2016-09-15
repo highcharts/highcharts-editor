@@ -59,6 +59,10 @@ highed.Tree = function (parent) {
                 highed.dom.style(body, {display: 'none'});
 
                 function toggle() {
+                    if (Object.keys(child.children).length === 0) {
+                        return;
+                    }
+
                     expanded = !expanded;
                     if (expanded) {
                         // highed.dom.style(icon, {
