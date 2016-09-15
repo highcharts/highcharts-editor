@@ -63,6 +63,7 @@ highed.ChartCustomizer = function (parent, attributes) {
     function init(foptions) {
         flatOptions = foptions || {};
         list.reselect();
+        advTree.reselect();
     }
 
     function buildBody(entry) {

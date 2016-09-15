@@ -26,6 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.Tree = function (parent) {
     var container = highed.dom.cr('div', 'highed-tree'),
         selectedNode = false,
+        reselectFn = false,
         events = highed.events()
     ;
 
@@ -103,6 +104,10 @@ highed.Tree = function (parent) {
                     title.className = 'parent-title parent-title-selected';
                     selectedNode = title;
 
+                    reselectFn = function () {
+                        events.emit('Select', child, highed.uncamelize(key));
+                    };
+
                     events.emit('Select', child, highed.uncamelize(key));
                 });
 
@@ -112,6 +117,13 @@ highed.Tree = function (parent) {
         }
     }
 
+    function reselect() {
+        if (selectedNode && highed.isFn(reselectFn)) {
+            reselectFn();
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
     highed.dom.ap(parent, container);
@@ -120,6 +132,7 @@ highed.Tree = function (parent) {
     
     return {
         on: events.on,
+        reselect: reselect,
         build: function (tree) {
             build(tree, 0, container);
         }
