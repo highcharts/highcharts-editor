@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100,700|Source Sans:400,300,100' rel='stylesheet' type='text/css'/>
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+
+        <script src="dependencies/highstock.js" type="text/javascript" charset="utf-8"></script>
+        <script src="dependencies/standalone-framework.js" type="text/javascript" charset="utf-8"></script>
+        <script src="dependencies/highcharts-more.js" type="text/javascript" charset="utf-8"></script>
+        <script src="dependencies/highcharts-3d.js" type="text/javascript" charset="utf-8"></script>
+        <script src="dependencies/data.js" type="text/javascript" charset="utf-8"></script>
+        <script src="dependencies/exporting.js"></script>
+        <script src="dependencies/funnel.js"></script>
+        <script src="dependencies/solid-gauge.js"></script>
+
+        <link href="./highcharts-editor.min.css" type="text/css" rel="stylesheet"/>
+        <script src="./highcharts-editor.min.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="./plugins/data-csv.js" type="text/javascript" charset="utf-8"></script>
+        <script src="./plugins/data-difi.js" type="text/javascript" charset="utf-8"></script>
+        <script src="./plugins/data-gspreadsheets.js" type="text/javascript" charset="utf-8"></script>
+        <script src="./plugins/data-socrata.js" type="text/javascript" charset="utf-8"></script>
+
+        <style>
+        	html, body {
+        		margin: 0;
+        		padding: 0;
+        		width:100%;
+        		height:100%;
+        	}
+        </style>
+    </head>
+
+    <body id="main"></body>
+
+    <script>
+
+    	highed.ready(function () {
+    		highed.Editor('main', {});
+    	});
+
+        window.onbeforeunload = function(e) {
+            var electron = require('electron');
+            var remote = require('remote');
+            var dialog = remote.require('dialog');
+            var choice = dialog.showMessageBox(
+                    remote.getCurrentWindow(),
+                    {
+                        type: 'question',
+                        buttons: ['Yes', 'No'],
+                        title: 'Confirm',
+                        message: 'Are you sure you want to quit?'
+                    });
+
+            return choice === 0;
+        };
+    </script>
+</html>
