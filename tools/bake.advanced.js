@@ -28,6 +28,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 var apiDumpURL = 'http://api.highcharts.com/highcharts/option/dump.json',
     request = require('request'),
     fs = require('fs'), 
+    apiSorted = {},
     license = fs.readFileSync(__dirname + '/../LICENSE')
 ;
 
@@ -35,6 +36,31 @@ require('colors');
 
 console.log('Higcharts Advanced Options Updater'.green);
 console.log('Fetching latest API dump...'.bold);
+
+
+function sortAPI(api) {
+    api.forEach(function (entry) {
+        var st = extractType(entry.name);
+        entry.name = removeType(entry.name);
+
+        if (!apiSorted[entry.name]) {            
+
+            apiSorted[entry.name] = entry;
+
+            if (st !== false) {
+                entry.subType = [st];            
+            }
+        } else if (st) {
+            apiSorted[entry.name].subType = apiSorted[entry.name].subType || [];
+            apiSorted[entry.name].subType.push(st);
+            apiSorted[entry.name].values = apiSorted[entry.name].values || entry.values;
+            apiSorted[entry.name].defaults = apiSorted[entry.name].defaults || entry.defaults;
+
+            apiSorted[entry.name].subTypeDefaults = apiSorted[entry.name].subTypeDefaults || {};
+            apiSorted[entry.name].subTypeDefaults[st] = entry.defaults;
+        }
+    });
+}
 
 function writeMeta(data) {
     var body = [
@@ -79,6 +105,8 @@ function process(data) {
         path = parent.replace(/\-\-/g, '.').replace(/\-/g, '.').split('.');
 
         path.forEach(function(p, i) {
+            var c;
+
             if (i === path.length - 1) {                  
 
                 current.children[p] = current.children[p] || {
@@ -86,13 +114,34 @@ function process(data) {
                     children: []
                 };
 
-                current.children[p].entries.push({
+                c = {
                     id: entry.name,
                     shortName: entry.name.substr(entry.name.lastIndexOf('-') + 1),
                     dataType: (entry.returnType || '').toLowerCase(),
                     description: entry.description,
                     values: entry.values || ''
-                });
+                };
+
+                //If it's an object, skip it. It will appear as a leaf.
+                if (c.dataType.indexOf('object') < 0 && !entry.isParent) {
+                    current.children[p].entries.push(c);
+                }   
+
+                // if (c.dataType.indexOf('object') >= 0) {
+                //     c.attributes = [];
+                //     data.forEach(function (child) {
+                //         if (child.parent === c.name) {
+                //             c.attributes.push({
+                //                 dataType: (child.returnType || '').toLowerCase(),
+                //                 name: child.title,
+                //                 title: child.title,
+                //                 tooltipText: child.description,
+                //                 defaults: child.defaults,
+                //                 values: child.values
+                //             });
+                //         }
+                //     });
+                // }
 
             } else {
                 if (typeof current.children[p] === 'undefined') {
@@ -119,6 +168,6 @@ request(apiDumpURL, function (error, response, body) {
     if (error) {
         console.log('[error]'.red, error);
     } else {
-       writeMeta(process(body));
+        writeMeta(process(body));
     }
 });
