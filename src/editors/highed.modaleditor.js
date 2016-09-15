@@ -31,7 +31,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 highed.ModalEditor = function (summoner, attributes, fn) {
     var properties = highed.merge({
-            type: 'full'
+            type: 'full',
+            allowDone: false
         }, attributes), 
         modal = highed.OverlayModal(false, {
             width: '90%',
@@ -73,7 +74,7 @@ highed.ModalEditor = function (summoner, attributes, fn) {
 
     attachToSummoner();
 
-    if (attributes && attributes.allowDone) {
+    if (properties.allowDone) {
         highed.dom.ap(editor.toolbar.center, doneEditing);           
     }
 

@@ -49,13 +49,15 @@ highed.SimpleEditor = function (parent, attributes) {
         events = highed.events(),
 
         container = highed.dom.cr('div', 'highed-container'),
+        expandContainer = highed.dom.cr('div', 'highed-expand-container'),
+
         mainVSplitter = highed.VSplitter(container, {topHeight: '50px'}),
         mainToolbar = highed.Toolbar(mainVSplitter.top, {additionalCSS: ['highed-header']}),
 
         hsplitter = highed.HSplitter(mainVSplitter.bottom, {leftWidth: 60, noOverflow: true}),
 
         vsplitterRight = highed.VSplitter(hsplitter.right, {noOverflow: true}),
-        preview = highed.ChartPreview(vsplitterRight.top, properties.chart),
+        preview = highed.ChartPreview(vsplitterRight.top, {defaultChartOptions: properties.chart, expandTo: expandContainer}),
         importer = highed.DataImporter(vsplitterRight.bottom, properties.importer),        
 
         customizer = highed.ChartCustomizer(hsplitter.left, {
@@ -160,7 +162,7 @@ highed.SimpleEditor = function (parent, attributes) {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    highed.dom.ap(highed.dom.get(parent), container);
+    highed.dom.ap(highed.dom.get(parent), container, expandContainer);
 
     highed.dom.on(window, 'resize', resize);
 
