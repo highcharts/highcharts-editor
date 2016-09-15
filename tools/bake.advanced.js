@@ -119,7 +119,8 @@ function process(data) {
                     shortName: entry.name.substr(entry.name.lastIndexOf('-') + 1),
                     dataType: (entry.returnType || '').toLowerCase(),
                     description: entry.description,
-                    values: entry.values || ''
+                    values: entry.values || '',
+                    defaults: entry.defaultsr
                 };
 
                 //If it's an object, skip it. It will appear as a leaf.
