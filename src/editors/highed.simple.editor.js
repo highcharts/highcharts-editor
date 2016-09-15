@@ -31,6 +31,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *      > options {string|array<string>} - the options to include
  *      > plugins {string|array<sting>} - the plugins to enable
  *    > availableSettings {array<string>} - the settings to include
+ *  @param chart {object} - default chart settings
  */
 highed.SimpleEditor = function (parent, attributes) {
     var properties = highed.merge({
@@ -40,7 +41,8 @@ highed.SimpleEditor = function (parent, attributes) {
                 'subtitle--text',
                 'colors',
                 'chart--backgroundColor'
-            ]
+            ],
+            chart: {}
         }, attributes),
         events = highed.events(),
 

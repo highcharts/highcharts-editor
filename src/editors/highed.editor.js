@@ -402,6 +402,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             }
         });
 
+        chartCustomizer.init(chartPreview.options.customized);
+
         ///////////////////////////////////////////////////////////////////////////
 
         //Public interface

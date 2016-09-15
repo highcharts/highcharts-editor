@@ -100,15 +100,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             if (!properties.options.json) {
                 jsonTab.hide();
             }
-            if (!properties.options.web) {
+            if (!properties.options.plugins || !Object.keys(properties.plugins) === 0) {
                 webTab.hide();
             }
             if (!properties.options.samples) {
                 samplesTab.hide();
-            }
-
-            if (Object.keys(properties.plugins) === 0) {
-                webTab.hide();
             }
 
             tabs.selectFirst();
