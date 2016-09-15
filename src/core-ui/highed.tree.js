@@ -84,8 +84,8 @@ highed.Tree = function (parent) {
 
                 highed.dom.on(title, 'click', function () {
                     if (Object.keys(child.children).length > 0) {
-                        toggle();
-                        return;
+                       // toggle();
+                        //return;
                     }
 
                     if (selectedNode) {
