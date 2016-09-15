@@ -30,19 +30,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * and where the expanded state covers most of the screen (90%)
  */
 highed.ChartPreview = function (parent, attributes) {
-    var events = highed.events(),
-        customizedOptions = {},
-        aggregatedOptions = {},
-        flatOptions = {},   
-        templateOptions = {},
-        properties = highed.merge({
+    var properties = highed.merge({
             defaultChartOptions: {
-                titles: {
+                title: {
                     text: 'Untitled Chart'
                 }
             },
             expandTo: parent
         }, attributes),
+
+        events = highed.events(),
+        customizedOptions = highed.merge({}, properties.defaultChartOptions),
+        aggregatedOptions = {},
+        flatOptions = {},   
+        templateOptions = {},
+      
         throttleTimeout = false,
         chart = false,
         preExpandSize = false,
@@ -99,7 +101,7 @@ highed.ChartPreview = function (parent, attributes) {
         var i;
 
         //We want to work on a copy..
-        options = highed.merge({}, options || properties.defaultChartOptions);
+        options = highed.merge({}, options || aggregatedOptions);
         highed.setAttr(options, 'chart--renderTo', pnode || parent);
 
         if (noAnimation) {
@@ -417,6 +419,7 @@ highed.ChartPreview = function (parent, attributes) {
     ///////////////////////////////////////////////////////////////////////////
 
     //Init the initial chart
+    updateAggregated();
     init();
 
     highed.dom.on(toggleButton, 'click', function () {

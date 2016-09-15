@@ -42,6 +42,7 @@ highed.SimpleEditor = function (parent, attributes) {
                 'chart--backgroundColor'
             ]
         }, attributes),
+        events = highed.events(),
 
         hsplitter = highed.HSplitter(parent, {leftWidth: 60}),
 
@@ -88,8 +89,11 @@ highed.SimpleEditor = function (parent, attributes) {
     resize();
     highed.dom.on(window, 'resize', resize);
 
+    attachToCustomizer();
+
     //Public interface
     return {
-        resize: resize
+        resize: resize,
+        on: events.on
     };
 };
