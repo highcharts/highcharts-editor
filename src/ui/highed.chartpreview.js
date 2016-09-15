@@ -408,6 +408,8 @@ highed.ChartPreview = function (parent, attributes) {
         highed.clearObj(customizedOptions);
         highed.clearObj(flatOptions);
 
+        highed.merge(customizedOptions, properties.defaultChartOptions);
+
         updateAggregated();
         
         init(aggregatedOptions);
