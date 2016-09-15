@@ -100,7 +100,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             if (!properties.options.json) {
                 jsonTab.hide();
             }
-            if (!properties.options.plugins || !Object.keys(properties.plugins) === 0) {
+            if (!Object.keys(properties.plugins) === 0 || !properties.options.plugins) {
                 webTab.hide();
             }
             if (!properties.options.samples) {
@@ -255,13 +255,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         }
         
         function resize(w, h) {
-            var bsize;
+            var bsize,
+                ps = highed.dom.size(parent)
+            ;
 
-            tabs.resize(w, h);
+            tabs.resize(w || ps.w, h || ps.h);
             bsize = tabs.barSize();
             
-            webSplitter.resize(w, h - bsize.h - 20);
-            webList.resize(w, h - bsize.h);
+            webSplitter.resize(w || ps.w, (h || ps.h) - bsize.h - 20);
+            webList.resize(w || ps.w, (h || ps.h) - bsize.h);
         }
 
         ///////////////////////////////////////////////////////////////////////////

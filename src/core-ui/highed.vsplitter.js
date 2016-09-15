@@ -41,11 +41,29 @@ highed.VSplitter = function (parent, attributes) {
     function resize(w, h) {
         var s = highed.dom.size(parent);
 
-        highed.dom.style(container, {
-            width: (s.w || w) + 'px',
-            height: (s.h || h) + 'px'
+         highed.dom.style(container, {
+            width: (w || s.w) + 'px',
+            height: (h || s.h) + 'px'
         });
 
+        if (properties.topHeight.toString().indexOf('px') > 0) {
+            highed.dom.style(top, {
+                height: properties.topHeight
+            });
+
+            highed.dom.style(bottom, {
+                height: (h || s.h) - (parseInt(properties.topHeight, 10)) + 'px'
+            });
+
+        } else {                       
+            highed.dom.style(top, {
+                height: properties.topHeight + '%'
+            });
+
+            highed.dom.style(bottom, {
+                height: (100 - properties.topHeight) + '%'
+            });
+        }
         //highed.dom.style([top, bottom, container], {
         //    width: (w || s.w) + 'px'
         //});
@@ -58,21 +76,15 @@ highed.VSplitter = function (parent, attributes) {
             highed.dom.ap(top, topBody),
             highed.dom.ap(bottom, bottomBody)
         )
-    );
-
-    highed.dom.style(top, {
-        height: properties.topHeight + '%'
-    });
-
-    highed.dom.style(bottom, {
-        height: (100 - properties.topHeight) + '%'
-    });
+    );    
 
     if (properties.noOverflow) {
         highed.dom.style([container, top, bottom], {
             'overflow-x': 'hidden'
         });
     }
+
+    parent = highed.dom.get(parent);
 
     ///////////////////////////////////////////////////////////////////////////
 

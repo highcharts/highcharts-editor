@@ -33,7 +33,10 @@ highed.ChartPreview = function (parent, attributes) {
     var properties = highed.merge({
             defaultChartOptions: {
                 title: {
-                    text: 'Untitled Chart'
+                    text: 'My Chart'
+                },
+                subtitle: {
+                    text: 'My Untitled Chart'
                 }
             },
             expandTo: parent

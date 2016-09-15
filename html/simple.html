@@ -90,7 +90,8 @@
     highed.ready(function () {
         highed.SimpleEditor('editor', {
             importer: {
-                options: 'web csv json samples'
+                options: 'csv json samples',
+                plugins: ''
             }
         }, function (html) {
             highed.dom.get('chart-result').value = html;

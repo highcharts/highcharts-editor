@@ -69,6 +69,8 @@ highed.HSplitter = function (parent, attributes) {
         });
     }
 
+    parent = highed.dom.get(parent);
+
     ///////////////////////////////////////////////////////////////////////////
 
     // Public interface
