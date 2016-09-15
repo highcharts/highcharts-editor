@@ -35,9 +35,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     treatAs: 'csv',
                     fetchAs: 'json',
                     defaultURL: '',
+                    dependencies: [],
                     options: {},
                     filter: function (){}
                 }, defintion);
+
+                if (webImports[name].dependencies) {
+                    highed.include(webImports[name].dependencies);
+                }
             } else {
                 highed.log(1, 'tried to register an import plugin which already exists:', name);
             }
