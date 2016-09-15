@@ -41,9 +41,14 @@ highed.VSplitter = function (parent, attributes) {
     function resize(w, h) {
         var s = highed.dom.size(parent);
 
-        highed.dom.style([top, bottom, container], {
-            width: (w || s.w) + 'px'
+        highed.dom.style(container, {
+            width: (s.w || w) + 'px',
+            height: (s.h || h) + 'px'
         });
+
+        //highed.dom.style([top, bottom, container], {
+        //    width: (w || s.w) + 'px'
+        //});
     }
     
     ///////////////////////////////////////////////////////////////////////////

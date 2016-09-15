@@ -23,8 +23,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-highed.ChartCustomizer = function (parent, owner) {
-    var events = highed.events(),
+highed.ChartCustomizer = function (parent, attributes) {
+    var properties = highed.merge({
+            noAdvanced: false
+        }, attributes),
+        events = highed.events(),
         tabs = highed.TabControl(parent, true),
         simpleTab = tabs.createTab({title: 'SIMPLE'}),
         advancedTab = tabs.createTab({title: 'ADVANCED'}),
@@ -242,7 +245,7 @@ highed.ChartCustomizer = function (parent, owner) {
 
     build();
 
-    if (highed.isNull(highed.meta.optionsAdvanced)) {
+    if (properties.noAdvanced || highed.isNull(highed.meta.optionsAdvanced)) {
         advancedTab.hide();
     } else {
         advTree.build(highed.meta.optionsAdvanced);        

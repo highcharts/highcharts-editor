@@ -58,6 +58,7 @@
     <script src="/src/ui/highed.chartpreview.js" type="text/javascript" charset="utf-8" ></script>
     
     <script src="/src/editors/highed.editor.js" type="text/javascript" charset="utf-8" ></script>
+    <script src="/src/editors/highed.simple.editor.js" type="text/javascript" charset="utf-8" ></script>
     <script src="/src/editors/highed.modaleditor.js" type="text/javascript" charset="utf-8" ></script>
 
     <script src="/plugins/jquery-simple-rest.js" type="text/javascript" charset="utf-8" ></script>
@@ -68,41 +69,33 @@
     <script src="/plugins/data-socrata.js" type="text/javascript" charset="utf-8"></script>
 
     <style>
-    	html, body {
-    		margin: 0;
-    		padding: 0;
-    		width:100%;
-    		height:100%;
+        html, body {
+            margin: 0;
+            padding: 0;
+            width:100%;
+            height:100%;
             background:#F5F5F5;
             font-family: 'Roboto', sans-serif;
-    	}
+        }
     </style>
 
 </head>
 
 <body>
-<div style="padding:10px;" class="highed-box-size">
-    <div style="font-size:26px; font-weight:100;">Highcharts Editor Test</div>
-    <br/><br/>
-    Result:
-    <br/><br/>
-    <textarea id="chart-result" class="highed-box-size" style="font-family:monospace;width:100%;height:400px"></textarea>
-    <br/><br/>
-    <button id="modal-btn" class="highed-imp-button">Create a chart</button>
-</div>
+<div id="editor" style="width:100%; height:100%"></div>
 </body>
 
 <script>
 
-	highed.ready(function () {
-		highed.ModalEditor('modal-btn', {
+    highed.ready(function () {
+        highed.SimpleEditor('editor', {
             importer: {
                 options: 'web csv json samples'
             }
         }, function (html) {
-			highed.dom.get('chart-result').value = html;
-		});
-	});
+            highed.dom.get('chart-result').value = html;
+        });
+    });
 
 </script>
 </html>

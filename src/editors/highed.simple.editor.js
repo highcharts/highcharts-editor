@@ -36,15 +36,16 @@ highed.SimpleEditor = function (parent, attributes) {
             importer: {}
         }, attributes),
 
-        hsplitter = highed.HSplitter(parent),
+        hsplitter = highed.HSplitter(parent, {leftWidth: 60}),
 
         vsplitterRight = highed.VSplitter(hsplitter.right),
         preview = highed.ChartPreview(vsplitterRight.top, properties.chart),
         importer = highed.DataImporter(vsplitterRight.bottom, properties.importer),
 
-        vsplitterLeft = highed.VSplitter(hsplitter.left),
-        customizer = highed.ChartCustomizer(vsplitterLeft.top),
-        bottomToolbar = highed.Toolbar(vsplitterLeft.bottom)
+
+        customizer = highed.ChartCustomizer(hsplitter.left, {
+            noAdvanced: true
+        })
     ;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -53,17 +54,28 @@ highed.SimpleEditor = function (parent, attributes) {
      *  @memberof highed.SimpleEditor
      */
     function resize() {
+        var ps = highed.dom.size(parent);
 
+        vsplitterRight.resize(ps.w, ps.h);
+
+        hsplitter.resize(ps.w, ps.h);
+
+        preview.resize(ps.w, ps.h);
+        importer.resize(ps.w, ps.h);
+        customizer.resize(ps.w, ps.h);
     }
 
     ///////////////////////////////////////////////////////////////////////////
 
-    customizer.on('PropertyChange', chartPreview.options.set);
-    importer.on('ImportCSV', chartPreview.data.csv);
-    importer.on('ImportJSON', chartPreview.data.json);
-    importer.on('ImportChartSettings', chartPreview.data.settings);
+    customizer.on('PropertyChange', preview.options.set);
+    importer.on('ImportCSV', preview.data.csv);
+    importer.on('ImportJSON', preview.data.json);
+    importer.on('ImportChartSettings', preview.data.settings);
 
     ///////////////////////////////////////////////////////////////////////////
+
+    resize();
+    highed.dom.on(window, 'resize', resize);
 
     //Public interface
     return {
