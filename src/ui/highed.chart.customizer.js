@@ -42,6 +42,7 @@ highed.ChartCustomizer = function (parent, attributes) {
         advTree = highed.Tree(advSplitter.left),
 
         flatOptions = {},
+        chartOptions = {},
 
         highlighted = false
     ;
@@ -60,9 +61,11 @@ highed.ChartCustomizer = function (parent, attributes) {
         splitter.resize(w, h - bsize.h - 10);
     }
 
-    function init(foptions) {
+    function init(foptions, coptions) {
         flatOptions = foptions || {};
+        chartOptions = coptions || flatOptions;
         list.reselect();
+        buildTree();
         advTree.reselect();
     }
 
@@ -224,6 +227,14 @@ highed.ChartCustomizer = function (parent, attributes) {
         }
     }
 
+    function buildTree() {
+        if (properties.noAdvanced || highed.isNull(highed.meta.optionsAdvanced)) {
+            advancedTab.hide();
+        } else {
+            advTree.build(highed.meta.optionsAdvanced, flatOptions);        
+        }
+    }
+
     function build() {
         Object.keys(highed.meta.optionsExtended.options).forEach(function (key) {
             if (!shouldInclude(highed.meta.optionsExtended.options[key])) {
@@ -235,6 +246,8 @@ highed.ChartCustomizer = function (parent, attributes) {
                 title: key
             });
         });
+
+        buildTree();
     }
 
     function focus(thing, x, y) {
@@ -260,15 +273,17 @@ highed.ChartCustomizer = function (parent, attributes) {
         highlighted = false;
     });
 
-    advTree.on('Select', function (item, selected) {
+    advTree.on('Select', function (item, selected, arrIndex) {
         var table = highed.dom.cr('table', 'highed-customizer-table');
         advBody.innerHTML = '';
 
-        item.entries.forEach(function (entry) {
+        Object.keys(item.entries).forEach(function (key) {
+            var entry = item.entries[key];
+            
             highed.dom.ap(table,
                 highed.InspectorField(
                     entry.values ?  'options' : (entry.dataType || 'string'), 
-                    (highed.getAttr(flatOptions, entry.id)  || entry.defaults), 
+                    (highed.getAttr(chartOptions, entry.id)  || entry.defaults), 
                     {
                         title: highed.uncamelize(entry.shortName),
                         tooltip: entry.description,
@@ -276,7 +291,8 @@ highed.ChartCustomizer = function (parent, attributes) {
                         custom: {},
                         attributes: entry.attributes || []
                     },
-                    function (newValue) {           
+                    function (newValue) {       
+                        console.log(arrIndex);    
                         events.emit('PropertyChange', entry.id, newValue);
                     }
                 )
@@ -295,11 +311,7 @@ highed.ChartCustomizer = function (parent, attributes) {
 
     build();
 
-    if (properties.noAdvanced || highed.isNull(highed.meta.optionsAdvanced)) {
-        advancedTab.hide();
-    } else {
-        advTree.build(highed.meta.optionsAdvanced);        
-    }
+    
 
     return {
         /* Listen to an event */

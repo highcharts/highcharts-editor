@@ -76,7 +76,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
                 return input;
             },
             range: function (val, callback) {
-                var f = fields.string(val, callback),
+                var f = highed.dom.cr('input', 'highed-field-input'),
                     indicator = highed.dom.cr('div', 'highed-field-range-indicator', '&nbsp;'),
                     nullIt = highed.dom.cr('span', 'highed-icon highed-field-range-null fa fa-undo', '')
                 ;  
@@ -91,6 +91,10 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
                     indicator.innerHTML = f.value;
                 });
 
+                highed.dom.on(input, 'change', function () {
+                    tryCallback(callback, input.value);
+                });
+
                 if ((val || value) == null || ((val || value)) == 'null') {
                     indicator.innerHTML = 'auto';
                 } else if (!highed.isNull(val || value)) {
@@ -98,6 +102,8 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
                 } else {
                     indicator.innerHTML = '&nbsp;';
                 }
+
+                f.value = val || value;
 
                 highed.dom.on(nullIt, 'click', function () {
                     f.value = 0;
@@ -168,7 +174,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
             object: function (val, callback) {
                 //Create a sub-table of options
                 var stable = highed.dom.cr('table', 'highed-customizer-table'),
-                    wasUndefined = highed.isNull(val)
+                    wasUndefined = highed.isNull(val || value)
                 ;
 
                 val = val || {};

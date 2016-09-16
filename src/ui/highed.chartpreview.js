@@ -47,6 +47,7 @@ highed.ChartPreview = function (parent, attributes) {
         aggregatedOptions = {},
         flatOptions = {},   
         templateOptions = {},
+        chartOptions = {},
       
         throttleTimeout = false,
         chart = false,
@@ -116,7 +117,9 @@ highed.ChartPreview = function (parent, attributes) {
             //This is super ugly.
             customizedOptions.series = customizedOptions.series || [];
             highed.merge(customizedOptions.series, chart.options.series);
-            updateAggregated();           
+            updateAggregated();    
+
+            highed.merge(chartOptions, chart.options);       
 
             attachWYSIWYG();
 
@@ -447,7 +450,8 @@ highed.ChartPreview = function (parent, attributes) {
         options: {
             set: set,
             customized: aggregatedOptions,
-            flat: flatOptions
+            flat: flatOptions,
+            chart: chartOptions
         },
 
         data: {

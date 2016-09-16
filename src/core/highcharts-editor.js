@@ -204,6 +204,10 @@ var highed = {
     uncamelize: function (str) {
         var s = '';
 
+        if (!str) {
+            return str;
+        }
+
         if (str.length < 0 || !str) {
             return str;
         }
@@ -344,8 +348,10 @@ var highed = {
         path = path.replace(/\-\-/g, '.').replace(/\-/g, '.').split('.');
 
         path.forEach(function(p, i) {
-            if (i === path.length - 1) {    
-                result = current[p];                 
+            if (i === path.length - 1) {  
+                if (typeof current !== 'undefined') {
+                    result = current[p];                                     
+                } 
             } else {
                 if (typeof current[p] === 'undefined') {
                     current = current[p] = {};

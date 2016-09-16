@@ -353,7 +353,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 );
                 dataExp.buildPluginUI();
             } else if (thing.id === 'customize') {
-                chartCustomizer.init(chartPreview.options.customized);                
+                chartCustomizer.init(chartPreview.options.customized, chartPreview.options.chart);                
             }
         });
 

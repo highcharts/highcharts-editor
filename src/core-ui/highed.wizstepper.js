@@ -201,23 +201,18 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
     highed.dom.ap(indicatorParent, indicators);
     highed.dom.ap(bodyParent, body);
 
-    // addStep({title: 'Data'});
-    // addStep({title: 'Templates'});
-    // addStep({title: 'Customize'});
-    // addStep({title: 'Use!'});
-
     ///////////////////////////////////////////////////////////////////////////
 
     return {
         on: events.on,
         addStep: addStep,
         next: next,
+        resize: resize,
         previous: previous,
         /** The main body
          *  @memberof highed.WizardStepper
          *  @type {domnode} 
          */
-        body: body,
-        resize: resize
+        body: body
     };
 };

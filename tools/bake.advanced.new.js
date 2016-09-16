@@ -53,7 +53,7 @@ function extractType(str) {
 function removeType(str) {
     var t = extractType(str);
 
-    if (t) {        
+    if (t) {
         return str.replace('<' + t + '>', '');
     }
     return str;
@@ -111,10 +111,8 @@ function process(data) {
         return false;
     }
 
-    sortAPI(data);
-
     data.forEach(function (entry) {
-        var parent = entry.parent || removeType(entry.name),
+        var parent = entry.parent || 'global',
             current = tree,
             path,
             nitm
@@ -131,10 +129,6 @@ function process(data) {
 
         parent = removeType(parent);
         path = parent.replace(/\-\-/g, '.').replace(/\-/g, '.').split('.');
-
-        if (entry.name.indexOf('series') !== 0) {
-           // return;
-        }
 
         // if (path.length === 1) {
 
@@ -154,7 +148,8 @@ function process(data) {
             if (i === path.length - 1) {                  
 
                 current.children[p] = current.children[p] || {
-                    entries: {},
+                    dataType: '',
+                    entries: [],
                     children: {}
                 };
 
@@ -165,29 +160,23 @@ function process(data) {
                     dataType: (entry.returnType || '').toLowerCase(),
                     description: entry.description,
                     values: entry.values || undefined,
-                    defaults: entry.defaultsr,
-                    subType: apiSorted[entry.name].subType                    
+                    defaults: entry.defaultsr                    
                 };
 
                 if (c.dataType.indexOf('array') === 0 && entry.isParent) {
-                    //current.children[p] = c;
-                    if (current.children[p]) {
-                        current.children[p].isInstancedArray = true;
-                        current.children[p].shortName = p;
-                        current.children[p].id = p;
-                    } //else {
-                    //     c.isInstancedArray = true;
-                    //     current.children[p].entries[c.id] = c;                        
-                    // }
-                    //c.entries = [];
-                    //c.children = {};
+                    current.children[p] = c;
+                    current.children[p].isInstancedArray = true;
+                    current.children[p].entries = [];
+                    current.children[p].children = {};
+
                     //Now we have an interesting problem, because the children appear
                     //as nodes in the general tree. 
                 
                 //If it's an object, skip it. It will appear as a leaf.
                 } else if (c.dataType.indexOf('object') < 0 && !entry.isParent) {
-                    current.children[p].entries[c.id] = c;
+                    current.children[p].entries.push(c);
                 }  else if (entry.isParent) {
+                    current.isArray = true;
                     current.id = entry.name;
                     current.dataType = (entry.returnType || '').toLowerCase();
                 }
@@ -212,7 +201,7 @@ function process(data) {
                 if (typeof current.children[p] === 'undefined') {
 
                     current.children[p] = {
-                        entries: {},
+                        entries: [],
                         children: {}
                     };
 
@@ -233,7 +222,6 @@ request(apiDumpURL, function (error, response, body) {
     if (error) {
         console.log('[error]'.red, error);
     } else {
-
         writeMeta(process(body));
     }
 });
