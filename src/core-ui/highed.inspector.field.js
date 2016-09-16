@@ -23,12 +23,24 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-/* An editable field
- * @type - the type of widget to use
- * @value - the current value of the field
- * @properties - the properties for the widget
- * @fn - the function to call when the field is changed
- * @returns a DOM node containing the field + label
+/** An editable field
+ *  Creates a table row with thre columns:
+ *    - label
+ *    - widget
+ *    - help icon
+ *  @param type {enum} - the type of widget to use
+ *    > string
+ *    > number
+ *    > range
+ *    > boolean
+ *    > color
+ *    > font
+ *    > options
+ *    > object
+ *  @param value {anything} - the current value of the field
+ *  @param properties {object} - the properties for the widget
+ *  @param fn {function} - the function to call when the field is changed
+ *  @returns {domnode} - a DOM node containing the field + label wrapped in a tr
  */
 highed.InspectorField = function (type, value, properties, fn, nohint) {
     var 

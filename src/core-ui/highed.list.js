@@ -23,6 +23,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+/** A list component
+ *  Creates a list with selectable items
+ *  @constructor
+ *  @param parent {domnode} - the node to attach the list to
+ */
 highed.List = function (parent) {
     var container = highed.dom.cr('div', 'highed-list'),
         selectedItem = false,
@@ -32,15 +37,17 @@ highed.List = function (parent) {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    /* Add an item to the list
-     * @item - the item meta for the item to add
-     *
-     * Meta definition: {
-     *   title: '',
-     *   click: <function callback>
-     * }
-     *
-     * @returns an interface to interact with the item
+    /** Add an item to the list
+     * @memberof highed.List
+     * @param item {object} - the item meta for the item to add
+     *   > title {string} - the title as displayed in the list
+     *   > id {anything} - the id of the item: used for `highed.List.on('Select')`
+     *   > click {function} - function to call when clicking the item
+     * @returns {object} - an interface to interact with the item
+     *   > id {anything} - the item id
+     *   > title {string} - the title of the item
+     *   > node {domnode} - the dom node for the item
+     *   > select {function} - selects the item if called
      */
     function addItem(item) {
         var node = highed.dom.cr('a', 'item', item.title),
@@ -62,7 +69,6 @@ highed.List = function (parent) {
         }
 
         highed.dom.on(node, 'click', select);
-
         highed.dom.ap(container, node);
 
         iexports = {
@@ -78,17 +84,12 @@ highed.List = function (parent) {
             select();
         }
 
-        // if (items.length < 2) {
-        //     highed.dom.style(container, {display: 'none'});
-        // } else {
-        //     highed.dom.style(container, {display: ''});
-        // }
-
         return iexports;
     }
 
-    /* Add a set of items to the list
-     * @items - an array of items to add
+    /** Add a set of items to the list
+     *  @memberof highed.List
+     *  @params {array<object>} items - an array of items to add
      */
     function addItems(items) {
         if (highed.isArr(items)) {
@@ -96,13 +97,16 @@ highed.List = function (parent) {
         }
     }
 
-    /* Clear all the items in the list
+    /** Clear all the items in the list
+     *  @memberof highed.List
      */
     function clear() {
         container.innerHTML = '';
     }
 
-    /* Force resize of the list */
+    /** Force resize of the list 
+     *  @memberof highed.List
+     */
     function resize() {
         var ps = highed.dom.size(parent);
 
@@ -112,25 +116,35 @@ highed.List = function (parent) {
         }); 
     }
 
-    /* Show the list */
+    /** Show the list 
+    *  @memberof highed.List
+    */
     function show() {
         highed.dom.style(container, {
 
         });
     }
 
-    /* Hide the list */
+    /** Hide the list 
+     *  @memberof highed.List
+     */
     function hide() {
 
     }
 
-    /* Select the first item */
+    /** Select the first item 
+     *  @memberof highed.List
+     */
     function selectFirst() {
         if (items.length > 0) {
             items[0].select();
         }
     }
 
+    /** Select an item
+     *  @memberof highed.List
+     *  @param which {string} - the id of the item to select
+     */
     function select(which) {
         items.some(function (item) {
             if (which === item.title) {
@@ -140,16 +154,26 @@ highed.List = function (parent) {
         });
     }
 
+    /** Reselect the current item
+     *  @memberof highed.List
+     */
     function reselect() {
         if (selectedItem) {
             selectedItem.select();
         }
     }
 
+    /** Count the number of items currently in the list
+     *  @memberof highed.List
+     */
     function countItems() {
         return items.length;
     }
 
+    /** Get the selected item
+     *  @memberof highed.List
+     *  @returns {object} - the selected item
+     */
     function selected() {
         return selectedItem;
     }

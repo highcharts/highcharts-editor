@@ -25,18 +25,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 (function () {
 
-    /* Font picker 
-     * @fn - the function to call when things change
-     * @style - the current style object
-     *
-     * Note that this must be attached to the document manually
-     *
-     * Creates a small font picking widget with:
+    /** Font picker 
+     *  Creates a small font picking widget with:
      *      - bold
      *      - font family
      *      - font size
      *      - color
-     * options.
+     *  options. Note that this must be attached to the document manually
+     *  @param fn {function} - the function to call when things change
+     *  @param style {object} - the current style object
+     *    > fontFamily {string} - the font family
+     *    > color {string} - the font color
+     *    > fontWeight {string} - the current font weight
+     *    > fontStyle {string} - the current font style
+     *  @returns {object}
+     *    > container {domnode} - the body of the picker
      */
     highed.FontPicker = function (fn, style) {
         var container = highed.dom.cr('div', 'highed-font-picker'),

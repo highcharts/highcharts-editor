@@ -40,6 +40,8 @@ highed.dom = {
         var children = (Array.prototype.slice.call(arguments));
         children.splice(0, 1);
 
+        target = highed.dom.get(target);
+        
         if (!highed.isNull(target) && typeof target.appendChild !== 'undefined') {
             children.forEach(function (child) {
                 if (highed.isArr(child)) {

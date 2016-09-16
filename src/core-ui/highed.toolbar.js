@@ -23,8 +23,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-/* A standard toolbar.
- * @parent - the node to attach the toolbar to
+/** A standard toolbar.
+ *  @constructor
+ *  @param parent {domnode} - the node to attach the toolbar to
  */
 highed.Toolbar = function (parent, attributes) {
     var properties = highed.merge({
@@ -39,10 +40,11 @@ highed.Toolbar = function (parent, attributes) {
 
     ///////////////////////////////////////////////////////////////////////////
     
-    /* Add an icon to the toolbar
-     * @icon - an object containing the icon settings. Valid properties are:
-     *            * css: the additional css class(s) to use
-     *            * click: the function to call when the icon is clicked
+    /** Add an icon to the toolbar
+     *  @memberof highed.Toolbar
+     *  @param icon {object} - an object containing the icon settings.
+     *    > css {array} - the additional css class(s) to use
+     *    > click {function} - the function to call when the icon is clicked
      */
     function addIcon(icon) {
         var i = highed.dom.cr('div', 'highed-icon fa ' + (icon.css || ''));
@@ -69,10 +71,26 @@ highed.Toolbar = function (parent, attributes) {
     ///////////////////////////////////////////////////////////////////////////
     
     return {
-        container: container,
+        /** The toolbar container
+         *  @type {domnode}
+         *  @memberof highed.Toolbar
+         */
+        container: container,        
         addIcon: addIcon,
+        /** The left part of the toolbar
+         *  @type {domnode}
+         *  @memberof highed.Toolbar
+         */
         left: left,
+        /** The center part of the toolbar
+         *  @type {domnode}
+         *  @memberof highed.Toolbar
+         */
         center: center,
+        /** The right part of the toolbar
+         *  @type {domnode}
+         *  @memberof highed.Toolbar
+         */
         right: right
     };
 };

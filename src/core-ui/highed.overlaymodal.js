@@ -24,11 +24,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** Turn a DOM node into an overlay 
- * @memberof! highed#
- * @function highed.OverlayModal
- * @param {object} contents - the DOM node to wrap. Properties is an object as such: `{wdith, height, minWidth, minHeight}`
- * @param {object} attributes - properties for the modal
- * @return {object} - A new instance of OverlayModal
+ *  @constructor
+ *  @param {object} contents - the DOM node to wrap. Properties is an object as such: `{wdith, height, minWidth, minHeight}`
+ *  @param {object} attributes - properties for the modal
+ *  @return {object} - A new instance of OverlayModal
  */
 highed.OverlayModal = function (contents, attributes) {
     var container = highed.dom.cr('div', 'highed-overlay-modal'),
@@ -46,6 +45,9 @@ highed.OverlayModal = function (contents, attributes) {
 
     ///////////////////////////////////////////////////////////////////////////
 
+    /** Show the modal
+     *  @memberof highed.OverlayModal
+     */
     function show() {
         if (visible) return;
 
@@ -72,6 +74,10 @@ highed.OverlayModal = function (contents, attributes) {
         visible = true;
     }
 
+    /** Hide the modal
+     *  @memberof highed.OverlayModal
+     *  @param suppress {boolean} - supress the hide event emitting
+     */
     function hide(supress) {
         if (!visible) return;
 
@@ -126,14 +132,11 @@ highed.OverlayModal = function (contents, attributes) {
          *
          * @return a function that can be called to unbind the listener
          */
-        on: events.on,
-        /** Show the modal
-         */
-        show: show,
-        /** Hide the modal
-         */
+        on: events.on,        
+        show: show,        
         hide: hide,
         /** The container DOM node
+         *  @memberof highed.OverlayModal
          */
         body: container
     };

@@ -23,8 +23,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-
-highed.ContextMenu = function (stuff, onClose) {
+/** A context menu component
+ *  Does a typicall right-click menu. 
+ *  @constructor
+ *  @param stuff {object} - things to add (optional)
+ *      > title {string} - the title of the entry
+ *      > click {function} - function to call when selecting the item
+ */
+highed.ContextMenu = function (stuff) {
     var container = highed.dom.cr('div', 'highed-ctx-container'),
         visible = false,
         dimHide = false
@@ -32,6 +38,10 @@ highed.ContextMenu = function (stuff, onClose) {
 
     ///////////////////////////////////////////////////////////////////////////
 
+    /** Add an entry to the menu
+     *  @memberof highed.ContextMenu
+     *  @pram entry {object} - the definition of the entry to add 
+     */
     function addEntry(entry) {
         var item = highed.dom.cr('div', 'highed-ctx-item', entry.title),
             right = highed.dom.cr('div', 'ctx-child-icon fa fa-angle-right'),
@@ -68,6 +78,11 @@ highed.ContextMenu = function (stuff, onClose) {
         );
     }
 
+    /** Show the menu
+     /* @memberof highed.ContextMenu
+     *  @param x {number} - the x position
+     *  @param y {number} - the y position
+     */
     function show(x, y) {
         var psize = highed.dom.size(document.body),
             size = highed.dom.size(container)
@@ -94,6 +109,9 @@ highed.ContextMenu = function (stuff, onClose) {
         dimHide = highed.showDimmer(hide, true, true, 10);
     }
 
+    /** Hide the menu
+     *  @memberof highed.ContextMenu
+     */
     function hide() {
         if (!visible) return;
 
@@ -109,6 +127,10 @@ highed.ContextMenu = function (stuff, onClose) {
         visible = false;
     }
 
+    /** Build a menu
+     *  @memberof highed.ContextMenu
+     *  @param def {array<object>} - an array of entries
+     */
     function build(def) {
         container.innerHTML = '';
 

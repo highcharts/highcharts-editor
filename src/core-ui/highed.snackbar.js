@@ -60,10 +60,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     ///////////////////////////////////////////////////////////////////////////
 
-    /*  Show a snackbar 
-     *  @stitle - the snackbar title
-     *  @saction - the snackbar action text
-     *  @fn - the function to call when clicking the action
+    /**  Show a snackbar 
+     *   @param stitle {string} (optional) - the snackbar title
+     *   @param saction {string} (optional) - the snackbar action text
+     *   @param fn {function} (optional) - the function to call when clicking the action
      */
     highed.snackBar = function (stitle, saction, fn) {
         title.innerHTML = stitle.toUpperCase();

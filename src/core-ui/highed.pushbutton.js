@@ -23,10 +23,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-/* A simple toggle button component
- * @parent (optional) - the parent to attach the button to
- * @icon - the button icon
- * @state - the innitial state of the button
+/** A simple toggle button component
+ *  @constructor
+ *  @param parent {domnode} (optional) - the parent to attach the button to
+ *  @param icon {string} - the button icon
+ *  @param state {boolean} - the innitial state of the button
  */
 highed.PushButton = function (parent, icon, state) {
     var button = highed.dom.cr('span', 'highed-pushbutton fa fa-' + icon),
@@ -41,6 +42,10 @@ highed.PushButton = function (parent, icon, state) {
         }
     }
 
+    /** Set the current state
+     *  @memberof highed.PushButton
+     *  @param flag {boolean} - the new state
+     */
     function set(flag) {
         state = flag;
         updateCSS();
@@ -60,6 +65,10 @@ highed.PushButton = function (parent, icon, state) {
 
     return {
         set: set,
+        /** The button
+         * @memberof highed.PushButton
+         * @type {domnode}
+         */
         button: button,
         on: events.on
     };

@@ -23,6 +23,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+/** A wizard-type stepper
+ *  @constructor
+ *  @param bodyParent {domnode} - the node to attach the body to
+ *  @param indiatorParent {domnode} - the node to attach the indicators to
+ *  @param attributes {object} - the settings for the stepper
+ *    > indicatorPos {enum} - the indicator alignment
+ *       > top
+ *       > bottom
+ */
 highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
     var properties = highed.merge({
             indicatorPos: 'top'         
@@ -49,8 +58,13 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
         });
     }
     
-    /* Add a new step
-     * @step - an object describing the step
+    /** Add a new step
+     *  @param step {object} - an object describing the step
+     *    > title {string} - the step title
+     *  @returns {object} - interface to manipulate the step
+     *    > activate {function} - function to activate the step
+     *    > bubble {domnode} - the node for the bubble
+     *    > body {domnode} - the node for the step body
      */
     function addStep(step) {        
         var stepexports = {
@@ -151,21 +165,29 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
         return stepexports;
     }
 
-    /* Go to the next step */
+    /** Go to the next step 
+     *  @member of highed.WizardStepper
+     */
     function next() {
         if (activeStep && activeStep.number < stepCount) {
             steps[activeStep.number].activate();
         }
     }
 
-    /* Go to the previous step */
+    /** Go to the previous step 
+     *  @member of highed.WizardStepper
+     */
     function previous() {
         if (activeStep && activeStep.number > 1) {
             steps[activeStep.number - 2].activate();
         }
     }
 
-    /* Resize */
+    /** Force a resize of the splitter
+     *  @memberof highed.WizardStepper
+     *  @param w {number} - the width of the stepper (will use parent if null)
+     *  @param h {number} - the height of the stepper (will use parent if null)
+     */
     function resize(w, h) {
         var ps = highed.dom.size(bodyParent);
 
@@ -191,6 +213,10 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
         addStep: addStep,
         next: next,
         previous: previous,
+        /** The main body
+         *  @memberof highed.WizardStepper
+         *  @type {domnode} 
+         */
         body: body,
         resize: resize
     };

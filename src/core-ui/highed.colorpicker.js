@@ -35,11 +35,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         highed.dom.ap(document.body, container);
     });
 
-    /* Color picker 
-     * @x - the x position to display the picker at
-     * @y - the y position to display the picker at
-     * @current - the current color
-     * @fn - the function to call when the color changes
+    /** Color picker 
+     *  @param x {number} - the x position to display the picker at
+     *  @param y {number} - the y position to display the picker at
+     *  @param current {colorstring} - the current color
+     *  @param fn {function} - the function to call when the color changes
      */
     highed.pickColor = function (x, y, current, fn) {
         var windowSize = highed.dom.size(document.body),

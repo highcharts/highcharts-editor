@@ -41,6 +41,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     highed.dom.on(container, 'mouseout', hide);
     highed.dom.on(container, 'click', hide);
 
+    /** Show a tooltip
+     *  @param x {number} - the x position of the tooltip
+     *  @param y {number} - the y position of the tooltip
+     *  @param tip {string} - the title
+     *  @param blowup {boolean}  - blow the tooltip up
+     */
     highed.Tooltip = function (x, y, tip, blowup) {
         highed.dom.style(container, {
             opacity: 1,

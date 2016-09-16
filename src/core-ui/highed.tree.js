@@ -23,6 +23,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+/** Tree component
+ *  @constructor
+ *  @param parent {domnode} - the node to attach the tree to
+ */
 highed.Tree = function (parent) {
     var container = highed.dom.cr('div', 'highed-tree'),
         selectedNode = false,
@@ -32,6 +36,12 @@ highed.Tree = function (parent) {
 
     ///////////////////////////////////////////////////////////////////////////
     
+    /** Build the tree
+     *  @memberof highed.Tree
+     *  @param tree {object} - the tree to display
+     *    > children {object} - the children of the node
+     *    > entries {array} - array of orphan children 
+     */
     function build(tree, level, pnode) {
 
         level = level || 0;
@@ -66,19 +76,10 @@ highed.Tree = function (parent) {
 
                     expanded = !expanded;
                     if (expanded) {
-                        // highed.dom.style(icon, {
-                        //     transform: 'rotate(90deg)',
-                        //     left: '-5px'
-                        // });
                         icon.className = 'exp-col-icon fa fa-minus';
                         highed.dom.style(body, {display: 'block'});
                     } else {
-                        // highed.dom.style(icon, {
-                        //     transform: '',
-                        //     left: ''
-                        // });
-                        icon.className = 'exp-col-icon fa fa-plus';
-                        
+                        icon.className = 'exp-col-icon fa fa-plus';                        
                         highed.dom.style(body, {display: 'none'});
                     }
                 }
@@ -87,20 +88,13 @@ highed.Tree = function (parent) {
 
                 if (Object.keys(child.children).length === 0) {
                     icon.className = 'exp-col-icon fa fa-sliders'
-                    // highed.dom.style(icon, {
-                    //     display: 'none'
-                    // });
                 }
 
                 highed.dom.on(title, 'click', function () {
-                    if (Object.keys(child.children).length > 0) {
-                       // toggle();
-                        //return;
-                    }
-
                     if (selectedNode) {
                         selectedNode.className = 'parent-title';
                     }
+
                     title.className = 'parent-title parent-title-selected';
                     selectedNode = title;
 
@@ -117,13 +111,15 @@ highed.Tree = function (parent) {
         }
     }
 
+    /** Reselect the currently selected node
+     *  @memberof highed.Tree
+     */
     function reselect() {
         if (selectedNode && highed.isFn(reselectFn)) {
             reselectFn();
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
     highed.dom.ap(parent, container);

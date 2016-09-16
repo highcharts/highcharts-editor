@@ -23,6 +23,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+/** Vertical splitter
+ *  Splits a view into two vertical cells
+ *  @constructor
+ *  @param parent {domnode} - the parant to attach to
+ *  @param attributes {object} - the settings for the splitter
+ *    > topHeight {number} - the height in percent of the left cell. Alternatively, use '123px' to set a capped size.
+ *    > noOverflow {bool} - wether or not overflowing is allowed
+ */
 highed.VSplitter = function (parent, attributes) {
     var properties = highed.merge({
             topHeight: 40,
@@ -37,7 +45,11 @@ highed.VSplitter = function (parent, attributes) {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    //Force a resize of the splitter
+    /** Force a resize of the splitter
+     *  @memberof highed.VSplitter
+     *  @param w {number} - the width of the splitter (will use parent if null)
+     *  @param h {number} - the height of the splitter (will use parent if null)
+     */
     function resize(w, h) {
         var s = highed.dom.size(parent);
 
@@ -91,7 +103,15 @@ highed.VSplitter = function (parent, attributes) {
     // Public interface
     return {
         resize: resize,
+        /** The dom node for the top cell
+         *  @memberof highed.VSplitter
+         *  @type {domnode}
+         */
         top: topBody,
+        /** The dom node for the bottom cell
+         *  @memberof highed.VSplitter
+         *  @type {domnode}
+         */
         bottom: bottomBody
     };
 };

@@ -23,6 +23,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+/** Horizontal splitter
+ *  Splits a view into two horizontal cells
+ *  @constructor
+ *  @param parent {domnode} - the parant to attach to
+ *  @param attributes {object} - the settings for the splitter
+ *    > leftWidth {number} - the width in percent of the left cell
+ *    > noOverflow {bool} - wether or not overflowing is allowed
+ */
 highed.HSplitter = function (parent, attributes) {
     var properties = highed.merge({
             leftWidth: 40,
@@ -37,7 +45,11 @@ highed.HSplitter = function (parent, attributes) {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    //Force a resize of the splitter
+    /** Force a resize of the splitter
+     *  @memberof highed.HSplitter
+     *  @param w {number} - the width of the splitter (will use parent if null)
+     *  @param h {number} - the height of the splitter (will use parent if null)
+     */
     function resize(w, h) {
         var s = highed.dom.size(parent);
 
@@ -76,7 +88,15 @@ highed.HSplitter = function (parent, attributes) {
     // Public interface
     return {
         resize: resize,
+        /** The dom node for the left cell
+         *  @memberof highed.HSplitter
+         *  @type {domnode}
+         */
         left: leftBody,
+        /** The dom node for the right cell
+         *  @memberof highed.HSplitter
+         *  @type {domnode}
+         */
         right: rightBody
     };
 };

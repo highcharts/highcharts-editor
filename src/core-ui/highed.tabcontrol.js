@@ -23,6 +23,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+/** Standard tabcontrol compopnent
+ *  @constructor
+ *  @param parent {domnode} - the node to attach to
+ *  @param noOverflow {boolean} - set to true to disable scrollbars
+ */
 highed.TabControl = function (parent, noOverflow) {
     var container = highed.dom.cr('div', 'highed-tab-control'),
         paneBar = highed.dom.cr('div', 'tabs'),
@@ -36,7 +41,11 @@ highed.TabControl = function (parent, noOverflow) {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    //Force a resize of the tab control
+    /** Force a resize of the tab control
+     *  @memberof highed.TabControl
+     *  @param w {number} - the width, uses parent width if null
+     *  @param h {number} - the height, uses parent width if null
+     */
     function resize(w, h) {
         var cs = highed.dom.size(parent),
             ps = highed.dom.size(paneBar)
@@ -56,6 +65,18 @@ highed.TabControl = function (parent, noOverflow) {
         }
     }
 
+    /** Select the first tab
+     *  @memberof highed.TabControl
+     */
+    function selectFirst() {
+        tabs.some(function (tab) {
+            if (tab.visible()) {
+                tab.focus();
+                return true;
+            }
+        });
+    }
+
     function updateVisibility() {
         var c = tabs.filter(function (a) {
             return a.visible();
@@ -72,14 +93,7 @@ highed.TabControl = function (parent, noOverflow) {
         }
     }
 
-    function selectFirst() {
-        tabs.some(function (tab) {
-            if (tab.visible()) {
-                tab.focus();
-                return true;
-            }
-        });
-    }
+   
 
     /* Create and return a new tab
      * @properties - the properties for the tab:
@@ -200,6 +214,12 @@ highed.TabControl = function (parent, noOverflow) {
         createTab: Tab,
         resize: resize,
         selectFirst: selectFirst,
+        /** Get the size of the title bar
+         *  @memberof highed.TabControl
+         *  @returns {object}
+         *    > w {number} - the width of the control
+         *    > h {number} - the height of the control
+         */
         barSize: function () {
             return highed.dom.size(paneBar);
         }
