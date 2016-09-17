@@ -23,28 +23,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-/**
- * RGB Color value
- * @typedef {Object} RGBColorObject
- * @property {number} r - red component
- * @property {number} g - green component
- * @property {number} b - blue component
- */
 
+//////////////////////////////////////////////////////////////////////////////
 
- //////////////////////////////////////////////////////////////////////////////
-
-/** 
- * The main highcharts editor namespace
- * @exports highed
- * @namespace highed
- */
+/** The main highcharts editor namespace */
 var highed = {
     schemas: {},
     meta: {},
     plugins: {},
 
-    /* Include something */
+    /** Include something 
+     *  @namespace highed
+     *  @param what {string} - URL to a css or javascript file
+     *  @param fn {function} - function to call when done including the script
+     */
     include: function (what, fn) {
         var n;
 
@@ -78,14 +70,33 @@ var highed = {
         highed.dom.ap(document.head, n);
     },
 
-    /* Clear an object */
+    /** Clear an object 
+      * Deletes all the object attributes.
+      * Useful when needing to clear an object without invalidating references to it
+      * @namespace highed
+      * @param obj {object} - the object to clear
+     */
     clearObj: function (obj) {
         Object.keys(obj).forEach(function (key) {
             delete obj[key];
         });
     },
 
-    /* Preform an AJAX request. Same syntax as jQuery. */
+    /** Preform an AJAX request. Same syntax as jQuery. 
+     *  @namespace highed
+     *  @param p {object} - options
+     *    > url {string} - the URL to call
+     *    > type {enum} - the type of request
+     *    > dataType {enum} - the type of data expected
+     *    > success {function} - function to call on success
+     *    > error {function} - function to call on request fail
+     *    > data {object} - the payload
+     *    > autoFire {boolean} - wether or not to fire the request right away
+     * 
+     *   @emits Error {string} - when there's an error 
+     *   @emits OK {string} - when the request succeeded
+     *   @returns {object} - interface to the request
+     */
     ajax: function (p) {
         var props = highed.merge({
             url: false,
@@ -162,7 +173,9 @@ var highed = {
     },
 
     /** Generate a uuid 
-     * Borrowed from http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+     *  Borrowed from http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+     *  @namespace highed
+     *  @returns {string} - a UUID string
      */
     uuid: function () {
         var d = new Date().getTime(), uuid;
@@ -180,8 +193,9 @@ var highed = {
     },
 
     /** Map an array to an object
-     * @param {array} arr - the array to map
-     * @return {object}
+     *  @namespace highed
+     *  @param {array} arr - the array to map
+     *  @return {object} - an object with the array contents as keys, and their value set to true
      */
     arrToObj: function (arr) {
         var obj = {};
@@ -198,8 +212,10 @@ var highed = {
     },
 
     /** Make a camel back string pretty
-     * @param {string} - the input string
-     * @return {string} - the transformed string
+     *  Transforms e.g. `imACamelBackString` to `Im a camelback string`.
+     *  @namespace highed
+     *  @param {string} - the input string
+     *  @return {string} - the transformed string
      */
     uncamelize: function (str) {
         var s = '';
@@ -223,8 +239,10 @@ var highed = {
     },
 
     /** Clamp a number between min/max
-     * @param {number} - minimum value
-     * @param {number} - maximum value
+     *  @namespace highed
+     *  @param {number} - minimum value
+     *  @param {number} - maximum value
+     *  @returns the clamped value
      */
     clamp: function (min, max, value) {
         if (value < min) return min;
@@ -232,13 +250,14 @@ var highed = {
         return value;
     },
 
-    /** 
-     * Convert a hex value to RGB
+    /** Convert a hex value to RGB
      *
-     * @memberof highed
-     * @method hexToRgb
-     * @param {string} hex - the hex string
-     * @return {RGBColorObject}
+     *  @namespace highed
+     *  @param {string} hex - the hex string
+     *  @return {object} - an object with rgb components
+     *    > r {number} - red
+     *    > g {number} - green
+     *    > b {number} - blue
      */
     hexToRgb: function (hex) {
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -252,9 +271,9 @@ var highed = {
     },
 
     /** Invert a color 
-     * @memberof highed
-     * @param {string} hex - the color to invert
-     * @return {string} new hex color
+     *  @namespace highed
+     *  @param {string} hex - the color to invert
+     *  @return {string} new hex color
      */
     invertHexColor: function (hex) {
         var rgb = highed.hexToRgb(hex),
@@ -273,9 +292,9 @@ var highed = {
     },
 
     /** Return #FFF or #000 based on the intensity of a color
-     * @memberof highed
-     * @param {string} hex - input color
-     * @return {string} the new hex color
+     *  @namespace highed
+     *  @param {string} hex - input color
+     *  @return {string} the new hex color
      */
     getContrastedColor: function (hex) {
         var rgb = highed.hexToRgb(hex),
@@ -289,20 +308,19 @@ var highed = {
     },
 
     /** Convert a string to a bool
-     * @memberof highed
-     * @param {string} what - the string to convert
-     * @return {bool}
+     *  @namespace highed
+     *  @param {string} what - the string to convert
+     *  @return {bool}
      */
     toBool: function (what) {
         return what === 'true' || what === true || what === 'on';
     },
 
-    /**
-     * Set a property based on -- delimited path  
-     * @memberof highed
-     * @param {object} obj - the object to modify
-     * @param {string} path - the path to the attribute to change
-     * @param {(String|Bool|Object|Number)} value - the value to set
+    /** Set a property based on -- delimited path  
+     *  @namespace highed
+     *  @param {object} obj - the object to modify
+     *  @param {string} path - the path to the attribute to change
+     *  @param {anything} value - the value to set
      */
     setAttr: function (obj, path, value, index) {
         var current = obj;
@@ -333,6 +351,12 @@ var highed = {
         });
     },
 
+    /** Get a property based on -- delimited path  
+     *  @namespace highed
+     *  @param {object} obj - the object to traverse
+     *  @param {string} path - the path to the attribute to get
+     *  @returns {anything} - the value or false
+     */
     getAttr: function (obj, path, index) {
         var current = obj,
             result = false
@@ -368,10 +392,9 @@ var highed = {
         return result;
     },
 
-    /**
-     * Deep merge two objects.
+    /** Deep merge two objects.
      * Note: this modifies object `a`!
-     * @memberof highed
+     * @namespace highed
      * @param {object} a - the destination object
      * @param {object} b - the source object
      * @return {object} - argument a
@@ -403,63 +426,64 @@ var highed = {
     },
 
     /** Check if something is null or undefined
-     * @memberof highed
-     * @param {(String|Object|Number)} what - the value to check
-     * @return {bool}
+     *  @namespace highed
+     *  @param {anything} what - the value to check
+     *  @return {bool} - true if nulll
      */
     isNull: function (what) {
         return (typeof what === 'undefined' || what === null);
     },
 
     /** Check if something is a string 
-     * @memberof highed
-     * @param {(String|Object|Number)} - the value to check
-     * @return {bool}
+     *  @namespace highed
+     *  @param {anything} what - the value to check
+     *  @return {bool} - true if string
      */
     isStr: function (what) {
         return (typeof what === 'string' || what instanceof String);
     },
 
     /** Check if something is a number
-     * @memberof highed
-     * @param {(String|Object|Number)} what - the value to check
-     * @return {bool}
+     * @namespace highed
+     *  @param {anything} what - the value to check
+     *  @return {bool} - true if number
      */
     isNum: function(what) {
         return !isNaN(parseFloat(what)) && isFinite(what);
     },
 
     /** Check if a value is a function
-     * @memberof highed
-     * @param {(String|Object|Number)} what - the value to check
-     * @return {bool}
+     * @namespace highed
+     * @param {anything} what - the value to check
+     * @return {bool} - true if function
      */
     isFn: function (what) {
         return (what && (typeof what === 'function') || (what instanceof Function));
     },
 
     /** Check if a value is an array
-     * @memberof highed
-     * @param {(String|Object|Number)} what - the value to check
-     * @return {bool}
+     * @namespace highed
+     * @param {anything} what - the value to check
+     * @return {bool} - true if array
      */
     isArr: function (what) {
         return (!highed.isNull(what) && what.constructor.toString().indexOf("Array") > -1);
     },
 
     /** Check if a value is a boolean
-     * @memberof highed
-     * @param {(String|Object|Number)} what - the value to check
-     * @return {bool}
+     * @namespace highed
+     * @param {anything} what - the value to check
+     * @return {bool} - true if bool
      */
     isBool: function (what) {
         return (what === true || what === false);
     },
 
     /** Check if a value is a basic type
-     * @memberof highed
-     * @param {(String|Object|Number)} what - the value to check
-     * @return {bool} 
+     * A basic type is either a bool, string, or a number
+     * @namespace highed
+     * @param {anything} what - the value to check
+     * @return {bool} - true if basic
      */
     isBasic: function (what) {
         return !highed.isArr(what) && (highed.isStr(what) || highed.isNum(what) || highed.isBool(what) || highed.isFn(what));
@@ -507,7 +531,6 @@ var highed = {
     ///////////////////////////////////////////////////////////////////////////
 
     /** Add a function to call when the document is ready
-     * @memberof highed
      * @param {function} fn - the function to call
      */
     highed.ready = function (fn) {
@@ -521,7 +544,6 @@ var highed = {
     };
 
     /** Set the current log level
-     * @memberof highed
      * @param {number} level - the log level 1..4
      * @param {string} msg - the log message
      */

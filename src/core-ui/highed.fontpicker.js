@@ -32,7 +32,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      *      - font family
      *      - font size
      *      - color
-     *
+     *  
      *  Note that this must be attached to the document manually by appending
      *  the returned container to something.
      *
@@ -49,7 +49,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      *    > color {string} - the font color
      *    > fontWeight {string} - the current font weight
      *    > fontStyle {string} - the current font style
-     *  @returns {object}
+     *  @returns {object} - an interface to the picker
      *    > container {domnode} - the body of the picker
      */
     highed.FontPicker = function (fn, style) {
