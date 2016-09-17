@@ -36,10 +36,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     });
 
     /** Color picker 
+     *  Component to pick colors from the google material design color palette.
+     *  User input is also possible.
+     *
+     *  @example 
+     *  //Show a color picker at [10,10]
+     *  highed.pickColor(10, 10, '#fff', function (color) {
+     *      alert('You selected ' + color + ', great choice!');
+     *  });
+     * 
      *  @param x {number} - the x position to display the picker at
      *  @param y {number} - the y position to display the picker at
-     *  @param current {colorstring} - the current color
+     *  @param current {string} - the current color
      *  @param fn {function} - the function to call when the color changes
+     *    > newColor {string} - the color selected by the user
      */
     highed.pickColor = function (x, y, current, fn) {
         var windowSize = highed.dom.size(document.body),

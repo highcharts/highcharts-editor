@@ -23,8 +23,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-/** Turn a DOM node into an overlay 
+/** Turn a DOM node into an overlay "popup"
+ *
+ *  @example
+ *  //Create an overlay with hello world in it
+ *  highed.OverlayModal(highed.dom.cr('h1', '', 'Hello World!'));
+ *
  *  @constructor
+ *
+ *  @emits Show - when the overlay is shown
+ *  @emits Hide - when the overlay is hidden
+ *
  *  @param {object} contents - the DOM node to wrap. Properties is an object as such: `{wdith, height, minWidth, minHeight}`
  *  @param {object} attributes - properties for the modal
  *  @return {object} - A new instance of OverlayModal
@@ -122,16 +131,6 @@ highed.OverlayModal = function (contents, attributes) {
 
     //Public interface
     return {
-        /** 
-         * Attach an event listener
-         * @instance
-         * @inner
-         * @param {string} event - the event to listen for
-         * @param {function} callback - the callback to execute when the event is emitted
-         * @param {} context (optional) - the value of the this reference in the callback
-         *
-         * @return a function that can be called to unbind the listener
-         */
         on: events.on,        
         show: show,        
         hide: hide,

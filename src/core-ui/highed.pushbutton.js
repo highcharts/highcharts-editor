@@ -24,7 +24,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** A simple toggle button component
+ *
+ *  @example
+ *  //Create a push button with the gear icon attached
+ *  highed.PushButton(document.body, 'gear', false).on('Toggle', function (state) {
+ *      alert('Push button is now ' + state);   
+ *  });
+ *
  *  @constructor
+ *  
+ *  @emits Toggle {boolean} - when the state changes
+ *
  *  @param parent {domnode} (optional) - the parent to attach the button to
  *  @param icon {string} - the button icon
  *  @param state {boolean} - the innitial state of the button

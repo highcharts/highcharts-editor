@@ -24,6 +24,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** A wizard-type stepper
+ *
+ *  @emits Step - when going back/forth
+ *  @emits AddStep - when a new step is added
+ * 
  *  @constructor
  *  @param bodyParent {domnode} - the node to attach the body to
  *  @param indiatorParent {domnode} - the node to attach the indicators to
@@ -59,6 +63,7 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
     }
     
     /** Add a new step
+     *  @memberof highed.WizardStepper
      *  @param step {object} - an object describing the step
      *    > title {string} - the step title
      *  @returns {object} - interface to manipulate the step
@@ -166,7 +171,7 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
     }
 
     /** Go to the next step 
-     *  @member of highed.WizardStepper
+     *  @memberof highed.WizardStepper
      */
     function next() {
         if (activeStep && activeStep.number < stepCount) {
@@ -175,7 +180,7 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
     }
 
     /** Go to the previous step 
-     *  @member of highed.WizardStepper
+     *  @memberof highed.WizardStepper
      */
     function previous() {
         if (activeStep && activeStep.number > 1) {

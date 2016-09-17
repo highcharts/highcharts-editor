@@ -24,6 +24,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** A standard toolbar.
+ *
+ *  @example
+ *  var toolbar = highed.Toolbar('my-node', {
+ *    additionalCSS: ['cool-toolbar']  
+ *  });  
+ *
  *  @constructor
  *  @param parent {domnode} - the node to attach the toolbar to
  */

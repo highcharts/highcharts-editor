@@ -25,6 +25,18 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /** A context menu component
  *  Does a typicall right-click menu. 
+ *  Note that each instance get their own DOM node in the document body.
+ *
+ *  @example
+ *  var ctx = highed.ContextMenu([
+ *     {
+ *         title: "Hello World",
+ *         click: function (e) {
+ *             alert('hello world!');   
+ *         }   
+ *     }
+ *  ]);  
+ *
  *  @constructor
  *  @param stuff {object} - things to add (optional)
  *      > title {string} - the title of the entry
@@ -40,7 +52,9 @@ highed.ContextMenu = function (stuff) {
 
     /** Add an entry to the menu
      *  @memberof highed.ContextMenu
-     *  @pram entry {object} - the definition of the entry to add 
+     *  @param entry {object} - the definition of the entry to add 
+     *    > title {string} - the title of the entry
+     *    > click {function} - the function to call when clicking the item
      */
     function addEntry(entry) {
         var item = highed.dom.cr('div', 'highed-ctx-item', entry.title),
@@ -79,7 +93,7 @@ highed.ContextMenu = function (stuff) {
     }
 
     /** Show the menu
-     /* @memberof highed.ContextMenu
+     *  @memberof highed.ContextMenu
      *  @param x {number} - the x position
      *  @param y {number} - the y position
      */

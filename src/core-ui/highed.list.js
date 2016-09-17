@@ -24,7 +24,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** A list component
+ *
  *  Creates a list with selectable items
+ *
+ *  @example
+ *  var list = highed.List(document.body).addItem({
+ *      title: 'My Item',
+ *      click: function() {
+ *          alert('You clicked the item!');   
+ *      }   
+ *  });  
+ *
  *  @constructor
  *  @param parent {domnode} - the node to attach the list to
  */

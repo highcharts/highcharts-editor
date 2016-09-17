@@ -24,6 +24,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** Tree component
+ *
+ *  @example
+ *  var tree = highed.Tree(document.body).build({
+ *     //Tree data here   
+ *  });
+ * 
+ *  @emits Select {object} - when a node is selected
+ *
  *  @constructor
  *  @param parent {domnode} - the node to attach the tree to
  */

@@ -24,10 +24,26 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** An editable field
+ *
  *  Creates a table row with thre columns:
  *    - label
  *    - widget
  *    - help icon
+ * 
+ *  @example
+ *  //Create a table, append to body, add a color picker to it.
+ *  highed.dom.ap(document.body,
+ *      highed.dom.ap(highed.dom.cr('table'),
+ *          highed.InspectorField('color', '#FFF', {
+ *              title: 'Set the color!'  
+ *          }, function (newValue) {
+ *              highed.dom.style(document.body, {
+ *                  backgroundColor: newValue   
+ *              });
+ *          })
+ *      )
+ *  );
+ *
  *  @param type {enum} - the type of widget to use
  *    > string
  *    > number
@@ -40,6 +56,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @param value {anything} - the current value of the field
  *  @param properties {object} - the properties for the widget
  *  @param fn {function} - the function to call when the field is changed
+ *     > {anything} - the changed value
  *  @returns {domnode} - a DOM node containing the field + label wrapped in a tr
  */
 highed.InspectorField = function (type, value, properties, fn, nohint) {

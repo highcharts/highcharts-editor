@@ -26,11 +26,19 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function () {
 
     /** Show a dimmer backdrop 
-     * @param {function} fn - the function to call when the dimmer is clicked
-     * @param {bool} autohide - set to true to hide the dimmer when it's clicked
-     * @param {bool} transparent - set to true for the dimmer to be transparent
-     * @param {number} zIndex - the z index *offset* 
-     * @return {function} - A function that can be called to hide the dimmer
+     *
+     *  Used to catch input when showing modals, context menues etc.
+     *
+     *  @example
+     *  highed.showDimmer(function () {
+     *       alert('You clicked the dimmer!');
+     *  });
+     *
+     *  @param {function} fn - the function to call when the dimmer is clicked
+     *  @param {bool} autohide - set to true to hide the dimmer when it's clicked
+     *  @param {bool} transparent - set to true for the dimmer to be transparent
+     *  @param {number} zIndex - the z index *offset* 
+     *  @return {function} - A function that can be called to hide the dimmer
      */
     highed.showDimmer = function (fn, autohide, transparent, zIndex) {
         var dimmer = highed.dom.cr('div', 'highed-dimmer'),

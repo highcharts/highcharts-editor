@@ -24,7 +24,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** Standard tabcontrol compopnent
+ *  @example 
+ *  var tabs = highed.TabControl(document.body),
+ *      tab1 = tabs.createTab({title: 'Tab 1'}),
+ *      tab2 = tabs.createTab({title: 'Tab 2'})
+ *  ;
+ *  //Append things to tab1|tab2.body
+ *
  *  @constructor
+ *  
+ *  @emits Focus {object} - when a new tab gets focus.
+ * 
  *  @param parent {domnode} - the node to attach to
  *  @param noOverflow {boolean} - set to true to disable scrollbars
  */
@@ -96,10 +106,16 @@ highed.TabControl = function (parent, noOverflow) {
    
 
     /* Create and return a new tab
+     * @memberof highed.TabControl
+     * @name createTab
      * @properties - the properties for the tab:
-     *   {
-     *      "title": "title of tab"
-     *   }
+     *   > title {string} - the title of the tab
+     * @returns {object} - an interface to the tab
+     *    > hide {function} - hide the tab
+     *    > show {function} - show the tab
+     *    > focus {function} - make the tab active
+     *    > visible {function} - returns true if the tab is visible
+     *    > body {domnode} - the tab body
      */
     function Tab(properties) {
         var tevents = highed.events(),

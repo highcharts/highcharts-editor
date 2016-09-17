@@ -25,6 +25,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /** Vertical splitter
  *  Splits a view into two vertical cells
+ *
+ *  @example
+ *  var splitter = highed.VSplitter(document.body);
+ *  highed.dom.ap(splitter.top, highed.dom.cr('div', '', 'Top!')); 
+ *  highed.dom.ap(splitter.bottom, highed.dom.cr('div', '', 'Bottom!')); 
+ *
  *  @constructor
  *  @param parent {domnode} - the parant to attach to
  *  @param attributes {object} - the settings for the splitter

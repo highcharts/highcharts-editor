@@ -24,7 +24,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** Horizontal splitter
+ *
  *  Splits a view into two horizontal cells
+ *
+ *  @example
+ *  var splitter = highed.HSplitter(document.body);
+ *  highed.dom.ap(splitter.left, highed.dom.cr('div', '', 'Left!')); 
+ *  highed.dom.ap(splitter.right, highed.dom.cr('div', '', 'Right!')); 
+ *
  *  @constructor
  *  @param parent {domnode} - the parant to attach to
  *  @param attributes {object} - the settings for the splitter

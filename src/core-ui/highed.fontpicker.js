@@ -26,12 +26,23 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function () {
 
     /** Font picker 
-     *  Creates a small font picking widget with:
+     *
+     *  Creates a small font picking widget editing of:
      *      - bold
      *      - font family
      *      - font size
      *      - color
-     *  options. Note that this must be attached to the document manually
+     *
+     *  Note that this must be attached to the document manually by appending
+     *  the returned container to something.
+     *
+     *  @example
+     *  var picker = highed.FontPicker(function (newStyle) {
+     *      highed.dom.style(document.body, newStyle);  
+     *  });
+     *
+     *  highed.dom.ap(document.body, picker.container);
+     *
      *  @param fn {function} - the function to call when things change
      *  @param style {object} - the current style object
      *    > fontFamily {string} - the font family

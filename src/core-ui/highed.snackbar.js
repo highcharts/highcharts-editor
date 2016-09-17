@@ -61,6 +61,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     ///////////////////////////////////////////////////////////////////////////
 
     /**  Show a snackbar 
+     *   A snack bar is those info rectangles showing up on the bottom left.
+     *
+     *   @example
+     *   highed.snackBar('Hello world!'); 
+     *
      *   @param stitle {string} (optional) - the snackbar title
      *   @param saction {string} (optional) - the snackbar action text
      *   @param fn {function} (optional) - the function to call when clicking the action
