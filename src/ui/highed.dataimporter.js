@@ -27,7 +27,24 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     var webImports = {};
 
     highed.plugins.import = {
-        /* Install a data import plugin */
+        /** Install a data import plugin 
+          * @namespace highed.plugins.import
+          * @param name {string} - the name of the plugin
+          * @param definition {object} - the plugin definition
+          *   > description {string} - the plugin description
+          *   > treatAs {string} - what to treat the import as: `json|csv`
+          *   > fetchAs {string} - what the expect request return is
+          *   > defaultURL {string} - the default URL
+          *   > depdendencies {array<string>} - set of additional javascript/css to include
+          *   > options {object} - additional user-supplied options
+          *      > label {string} - the title of the option
+          *      > type {string} - the type of the option
+          *      > default {string} - the default value
+          *   > filter {function} - function to call when executing the plugin
+          *      >  url {anything} - request url 
+          *      >  options {object} - contains user-defined options
+          *      >  callback {function} - function to call when the import is done
+          */
         install: function (name, defintion) {
             if (highed.isNull(webImports[name])) {
                 webImports[name] = highed.merge({
@@ -49,10 +66,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         }
     };
 
-    /* Data importer widget
-     * @parent - the node to attach the widget to
-     *
-     * @returns an instance of DataImporter
+    /** Data importer widget
+     *  @constructor
+     *  @emits ImportChartSettings - when importing chart settings
+     *  @emits ImportCSV - when importing CSV
+     *  @emits ImportJSON - when importing JSON
+     *  @param parent {domnode} - the node to attach the widget to
+     *  @param attributes {object} - the settings
+     *     > options {string} - the options to include: `csv json plugins samples`
+     *     > plugins {string} - the plugins to activate (must have been installed first)
      */
     highed.DataImporter = function (parent, attributes) {
         var events = highed.events(),
@@ -254,6 +276,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             highed.snackBar('imported json');
         }
         
+        /** Force a resize of the widget 
+         *  @memberof highed.DataImporter
+         */
         function resize(w, h) {
             var bsize,
                 ps = highed.dom.size(parent)

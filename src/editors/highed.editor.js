@@ -40,7 +40,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       *  Note that plugins must be enabled when creating the editor
       *  for it to be active.
       *
-      *  @namespace highed.plugins
+      *  @namespace highed.plugins.editor
       *
       *  @param name       {string} - the name of the plugin
       *  @param definition {object} - the plugin definition 
@@ -126,7 +126,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     ///////////////////////////////////////////////////////////////////////////
 
     /**The main chart editor object 
-     * @memberof highed
      * @constructor
      * @emits ChartChange - when the chart changes
      *   > {object} - new chart data
@@ -268,8 +267,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         /** 
          * Force a resize of the editor
-         * @inner
-         * @instance 
+         * @memberof highed.Editor
          */
         function resize() {
             var cs = highed.dom.size(container),
@@ -412,16 +410,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         //Public interface
         return {
-            /** 
-             * Attach an event listener
-             * @instance
-             * @inner
-             * @param {string} event - the event to listen for
-             * @param {function} callback - the callback to execute when the event is emitted
-             * @param {} context (optional) - the value of the this reference in the callback
-             *
-             * @return a function that can be called to unbind the listener
-             */
             on: events.on,
             /* Force a resize of the editor */
             resize: resize,

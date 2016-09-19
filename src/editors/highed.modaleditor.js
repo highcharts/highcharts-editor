@@ -25,7 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /** A modal editor
  * @constructor
- * @oaram summoner {domnode} - the node which spawns the editor
+ * @param summoner {domnode} - the node which spawns the editor
  * @param attributes {object} - properties sent to the editor
  * @param fn {function} - function to call when done editing, argument is embeddable HTML
  */

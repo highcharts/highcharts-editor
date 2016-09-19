@@ -63,7 +63,7 @@ highed.ChartCustomizer = function (parent, attributes) {
     ///////////////////////////////////////////////////////////////////////////
 
      /** Force a resize of the editor 
-     *  @memberof highed.SimpleEditor
+     *  @memberof highed.ChartCustomizer
      */
     function resize(w, h) {
         var bsize;
