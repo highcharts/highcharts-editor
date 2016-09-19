@@ -59,7 +59,7 @@ highed.Tree = function (parent) {
         ;
 
         if (!arrayHeader && child.entries.length === 0 && Object.keys(child.children).length === 0) {
-            return;
+           // return;
         }
 
         if (arrayHeader || child.isArrayParent) {
@@ -81,7 +81,7 @@ highed.Tree = function (parent) {
                 if (confirm('Really delete the entry?')) {
                     arr = highed.getAttr(instancedData, child.id, dataIndex);
                     arr = arr.filter(function (b, i) {
-                        return i !== child.dataIndex;
+                        return i !== dataIndex;
                     });
                     highed.setAttr(instancedData, child.id, arr);  
                 }
@@ -166,7 +166,7 @@ highed.Tree = function (parent) {
      *    > children {object} - the children of the node
      *    > entries {array} - array of orphan children 
      */
-    function build(tree, level, pnode, instancedData, dataIndex) {
+    function build(tree, pnode, instancedData, dataIndex) {
 
        // dataIndex = tree.dataIndex || dataIndex;
 
@@ -196,15 +196,12 @@ highed.Tree = function (parent) {
                         children: children,
                         entries: []
                     }, 
-                    ++level, 
                     createNode(tree, tree.shortName, pnode, instancedData, dataIndex, true),
                     instancedData, 
                     dataIndex
                 );  
             } 
         } 
-
-        level = level || 0;
 
         // if (tree.shortName) {
         //     instancedData = instancedData[tree.shortName];
@@ -240,11 +237,12 @@ highed.Tree = function (parent) {
                  if (child.isInstancedArray) {
                     arr = highed.getAttr(instancedData, child.id, dataIndex);
                     if (highed.isArr(arr)) {
-                        return build(child, level, pnode, instancedData, dataIndex);                        
+                        //Skip node creation - will be done later
+                        return build(child, pnode, instancedData, dataIndex);                        
                     } 
                 }
 
-                createNode(child, key, pnode, instancedData, dataIndex, false);                        
+                body = createNode(child, key, pnode, instancedData, dataIndex);                        
 
                 //If the child is an instanced array, we should abort 
                 // if (child.isInstancedArray) {
@@ -316,7 +314,7 @@ highed.Tree = function (parent) {
                 //     events.emit('Select', child, highed.uncamelize(key), child.dataIndex);
                 // });
 
-                build(child, ++level, body, instancedData, child.dataIndex);
+                build(child, body, instancedData, child.dataIndex);
             });
         }
     }
@@ -341,7 +339,7 @@ highed.Tree = function (parent) {
         reselect: reselect,
         build: function (tree, data) {
             container.innerHTML = '';
-            build(tree, 0, container, data, 0);
+            build(tree, container, data, 0);
         }
     };
 };
