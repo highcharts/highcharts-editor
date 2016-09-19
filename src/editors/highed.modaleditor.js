@@ -23,11 +23,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-/* A modal editor
- * @summoner - the node which spawns the editor
- * @attributes - properties sent to the editor
- * @fn - function to call when done editing, argument is embeddable HTML
- * @returns a highed.ModalEditor instance.
+/** A modal editor
+ * @constructor
+ * @oaram summoner {domnode} - the node which spawns the editor
+ * @param attributes {object} - properties sent to the editor
+ * @param fn {function} - function to call when done editing, argument is embeddable HTML
  */
 highed.ModalEditor = function (summoner, attributes, fn) {
     var properties = highed.merge({
@@ -47,6 +47,10 @@ highed.ModalEditor = function (summoner, attributes, fn) {
 
     ///////////////////////////////////////////////////////////////////////////
 
+    /** Attach to a new summoner
+     *  @memberof highed.ModalEditor
+     *  @param nn {domnode} - the new node to attach to
+     */
     function attachToSummoner(nn) {
         nn = nn || summoner;
 

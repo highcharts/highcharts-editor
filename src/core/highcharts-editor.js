@@ -343,8 +343,15 @@ var highed = {
                 } else {
                     current = current[p]; 
 
-                    if (highed.isArr(current) && index >= 0 && index < current.length) {
-                        current = current[index];
+                    if (highed.isArr(current)) {
+                        if (index > current.length - 1) {
+                            for (var i = current.length; i <= index; i++ ) {
+                                current.push({});
+                            }
+                        } 
+                        if (index >= 0) {
+                            current = current[index];                            
+                        }
                     }                      
                 }
             }

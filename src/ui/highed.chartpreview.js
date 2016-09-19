@@ -156,6 +156,10 @@ highed.ChartPreview = function (parent, attributes) {
     }
 
     function updateAggregated() {
+       // customizedOptions.plotOptions = customizedOptions.plotOptions || {};
+       // customizedOptions.plotOptions.series = customizedOptions.plotOptions.series || [];
+        customizedOptions.series = customizedOptions.series || [];
+
         //Merge fest
         highed.clearObj(aggregatedOptions);
         highed.merge(aggregatedOptions, 

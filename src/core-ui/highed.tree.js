@@ -208,14 +208,6 @@ highed.Tree = function (parent) {
             } 
         } 
 
-        // if (tree.shortName) {
-        //     instancedData = instancedData[tree.shortName];
-
-        //     if (highed.isArr(instancedData) && dataIndex >= 0) {
-        //         instancedData = instancedData[dataIndex];
-        //     }
-        // }
-
         if (tree && tree.entries) {
             Object.keys(tree.entries).forEach(function (key) {
                 var entry = tree.entries[key];
@@ -238,76 +230,6 @@ highed.Tree = function (parent) {
                 }
 
                 body = createNode(child, key, pnode, instancedData, dataIndex);                        
-
-                //If the child is an instanced array, we should abort 
-                // if (child.isInstancedArray) {
-                //     arr = highed.getAttr(instancedData, child.id, dataIndex);
-                //     if (highed.isArr(arr)) {
-                //         return build(child, level, pnode, instancedData, dataIndex);                        
-                //     }
-                // }
-
-                // if (child.entries.length === 0 && Object.keys(child.children).length === 0) {
-                //     return;
-                // }
-
-                // highed.dom.ap(pnode,
-                //     highed.dom.ap(node,
-                //         icon,
-                //         title
-                //     ),
-                //     body
-                // );
-
-                // if (child.isArrayParent) {
-                //     highed.dom.ap(node, rightIcons);
-
-                //     highed.dom.ap(rightIcons,
-                //         remIcon
-                //     );
-                // }
-
-                // highed.dom.style(body, {display: 'none'});
-
-                // function toggle() {
-                //     if (Object.keys(child.children).length === 0) {
-                //         return;
-                //     }
-
-                //     expanded = !expanded;
-                //     if (expanded) {
-                //         icon.className = 'exp-col-icon fa fa-minus';
-                //         highed.dom.style(body, {display: 'block'});
-                //     } else {
-                //         icon.className = 'exp-col-icon fa fa-plus';                        
-                //         highed.dom.style(body, {display: 'none'});
-                //     }
-                // }
-
-                // highed.dom.on(icon, 'click', toggle);
-
-                // if (Object.keys(child.children).length === 0) {
-                //     icon.className = 'exp-col-icon fa fa-sliders'
-                // }
-
-                // highed.dom.on(title, 'click', function () {
-                //     if (noInspectSelf) {
-                //         return;
-                //     }
-
-                //     if (selectedNode) {
-                //         selectedNode.className = 'parent-title';
-                //     }
-
-                //     title.className = 'parent-title parent-title-selected';
-                //     selectedNode = title;
-
-                //     reselectFn = function () {
-                //         events.emit('Select', child, highed.uncamelize(key), child.dataIndex);
-                //     };
-
-                //     events.emit('Select', child, highed.uncamelize(key), child.dataIndex);
-                // });
 
                 build(child, body, instancedData, child.dataIndex);
             });

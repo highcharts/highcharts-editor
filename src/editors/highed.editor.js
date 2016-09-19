@@ -118,17 +118,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     }
 
     //Public interface
-    highed.plugins.editor = {
+    highed.plugins.editor = {    
         install: install,
         use: use
     };
 
     ///////////////////////////////////////////////////////////////////////////
 
-    /**
-     * The main chart editor object 
-     * @memberof! highed#
-     * @exports highed.Editor
+    /**The main chart editor object 
+     * @memberof highed
+     * @constructor
+     * @emits ChartChange - when the chart changes
+     *   > {object} - new chart data
+     * @emits ChartChangedLately - when the chart changes, on a throttle so events are not emitted more frequently than every 100ms
+     *   > {object} - new chart data
      * @param {object} parent - the node to attach the editor to
      * @param {object} attributes - the editor settings
      * @return {highed.Editor} - A new instance of an editor

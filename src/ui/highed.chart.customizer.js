@@ -23,6 +23,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+/** UI For customizing a chart
+ *  @constructor
+ *  @emits PropertyChange - when a property changes
+ *    > {string} - the path of the change
+ *    > {anything} - the new value
+ *    > {number} - the change array index
+ *  @param parent {domnode} - the node to attach the editor to
+ *  @param attributes {object} - the attributes
+ *    > noAdvanced {bool} - set to false to force disable the advance view
+ *    > availableSettings {string|array} - whitelist of exposed settings
+ */
 highed.ChartCustomizer = function (parent, attributes) {
     var properties = highed.merge({
             noAdvanced: false,
@@ -51,6 +62,9 @@ highed.ChartCustomizer = function (parent, attributes) {
 
     ///////////////////////////////////////////////////////////////////////////
 
+     /** Force a resize of the editor 
+     *  @memberof highed.SimpleEditor
+     */
     function resize(w, h) {
         var bsize;
         
@@ -61,6 +75,11 @@ highed.ChartCustomizer = function (parent, attributes) {
         splitter.resize(w, h - bsize.h - 10);
     }
 
+    /** Init the customizer
+     *  @memberof highed.ChartCustomizer
+     *  @param foptions {object} - the customized options
+     *  @param coptions {object} - the full chart options
+     */
     function init(foptions, coptions) {
         flatOptions = foptions || {};
         chartOptions = coptions || flatOptions;
@@ -250,6 +269,10 @@ highed.ChartCustomizer = function (parent, attributes) {
         buildTree();
     }
 
+    /** Focus a category
+     *  @memberof highed.ChartCustomizer
+     *  @param thing {anything} - the category to focus
+     */
     function focus(thing, x, y) {
         list.select(thing);
         // var entry = highed.meta.optionsExtended.options[thing];
