@@ -231,7 +231,7 @@ highed.ChartCustomizer = function (parent, attributes) {
         if (properties.noAdvanced || highed.isNull(highed.meta.optionsAdvanced)) {
             advancedTab.hide();
         } else {
-            advTree.build(highed.meta.optionsAdvanced, flatOptions);        
+            advTree.build(highed.meta.optionsAdvanced, chartOptions);        
         }
     }
 
@@ -283,7 +283,7 @@ highed.ChartCustomizer = function (parent, attributes) {
             highed.dom.ap(table,
                 highed.InspectorField(
                     entry.values ?  'options' : (entry.dataType || 'string'), 
-                    (highed.getAttr(chartOptions, entry.id)  || entry.defaults), 
+                    (highed.getAttr(chartOptions, entry.id, arrIndex)  || entry.defaults), 
                     {
                         title: highed.uncamelize(entry.shortName),
                         tooltip: entry.description,
@@ -293,7 +293,7 @@ highed.ChartCustomizer = function (parent, attributes) {
                     },
                     function (newValue) {       
                         console.log(arrIndex);    
-                        events.emit('PropertyChange', entry.id, newValue);
+                        events.emit('PropertyChange', entry.id, newValue, arrIndex);
                     }
                 )
             );
@@ -306,12 +306,10 @@ highed.ChartCustomizer = function (parent, attributes) {
     });
 
     tabs.on('Focus', function () {
-        init(flatOptions);
+        init(flatOptions, chartOptions);
     });
 
     build();
-
-    
 
     return {
         /* Listen to an event */

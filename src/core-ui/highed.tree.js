@@ -44,10 +44,16 @@ highed.Tree = function (parent) {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    function createNode(child, key, pnode, dataIndex, arrayHeader) {
+    function createNode(child, key, pnode, instancedData, dataIndex, arrayHeader) {
         var title = highed.dom.cr('div', 'parent-title', child.title || highed.uncamelize(key)),
             icon = highed.dom.cr('div', 'exp-col-icon fa fa-plus'),
             body = highed.dom.cr('div', 'parent-body'),
+            node = highed.dom.cr('div', 'node'),
+
+            rightIcons = highed.dom.cr('div', 'right-icons'),
+            remIcon = highed.dom.cr('div', 'highed-icon fa fa-trash'),
+            addIcon = highed.dom.cr('div', 'highed-icon fa fa-plus-circle'),
+
             expanded = false,
             noInspectSelf = false
         ;
@@ -56,10 +62,49 @@ highed.Tree = function (parent) {
             return;
         }
 
-        child.dataIndex = dataIndex;
+        if (arrayHeader || child.isArrayParent) {
+            highed.dom.ap(node, rightIcons);
+
+            if (arrayHeader) {
+                highed.dom.ap(rightIcons,
+                    addIcon
+                );
+            }
+
+            if (child.isArrayParent) {
+                highed.dom.ap(rightIcons,
+                    remIcon
+                );
+            }
+
+            highed.dom.on(remIcon, 'click', function () {
+                if (confirm('Really delete the entry?')) {
+                    arr = highed.getAttr(instancedData, child.id, dataIndex);
+                    arr = arr.filter(function (b, i) {
+                        return i !== child.dataIndex;
+                    });
+                    highed.setAttr(instancedData, child.id, arr);  
+                }
+            });
+
+            highed.dom.on(addIcon, 'click', function () {
+                arr = highed.getAttr(instancedData, child.id, dataIndex);
+                if (highed.isArr(arr)) {
+                    arr.push({});
+                    highed.setAttr(instancedData, child.id, arr);                       
+                } else {
+                    highed.setAttr(instancedData, child.id, [{}]);
+                }
+                if (highed.isFn(reselectFn)) {
+                    reselectFn();
+                }
+            });
+        }
+
+        //child.dataIndex = dataIndex;
 
         highed.dom.ap(pnode,
-            highed.dom.ap(highed.dom.cr('div', 'node'),
+            highed.dom.ap(node,
                 icon,
                 title
             ),
@@ -106,10 +151,10 @@ highed.Tree = function (parent) {
             selectedNode = title;
 
             reselectFn = function () {
-                events.emit('Select', child, highed.uncamelize(key));
+                events.emit('Select', child, highed.uncamelize(key), child.dataIndex);
             };
 
-            events.emit('Select', child, highed.uncamelize(key));
+            events.emit('Select', child, highed.uncamelize(key), child.dataIndex);
         });
 
         return body;
@@ -123,7 +168,7 @@ highed.Tree = function (parent) {
      */
     function build(tree, level, pnode, instancedData, dataIndex) {
 
-        dataIndex = tree.dataIndex || dataIndex;
+       // dataIndex = tree.dataIndex || dataIndex;
 
         if (tree.isInstancedArray) {
 
@@ -141,7 +186,8 @@ highed.Tree = function (parent) {
                     children[tree.shortName + ' #' + (i + 1)] = {                        
                         children: tree.children,
                         entries: tree.entries,
-                        dataIndex: i
+                        dataIndex: i,
+                        isArrayParent: true
                     };
                 });
 
@@ -151,7 +197,7 @@ highed.Tree = function (parent) {
                         entries: []
                     }, 
                     ++level, 
-                    createNode(tree, tree.shortName, pnode, dataIndex, true),
+                    createNode(tree, tree.shortName, pnode, instancedData, dataIndex, true),
                     instancedData, 
                     dataIndex
                 );  
@@ -181,78 +227,96 @@ highed.Tree = function (parent) {
                     title = highed.dom.cr('div', 'parent-title', child.title || highed.uncamelize(key)),
                     icon = highed.dom.cr('div', 'exp-col-icon fa fa-plus'),
                     body = highed.dom.cr('div', 'parent-body'),
+                    node = highed.dom.cr('div', 'node'),
+
+                    rightIcons = highed.dom.cr('div', 'right-icons'),
+                    remIcon = highed.dom.cr('div', 'highed-icon fa fa-trash'),
+
                     expanded = false,
                     noInspectSelf = false,
                     arr
                 ;
 
-                //If the child is an instanced array, we should abort 
-                if (child.isInstancedArray) {
+                 if (child.isInstancedArray) {
                     arr = highed.getAttr(instancedData, child.id, dataIndex);
                     if (highed.isArr(arr)) {
                         return build(child, level, pnode, instancedData, dataIndex);                        
-                    }
+                    } 
                 }
 
-                if (child.entries.length === 0 && Object.keys(child.children).length === 0) {
-                    return;
-                }
+                createNode(child, key, pnode, instancedData, dataIndex, false);                        
 
-                child.dataIndex = dataIndex;
-                child.data = instancedData;
+                //If the child is an instanced array, we should abort 
+                // if (child.isInstancedArray) {
+                //     arr = highed.getAttr(instancedData, child.id, dataIndex);
+                //     if (highed.isArr(arr)) {
+                //         return build(child, level, pnode, instancedData, dataIndex);                        
+                //     }
+                // }
 
+                // if (child.entries.length === 0 && Object.keys(child.children).length === 0) {
+                //     return;
+                // }
 
-                highed.dom.ap(pnode,
-                    highed.dom.ap(highed.dom.cr('div', 'node'),
-                        icon,
-                        title
-                    ),
-                    body
-                );
+                // highed.dom.ap(pnode,
+                //     highed.dom.ap(node,
+                //         icon,
+                //         title
+                //     ),
+                //     body
+                // );
 
-                highed.dom.style(body, {display: 'none'});
+                // if (child.isArrayParent) {
+                //     highed.dom.ap(node, rightIcons);
 
-                function toggle() {
-                    if (Object.keys(child.children).length === 0) {
-                        return;
-                    }
+                //     highed.dom.ap(rightIcons,
+                //         remIcon
+                //     );
+                // }
 
-                    expanded = !expanded;
-                    if (expanded) {
-                        icon.className = 'exp-col-icon fa fa-minus';
-                        highed.dom.style(body, {display: 'block'});
-                    } else {
-                        icon.className = 'exp-col-icon fa fa-plus';                        
-                        highed.dom.style(body, {display: 'none'});
-                    }
-                }
+                // highed.dom.style(body, {display: 'none'});
 
-                highed.dom.on(icon, 'click', toggle);
+                // function toggle() {
+                //     if (Object.keys(child.children).length === 0) {
+                //         return;
+                //     }
 
-                if (Object.keys(child.children).length === 0) {
-                    icon.className = 'exp-col-icon fa fa-sliders'
-                }
+                //     expanded = !expanded;
+                //     if (expanded) {
+                //         icon.className = 'exp-col-icon fa fa-minus';
+                //         highed.dom.style(body, {display: 'block'});
+                //     } else {
+                //         icon.className = 'exp-col-icon fa fa-plus';                        
+                //         highed.dom.style(body, {display: 'none'});
+                //     }
+                // }
 
-                highed.dom.on(title, 'click', function () {
-                    if (noInspectSelf) {
-                        return;
-                    }
+                // highed.dom.on(icon, 'click', toggle);
 
-                    if (selectedNode) {
-                        selectedNode.className = 'parent-title';
-                    }
+                // if (Object.keys(child.children).length === 0) {
+                //     icon.className = 'exp-col-icon fa fa-sliders'
+                // }
 
-                    title.className = 'parent-title parent-title-selected';
-                    selectedNode = title;
+                // highed.dom.on(title, 'click', function () {
+                //     if (noInspectSelf) {
+                //         return;
+                //     }
 
-                    reselectFn = function () {
-                        events.emit('Select', child, highed.uncamelize(key), dataIndex);
-                    };
+                //     if (selectedNode) {
+                //         selectedNode.className = 'parent-title';
+                //     }
 
-                    events.emit('Select', child, highed.uncamelize(key), dataIndex);
-                });
+                //     title.className = 'parent-title parent-title-selected';
+                //     selectedNode = title;
 
-                build(child, ++level, body, instancedData, dataIndex);
+                //     reselectFn = function () {
+                //         events.emit('Select', child, highed.uncamelize(key), child.dataIndex);
+                //     };
+
+                //     events.emit('Select', child, highed.uncamelize(key), child.dataIndex);
+                // });
+
+                build(child, ++level, body, instancedData, child.dataIndex);
             });
         }
     }
