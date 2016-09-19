@@ -38,16 +38,19 @@ highed.ready(function () {
     });
 
 
- /* Upload and parse a local file
-  * Borrowed from almostvanilla which is licensed under MIT.
-  *
-  * {
-  *     type: json|text|b64|binary,
-  *     multiple: true|false,
-  *     progress: fn,
-  *     success: fn,
-  *     error: fn
-  * }
+ /** Upload and parse a local file
+  *  Borrowed from almostvanilla which is licensed under MIT.
+  *  @param props
+  *     > type {string} - the type of data to load
+  *     > accept {string} - the accepted file extensions
+  *     > multiple {boolean} - allow multiple files
+  *     > progress {function} - progress callback
+  *       > {number} - the progress in percent
+  *     > success {function} - function called when the file is uploaded
+  *       > {object} - the file information
+  *         > filename {string} - the name of the file
+  *         > size {number} - the size of the file in bytes
+  *         > data {string} - the file data  
   */  
   highed.readLocalFile = function (props) {
     var p = highed.merge({

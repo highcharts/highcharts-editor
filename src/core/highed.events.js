@@ -24,16 +24,24 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** Event dispatcher object
- * @description Constructs an instance of an event dispatcher when called. 
- * Usage: `var events = highed.events();`.
- * @memberof! highed#
- * @exports highed.events
+ *  Constructs an instance of an event dispatcher when called. 
+ *  @constructor
+ *  @example
+ *  var events = highed.events();
+ *  events.on('foobar', function () {console.log('Hello world!')});
+ *  events.emit('foobar');
  */
 highed.events = function () {
     var callbacks = {},
         listenerCounter = 0
     ;
 
+    /** Listen to an event
+      * @memberof highed.events
+      * @param event {string} - the event to listen for
+      * @param callback {function} - the function to call when the event is emitted
+      * @returns {function} - function that can be called to unbind the listener
+      */
     function on(event, callback, context) {
         var id = ++listenerCounter;
 
@@ -59,19 +67,12 @@ highed.events = function () {
     }
 
     return {
-        /** Attach an event listener
-  
-         * @param {string} event - the event to listen for
-         * @param {function} callback - the callback to execute when the event is emitted
-         * @param {object} context (optional) - the value of the this reference in the callback
-         *
-         * @return {function} - A function that can be called to unbind the listener
-         */
         on: on,
 
         /** Emit an event
-         * @description Note that the function accepts a variable amount of arguments. Any arguments after the event name will be passed on to any event listeners attached to the event being emitted.
-         * @param {string} event - the event to emit         
+         * Note that the function accepts a variable amount of arguments. Any arguments after the event name will be passed on to any event listeners attached to the event being emitted.         
+         * @memberof highed.events
+         * @param event {string} - the event to emit         
          * @return {number} - The number of events dispatched
          */
         emit: function (event) {
