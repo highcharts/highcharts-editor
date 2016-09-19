@@ -51,7 +51,7 @@ highed.Tree = function (parent) {
             node = highed.dom.cr('div', 'node'),
 
             rightIcons = highed.dom.cr('div', 'right-icons'),
-            remIcon = highed.dom.cr('div', 'highed-icon fa fa-trash'),
+            remIcon = highed.dom.cr('div', 'highed-icon fa fa-minus-circle'),
             addIcon = highed.dom.cr('div', 'highed-icon fa fa-plus-circle'),
 
             expanded = false,
@@ -80,10 +80,14 @@ highed.Tree = function (parent) {
             highed.dom.on(remIcon, 'click', function () {
                 if (confirm('Really delete the entry?')) {
                     arr = highed.getAttr(instancedData, child.id, dataIndex);
+                    
                     arr = arr.filter(function (b, i) {
                         return i !== dataIndex;
                     });
+
                     highed.setAttr(instancedData, child.id, arr);  
+
+                    events.emit('DataUpdate', child.id, arr);
                 }
             });
 
@@ -187,6 +191,7 @@ highed.Tree = function (parent) {
                         children: tree.children,
                         entries: tree.entries,
                         dataIndex: i,
+                        id: tree.id,
                         isArrayParent: true
                     };
                 });
@@ -221,20 +226,10 @@ highed.Tree = function (parent) {
         if (tree && tree.children) {
             Object.keys(tree.children).forEach(function (key) {
                 var child = tree.children[key],
-                    title = highed.dom.cr('div', 'parent-title', child.title || highed.uncamelize(key)),
-                    icon = highed.dom.cr('div', 'exp-col-icon fa fa-plus'),
-                    body = highed.dom.cr('div', 'parent-body'),
-                    node = highed.dom.cr('div', 'node'),
-
-                    rightIcons = highed.dom.cr('div', 'right-icons'),
-                    remIcon = highed.dom.cr('div', 'highed-icon fa fa-trash'),
-
-                    expanded = false,
-                    noInspectSelf = false,
-                    arr
+                    body = highed.dom.cr('div', 'parent-body')
                 ;
 
-                 if (child.isInstancedArray) {
+                if (child.isInstancedArray) {
                     arr = highed.getAttr(instancedData, child.id, dataIndex);
                     if (highed.isArr(arr)) {
                         //Skip node creation - will be done later

@@ -305,6 +305,10 @@ highed.ChartCustomizer = function (parent, attributes) {
         );
     });
 
+    advTree.on('DataUpdate', function (path, data) {
+        events.emit('PropertyChange', path, data);
+    });
+
     tabs.on('Focus', function () {
         init(flatOptions, chartOptions);
     });
