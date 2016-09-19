@@ -27,6 +27,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     var exportPlugins = {};
 
     highed.plugins.export = {
+        /** Install an export plugin
+         *  @namespace highed.plugins.export
+         *  @param name {string} - the name of the plugin
+         *  @param definition {object} - the plugin definition
+         */
         install: function (name, definition) {
             if (highed.isNull(exportPlugins[name])) {
                 exportPlugins[name] = highed.merge({
@@ -84,6 +89,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         }
     });
 
+    /** Export widget
+     *  @constructor
+     *  @param parent {domnode} - the node to attach the widget to
+     *  @param attributes {object} - the options
+     *    > options {string} - things to include: `csv html json plugins`
+     *    > plugins {string|array} - plugins to activate
+     */
     highed.Exporter = function (parent, attributes) {
         var //splitter = highed.HSplitter(parent, {leftWidth: 50, noOverflow: true}),
             properties = highed.merge({
@@ -212,7 +224,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             pluginList.selectFirst();
         }
 
-        //Set the export boxes based on chart JSON data (chart.options)
+        /** Set the export boxes based on chart JSON data (chart.options)
+         *  @memberof highed.Exporter
+         *  @param chartData {object} - the chart JSON
+         *  @param chartHTML {string} - chart HTML
+         *  @param chartSVG {string} - chart svg
+         *  @param chartPreview {object} - instance of highed.ChartPreview
+         */
         function init(chartData, chartHTML, chartSVG, chartPreview) {
             var title = '_export';
 
@@ -251,6 +269,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             });
         }   
 
+        /** Force a resize of the UI
+         *  @memberof highed.Exporter
+         */
         function resize(w, h) {
             var bsize;
 

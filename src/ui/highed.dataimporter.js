@@ -30,7 +30,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         /** Install a data import plugin 
           * @namespace highed.plugins.import
           * @param name {string} - the name of the plugin
-          * @param definition {object} - the plugin definition
+          * @param defintion {object} - the plugin definition
           *   > description {string} - the plugin description
           *   > treatAs {string} - what to treat the import as: `json|csv`
           *   > fetchAs {string} - what the expect request return is

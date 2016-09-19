@@ -23,7 +23,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-/* This is a component that implements a toolbar with wizard steps */
+/** This is a component that implements a toolbar with wizard steps 
+  * @constructor
+  * @emits Step - when stepping back or forth
+  * @emits AddStep - when adding a step to the stepper
+  * @param parent {domnode} - the dom node to attach the UI to
+  * @param bodyParent {domnode} - the dom node to attach the stepper body to
+  * @param attributes {object} - options for the object
+*/
 highed.WizardBar = function (parent, bodyParent, attributes) {
     var toolbar = highed.Toolbar(parent, { 
             additionalCSS: ['highed-wizstepper-bar'] 
