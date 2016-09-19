@@ -90,7 +90,11 @@ highed.Tree = function (parent) {
         }
 
         highed.dom.on(title, 'click', function () {
-            if (arrayHeader || noInspectSelf) {
+            if (arrayHeader) {
+                return toggle();
+            }
+
+            if (noInspectSelf) {
                 return;
             }
 
@@ -151,11 +155,7 @@ highed.Tree = function (parent) {
                     instancedData, 
                     dataIndex
                 );  
-            } else {
-               // console.log('no elements for', tree.id);
-            }                
-
-            return;
+            } 
         } 
 
         level = level || 0;
@@ -182,12 +182,16 @@ highed.Tree = function (parent) {
                     icon = highed.dom.cr('div', 'exp-col-icon fa fa-plus'),
                     body = highed.dom.cr('div', 'parent-body'),
                     expanded = false,
-                    noInspectSelf = false
+                    noInspectSelf = false,
+                    arr
                 ;
 
                 //If the child is an instanced array, we should abort 
                 if (child.isInstancedArray) {
-                    return build(child, level, pnode, instancedData, dataIndex);
+                    arr = highed.getAttr(instancedData, child.id, dataIndex);
+                    if (highed.isArr(arr)) {
+                        return build(child, level, pnode, instancedData, dataIndex);                        
+                    }
                 }
 
                 if (child.entries.length === 0 && Object.keys(child.children).length === 0) {

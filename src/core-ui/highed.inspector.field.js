@@ -108,8 +108,8 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
                     indicator.innerHTML = f.value;
                 });
 
-                highed.dom.on(input, 'change', function () {
-                    tryCallback(callback, input.value);
+                highed.dom.on(f, 'change', function () {
+                    tryCallback(callback, f.value);
                 });
 
                 if ((val || value) == null || ((val || value)) == 'null') {
