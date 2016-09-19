@@ -23,6 +23,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+/** 
+ * @ignore
+ */
 highed.ready(function () {
     var uploader = highed.dom.cr('input'),
         cb = false

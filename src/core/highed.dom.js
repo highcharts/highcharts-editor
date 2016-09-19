@@ -23,7 +23,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-/** Namespace for DOM helper functions */
+/** Namespace for DOM helper functions 
+ * @ignore
+ */
 highed.dom = {
     /** Append a set of nodes to another node.
      * Arguments supplied after the @param {} target represents the children to append.

@@ -26,7 +26,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 //////////////////////////////////////////////////////////////////////////////
 
-/** The main highcharts editor namespace */
+/** The main highcharts editor namespace 
+ * @ignore
+ */
 var highed = {
     schemas: {},
     meta: {},
@@ -214,7 +216,7 @@ var highed = {
     /** Make a camel back string pretty
      *  Transforms e.g. `imACamelBackString` to `Im a camelback string`.
      *  @namespace highed
-     *  @param {string} - the input string
+     *  @param str {string} - the input string
      *  @return {string} - the transformed string
      */
     uncamelize: function (str) {
@@ -240,9 +242,9 @@ var highed = {
 
     /** Clamp a number between min/max
      *  @namespace highed
-     *  @param {number} - minimum value
-     *  @param {number} - maximum value
-     *  @returns the clamped value
+     *  @param min {number} - minimum value
+     *  @param max {number} - maximum value
+     *  @returns {number} - the clamped value
      */
     clamp: function (min, max, value) {
         if (value < min) return min;
@@ -273,7 +275,7 @@ var highed = {
     /** Invert a color 
      *  @namespace highed
      *  @param {string} hex - the color to invert
-     *  @return {string} new hex color
+     *  @return {string} - new hex color
      */
     invertHexColor: function (hex) {
         var rgb = highed.hexToRgb(hex),
@@ -294,7 +296,7 @@ var highed = {
     /** Return #FFF or #000 based on the intensity of a color
      *  @namespace highed
      *  @param {string} hex - input color
-     *  @return {string} the new hex color
+     *  @return {string} - the new hex color
      */
     getContrastedColor: function (hex) {
         var rgb = highed.hexToRgb(hex),
@@ -310,7 +312,7 @@ var highed = {
     /** Convert a string to a bool
      *  @namespace highed
      *  @param {string} what - the string to convert
-     *  @return {bool}
+     *  @return {bool} - the resulting bool
      */
     toBool: function (what) {
         return what === 'true' || what === true || what === 'on';
