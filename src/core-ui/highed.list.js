@@ -99,7 +99,7 @@ highed.List = function (parent) {
 
     /** Add a set of items to the list
      *  @memberof highed.List
-     *  @params {array<object>} items - an array of items to add
+     *  @param items {array<object>} - an array of items to add
      */
     function addItems(items) {
         if (highed.isArr(items)) {

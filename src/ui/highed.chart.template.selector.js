@@ -23,11 +23,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-/* UI for selecting a chart template from the ones defined in meta/highed.meta.charts.js
- * @parent - the parent to attach the selector to
+/** UI for selecting a chart template from the ones defined in meta/highed.meta.charts.js
+ *  @constructor
+ *  @param parent {domnode} - the parent to attach the selector to
  *
- * Emitted events:
- *   - Select : templateDefinition
+ *  @emits Select - when selecting a template
+ *    > {object} - the template definition
  */
 highed.ChartTemplateSelector = function (parent) {
     var events = highed.events(),
