@@ -552,9 +552,10 @@ var highed = {
         }
     };
 
-    /** Set the current log level
-     * @param {number} level - the log level 1..4
-     * @param {string} msg - the log message
+    /** Log something
+     * Accepts a variable amount of arguments after `level` which will be
+     * the log message (similar to `console.log`).
+     * @param {number} level - the log level 1..4    
      */
     highed.log = function (level) {
         var things = (Array.prototype.slice.call(arguments));

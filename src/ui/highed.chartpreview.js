@@ -28,7 +28,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  It implements a sliding drawer type widget,
  *  where the initial state can be as part of the main DOM,
  *  and where the expanded state covers most of the screen (90%)
+ *
  *  @constructor
+ *
+ *  @param parent {domnode} - the node to attach the preview to
+ *  @param attributes {object} - the settings
+ *    > defaultChartOptions {object} - the default chart options 
  */
 highed.ChartPreview = function (parent, attributes) {
     var properties = highed.merge({
@@ -38,6 +43,9 @@ highed.ChartPreview = function (parent, attributes) {
                 },
                 subtitle: {
                     text: 'My Untitled Chart'
+                },
+                exporting: {
+                    url: 'http://127.0.0.1:7801'
                 }
             },
             expandTo: parent
