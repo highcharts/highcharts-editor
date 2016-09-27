@@ -45,7 +45,7 @@ highed.ChartPreview = function (parent, attributes) {
                     text: 'My Untitled Chart'
                 },
                 exporting: {
-                    url: 'http://127.0.0.1:7801'
+                 //   url: 'http://127.0.0.1:7801'
                 }
             },
             expandTo: parent
