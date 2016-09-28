@@ -34,44 +34,6 @@ var highed = {
     meta: {},
     plugins: {},
 
-    /** Include something 
-     *  @namespace highed
-     *  @param what {string} - URL to a css or javascript file
-     *  @param fn {function} - function to call when done including the script
-     */
-    include: function (what, fn) {
-        var n;
-
-        function next() {
-            if (n < what.length - 1) {
-                highed.include(what[++n], next);
-            }
-
-            return highed.isFn(fn) && fn();
-        }
-
-        if (highed.isArr(what)) {
-            n = -1;
-            return next();            
-        };
-
-        highed.log(3, 'including script', what);
-
-        if (what.lastIndexOf('.css') === what.length - 4) {
-            n = highed.dom.cr('link');
-            n.rel = 'stylesheet';
-            n.type = 'text/css';
-            n.href = what;
-            n.onload = fn;
-        } else {
-            n = highed.dom.cr('script');
-            n.src = what;
-            n.onload = fn;
-        }
-
-        highed.dom.ap(document.head, n);
-    },
-
     /** Clear an object 
       * Deletes all the object attributes.
       * Useful when needing to clear an object without invalidating references to it
@@ -510,6 +472,7 @@ var highed = {
         currentLogLevel = 4,
         initQueue = [],
         isReady = false,
+        includedScripts = {},
         cdnScripts = [
             "https://code.highcharts.com/stock/highstock.js",   
             "http://code.highcharts.com/adapters/standalone-framework.js",  
@@ -564,6 +527,50 @@ var highed = {
         if (level <= currentLogLevel) {
             console.log.apply(undefined, [logLevels[level - 1] + ':'].concat(things));
         }
+    };
+
+    /** Include something 
+     *  @namespace highed
+     *  @param what {string} - URL to a css or javascript file
+     *  @param fn {function} - function to call when done including the script
+     */
+    highed.include = function (what, fn) {
+        var n;
+
+        function next() {
+            if (n < what.length - 1) {
+                highed.include(what[++n], next);
+            }
+
+            return highed.isFn(fn) && fn();
+        }
+
+        if (highed.isArr(what)) {
+            n = -1;
+            return next();            
+        };
+
+        highed.log(3, 'including script', what);
+
+        if (includedScripts[what]) {
+            highed.log(3, 'script already included, skipping:', what);
+            return fn();
+        }
+
+        if (what.lastIndexOf('.css') === what.length - 4) {
+            n = highed.dom.cr('link');
+            n.rel = 'stylesheet';
+            n.type = 'text/css';
+            n.href = what;
+            n.onload = fn;
+        } else {
+            n = highed.dom.cr('script');
+            n.src = what;
+            n.onload = fn;
+        }
+
+        includedScripts[what] = true
+        highed.dom.ap(document.head, n);
     };
 
     ///////////////////////////////////////////////////////////////////////////
