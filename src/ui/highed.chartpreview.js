@@ -156,8 +156,7 @@ highed.ChartPreview = function (parent, attributes) {
                 //Our assumption was wrong. The world is ending.
                 highed.snackBar(e);            
             }
-        }
-       
+        }       
 
         return chart;
     }

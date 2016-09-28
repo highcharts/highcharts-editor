@@ -62,7 +62,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         var //splitter = highed.HSplitter(parent, {leftWidth: 50, noOverflow: true}),
             properties = highed.merge({
                 options: 'csv html json plugins',
-                plugins: ['beatify-js']
+                plugins: 'beatify-js beatify-json'
             }, attributes),    
 
             tctrl = highed.TabControl(parent),
