@@ -60,7 +60,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         var //splitter = highed.HSplitter(parent, {leftWidth: 50, noOverflow: true}),
             properties = highed.merge({
                 options: 'csv html json plugins',
-                plugins: ['Beautified HTML']
+                plugins: ['Beautified JavaScript']
             }, attributes),    
 
             tctrl = highed.TabControl(parent),

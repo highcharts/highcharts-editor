@@ -6,17 +6,14 @@
 
 */
 
-highed.plugins.export.install('Beautified HTML', {
-    description: 'Exports well-formatted HTML',
+highed.plugins.export.install('Beautified JavaScript', {
+    description: 'Exports well-formatted JavaScript',
     dependencies: [
         'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/codemirror.min.js',
         'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/codemirror.min.css',
         'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/theme/monokai.min.css',
-        'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/mode/xml/xml.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/mode/htmlmixed/htmlmixed.min.js',
-        'https://cdn.rawgit.com/beautify-web/js-beautify/master/js/lib/beautify.js',
-        'https://cdn.rawgit.com/beautify-web/js-beautify/master/js/lib/beautify-css.js',
-        'https://cdn.rawgit.com/beautify-web/js-beautify/master/js/lib/beautify-html.js'        
+        'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/mode/javascript/javascript.min.js',
+        'https://cdn.rawgit.com/beautify-web/js-beautify/master/js/lib/beautify.js'       
     ],           
     create: function (chart, node) {
         this.textarea = highed.dom.cr('textarea');
@@ -25,13 +22,13 @@ highed.plugins.export.install('Beautified HTML', {
         this.cm = CodeMirror.fromTextArea(this.textarea, {
             lineNumbers: true,
            // value: chart.export.html(),
-            mode: 'htmlmixed',
+            mode: 'javascript',
             readOnly: true,
             theme: 'monokai'
         });
 
         this.update = function (chart) {
-            this.cm.setValue(js_beautify(chart.export.html(true)));
+            this.cm.setValue(js_beautify(chart.export.js()));
             this.cm.refresh();
             this.cm.focus();
         };
