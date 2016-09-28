@@ -36,7 +36,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             if (highed.isNull(exportPlugins[name])) {
                 exportPlugins[name] = highed.merge({
                     description: '',
-                    options: {}
+                    options: {},
+                    title: false,
+                    downloadOutput: false
                 }, definition);
 
                 if (exportPlugins[name].dependencies) {
@@ -152,9 +154,19 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     });
 
                     highed.dom.on(executeBtn, 'click', function () {
-                        if (highed.isFn(options.export && currentChartPreview)) {
-                            options.export.apply(pluginData[name], [dynamicOptions, currentChartPreview, function (err) {
+                        if (highed.isFn(options.export) && currentChartPreview) {
+                            options.export.apply(pluginData[name], [dynamicOptions, currentChartPreview, function (err, data, filename) {
                                 if (err) return highed.snackBar('Export error: ' + err);
+
+                                if (options.downloadOutput) {
+                                    var l = highed.dom.cr('a');
+                                    l.download = filename || 'unkown';
+                                    l.href = 'data:application/octet-stream,' + encodeURIComponent(data);
+                                    highed.dom.ap(document.body, l);
+                                    l.click();
+                                    document.body.removeChild(l);
+                                }
+
                                 highed.snackBar((options.title || name) + ' export complete');
                             }, additionalUI]);
                         }

@@ -7,7 +7,7 @@
 */
 
 highed.plugins.export.install('beatify-js', {
-    title: 'Export JavaScript',
+    title: 'Beatuified JavaScript',
     description: 'Exports well-formatted JavaScript',
     dependencies: [
         'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/codemirror.min.js',
@@ -16,6 +16,7 @@ highed.plugins.export.install('beatify-js', {
         'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/mode/javascript/javascript.min.js',
         'https://cdn.rawgit.com/beautify-web/js-beautify/master/js/lib/beautify.js'       
     ],           
+    downloadOutput: true,
     create: function (chart, node) {
         this.textarea = highed.dom.cr('textarea');
         highed.dom.ap(node, this.textarea);
@@ -40,6 +41,6 @@ highed.plugins.export.install('beatify-js', {
         this.update(chart);
     },
     export: function (options, chart, fn) {
-
+        fn(false, this.cm.getValue(), 'chart.js');
     }
 });
