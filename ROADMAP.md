@@ -5,7 +5,7 @@
 
 **Editor Features**
 
-* Modularized editor
+  * Modularized editor
     * Full (wizard-like)
     * Properties only
         * Default options set at "compile" time
@@ -34,7 +34,6 @@
     * Optional whitelisting of options to include
     * Simple Editor: Same basic set of modifiable properties as on Highcharts Cloud
     * Advanced Editor: (optional) in the property customizer
-  * Embed: get HTML + JSON output
   * Basic responsiveness
   * Data import plugins
   * Data export plugins
