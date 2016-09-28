@@ -83,7 +83,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             currentChartPreview = false,
             hasBuiltPlugins = false,
-            pluginData = {}
+            hasBeenVisible = false,
+            pluginData = {},
+            activePlugins = {},
+            activePlugin = false
         ;
 
         properties.options = highed.arrToObj(properties.options);
@@ -122,38 +125,43 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 var options = exportPlugins[name]
                 ;
 
-                pluginData[name] = {};
+                pluginData[name] = {options: {}};
 
                 if (!properties.plugins[name]) {
                     return false;
                 }
 
                 function buildBody() {                      
-                    var executeBtn = highed.dom.cr('button', 'highed-imp-button highed-imp-button-right', options.exportTitle || 'Export'),
+                    var container = highed.dom.cr('div'),
+                        executeBtn = highed.dom.cr('button', 'highed-imp-button highed-imp-button-right', options.exportTitle || 'Export'),
                         dynamicOptionsContainer = highed.dom.cr('table', 'highed-customizer-table'),
                         additionalUI = highed.dom.cr('div'),
-                        dynamicOptions = {}
+                        dynamicOptions = pluginData[name].options
                     ;
                     
-                    pluginSplitter.right.innerHTML = '';            
+                   // pluginSplitter.right.innerHTML = '';            
 
-                    Object.keys(options.options || {}).forEach(function (name) {
-                        dynamicOptions[name] = options.options[name].default;
+                    Object.keys(options.options || {}).forEach(function (pname) {
+                        dynamicOptions[pname] = options.options[pname].default;
 
                         highed.dom.ap(dynamicOptionsContainer,
                             highed.InspectorField(
-                                options.options[name].type, 
-                                options.options[name].default, 
+                                options.options[pname].type, 
+                                options.options[pname].default, 
                                 {
-                                    title: options.options[name].label
+                                    title: options.options[pname].label
                                 }, 
                                 function (nval) {
-                                    dynamicOptions[name] = nval;
+                                    dynamicOptions[pname] = nval;
+
+                                    if (highed.isFn(options.show)) {
+                                        options.show.apply(pluginData[name], [currentChartPreview]);
+                                    }
                                 }, true)
                         );
                     });
 
-                    highed.dom.on(executeBtn, 'click', function () {
+                    function doExport() {
                         if (highed.isFn(options.export) && currentChartPreview) {
                             options.export.apply(pluginData[name], [dynamicOptions, currentChartPreview, function (err, data, filename) {
                                 if (err) return highed.snackBar('Export error: ' + err);
@@ -170,9 +178,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                                 highed.snackBar((options.title || name) + ' export complete');
                             }, additionalUI]);
                         }
-                    });
+                    }
 
-                    highed.dom.ap(pluginSplitter.right,
+                    highed.dom.on(executeBtn, 'click', doExport);
+
+                    highed.dom.ap(pluginSplitter.right, container);
+
+                    highed.dom.style(container, {display: 'none'});
+
+                    highed.dom.ap(container,
                         highed.dom.cr('div', 'highed-customizer-table-heading', options.title || name),
                         highed.dom.cr('div', 'highed-imp-help', options.description),
                         Object.keys(options.options || {}).length ? dynamicOptionsContainer : false,
@@ -183,17 +197,32 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     if (highed.isFn(options.create)) {
                         options.create.apply(pluginData[name], [currentChartPreview, additionalUI]);
                     }
+
+                    activePlugins[name] = {
+                        export: doExport,
+                        show: function () {
+                            if (activePlugin) {
+                                activePlugin.hide();
+                            }
+                            highed.dom.style(container, {display: ''});
+                            options.show.apply(pluginData[name], [currentChartPreview]);
+                            activePlugin = activePlugins[name];
+                        },
+                        hide: function () {
+                            highed.dom.style(container, {display: 'none'});
+                        }
+                    };
                 }
+
+                buildBody();
                 
                 pluginList.addItem({
                     id: name,
                     title: options.title || name,
-                    click: buildBody
+                    click: activePlugins[name].show
                 });
 
-            });
-
-            pluginList.selectFirst();
+            });            
         }
 
         /** Set the export boxes based on chart JSON data (chart.options)
@@ -229,16 +258,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             buildPlugins();
 
-            Object.keys(exportPlugins).forEach(function (name) {
-                var options = exportPlugins[name];
+            // Object.keys(activePlugins).forEach(function (name) {
+            //     activePlugins[name].show();
+            // });
 
-                if (!properties.plugins[name]) {
-                    return false;
-                }
-                if (highed.isFn(options.show)) {
-                    options.show.apply(pluginData[name], [currentChartPreview]);
-                }
-            });
+            if (activePlugin) {
+                activePlugin.show();
+            }
+
+            hasBeenVisible = true;
         }   
 
         /** Force a resize of the UI

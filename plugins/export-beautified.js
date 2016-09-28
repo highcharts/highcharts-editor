@@ -21,6 +21,16 @@ highed.plugins.export.install('beatify-js', {
     downloadOutput: true,
     //Set the title of the export button - default is "Export".
     exportTitle: 'Download',   
+
+    //Options can be fetched in the hooks using this.options.<name of option>.
+    options: {
+        node: {
+            label: 'Node to append chart to',
+            type: 'string',
+            default: 'document.body'
+        }
+    },
+
     //Called when creating the plugin
     create: function (chart, node) {
         this.textarea = highed.dom.cr('textarea');
@@ -42,7 +52,7 @@ highed.plugins.export.install('beatify-js', {
             }
 
             this.cm.setValue(([
-                'var chart = new Highcharts(document.body, ',
+                'var chart = new Highcharts(', this.options.node ,', ',
                 JSON.stringify(json, undefined, '    '),
                 ');'
             ].join('')));
@@ -50,11 +60,11 @@ highed.plugins.export.install('beatify-js', {
             this.cm.focus();
         };
 
-        this.update(chart);
+        this.update.call(this, chart);
     },                  
-    //Called when showing the UI
+    //Called when showing the UI. Also called when the options change.
     show: function (chart) {
-        this.update(chart);
+        this.update.call(this, chart);
     },
     //Called when triggering an export
     export: function (options, chart, fn) {
