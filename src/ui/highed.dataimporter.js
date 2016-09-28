@@ -216,7 +216,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
                 webList.addItem({
                     id: name,
-                    title: options.title || name,
+                    title: webImports[name].title || name,
                     click: buildBody
                 });
 
