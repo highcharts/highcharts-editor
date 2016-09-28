@@ -198,8 +198,8 @@ gulp.task('lint-advanced', function () {
 
 gulp.task('minify', function () {
     return gulp.src(sources)
-               .pipe(concat(name + '.js'))
-                            
+               .pipe(concat(name + '.js'))       
+               .pipe(gulp.dest(dest))           
                .pipe(rename(name + '.min.js'))
                .pipe(uglify())
                .pipe(header(license, packageJson))
