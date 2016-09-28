@@ -63,12 +63,19 @@ gulp.task('update-deps', function () {
   return run('node tools/update.deps.js').exec();
 });
 
+gulp.task('bake-advanced', function () {
+  return run('node tools/bake.advanced.js').exec();
+});
+
 ////////////////////////////////////////////////////////////////////////////////
 
 gulp.task('zip-tinymce', ['less', 'minify', 'tinymce'], function () {
     return gulp.src([
-                  'dist/' + name + '.min.css',
-                  'dist/' + name + '.tinymce.js'
+               //   'dist/' + name + '.min.css',
+                  'dist/' + name + '.tinymce.js',
+                  'dist/' + name + '.tinymce.min.js'
+                 // 'dist/' + name + '.min.js',
+                 // 'dist/' + name + '.advanced.min.js'
                 ]).pipe(zip(name + '.tinymce.' + packageJson.version + '.zip'))
                   .pipe(gulp.dest(buildDest))
     ;
@@ -76,8 +83,11 @@ gulp.task('zip-tinymce', ['less', 'minify', 'tinymce'], function () {
 
 gulp.task('zip-ckeditor', ['less', 'minify', 'ckeditor'], function () {
     return gulp.src([
-                  'dist/' + name + '.min.css',
-                  'dist/' + name + '.ckeditor.js'
+                 // 'dist/' + name + '.min.css',
+                  'dist/' + name + '.ckeditor.js',
+                  'dist/' + name + '.ckeditor.min.js'
+                 // 'dist/' + name + '.min.js',
+                 // 'dist/' + name + '.advanced.min.js'
                 ]).pipe(zip(name + '.ckeditor.' + packageJson.version + '.zip'))
                   .pipe(gulp.dest(buildDest))
     ;
@@ -110,6 +120,14 @@ gulp.task('zip-dist', ['less', 'minify'], function () {
            .pipe(gulp.dest(buildDest));
 });
 
+gulp.task('zip-dist-advanced', ['less', 'minify', 'minify-advanced'], function () {
+  return gulp.src([
+            'dist/' + name + '.min.css',
+            'dist/' + name + '.advanced.min.js'
+         ]).pipe(zip(name + '.dist.advanced.min.' + packageJson.version + '.zip'))
+           .pipe(gulp.dest(buildDest));
+});
+
 ////////////////////////////////////////////////////////////////////////////////
 
 gulp.task('wordpress', ['less', 'minify', 'update-deps'], function () {
@@ -119,8 +137,8 @@ gulp.task('wordpress', ['less', 'minify', 'update-deps'], function () {
     ;
 });
 
-gulp.task('tinymce', function () {
-    return gulp.src(sources.concat('integrations/tinymce.js'))
+gulp.task('tinymce',  function () {
+    return gulp.src('integrations/tinymce.js')
                .pipe(concat(name + '.tinymce.js'))
                .pipe(gulp.dest(dest))
                .pipe(rename(name + '.tinymce.min.js'))
@@ -130,7 +148,7 @@ gulp.task('tinymce', function () {
 });
 
 gulp.task('ckeditor', function () {
-    return gulp.src(sources.concat('integrations/ckeditor.js'))
+    return gulp.src('integrations/ckeditor.js')
                .pipe(concat(name + '.ckeditor.js'))
                .pipe(gulp.dest(dest))
                .pipe(rename(name + '.ckeditor.min.js'))
@@ -166,9 +184,9 @@ gulp.task('minify', function () {
     ;
 });
 
-gulp.task('minify-advanced', function () {
+gulp.task('minify-advanced', ['bake-advanced', 'less'], function () {
     return gulp.src(sources.concat(['./src/meta/highed.meta.options.advanced.js']))
-               .pipe(concat(name + '.js'))
+               .pipe(concat(name + '.advanced.js'))
                .pipe(gulp.dest(dest))               
                .pipe(rename(name + '.advanced.min.js'))
                .pipe(uglify())
@@ -244,9 +262,9 @@ gulp.task('default', function () {
 });
 
 gulp.task('with-advanced', function () {
-    gulp.start('minify-advanced', 'ckeditor', 'tinymce', 'less', 'plugins', 'wordpress', 'zip-standalone', 'zip-dist', 'zip-standalone-nominify', 'zip-tinymce', 'zip-ckeditor');
+    gulp.start('minify-advanced', 'zip-dist-advanced', 'ckeditor', 'tinymce', 'less', 'plugins', 'wordpress', 'zip-standalone', 'zip-dist', 'zip-standalone-nominify', 'zip-tinymce', 'zip-ckeditor');
 });
 
 gulp.task('all', function () {
-  gulp.start('default', 'electron');
+  gulp.start('default', 'electron', 'with-advanced');
 });
