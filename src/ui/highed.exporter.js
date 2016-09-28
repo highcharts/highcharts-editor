@@ -129,7 +129,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 }
 
                 function buildBody() {                      
-                    var executeBtn = highed.dom.cr('button', 'highed-imp-button highed-imp-button-right', 'Export'),
+                    var executeBtn = highed.dom.cr('button', 'highed-imp-button highed-imp-button-right', options.exportTitle || 'Export'),
                         dynamicOptionsContainer = highed.dom.cr('table', 'highed-customizer-table'),
                         additionalUI = highed.dom.cr('div'),
                         dynamicOptions = {}
