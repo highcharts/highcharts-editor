@@ -12,7 +12,7 @@ highed.plugins.export.install('beatify-js', {
     dependencies: [
         'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/codemirror.min.js',
         'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/codemirror.min.css',
-        'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/theme/monokai.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/theme/neo.min.css',
         'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/mode/javascript/javascript.min.js',
         'https://cdn.rawgit.com/beautify-web/js-beautify/master/js/lib/beautify.js'       
     ],           
@@ -25,7 +25,7 @@ highed.plugins.export.install('beatify-js', {
            // value: chart.export.html(),
             mode: 'javascript',
             readOnly: true,
-            theme: 'monokai'
+            theme: 'neo'
         });
 
         this.update = function (chart) {
