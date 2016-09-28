@@ -389,6 +389,7 @@ module.exports = {
 			}, {
 				id: 'exporting--scale',
 				text: 'Scaling factor',
+				tooltipText: 'The export scale. Note that this is overridden if width is set.',
 				custom: {
 					minValue: 1,
 					maxValue: 4
