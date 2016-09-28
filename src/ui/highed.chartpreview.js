@@ -312,10 +312,10 @@ highed.ChartPreview = function (parent, attributes) {
         });
     }
 
-    /* Get embeddable HTML */
-    function getEmbeddableHTML(placehold) {
+    /* Get embeddable JavaScript */
+    function getEmbeddableJavaScript(id) {
         return gc(function (chart) {            
-            var id = 'highcharts-' + highed.uuid(),
+            var 
                 cdnIncludes = {
                     "https://code.highcharts.com/stock/highstock.js": 1,   
                     "https://code.highcharts.com/adapters/standalone-framework.js": 1,  
@@ -329,6 +329,8 @@ highed.ChartPreview = function (parent, attributes) {
                 title = chart.options.titles ? chart.options.titles.text || 'untitled chart' : 'untitled chart'
             ;
 
+            id = id || '';
+
             highed.setAttr(aggregatedOptions, 'chart--renderTo', id);
 
             /*
@@ -340,13 +342,7 @@ highed.ChartPreview = function (parent, attributes) {
                 but it works.
             */
 
-            return '\n' + [
-                '<div id="', id, '">',
-                placehold ? getEmbeddableSVG() : '',
-                '</div>',
-
-                '<script type="text/javascript">',
-                
+            return '\n' + [  
                 '(function(){ ',
                 'function include(script, next) {',
                     'var sc=document.createElement("script");',
@@ -375,10 +371,21 @@ highed.ChartPreview = function (parent, attributes) {
                     'setTimeout(cl, 20);',
                 '}',
                 'cl();',
-                '})();',
-                '</script>'
+                '})();'
 
             ].join('') + '\n';
+        });
+    }
+
+    /* Get embeddable HTML */
+    function getEmbeddableHTML(placehold) {
+        return gc(function (chart) {       
+            var id = 'highcharts-' + highed.uuid();     
+            return '\n' + [
+                '<div id="', id, '">',
+                placehold ? getEmbeddableSVG() : '',
+                '</div>'
+            ].join('') + '<script>' + getEmbeddableJavaScript(id) + '</script>';
         });
     };
 
@@ -477,7 +484,8 @@ highed.ChartPreview = function (parent, attributes) {
         export: {
             html: getEmbeddableHTML,
             json: getEmbeddableJSON,
-            svg: getEmbeddableSVG
+            svg: getEmbeddableSVG,
+            js: getEmbeddableJavaScript
         }
     };
 };
