@@ -66,8 +66,8 @@ var highed = {
             url: false,
             type: 'GET',
             dataType: 'json',
-            success: function () {},
-            error: function () {},
+            success: false,
+            error: false,
             data: {},
             autoFire: true
           }, p),
@@ -309,7 +309,7 @@ var highed = {
 
                     if (highed.isArr(current)) {
                         if (index > current.length - 1) {
-                            for (var i = current.length; i <= index; i++ ) {
+                            for (var j = current.length; j <= index; j++ ) {
                                 current.push({});
                             }
                         } 
@@ -548,14 +548,15 @@ var highed = {
         if (highed.isArr(what)) {
             n = -1;
             return next();            
-        };
-
-        highed.log(3, 'including script', what);
+        }
 
         if (includedScripts[what]) {
             highed.log(3, 'script already included, skipping:', what);
             return fn();
         }
+        
+        highed.log(3, 'including script', what);
+        includedScripts[what] = true;
 
         if (what.lastIndexOf('.css') === what.length - 4) {
             n = highed.dom.cr('link');
@@ -569,7 +570,6 @@ var highed = {
             n.onload = fn;
         }
 
-        includedScripts[what] = true
         highed.dom.ap(document.head, n);
     };
 

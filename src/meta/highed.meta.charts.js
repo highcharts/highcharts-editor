@@ -23,7 +23,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-if (typeof highed === 'undefined') {var highed = {meta: {}}};
+if (typeof highed === 'undefined') {
+	var highed = {meta: {}};
+}
 
 highed.meta.chartTemplates = {
 	line: {

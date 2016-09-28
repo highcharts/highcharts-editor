@@ -105,16 +105,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         highed.dom.options(fontSize, [8, 10, 12, 14, 16, 18, 20, 22, 25, 26, 28, 30, 32, 34]);
 
         //Set the current values
-        boldBtn.set(style['fontWeight'] === 'bold');
-        italicBtn.set(style['fontStyle'] === 'italic');
+        boldBtn.set(style.fontWeight === 'bold');
+        italicBtn.set(style.fontStyle === 'italic');
         updateColor(style.color, true);
-        highed.dom.val(fontFamily, style['fontFamily']);
-        highed.dom.val(fontSize, style['fontSize'].replace('px', ''));
+        highed.dom.val(fontFamily, style.fontFamily);
+        highed.dom.val(fontSize, style.fontSize.replace('px', ''));
 
         //Listen to font changes
         highed.dom.on(fontFamily, 'change', function () {
             if (fontFamily.selectedIndex >= 0) {
-                style['fontFamily'] = fontFamily.options[fontFamily.selectedIndex].id;
+                style.fontFamily = fontFamily.options[fontFamily.selectedIndex].id;
                 callback();
             }
         });
@@ -122,20 +122,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         //Listen to font size changes
         highed.dom.on(fontSize, 'change', function () {
             if (fontSize.selectedIndex >= 0) {
-                style['fontSize'] = fontSize.options[fontSize.selectedIndex].id + 'px';
+                style.fontSize = fontSize.options[fontSize.selectedIndex].id + 'px';
                 callback();
             }
         });
 
         //Listen to bold changes
         boldBtn.on('Toggle', function (state) {
-            style['fontWeight'] = state ? 'bold' : 'normal';
+            style.fontWeight = state ? 'bold' : 'normal';
             callback();
         });
 
         //Listen to italic changes
         italicBtn.on('Toggle', function (state) {
-            style['fontStyle'] = state ? 'italic' : 'normal';
+            style.fontStyle = state ? 'italic' : 'normal';
             callback();
         });
 

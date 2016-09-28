@@ -49,7 +49,7 @@ highed.events = function () {
             return callback.forEach(function (cb) {
                 on(event, cb, context);
             });
-        };
+        }
 
         callbacks[event] = callbacks[event] || [];
 

@@ -121,7 +121,7 @@ highed.ChartPreview = function (parent, attributes) {
             highed.setAttr(options, 'plotOptions--series--animation', false);
         }
 
-        if (typeof window['Highcharts'] === 'undefined') {
+        if (typeof window.Highcharts === 'undefined') {
             highed.snackBar('Highcharts.JS must be included to use the editor');
             return;
         }
@@ -139,8 +139,8 @@ highed.ChartPreview = function (parent, attributes) {
 
             resize();
             highed.dom.ap(pnode || parent, toggleButton);
-        } catch (e) {
-            e = e.toString();
+        } catch (ex) {
+            var e = ex.toString();
 
             //So we know that the return here is likely to be an
             //url with the error code. so extract it.
@@ -186,7 +186,7 @@ highed.ChartPreview = function (parent, attributes) {
      */
     function loadTemplate(template) {
         if (!template || !template.config) {
-            return highed.log(1, 'chart preview: templates must be an object {config: {...}}')
+            return highed.log(1, 'chart preview: templates must be an object {config: {...}}');
         }
 
         highed.clearObj(templateOptions);
@@ -292,7 +292,7 @@ highed.ChartPreview = function (parent, attributes) {
         if (id.indexOf('lang--') === 0 && customizedOptions.lang) {
             Highcharts.setOptions({
                 lang: customizedOptions.lang
-            })
+            });
         }
     }
 
@@ -391,7 +391,7 @@ highed.ChartPreview = function (parent, attributes) {
                 '</div>'
             ].join('') + '<script>' + getEmbeddableJavaScript(id) + '</script>';
         });
-    };
+    }
 
     /* Expand the chart from its drawer */
     function expand() {

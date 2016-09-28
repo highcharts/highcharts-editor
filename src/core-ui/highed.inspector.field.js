@@ -112,7 +112,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
                     tryCallback(callback, f.value);
                 });
 
-                if ((val || value) == null || ((val || value)) == 'null') {
+                if ((val || value) === null || ((val || value)) === 'null') {
                     indicator.innerHTML = 'auto';
                 } else if (!highed.isNull(val || value)) {
                     indicator.innerHTML = val || value;                    
@@ -367,9 +367,8 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
             ),
             highed.dom.ap(widgetTD,
                 fields[type] ? fields[type]() : fields.string()
-            )
-             ,
-             (!nohint ? 
+            ),
+            (!nohint ? 
              highed.dom.ap(helpTD,
                  //highed.dom.cr('span', 'highed-field-tooltip', properties.tooltip) 
                  help

@@ -123,7 +123,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             if (!properties.options.json) {
                 jsonTab.hide();
             }
-            if (!Object.keys(properties.plugins) === 0 || !properties.options.plugins) {
+            if (Object.keys(properties.plugins) === 0 || !properties.options.plugins) {
                 webTab.hide();
             }
             if (!properties.options.samples) {
@@ -146,7 +146,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         urlTitle = highed.dom.cr('div', '', 'URL'),
                         importBtn = highed.dom.cr('button', 'highed-imp-button highed-imp-button-right', 'Import ' + name + ' from URL'),
                         dynamicOptionsContainer = highed.dom.cr('table', 'highed-customizer-table'),
-                        dynamicOptions = {};
+                        dynamicOptions = {}
                     ;
 
                     url.value = options.defaultURL || '';

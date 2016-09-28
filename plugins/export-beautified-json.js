@@ -9,7 +9,12 @@
 highed.plugins.export.install('beatify-json', {
     title: 'Beatuified JSON',
     description: 'Exports well-formatted JSON',
-    dependencies: [],        
+    dependencies: [
+        'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/codemirror.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/codemirror.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/theme/neo.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/mode/javascript/javascript.min.js' 
+    ], 
     //Set this to true to trigger a download when doing the export.
     //Useful for cases where the export is completely clientside.
     downloadOutput: true,
@@ -23,7 +28,6 @@ highed.plugins.export.install('beatify-json', {
 
         this.cm = CodeMirror.fromTextArea(this.textarea, {
             lineNumbers: true,
-           // value: chart.export.html(),
             mode: 'javascript',
             readOnly: true,
             theme: 'neo'

@@ -135,7 +135,7 @@ highed.Tree = function (parent) {
         highed.dom.on(icon, 'click', toggle);
 
         if (!arrayHeader && Object.keys(child.children).length === 0) {
-            icon.className = 'exp-col-icon fa fa-sliders'
+            icon.className = 'exp-col-icon fa fa-sliders';
         }
 
         highed.dom.on(title, 'click', function () {

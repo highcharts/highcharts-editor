@@ -85,9 +85,7 @@ function sortAPI(api) {
 
 function writeMeta(data) {
     var body = [
-        '/*',
         license,
-        '*/',
         'highed.meta.optionsAdvanced = ',
         data,
         ';'

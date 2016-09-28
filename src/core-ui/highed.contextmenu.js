@@ -174,4 +174,4 @@ highed.ContextMenu = function (stuff) {
         hide: hide, 
         build: build
     };
-}
+};

@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 var dest = 'dist/',
     buildDest = dest + 'bundles/',
     electronDest = 'app/',
@@ -10,9 +12,11 @@ var dest = 'dist/',
     concat = require('gulp-concat'),
     less = require('gulp-less'),
     electron = require('gulp-electron'),
-    jshint = require('gulp-jshint'),
+    jslint = require('gulp-jshint'),
     zip = require('gulp-zip'),
     run = require('gulp-run'),
+    header = require('gulp-header'),
+    license = fs.readFileSync(__dirname + '/LICENSE'),
     //The order is important, so we don't do wildcard
     sources =[
         "./src/core/highcharts-editor.js",
@@ -143,6 +147,7 @@ gulp.task('tinymce',  function () {
                .pipe(gulp.dest(dest))
                .pipe(rename(name + '.tinymce.min.js'))
                .pipe(uglify())
+               .pipe(header(license, packageJson))
                .pipe(gulp.dest(dest))
     ;
 });
@@ -153,6 +158,7 @@ gulp.task('ckeditor', function () {
                .pipe(gulp.dest(dest))
                .pipe(rename(name + '.ckeditor.min.js'))
                .pipe(uglify())
+               .pipe(header(license, packageJson))
                .pipe(gulp.dest(dest))
     ;
 });
@@ -172,12 +178,31 @@ gulp.task('less', function () {
     ; 
 });
 
+gulp.task('lint', function () {
+  return gulp.src(sources)
+         .pipe(jslint({
+        //  global: ['XMLHttpRequest']
+         }))
+         .pipe(jslint.reporter('default', {}))
+  ;
+});
+
+gulp.task('lint-advanced', function () {
+  return gulp.src(sources.concat(['./src/meta/highed.meta.options.advanced.js']))
+         .pipe(jslint({
+        //  global: ['XMLHttpRequest']
+         }))
+         .pipe(jslint.reporter('default', {}))
+  ;
+});
+
 gulp.task('minify', function () {
     return gulp.src(sources)
                .pipe(concat(name + '.js'))
-               .pipe(gulp.dest(dest))               
+                            
                .pipe(rename(name + '.min.js'))
                .pipe(uglify())
+               .pipe(header(license, packageJson))
                .pipe(gulp.dest(dest))
                .pipe(gulp.dest(electronDest))
                .pipe(gulp.dest(wpPluginDest))
@@ -190,6 +215,7 @@ gulp.task('minify-advanced', ['bake-advanced', 'less'], function () {
                .pipe(gulp.dest(dest))               
                .pipe(rename(name + '.advanced.min.js'))
                .pipe(uglify())
+               .pipe(header(license, packageJson))
                .pipe(gulp.dest(dest))
                .pipe(gulp.dest(electronDest))
                .pipe(gulp.dest(wpPluginDest))
@@ -199,6 +225,7 @@ gulp.task('minify-advanced', ['bake-advanced', 'less'], function () {
 gulp.task('plugins', function () {
     return gulp.src('plugins/*.js')
                .pipe(uglify())
+               .pipe(header(license, packageJson))
                .pipe(gulp.dest(dest + 'plugins'))
                .pipe(gulp.dest(electronDest + 'plugins'))
                .pipe(zip(name + '.plugins.' + packageJson.version + '.zip'))
