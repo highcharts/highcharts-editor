@@ -120,7 +120,7 @@ gulp.task('zip-dist', ['less', 'minify'], function () {
   return gulp.src([
             'dist/' + name + '.min.css',
             'dist/' + name + '.min.js'
-         ]).pipe(zip(name + '.dist.minified.' + packageJson.version + '.zip'))
+         ]).pipe(zip(name + '.dist.min.' + packageJson.version + '.zip'))
            .pipe(gulp.dest(buildDest));
 });
 
