@@ -170,7 +170,7 @@ gulp.task('minify-advanced', function () {
     return gulp.src(sources.concat(['./src/meta/highed.meta.options.advanced.js']))
                .pipe(concat(name + '.js'))
                .pipe(gulp.dest(dest))               
-               .pipe(rename(name + '.min.js'))
+               .pipe(rename(name + '.advanced.min.js'))
                .pipe(uglify())
                .pipe(gulp.dest(dest))
                .pipe(gulp.dest(electronDest))
@@ -180,9 +180,6 @@ gulp.task('minify-advanced', function () {
 
 gulp.task('plugins', function () {
     return gulp.src('plugins/*.js')
-               //.pipe(concat(name + '.js'))
-              // .pipe(gulp.dest(dest))               
-               //.pipe(rename(name + '.min.js'))
                .pipe(uglify())
                .pipe(gulp.dest(dest + 'plugins'))
                .pipe(gulp.dest(electronDest + 'plugins'))
