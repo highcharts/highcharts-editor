@@ -1,7 +1,7 @@
 
 # Highcharts Editor Roadmap
 
-## 0.0.1-beta: Release first week of September, 2016
+## 0.0.1-beta: Release first week of October, 2016
 
 **Editor Features**
 
@@ -16,16 +16,29 @@
         * Basic property subset (no left-side categories)
         * Basic template picker
         * Modal data import (?)            
-  * Data import: CSV + JSON 
-  * Chart export: HTML + JSON
+  * Data import: CSV + JSON + Samples 
+  * Chart export: HTML + JSON + SVG
   * Templates: basic library of templates
-  * Customize: most common types editable (primitives + styling + arrays)
-    * Same basic set of modifiable properties as on Highcharts Cloud
+  * Customizer
+    * Supported types in the UI:
+      * string
+      * number
+      * range
+      * boolean
+      * color
+      * cssobject
+      * object
+      * options (drop down)
+      * font
+      * array of any of the supported types
+    * Optional whitelisting of options to include
+    * Simple Editor: Same basic set of modifiable properties as on Highcharts Cloud
+    * Advanced Editor: (optional) in the property customizer
   * Embed: get HTML + JSON output
-  * Array types in the property customizer
-  * Advanced options in the property customizer
   * Basic responsiveness
-  * Simple data fetcher plug-in API
+  * Data import plugins
+  * Data export plugins
+  * Editor plugins
 
 **Ecosystem/Tooling**
     
@@ -33,6 +46,17 @@
   * Electron build option
   * Custom property sub-set baking
   * Plugin samples
+    * Import:
+      * csv
+      * Difi
+      * gspreadsheets
+      * Socrata
+    * Export
+      * Beautified JS
+      * Beautified JSON
+    * Editor
+      * REST auto poster
   * Integration demos
     * TinyMCE
     * Wordpress
+    * CKEditor
