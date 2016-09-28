@@ -76,7 +76,7 @@ highed.ModalEditor = function (summoner, attributes, fn) {
         modal.hide();
     });
 
-    attachToSummoner();
+    attachToSummoner(summoner);
 
     if (properties.allowDone) {
         highed.dom.ap(editor.toolbar.center, doneEditing);           
