@@ -121,6 +121,11 @@ highed.ChartPreview = function (parent, attributes) {
             highed.setAttr(options, 'plotOptions--series--animation', false);
         }
 
+        if (typeof window['Highcharts'] === 'undefined') {
+            highed.snackBar('Highcharts.JS must be included to use the editor');
+            return;
+        }
+
         try {
             chart = new Highcharts.Chart(options);   
             //This is super ugly.
