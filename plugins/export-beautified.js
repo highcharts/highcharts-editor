@@ -6,7 +6,8 @@
 
 */
 
-highed.plugins.export.install('Beautified JavaScript', {
+highed.plugins.export.install('beatify-js', {
+    title: 'Export JavaScript',
     description: 'Exports well-formatted JavaScript',
     dependencies: [
         'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/codemirror.min.js',

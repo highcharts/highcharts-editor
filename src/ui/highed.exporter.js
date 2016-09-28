@@ -60,7 +60,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         var //splitter = highed.HSplitter(parent, {leftWidth: 50, noOverflow: true}),
             properties = highed.merge({
                 options: 'csv html json plugins',
-                plugins: ['Beautified JavaScript']
+                plugins: ['beatify-js']
             }, attributes),    
 
             tctrl = highed.TabControl(parent),
@@ -155,13 +155,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         if (highed.isFn(options.export && currentChartPreview)) {
                             options.export.apply(pluginData[name], [dynamicOptions, currentChartPreview, function (err) {
                                 if (err) return highed.snackBar('Export error: ' + err);
-                                highed.snackBar(name + ' export complete');
+                                highed.snackBar((options.title || name) + ' export complete');
                             }, additionalUI]);
                         }
                     });
 
                     highed.dom.ap(pluginSplitter.right,
-                        highed.dom.cr('div', 'highed-customizer-table-heading', name),
+                        highed.dom.cr('div', 'highed-customizer-table-heading', options.title || name),
                         highed.dom.cr('div', 'highed-imp-help', options.description),
                         Object.keys(options.options || {}).length ? dynamicOptionsContainer : false,
                         additionalUI,
@@ -175,7 +175,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 
                 pluginList.addItem({
                     id: name,
-                    title: name,
+                    title: options.title || name,
                     click: buildBody
                 });
 

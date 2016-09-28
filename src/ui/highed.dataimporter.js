@@ -48,6 +48,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         install: function (name, defintion) {
             if (highed.isNull(webImports[name])) {
                 webImports[name] = highed.merge({
+                    title: false,
                     description: '',
                     treatAs: 'csv',
                     fetchAs: 'json',
@@ -203,7 +204,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     webSplitter.right.innerHTML = '';
 
                     highed.dom.ap(webSplitter.right,
-                        highed.dom.cr('div', 'highed-customizer-table-heading', name),
+                        highed.dom.cr('div', 'highed-customizer-table-heading', options.title || name),
                         highed.dom.cr('div', 'highed-imp-help', options.description),
                         urlTitle,
                         url,
@@ -215,7 +216,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
                 webList.addItem({
                     id: name,
-                    title: name,
+                    title: options.title || name,
                     click: buildBody
                 });
 
