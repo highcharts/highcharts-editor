@@ -369,6 +369,7 @@ module.exports = {
 			}, {
 				id: 'exporting--sourceWidth',
 				text: 'Exported width',
+				tooltipText: 'Note that this overrides the scale property',
 				custom: {
 					minValue: 10,
 					maxValue: 2000,
