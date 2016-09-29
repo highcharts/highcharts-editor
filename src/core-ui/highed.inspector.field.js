@@ -59,11 +59,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *     > {anything} - the changed value
  *  @returns {domnode} - a DOM node containing the field + label wrapped in a tr
  */
-highed.InspectorField = function (type, value, properties, fn, nohint) {
+highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) {
     var 
         fields = {
             string: function (val, callback) {
-                var input = highed.dom.cr('input', 'highed-field-input');
+                var input = highed.dom.cr('input', 'highed-field-input', '', fieldID);
 
                 highed.dom.on(input, 'change', function () {
                     tryCallback(callback, input.value);
@@ -74,7 +74,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
                 return input;
             },
             number: function (val, callback) {
-                var input = highed.dom.cr('input', 'highed-field-input');
+                var input = highed.dom.cr('input', 'highed-field-input', '', fieldID);
 
                 input.type = 'number';
 
@@ -93,7 +93,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
                 return input;
             },
             range: function (val, callback) {
-                var f = highed.dom.cr('input', 'highed-field-input'),
+                var f = highed.dom.cr('input', 'highed-field-input', '', fieldID),
                     indicator = highed.dom.cr('div', 'highed-field-range-indicator', '&nbsp;'),
                     nullIt = highed.dom.cr('span', 'highed-icon highed-field-range-null fa fa-undo', '')
                 ;  
@@ -131,7 +131,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
                 return [f, indicator, nullIt];
             },
             boolean: function (val, callback) {
-                var input = highed.dom.cr('input');             
+                var input = highed.dom.cr('input', '', '', fieldID);             
                 input.type = 'checkbox';
 
                 input.checked = highed.toBool(val || value);
@@ -143,7 +143,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
                 return input;
             },
             color: function (val, callback) {
-                var box = highed.dom.cr('div', 'highed-field-colorpicker'); 
+                var box = highed.dom.cr('div', 'highed-field-colorpicker', '', fieldID); 
 
                 function update(col, callback) {
                     box.innerHTML = col;
@@ -176,7 +176,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
                 return picker.container;
             },
             options: function (val, callback) {
-                var options = highed.dom.cr('select', 'highed-field-select');
+                var options = highed.dom.cr('select', 'highed-field-select', '', fieldID);
 
                 highed.dom.options(options, properties.values);
 
@@ -190,7 +190,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
             },
             object: function (val, callback) {
                 //Create a sub-table of options
-                var stable = highed.dom.cr('table', 'highed-customizer-table'),
+                var stable = highed.dom.cr('table', 'highed-customizer-table', '', fieldID),
                     wasUndefined = highed.isNull(val || value)
                 ;
 
@@ -219,7 +219,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint) {
                 return stable;
             },
             array: function () {
-                var container = highed.dom.cr('div'),
+                var container = highed.dom.cr('div', '', '', fieldID),
                     add = highed.dom.cr('span', 'highed-field-array-add fa fa-plus', ''),
                     itemsNode = highed.dom.cr('div', 'highed-inline-blocks'),
                     items = {},

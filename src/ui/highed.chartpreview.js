@@ -64,12 +64,16 @@ highed.ChartPreview = function (parent, attributes) {
         toggleButton = highed.dom.cr('div', 'highed-icon highed-chart-preview-expand fa fa-angle-double-left'),
         expanded = false,
         wysiwyg = {
-            'highcharts-legend': 'Legend',
-            'highcharts-title': 'Titles',
-            'highcharts-subtitle': 'Titles',
-            'highcharts-yaxis-labels': 'Axes',
-            'highcharts-xaxis-labels': 'Axes',
-            'highcharts-yaxis-title': 'Axes'
+            'g.highcharts-legend': { tab: 'Legend', id: 'legend--enabled'},
+            'text.highcharts-title': { tab: 'Titles', id: 'title--text'},
+            'text.highcharts-subtitle': { tab: 'Titles', id: 'subtitle--text'},
+            'g.highcharts-yaxis-labels': { tab: 'Axes', id: 'yAxis-title--text'},
+            'g.highcharts-xaxis-labels': { tab: 'Axes', id: 'xAxis-title--text'},
+            'text.highcharts-xaxis-title': { tab: 'Axes', id: 'xAxis-title--text'},
+            'text.highcharts-yaxis-title': { tab: 'Axes', id: 'yAxis-title--text'},
+            'rect.highcharts-background': { tab: 'Appearance', id: 'chart--backgroundColor'},
+            '.highcharts-tracker .highcharts-data-labels': { tab: 'Data series', id: 'series'},
+            'g.highcharts-tooltip': { tab: 'Tooltip', id: 'tooltip--enabled'}
         }
     ;
 
@@ -77,8 +81,13 @@ highed.ChartPreview = function (parent, attributes) {
 
     function attachWYSIWYG() {
         Object.keys(wysiwyg).forEach(function (key) {            
-            highed.dom.on(parent.querySelector('.' + key), 'click', function (e) {
+            highed.dom.on(parent.querySelector(key), 'click', function (e) {
                 events.emit('RequestEdit', wysiwyg[key], e.clientX, e.clientY);
+                e.cancelBubble = true;
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                return false; 
             });
         });
     }

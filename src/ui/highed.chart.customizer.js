@@ -55,12 +55,18 @@ highed.ChartCustomizer = function (parent, attributes) {
         flatOptions = {},
         chartOptions = {},
 
-        highlighted = false
+        highlighted = false,
+
+        indicator = highed.dom.cr('div', 'highed-customizer-field-highlighter')
     ;
 
     properties.availableSettings = highed.arrToObj(properties.availableSettings);
 
     ///////////////////////////////////////////////////////////////////////////
+
+    // highed.ready(function () {
+    //     highed.dom.ap(document.body, indicator);
+    // });
 
      /** Force a resize of the editor 
      *  @memberof highed.ChartCustomizer
@@ -240,7 +246,9 @@ highed.ChartCustomizer = function (parent, attributes) {
                             //here somehow and check their subType
                             applyFilter(detailIndex, filteredBy, newValue);
                         }
-                    }
+                    },
+                    false,
+                    group.id
                 )
             );
         }
@@ -274,7 +282,28 @@ highed.ChartCustomizer = function (parent, attributes) {
      *  @param thing {anything} - the category to focus
      */
     function focus(thing, x, y) {
-        list.select(thing);
+        var n;
+
+        list.select(thing.tab);
+        n = body.querySelector('#' + thing.id);
+
+        if (!n) return;
+
+        var p = highed.dom.pos(n);
+
+        highed.dom.style(n, {
+            border: '2px solid #33aa33'
+        });
+
+        n.focus();
+        n.scrollIntoView(true);
+
+        setTimeout(function () {
+            highed.dom.style(n, {
+                border: ''
+            });
+        }, 2000);
+        
         // var entry = highed.meta.optionsExtended.options[thing];
 
         // if (entry) {

@@ -58,3 +58,16 @@
 .highed-customizer-table tr:nth-child(odd) {
 	background: darken(@background-panel, 2);
 }
+
+.highed-customizer-field-highlighter {
+	position:fixed;
+	pointer-events: none;
+
+	background: @accent-color;
+	border-radius: 50%;
+	width:40px;
+	height:40px;
+	opacity:1;
+
+	.highed-transition;
+}
