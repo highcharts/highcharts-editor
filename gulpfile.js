@@ -127,7 +127,8 @@ gulp.task('zip-dist', ['less', 'minify'], function () {
 gulp.task('zip-dist-advanced', ['less', 'minify', 'minify-advanced'], function () {
   return gulp.src([
             'dist/' + name + '.min.css',
-            'dist/' + name + '.advanced.min.js'
+            'dist/' + name + '.advanced.min.js',
+            'dist/' + name + '.min.js'
          ]).pipe(zip(name + '.dist.advanced.min.' + packageJson.version + '.zip'))
            .pipe(gulp.dest(buildDest));
 });
@@ -210,7 +211,7 @@ gulp.task('minify', function () {
 });
 
 gulp.task('minify-advanced', ['bake-advanced', 'less'], function () {
-    return gulp.src(sources.concat(['./src/meta/highed.meta.options.advanced.js']))
+    return gulp.src('./src/meta/highed.meta.options.advanced.js')
                .pipe(concat(name + '.advanced.js'))
                .pipe(gulp.dest(dest))               
                .pipe(rename(name + '.advanced.min.js'))

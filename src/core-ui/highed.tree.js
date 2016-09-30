@@ -61,6 +61,10 @@ highed.Tree = function (parent) {
             noInspectSelf = false
         ;
 
+        if (!key && !child.title) {
+            return;
+        }
+
         if (!arrayHeader && child.entries.length === 0 && Object.keys(child.children).length === 0) {
            // return;
         }
