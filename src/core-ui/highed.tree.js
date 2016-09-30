@@ -41,7 +41,8 @@ highed.Tree = function (parent) {
         reselectFn = false,
         events = highed.events(),
         expands = {},
-        expandState = {}
+        expandState = {},
+        selectedID = false
     ;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -50,7 +51,7 @@ highed.Tree = function (parent) {
         var title = highed.dom.cr('div', 'parent-title', child.title || highed.uncamelize(key)),
             icon = highed.dom.cr('div', 'exp-col-icon fa fa-plus'),
             body = highed.dom.cr('div', 'parent-body'),
-            node = highed.dom.cr('div', 'node'),
+            node = highed.dom.cr('div', 'node', '', (child.id || key)),
 
             rightIcons = highed.dom.cr('div', 'right-icons'),
             remIcon = highed.dom.cr('div', 'highed-icon fa fa-minus-circle'),
@@ -129,6 +130,7 @@ highed.Tree = function (parent) {
 
             title.className = 'parent-title parent-title-selected';
             selectedNode = title;
+            
 
             reselectFn = function () {
                 events.emit('Select', child, highed.uncamelize(key), child.dataIndex);
@@ -198,6 +200,8 @@ highed.Tree = function (parent) {
         }
 
         highed.dom.on(title, 'click', function () {
+            selectedID = child.id || key;
+
             if (arrayHeader) {
                 return toggle();
             }
@@ -217,6 +221,8 @@ highed.Tree = function (parent) {
      */
     function expandTo(id) {
         var prev = '';
+
+        if (!id) return;
 
         id = id.replace(/\-\-/g, '.').replace(/\-/g, '.').split('.');
 
@@ -327,6 +333,7 @@ highed.Tree = function (parent) {
                     expands[key]();
                 }
             });
+            expandTo(selectedID);
         }
     };
 };

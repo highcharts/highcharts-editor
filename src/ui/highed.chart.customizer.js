@@ -296,8 +296,14 @@ highed.ChartCustomizer = function (parent, attributes) {
      *  @id is the id of the field to highlight
      */
     function highlightField(id) {
+        var n = advSplitter.left.querySelector('#' + id.substr(0, id.indexOf('-')));        
+
         highlightNode(body.querySelector('#' + id));
         highlightNode(advSplitter.right.querySelector('#' + id));
+
+        if (n) {
+            n.scrollIntoView({block: "end"});
+        }
     }
 
     /** Focus a category
