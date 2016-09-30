@@ -67,10 +67,10 @@ highed.ChartPreview = function (parent, attributes) {
             'g.highcharts-legend': { tab: 'Legend', id: 'legend--enabled'},
             'text.highcharts-title': { tab: 'Titles', id: 'title--text'},
             'text.highcharts-subtitle': { tab: 'Titles', id: 'subtitle--text'},
-            'g.highcharts-yaxis-labels': { tab: 'Axes', id: 'yAxis-title--text'},
+            'g.highcharts-yaxis-labels': { tab: 'Titles', id: 'yAxis-title--text'},
             'g.highcharts-xaxis-labels': { tab: 'Axes', id: 'xAxis-title--text'},
             'text.highcharts-xaxis-title': { tab: 'Axes', id: 'xAxis-title--text'},
-            'text.highcharts-yaxis-title': { tab: 'Axes', id: 'yAxis-title--text'},
+            'text.highcharts-yaxis-title': { tab: 'Titles', id: 'yAxis-title--text'},
             'rect.highcharts-background': { tab: 'Appearance', id: 'chart--backgroundColor'},
             '.highcharts-tracker .highcharts-data-labels': { tab: 'Data series', id: 'series'},
             'g.highcharts-tooltip': { tab: 'Tooltip', id: 'tooltip--enabled'}

@@ -55,18 +55,12 @@ highed.ChartCustomizer = function (parent, attributes) {
         flatOptions = {},
         chartOptions = {},
 
-        highlighted = false,
-
-        indicator = highed.dom.cr('div', 'highed-customizer-field-highlighter')
+        highlighted = false
     ;
 
     properties.availableSettings = highed.arrToObj(properties.availableSettings);
 
     ///////////////////////////////////////////////////////////////////////////
-
-    // highed.ready(function () {
-    //     highed.dom.ap(document.body, indicator);
-    // });
 
      /** Force a resize of the editor 
      *  @memberof highed.ChartCustomizer
@@ -277,17 +271,9 @@ highed.ChartCustomizer = function (parent, attributes) {
         buildTree();
     }
 
-    /** Focus a category
-     *  @memberof highed.ChartCustomizer
-     *  @param thing {anything} - the category to focus
-     */
-    function focus(thing, x, y) {
-        var n;
-
-        list.select(thing.tab);
-        n = body.querySelector('#' + thing.id);
-
-        if (!n) return;
+    //Highlight a node
+    function highlightNode(n) {
+         if (!n) return;
 
         var p = highed.dom.pos(n);
 
@@ -303,15 +289,27 @@ highed.ChartCustomizer = function (parent, attributes) {
                 border: ''
             });
         }, 2000);
-        
-        // var entry = highed.meta.optionsExtended.options[thing];
+    }
 
-        // if (entry) {
-        //     body.innerHTML = '';
-        //     entry.forEach(function (thing) {
-        //         selectGroup(thing);
-        //     });
-        // }
+    /** Highlight a field in the customizer
+     *  @memberof highed.ChartCustomizer
+     *  @id is the id of the field to highlight
+     */
+    function highlightField(id) {
+        highlightNode(body.querySelector('#' + id));
+        highlightNode(advSplitter.right.querySelector('#' + id));
+    }
+
+    /** Focus a category
+     *  @memberof highed.ChartCustomizer
+     *  @param thing {anything} - the category to focus
+     */
+    function focus(thing, x, y) {
+        var n;
+
+        list.select(thing.tab);
+        advTree.expandTo(thing.id);
+        highlightField(thing.id);        
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -346,7 +344,9 @@ highed.ChartCustomizer = function (parent, attributes) {
                     function (newValue) {       
                         console.log(arrIndex);    
                         events.emit('PropertyChange', entry.id, newValue, arrIndex);
-                    }
+                    },
+                    false,
+                    entry.id
                 )
             );
         });
@@ -373,6 +373,7 @@ highed.ChartCustomizer = function (parent, attributes) {
         resize: resize,
         init: init,
         focus: focus,
-        reselect: list.reselect
+        reselect: list.reselect,
+        highlightField: highlightField
     };
 };

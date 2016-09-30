@@ -39,7 +39,8 @@ highed.Tree = function (parent) {
     var container = highed.dom.cr('div', 'highed-tree'),
         selectedNode = false,
         reselectFn = false,
-        events = highed.events()
+        events = highed.events(),
+        expands = {}
     ;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -117,6 +118,32 @@ highed.Tree = function (parent) {
 
         highed.dom.style(body, {display: 'none'});
 
+        function select() {
+            if (selectedNode) {
+                selectedNode.className = 'parent-title';
+            }
+
+            title.className = 'parent-title parent-title-selected';
+            selectedNode = title;
+
+            reselectFn = function () {
+                events.emit('Select', child, highed.uncamelize(key), child.dataIndex);
+            };
+
+            events.emit('Select', child, highed.uncamelize(key), child.dataIndex);
+        }
+
+        function expand() {            
+            if (!expanded && Object.keys(child.children).length) {
+                icon.className = 'exp-col-icon fa fa-minus';
+                highed.dom.style(body, {display: 'block'});
+                expanded = true;      
+
+            } 
+            //Trigger a selection
+            select();        
+        }
+
         function toggle() {
             if (!arrayHeader && Object.keys(child.children).length === 0) {
                 return;
@@ -132,7 +159,20 @@ highed.Tree = function (parent) {
             }
         }
 
+        if (child.id) {
+            expands[child.id.replace(/\-\-/g, '.').replace(/\-/g, '.')] = expand;            
+        }
+
         highed.dom.on(icon, 'click', toggle);
+
+        if (child.entries) {
+            Object.keys(child.entries).forEach(function (ekey) {
+                var schild = child.entries[ekey];
+                if (schild.id) {
+                    expands[schild.id.replace(/\-\-/g, '.').replace(/\-/g, '.')] = expand;            
+                }
+            });
+        }
 
         if (!arrayHeader && Object.keys(child.children).length === 0) {
             icon.className = 'exp-col-icon fa fa-sliders';
@@ -147,21 +187,25 @@ highed.Tree = function (parent) {
                 return;
             }
 
-            if (selectedNode) {
-                selectedNode.className = 'parent-title';
-            }
-
-            title.className = 'parent-title parent-title-selected';
-            selectedNode = title;
-
-            reselectFn = function () {
-                events.emit('Select', child, highed.uncamelize(key), child.dataIndex);
-            };
-
-            events.emit('Select', child, highed.uncamelize(key), child.dataIndex);
+            select();
         });
 
         return body;
+    }
+
+    /** Expand to show a given ID 
+     *  @param id {string} - the ID of the element to expand
+     */
+    function expandTo(id) {
+        var prev = '';
+
+        id = id.replace(/\-\-/g, '.').replace(/\-/g, '.').split('.');
+
+        id.forEach(function (seg) {
+            seg = prev + seg;
+            if (expands[seg]) expands[seg]();
+            prev += seg + '.';
+        });
     }
     
     /** Build the tree
@@ -254,6 +298,7 @@ highed.Tree = function (parent) {
     return {
         on: events.on,
         reselect: reselect,
+        expandTo: expandTo,
         build: function (tree, data) {
             container.innerHTML = '';
             build(tree, container, data, 0);
