@@ -49,13 +49,13 @@ highed.Tree = function (parent) {
 
     function createNode(child, key, pnode, instancedData, dataIndex, arrayHeader, alwaysExpand) {
         var title = highed.dom.cr('div', 'parent-title', child.title || highed.uncamelize(key)),
-            icon = highed.dom.cr('div', 'exp-col-icon fa fa-plus'),
+            icon = highed.dom.cr('div', 'exp-col-icon fa fa-folder-o'),
             body = highed.dom.cr('div', 'parent-body'),
             node = highed.dom.cr('div', 'node', '', (child.id || key)),
 
             rightIcons = highed.dom.cr('div', 'right-icons'),
-            remIcon = highed.dom.cr('div', 'highed-icon fa fa-minus-circle'),
-            addIcon = highed.dom.cr('div', 'highed-icon fa fa-plus-circle'),
+            remIcon = highed.dom.cr('div', 'highed-icon fa fa-minus-square-o'),
+            addIcon = highed.dom.cr('div', 'highed-icon fa fa-plus-square-o'),
 
             expanded = false,
             noInspectSelf = false
@@ -145,6 +145,11 @@ highed.Tree = function (parent) {
 
         function pushExpandState() {
             var id = (child.id || key).replace(/\-\-/g, '.').replace(/\-/g, '.');
+
+            if (child.isArrayParent) {
+                id += ':' + child.dataIndex;
+            }
+
             expandState[id] = expanded;  
             //We actually need to check everything starting with this id
             if (!expanded) {
@@ -158,7 +163,7 @@ highed.Tree = function (parent) {
 
         function expand() {            
             if (!expanded && Object.keys(child.children).length) {
-                icon.className = 'exp-col-icon fa fa-minus';
+                icon.className = 'exp-col-icon fa fa-folder-open-o';
                 highed.dom.style(body, {display: 'block'});
                 expanded = true;      
                 pushExpandState();
@@ -174,10 +179,10 @@ highed.Tree = function (parent) {
 
             expanded = !expanded;
             if (expanded) {
-                icon.className = 'exp-col-icon fa fa-minus';
+                icon.className = 'exp-col-icon fa fa-folder-open-o';
                 highed.dom.style(body, {display: 'block'});
             } else {
-                icon.className = 'exp-col-icon fa fa-plus';                        
+                icon.className = 'exp-col-icon fa fa-folder-o';                        
                 highed.dom.style(body, {display: 'none'});
             }
 
@@ -185,12 +190,19 @@ highed.Tree = function (parent) {
         }
 
         if (alwaysExpand) {
+
             expand();
         }
 
-        
-        expands[(child.id || key).replace(/\-\-/g, '.').replace(/\-/g, '.')] = expand;            
-        
+        if (arrayHeader) {
+            icon.className = 'exp-col-icon fa fa-list-ul';
+        }
+
+        if (child.isArrayParent) {
+            expands[(child.id || key).replace(/\-\-/g, '.').replace(/\-/g, '.') + ':' + child.dataIndex] = expand;                        
+        } else {
+            expands[(child.id || key).replace(/\-\-/g, '.').replace(/\-/g, '.')] = expand;            
+        }        
 
         highed.dom.on(icon, 'click', toggle);
 
@@ -339,6 +351,14 @@ highed.Tree = function (parent) {
             build(tree, container, data, 0);
             //Apply the active expand state
             Object.keys(expandState).forEach(function (key) {
+                var index = 0;
+
+                // if (key.indexOf(':') > 0) {
+                //     //This is an array thing
+                //     index = parseInt(key(key.indexOf(':') + 1));
+                //     key = key.substr(0, key.indexOf(':') - 1);
+                // }
+
                 if (expandState[key] && expands[key]) {
                     expands[key]();
                 }
