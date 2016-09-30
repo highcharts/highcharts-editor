@@ -336,6 +336,10 @@ highed.ChartCustomizer = function (parent, attributes) {
         Object.keys(item.entries).forEach(function (key) {
             var entry = item.entries[key];
             
+            if (!entry.shortName.length) {
+                return;
+            }
+
             highed.dom.ap(table,
                 highed.InspectorField(
                     entry.values ?  'options' : (entry.dataType || 'string'), 

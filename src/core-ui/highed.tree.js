@@ -47,7 +47,7 @@ highed.Tree = function (parent) {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    function createNode(child, key, pnode, instancedData, dataIndex, arrayHeader) {
+    function createNode(child, key, pnode, instancedData, dataIndex, arrayHeader, alwaysExpand) {
         var title = highed.dom.cr('div', 'parent-title', child.title || highed.uncamelize(key)),
             icon = highed.dom.cr('div', 'exp-col-icon fa fa-plus'),
             body = highed.dom.cr('div', 'parent-body'),
@@ -168,7 +168,7 @@ highed.Tree = function (parent) {
         }
 
         function toggle() {
-            if (!arrayHeader && Object.keys(child.children).length === 0) {
+            if (alwaysExpand || (!arrayHeader && Object.keys(child.children).length === 0)) {
                 return;
             }
 
@@ -182,6 +182,10 @@ highed.Tree = function (parent) {
             }
 
             pushExpandState();                      
+        }
+
+        if (alwaysExpand) {
+            expand();
         }
 
         
@@ -260,7 +264,7 @@ highed.Tree = function (parent) {
 
             if (highed.isArr(arr)) {
                 arr.forEach(function (data, i) {
-                    children[tree.shortName + ' #' + (i + 1)] = {                        
+                    children[tree.shortName + ' ' + (i + 1)] = {                        
                         children: tree.children,
                         entries: tree.entries,
                         dataIndex: i,
@@ -269,12 +273,14 @@ highed.Tree = function (parent) {
                     };
                 });
 
+               // tree.alwaysExpand =  true;
+
                 return build(
                     {
                         children: children,
                         entries: []
                     }, 
-                    createNode(tree, tree.shortName, pnode, instancedData, dataIndex, true),
+                    createNode(tree, tree.shortName, pnode, instancedData, dataIndex, true, true),
                     instancedData, 
                     dataIndex
                 );  
