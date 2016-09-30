@@ -361,6 +361,10 @@ highed.ChartCustomizer = function (parent, attributes) {
         events.emit('PropertyChange', path, data);
     });
 
+    advTree.on('Dirty', function () {
+        init(flatOptions, chartOptions);
+    });
+
     tabs.on('Focus', function () {
         init(flatOptions, chartOptions);
     });

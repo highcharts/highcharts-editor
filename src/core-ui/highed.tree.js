@@ -40,7 +40,8 @@ highed.Tree = function (parent) {
         selectedNode = false,
         reselectFn = false,
         events = highed.events(),
-        expands = {}
+        expands = {},
+        expandState = {}
     ;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -89,6 +90,7 @@ highed.Tree = function (parent) {
                     highed.setAttr(instancedData, child.id, arr);  
 
                     events.emit('DataUpdate', child.id, arr);
+                    events.emit('Dirty');
                 }
             });
 
@@ -103,6 +105,8 @@ highed.Tree = function (parent) {
                 if (highed.isFn(reselectFn)) {
                     reselectFn();
                 }
+                expandTo(child.id);
+                events.emit('Dirty');
             });
         }
 
@@ -133,12 +137,25 @@ highed.Tree = function (parent) {
             events.emit('Select', child, highed.uncamelize(key), child.dataIndex);
         }
 
+        function pushExpandState() {
+            var id = (child.id || key).replace(/\-\-/g, '.').replace(/\-/g, '.');
+            expandState[id] = expanded;  
+            //We actually need to check everything starting with this id
+            if (!expanded) {
+                Object.keys(expandState).forEach(function (key) {
+                    if (key.indexOf(id) === 0) {
+                        expandState[key] = false;
+                    }
+                });
+            }
+        }
+
         function expand() {            
             if (!expanded && Object.keys(child.children).length) {
                 icon.className = 'exp-col-icon fa fa-minus';
                 highed.dom.style(body, {display: 'block'});
                 expanded = true;      
-
+                pushExpandState();
             } 
             //Trigger a selection
             select();        
@@ -157,11 +174,13 @@ highed.Tree = function (parent) {
                 icon.className = 'exp-col-icon fa fa-plus';                        
                 highed.dom.style(body, {display: 'none'});
             }
+
+            pushExpandState();                      
         }
 
-        if (child.id) {
-            expands[child.id.replace(/\-\-/g, '.').replace(/\-/g, '.')] = expand;            
-        }
+        
+        expands[(child.id || key).replace(/\-\-/g, '.').replace(/\-/g, '.')] = expand;            
+        
 
         highed.dom.on(icon, 'click', toggle);
 
@@ -302,6 +321,12 @@ highed.Tree = function (parent) {
         build: function (tree, data) {
             container.innerHTML = '';
             build(tree, container, data, 0);
+            //Apply the active expand state
+            Object.keys(expandState).forEach(function (key) {
+                if (expandState[key] && expands[key]) {
+                    expands[key]();
+                }
+            });
         }
     };
 };
