@@ -325,11 +325,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             jsonImportBtn
         );
 
-        highed.dom.on(csvImportBtn, 'click', emitCSVImport);
+        highed.dom.on(csvImportBtn, 'click', function () {
+            emitCSVImport();
+        });
 
         highed.dom.on(csvPasteArea, 'keyup', function (e) {
             if (e.keyCode === 13 || ((e.metaKey || e.ctrlKey) && e.key === 'z')) {
-                emitCSVImport();
+                emitCSVImport(csvPasteArea.value);
             }
         });
 
