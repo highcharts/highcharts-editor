@@ -11,13 +11,21 @@
 }
 
 .highed-wizstepper-item #label {
-	opacity: 0.5;
+	color: mix(@wiz-bar-background, @wiz-bar-color, 50);
 	font-size: 15px;
 	.highed-transition-opacity
 }
 
 .highed-wizstepper-item:hover #label {
-	opacity: 1;
+	color: @wiz-bar-color;
+}
+
+.highed-wizstepper-item .label-active {
+	color: @wiz-bar-color !important;
+}
+
+.highed-wizstepper-item .label-inactive {
+	
 }
 
 .highed-wizstepper-item .bubble {

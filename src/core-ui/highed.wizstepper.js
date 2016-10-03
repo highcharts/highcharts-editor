@@ -104,6 +104,8 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
                         bottom: ''
                     });
                 }
+
+                activeStep.label.className = 'label-inactive';
             }
 
             stepexports.bubble.innerHTML = stepexports.number;
@@ -127,6 +129,7 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
             }
 
             activeStep = stepexports;
+            activeStep.label.className = 'label-active';
 
             events.emit('Step', stepexports, stepCount, step);
         }
