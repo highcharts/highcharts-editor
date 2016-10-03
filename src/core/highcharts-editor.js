@@ -303,6 +303,8 @@ var highed = {
     setAttr: function (obj, path, value, index) {
         var current = obj;
 
+        if (!current) return;
+
         if (highed.isArr(obj)) {
             obj.forEach(function (thing) {
                 highed.setAttr(thing, path, value, index);
@@ -346,6 +348,8 @@ var highed = {
         var current = obj,
             result = false
         ;
+
+        if (!current) return false;
 
         if (highed.isArr(obj)) {
             obj.forEach(function (thing) {

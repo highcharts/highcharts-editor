@@ -165,6 +165,7 @@ highed.ChartPreview = function (parent, attributes) {
                 //Our assumption was wrong. The world is ending.
                 highed.snackBar(e);            
             }
+            chart = false;
         }       
 
         return chart;
@@ -181,6 +182,14 @@ highed.ChartPreview = function (parent, attributes) {
        // customizedOptions.plotOptions = customizedOptions.plotOptions || {};
        // customizedOptions.plotOptions.series = customizedOptions.plotOptions.series || [];
         customizedOptions.series = customizedOptions.series || [];
+
+        if (customizedOptions && !highed.isArr(customizedOptions.yAxis)) {
+            customizedOptions.yAxis = [customizedOptions.yAxis || {}];
+        }
+
+        if (customizedOptions && !highed.isArr(customizedOptions.xAxis)) {
+            customizedOptions.xAxis = [customizedOptions.xAxis || {}];
+        }
 
         //Merge fest
         highed.clearObj(aggregatedOptions);
@@ -288,15 +297,19 @@ highed.ChartPreview = function (parent, attributes) {
      */
     function set(id, value, index) {
         gc(function (chart) {
-            highed.setAttr([chart.options, customizedOptions], id, value, index);        
+            highed.setAttr(chart.options, id, value, index);        
             highed.setAttr(chart.options, 'plotOptions--series--animation', false, index);
-
-            flatOptions[id] = value;
-
-            updateAggregated();
-            init(aggregatedOptions, undefined, true);
-            emitChange();
         });
+
+        //We want to be able to set the customized options even if the chart 
+        //doesn't exist
+        highed.setAttr(customizedOptions, id, value, index);        
+
+        flatOptions[id] = value;
+
+        updateAggregated();
+        init(aggregatedOptions, undefined, true);
+        emitChange();
 
         if (id.indexOf('lang--') === 0 && customizedOptions.lang) {
             Highcharts.setOptions({

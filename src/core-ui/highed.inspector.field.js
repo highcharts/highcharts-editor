@@ -332,7 +332,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
 
     //Choose a type
     if (type && type.indexOf('|') >= 0) {
-        type = type.indexOf('object') ? 'object' : type.split('|')[0];
+        type = type.indexOf('object') >= 0 ? 'object' : type.split('|')[0];
     }
 
     if (!highed.isNull(properties.custom) && 
