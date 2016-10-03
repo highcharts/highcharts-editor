@@ -167,12 +167,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                                 if (err) return highed.snackBar('Export error: ' + err);
 
                                 if (options.downloadOutput) {
-                                    var l = highed.dom.cr('a');
-                                    l.download = filename || 'unkown';
-                                    l.href = 'data:application/octet-stream,' + encodeURIComponent(data);
-                                    highed.dom.ap(document.body, l);
-                                    l.click();
-                                    document.body.removeChild(l);
+                                    highed.download(filename, data);
                                 }
 
                                 highed.snackBar((options.title || name) + ' export complete');

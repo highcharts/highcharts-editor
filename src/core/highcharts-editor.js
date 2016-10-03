@@ -34,6 +34,20 @@ var highed = {
     meta: {},
     plugins: {},
 
+    /** Trigger file download
+     *  @param filename {string} - the filename
+     *  @param data {string} - the contained data
+     */
+    download: function (filename, data) {
+        var l = highed.dom.cr('a');
+        l.download = filename || 'unkown';
+        l.href = 'data:application/octet-stream,' + encodeURIComponent(data);
+        highed.dom.ap(document.body, l);
+        l.click();
+        document.body.removeChild(l);
+    },
+
+
     /** Clear an object 
       * Deletes all the object attributes.
       * Useful when needing to clear an object without invalidating references to it
