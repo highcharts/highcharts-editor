@@ -339,7 +339,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             highed.log(1, 'no valid parent supplied to editor');
         }
 
-        highed.dom.style(welcomeStep.body, {padding: '4px'});
+        highed.dom.style(welcomeStep.body, {padding: '0 20px'});
 
         highed.dom.ap(welcomeStep.body, 
             highed.dom.cr('h2', '', 'Welcome'),

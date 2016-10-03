@@ -144,7 +144,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     var options = webImports[name],
                         url = highed.dom.cr('input', 'highed-imp-input-stretch'),
                         urlTitle = highed.dom.cr('div', '', 'URL'),
-                        importBtn = highed.dom.cr('button', 'highed-imp-button highed-imp-button-right', 'Import ' + name + ' from URL'),
+                        importBtn = highed.dom.cr('button', 'highed-imp-button', 'Import ' + name + ' from URL'),
                         dynamicOptionsContainer = highed.dom.cr('table', 'highed-customizer-table'),
                         dynamicOptions = {}
                     ;

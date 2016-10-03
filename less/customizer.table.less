@@ -1,11 +1,11 @@
 .highed-customizer-table-heading {
 	text-align: center;
-	padding-top:5px;
+	padding-top: 5px;
 	padding-bottom: 5px;
-	background:@wiz-bar-background;
-	color:@wiz-bar-color;
-	font-weight: 100;
-	font-family: @font-secondary;
+	background: white;
+	color: @table-heading-text;
+	font-weight: 600;
+	font-family: @font-main;
 	font-size: 18px;
 	margin-bottom: 25px;
 }
@@ -20,8 +20,7 @@
 }
 
 .highed-customizer-table td {
-	padding-top:2px;
-	padding-bottom:2px;
+	padding: 5px 10px;
 }
 
 .highed-customizer-table tr {
@@ -40,7 +39,7 @@
 	min-width: 30%;
 	width:30%;	
 	font-weight: 100;
-	font-size:14px;
+	font-size: 14px;
 }
 
 .highed-customizer-table td:nth-child(2) {
@@ -52,11 +51,11 @@
 }
 
 .highed-customizer-table tr:nth-child(even) {
-	background: @background-panel;
+	background: lighten(@background-panel, 3);
 }
 
 .highed-customizer-table tr:nth-child(odd) {
-	background: darken(@background-panel, 2);
+	background: lighten(@background-panel, 2);
 }
 
 .highed-customizer-field-highlighter {

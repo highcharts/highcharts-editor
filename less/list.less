@@ -1,25 +1,22 @@
 .highed-list {
 	background: @background-panel;
 	color: @text-panel;
-	padding:5px;
 	.highed-box-size;
 	.highed-nosel;	
+    overflow: hidden;
 }
 
 .highed-list .item {
 	text-align: left !important;
     color: #34343e !important;
-    font-size: 13px !important;
-
+    font-size: 14px !important;
+    cursor: pointer;
     display: block;
-
-    background-color: white !important;
-    border-color: white !important;
+    background-color: @background-panel !important;
     background-image: none !important;
-    border-bottom: 1px solid @background-main !important;
-    padding-top: 7px;
-    padding-bottom: 7px;
-
+    border-bottom: @border-main !important;
+    border-left: @border-main !important;
+    padding: 10px;
     .highed-box-size;
     .highed-transition;
 }
@@ -29,11 +26,12 @@
 	font-weight: bold;
 }
 
-.highed-list .item:last-child {
-	border: none !important;
+.highed-list .item:first-child {
+	border-top: @border-main !important;
 }
 
 .highed-list .item-selected {
+    background-color: white !important;
 	color: #31436b !important;
     font-weight: bold;
 }
