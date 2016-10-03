@@ -358,8 +358,7 @@ highed.ChartCustomizer = function (parent, attributes) {
                         custom: {},
                         attributes: entry.attributes || []
                     },
-                    function (newValue) {       
-                        console.log(arrIndex);    
+                    function (newValue) {          
                         events.emit('PropertyChange', entry.id, newValue, arrIndex);
                     },
                     false,
