@@ -179,7 +179,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             cmenu = highed.ContextMenu([
                 {
                 title: 'New Chart',
-                icon: 'file',
+                icon: 'file-o',
                 click: function () {
                     if (confirm('Are you sure you want to abandon the current chart and start over?')) {
                         chartPreview.new();  
@@ -189,12 +189,30 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 },
                 '-',
                 {
-                    title: 'Save as JSON',
-                    icon: 'file-code-o'
+                    title: 'Save project',
+                    icon: 'floppy-o',
+                    click: function () {
+                        highed.download('chart.json', JSON.stringify(chartPreview.export.json()));
+                    }
                 },
                 {
-                    title: 'Save as HTML',
-                    icon: 'file-code-o'
+                    title: 'Load project',
+                    icon: 'folder-open-o',
+                    click: function () {
+                        highed.readLocalFile({
+                            type: 'text',
+                            accept: '.json',
+                            success: function (file) {
+                                try {
+                                    file = JSON.parse(file.data);
+                                } catch (e) {
+                                    return highed.snackBar('Error loading JSON: ' + e);
+                                }
+
+                                chartPreview.data.json(file);
+                            }
+                        });
+                    }
                 },
                 '-',
                 {
