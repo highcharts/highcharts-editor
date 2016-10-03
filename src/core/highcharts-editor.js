@@ -594,8 +594,10 @@ var highed = {
     ///////////////////////////////////////////////////////////////////////////
 
     //Inject dependencies
-    highed.include('https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css');
-    highed.include('https://fonts.googleapis.com/css?family=Roboto:400,300,100,700|Source Sans:400,300,100', false, true);
+    highed.ready(function () {
+        highed.include('https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css');
+        highed.include('https://fonts.googleapis.com/css?family=Roboto:400,300,100,700|Source Sans:400,300,100', false, true);
+    });
 
  //   highed.ready(function () {
         //Include the highcharts scripts
