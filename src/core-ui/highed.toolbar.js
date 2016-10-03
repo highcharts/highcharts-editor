@@ -53,7 +53,7 @@ highed.Toolbar = function (parent, attributes) {
      *    > click {function} - the function to call when the icon is clicked
      */
     function addIcon(icon) {
-        var i = highed.dom.cr('div', 'highed-icon fa ' + (icon.css || ''));
+        var i = highed.dom.cr('div', 'icon highed-icon fa ' + (icon.css || ''));
 
         highed.dom.on(i, 'click', function (e) {
             if (highed.isFn(icon.click)) {
