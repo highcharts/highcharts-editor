@@ -552,7 +552,7 @@ var highed = {
      *  @param what {string} - URL to a css or javascript file
      *  @param fn {function} - function to call when done including the script
      */
-    highed.include = function (what, fn) {
+    highed.include = function (what, fn, asCSS) {
         var n;
 
         function next() {
@@ -576,7 +576,7 @@ var highed = {
         highed.log(3, 'including script', what);
         includedScripts[what] = true;
 
-        if (what.lastIndexOf('.css') === what.length - 4) {
+        if (asCSS || what.lastIndexOf('.css') === what.length - 4) {
             n = highed.dom.cr('link');
             n.rel = 'stylesheet';
             n.type = 'text/css';
@@ -592,6 +592,10 @@ var highed = {
     };
 
     ///////////////////////////////////////////////////////////////////////////
+
+    //Inject dependencies
+    highed.include('https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css');
+    highed.include('https://fonts.googleapis.com/css?family=Roboto:400,300,100,700|Source Sans:400,300,100', false, true);
 
  //   highed.ready(function () {
         //Include the highcharts scripts

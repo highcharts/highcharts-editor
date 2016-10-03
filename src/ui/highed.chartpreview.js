@@ -140,7 +140,7 @@ highed.ChartPreview = function (parent, attributes) {
         }
 
         try {
-            chart = new Highcharts.Chart(parent, options);   
+            chart = new Highcharts.Chart(pnode || parent, options);   
             //This is super ugly.
            // customizedOptions.series = customizedOptions.series || [];
           //  customizedOptions.series = chart.options.series || [];
