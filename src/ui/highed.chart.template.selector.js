@@ -88,9 +88,15 @@ highed.ChartTemplateSelector = function (parent) {
     
     /* Force a resize */
     function resize(w, h) {
+        var lsize;
+
         splitter.resize(w, h);
         list.resize();
 
+        lsize = highed.dom.size(list.container);
+        highed.dom.style(templates, {
+            minHeight: lsize.h + 'px'
+        });
     }
 
     /* Build the UI */

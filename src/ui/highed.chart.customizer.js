@@ -66,13 +66,20 @@ highed.ChartCustomizer = function (parent, attributes) {
      *  @memberof highed.ChartCustomizer
      */
     function resize(w, h) {
-        var bsize;
+        var bsize, lsize;
         
         tabs.resize(w, h);
         bsize = tabs.barSize();
 
         list.resize(w, h - bsize.h);
         splitter.resize(w, h - bsize.h - 10);
+
+        //The customize body needs to have a min-height of the list height
+        lsize = highed.dom.size(list.container);
+
+        highed.dom.style(body, {
+            minHeight: lsize.h + 'px'
+        });
     }
 
     /** Init the customizer

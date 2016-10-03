@@ -118,12 +118,12 @@ highed.List = function (parent) {
      *  @memberof highed.List
      */
     function resize() {
-        var ps = highed.dom.size(parent);
+        // var ps = highed.dom.size(parent);
 
-        highed.dom.style(container, {
-            //height: ps.height + 'px'
-            height: '100%'
-        }); 
+        // highed.dom.style(container, {
+        //     //height: ps.height + 'px'
+        //     height: '100%'
+        // }); 
     }
 
     /** Show the list 
