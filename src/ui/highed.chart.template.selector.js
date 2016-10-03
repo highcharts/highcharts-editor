@@ -32,11 +32,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 highed.ChartTemplateSelector = function (parent) {
     var events = highed.events(),
-        splitter = highed.HSplitter(parent, {leftWidth: 30}),
+        container = highed.dom.cr('div', 'highed-chart-template-container'),
+        splitter = highed.HSplitter(container, {leftWidth: 30}),
         list = highed.List(splitter.left),
         templates = splitter.right,
         selected = false
     ;
+
+    highed.dom.ap(parent, container);
 
     ///////////////////////////////////////////////////////////////////////////
 
