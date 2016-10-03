@@ -206,6 +206,7 @@ highed.List = function (parent) {
         select: select,
         reselect: reselect,
         selected: selected,
-        count: countItems
+        count: countItems,
+        container: container
     };
 };

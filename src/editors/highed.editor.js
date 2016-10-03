@@ -324,6 +324,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 chartContainer
             );
 
+            highed.dom.style(splitter.right, {
+                overflow: 'hidden'
+            });
+
             highed.dom.ap(mainToolbar.left,
                 highed.dom.style(highed.dom.cr('div', 'highed-logo'), {
                         'background-image': 'url("data:image/svg+xml;utf8,' + 
