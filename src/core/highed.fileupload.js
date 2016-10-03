@@ -113,6 +113,8 @@ highed.ready(function () {
           crReader(uploader.files[i]).readAsDataURL(uploader.files[i]);
         }
       }      
+      cb();
+      uploader.value = '';
     });
     
     uploader.multiple = p.multiple;
