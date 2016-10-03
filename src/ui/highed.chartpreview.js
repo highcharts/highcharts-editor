@@ -123,8 +123,12 @@ highed.ChartPreview = function (parent, attributes) {
         var i;
 
         //We want to work on a copy..
-        options = highed.merge({}, options || aggregatedOptions);
-        highed.setAttr(options, 'chart--renderTo', pnode || parent);
+        options = options || aggregatedOptions;
+        // options = highed.merge({}, options || aggregatedOptions);
+        
+        // if (aggregatedOptions && aggregatedOptions.series) {
+        //     options = aggregatedOptions.series; 
+        // }
 
         if (noAnimation) {
             highed.setAttr(options, 'plotOptions--series--animation', false);
@@ -136,10 +140,11 @@ highed.ChartPreview = function (parent, attributes) {
         }
 
         try {
-            chart = new Highcharts.Chart(options);   
+            chart = new Highcharts.Chart(parent, options);   
             //This is super ugly.
-            customizedOptions.series = customizedOptions.series || [];
-            highed.merge(customizedOptions.series, chart.options.series);
+           // customizedOptions.series = customizedOptions.series || [];
+          //  customizedOptions.series = chart.options.series || [];
+           // highed.merge(customizedOptions.series, chart.options.series);
             updateAggregated();    
 
             highed.merge(chartOptions, chart.options);       
@@ -181,7 +186,7 @@ highed.ChartPreview = function (parent, attributes) {
     function updateAggregated() {
        // customizedOptions.plotOptions = customizedOptions.plotOptions || {};
        // customizedOptions.plotOptions.series = customizedOptions.plotOptions.series || [];
-        customizedOptions.series = customizedOptions.series || [];
+      //  customizedOptions.series = customizedOptions.series || [];
 
         if (customizedOptions && !highed.isArr(customizedOptions.yAxis)) {
             customizedOptions.yAxis = [customizedOptions.yAxis || {}];
@@ -191,12 +196,22 @@ highed.ChartPreview = function (parent, attributes) {
             customizedOptions.xAxis = [customizedOptions.xAxis || {}];
         }
 
+        // if (templateOptions.series) {
+        //     templateOptions.series = templateOptions.series.map(function (s) {
+        //         delete s['data'];
+        //         return s;
+        //     });
+        // }
+
         //Merge fest
         highed.clearObj(aggregatedOptions);
         highed.merge(aggregatedOptions, 
             highed.merge(highed.merge({}, templateOptions), 
             customizedOptions
         ));
+
+        //Temporary hack to debug series weirdness
+        aggregatedOptions.series = customizedOptions.series;
     }
 
     /* Load a template from the meta
@@ -224,6 +239,16 @@ highed.ChartPreview = function (parent, attributes) {
         });
     }
 
+    function loadSeries() {
+        if (!gc(function (chart) {
+            customizedOptions.series = chart.options.series;    
+            return true;
+        })) {
+            customizedOptions.series = [];
+        }
+        updateAggregated();
+    }
+
     /* Load CSV data
      * @data - the data to load
      */
@@ -245,6 +270,7 @@ highed.ChartPreview = function (parent, attributes) {
             updateAggregated();
 
             init(aggregatedOptions);
+            loadSeries();
             emitChange();
         });
     }
@@ -270,8 +296,10 @@ highed.ChartPreview = function (parent, attributes) {
                 templateOptions = {};
                 highed.clearObj(customizedOptions);
                 highed.merge(customizedOptions, highed.merge({}, data));
+                customizedOptions.series = data.series;
                 updateAggregated();
                 init(customizedOptions);
+                loadSeries();
                 emitChange();
             }
         });
@@ -328,6 +356,9 @@ highed.ChartPreview = function (parent, attributes) {
             //delete r['data'];
         }
 
+        //Temprorary hack - need to fix the merge function
+        r.series = aggregatedOptions.series;
+
         return r;
     }
 
@@ -357,7 +388,7 @@ highed.ChartPreview = function (parent, attributes) {
 
             id = id || '';
 
-            highed.setAttr(aggregatedOptions, 'chart--renderTo', id);
+         
 
             /*
                 This magic code will generate an injection script that will
