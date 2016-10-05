@@ -65,6 +65,8 @@ highed.Tree = function (parent) {
             return;
         }
 
+        child.dataIndex = child.dataIndex || dataIndex;
+
         if (!arrayHeader && child.entries.length === 0 && Object.keys(child.children).length === 0) {
            // return;
         }
@@ -320,9 +322,9 @@ highed.Tree = function (parent) {
                     } 
                 }
 
-                body = createNode(child, key, pnode, instancedData, dataIndex);                        
+                body = createNode(child, key, pnode, instancedData, child.dataIndex || tree.dataIndex || dataIndex);                        
 
-                build(child, body, instancedData, child.dataIndex);
+                build(child, body, instancedData, child.dataIndex || tree.dataIndex || dataIndex);
             });
         }
     }
