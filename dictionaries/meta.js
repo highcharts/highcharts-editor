@@ -38,7 +38,8 @@ module.exports = {
 			}, {
 				text: 'Y axis title',
 				id: 'yAxis-title--text',
-				tooltipText: 'The Y axis title, normally displayed vertically along the Y axis.'
+				tooltipText: 'The Y axis title, normally displayed vertically along the Y axis.',
+				dataIndex: 0
 			}]
 		}],
 
@@ -152,29 +153,49 @@ module.exports = {
 			options: [
 				{
 					id: 'xAxis-crosshair',
-					text: 'Crosshair'
+					text: 'Crosshair',
+					dataIndex: 0
 
 				},
 				{
 					id: 'xAxis-title--style',
 					text: 'X axis title',
-					tooltipText: 'Styling and text for the X axis title'
+					tooltipText: 'Styling and text for the X axis title',
+					dataIndex: 0
 				},
-				{id: 'xAxis-title--text'},
-				{id: 'xAxis--type', text: 'Type', tooltipText: 'The type of axis'},
-				{id: 'xAxis--opposite', text: 'Opposite side of chart'},
-				{id: 'xAxis--reversed', text: 'Reversed direction'},
 				{
-					id: 'xAxis-labels--format', text: 'Axis labels format',
+					id: 'xAxis-title--text',
+					dataIndex: 0
+				},
+				{
+					id: 'xAxis--type', 
+					text: 'Type', 
+					tooltipText: 'The type of axis',
+					dataIndex: 0
+				},
+				{
+					id: 'xAxis--opposite', 
+					text: 'Opposite side of chart',
+					dataIndex: 0
+				},
+				{
+					id: 'xAxis--reversed', 
+					text: 'Reversed direction',
+					dataIndex: 0
+				},
+				{
+					id: 'xAxis-labels--format', 
+					text: 'Axis labels format',
 					tooltipText: '<p>A format string for the axis labels. The value is available through a variable <code>{value}</code>.</p>' +
 					'<p><b>Units</b> can be added for example like <code>{value} USD</code>.</p>' +
 					'<p><b>Formatting</b> can be added after a colon inside the variable, for example <code>USD {value:.2f}</code> to display two decimals, ' +
-					'or <code>{value:%Y-%m-%d}</code> for a certain time format.'
-
+					'or <code>{value:%Y-%m-%d}</code> for a certain time format.',
+					dataIndex: 0
 				},
 				{
 					id: 'xAxis-labels--rotation', text: 'Axis labels rotation',
-					custom: {step: 5, minValue: -90, maxValue: 90}
+					custom: {step: 5, minValue: -90, maxValue: 90},
+					dataIndex: 0
 				}
 			]
 		}, {
@@ -184,24 +205,40 @@ module.exports = {
 			options: [
 				{
 					id: 'yAxis-crosshair',
-					text: 'Crosshair'
+					text: 'Crosshair',
+					dataIndex: 0
 				},
 				{
 					id: 'yAxis-title--style',
 					text: 'Y axis title',
-					tooltipText: 'Styling and text for the X axis title'
+					tooltipText: 'Styling and text for the X axis title',
+					dataIndex: 0
 				},
 				//{id: 'yAxis-title--text'},
-				{id: 'yAxis--type', text: 'Type', tooltipText: 'The type of axis'},
-				{id: 'yAxis--opposite', text: 'Opposite side of chart'},
-				{id: 'yAxis--reversed', text: 'Reversed direction'},
 				{
-					id: 'yAxis-labels--format', text: 'Axis labels format',
+					id: 'yAxis--type', 
+					text: 'Type', 
+					tooltipText: 'The type of axis',
+					dataIndex: 0
+				},
+				{
+					id: 'yAxis--opposite', 
+					text: 'Opposite side of chart',
+					dataIndex: 0
+				},
+				{
+					id: 'yAxis--reversed', 
+					text: 'Reversed direction',
+					dataIndex: 0
+				},
+				{
+					id: 'yAxis-labels--format', 
+					text: 'Axis labels format',
 					tooltipText: '<p>A format string for the axis labels. The value is available through a variable <code>{value}</code>.</p>' +
 					'<p><b>Units</b> can be added for example like <code>{value} USD</code>.</p>' +
 					'<p><b>Formatting</b> can be added after a colon inside the variable, for example <code>USD {value:.2f}</code> to display two decimals, ' +
-					'or <code>{value:%Y-%m-%d}</code> for a certain time format.'
-
+					'or <code>{value:%Y-%m-%d}</code> for a certain time format.',
+					dataIndex: 0
 				}
 			]
 		}

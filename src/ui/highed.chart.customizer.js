@@ -226,6 +226,10 @@ highed.ChartCustomizer = function (parent, attributes) {
                 }
             }
 
+            if (typeof group.dataIndex !== 'undefined') {
+                detailIndex = group.dataIndex;
+            }
+
             //highed.dom.ap(sub, highed.dom.cr('span', '', referenced[0].returnType));
             highed.dom.ap(table, 
                 highed.InspectorField(

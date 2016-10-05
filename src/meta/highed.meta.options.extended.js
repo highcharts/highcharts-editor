@@ -1,4 +1,7 @@
 /*
+
+Highcharts Editor v<%= version %>
+
 Copyright (c) 2016, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
@@ -19,7 +22,10 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
 CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 */
+
+
 
 highed.meta.optionsExtended = {
   "options": {
@@ -48,6 +54,7 @@ highed.meta.optionsExtended = {
             "text": "Y axis title",
             "id": "yAxis-title--text",
             "tooltipText": "The Y axis title, normally displayed vertically along the Y axis.",
+            "dataIndex": 0,
             "dataType": "string",
             "context": "General",
             "defaults": "Values",
@@ -147,7 +154,7 @@ highed.meta.optionsExtended = {
             "tooltipText": "Styling for the chart's subtitle, normally displayed with smaller fonts below the main title",
             "dataType": "cssobject",
             "context": "General",
-            "defaults": "{ \"color\": \"#555555\" }",
+            "defaults": "{ \"color\": \"#666666\" }",
             "parent": "subtitle"
           }
         ]
@@ -207,7 +214,7 @@ highed.meta.optionsExtended = {
             "dataType": "color",
             "context": "General",
             "tooltipText": "The color of the outer chart border.",
-            "defaults": "#4572A7",
+            "defaults": "#335cad",
             "parent": "chart"
           }
         ]
@@ -246,7 +253,7 @@ highed.meta.optionsExtended = {
             "dataType": "color",
             "context": "General",
             "tooltipText": "The color of the inner chart or plot area border.",
-            "defaults": "#C0C0C0",
+            "defaults": "#cccccc",
             "parent": "chart"
           }
         ]
@@ -274,20 +281,26 @@ highed.meta.optionsExtended = {
           {
             "id": "xAxis-crosshair",
             "text": "Crosshair",
+            "dataIndex": 0,
             "dataType": "boolean|object",
             "context": "General",
-            "tooltipText": "Configure a crosshair that follows either the mouse pointer or the hovered point.",
+            "tooltipText": "<p>Configure a crosshair that follows either the mouse pointer or the hovered point.</p>\r\n\r\n<p>In <a href=\"http://www.highcharts.com/docs/chart-design-and-style/style-by-css\">styled mode</a>, the crosshairs are styled in the <code>.highcharts-crosshair</code>, <code>.highcharts-crosshair-thin</code> or <code>.highcharts-xaxis-category</code> classes.</p>",
             "defaults": "false",
             "parent": "xAxis",
-            "values": "",
             "attributes": [
+              {
+                "dataType": "string",
+                "name": "className",
+                "title": "className",
+                "tooltipText": "A class name for the crosshair, especially as a hook for styling.",
+                "defaults": "",
+                "values": ""
+              },
               {
                 "dataType": "color",
                 "name": "color",
                 "title": "color",
-                "tooltipText": "The color of the crosshair. Defaults to <code>#C0C0C0</code> for numeric and datetime axes, and <code>rgba(155,200,255,0.2)</code> for category axes, where the crosshair by default highlights the whole category.",
-                "defaults": "",
-                "values": ""
+                "tooltipText": "The color of the crosshair. Defaults to <code>#cccccc</code> for numeric and datetime axes, and <code>rgba(204,214,235,0.25)</code> for category axes, where the crosshair by default highlights the whole category."
               },
               {
                 "dataType": "string",
@@ -327,13 +340,15 @@ highed.meta.optionsExtended = {
             "id": "xAxis-title--style",
             "text": "X axis title",
             "tooltipText": "Styling and text for the X axis title",
+            "dataIndex": 0,
             "dataType": "cssobject",
             "context": "General",
-            "defaults": "{ \"color\": \"#707070\", \"fontWeight\": \"bold\" }",
+            "defaults": "{ \"color\": \"#666666\" }",
             "parent": "xAxis-title"
           },
           {
             "id": "xAxis-title--text",
+            "dataIndex": 0,
             "dataType": "string",
             "context": "General",
             "tooltipText": "The actual text of the axis title. It can contain basic HTML text markup like &lt;b&gt;, &lt;i&gt; and spans with style.",
@@ -344,6 +359,7 @@ highed.meta.optionsExtended = {
             "id": "xAxis--type",
             "text": "Type",
             "tooltipText": "The type of axis",
+            "dataIndex": 0,
             "dataType": "string",
             "context": "General",
             "defaults": "linear",
@@ -353,6 +369,7 @@ highed.meta.optionsExtended = {
           {
             "id": "xAxis--opposite",
             "text": "Opposite side of chart",
+            "dataIndex": 0,
             "dataType": "boolean",
             "context": "General",
             "tooltipText": "Whether to display the axis on the opposite side of the normal. The normal is on the left side for vertical axes and bottom for horizontal, so the opposite sides will be right and top respectively. This is typically used with dual or multiple axes.",
@@ -362,6 +379,7 @@ highed.meta.optionsExtended = {
           {
             "id": "xAxis--reversed",
             "text": "Reversed direction",
+            "dataIndex": 0,
             "dataType": "boolean",
             "context": "General",
             "tooltipText": "Whether to reverse the axis so that the highest number is closest to the origin. If the chart is inverted, the x axis is reversed by default.",
@@ -372,6 +390,7 @@ highed.meta.optionsExtended = {
             "id": "xAxis-labels--format",
             "text": "Axis labels format",
             "tooltipText": "<p>A format string for the axis labels. The value is available through a variable <code>{value}</code>.</p><p><b>Units</b> can be added for example like <code>{value} USD</code>.</p><p><b>Formatting</b> can be added after a colon inside the variable, for example <code>USD {value:.2f}</code> to display two decimals, or <code>{value:%Y-%m-%d}</code> for a certain time format.",
+            "dataIndex": 0,
             "dataType": "string",
             "context": "General",
             "defaults": "{value}",
@@ -385,6 +404,7 @@ highed.meta.optionsExtended = {
               "minValue": -90,
               "maxValue": 90
             },
+            "dataIndex": 0,
             "dataType": "number",
             "context": "General",
             "tooltipText": "Rotation of the labels in degrees.",
@@ -400,20 +420,26 @@ highed.meta.optionsExtended = {
           {
             "id": "yAxis-crosshair",
             "text": "Crosshair",
+            "dataIndex": 0,
             "dataType": "boolean|object",
             "context": "General",
-            "tooltipText": "Configure a crosshair that follows either the mouse pointer or the hovered point.",
+            "tooltipText": "<p>Configure a crosshair that follows either the mouse pointer or the hovered point.</p>\r\n\r\n<p>In <a href=\"http://www.highcharts.com/docs/chart-design-and-style/style-by-css\">styled mode</a>, the crosshairs are styled in the <code>.highcharts-crosshair</code>, <code>.highcharts-crosshair-thin</code> or <code>.highcharts-xaxis-category</code> classes.</p>",
             "defaults": "false",
             "parent": "yAxis",
-            "values": "",
             "attributes": [
+              {
+                "dataType": "string",
+                "name": "className",
+                "title": "className",
+                "tooltipText": "A class name for the crosshair, especially as a hook for styling.",
+                "defaults": "",
+                "values": ""
+              },
               {
                 "dataType": "color",
                 "name": "color",
                 "title": "color",
-                "tooltipText": "The color of the crosshair. Defaults to <code>#C0C0C0</code> for numeric and datetime axes, and <code>rgba(155,200,255,0.2)</code> for category axes, where the crosshair by default highlights the whole category.",
-                "defaults": "",
-                "values": ""
+                "tooltipText": "The color of the crosshair. Defaults to <code>#cccccc</code> for numeric and datetime axes, and <code>rgba(204,214,235,0.25)</code> for category axes, where the crosshair by default highlights the whole category."
               },
               {
                 "dataType": "string",
@@ -453,15 +479,17 @@ highed.meta.optionsExtended = {
             "id": "yAxis-title--style",
             "text": "Y axis title",
             "tooltipText": "Styling and text for the X axis title",
+            "dataIndex": 0,
             "dataType": "cssobject",
             "context": "General",
-            "defaults": "{ \"color\": \"#707070\", \"fontWeight\": \"bold\" }",
+            "defaults": "{ \"color\": \"#666666\" }",
             "parent": "yAxis-title"
           },
           {
             "id": "yAxis--type",
             "text": "Type",
             "tooltipText": "The type of axis",
+            "dataIndex": 0,
             "dataType": "string",
             "context": "General",
             "defaults": "linear",
@@ -471,6 +499,7 @@ highed.meta.optionsExtended = {
           {
             "id": "yAxis--opposite",
             "text": "Opposite side of chart",
+            "dataIndex": 0,
             "dataType": "boolean",
             "context": "General",
             "tooltipText": "Whether to display the axis on the opposite side of the normal. The normal is on the left side for vertical axes and bottom for horizontal, so the opposite sides will be right and top respectively. This is typically used with dual or multiple axes.",
@@ -480,6 +509,7 @@ highed.meta.optionsExtended = {
           {
             "id": "yAxis--reversed",
             "text": "Reversed direction",
+            "dataIndex": 0,
             "dataType": "boolean",
             "context": "General",
             "tooltipText": "Whether to reverse the axis so that the highest number is closest to the origin. If the chart is inverted, the x axis is reversed by default.",
@@ -507,31 +537,31 @@ highed.meta.optionsExtended = {
             "tooltipText": "The type of series",
             "dataType": "string",
             "context": "General",
-            "parent": "series<pie>",
+            "parent": "series",
             "values": "[null, \"line\", \"spline\", \"column\", \"area\", \"areaspline\", \"pie\", \"arearange\", \"areasplinerange\", \"boxplot\", \"bubble\", \"columnrange\", \"errorbar\", \"funnel\", \"gauge\", \"scatter\", \"waterfall\"]",
             "subType": [
-              "pie",
-              "line",
-              "bubble",
-              "treemap",
-              "bar",
-              "pyramid",
-              "areaspline",
               "scatter",
-              "gauge",
-              "waterfall",
-              "area",
-              "errorbar",
-              "polygon",
-              "solidgauge",
-              "funnel",
-              "column",
-              "spline",
               "arearange",
               "columnrange",
+              "areaspline",
+              "bar",
+              "errorbar",
+              "bubble",
+              "gauge",
+              "line",
+              "polygon",
+              "waterfall",
               "heatmap",
+              "spline",
+              "boxplot",
+              "column",
+              "pie",
               "areasplinerange",
-              "boxplot"
+              "area",
+              "funnel",
+              "treemap",
+              "pyramid",
+              "solidgauge"
             ],
             "subTypeDefaults": {}
           },
@@ -542,31 +572,31 @@ highed.meta.optionsExtended = {
             "dataType": "color",
             "context": "General",
             "defaults": "null",
-            "parent": "series<polygon>",
+            "parent": "series<scatter>",
             "subType": [
-              "polygon",
-              "areasplinerange",
-              "boxplot",
               "scatter",
-              "waterfall",
-              "areaspline",
-              "bar",
-              "spline",
-              "line",
-              "treemap",
-              "arearange",
-              "columnrange",
               "gauge",
-              "column",
-              "area",
-              "errorbar",
               "heatmap",
-              "bubble"
+              "line",
+              "spline",
+              "areaspline",
+              "bubble",
+              "area",
+              "waterfall",
+              "boxplot",
+              "arearange",
+              "bar",
+              "errorbar",
+              "areasplinerange",
+              "column",
+              "columnrange",
+              "treemap",
+              "polygon"
             ],
             "subTypeDefaults": {
-              "treemap": "null",
+              "heatmap": "null",
               "errorbar": "#000000",
-              "heatmap": "null"
+              "treemap": "null"
             }
           },
           {
@@ -576,38 +606,37 @@ highed.meta.optionsExtended = {
             "dataType": "color",
             "context": "General",
             "defaults": "null",
-            "parent": "series<areaspline>",
-            "values": "",
+            "parent": "series<spline>",
             "subType": [
-              "areaspline",
-              "polygon",
-              "bubble",
-              "gauge",
-              "scatter",
-              "boxplot",
-              "arearange",
-              "errorbar",
-              "bar",
-              "areasplinerange",
-              "line",
-              "column",
               "spline",
-              "area"
+              "areasplinerange",
+              "column",
+              "polygon",
+              "line",
+              "bubble",
+              "areaspline",
+              "scatter",
+              "bar",
+              "arearange",
+              "area",
+              "boxplot",
+              "gauge",
+              "errorbar"
             ],
             "subTypeDefaults": {
-              "polygon": "null",
-              "bubble": "null",
-              "gauge": "null",
-              "scatter": "null",
-              "boxplot": "null",
-              "arearange": "null",
-              "errorbar": "null",
-              "bar": "null",
               "areasplinerange": "null",
-              "line": "null",
               "column": "null",
-              "spline": "null",
-              "area": "null"
+              "polygon": "null",
+              "line": "null",
+              "bubble": "null",
+              "areaspline": "null",
+              "scatter": "null",
+              "bar": "null",
+              "arearange": "null",
+              "area": "null",
+              "boxplot": "null",
+              "gauge": "null",
+              "errorbar": "null"
             }
           },
           {
@@ -617,25 +646,25 @@ highed.meta.optionsExtended = {
             "dataType": "boolean",
             "context": "General",
             "defaults": "false",
-            "parent": "series<boxplot>",
+            "parent": "series<waterfall>",
             "subType": [
-              "boxplot",
-              "errorbar",
-              "bar",
-              "heatmap",
               "waterfall",
               "treemap",
               "column",
-              "columnrange"
+              "columnrange",
+              "errorbar",
+              "boxplot",
+              "heatmap",
+              "bar"
             ],
             "subTypeDefaults": {
-              "errorbar": "false",
-              "bar": "false",
-              "heatmap": "false",
-              "waterfall": "false",
               "treemap": "false",
               "column": "false",
-              "columnrange": "false"
+              "columnrange": "false",
+              "errorbar": "false",
+              "boxplot": "false",
+              "heatmap": "false",
+              "bar": "false"
             }
           },
           {
@@ -645,30 +674,30 @@ highed.meta.optionsExtended = {
             "context": "General",
             "tooltipText": "A name for the dash style to use for the graph. Applies only to series type having a graph, like <code>line</code>, <code>spline</code>, <code>area</code> and <code>scatter</code> in  case it has a <code>lineWidth</code>. The value for the <code>dashStyle</code> include:\r\n\t\t    <ul>\r\n\t\t    \t<li>Solid</li>\r\n\t\t    \t<li>ShortDash</li>\r\n\t\t    \t<li>ShortDot</li>\r\n\t\t    \t<li>ShortDashDot</li>\r\n\t\t    \t<li>ShortDashDotDot</li>\r\n\t\t    \t<li>Dot</li>\r\n\t\t    \t<li>Dash</li>\r\n\t\t    \t<li>LongDash</li>\r\n\t\t    \t<li>DashDot</li>\r\n\t\t    \t<li>LongDashDot</li>\r\n\t\t    \t<li>LongDashDotDot</li>\r\n\t\t    </ul>",
             "defaults": "Solid",
-            "parent": "series<arearange>",
+            "parent": "series<polygon>",
             "values": "[\"Solid\", \"ShortDash\", \"ShortDot\", \"ShortDashDot\", \"ShortDashDotDot\", \"Dot\", \"Dash\" ,\"LongDash\", \"DashDot\", \"LongDashDot\", \"LongDashDotDot\"]",
             "subType": [
-              "arearange",
               "polygon",
-              "areaspline",
-              "bubble",
-              "scatter",
-              "areasplinerange",
               "line",
-              "spline",
               "waterfall",
-              "area"
+              "bubble",
+              "areaspline",
+              "scatter",
+              "area",
+              "spline",
+              "arearange",
+              "areasplinerange"
             ],
             "subTypeDefaults": {
-              "polygon": "Solid",
-              "areaspline": "Solid",
-              "bubble": "Solid",
-              "scatter": "Solid",
-              "areasplinerange": "Solid",
               "line": "Solid",
-              "spline": "Solid",
               "waterfall": "Dot",
-              "area": "Solid"
+              "bubble": "Solid",
+              "areaspline": "Solid",
+              "scatter": "Solid",
+              "area": "Solid",
+              "spline": "Solid",
+              "arearange": "Solid",
+              "areasplinerange": "Solid"
             }
           },
           {
@@ -678,23 +707,23 @@ highed.meta.optionsExtended = {
             "context": "General",
             "tooltipText": "Enable or disable the point marker. If <code>null</code>, the markers are hidden when the data is dense, and shown for more widespread data points.",
             "defaults": "null",
-            "parent": "series<line>-marker",
+            "parent": "series<area>-marker",
             "subType": [
+              "area",
+              "bubble",
               "line",
               "spline",
-              "area",
-              "polygon",
               "areaspline",
-              "scatter",
-              "bubble"
+              "polygon",
+              "scatter"
             ],
             "subTypeDefaults": {
+              "bubble": "null",
+              "line": "null",
               "spline": "null",
-              "area": "null",
-              "polygon": "null",
               "areaspline": "null",
-              "scatter": "null",
-              "bubble": "null"
+              "polygon": "null",
+              "scatter": "null"
             }
           },
           {
@@ -703,15 +732,15 @@ highed.meta.optionsExtended = {
             "dataType": "string",
             "context": "General",
             "tooltipText": "<p>A predefined shape or symbol for the marker. When null, the symbol is pulled from options.symbols. Other possible values are \"circle\", \"square\", \"diamond\", \"triangle\" and \"triangle-down\".</p>\r\n\r\n<p>Additionally, the URL to a graphic can be given on this form:  \"url(graphic.png)\". Note that for the image to be applied to exported charts, its URL needs to be accessible by the export server.</p>\r\n\r\n<p>Custom callbacks for symbol path generation can also be added to <code>Highcharts.SVGRenderer.prototype.symbols</code>. The callback is then used by its method name, as shown in the demo.</p>",
-            "parent": "series<spline>-marker",
+            "parent": "series<area>-marker",
             "values": "[null, \"circle\", \"square\", \"diamond\", \"triangle\", \"triangle-down\"]",
             "subType": [
-              "spline",
-              "polygon",
               "area",
+              "polygon",
               "areaspline",
-              "line",
+              "spline",
               "bubble",
+              "line",
               "scatter"
             ],
             "subTypeDefaults": {}
@@ -739,7 +768,7 @@ highed.meta.optionsExtended = {
             "dataType": "cssobject",
             "context": "General",
             "tooltipText": "Styles for the label.",
-            "defaults": "{\"color\": \"contrast\", \"fontSize\": \"11px\", \"fontWeight\": \"bold\", \"textShadow\": \"0 0 6px contrast, 0 0 3px contrast\" }",
+            "defaults": "{\"color\": \"contrast\", \"fontSize\": \"11px\", \"fontWeight\": \"bold\", \"textShadow\": \"1px 1px contrast, -1px -1px contrast, -1px 1px contrast, 1px -1px contrast\" }",
             "parent": "plotOptions-series-dataLabels"
           }
         ]
@@ -839,7 +868,8 @@ highed.meta.optionsExtended = {
             "text": "Text style hidden",
             "dataType": "cssobject",
             "context": "General",
-            "tooltipText": "CSS styles for each legend item when the corresponding series or point is hidden. Only a subset of CSS is supported, notably those options related to text. Properties are inherited from <code>style</code> unless overridden here. Defaults to:\r\n<pre>itemHiddenStyle: {\r\n\tcolor: '#CCC'\r\n}</pre>",
+            "tooltipText": "CSS styles for each legend item when the corresponding series or point is hidden. Only a subset of CSS is supported, notably those options related to text. Properties are inherited from <code>style</code> unless overridden here.",
+            "defaults": "{ \"color\": \"#cccccc\" }",
             "parent": "legend"
           },
           {
@@ -874,7 +904,7 @@ highed.meta.optionsExtended = {
             "dataType": "color",
             "context": "General",
             "tooltipText": "The color of the drawn border around the legend.",
-            "defaults": "#909090",
+            "defaults": "#999999",
             "parent": "legend"
           }
         ]
@@ -913,7 +943,7 @@ highed.meta.optionsExtended = {
             "tooltipText": "The background color of the tooltip",
             "dataType": "color",
             "context": "General",
-            "defaults": "rgba(255, 255, 255, 0.85)",
+            "defaults": "rgba(247,247,247,0.85)",
             "parent": "tooltip"
           },
           {
@@ -924,7 +954,7 @@ highed.meta.optionsExtended = {
             },
             "dataType": "number",
             "context": "General",
-            "tooltipText": "The pixel width of the tooltip border.",
+            "tooltipText": "<p>The pixel width of the tooltip border.</p>\r\n\r\n<p>In <a href=\"http://www.highcharts.com/docs/chart-design-and-style/style-by-css\">styled mode</a>, the stroke width is set in the <code>.highcharts-tooltip-box</code> class.</p>",
             "defaults": "1",
             "parent": "tooltip"
           },
@@ -968,12 +998,12 @@ highed.meta.optionsExtended = {
           {
             "id": "exporting--sourceWidth",
             "text": "Exported width",
+            "tooltipText": "The width of the original chart when exported. The pixel width of the exported image is then multiplied by the <em>Scaling factor</em>.",
             "custom": {
               "minValue": 10,
               "maxValue": 2000,
               "step": 10
             },
-            "tooltipText": "The width of the original chart when exported. The pixel width of the exported image is then multiplied by the <em>Scaling factor</em>.",
             "dataType": "number",
             "context": "General",
             "parent": "exporting",
@@ -982,13 +1012,13 @@ highed.meta.optionsExtended = {
           {
             "id": "exporting--scale",
             "text": "Scaling factor",
+            "tooltipText": "The export scale. Note that this is overridden if width is set.",
             "custom": {
               "minValue": 1,
               "maxValue": 4
             },
             "dataType": "number",
             "context": "General",
-            "tooltipText": "Defines the scale or zoom factor for the exported image compared to the on-screen display. While for instance a 600px wide chart may look good on a website, it will look bad in print. The default scale of 2 makes this chart export to a 1200px PNG or JPG. ",
             "defaults": "2",
             "parent": "exporting",
             "values": ""
