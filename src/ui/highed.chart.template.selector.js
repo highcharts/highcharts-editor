@@ -29,11 +29,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  @emits Select - when selecting a template
  *    > {object} - the template definition
+ *  @emits Hover - when hovering a template
+ *    > {object} - the template definition
  */
 highed.ChartTemplateSelector = function (parent) {
     var events = highed.events(),
         container = highed.dom.cr('div', 'highed-chart-template-container'),
         splitter = highed.HSplitter(container, {leftWidth: 30}),
+        hintNode = highed.dom.cr('div', 'highed-chart-template-hint'),
         list = highed.List(splitter.left),
         templates = splitter.right,
         selected = false
@@ -62,6 +65,19 @@ highed.ChartTemplateSelector = function (parent) {
             });
 
             highed.dom.showOnHover(node, titleBar);
+
+            highed.dom.on(node, 'mouseenter', function () {
+                if (t.tooltipText) {
+                    hintNode.innerHTML = t.tooltipText;
+                    highed.dom.style(hintNode, {display: 'block'});
+                    events.emit('Hover', t);                    
+                }
+            });
+
+            highed.dom.on(node, 'mouseleave', function () {                
+                hintNode.innerHTML = '';
+                highed.dom.style(hintNode, {display: 'none'});
+            });
 
             highed.dom.on(node, 'click', function () {
                 if (selected) {
@@ -118,6 +134,8 @@ highed.ChartTemplateSelector = function (parent) {
     });
 
     build();
+
+    highed.dom.ap(splitter.left, hintNode);
 
     ///////////////////////////////////////////////////////////////////////////
 

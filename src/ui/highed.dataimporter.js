@@ -155,9 +155,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         dynamicOptions[name] = options.options[name].default;
 
                         highed.dom.ap(dynamicOptionsContainer,
-                            highed.InspectorField(options.options[name].type, options.options[name].default, {title: options.options[name].label}, function (nval) {
-                                dynamicOptions[name] = nval;
-                            }, true)
+                            highed.InspectorField(
+                                options.options[name].type, 
+                                options.options[name].default, 
+                                {
+                                    title: options.options[name].label
+                                }, 
+                                function (nval) {
+                                    dynamicOptions[name] = nval;
+                                }, 
+                                true
+                            )
                         );
                     });
 
