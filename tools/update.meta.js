@@ -195,7 +195,7 @@ function process() {
 
     });
 
-    fs.writeFile(__dirname + '/../src/meta/highed.meta.options.extended.js', '/*\n' + license + '\n*/\n\nhighed.meta.optionsExtended = ' + JSON.stringify(meta, undefined, '  ') + ';', function (err) {
+    fs.writeFile(__dirname + '/../src/meta/highed.meta.options.extended.js', license + '\n\n\nhighed.meta.optionsExtended = ' + JSON.stringify(meta, undefined, '  ') + ';', function (err) {
         if (err) {
             console.log('[error]'.red, err);
         }
