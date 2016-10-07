@@ -72,33 +72,13 @@ A number of example integrations are included in the editor:
   * [Electron](https://github.com/highcharts/highcharts-editor/wiki/Native-OSX-Windows-Linux)
   * [CKEditor](https://github.com/highcharts/highcharts-editor/wiki/CKEditor)
 
-## API Reference
+## API Reference & General Documentation
 
-See [wiki](https://github.com/highcharts/highcharts-editor/wiki/API).
+[API reference](https://github.com/highcharts/highcharts-editor/wiki/API), [Full documentation](https://github.com/highcharts/highcharts-editor/wiki).
 
-## Customizing the exposed settings
-
-Sometimes, only a sub-set of editable settings is required. 
-
-### Custom Baking
-
-To bake a custom version that only includes the options required, modify `dictionaries/allowed_options.json` and then run
- `node tools/update.meta`.
-
-**Usage**
-        
-        node tools/update.meta.js --exposed <JSON file with an array of options to include>
-
-After running the tool, run `gulp` in the project root to bake your custom build.
-Take a look at [dictionaries/exposed.settings.json](dictionaries/exposed.settings.json) to see how to format the input JSON file. 
-
-## Enabling the Advanced Property Editor
-
-See [wiki](https://github.com/highcharts/highcharts-editor/wiki/Enable-Advanced-Customization).
-
-## Plugins
-
-See [wiki](https://github.com/highcharts/highcharts-editor/wiki/Plugins).
+  * [Plugins](https://github.com/highcharts/highcharts-editor/wiki/Plugins)
+  * [Advanced Editor](https://github.com/highcharts/highcharts-editor/wiki/Enable-Advanced-Customization)
+  * [Customizing available editable properties](https://github.com/highcharts/highcharts-editor/wiki/Choosing-Options)
 
 ## License
 

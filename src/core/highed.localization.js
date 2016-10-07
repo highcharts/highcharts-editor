@@ -64,17 +64,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         if (langTree[currentLang]) {
             if (langTree[currentLang][id]) {
                 return langTree[currentLang][id];
-            } else {
-                //The localized string is 404
-            }
+            } 
         } else {
             //The current language is invalid, fall back to 'en'
             if (langTree['en'][id]) {
                 return langTree['en'][id];
-            } else {
-                //Loacalized string is 404
-            }
+            } 
         }
+
+        //404
+        return 'bad localized string: ' + id;
     };
 
     /** Install a language pack from a json object
