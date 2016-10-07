@@ -86,8 +86,13 @@ highed.ContextMenu = function (stuff) {
 
         highed.dom.ap(container, 
             highed.dom.ap(item, 
-                entry.icon ? highed.dom.cr('div', 'ctx-child-licon fa fa-' + entry.icon) : false,
-                entry.children ? right : false
+                entry.icon ? 
+                        highed.dom.cr(
+                            'div', 
+                            'ctx-child-licon fa fa-' + 
+                            entry.icon) 
+                        : false,
+                        entry.children ? right : false
             )
         );
     }

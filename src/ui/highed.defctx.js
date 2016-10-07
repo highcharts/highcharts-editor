@@ -23,6 +23,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+/** Create an instance of the default context menu
+ *  This is shared accross the simple and full editor.
+ *  @constructor
+ */
 highed.DefaultContextMenu = function (chartPreview) {
     var events = highed.events(),
         cmenu = highed.ContextMenu([

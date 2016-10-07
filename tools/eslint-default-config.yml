@@ -73,7 +73,7 @@ rules:
     no-shadow: "error"
     no-shadow-restricted-names: "error"
     no-spaced-func: "error"
-    no-trailing-spaces: "error"
+    no-trailing-spaces: "warn"
     no-undef: "error"
     no-undef-init: "error"
     no-undefined: "error"
@@ -89,13 +89,14 @@ rules:
     radix: "error"
     require-jsdoc: "off"
     semi: "error"
+    object-curly-spacing: "warn"
     semi-spacing: ["error", {before: false, after: true}]
     space-before-blocks: "error"
     space-before-function-paren: ["error", "never"]
     space-in-parens: "error"
     space-infix-ops: "error"
     space-unary-ops: ["error", {words: true, nonwords: false}]
-    spaced-comment: ["error", "always", { exceptions: ["-"]}]
+    spaced-comment: ["warn", "always", { exceptions: ["-"]}]
     strict: ["error", "global"]
     valid-jsdoc: ["off", { prefer: { "return": "returns"}}]
     wrap-iife: "error"

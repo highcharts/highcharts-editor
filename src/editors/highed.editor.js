@@ -326,7 +326,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         chartPreview.on('ChartChange', function (newData) { events.emit('ChartChange', newData);});
         chartPreview.on('ChartChangeLately', function (newData) { events.emit('ChartChangeLately', newData);});
 
-
         ///////////////////////////////////////////////////////////////////////////
             
         //Attach event listeners defined in the properties
