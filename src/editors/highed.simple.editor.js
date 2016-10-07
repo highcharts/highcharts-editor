@@ -24,7 +24,24 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** Simple one-pane editor
+ *  An essentials-only editor.
+ *  
+ *  @example
+ *  var simpleEditor = highed.SimpleEditor(document.body, {
+ *      availableSettings: [
+ *          'title--text',
+ *          'subtitle--text'
+ *      ]    
+ *  });  
+ *  
+ *  simpleEditor.on('Change', function (chart) {
+ *       console.log(chart.export.html());
+ *  });
+ *
  *  @constructor
+ *  @emits change - when the chart changes
+ *    > {highed.ChartPreview} - an instance of the chart preview
+ *
  *  @param parent {domnode} - the node to attach to
  *  @param attributes {object} - the options for the editor
  *    > importer {object} - options passed to the importer widget
@@ -151,7 +168,10 @@ highed.SimpleEditor = function (parent, attributes) {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    customizer.on('PropertyChange', preview.options.set);
+    customizer.on('PropertyChange', function (id, value, index) {
+        preview.options.set(id, value, index);
+        events.emit('Change', preview);
+    });
     importer.on('ImportCSV', [preview.data.csv, attachToCustomizer]);
     importer.on('ImportJSON', [preview.data.json, attachToCustomizer]);
     importer.on('ImportChartSettings', [preview.data.settings, attachToCustomizer]);
@@ -190,7 +210,15 @@ highed.SimpleEditor = function (parent, attributes) {
     return {
         resize: resize,
         on: events.on,
+        /** Main toolbar
+         *  @type {domnode}
+         *  @memberof highed.simpleEditor
+         */
         toolbar: mainToolbar,
+        /** The chart preview
+         *  @type {highed.ChartPreview}
+         *  @memberof highed.simpleEditor
+         */
         chart: preview
     };
 };

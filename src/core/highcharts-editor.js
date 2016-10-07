@@ -178,6 +178,10 @@ var highed = {
     arrToObj: function (arr) {
         var obj = {};
 
+        if (!highed.isArr(arr) && !highed.isBasic(arr)) {
+            return arr;
+        }
+
         if (highed.isStr(arr)) {
             arr = arr.split(' ');
         }

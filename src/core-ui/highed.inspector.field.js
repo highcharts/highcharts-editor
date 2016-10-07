@@ -204,10 +204,15 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                         attr.title = highed.uncamelize(attr.title);
 
                         highed.dom.ap(stable, 
-                            highed.InspectorField(attr.dataType, val[attr.name], attr, function (nval) {
-                                val[attr.name] = nval;
-                                tryCallback(callback, val);
-                            })
+                            highed.InspectorField(
+                                attr.dataType, 
+                                val[attr.name], 
+                                attr, 
+                                function (nval) {
+                                    val[attr.name] = nval;
+                                    tryCallback(callback, val);
+                                }
+                            )
                         );
                     });
                 }

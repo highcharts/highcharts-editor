@@ -127,11 +127,25 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     /**The main chart editor object 
      * @constructor
+     *
+     * @example
+     * var editor = highed.Editor('my-div', {
+     *   
+     * });
+     * 
      * @emits ChartChange - when the chart changes
      *   > {object} - new chart data
      * @emits ChartChangedLately - when the chart changes, on a throttle so events are not emitted more frequently than every 100ms
      *   > {object} - new chart data
-     * @param {object} parent - the node to attach the editor to
+     *
+     * @param {domnode} parent - the node to attach the editor to
+     *   > defaultChartOptions {object} - the initial chart options
+     *   > on {object} - event listeners: key is event name, value is a function
+     *   > plugins {string|array} - the editor plugins to enable
+     *   > features {string} - the features to enable: `import`, `export`, `templates`, `customize`, `welcome`. Separate by string.
+     *   > includeSVGInHTMLEmbedding {bool} - if true (which is default) the exported HTML will contain both an SVG fallback and the JavaScript injection
+     *   > importer {object} - options passed to the contained importer object (see highed.DataImporter)
+     *   > exporter {object} - options passd to the contained export object (see highed.DataExporter)
      * @param {object} attributes - the editor settings
      * @return {highed.Editor} - A new instance of an editor
      */
@@ -250,7 +264,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 },
                 {
                     title: 'License Information',
-                    icon: 'key'
+                    icon: 'key',
+                    click: function () {
+                        highed.licenseInfo.show();
+                    }
                 }
             ])
 
@@ -401,6 +418,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         }
 
         //Activate plugins
+        properties.plugins = highed.arrToObj(properties.plugins);
         Object.keys(properties.plugins).forEach(function (name) {
             highed.plugins.use(name, properties.plugins[name] || {});
         });

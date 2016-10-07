@@ -24,6 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** This is a component that implements a toolbar with wizard steps 
+  * Proxies the interface of the WizardStepper object.
   * @constructor
   * @emits Step - when stepping back or forth
   * @emits AddStep - when adding a step to the stepper
@@ -89,6 +90,10 @@ highed.WizardBar = function (parent, bodyParent, attributes) {
     });
 
     return {
+        /** The container which the bar is attached to
+         *  @type {domnode}
+         *  @memberof highed.WizardBar
+         */
         container: toolbar.container,
         on: stepper.on,
         next: stepper.next,

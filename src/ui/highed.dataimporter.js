@@ -68,7 +68,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     };
 
     /** Data importer widget
+     *  
+     *  @example
+     *  var dimp = highed.DataImporter(document.body);
+     *  dimp.on('ImportCSV', function (data) {
+     *      console.log('Importing csv:', data.csv);
+     *  });
+     *  
      *  @constructor
+     *
      *  @emits ImportChartSettings - when importing chart settings
      *  @emits ImportCSV - when importing CSV
      *  @emits ImportJSON - when importing JSON

@@ -24,10 +24,25 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** A modal editor
+ * The modal editor connects to a "summoner", which is the DOM node that should
+ * spawn the editor. This arg is however optional, and if not present, 
+ * `show()` should be called instead when wanting to display it.
+ *
+ * The contained editor can either be a full editor, or a simple editor. 
+ *
+ * @example
+ * highed.ModalEditor('icon', {allowDone: true}, function (html) {
+ *    doSomethingWithTheExportedHTML(html);   
+ * });
+ *
  * @constructor
+ *
  * @param summoner {domnode} - the node which spawns the editor
- * @param attributes {object} - properties sent to the editor
+ * @param attributes {object} - properties. Note that this object is also passed to the editor constructor.
+ *   > type {string} - either `full` or `simple`.
+ *   > allowDone {bool} - if set to true (default is false) a "Close and use" button will appear on the top bar
  * @param fn {function} - function to call when done editing, argument is embeddable HTML
+ *
  */
 highed.ModalEditor = function (summoner, attributes, fn) {
     var properties = highed.merge({

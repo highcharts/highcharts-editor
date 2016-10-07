@@ -46,7 +46,8 @@ highed.OverlayModal = function (contents, attributes) {
             height: 200,
             minWidth: 690,
             minHeight: 0,
-            showOnInit: true
+            showOnInit: true,
+            zIndex: 10000
         }, attributes),
         hideDimmer = false,
         visible = false
@@ -61,12 +62,13 @@ highed.OverlayModal = function (contents, attributes) {
         if (visible) return;
 
         highed.dom.style(container, {
-            width: properties.width + (properties.width.indexOf('%') > 0 ? '' : 'px'),
-            height: properties.height + (properties.height.indexOf('%') > 0 ? '' : 'px'),
+            width: properties.width + (properties.width.toString().indexOf('%') > 0 ? '' : 'px'),
+            height: properties.height + (properties.height.toString().indexOf('%') > 0 ? '' : 'px'),
             opacity: 1,
             'pointer-events': 'auto',
             'min-width': properties.minWidth + 'px',
-            'min-height': properties.minHeight + 'px'
+            'min-height': properties.minHeight + 'px',
+            'z-index': properties.zIndex
         });
 
         highed.dom.style(document.body, {
@@ -74,7 +76,7 @@ highed.OverlayModal = function (contents, attributes) {
             'overflow-y': 'hidden'
         });
 
-        hideDimmer = highed.showDimmer(hide, true);
+        hideDimmer = highed.showDimmer(hide, true, false, properties.zIndex - 10000);
 
         setTimeout(function () {
             events.emit('Show');            
@@ -115,9 +117,11 @@ highed.OverlayModal = function (contents, attributes) {
 
     ///////////////////////////////////////////////////////////////////////////
     
-    highed.dom.ap(document.body, 
-        container
-    );
+    highed.ready(function () {
+        highed.dom.ap(document.body, 
+            container
+        );        
+    });
 
     if (contents) {
         highed.dom.ap(container,

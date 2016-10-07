@@ -52,7 +52,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     };
 
     /** Export widget
+     *  
+     *  @example
+     *  var exporter = highed.Exporter(document.body),
+     *      preview = highed.ChartPreview(document.body)
+     *  ;
+     *
+     *  exporter.init(preview.export.json(), preview.export.html(), preview.export.svg(), preview);
+     *
      *  @constructor
+     *
      *  @param parent {domnode} - the node to attach the widget to
      *  @param attributes {object} - the options
      *    > options {string} - things to include: `csv html json plugins`

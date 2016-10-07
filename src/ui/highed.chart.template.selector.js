@@ -24,7 +24,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** UI for selecting a chart template from the ones defined in meta/highed.meta.charts.js
+ *  
+ *  @example
+ *  var picker = highed.ChartTemplateSelector(document.body);
+ *  picker.on('Select', function (template) {
+ *      console.log('Selected new template:', template);   
+ *  });
+ * 
  *  @constructor
+ *
  *  @param parent {domnode} - the parent to attach the selector to
  *
  *  @emits Select - when selecting a template

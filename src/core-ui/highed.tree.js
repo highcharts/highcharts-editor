@@ -24,10 +24,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** Tree component
- *
+ *  For an example of formatting, build the editor with `gulp with-advanced`,
+ *  and look in `src/meta/highed.options.advanced.js`.
+ * 
  *  @example
  *  var tree = highed.Tree(document.body).build({
- *     //Tree data here   
+ *
+ *     }   
  *  });
  * 
  *  @emits Select {object} - when a node is selected

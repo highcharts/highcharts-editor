@@ -4,6 +4,9 @@
   "version": "0.0.2",
   "private": true,
   "license": "MIT",
+  "scripts": {
+    "install": "gulp"
+  },
   "devDependencies": {
     "async": "^2.0.0",
     "colors": "1.1.2",

@@ -24,11 +24,19 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** UI For customizing a chart
+ *  Interface/wrapper to Highcharts
+ *
+ *  @example
+ *  var chart = highed.ChartCustomizer(document.body);
+ *  console.log(chart.export.html());
+ *
  *  @constructor
+ *
  *  @emits PropertyChange - when a property changes
  *    > {string} - the path of the change
  *    > {anything} - the new value
  *    > {number} - the change array index
+ *
  *  @param parent {domnode} - the node to attach the editor to
  *  @param attributes {object} - the attributes
  *    > noAdvanced {bool} - set to false to force disable the advance view

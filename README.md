@@ -12,13 +12,13 @@ It requires no back-end service to operate.
 
 ## Features
 	
-  * No dependencies except from Highcharts
-  * Lightweight: weighs in at less than 100kb
+  * Light on dependencies: requires only Highcharts, FontAwesome, and (optionally) two Google Fonts
+  * Lightweight: weighs in at ~140kb non-gzipped
   * 100% client-side
   * Outputs both HTML and JSON
   * Optional wizard-style interface
   * Highly configurable
-  * Plugin system
+  * Plug-in system
 
 ## Installing and Building
 
@@ -37,7 +37,12 @@ The editor is pushed to NPM and Bower under `highcharts-editor`.
 	npm install
 	gulp
 
-*Notice for windows users:** You need [7zip]() installed and added to your path for `gulp electron` to work!
+**Build options**
+  * `gulp`: Builds distribution packages for the editor and the bundled integrations and plugins
+  * `gulp electron`: Builds Electron packages for Windows/Linux/OSX
+  * `gulp with-advanced`: Builds packages for the advanced editor which exposes all API settings
+
+*Notice for windows users:** You need [7zip](http://www.7-zip.org/) installed and added to your path for `gulp electron` to work!
 
 This will put a built version in the `dist` folder.
 
@@ -46,26 +51,26 @@ This will put a built version in the `dist` folder.
 	<!DOCTYPE html>
 	<html>
 		<head>
-      <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100,700|Source Sans:400,300,100' rel='stylesheet' type='text/css'/>
-      <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-
-      <link href="./highcharts-editor.min.css" type="text/css" rel="stylesheet"/>
-      <script src="./highcharts-editor.min.js" type="text/javascript" charset="utf-8"></script>
+      <link href="highcharts-editor.min.css" type="text/css" rel="stylesheet"/>
+      <script src="highcharts-editor.min.js" type="text/javascript" charset="utf-8"></script>
 		</head>
 		<body>
-			<div id="highcharts-editor"></div>
 		</body>
 		<script>
-			//Create an editor widget and attach it to the highcharts-editor div
-			var editor = highed.Editor('highcharts-editor');
+			//Create an editor widget and attach it to the document body      
+			highed.Editor(document.body).on('ChartChange', function (data) {
+        //Do something with the modified chart here.
+      });
 		</script>
 	</html>
 
 ## Integrations
 
+A number of example integrations are included in the editor:
   * [TinyMCE](https://github.com/highcharts/highcharts-editor/wiki/TinyMCE)
-  * [Wiki](https://github.com/highcharts/highcharts-editor/wiki/Wordpress)
+  * [Wordpress](https://github.com/highcharts/highcharts-editor/wiki/Wordpress)
   * [Electron](https://github.com/highcharts/highcharts-editor/wiki/Native_OSX_Windows_Linux)
+  * [CKEditor](https://github.com/highcharts/highcharts-editor/wiki/CKEditor)
 
 ## API Reference
 
@@ -75,7 +80,10 @@ See [wiki](https://github.com/highcharts/highcharts-editor/wiki/API).
 
 Sometimes, only a sub-set of editable settings is required. 
 
-To that end, the `update.meta` tool in the `tools/` folder can be used to create a custom build of the editor which only includes the desired settings.
+### Custom Baking
+
+To bake a custom version that only includes the options required, modify `dictionaries/allowed_options.json` and then run
+ `node tools/update.meta`.
 
 **Usage**
         
@@ -86,21 +94,11 @@ Take a look at [dictionaries/exposed.settings.json](dictionaries/exposed.setting
 
 ## Enabling the Advanced Property Editor
 
-The advanced editor allows for editing every property in the Highcharts API. When enabled, it appears in a separate tab --- ADVANCED --- in the customize wizard step.
-
-By default, only the simple property editor is included in baked sources. This is because the required meta data to enable the advanced editor is large enough to be inconvenient in most cases (adds around 400kb to the minified sources).
-
-To enable the advanced editor:
-    
-    node tools/bake.advanced.js
-
-This will create the required meta in the source tree. Run `gulp with-advanced` afterwards to bake sources with the advanced editor enabled.
+See [wiki](https://github.com/highcharts/highcharts-editor/wiki/Enable-Advanced-Customization).
 
 ## Plugins
 
-The editor supports data handling plugins. Plugins are registered using the `highed.plugins.install` function. They must also be activated, either by calling `highed.plugins.use(<plugin name>, <plugin options>)`, or by supplying the name of the plugin in the editor constructor (see editor section above).
-
-See [plugins/jquery-simple-rest.js](plugins/jquery-simple-rest.js) for an example on how to write plugins.
+See [wiki](https://github.com/highcharts/highcharts-editor/wiki/Plugins).
 
 ## License
 

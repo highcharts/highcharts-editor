@@ -1,7 +1,7 @@
 
 # Highcharts Editor Roadmap
 
-## 0.0.1-beta: Release first week of October, 2016
+## 0.0.1-beta: Release mid-October, 2016
 
 **Editor Features**
 

@@ -6,3 +6,4 @@ cache/
 *.zip
 api.js
 output
+docs/

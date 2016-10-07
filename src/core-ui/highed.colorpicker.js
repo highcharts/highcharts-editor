@@ -39,6 +39,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      *  Component to pick colors from the google material design color palette.
      *  User input is also possible.
      *
+     *  The color palette is defined in meta/highed.meta.colors.js,
+     *  and is divided into groups of 14 hues per. color.
+     *
      *  @example 
      *  //Show a color picker at [10,10]
      *  highed.pickColor(10, 10, '#fff', function (color) {
