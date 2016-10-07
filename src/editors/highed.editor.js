@@ -190,88 +190,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             dataExpStep = wizbar.addStep({title: highed.getLocalizedStr('stepExport'), id: 'export'}),
             dataExp = highed.Exporter(dataExpStep.body, properties.exporter),
 
-            cmenu = highed.ContextMenu([
-                {
-                title: highed.getLocalizedStr('newChart'),
-                icon: 'file-o',
-                click: function () {
-                    if (window.confirm(highed.getLocalizedStr('confirmNewChart'))) {
-                        chartPreview.new();  
-                        dataImpStep.activate();                  
-                    }
-                }
-                },
-                '-',
-                {
-                    title: highed.getLocalizedStr('saveProject'),
-                    icon: 'floppy-o',
-                    click: function () {
-                        highed.download('chart.json', JSON.stringify(chartPreview.export.json()));
-                    }
-                },
-                {
-                    title: highed.getLocalizedStr('loadProject'),
-                    icon: 'folder-open-o',
-                    click: function () {
-                        highed.readLocalFile({
-                            type: 'text',
-                            accept: '.json',
-                            success: function (file) {
-                                try {
-                                    file = JSON.parse(file.data);
-                                } catch (e) {
-                                    return highed.snackBar('Error loading JSON: ' + e);
-                                }
-
-                                chartPreview.data.json(file);
-                            }
-                        });
-                    }
-                },
-                '-',
-                {
-                    title: highed.getLocalizedStr('exportPNG'),
-                    icon: 'file-image-o',
-                    click: function () {
-                        chartPreview.data.export({});
-                    }
-                },
-                {
-                    title: highed.getLocalizedStr('exportJPEG'),
-                    icon: 'file-image-o',
-                    click: function () {
-                        chartPreview.data.export({type: 'image/jpeg'});
-                    }
-                },
-                {
-                    title: highed.getLocalizedStr('exportSVG'),
-                    icon: 'file-image-o',
-                    click: function () {
-                        chartPreview.data.export({type: 'image/svg+xml'});
-                    }
-                },
-                {
-                    title: highed.getLocalizedStr('exportPDF'),
-                    icon: 'file-pdf-o',
-                    click: function () {
-                        chartPreview.data.export({type: 'application/pdf'});
-                    }
-                },
-                '-',
-                {
-                    title: highed.getLocalizedStr('help'),
-                    icon: 'question-circle'
-                },
-                {
-                    title: highed.getLocalizedStr('licenseInfo'),
-                    icon: 'key',
-                    click: function () {
-                        highed.licenseInfo.show();
-                    }
-                }
-            ])
+            cmenu = highed.DefaultContextMenu(chartPreview)
 
         ;
+
+        cmenu.on('NewChart', function () {
+            dataImpStep.activate();
+        });
 
         ///////////////////////////////////////////////////////////////////////////
 

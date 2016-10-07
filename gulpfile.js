@@ -50,6 +50,7 @@ var dest = 'dist/',
        // "./src/meta/highed.meta.options.advanced.js",
             
         "./src/ui/highed.chart.template.selector.js",
+        "./src/ui/highed.defctx.js",
         "./src/ui/highed.chart.customizer.js",
         "./src/ui/highed.wizbar.js",
         "./src/ui/highed.dataimporter.js",
