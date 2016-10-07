@@ -69,7 +69,7 @@ This will put a built version in the `dist` folder.
 A number of example integrations are included in the editor:
   * [TinyMCE](https://github.com/highcharts/highcharts-editor/wiki/TinyMCE)
   * [Wordpress](https://github.com/highcharts/highcharts-editor/wiki/Wordpress)
-  * [Electron](https://github.com/highcharts/highcharts-editor/wiki/Native_OSX_Windows_Linux)
+  * [Electron](https://github.com/highcharts/highcharts-editor/wiki/Native-OSX-Windows-Linux)
   * [CKEditor](https://github.com/highcharts/highcharts-editor/wiki/CKEditor)
 
 ## API Reference
