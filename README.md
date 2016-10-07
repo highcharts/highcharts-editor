@@ -15,7 +15,7 @@ It requires no back-end service to operate.
   * Light on dependencies: requires only Highcharts, FontAwesome, and (optionally) two Google Fonts
   * Lightweight: weighs in at ~140kb non-gzipped
   * 100% client-side
-  * Outputs both HTML and JSON
+  * Outputs embeddable HTML, JavaScript, and JSON
   * Optional wizard-style interface
   * Highly configurable
   * Plug-in system
