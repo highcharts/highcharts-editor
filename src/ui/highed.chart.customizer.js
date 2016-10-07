@@ -49,8 +49,8 @@ highed.ChartCustomizer = function (parent, attributes) {
         }, attributes),
         events = highed.events(),
         tabs = highed.TabControl(parent, true),
-        simpleTab = tabs.createTab({title: 'SIMPLE'}),
-        advancedTab = tabs.createTab({title: 'ADVANCED'}),
+        simpleTab = tabs.createTab({title: highed.getLocalizedStr('customizeSimple')}),
+        advancedTab = tabs.createTab({title: highed.getLocalizedStr('customizeAdvanced')}),
         
         splitter = highed.HSplitter(simpleTab.body, {leftWidth: 30}),
         list = highed.List(splitter.left),

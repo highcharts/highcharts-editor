@@ -7,7 +7,8 @@
             "./src/core/highcharts-editor.js",
             "./src/core/highed.dom.js",
             "./src/core/highed.events.js",
-            "./src/core/highed.fileupload.js"
+            "./src/core/highed.fileupload.js",
+            "./src/core/highed.localization.js"
         ],
 
         "UI-Library": [

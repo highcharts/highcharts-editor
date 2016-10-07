@@ -173,29 +173,29 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             wizbar = highed.WizardBar(container, splitter.left),
 
-            welcomeStep = wizbar.addStep({title: 'Start'}),
+            welcomeStep = wizbar.addStep({title: highed.getLocalizedStr('stepStart')}),
 
-            dataImpStep = wizbar.addStep({title: 'Import'}),
+            dataImpStep = wizbar.addStep({title: highed.getLocalizedStr('stepImport')}),
             dataImp = highed.DataImporter(dataImpStep.body, properties.importer),
         
-            templateStep = wizbar.addStep({title: 'Templates'}),
+            templateStep = wizbar.addStep({title: highed.getLocalizedStr('stepTemplates')}),
             chartTemplateSelector = highed.ChartTemplateSelector(templateStep.body),
 
             chartContainer = highed.dom.cr('div', 'highed-box-size highed-chart-container'),
             chartPreview = highed.ChartPreview(chartContainer, {defaultChartOptions: properties.defaultChartOptions, expandTo: expandContainer}),
 
-            customizerStep = wizbar.addStep({title: 'Customize', id: 'customize'}),
+            customizerStep = wizbar.addStep({title: highed.getLocalizedStr('stepCustomize'), id: 'customize'}),
             chartCustomizer = highed.ChartCustomizer(customizerStep.body),
 
-            dataExpStep = wizbar.addStep({title: 'Export', id: 'export'}),
+            dataExpStep = wizbar.addStep({title: highed.getLocalizedStr('stepExport'), id: 'export'}),
             dataExp = highed.Exporter(dataExpStep.body, properties.exporter),
 
             cmenu = highed.ContextMenu([
                 {
-                title: 'New Chart',
+                title: highed.getLocalizedStr('newChart'),
                 icon: 'file-o',
                 click: function () {
-                    if (confirm('Are you sure you want to abandon the current chart and start over?')) {
+                    if (window.confirm(highed.getLocalizedStr('confirmNewChart'))) {
                         chartPreview.new();  
                         dataImpStep.activate();                  
                     }
@@ -203,14 +203,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 },
                 '-',
                 {
-                    title: 'Save project',
+                    title: highed.getLocalizedStr('saveProject'),
                     icon: 'floppy-o',
                     click: function () {
                         highed.download('chart.json', JSON.stringify(chartPreview.export.json()));
                     }
                 },
                 {
-                    title: 'Load project',
+                    title: highed.getLocalizedStr('loadProject'),
                     icon: 'folder-open-o',
                     click: function () {
                         highed.readLocalFile({
@@ -230,28 +230,28 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 },
                 '-',
                 {
-                    title: 'Export as PNG',
+                    title: highed.getLocalizedStr('exportPNG'),
                     icon: 'file-image-o',
                     click: function () {
                         chartPreview.data.export({});
                     }
                 },
                 {
-                    title: 'Export as JPEG',
+                    title: highed.getLocalizedStr('exportJPEG'),
                     icon: 'file-image-o',
                     click: function () {
                         chartPreview.data.export({type: 'image/jpeg'});
                     }
                 },
                 {
-                    title: 'Export as SVG',
+                    title: highed.getLocalizedStr('exportSVG'),
                     icon: 'file-image-o',
                     click: function () {
                         chartPreview.data.export({type: 'image/svg+xml'});
                     }
                 },
                 {
-                    title: 'Export as PDF',
+                    title: highed.getLocalizedStr('exportPDF'),
                     icon: 'file-pdf-o',
                     click: function () {
                         chartPreview.data.export({type: 'application/pdf'});
@@ -259,11 +259,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 },
                 '-',
                 {
-                    title: 'Help',
+                    title: highed.getLocalizedStr('help'),
                     icon: 'question-circle'
                 },
                 {
-                    title: 'License Information',
+                    title: highed.getLocalizedStr('licenseInfo'),
                     icon: 'key',
                     click: function () {
                         highed.licenseInfo.show();
