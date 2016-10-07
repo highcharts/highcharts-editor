@@ -303,7 +303,7 @@ highed.ChartCustomizer = function (parent, attributes) {
         n.focus();
         n.scrollIntoView(true);
 
-        setTimeout(function () {
+        window.setTimeout(function () {
             highed.dom.style(n, {
                 border: ''
             });

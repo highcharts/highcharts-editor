@@ -6,6 +6,8 @@ extends:
 
 globals:
     highed: true
+    window: true
+    Highcharts: true
 
 rules:
     array-callback-return: "error"

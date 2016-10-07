@@ -78,7 +78,7 @@ highed.OverlayModal = function (contents, attributes) {
 
         hideDimmer = highed.showDimmer(hide, true, false, properties.zIndex - 10000);
 
-        setTimeout(function () {
+        window.setTimeout(function () {
             events.emit('Show');            
         }, 300);
 

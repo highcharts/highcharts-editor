@@ -67,8 +67,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             } 
         } else {
             //The current language is invalid, fall back to 'en'
-            if (langTree['en'][id]) {
-                return langTree['en'][id];
+            if (langTree.en[id]) {
+                return langTree.en[id];
             } 
         }
 

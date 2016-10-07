@@ -114,5 +114,5 @@ highed.DefaultContextMenu = function (chartPreview) {
     return {
         on: events.on,
         show: cmenu.show
-    }
+    };
 };

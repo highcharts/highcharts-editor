@@ -71,7 +71,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 unbinder = false;
             }
 
-            setTimeout(function () {
+            window.setTimeout(function () {
                 if (dimmer.parentNode) {
                     dimmer.parentNode.removeChild(dimmer);                    
                 }

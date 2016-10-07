@@ -41,7 +41,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     });
 
     highed.dom.on(container, 'mouseover', function () {
-        clearTimeout(timeout);
+        window.clearTimeout(timeout);
     });
 
     highed.dom.on(container, 'mouseout', function () {
@@ -51,7 +51,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     ///////////////////////////////////////////////////////////////////////////
     
     function hide() {
-        timeout = setTimeout(function () {
+        timeout = window.setTimeout(function () {
             highed.dom.style(container, {
                 bottom: '-58px'
             });
@@ -73,7 +73,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     highed.snackBar = function (stitle, saction, fn) {
         title.innerHTML = stitle.toUpperCase();
 
-        clearTimeout(timeout);
+        window.clearTimeout(timeout);
         
         if (saction) {
             action.innerHTML = saction.toUpperCase();           

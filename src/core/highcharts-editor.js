@@ -519,7 +519,7 @@ var highed = {
                     fn();
                 });
             } else {
-                setTimeout(pollForReady, 100);
+                window.setTimeout(pollForReady, 100);
             }
         }
     }
@@ -626,7 +626,7 @@ var highed = {
     //             document.head.appendChild(s);
     //         });            
     //     } else {
-    //         setTimeout(tryAddScripts, 10);            
+    //         window.setTimeout(tryAddScripts, 10);            
     //     }
     // }
 

@@ -112,8 +112,8 @@ highed.ChartPreview = function (parent, attributes) {
         //Throttled event - we use this when doing server stuff in the handler
         //since e.g. using the color picker can result in quite a lot of updates
         //within a short amount of time
-        clearTimeout(throttleTimeout);
-        throttleTimeout = setTimeout(function () {
+        window.clearTimeout(throttleTimeout);
+        throttleTimeout = window.setTimeout(function () {
             events.emit('ChartChangeLately', aggregatedOptions);
         }, 800);
     }
@@ -336,7 +336,7 @@ highed.ChartPreview = function (parent, attributes) {
         flatOptions[id] = value;
 
         updateAggregated();
-        init(aggregatedOptions, undefined, true);
+        init(aggregatedOptions, false, true);
         emitChange();
 
         if (id.indexOf('lang--') === 0 && customizedOptions.lang) {
@@ -425,7 +425,7 @@ highed.ChartPreview = function (parent, attributes) {
                         'new Highcharts.chart("', id, '", ', 
                             JSON.stringify(getEmbeddableJSON()), ')',
                     ' : ',
-                    'setTimeout(cl, 20);',
+                    'window.setTimeout(cl, 20);',
                 '}',
                 'cl();',
                 '})();'
