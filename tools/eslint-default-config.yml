@@ -9,7 +9,7 @@ globals:
 
 rules:
     array-callback-return: "error"
-    indent: ["error", 4, {SwitchCase: 1}]
+    indent: ["warn", 4, {SwitchCase: 1}]
     block-spacing: "error"
     brace-style: ["error", "1tbs"]
     camelcase: ["error", { properties: "never" }]
@@ -17,7 +17,7 @@ rules:
     comma-spacing: "error"
     comma-style: ["error", "last"]
     consistent-return: "error"
-    curly: ["error", "all"]
+    curly: ["warn", "all"]
     default-case: "error"
     dot-notation: ["error", { allowKeywords: true }]
     eol-last: "error"
@@ -85,7 +85,7 @@ rules:
     no-useless-concat: "error"
     no-with: "error"
     one-var-declaration-per-line: "error"
-    quotes: ["off", "double"]
+    quotes: ["warn", "double"]
     radix: "error"
     require-jsdoc: "off"
     semi: "error"

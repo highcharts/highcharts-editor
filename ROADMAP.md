@@ -34,7 +34,6 @@
     * Optional whitelisting of options to include
     * Simple Editor: Same basic set of modifiable properties as on Highcharts Cloud
     * Advanced Editor: (optional) in the property customizer
-  * Basic responsiveness
   * Data import plugins
   * Data export plugins
   * Editor plugins
@@ -59,3 +58,6 @@
     * TinyMCE
     * Wordpress
     * CKEditor
+
+## 0.0.2
+

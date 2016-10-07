@@ -45,4 +45,4 @@ highed.plugins.editor.install('jquery-simple-rest', {
             }
         })
     }
-})
+});
