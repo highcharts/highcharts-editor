@@ -74,10 +74,10 @@ A number of example integrations are included in the editor:
 
 ## API Reference & General Documentation
 
-[API reference](https://github.com/highcharts/highcharts-editor/wiki/API), [Full documentation](https://github.com/highcharts/highcharts-editor/wiki).
-
-  * [Plugins](https://github.com/highcharts/highcharts-editor/wiki/Plugins)
-  * [Advanced Editor](https://github.com/highcharts/highcharts-editor/wiki/Enable-Advanced-Customization)
+  * [API reference](https://github.com/highcharts/highcharts-editor/wiki/API)
+  * [Full documentation](https://github.com/highcharts/highcharts-editor/wiki)
+  * [Using plug-ins](https://github.com/highcharts/highcharts-editor/wiki/Plugins)
+  * [Advanced editor](https://github.com/highcharts/highcharts-editor/wiki/Enable-Advanced-Customization)
   * [Customizing available editable properties](https://github.com/highcharts/highcharts-editor/wiki/Choosing-Options)
 
 ## License
