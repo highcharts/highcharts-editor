@@ -24,6 +24,7 @@ var dest = 'dist/',
         "./src/core/highed.events.js",
         "./src/core/highed.fileupload.js",
         "./src/core/highed.localization.js",
+        "./src/core/highed.templateman.js",
 
         "./src/core-ui/highed.dimmer.js",
         "./src/core-ui/highed.overlaymodal.js",

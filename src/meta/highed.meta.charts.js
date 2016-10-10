@@ -25,28 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 if (typeof highed === 'undefined') {
 	var highed = {meta: {}};
-} else {
-	
-	/** Install a new template
-	 *  @param type {string} - template type: `line area column bar scatter pie polar stock`
-	 *  @def {object} - the template definition
-	 *    > title {string} - the template title
-	 *    > config {object} - the highcharts attributes
-	 *    > tooltipText {string} - the tooltip text
-	 */
-	highed.installTemplate = function(type, def) {
-		var properties = highed.merge({
-			title: '',
-			config: {},
-			tooltipText: ''
-		}, def);
-
-		if (highed.meta.chartTemplates[type] !== 'undefined' && properties.title.length) {
-			highed.meta.chartTemplates[type][properties.title] = properties;
-		} 
-	};
-}
-
+} 
 
 highed.meta.chartTemplates = {
 	line: {
