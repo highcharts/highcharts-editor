@@ -77,7 +77,7 @@ A number of example integrations are included in the editor:
   * [API reference](https://github.com/highcharts/highcharts-editor/wiki/API)
   * [Full documentation](https://github.com/highcharts/highcharts-editor/wiki)
   * [Using plug-ins](https://github.com/highcharts/highcharts-editor/wiki/Plugins)
-  * [Advanced editor](https://github.com/highcharts/highcharts-editor/wiki/Enable-Advanced-Customization)
+  * [Enabling the advanced editor](https://github.com/highcharts/highcharts-editor/wiki/Enable-Advanced-Customization)
   * [Customizing available editable properties](https://github.com/highcharts/highcharts-editor/wiki/Choosing-Options)
   * [Adding custom templates](https://github.com/highcharts/highcharts-editor/wiki/Custom-Templates)
   * [Disabling editor features](https://github.com/highcharts/highcharts-editor/wiki/Disable-Features)

@@ -66,6 +66,8 @@ highed.ChartCustomizer = function (parent, attributes) {
         highlighted = false
     ;
 
+    body.className += ' highed-customizer-body';
+
     properties.availableSettings = highed.arrToObj(properties.availableSettings);
 
     ///////////////////////////////////////////////////////////////////////////

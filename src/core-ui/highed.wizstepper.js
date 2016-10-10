@@ -24,6 +24,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** A wizard-type stepper
+ *  This is sort of like a tab control, but with a logical
+ *  x -> y flow. 
  *
  *  @emits Step - when going back/forth
  *  @emits AddStep - when a new step is added
