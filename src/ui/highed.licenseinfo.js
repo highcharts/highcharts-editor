@@ -39,6 +39,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     highed.licenseInfo = {
         /** Show license information modal
          *  @namespace highed.licenseInfo
+         *  @type function
          */
         show: modal.show         
     };

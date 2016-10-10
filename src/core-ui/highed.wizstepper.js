@@ -54,10 +54,20 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
     /* Update the bar CSS - this is more stable than doing it in pure CS */
     function updateBarCSS() {
         var fsteps = steps.filter(function (t) { return t.visible; });
+        
+        stepCount = 0;
+
         fsteps.forEach(function (step, i) {
-            if (i === 0) step.bar.className = 'bar bar-first';
-            else if (i === fsteps.length - 1) step.bar.className = 'bar bar-last';
-            else step.bar.className = 'bar';
+            if (i === 0) {
+                step.bar.className = 'bar bar-first';
+            } else if (i === fsteps.length - 1) {
+                step.bar.className = 'bar bar-last';   
+            } else {
+                step.bar.className = 'bar';
+            }
+
+            step.number = ++stepCount;
+
             step.bar.className += ' ' + (properties.indicatorPos === 'bottom' ? 'bar-bottom' : 'bar-top');
         });
     }
@@ -204,6 +214,18 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
         });
     }
 
+    /** Select the first step
+      * @memberof highed.WizardStepper
+      */
+    function selectFirst() {        
+        steps.some(function (step, i) {
+            if (step.visible) {
+                step.activate();
+                return true;
+            }
+        });
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     
     highed.dom.ap(indicatorParent, indicators);
@@ -217,6 +239,7 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
         next: next,
         resize: resize,
         previous: previous,
+        selectFirst: selectFirst,
         /** The main body
          *  @memberof highed.WizardStepper
          *  @type {domnode} 

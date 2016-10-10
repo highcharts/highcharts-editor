@@ -42,7 +42,7 @@ The editor is pushed to NPM and Bower under `highcharts-editor`.
   * `gulp electron`: Builds Electron packages for Windows/Linux/OSX
   * `gulp with-advanced`: Builds packages for the advanced editor which exposes all API settings
 
-*Notice for windows users:** You need [7zip](http://www.7-zip.org/) installed and added to your path for `gulp electron` to work!
+**Notice for windows users:** You need [7zip](http://www.7-zip.org/) installed and added to your path for `gulp electron` to work!
 
 This will put a built version in the `dist` folder.
 
@@ -59,7 +59,7 @@ This will put a built version in the `dist` folder.
 		<script>
 			//Create an editor widget and attach it to the document body      
 			highed.Editor(document.body).on('ChartChange', function (data) {
-        //Do something with the modified chart here.
+          //Do something with the modified chart here.
       });
 		</script>
 	</html>

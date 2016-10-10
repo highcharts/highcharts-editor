@@ -98,6 +98,7 @@ highed.WizardBar = function (parent, bodyParent, attributes) {
         on: stepper.on,
         next: stepper.next,
         previous: stepper.previous,
-        addStep: stepper.addStep
+        addStep: stepper.addStep,
+        selectFirst: stepper.selectFirst
     };
 };
