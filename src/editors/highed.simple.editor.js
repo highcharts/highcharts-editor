@@ -68,7 +68,7 @@ highed.SimpleEditor = function (parent, attributes) {
         container = highed.dom.cr('div', 'highed-container'),
         expandContainer = highed.dom.cr('div', 'highed-expand-container'),
 
-        mainVSplitter = highed.VSplitter(container, {topHeight: '50px'}),
+        mainVSplitter = highed.VSplitter(container, {topHeight: '60px', noOverflow: true}),
         mainToolbar = highed.Toolbar(mainVSplitter.top, {additionalCSS: ['highed-header']}),
 
         hsplitter = highed.HSplitter(mainVSplitter.bottom, {leftWidth: 60, noOverflow: true}),
@@ -84,6 +84,8 @@ highed.SimpleEditor = function (parent, attributes) {
 
         cmenu = highed.DefaultContextMenu(preview)
     ;
+
+
 
     ///////////////////////////////////////////////////////////////////////////
 

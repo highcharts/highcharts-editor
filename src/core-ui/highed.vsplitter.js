@@ -98,7 +98,7 @@ highed.VSplitter = function (parent, attributes) {
 
     if (properties.noOverflow) {
         highed.dom.style([container, top, bottom], {
-            'overflow-x': 'hidden'
+            'overflow-y': 'hidden'
         });
     }
 
