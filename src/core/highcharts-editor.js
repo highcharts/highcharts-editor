@@ -184,7 +184,7 @@ var highed = {
     arrToObj: function (arr) {
         var obj = {};
 
-        if (!highed.isArr(arr) && !highed.isBasic(arr)) {
+        if ((!highed.isArr(arr) && !highed.isBasic(arr)) || arr === false) {
             return arr;
         }
 
