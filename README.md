@@ -80,6 +80,7 @@ A number of example integrations are included in the editor:
   * [Advanced editor](https://github.com/highcharts/highcharts-editor/wiki/Enable-Advanced-Customization)
   * [Customizing available editable properties](https://github.com/highcharts/highcharts-editor/wiki/Choosing-Options)
   * [Adding custom templates](https://github.com/highcharts/highcharts-editor/wiki/Custom-Templates)
+  * [Disabling editor features](https://github.com/highcharts/highcharts-editor/wiki/Disable-Features)
 
 ## License
 
