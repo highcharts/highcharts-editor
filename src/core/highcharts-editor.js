@@ -32,7 +32,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 var highed = {
     schemas: {},
     meta: {
-        chartTemplates: {}
+        chartTemplates: {},
+        fonts: []
     },
     plugins: {},
 
