@@ -70,7 +70,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     highed.Exporter = function (parent, attributes) {
         var //splitter = highed.HSplitter(parent, {leftWidth: 50, noOverflow: true}),
             properties = highed.merge({
-                options: 'csv html json plugins',
+                options: 'svg html json plugins',
                 plugins: 'beatify-js beatify-json'
             }, attributes),    
 
@@ -111,8 +111,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             if (!properties.options.json) {
                 jsonTab.hide();
             }
-            if (!properties.options.html) {
-                htmlTab.hide();
+            if (!properties.options.svg) {
+                svgTab.hide();
             }
             if (!properties.options.plugins) {
                 pluginTab.hide();
