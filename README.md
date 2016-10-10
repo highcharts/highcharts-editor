@@ -82,6 +82,14 @@ A number of example integrations are included in the editor:
   * [Adding custom templates](https://github.com/highcharts/highcharts-editor/wiki/Custom-Templates)
   * [Disabling editor features](https://github.com/highcharts/highcharts-editor/wiki/Disable-Features)
 
+Documentation can also be generated offline by running `js-skald` in the project root, which outputs the API reference
+in the `docs/` folder.
+
+`js-skald` is a simple doc generator that outputs markdown files and JSON trees representing the code.
+It can be installed by running `npm install -g js-skald`. 
+
 ## License
 
-[MIT](LICENSE).
+The editor is licensed under [MIT](LICENSE).
+
+Note that the use of Highcharts itself (which the editor depends on) falls under the [Highcharts License](#).
