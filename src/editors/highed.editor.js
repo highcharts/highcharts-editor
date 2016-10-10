@@ -146,6 +146,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      *   > includeSVGInHTMLEmbedding {bool} - if true (which is default) the exported HTML will contain both an SVG fallback and the JavaScript injection
      *   > importer {object} - options passed to the contained importer object (see highed.DataImporter)
      *   > exporter {object} - options passd to the contained export object (see highed.DataExporter)
+     *   > availableSettings {array} - array containing a whitelist of editable properties. Default is "show all available"
      * @param {object} attributes - the editor settings
      * @return {highed.Editor} - A new instance of an editor
      */
@@ -159,7 +160,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 features: 'import export templates customize welcome',
                 includeSVGInHTMLEmbedding: true,
                 importer: {},
-                exporter: {}   
+                exporter: {},
+                availableSettings: false   
             }, attributes),
 
             container = highed.dom.cr('div', 'highed-container'),
@@ -185,7 +187,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             chartPreview = highed.ChartPreview(chartContainer, {defaultChartOptions: properties.defaultChartOptions, expandTo: expandContainer}),
 
             customizerStep = wizbar.addStep({title: highed.getLocalizedStr('stepCustomize'), id: 'customize'}),
-            chartCustomizer = highed.ChartCustomizer(customizerStep.body),
+            chartCustomizer = highed.ChartCustomizer(customizerStep.body, {
+                availableSettings: properties.availableSettings
+            }),
 
             dataExpStep = wizbar.addStep({title: highed.getLocalizedStr('stepExport'), id: 'export'}),
             dataExp = highed.Exporter(dataExpStep.body, properties.exporter),

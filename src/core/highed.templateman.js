@@ -24,6 +24,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** Install a new template
+ *
+ *  @example 
+ *  highed.installTemplate('custom', {
+ *      title: 'My company template',
+ *      tooltipText: 'Company template: requires no particular data',
+ *      config: {
+ *           'chart--title': 'Copany Chart' 
+ *      } 
+ *  });
+ *
  *  @param type {string} - template type: `line area column bar scatter pie polar stock`
  *  @def {object} - the template definition
  *    > title {string} - the template title
@@ -48,6 +58,10 @@ highed.installTemplate = function(type, def) {
 
 /** Add a new template type
  *  If the type allready exists, nothing will happen
+ *
+ *  @example
+ *  highed.addTemplateType('custom', 'My company templates');
+ *
  *  @param type {string} - the type id
  *  @param title {string} - the title as it appears in the category list     
  */

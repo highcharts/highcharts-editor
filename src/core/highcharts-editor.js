@@ -31,7 +31,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 var highed = {
     schemas: {},
-    meta: {},
+    meta: {
+        chartTemplates: {}
+    },
     plugins: {},
 
     resources: {
@@ -50,7 +52,6 @@ var highed = {
         l.click();
         document.body.removeChild(l);
     },
-
 
     /** Clear an object 
       * Deletes all the object attributes.
