@@ -155,7 +155,7 @@ highed.ChartCustomizer = function (parent, attributes) {
 
     //This function has mutated into a proper mess. Needs refactoring.
     function selectGroup(group, table, options, detailIndex, filteredBy, filter) {
-        var master, vals, doInclude = true;
+        var master, vals, doInclude = true, container, masterNode;
 
         options = options || flatOptions;
 
@@ -168,9 +168,13 @@ highed.ChartCustomizer = function (parent, attributes) {
                 return;
             }
 
+            container = highed.dom.cr('div', 'highed-customize-group');
+            masterNode = highed.dom.cr('div', 'highed-customize-master-dropdown');
+
             highed.dom.ap(body, 
-                highed.dom.ap(highed.dom.cr('div', 'highed-customize-group'),
+                highed.dom.ap(container,
                     highed.dom.cr('div', 'highed-customizer-table-heading', group.text),
+                    masterNode,
                     table
                 )
             );
@@ -181,6 +185,10 @@ highed.ChartCustomizer = function (parent, attributes) {
 
             if (group.controlledBy) {
                 master = highed.dom.cr('select', 'highed-box-size highed-stretch');
+
+                highed.dom.style(masterNode, {
+                    display: 'block'
+                });
             
                 if (highed.isStr(group.controlledBy.options)) {
                     vals = highed.getAttr(options, group.controlledBy.options, detailIndex);
@@ -211,7 +219,7 @@ highed.ChartCustomizer = function (parent, attributes) {
                             });
                         });
 
-                        highed.dom.ap(body, master);               
+                        highed.dom.ap(masterNode, master);               
                         detailIndex = detailIndex || 0;
                     } else {
                         return;
