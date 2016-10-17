@@ -1,5 +1,9 @@
 .highed-customize-group {
-	
+    border: 1px solid @border-main-color;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 40px;
+    box-shadow: 0 3px 7px @bright-shadow;
 }
 
 .highed-customizer-table-heading {
@@ -10,8 +14,14 @@
 	color: @color-header;
 	font-weight: 600;
 	font-family: @font-main;
-	font-size: 18px;
-	margin-bottom: 25px;
+	font-size: 20px;
+	margin-bottom: 5px;
+}
+
+.highed-customize-group .highed-customizer-table-heading {
+    margin-bottom: 0;
+    padding: 15px;
+    border-bottom: 1px solid @border-main-color;
 }
 
 .highed-customizer-body {
@@ -26,15 +36,28 @@
 	padding:0px;
 	border-collapse: collapse;
 	width:100%;
-    margin-bottom: 22px;
-    margin-top: 22px;
+    margin-bottom: 20px;
+    margin-top: 20px;
     background: @bright-background;
 	.highed-box-size;
+	border: 1px solid @border-main-color;
+}
+
+.highed-customize-group .highed-customizer-table {
+    margin-bottom: 0;
+    margin-top: 0;
+    border: none;
 }
 
 .highed-customizer-table td {
-	padding: 5px 10px;
+	padding: 10px;
+	border-bottom: 1px solid @border-main-color;
 }
+
+.highed-customizer-table tr:last-child td {
+	border: none;
+}
+
 
 .highed-customizer-table tr {
 	//border-bottom: @border-main;
