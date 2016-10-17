@@ -48,7 +48,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *      > options {string|array<string>} - the options to include
  *      > plugins {string|array<sting>} - the plugins to enable
  *    > availableSettings {array<string>} - the settings to include
- *  @param chart {object} - default chart settings
+ *    > chart {object} - default chart settings
  */
 highed.SimpleEditor = function (parent, attributes) {
     var properties = highed.merge({
@@ -157,12 +157,12 @@ highed.SimpleEditor = function (parent, attributes) {
         on: events.on,
         /** Main toolbar
          *  @type {domnode}
-         *  @memberof highed.simpleEditor
+         *  @memberof highed.SimpleEditor
          */
         toolbar: mainToolbar,
         /** The chart preview
          *  @type {highed.ChartPreview}
-         *  @memberof highed.simpleEditor
+         *  @memberof highed.SimpleEditor
          */
         chart: preview
     };

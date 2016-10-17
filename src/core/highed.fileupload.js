@@ -43,7 +43,7 @@ highed.ready(function () {
 
  /** Upload and parse a local file
   *  Borrowed from almostvanilla which is licensed under MIT.
-  *  @param props
+  *  @param props {object} - the upload settings
   *     > type {string} - the type of data to load
   *     > accept {string} - the accepted file extensions
   *     > multiple {boolean} - allow multiple files

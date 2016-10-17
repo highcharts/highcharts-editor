@@ -57,6 +57,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @param properties {object} - the properties for the widget
  *  @param fn {function} - the function to call when the field is changed
  *     > {anything} - the changed value
+ *  @param nohint {boolean} - if true, the help icon will be skipped
+ *  @param fieldID {anything} - the id of the field
  *  @returns {domnode} - a DOM node containing the field + label wrapped in a tr
  */
 highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) {

@@ -42,6 +42,7 @@ var highed = {
     },
 
     /** Trigger file download
+     *  @namespace highed
      *  @param filename {string} - the filename
      *  @param data {string} - the contained data
      */
@@ -165,7 +166,7 @@ var highed = {
         var d = new Date().getTime(), uuid;
         
         if (window.performance && typeof window.performance.now === "function") {
-            d += performance.now(); //use high-precision timer if available
+            d += window.performance.now(); //use high-precision timer if available
         }
         
         uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -230,6 +231,7 @@ var highed = {
      *  @namespace highed
      *  @param min {number} - minimum value
      *  @param max {number} - maximum value
+     *  @param value {number} - the value to clamp
      *  @returns {number} - the clamped value
      */
     clamp: function (min, max, value) {
@@ -258,7 +260,7 @@ var highed = {
         };
     },
 
-    /** Invert a color 
+    /** Invert a color
      *  @namespace highed
      *  @param {string} hex - the color to invert
      *  @return {string} - new hex color
@@ -304,11 +306,12 @@ var highed = {
         return what === 'true' || what === true || what === 'on';
     },
 
-    /** Set a property based on -- delimited path  
+    /** Set a property based on -- delimited path
      *  @namespace highed
      *  @param {object} obj - the object to modify
      *  @param {string} path - the path to the attribute to change
      *  @param {anything} value - the value to set
+     *  @param {number} index - if we're accessing an array, this is the index
      */
     setAttr: function (obj, path, value, index) {
         var current = obj;
@@ -348,10 +351,11 @@ var highed = {
         });
     },
 
-    /** Get a property based on -- delimited path  
+    /** Get a property based on -- delimited path
      *  @namespace highed
      *  @param {object} obj - the object to traverse
      *  @param {string} path - the path to the attribute to get
+     *  @param {number} index - if we're accessing an array, this is the index
      *  @returns {anything} - the value or false
      */
     getAttr: function (obj, path, index) {
@@ -433,7 +437,7 @@ var highed = {
         return (typeof what === 'undefined' || what === null);
     },
 
-    /** Check if something is a string 
+    /** Check if something is a string
      *  @namespace highed
      *  @param {anything} what - the value to check
      *  @return {bool} - true if string
@@ -489,7 +493,7 @@ var highed = {
     }
 };
 
-//Stateful functions
+// Stateful functions
 (function () {
     var logLevels = [
             'error',
@@ -546,7 +550,7 @@ var highed = {
     /** Log something
      * Accepts a variable amount of arguments after `level` which will be
      * the log message (similar to `console.log`).
-     * @param {number} level - the log level 1..4    
+     * @param {number} level - the log level 1..4
      */
     highed.log = function (level) {
         var things = (Array.prototype.slice.call(arguments));
@@ -566,10 +570,11 @@ var highed = {
         }
     };
 
-    /** Include something 
+    /** Include something
      *  @namespace highed
      *  @param what {string} - URL to a css or javascript file
      *  @param fn {function} - function to call when done including the script
+     *  @param asCSS {boolean} - force including as css
      */
     highed.include = function (what, fn, asCSS) {
         var n;
@@ -584,14 +589,14 @@ var highed = {
 
         if (highed.isArr(what)) {
             n = -1;
-            return next();            
+            return next();
         }
 
         if (includedScripts[what]) {
             highed.log(3, 'script already included, skipping:', what);
             return fn();
         }
-        
+
         highed.log(3, 'including script', what);
         includedScripts[what] = true;
 

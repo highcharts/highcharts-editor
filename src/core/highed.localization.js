@@ -76,11 +76,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         return 'bad localized string: ' + id;
     };
 
-    /** Install a language pack from a json object
+    /* Install a language pack from a json object
      *  @param translations {object} - translation objects
      */
 
-    /** Install a language pack from a url
+    /* Install a language pack from a url
      *  @param url {string} - the location of the pack
      */
 

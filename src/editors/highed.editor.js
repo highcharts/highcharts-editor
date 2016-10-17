@@ -43,7 +43,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       *  @namespace highed.plugins.editor
       *
       *  @param name       {string} - the name of the plugin
-      *  @param definition {object} - the plugin definition 
+      *  @param definition {object} - the plugin definition
       *     > meta {object}
       *         > version {string}
       *         > author {string}
@@ -139,6 +139,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      *   > {object} - new chart data
      *
      * @param {domnode} parent - the node to attach the editor to
+     * @param {object} attributes - the editor settings
      *   > defaultChartOptions {object} - the initial chart options
      *   > on {object} - event listeners: key is event name, value is a function
      *   > plugins {string|array} - the editor plugins to enable
@@ -147,7 +148,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      *   > importer {object} - options passed to the contained importer object (see highed.DataImporter)
      *   > exporter {object} - options passd to the contained export object (see highed.DataExporter)
      *   > availableSettings {array} - array containing a whitelist of editable properties. Default is "show all available"
-     * @param {object} attributes - the editor settings
      * @return {highed.Editor} - A new instance of an editor
      */
     highed.Editor = function (parent, attributes) {
