@@ -35,7 +35,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  });
  *
  *  @param type {string} - template type: `line area column bar scatter pie polar stock`
- *  @def {object} - the template definition
+ *  @param def {object} - the template definition
  *    > title {string} - the template title
  *    > config {object} - the highcharts attributes
  *    > tooltipText {string} - the tooltip text
@@ -84,7 +84,7 @@ highed.addTemplateType = function (type, title) {
   *   {type: 'line', template: {title: 'My Line Template', config: {}}} 
   * ]);
   *
-  * @templates {array} - an array of templates
+  * @param templates {array} - an array of templates
   *
   */
  highed.installMultipleTemplates = function (templates) {

@@ -295,6 +295,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         
         /** Force a resize of the widget 
          *  @memberof highed.DataImporter
+         *  @param w {number} - the new width
+         *  @param h {number} - the new height
          */
         function resize(w, h) {
             var bsize,

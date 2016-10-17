@@ -32,6 +32,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  @constructor
  *  @param parent {domnode} - the node to attach the toolbar to
+ *  @param attributes {object} - toolbar settings
+ *    > additionalCSS {array} - array of additional css classes to add to the toolbar
  */
 highed.Toolbar = function (parent, attributes) {
     var properties = highed.merge({

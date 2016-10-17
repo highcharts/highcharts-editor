@@ -40,6 +40,7 @@ highed.events = function () {
       * @memberof highed.events
       * @param event {string} - the event to listen for
       * @param callback {function} - the function to call when the event is emitted
+      * @param context {anything} - the calling context (`this` reference) for the callback
       * @returns {function} - function that can be called to unbind the listener
       */
     function on(event, callback, context) {

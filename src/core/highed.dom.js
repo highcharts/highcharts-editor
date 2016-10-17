@@ -62,6 +62,7 @@ highed.dom = {
      * @namespace highed.dom
      * @param select {HTMLSelect} - the dropdown to add options to
      * @param options {(array|object)} - the options as an array or as an object keyed on ID
+     * @param selected {number} - the index of the selected option
      */
     options: function (select, options, selected) {
         if (highed.isNull(options)) {

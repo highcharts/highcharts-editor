@@ -32,7 +32,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  *  @constructor
  *  @param bodyParent {domnode} - the node to attach the body to
- *  @param indiatorParent {domnode} - the node to attach the indicators to
+ *  @param indicatorParent {domnode} - the node to attach the indicators to
  *  @param attributes {object} - the settings for the stepper
  *    > indicatorPos {enum} - the indicator alignment
  *       > top

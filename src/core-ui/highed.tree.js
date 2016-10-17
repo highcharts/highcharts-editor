@@ -29,8 +29,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  *  @example
  *  var tree = highed.Tree(document.body).build({
- *
- *     }   
+ *      
  *  });
  * 
  *  @emits Select {object} - when a node is selected
@@ -241,7 +240,8 @@ highed.Tree = function (parent) {
         return body;
     }
 
-    /** Expand to show a given ID 
+    /** Expand to show a given ID
+     *  @memberof highed.Tree
      *  @param id {string} - the ID of the element to expand
      */
     function expandTo(id) {
@@ -263,6 +263,9 @@ highed.Tree = function (parent) {
      *  @param tree {object} - the tree to display
      *    > children {object} - the children of the node
      *    > entries {array} - array of orphan children 
+     *  @param pnode {domnode} - the parent node
+     *  @param instancedData {object} - the actual tree data
+     *  @param dataIndex {number} - the path to data in arrays
      */
     function build(tree, pnode, instancedData, dataIndex) {
 

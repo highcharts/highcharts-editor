@@ -87,7 +87,7 @@ highed.OverlayModal = function (contents, attributes) {
 
     /** Hide the modal
      *  @memberof highed.OverlayModal
-     *  @param suppress {boolean} - supress the hide event emitting
+     *  @param supress {boolean} - supress the hide event emitting
      */
     function hide(supress) {
         if (!visible) return;

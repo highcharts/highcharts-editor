@@ -230,6 +230,7 @@ var highed = {
      *  @namespace highed
      *  @param min {number} - minimum value
      *  @param max {number} - maximum value
+     *  @param value {number} - the value to clamp
      *  @returns {number} - the clamped value
      */
     clamp: function (min, max, value) {
@@ -309,6 +310,7 @@ var highed = {
      *  @param {object} obj - the object to modify
      *  @param {string} path - the path to the attribute to change
      *  @param {anything} value - the value to set
+     *  @param {number} index - if we're accessing an array, this is the index
      */
     setAttr: function (obj, path, value, index) {
         var current = obj;
@@ -352,6 +354,7 @@ var highed = {
      *  @namespace highed
      *  @param {object} obj - the object to traverse
      *  @param {string} path - the path to the attribute to get
+     *  @param {number} index - if we're accessing an array, this is the index
      *  @returns {anything} - the value or false
      */
     getAttr: function (obj, path, index) {
@@ -570,6 +573,7 @@ var highed = {
      *  @namespace highed
      *  @param what {string} - URL to a css or javascript file
      *  @param fn {function} - function to call when done including the script
+     *  @param asCSS {boolean} - force including as css
      */
     highed.include = function (what, fn, asCSS) {
         var n;

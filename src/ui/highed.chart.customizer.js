@@ -74,6 +74,8 @@ highed.ChartCustomizer = function (parent, attributes) {
 
      /** Force a resize of the editor 
      *  @memberof highed.ChartCustomizer
+     *  @param w {number} - the new width
+     *  @param h {number} - the new height
      */
     function resize(w, h) {
         var bsize, lsize;
@@ -314,7 +316,7 @@ highed.ChartCustomizer = function (parent, attributes) {
 
     /** Highlight a field in the customizer
      *  @memberof highed.ChartCustomizer
-     *  @id is the id of the field to highlight
+     *  @param id {string} - is the id of the field to highlight
      */
     function highlightField(id) {
         var n = advSplitter.left.querySelector('#' + id.substr(0, id.indexOf('-')));        
@@ -330,6 +332,8 @@ highed.ChartCustomizer = function (parent, attributes) {
     /** Focus a category
      *  @memberof highed.ChartCustomizer
      *  @param thing {anything} - the category to focus
+     *  @param x {number} - the x coordinate where the focus was triggered
+     *  @param y {number} - the y coordinate where the focus was triggered
      */
     function focus(thing, x, y) {
         var n;
