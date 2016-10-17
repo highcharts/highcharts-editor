@@ -169,7 +169,10 @@ highed.ChartCustomizer = function (parent, attributes) {
             }
 
             highed.dom.ap(body, 
-                highed.dom.cr('div', 'highed-customizer-table-heading', group.text)
+                highed.dom.ap(highed.dom.cr('div', 'highed-customize-group'),
+                    highed.dom.cr('div', 'highed-customizer-table-heading', group.text),
+                    table
+                )
             );
 
             if (group.filteredBy) {
@@ -216,7 +219,7 @@ highed.ChartCustomizer = function (parent, attributes) {
                 }
             }
 
-            highed.dom.ap(body, table);
+            //highed.dom.ap(body, table);
 
             group.options.forEach(function (sub) {
                 selectGroup(sub, table, options, detailIndex, group.filteredBy, filter);
@@ -385,8 +388,10 @@ highed.ChartCustomizer = function (parent, attributes) {
         });
 
         highed.dom.ap(advBody, 
-            highed.dom.cr('div', 'highed-customizer-table-heading', selected),
-            table
+            highed.dom.ap(highed.dom.cr('div', 'highed-customize-group'),
+                highed.dom.cr('div', 'highed-customizer-table-heading', selected),
+                table
+            )
         );
     });
 
