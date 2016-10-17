@@ -44,11 +44,15 @@ highed.ChartTemplateSelector = function (parent) {
     var events = highed.events(),
         container = highed.dom.cr('div', 'highed-chart-template-container'),
         splitter = highed.HSplitter(container, {leftWidth: 30}),
-        hintNode = highed.dom.cr('div', 'highed-chart-template-hint'),
+        hintNode = highed.dom.cr('div', 'highed-tooltip'),
         list = highed.List(splitter.left),
         templates = splitter.right,
         selected = false
     ;
+
+    highed.dom.style(hintNode, {
+        display: 'none'
+    });
 
     highed.dom.ap(parent, container);
 

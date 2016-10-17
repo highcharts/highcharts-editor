@@ -24,7 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 (function () {
-    var container = highed.dom.cr('div', 'highed-tooltip')
+    var container = highed.dom.cr('div', 'highed-tooltip highed-tooltip-fixed')
     ;
 
     highed.ready(function () {
