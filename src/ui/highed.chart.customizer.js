@@ -24,7 +24,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** UI For customizing a chart
- *  Interface/wrapper to Highcharts
  *
  *  @example
  *  var chart = highed.ChartCustomizer(document.body);

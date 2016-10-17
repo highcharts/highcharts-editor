@@ -34,8 +34,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @emits Show - when the overlay is shown
  *  @emits Hide - when the overlay is hidden
  *
- *  @param {object} contents - the DOM node to wrap. Properties is an object as such: `{wdith, height, minWidth, minHeight}`
+ *  @param {domnode} contents - the DOM node to wrap.
  *  @param {object} attributes - properties for the modal
+ *    > width {number} - the width of the modal
+ *    > height {number} - the height of the modal
+ *    > minWidth {number} - the minimum width of the modal
+ *    > minHeight {number} - the minimum height of the modal
+ *    > showOnInit {boolean} - if true, the modal will be shown after creation
+ *    > zIndex {number} - the Z-Index to use for the modal
  *  @return {object} - A new instance of OverlayModal
  */
 highed.OverlayModal = function (contents, attributes) {
