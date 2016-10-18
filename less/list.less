@@ -1,5 +1,5 @@
 .highed-list {
-	background: @background-panel;
+	/*background: @background-panel;*/
 	color: @text-panel;
 	.highed-box-size;
 	.highed-nosel;	
@@ -12,10 +12,10 @@
     font-size: 14px !important;
     cursor: pointer;
     display: block;
-    background-color: @background-panel !important;
+    /*background-color: @background-panel !important;*/
     background-image: none !important;
-    border-bottom: @border-main !important;
-    border-left: @border-main !important;
+    border-top: @border-main !important;
+    /*border-left: @border-main !important;*/
     padding: 10px;
     .highed-box-size;
     .highed-transition;
@@ -27,11 +27,13 @@
 }
 
 .highed-list .item:first-child {
-	border-top: @border-main !important;
+	border-top: none !important;
 }
 
-.highed-list .item-selected {
-    background-color: @bright-background !important;
-	color: @bright-text!important;
+.highed-list .item-selected, .highed-list .item-selected:hover {
+    /*background-color: @bright-background !important;*/
+	color:@selected-item-color !important;
+    border-left: 3px solid @selected-item-color;
     font-weight: bold;
+    cursor: default;
 }
