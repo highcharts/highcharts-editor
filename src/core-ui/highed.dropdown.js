@@ -171,7 +171,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 return false;
             }
 
-            if (highed.isStr(item)) {
+            if (highed.isStr(item) || highed.isNum(item)) {
                 node.innerHTML = item;
                 id = item;
             } else {
@@ -219,7 +219,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
          */
         function selectById(id) {
             items.some(function (item) {
-                if (item.id() === id) {
+                //This is not a typo..
+                if (item.id() == id) {
                     item.select();
                     return true;
                 }
