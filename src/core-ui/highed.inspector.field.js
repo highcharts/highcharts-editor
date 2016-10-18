@@ -370,7 +370,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
     return highed.dom.ap(
         highed.dom.ap(highed.dom.cr('tr'),
             highed.dom.ap(titleCol,
-                highed.dom.cr('span', '', properties.title)
+                highed.dom.cr('span', 'highed-customize-field-label', properties.title)
             ),
             highed.dom.ap(widgetTD,
                 fields[type] ? fields[type]() : fields.string()
