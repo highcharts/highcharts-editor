@@ -50,8 +50,8 @@ highed.ModalEditor = function (summoner, attributes, fn) {
             allowDone: false
         }, attributes), 
         modal = highed.OverlayModal(false, {
-            width: '90%',
-            height: '80%',
+            width: '95%',
+            height: '95%',
             showOnInit: false
         }),
         editor = properties.type === 'full' ? highed.Editor(modal.body, attributes) : highed.SimpleEditor(modal.body, attributes),
