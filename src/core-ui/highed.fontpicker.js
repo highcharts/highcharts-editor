@@ -54,10 +54,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      */
     highed.FontPicker = function (fn, style) {
         var container = highed.dom.cr('div', 'highed-font-picker'),
-            fontFamily = highed.dom.cr('select', 'font-family'),
-            fontSize = highed.dom.cr('select', 'font-size'),
-            boldBtn = highed.PushButton(undefined, 'bold'),
-            italicBtn = highed.PushButton(undefined, 'italic'),
+            fontFamily = highed.DropDown(), //highed.dom.cr('select', 'font-family'),
+            fontSize = highed.DropDown(), //highed.dom.cr('select', 'font-size'),
+            boldBtn = highed.PushButton(false, 'bold'),
+            italicBtn = highed.PushButton(false, 'italic'),
             color = highed.dom.cr('span', 'font-color', '&nbsp;')
 
         ;
@@ -100,31 +100,30 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         ///////////////////////////////////////////////////////////////////////
 
         //Add fonts to font selector
-        highed.dom.options(fontFamily, highed.meta.fonts);
+        fontFamily.addItems(highed.meta.fonts);
         //Add font sizes
-        highed.dom.options(fontSize, [8, 10, 12, 14, 16, 18, 20, 22, 25, 26, 28, 30, 32, 34]);
+        fontSize.addItems([8, 10, 12, 14, 16, 18, 20, 22, 25, 26, 28, 30, 32, 34]);
 
         //Set the current values
         boldBtn.set(style.fontWeight === 'bold');
         italicBtn.set(style.fontStyle === 'italic');
         updateColor(style.color, true);
-        highed.dom.val(fontFamily, style.fontFamily);
-        highed.dom.val(fontSize, style.fontSize.replace('px', ''));
+        //highed.dom.val(fontFamily, style.fontFamily);
+        //highed.dom.val(fontSize, style.fontSize.replace('px', ''));
+
+        fontFamily.selectById(style.fontFamily);
+        fontSize.selectById(style.fontSize.replace('px', ''));
 
         //Listen to font changes
-        highed.dom.on(fontFamily, 'change', function () {
-            if (fontFamily.selectedIndex >= 0) {
-                style.fontFamily = fontFamily.options[fontFamily.selectedIndex].id;
-                callback();
-            }
+        fontFamily.on('Change', function (selected) {
+            style.fontFamily = selected.id();
+            return callback();
         });
 
         //Listen to font size changes
-        highed.dom.on(fontSize, 'change', function () {
-            if (fontSize.selectedIndex >= 0) {
-                style.fontSize = fontSize.options[fontSize.selectedIndex].id + 'px';
-                callback();
-            }
+        fontSize.on('Change', function (selected) {
+            style.fontSize = selected.id() + 'px';
+            return callback();
         });
 
         //Listen to bold changes
@@ -146,11 +145,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         //Create DOM
         highed.dom.ap(container,
-            fontFamily,
-            fontSize,
-            boldBtn.button,
-            italicBtn.button,
-            color
+            fontFamily.container,
+            highed.dom.ap(highed.dom.cr('div', 'highed-font-picker-button-container'),
+                fontSize.container,
+                highed.dom.ap(highed.dom.cr('div', 'highed-font-picker-buttons'),
+                    boldBtn.button,
+                    italicBtn.button,
+                    color
+                )
+           )
         );
 
         ///////////////////////////////////////////////////////////////////////

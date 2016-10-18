@@ -294,11 +294,25 @@ highed.dom = {
      * @param node {object} - the node to get the position of
      * @return {object} - the position as an object `{x, y}`
      */
-    pos: function (node) {
+    pos: function (node, abs) {
+      var x = 0, 
+          y = 0
+      ;
+
+      if (abs) {
+
+        var b = node.getBoundingClientRect();
+        
         return {
-            x: node.offsetLeft,
-            y: node.offsetTop
+          x: b.left + window.scrollX,
+          y: b.top + window.scrollY
         };
+      }
+      
+      return {
+          x: node.offsetLeft,
+          y: node.offsetTop
+      };
     },
 
     /** Find a node

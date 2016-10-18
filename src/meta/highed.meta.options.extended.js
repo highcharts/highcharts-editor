@@ -279,64 +279,6 @@ highed.meta.optionsExtended = {
         "text": "X-Axis",
         "options": [
           {
-            "id": "xAxis-crosshair",
-            "text": "Crosshair",
-            "dataIndex": 0,
-            "dataType": "boolean|object",
-            "context": "General",
-            "tooltipText": "<p>Configure a crosshair that follows either the mouse pointer or the hovered point.</p>\r\n\r\n<p>In <a href=\"http://www.highcharts.com/docs/chart-design-and-style/style-by-css\">styled mode</a>, the crosshairs are styled in the <code>.highcharts-crosshair</code>, <code>.highcharts-crosshair-thin</code> or <code>.highcharts-xaxis-category</code> classes.</p>",
-            "defaults": "false",
-            "parent": "xAxis",
-            "attributes": [
-              {
-                "dataType": "string",
-                "name": "className",
-                "title": "className",
-                "tooltipText": "A class name for the crosshair, especially as a hook for styling.",
-                "defaults": "",
-                "values": ""
-              },
-              {
-                "dataType": "color",
-                "name": "color",
-                "title": "color",
-                "tooltipText": "The color of the crosshair. Defaults to <code>#cccccc</code> for numeric and datetime axes, and <code>rgba(204,214,235,0.25)</code> for category axes, where the crosshair by default highlights the whole category."
-              },
-              {
-                "dataType": "string",
-                "name": "dashStyle",
-                "title": "dashStyle",
-                "tooltipText": "The dash style for the crosshair. See <a href=\"#plotOptions.series.dashStyle\">series.dashStyle</a> for possible values.",
-                "defaults": "Solid",
-                "values": "[\"Solid\", \"ShortDash\", \"ShortDot\", \"ShortDashDot\", \"ShortDashDotDot\", \"Dot\", \"Dash\" ,\"LongDash\", \"DashDot\", \"LongDashDot\", \"LongDashDotDot\"]"
-              },
-              {
-                "dataType": "boolean",
-                "name": "snap",
-                "title": "snap",
-                "tooltipText": "Whether the crosshair should snap to the point or follow the pointer independent of points.",
-                "defaults": "true",
-                "values": ""
-              },
-              {
-                "dataType": "number",
-                "name": "width",
-                "title": "width",
-                "tooltipText": "The pixel width of the crosshair. Defaults to 1 for numeric or datetime axes, and for one category width for category axes.",
-                "defaults": "",
-                "values": ""
-              },
-              {
-                "dataType": "number",
-                "name": "zIndex",
-                "title": "zIndex",
-                "tooltipText": "The Z index of the crosshair. Higher Z indices allow drawing the crosshair on top of the series or behind the grid lines.",
-                "defaults": "2",
-                "values": ""
-              }
-            ]
-          },
-          {
             "id": "xAxis-title--style",
             "text": "X axis title",
             "tooltipText": "Styling and text for the X axis title",
@@ -418,64 +360,6 @@ highed.meta.optionsExtended = {
         "text": "Y-Axis",
         "options": [
           {
-            "id": "yAxis-crosshair",
-            "text": "Crosshair",
-            "dataIndex": 0,
-            "dataType": "boolean|object",
-            "context": "General",
-            "tooltipText": "<p>Configure a crosshair that follows either the mouse pointer or the hovered point.</p>\r\n\r\n<p>In <a href=\"http://www.highcharts.com/docs/chart-design-and-style/style-by-css\">styled mode</a>, the crosshairs are styled in the <code>.highcharts-crosshair</code>, <code>.highcharts-crosshair-thin</code> or <code>.highcharts-xaxis-category</code> classes.</p>",
-            "defaults": "false",
-            "parent": "yAxis",
-            "attributes": [
-              {
-                "dataType": "string",
-                "name": "className",
-                "title": "className",
-                "tooltipText": "A class name for the crosshair, especially as a hook for styling.",
-                "defaults": "",
-                "values": ""
-              },
-              {
-                "dataType": "color",
-                "name": "color",
-                "title": "color",
-                "tooltipText": "The color of the crosshair. Defaults to <code>#cccccc</code> for numeric and datetime axes, and <code>rgba(204,214,235,0.25)</code> for category axes, where the crosshair by default highlights the whole category."
-              },
-              {
-                "dataType": "string",
-                "name": "dashStyle",
-                "title": "dashStyle",
-                "tooltipText": "The dash style for the crosshair. See <a href=\"#plotOptions.series.dashStyle\">series.dashStyle</a> for possible values.",
-                "defaults": "Solid",
-                "values": "[\"Solid\", \"ShortDash\", \"ShortDot\", \"ShortDashDot\", \"ShortDashDotDot\", \"Dot\", \"Dash\" ,\"LongDash\", \"DashDot\", \"LongDashDot\", \"LongDashDotDot\"]"
-              },
-              {
-                "dataType": "boolean",
-                "name": "snap",
-                "title": "snap",
-                "tooltipText": "Whether the crosshair should snap to the point or follow the pointer independent of points.",
-                "defaults": "true",
-                "values": ""
-              },
-              {
-                "dataType": "number",
-                "name": "width",
-                "title": "width",
-                "tooltipText": "The pixel width of the crosshair. Defaults to 1 for numeric or datetime axes, and for one category width for category axes.",
-                "defaults": "",
-                "values": ""
-              },
-              {
-                "dataType": "number",
-                "name": "zIndex",
-                "title": "zIndex",
-                "tooltipText": "The Z index of the crosshair. Higher Z indices allow drawing the crosshair on top of the series or behind the grid lines.",
-                "defaults": "2",
-                "values": ""
-              }
-            ]
-          },
-          {
             "id": "yAxis-title--style",
             "text": "Y axis title",
             "tooltipText": "Styling and text for the X axis title",
@@ -537,31 +421,31 @@ highed.meta.optionsExtended = {
             "tooltipText": "The type of series",
             "dataType": "string",
             "context": "General",
-            "parent": "series",
+            "parent": "series<columnrange>",
             "values": "[null, \"line\", \"spline\", \"column\", \"area\", \"areaspline\", \"pie\", \"arearange\", \"areasplinerange\", \"boxplot\", \"bubble\", \"columnrange\", \"errorbar\", \"funnel\", \"gauge\", \"scatter\", \"waterfall\"]",
             "subType": [
-              "scatter",
-              "arearange",
               "columnrange",
               "areaspline",
-              "bar",
-              "errorbar",
-              "bubble",
-              "gauge",
-              "line",
-              "polygon",
-              "waterfall",
-              "heatmap",
-              "spline",
-              "boxplot",
-              "column",
+              "arearange",
               "pie",
+              "line",
+              "boxplot",
+              "waterfall",
+              "gauge",
               "areasplinerange",
-              "area",
-              "funnel",
               "treemap",
+              "area",
+              "column",
+              "errorbar",
+              "polygon",
+              "bubble",
+              "solidgauge",
               "pyramid",
-              "solidgauge"
+              "funnel",
+              "spline",
+              "bar",
+              "scatter",
+              "heatmap"
             ],
             "subTypeDefaults": {}
           },
@@ -572,31 +456,32 @@ highed.meta.optionsExtended = {
             "dataType": "color",
             "context": "General",
             "defaults": "null",
-            "parent": "series<scatter>",
+            "parent": "series<line>",
+            "values": "",
             "subType": [
-              "scatter",
-              "gauge",
-              "heatmap",
               "line",
-              "spline",
-              "areaspline",
-              "bubble",
-              "area",
-              "waterfall",
-              "boxplot",
-              "arearange",
-              "bar",
-              "errorbar",
               "areasplinerange",
               "column",
-              "columnrange",
+              "spline",
               "treemap",
-              "polygon"
+              "waterfall",
+              "polygon",
+              "columnrange",
+              "bubble",
+              "boxplot",
+              "area",
+              "scatter",
+              "gauge",
+              "bar",
+              "arearange",
+              "heatmap",
+              "areaspline",
+              "errorbar"
             ],
             "subTypeDefaults": {
+              "treemap": "null",
               "heatmap": "null",
-              "errorbar": "#000000",
-              "treemap": "null"
+              "errorbar": "#000000"
             }
           },
           {
@@ -606,37 +491,37 @@ highed.meta.optionsExtended = {
             "dataType": "color",
             "context": "General",
             "defaults": "null",
-            "parent": "series<spline>",
+            "parent": "series<area>",
             "subType": [
-              "spline",
-              "areasplinerange",
+              "area",
               "column",
+              "scatter",
+              "arearange",
               "polygon",
+              "spline",
+              "boxplot",
+              "areasplinerange",
+              "gauge",
+              "bar",
               "line",
               "bubble",
-              "areaspline",
-              "scatter",
-              "bar",
-              "arearange",
-              "area",
-              "boxplot",
-              "gauge",
-              "errorbar"
+              "errorbar",
+              "areaspline"
             ],
             "subTypeDefaults": {
-              "areasplinerange": "null",
               "column": "null",
+              "scatter": "null",
+              "arearange": "null",
               "polygon": "null",
+              "spline": "null",
+              "boxplot": "null",
+              "areasplinerange": "null",
+              "gauge": "null",
+              "bar": "null",
               "line": "null",
               "bubble": "null",
-              "areaspline": "null",
-              "scatter": "null",
-              "bar": "null",
-              "arearange": "null",
-              "area": "null",
-              "boxplot": "null",
-              "gauge": "null",
-              "errorbar": "null"
+              "errorbar": "null",
+              "areaspline": "null"
             }
           },
           {
@@ -646,25 +531,25 @@ highed.meta.optionsExtended = {
             "dataType": "boolean",
             "context": "General",
             "defaults": "false",
-            "parent": "series<waterfall>",
+            "parent": "series<bar>",
             "subType": [
-              "waterfall",
-              "treemap",
-              "column",
-              "columnrange",
-              "errorbar",
+              "bar",
               "boxplot",
+              "waterfall",
+              "column",
+              "errorbar",
+              "columnrange",
               "heatmap",
-              "bar"
+              "treemap"
             ],
             "subTypeDefaults": {
-              "treemap": "false",
-              "column": "false",
-              "columnrange": "false",
-              "errorbar": "false",
               "boxplot": "false",
+              "waterfall": "false",
+              "column": "false",
+              "errorbar": "false",
+              "columnrange": "false",
               "heatmap": "false",
-              "bar": "false"
+              "treemap": "false"
             }
           },
           {
@@ -674,30 +559,30 @@ highed.meta.optionsExtended = {
             "context": "General",
             "tooltipText": "A name for the dash style to use for the graph. Applies only to series type having a graph, like <code>line</code>, <code>spline</code>, <code>area</code> and <code>scatter</code> in  case it has a <code>lineWidth</code>. The value for the <code>dashStyle</code> include:\r\n\t\t    <ul>\r\n\t\t    \t<li>Solid</li>\r\n\t\t    \t<li>ShortDash</li>\r\n\t\t    \t<li>ShortDot</li>\r\n\t\t    \t<li>ShortDashDot</li>\r\n\t\t    \t<li>ShortDashDotDot</li>\r\n\t\t    \t<li>Dot</li>\r\n\t\t    \t<li>Dash</li>\r\n\t\t    \t<li>LongDash</li>\r\n\t\t    \t<li>DashDot</li>\r\n\t\t    \t<li>LongDashDot</li>\r\n\t\t    \t<li>LongDashDotDot</li>\r\n\t\t    </ul>",
             "defaults": "Solid",
-            "parent": "series<polygon>",
+            "parent": "series<spline>",
             "values": "[\"Solid\", \"ShortDash\", \"ShortDot\", \"ShortDashDot\", \"ShortDashDotDot\", \"Dot\", \"Dash\" ,\"LongDash\", \"DashDot\", \"LongDashDot\", \"LongDashDotDot\"]",
             "subType": [
-              "polygon",
-              "line",
-              "waterfall",
-              "bubble",
+              "spline",
               "areaspline",
               "scatter",
-              "area",
-              "spline",
+              "areasplinerange",
+              "line",
               "arearange",
-              "areasplinerange"
+              "bubble",
+              "area",
+              "waterfall",
+              "polygon"
             ],
             "subTypeDefaults": {
-              "line": "Solid",
-              "waterfall": "Dot",
-              "bubble": "Solid",
               "areaspline": "Solid",
               "scatter": "Solid",
-              "area": "Solid",
-              "spline": "Solid",
+              "areasplinerange": "Solid",
+              "line": "Solid",
               "arearange": "Solid",
-              "areasplinerange": "Solid"
+              "bubble": "Solid",
+              "area": "Solid",
+              "waterfall": "Dot",
+              "polygon": "Solid"
             }
           },
           {
@@ -707,23 +592,23 @@ highed.meta.optionsExtended = {
             "context": "General",
             "tooltipText": "Enable or disable the point marker. If <code>null</code>, the markers are hidden when the data is dense, and shown for more widespread data points.",
             "defaults": "null",
-            "parent": "series<area>-marker",
+            "parent": "series<bubble>-marker",
             "subType": [
-              "area",
               "bubble",
-              "line",
               "spline",
-              "areaspline",
+              "scatter",
               "polygon",
-              "scatter"
+              "area",
+              "areaspline",
+              "line"
             ],
             "subTypeDefaults": {
-              "bubble": "null",
-              "line": "null",
               "spline": "null",
-              "areaspline": "null",
+              "scatter": "null",
               "polygon": "null",
-              "scatter": "null"
+              "area": "null",
+              "areaspline": "null",
+              "line": "null"
             }
           },
           {
@@ -732,15 +617,15 @@ highed.meta.optionsExtended = {
             "dataType": "string",
             "context": "General",
             "tooltipText": "<p>A predefined shape or symbol for the marker. When null, the symbol is pulled from options.symbols. Other possible values are \"circle\", \"square\", \"diamond\", \"triangle\" and \"triangle-down\".</p>\r\n\r\n<p>Additionally, the URL to a graphic can be given on this form:  \"url(graphic.png)\". Note that for the image to be applied to exported charts, its URL needs to be accessible by the export server.</p>\r\n\r\n<p>Custom callbacks for symbol path generation can also be added to <code>Highcharts.SVGRenderer.prototype.symbols</code>. The callback is then used by its method name, as shown in the demo.</p>",
-            "parent": "series<area>-marker",
+            "parent": "series<areaspline>-marker",
             "values": "[null, \"circle\", \"square\", \"diamond\", \"triangle\", \"triangle-down\"]",
             "subType": [
-              "area",
-              "polygon",
               "areaspline",
-              "spline",
-              "bubble",
               "line",
+              "bubble",
+              "area",
+              "spline",
+              "polygon",
               "scatter"
             ],
             "subTypeDefaults": {}
@@ -928,7 +813,7 @@ highed.meta.optionsExtended = {
             "text": "Shared between series",
             "dataType": "boolean",
             "context": "General",
-            "tooltipText": "<p>When the tooltip is shared, the entire plot area will capture mouse movement or touch events. Tooltip texts for series types with ordered data (not pie, scatter, flags etc) will be shown in a single bubble. This is recommended for single series charts and for tablet/mobile optimized charts.</p>\r\n\r\n<p>See also the experimental implementation for <a href=\"http://jsfiddle.net/gh/get/jquery/1.7.2/highcharts/highcharts/tree/master/samples/highcharts/studies/tooltip-split/\">tooltip.split</a>, that is better suited for charts with many series, especially line-type series.</p>",
+            "tooltipText": "<p>When the tooltip is shared, the entire plot area will capture mouse movement or touch events. Tooltip texts for series types with ordered data (not pie, scatter, flags etc) will be shown in a single bubble. This is recommended for single series charts and for tablet/mobile optimized charts.</p>\r\n\r\n<p>See also <a href=\"#tooltip.split\">tooltip.split</a>, that is better suited for charts with many series, especially line-type series.</p>",
             "defaults": "false",
             "parent": "tooltip"
           }

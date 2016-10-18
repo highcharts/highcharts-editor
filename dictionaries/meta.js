@@ -151,12 +151,12 @@ module.exports = {
 			text: 'X-Axis',
 			
 			options: [
-				{
-					id: 'xAxis-crosshair',
-					text: 'Crosshair',
-					dataIndex: 0
+				// {
+				// 	id: 'xAxis-crosshair',
+				// 	text: 'Crosshair',
+				// 	dataIndex: 0
 
-				},
+				// },
 				{
 					id: 'xAxis-title--style',
 					text: 'X axis title',
@@ -203,11 +203,11 @@ module.exports = {
 			text: 'Y-Axis',
 			
 			options: [
-				{
-					id: 'yAxis-crosshair',
-					text: 'Crosshair',
-					dataIndex: 0
-				},
+				// {
+				// 	id: 'yAxis-crosshair',
+				// 	text: 'Crosshair',
+				// 	dataIndex: 0
+				// },
 				{
 					id: 'yAxis-title--style',
 					text: 'Y axis title',
