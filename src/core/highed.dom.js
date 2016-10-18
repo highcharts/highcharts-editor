@@ -292,6 +292,7 @@ highed.dom = {
     /** Get the position of a node
      * @namespace highed.dom
      * @param node {object} - the node to get the position of
+     * @param abs {boolean} - absolute calculation rather than parent relative
      * @return {object} - the position as an object `{x, y}`
      */
     pos: function (node, abs) {

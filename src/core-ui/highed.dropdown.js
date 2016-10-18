@@ -222,6 +222,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         /** Set the current selection by id
          *  @memberof highed.DropDown
+         *  @param id {anything} - the id to select
          */
         function selectById(id) {
             items.some(function (item) {
@@ -235,6 +236,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         /** Set the current selection by index
          *  @memberof highed.DropDown
+         *  @param index {number} - the index to select in range [0..item.length]
          */
         function selectByIndex(index) {
             if (index >= 0 && index < items.length) {
