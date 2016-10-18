@@ -1,8 +1,8 @@
 .highed-customize-group {
-    border: 1px solid @border-main-color;
+    border:@border-strong;
     border-radius: 5px;
     overflow: hidden;
-    margin-bottom: 40px;
+    margin: 15px 15px 40px 15px;
     box-shadow: 0 3px 7px @bright-shadow;
 }
 
@@ -27,7 +27,7 @@
 .highed-customize-group .highed-customizer-table-heading {
     margin-bottom: 0;
     padding: 15px;
-    border-bottom: 1px solid @border-main-color;
+    border-bottom:@border-strong;
 }
 
 .highed-customizer-body {
@@ -50,8 +50,8 @@
 }
 
 .highed-customize-type {
-	padding:2px;
-	margin-left: 4px;
+	padding: 2px 4px;
+	margin-left: 5px;
 	font-size: 10px;
 	color: @type-text;
 	border-radius: 4px;
@@ -137,7 +137,11 @@
 }
 
 .highed-customizer-table tr:nth-child(odd) {
-	background: lighten(@background-panel, 2);
+	background: lighten(@background-panel, 1);
+}
+
+.highed-field-table-widget-column table, .highed-customizer-table .highed-field-table-widget-column table tr {
+    background: transparent;
 }
 
 .highed-customizer-field-highlighter {
