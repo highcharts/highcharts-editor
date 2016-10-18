@@ -178,17 +178,36 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 return picker.container;
             },
             options: function (val, callback) {
-                var options = highed.dom.cr('select', 'highed-field-select', '', fieldID);
+                // var options = highed.dom.cr('select', 'highed-field-select', '', fieldID);
 
-                highed.dom.options(options, properties.values);
+                // highed.dom.options(options, properties.values);
 
-                highed.dom.val(options, val || value);
+                // highed.dom.val(options, val || value);
 
-                highed.dom.on(options, 'change', function () {                    
-                    tryCallback(callback, highed.dom.val(options));
+                // highed.dom.on(options, 'change', function () {                    
+                //     tryCallback(callback, highed.dom.val(options));
+                // });
+
+                var ddown = highed.DropDown();
+
+                if (highed.isStr(properties.values)) {
+                    try {
+                        properties.values = JSON.parse(properties.values);
+                    } catch (e) {
+                        properties.values = properties.values.split(' ');
+                    }
+                }
+
+                ddown.addItems(properties.values);
+
+                 ddown.selectById(val || value);
+                
+                ddown.on('Change', function (selected) {
+                    tryCallback(callback, selected.id());
+                    console.log('options changed');
                 });
 
-                return options;
+                return ddown.container;
             },
             object: function (val, callback) {
                 //Create a sub-table of options

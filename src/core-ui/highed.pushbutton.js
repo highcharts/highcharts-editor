@@ -67,7 +67,7 @@ highed.PushButton = function (parent, icon, state) {
         events.emit('Toggle', state);
     });
 
-    if (!highed.isNull(parent)) {
+    if (!highed.isNull(parent) && parent !== false) {
         highed.dom.ap(parent, button);
     }
 

@@ -56,8 +56,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         var container = highed.dom.cr('div', 'highed-font-picker'),
             fontFamily = highed.dom.cr('select', 'font-family'),
             fontSize = highed.dom.cr('select', 'font-size'),
-            boldBtn = highed.PushButton(undefined, 'bold'),
-            italicBtn = highed.PushButton(undefined, 'italic'),
+            boldBtn = highed.PushButton(false, 'bold'),
+            italicBtn = highed.PushButton(false, 'italic'),
             color = highed.dom.cr('span', 'font-color', '&nbsp;')
 
         ;
@@ -146,8 +146,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         //Create DOM
         highed.dom.ap(container,
-            fontFamily,
-            fontSize,
+            highed.dom.ap(highed.dom.cr('div'),
+                fontFamily,
+                fontSize
+            ),
             boldBtn.button,
             italicBtn.button,
             color

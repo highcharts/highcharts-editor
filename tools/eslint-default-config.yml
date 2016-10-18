@@ -11,7 +11,7 @@ globals:
 
 rules:
     array-callback-return: "error"
-    indent: ["warn", 4, {SwitchCase: 1}]
+    indent: ["off", 4, {SwitchCase: 1}]
     block-spacing: "error"
     brace-style: ["error", "1tbs"]
     camelcase: ["error", { properties: "never" }]
@@ -19,7 +19,7 @@ rules:
     comma-spacing: "error"
     comma-style: ["error", "last"]
     consistent-return: "error"
-    curly: ["warn", "all"]
+    curly: ["off", "all"]
     default-case: "error"
     dot-notation: ["error", { allowKeywords: true }]
     eol-last: "error"
@@ -75,7 +75,7 @@ rules:
     no-shadow: "error"
     no-shadow-restricted-names: "error"
     no-spaced-func: "error"
-    no-trailing-spaces: "warn"
+    no-trailing-spaces: "off"
     no-undef: "error"
     no-undef-init: "error"
     no-undefined: "error"
@@ -87,18 +87,18 @@ rules:
     no-useless-concat: "error"
     no-with: "error"
     one-var-declaration-per-line: "error"
-    quotes: ["warn", "double"]
+    quotes: ["off", "double"]
     radix: "error"
     require-jsdoc: "off"
     semi: "error"
-    object-curly-spacing: "warn"
+    object-curly-spacing: "off"
     semi-spacing: ["error", {before: false, after: true}]
     space-before-blocks: "error"
     space-before-function-paren: ["error", "never"]
     space-in-parens: "error"
     space-infix-ops: "error"
     space-unary-ops: ["error", {words: true, nonwords: false}]
-    spaced-comment: ["warn", "always", { exceptions: ["-"]}]
+    spaced-comment: ["off", "always", { exceptions: ["-"]}]
     strict: ["error", "global"]
     valid-jsdoc: ["off", { prefer: { "return": "returns"}}]
     wrap-iife: "error"

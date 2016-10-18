@@ -1,0 +1,89 @@
+
+.highed-dropdown {
+    .highed-box-size;
+    position: relative;
+    width:100%;
+
+    overflow: hidden;
+    
+    font-family:@font-secondary;
+    font-size:14px;
+    height:32px;
+    .highed-box-size;
+}
+
+.highed-dropdown-body {
+    padding-right:36px;
+    padding-left:7px;
+    padding-top:7px;
+    padding-bottom:7px;
+    font-size: 13px;
+
+    height:32px;
+
+    width:100%;
+
+    background:@bright-background;
+
+    overflow: hidden;
+
+    border-top:@border-main;
+    border-bottom:@border-main;
+    border-left:@border-main;
+
+    .highed-box-size;
+}
+
+.highed-dropdown-item {
+    position: relative;
+    height:20px;
+    padding:3px;
+    padding-left:30px;
+    font-size: 12px;
+    line-height: 20px;
+    font-family: @font-secondary;
+    min-width: 100px;
+    .highed-nosel;
+}
+
+.highed-dropdown-arrow {
+    background: @wiz-bar-background;
+    color: @wiz-bar-color;
+    position: absolute;
+    right:0px;
+    top:1px;
+    height:30px;
+  //  border-left:@border-main;
+    text-align: center;
+    padding:4px;
+    width:32px;
+    padding-top:7px;
+    font-size: 14px;
+    .highed-box-size;
+}
+
+.highed-dropdown-arrow:hover {
+    background:@accent-color;
+    color:@accent-text;
+}
+
+.highed-dropdown-item-selected {
+    background:@accent-color;
+    color:@accent-text;
+}
+
+.highed-dropdown-items {
+    border-left:@border-main;
+    border-right:@border-main;
+    border-bottom:@border-main;
+    background:@background-main;
+    color:@text-main;
+
+    opacity:0;
+    pointer-events: none;
+    max-height: 200px;
+    overflow-y: auto;
+    position: fixed;
+    z-index: 20000;
+    .highed-transition-opacity;
+}
