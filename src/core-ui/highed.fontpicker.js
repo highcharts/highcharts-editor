@@ -145,13 +145,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         //Create DOM
         highed.dom.ap(container,
-            highed.dom.ap(highed.dom.cr('div'),
-                fontFamily.container,
-                fontSize.container
-            ),
-            boldBtn.button,
-            italicBtn.button,
-            color
+            fontFamily.container,
+            highed.dom.ap(highed.dom.cr('div', 'highed-font-picker-button-container'),
+                fontSize.container,
+                highed.dom.ap(highed.dom.cr('div', 'highed-font-picker-buttons'),
+                    boldBtn.button,
+                    italicBtn.button,
+                    color
+                )
+           )
         );
 
         ///////////////////////////////////////////////////////////////////////
