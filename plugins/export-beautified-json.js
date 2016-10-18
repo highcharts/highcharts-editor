@@ -6,8 +6,8 @@
 
 */
 
-highed.plugins.export.install('beatify-json', {
-    title: 'Beatuified JSON',
+highed.plugins.export.install('beautify-json', {
+    title: 'Beautified JSON',
     description: 'Exports well-formatted JSON',
     dependencies: [
         'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/codemirror.min.js',

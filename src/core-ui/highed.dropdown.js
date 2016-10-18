@@ -126,9 +126,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         function addItem(item) {
             var node = highed.dom.cr('div', 'highed-dropdown-item'),
                 id = highed.uuid(),
+                index = items.length,
                 itemInstance = {
                     //The node
                     node: node,
+
+                    //Get the index
+                    index: function () {
+                        return index;
+                    },
 
                     //Get the ID
                     id: function () {
@@ -192,7 +198,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 return false;
             });
 
-            items.push(itemInstance);
+            items.push(itemInstance);            
 
             return itemInstance;
         }

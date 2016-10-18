@@ -184,7 +184,7 @@ highed.ChartCustomizer = function (parent, attributes) {
             }
 
             if (group.controlledBy) {
-                master = highed.dom.cr('select', 'highed-box-size highed-stretch');
+                master = highed.DropDown(); //highed.dom.cr('select', 'highed-box-size highed-stretch');
 
                 highed.dom.style(masterNode, {
                     display: 'block'
@@ -199,15 +199,16 @@ highed.ChartCustomizer = function (parent, attributes) {
                             return;
                         }
 
-                        highed.dom.options(master,
+                        master.addItems(
                             vals.map(function (t) {
                                 return group.controlledBy.optionsTitle ? t[group.controlledBy.optionsTitle] : t;
-                            }),
-                            detailIndex
+                            })
                         );  
 
-                        highed.dom.on(master, 'change', function () {
-                            detailIndex = master.selectedIndex;
+                        master.selectByIndex(detailIndex || 0);
+
+                        master.on('Change', function (selected) {
+                            detailIndex = selected.index();
 
                             table.innerHTML = '';
 
@@ -219,7 +220,9 @@ highed.ChartCustomizer = function (parent, attributes) {
                             });
                         });
 
-                        highed.dom.ap(masterNode, master);               
+                        
+
+                        highed.dom.ap(masterNode, master.container);               
                         detailIndex = detailIndex || 0;
                     } else {
                         return;
