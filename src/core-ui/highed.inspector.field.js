@@ -323,7 +323,8 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
         help = highed.dom.cr('span', 'highed-icon fa fa-question-circle'),
         helpTD = highed.dom.cr('td'),
         widgetTD = highed.dom.cr('td', 'highed-field-table-widget-column'),
-        titleCol = highed.dom.cr('td')
+        titleCol = highed.dom.cr('td'),
+        typeIndicator = highed.dom.cr('span', 'highed-customize-type')
     ;
 
     function tryCallback(cb, val) {
@@ -367,10 +368,13 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
         widgetTD.colSpan = 2;
     }
 
+    typeIndicator.className += ' highed-customize-type-' + type;
+
     return highed.dom.ap(
         highed.dom.ap(highed.dom.cr('tr'),
             highed.dom.ap(titleCol,
-                highed.dom.cr('span', 'highed-customize-field-label', properties.title)
+                highed.dom.cr('span', 'highed-customize-field-label', properties.title),
+                typeIndicator
             ),
             highed.dom.ap(widgetTD,
                 fields[type] ? fields[type]() : fields.string()
