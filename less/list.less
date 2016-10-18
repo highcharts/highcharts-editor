@@ -14,9 +14,11 @@
     display: block;
     /*background-color: @background-panel !important;*/
     background-image: none !important;
-    border-top: @border-main !important;
+    /*border-top: @border-main !important;*/
     /*border-left: @border-main !important;*/
-    padding: 10px;
+    border-radius: 3px;
+    padding: 5px;
+    margin: 10px;
     .highed-box-size;
     .highed-transition;
 }
@@ -32,8 +34,9 @@
 
 .highed-list .item-selected, .highed-list .item-selected:hover {
     /*background-color: @bright-background !important;*/
-	color:@selected-item-color !important;
-    border-left: 3px solid @selected-item-color;
+	background-color:@selected-item-color !important;
+    color:@selected-item-text !important;
+    /*border-left: 3px solid @selected-item-color;*/
     font-weight: bold;
     cursor: default;
 }
