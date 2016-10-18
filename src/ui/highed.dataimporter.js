@@ -220,13 +220,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     webSplitter.right.innerHTML = '';
 
                     highed.dom.ap(webSplitter.right,
-                        highed.dom.cr('div', 'highed-customizer-table-heading', options.title || name),
-                        highed.dom.cr('div', 'highed-imp-help', options.description),
-                        urlTitle,
-                        url,
-                        Object.keys(options.options || {}).length ? dynamicOptionsContainer : false,
-                        highed.dom.cr('br'),
-                        importBtn
+                        highed.dom.ap(highed.dom.cr('div', 'highed-plugin-details'),
+                            highed.dom.cr('div', 'highed-customizer-table-heading', options.title || name),
+                            highed.dom.cr('div', 'highed-imp-help', options.description),
+                            urlTitle,
+                            url,
+                            Object.keys(options.options || {}).length ? dynamicOptionsContainer : false,
+                            highed.dom.cr('br'),
+                            importBtn
+                        )
                     );
                 }
 

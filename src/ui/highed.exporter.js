@@ -141,7 +141,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 }
 
                 function buildBody() {                      
-                    var container = highed.dom.cr('div'),
+                    var container = highed.dom.cr('div', 'highed-plugin-details'),
                         executeBtn = highed.dom.cr('button', 'highed-imp-button', options.exportTitle || 'Export'),
                         dynamicOptionsContainer = highed.dom.cr('table', 'highed-customizer-table'),
                         additionalUI = highed.dom.cr('div'),
