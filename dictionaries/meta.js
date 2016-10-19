@@ -165,6 +165,7 @@ module.exports = {
 				},
 				{
 					id: 'xAxis-title--text',
+					text: 'Text',
 					dataIndex: 0
 				},
 				{
