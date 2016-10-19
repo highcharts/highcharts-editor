@@ -62,8 +62,6 @@ highed.Slider = function (parent, attributes) {
 
         x = (value / properties.max) * (s.w - ms.w);
 
-        console.log(x, value, properties.max, s, ms);
-
         highed.dom.style(indicator, {
             left: x + 'px'
         });

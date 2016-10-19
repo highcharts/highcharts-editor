@@ -60,6 +60,23 @@ highed.HSplitter = function (parent, attributes) {
 
     ///////////////////////////////////////////////////////////////////////////
 
+    function updateSizeFromMover(x) {
+        var psize;
+
+        if (properties.allowResize) {
+            psize = highed.dom.size(container);
+            x = x || highed.dom.pos(resizeBar).x;
+
+            highed.dom.style(left, {
+                width: x + 'px'
+            });
+
+            highed.dom.style(right, {
+                width: (psize.w - x) + 'px'
+            });
+        }
+    }
+
     /** Force a resize of the splitter
      *  @memberof highed.HSplitter
      *  @param w {number} - the width of the splitter (will use parent if null)
@@ -71,6 +88,8 @@ highed.HSplitter = function (parent, attributes) {
         highed.dom.style([left, right, container, resizeBar], {
             height: (h || s.h) + 'px'
         });
+
+        updateSizeFromMover();
     }
     
     ///////////////////////////////////////////////////////////////////////////
@@ -106,15 +125,7 @@ highed.HSplitter = function (parent, attributes) {
         });
 
         mover = highed.Movable(resizeBar, 'x').on('Moving', function (x) {
-            var psize = highed.dom.size(container);
-
-            highed.dom.style(left, {
-                width: x + 'px'
-            });
-
-            highed.dom.style(right, {
-                width: (psize.w - x) + 'px'
-            });
+            updateSizeFromMover(x);
         });
     }
 
