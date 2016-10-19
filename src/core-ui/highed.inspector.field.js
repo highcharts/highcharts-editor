@@ -393,7 +393,11 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
 
     highed.dom.on([help], 'mouseover', function (e) {
         highed.Tooltip(e.clientX, e.clientY, properties.tooltip || properties.tooltipText);
-    });        
+    });      
+
+    highed.dom.on(help, 'touchstart', function () {
+        highed.Tooltip(0, 0, properties.tooltip || properties.tooltipText, true);
+    });
 
     if (nohint) {
         highed.dom.style(help, {display: 'none'});

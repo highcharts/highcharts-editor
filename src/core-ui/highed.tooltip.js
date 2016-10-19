@@ -64,11 +64,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         if (blowup) {
             highed.dom.style(container, {
+                opacity: 1,
+                'pointer-events': 'auto',
                 width: '90%',
                 height: '90%',
                 left: '50%',
                 top: '50%',
-                transform: 'translate(-50%, 0)'
+                transform: 'translate(-50%, -50%)'
             });
         }
 
