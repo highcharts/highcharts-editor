@@ -47,7 +47,8 @@ highed.HSplitter = function (parent, attributes) {
             noOverflow: false,
             leftClasses: '',
             rightClasses: '',
-            allowResize: false
+            allowResize: false,
+            responsive: false
         }, attributes),
         container = highed.dom.cr('div', 'highed-hsplitter'),
         left = highed.dom.cr('div', 'panel left ' + properties.leftClasses),
@@ -57,6 +58,10 @@ highed.HSplitter = function (parent, attributes) {
         resizeBar = highed.dom.cr('div', 'highed-hsplitter-resize-bar'),
         mover
     ;
+
+    if (properties.responsive) {
+        left.className += ' highed-hsplitter-body-responsive';
+    }
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -87,7 +92,7 @@ highed.HSplitter = function (parent, attributes) {
      *  @param h {number} - the height of the splitter (will use parent if null)
      */
     function resize(w, h) {
-        var s = highed.dom.size(parent);
+        var s = highed.dom.size(parent), st;
 
         //Check if the right side is visible
         if (!highed.dom.isVisible(right)) {
@@ -100,6 +105,21 @@ highed.HSplitter = function (parent, attributes) {
             });
         } else {
           resetSize();
+        }
+
+        if (properties.responsive) {  
+            st = window.getComputedStyle(left);          
+            if (st.float === 'none') {
+                highed.dom.style(right,{
+                    width: '100%'
+                });
+                
+                highed.dom.style(resizeBar, {
+                    display: 'none'
+                });
+            } else {
+              resetSize();
+            }
         }
 
         highed.dom.style([left, right, container, resizeBar], {

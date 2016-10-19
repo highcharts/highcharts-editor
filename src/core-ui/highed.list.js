@@ -38,8 +38,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @constructor
  *  @param parent {domnode} - the node to attach the list to
  */
-highed.List = function (parent) {
+highed.List = function (parent, responsive) {
     var container = highed.dom.cr('div', 'highed-list'),
+        compactIndicator = highed.dom.cr('div', 'highed-list-compact', 'compact'),
+        ctx = highed.ContextMenu(),
         selectedItem = false,
         events = highed.events(),
         items = []
@@ -66,12 +68,15 @@ highed.List = function (parent) {
 
         function select(e) {
             if (selectedItem) {
+                selectedItem.selected = false;
                 selectedItem.node.className = 'item';
             }
 
             selectedItem = iexports;
+            selectedItem.selected = true;
             node.className = 'item item-selected';
             events.emit('Select', item.id);
+            compactIndicator.innerHTML = item.title;
 
             if (highed.isFn(item.click)) {
                 return item.click(e);
@@ -85,7 +90,8 @@ highed.List = function (parent) {
             id: item.id,
             title: item.title,
             node: node,
-            select: select
+            select: select,
+            selected: false
         };
 
         items.push(iexports);
@@ -105,6 +111,8 @@ highed.List = function (parent) {
         if (highed.isArr(items)) {
             items.forEach(addItem);
         }
+
+        
     }
 
     /** Clear all the items in the list
@@ -118,7 +126,25 @@ highed.List = function (parent) {
      *  @memberof highed.List
      */
     function resize() {
-        // var ps = highed.dom.size(parent);
+        var ps = highed.dom.size(parent),
+            cs = highed.dom.size(container)
+        ;
+
+        if (responsive && ps.h < cs.h) {
+            highed.dom.style(compactIndicator, {
+                display: 'block'
+            });
+            highed.dom.style(container, {
+                display: 'none'
+            });
+        } else if (responsive) {
+             highed.dom.style(compactIndicator, {
+                display: 'none'
+            });
+            highed.dom.style(container, {
+                display: ''
+            });
+        }
 
         // highed.dom.style(container, {
         //     //height: ps.height + 'px'
@@ -189,7 +215,18 @@ highed.List = function (parent) {
     }
     ///////////////////////////////////////////////////////////////////////////
     
-    highed.dom.ap(parent, container);
+    highed.dom.on(compactIndicator, 'click', function (e) {
+        ctx.build(items.map(function (item) {
+            return {
+                title: item.title,
+                click: item.select,
+                selected: item.selected
+            };
+        }));
+        ctx.show(e.clientX, e.clientY);
+    });
+
+    highed.dom.ap(parent, container, compactIndicator);
 
     ///////////////////////////////////////////////////////////////////////////
 
