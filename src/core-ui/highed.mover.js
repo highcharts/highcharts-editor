@@ -34,14 +34,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @param constrain {string} - constrain moving: `XY`, `Y`, or `X`
  */
  highed.Movable = function (target, constrain, constrainParent) {
-    var events = highed.events()
+    var events = highed.events(),
+        moving = false
     ;
 
     constrain = (constrain || 'XY').toUpperCase();
     target = highed.dom.get(target);
 
     if (target) {
-        highed.dom.on(target, 'mousedown', function (e) {
+        highed.dom.on(target, ['mousedown', 'touchstart'], function (e) {
+         //   if (moving) return;
+            moving = true;
             var cp = highed.dom.pos(target),
                 ps = highed.dom.size(target.parentNode),
                 ns = highed.dom.size(target),
@@ -49,12 +52,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 y = cp.y,
                 offsetX = 0,
                 offsetY = 0,
-                mover = highed.dom.on(document.body, 'mousemove', function (moveE) {
+                mover = highed.dom.on(document.body, ['mousemove', 'touchmove'], function (moveE) {
                     if (constrain === 'X' || constrain === 'XY') {
-                        x = cp.x + (moveE.clientX - offsetX);                        
+                        x = cp.x + ((moveE.clientX || moveE.touches[0].clientX) - offsetX);                        
                     }
                     if (constrain === 'Y' || constrain === 'XY') {
-                        y = cp.y + (moveE.clientY - offsetY);                        
+                        y = cp.y + ((moveE.clientY || moveE.touches[0].clientY) - offsetY);                        
                     }
 
                     if (constrainParent) {
@@ -70,20 +73,39 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     });
 
                     events.emit('Moving', x, y);
+
+                    moveE.cancelBubble = true;
+                    moveE.preventDefault();
+                    moveE.stopPropagation();
+                    moveE.stopImmediatePropagation();
+                    return false;
                 }),
-                upper = highed.dom.on(document.body, 'mouseup', function () {                    
+                upper = highed.dom.on(document.body, ['mouseup', 'touchend'], function (upE) {                    
                     //Detach the document listeners
                     upper();
                     mover();    
+                    moving = false;
                     document.body.className = document.body.className.replace(' highed-nosel', '');
                     events.emit('EndMove', x, y);
+
+                    upE.cancelBubble = true;
+                    upE.preventDefault();
+                    upE.stopPropagation();
+                    upE.stopImmediatePropagation();
+                    return false;
                 })
             ;
 
             document.body.className += ' highed-nosel';
-            offsetX = e.clientX;
-            offsetY = e.clientY;
+            offsetX = e.clientX || e.touches[0].clientX;
+            offsetY = e.clientY || e.touches[0].clientY;
             events.emit('StartMove', cp.x, cp.y);
+
+            e.cancelBubble = true;
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            return false;
         });
     }
 

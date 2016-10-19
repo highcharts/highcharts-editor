@@ -120,8 +120,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         }
 
         function pickColor(e) {
-            var px = e.clientX,
-                py = e.clientY,
+            var px = e.clientX || e.touches[0].clientX || 0,
+                py = e.clientY || e.touches[0].clientY || 0,
                 cp = highed.dom.pos(canvas),
                 id = ctx.getImageData(px - cp.x - x, py - cp.y - y, 1, 1).data,
                 col = rgbToHex(id[0] || 0, id[1], id[2])
