@@ -45,11 +45,12 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
         events = highed.events(),
         body = highed.dom.cr('div', 'highed-wizstepper-body'),
         indicators = highed.dom.cr('div', 'highed-wizstepper-indicators'),
-        currentIndicator = highed.dom.cr('div', 'highed-wizstepper-current')
+        currentIndicator = highed.dom.cr('div', 'highed-wizstepper-current'),
 
         activeStep = false,
         stepCount = 0,
-        steps = []
+        steps = [],
+        ctx = highed.ContextMenu()
     ;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -94,6 +95,8 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
             body: highed.dom.cr('div', 'highed-step-body'),
             visible: true
         };
+
+        stepexports.title = step.title;
 
         function activate() {
             if (activeStep) {
@@ -229,6 +232,20 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
             }
         });
     }
+
+    highed.dom.on(currentIndicator, 'click', function (e) {
+        var fsteps = steps.filter(function (t) { return t.visible; });
+
+        ctx.build(fsteps.map(function (step) {
+            return {
+                title: step.title,
+                click: step.activate,
+                selected: activeStep.title === step.title
+            };
+        }));
+
+        ctx.show(e.clientX, e.clientY);
+    });
 
     ///////////////////////////////////////////////////////////////////////////
     

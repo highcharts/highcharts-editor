@@ -59,7 +59,7 @@ highed.ContextMenu = function (stuff) {
      */
     function addEntry(entry) {
         var item = highed.dom.cr('div', 'highed-ctx-item highed-ctx-item-responsive', entry.title),
-            right = highed.dom.cr('div', 'ctx-child-icon fa fa-angle-right'),           
+            right = highed.dom.cr('div', 'highed-ctx-child-icon fa fa-angle-right'),           
             childCtx 
         ;
 
@@ -77,6 +77,10 @@ highed.ContextMenu = function (stuff) {
             hide();
         });
 
+        if (entry.selected) {
+            item.className += ' highed-ctx-item-selected';
+        }
+
         if (!highed.isNull(entry.children)) {
             childCtx = highed.ContextMenu(entry.children);
 
@@ -90,7 +94,7 @@ highed.ContextMenu = function (stuff) {
                 entry.icon ? 
                         highed.dom.cr(
                             'div', 
-                            'ctx-child-licon ctx-child-licon-responsive fa fa-' + 
+                            'ctx-child-licon highed-ctx-child-licon-responsive fa fa-' + 
                             entry.icon) 
                         : false,
                         entry.children ? right : false
