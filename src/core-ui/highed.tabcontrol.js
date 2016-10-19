@@ -37,8 +37,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  *  @param parent {domnode} - the node to attach to
  *  @param noOverflow {boolean} - set to true to disable scrollbars
+ *  @param extraPadding {boolean} - set to true to have extra padding in bodies
  */
-highed.TabControl = function (parent, noOverflow) {
+highed.TabControl = function (parent, noOverflow, extraPadding) {
     var container = highed.dom.cr('div', 'highed-tab-control'),
         paneBar = highed.dom.cr('div', 'tabs'),
         body = highed.dom.cr('div', 'body'),
@@ -124,6 +125,10 @@ highed.TabControl = function (parent, noOverflow) {
             visible = true,
             texports = {}
         ;
+
+        if (extraPadding) {
+            tbody.className += ' tab-body-padded';
+        }
 
         highed.dom.ap(paneBar, tab);
         highed.dom.ap(body, tbody);

@@ -74,7 +74,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 plugins: 'beautify-js beautify-json'
             }, attributes),    
 
-            tctrl = highed.TabControl(parent),
+            tctrl = highed.TabControl(parent, false, true),
             htmlTab = tctrl.createTab({title: 'Export HTML'}),
             jsonTab = tctrl.createTab({title: 'Export JSON'}),
             svgTab = tctrl.createTab({title: 'Export SVG'}),

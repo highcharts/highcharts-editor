@@ -88,12 +88,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     highed.DataImporter = function (parent, attributes) {
         var events = highed.events(),
 
-            properties = highed.merge({
+            properties = highed.merge({          
                 options: ['csv', 'json', 'plugins', 'samples'],
                 plugins: ['CSV', 'JSON', 'Difi', 'Socrata', 'Google Spreadsheets']
             }, attributes),
 
-            tabs = highed.TabControl(parent),
+            tabs = highed.TabControl(parent, false, true),
             csvTab = tabs.createTab({title: 'CSV'}),
             jsonTab = tabs.createTab({title: 'JSON'}),
             webTab = tabs.createTab({title: 'Plugins'}),
