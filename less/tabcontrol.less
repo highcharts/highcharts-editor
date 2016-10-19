@@ -13,8 +13,29 @@
 	line-height: 40px;
 	padding: 5px;
 	margin-bottom: 10px;
+	overflow: hidden;
 	.highed-box-size;
 	.highed-nosel;
+}
+
+.highed-tab-control-more {
+	position: absolute;
+	right:0px;
+	top:0px;
+	background:@accent-color;
+	color: @accent-text;
+	width:30px;
+	padding:5px;
+	height:100%;
+	text-align: center;
+	line-height:40px !important;
+	display: none;
+	.highed-box-size;
+	.highed-transition;
+}
+
+.highed-tab-control-more:hover {
+	background:@wiz-bar-background;
 }
 
 .highed-tab-control .tab {

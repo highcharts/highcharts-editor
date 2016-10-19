@@ -43,7 +43,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *      > click {function} - function to call when selecting the item
  */
 highed.ContextMenu = function (stuff) {
-    var container = highed.dom.cr('div', 'highed-ctx-container'),
+    var container = highed.dom.cr('div', 'highed-ctx-container-common highed-ctx-container'),
+        closeBtn = highed.dom.cr('div', 'highed-ctx-close-button', 'Close'),
         visible = false,
         dimHide = false
     ;
@@ -57,8 +58,8 @@ highed.ContextMenu = function (stuff) {
      *    > click {function} - the function to call when clicking the item
      */
     function addEntry(entry) {
-        var item = highed.dom.cr('div', 'highed-ctx-item', entry.title),
-            right = highed.dom.cr('div', 'ctx-child-icon fa fa-angle-right'),
+        var item = highed.dom.cr('div', 'highed-ctx-item highed-ctx-item-responsive', entry.title),
+            right = highed.dom.cr('div', 'ctx-child-icon fa fa-angle-right'),           
             childCtx 
         ;
 
@@ -89,7 +90,7 @@ highed.ContextMenu = function (stuff) {
                 entry.icon ? 
                         highed.dom.cr(
                             'div', 
-                            'ctx-child-licon fa fa-' + 
+                            'ctx-child-licon ctx-child-licon-responsive fa fa-' + 
                             entry.icon) 
                         : false,
                         entry.children ? right : false
@@ -152,6 +153,7 @@ highed.ContextMenu = function (stuff) {
      */
     function build(def) {
         container.innerHTML = '';
+        highed.dom.ap(container, closeBtn);
 
         if (highed.isArr(def)) {
             return def.forEach(addEntry);
@@ -161,11 +163,14 @@ highed.ContextMenu = function (stuff) {
             var entry = def[key];
             addEntry(highed.merge({title: key}, entry));
         });
+
     }
 
     ///////////////////////////////////////////////////////////////////////////
     
     if (stuff) { build (stuff); }
+
+    highed.dom.on(closeBtn, 'click', hide);
 
     highed.ready(function () {
         highed.dom.ap(document.body, container);

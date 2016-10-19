@@ -27,6 +27,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * @ignore
  */
 highed.dom = {
+    /** Check if a node is visible
+     *  @namespace highed.dom
+     *  @param node {domnode} - the node to check
+     */
+    isVisible: function (node) {
+      var style = window.getComputedStyle(node);
+      return style.display !== 'none';
+    },
+
     /** Append a set of nodes to another node.
      * Arguments supplied after the @param {} target represents the children to append.
      * @namespace highed.dom

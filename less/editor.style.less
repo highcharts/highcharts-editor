@@ -15,9 +15,17 @@
 	margin-top:5px;
 }
 
-.highed-chart-preview-bar {
-	padding:4px;
-	background:@bright-background !important;
+@media (max-width: 650px) {
+	.highed-chart-preview-bar {
+		display:none !important;
+	}
+}
+
+@media (min-width: 650px) {	
+	.highed-chart-preview-bar {
+		padding:4px;
+		background:@bright-background !important;
+	}
 }
 
 .highed-container .titlebar {

@@ -31,6 +31,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 confirmNewChart: 'Are you sure you want to abandon the current chart and start over?',
 
                 //Main context menu
+                previewChart: 'Preview Chart',
                 newChart: 'New Chart',
                 saveProject: 'Save Project',
                 loadProject: 'Load Project',

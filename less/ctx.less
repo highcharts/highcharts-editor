@@ -1,4 +1,5 @@
-.highed-ctx-container {
+
+.highed-ctx-container-common {
     position: fixed;
     border:@border-main;
     background:@background-main;
@@ -9,6 +10,53 @@
     .highed-box-size;
     .highed-transition-opacity;
 }
+
+
+@media (max-width: 500px) {
+    .highed-ctx-container {
+        // left:5% !important;
+        // top:5% !important;
+        // width:90% !important;
+        // height:90% !important;
+        // tansform:translate(-50%, 0);
+        left: 0px !important;
+        top: 0px !important;
+        width: 100% !important;
+        height: 100% !important;
+        padding:10px !important;
+        overflow-y: auto !important;
+    }
+
+    .highed-ctx-close-button {
+        margin-bottom: 10px;
+        text-align: center;
+        background: @background-ok;
+        color: @color-ok;
+        border-radius: 10px;
+        padding:10px;
+    }
+
+    .highed-ctx-item-responsive {
+        font-size: 20px !important;
+        height:42px !important;
+        line-height: 42px !important;
+        padding-left: 55px !important;
+        font-weight: 100 !important;
+    }
+
+    .ctx-child-licon-responsive {
+        top:10px !important;
+        font-size: 22px !important;
+
+    }
+}
+
+@media (min-width: 501px) {
+    .highed-ctx-close-button {
+        display: none;
+    }
+}
+
 
 .highed-ctx-item {
     position: relative;

@@ -63,7 +63,7 @@ highed.HSplitter = function (parent, attributes) {
     function updateSizeFromMover(x) {
         var psize;
 
-        if (properties.allowResize) {
+        if (properties.allowResize && highed.dom.isVisible(right)) {
             psize = highed.dom.size(container);
             x = x || highed.dom.pos(resizeBar).x;
 
@@ -73,6 +73,10 @@ highed.HSplitter = function (parent, attributes) {
 
             highed.dom.style(right, {
                 width: (psize.w - x) + 'px'
+            });
+
+            highed.dom.style(resizeBar, {
+                display: ''
             });
         }
     }
@@ -85,11 +89,34 @@ highed.HSplitter = function (parent, attributes) {
     function resize(w, h) {
         var s = highed.dom.size(parent);
 
+        //Check if the right side is visible
+        if (!highed.dom.isVisible(right)) {
+            highed.dom.style(left, {
+                width: '100%'
+            });
+
+            highed.dom.style(resizeBar, {
+                display: 'none'
+            });
+        } else {
+          resetSize();
+        }
+
         highed.dom.style([left, right, container, resizeBar], {
             height: (h || s.h) + 'px'
         });
 
         updateSizeFromMover();
+    }
+
+    function resetSize() {
+         highed.dom.style(left, {
+            width: properties.leftWidth + '%'
+        });
+
+        highed.dom.style(right, {
+            width: (100 - properties.leftWidth) + '%'
+        });
     }
     
     ///////////////////////////////////////////////////////////////////////////
@@ -103,13 +130,7 @@ highed.HSplitter = function (parent, attributes) {
         )
     );
 
-    highed.dom.style(left, {
-        width: properties.leftWidth + '%'
-    });
-
-    highed.dom.style(right, {
-        width: (100 - properties.leftWidth) + '%'
-    });
+    resetSize();
 
     if (properties.noOverflow) {
         highed.dom.style([container, left, right], {
@@ -128,6 +149,8 @@ highed.HSplitter = function (parent, attributes) {
             updateSizeFromMover(x);
         });
     }
+
+    //resize();
 
     ///////////////////////////////////////////////////////////////////////////
 

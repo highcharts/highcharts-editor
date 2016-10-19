@@ -44,13 +44,30 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
         paneBar = highed.dom.cr('div', 'tabs'),
         body = highed.dom.cr('div', 'body'),
         indicator = highed.dom.cr('div', 'indicator'),
+        more = highed.dom.cr('div', 'highed-tab-control-more fa fa-chevron-right'),
 
         events = highed.events(),
         selectedTab = false,
-        tabs = []
+        tabs = [],
+        ctx = highed.ContextMenu()
     ;
 
     ///////////////////////////////////////////////////////////////////////////
+
+    //Build ctx menu
+    function buildCTX() {
+        ctx.build(tabs.map(function (tab) {
+            return {
+                title: tab.title,
+                click: tab.focus
+            };
+        }));
+    }
+
+    highed.dom.on(more, 'click', function (e) {
+        buildCTX();
+        ctx.show(e.clientX, e.clientY);
+    });
 
     /** Force a resize of the tab control
      *  @memberof highed.TabControl
@@ -59,7 +76,8 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
      */
     function resize(w, h) {
         var cs = highed.dom.size(parent),
-            ps = highed.dom.size(paneBar)
+            ps = highed.dom.size(paneBar),
+            width = 0
         ;
 
         highed.dom.style(container, {
@@ -74,6 +92,25 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
         if (selectedTab) {
             selectedTab.focus();
         }
+
+        //clientWidth/scrollWidth doesnt produce what we need,
+        //so let's check the accumulated width of the tabs.
+
+        tabs.forEach(function (tab) {
+            width += highed.dom.size(tab.node).w || 0;
+        });
+
+        if (width > paneBar.scrollWidth) {
+
+            highed.dom.style(more, {
+                display: 'block'
+            });
+        } else {
+            highed.dom.style(more, {
+                display: 'none'
+            });
+        }
+        console.log(width, paneBar.scrollWidth);
     }
 
     /** Select the first tab
@@ -188,6 +225,7 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
             body: tbody,
             hide: hide,
             show: show,
+            title: properties.title,
             visible: function () {
                 return visible;
             }
@@ -218,6 +256,7 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
         highed.dom.ap(parent,
             highed.dom.ap(container, 
                 highed.dom.ap(paneBar,
+                    more,
                     indicator
                 ),
                 body

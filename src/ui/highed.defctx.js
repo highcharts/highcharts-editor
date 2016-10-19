@@ -32,6 +32,14 @@ highed.DefaultContextMenu = function (chartPreview) {
     var events = highed.events(),
         cmenu = highed.ContextMenu([
             {
+                title: highed.getLocalizedStr('previewChart'),
+                icon: 'area-chart',
+                click: function () {
+                    chartPreview.expand();
+                }
+            },
+            '-',
+            {
             title: highed.getLocalizedStr('newChart'),
             icon: 'file-o',
             click: function () {
