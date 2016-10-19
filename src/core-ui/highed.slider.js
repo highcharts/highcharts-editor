@@ -73,7 +73,7 @@ highed.Slider = function (parent, attributes) {
         if (container.parentNode) {            
             calcIndicator();
         } else {
-            setTimeout(tryUpdateIndicators, 10);
+            window.setTimeout(tryUpdateIndicators, 10);
         }
     }
 
