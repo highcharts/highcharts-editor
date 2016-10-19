@@ -37,19 +37,25 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @param attributes {object} - the settings for the splitter
  *    > leftWidth {number} - the width in percent of the left cell
  *    > noOverflow {bool} - wether or not overflowing is allowed
+ *    > leftClasses {string} - additional css classes to use for the left body
+ *    > rightClasses {string} - additional css classes to use for the right body
+ *    > allowResize {boolean} - set to true to enable user-resizing
  */
 highed.HSplitter = function (parent, attributes) {
     var properties = highed.merge({
             leftWidth: 40,
             noOverflow: false,
             leftClasses: '',
-            rightClasses: ''
+            rightClasses: '',
+            allowResize: false
         }, attributes),
         container = highed.dom.cr('div', 'highed-hsplitter'),
-        left = highed.dom.cr('div', 'panel left'),
-        right = highed.dom.cr('div', 'panel right'),
+        left = highed.dom.cr('div', 'panel left ' + properties.leftClasses),
+        right = highed.dom.cr('div', 'panel right ' + properties.rightClasses),
         leftBody = highed.dom.cr('div', 'highed-hsplitter-body ' + properties.leftClasses),
-        rightBody = highed.dom.cr('div', 'highed-hsplitter-body ' + properties.rightClasses)
+        rightBody = highed.dom.cr('div', 'highed-hsplitter-body ' + properties.rightClasses),
+        resizeBar = highed.dom.cr('div', 'highed-hsplitter-resize-bar'),
+        mover
     ;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -62,12 +68,14 @@ highed.HSplitter = function (parent, attributes) {
     function resize(w, h) {
         var s = highed.dom.size(parent);
 
-        highed.dom.style([left, right, container], {
+        highed.dom.style([left, right, container, resizeBar], {
             height: (h || s.h) + 'px'
         });
     }
     
     ///////////////////////////////////////////////////////////////////////////
+
+    parent = highed.dom.get(parent);
 
     highed.dom.ap(highed.dom.get(parent), 
         highed.dom.ap(container, 
@@ -90,7 +98,25 @@ highed.HSplitter = function (parent, attributes) {
         });
     }
 
-    parent = highed.dom.get(parent);
+    if (properties.allowResize) {
+        highed.dom.ap(container, resizeBar);
+
+        highed.dom.style(resizeBar, {
+            left: properties.leftWidth + '%'
+        });
+
+        mover = highed.Movable(resizeBar, 'x').on('Moving', function (x) {
+            var psize = highed.dom.size(container);
+
+            highed.dom.style(left, {
+                width: x + 'px'
+            });
+
+            highed.dom.style(right, {
+                width: (psize.w - x) + 'px'
+            });
+        });
+    }
 
     ///////////////////////////////////////////////////////////////////////////
 

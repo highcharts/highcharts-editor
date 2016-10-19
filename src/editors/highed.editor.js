@@ -171,7 +171,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 additionalCSS: ['highed-header']
             }),
 
-            splitter = highed.HSplitter(container, { leftWidth: 60, rightClasses: 'highed-chart-preview-bar' }),
+            splitter = highed.HSplitter(container, { 
+                leftWidth: 60, 
+                rightClasses: 'highed-chart-preview-bar', 
+                allowResize: true
+            }),
 
             wizbar = highed.WizardBar(container, splitter.left),
 
@@ -249,6 +253,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             chartPreview.resize();
             dataImp.resize(cs.w, cs.h - ms.h - wb.h);
             events.emit('Resized');
+
+            highed.dom.style(chartContainer, {
+                'max-height': (cs.h - ms.h - wb.h) + 'px'                
+            });
         }
 
         function destroy() {
@@ -273,7 +281,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             );
 
             highed.dom.style(splitter.right, {
-                overflow: 'hidden'
+            //    overflow: 'hidden'
             });
 
             highed.dom.ap(mainToolbar.left,
