@@ -41,13 +41,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.HSplitter = function (parent, attributes) {
     var properties = highed.merge({
             leftWidth: 40,
-            noOverflow: false
+            noOverflow: false,
+            leftClasses: '',
+            rightClasses: ''
         }, attributes),
         container = highed.dom.cr('div', 'highed-hsplitter'),
         left = highed.dom.cr('div', 'panel left'),
         right = highed.dom.cr('div', 'panel right'),
-        leftBody = highed.dom.cr('div', 'highed-hsplitter-body'),
-        rightBody = highed.dom.cr('div', 'highed-hsplitter-body')
+        leftBody = highed.dom.cr('div', 'highed-hsplitter-body ' + properties.leftClasses),
+        rightBody = highed.dom.cr('div', 'highed-hsplitter-body ' + properties.rightClasses)
     ;
 
     ///////////////////////////////////////////////////////////////////////////

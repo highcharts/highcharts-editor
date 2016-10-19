@@ -171,27 +171,27 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 additionalCSS: ['highed-header']
             }),
 
-            splitter = highed.HSplitter(container, {leftWidth: 60}),
+            splitter = highed.HSplitter(container, { leftWidth: 60, rightClasses: 'highed-chart-preview-bar' }),
 
             wizbar = highed.WizardBar(container, splitter.left),
 
-            welcomeStep = wizbar.addStep({title: highed.getLocalizedStr('stepStart')}),
+            welcomeStep = wizbar.addStep({ title: highed.getLocalizedStr('stepStart') }),
 
-            dataImpStep = wizbar.addStep({title: highed.getLocalizedStr('stepImport')}),
+            dataImpStep = wizbar.addStep({ title: highed.getLocalizedStr('stepImport') }),
             dataImp = highed.DataImporter(dataImpStep.body, properties.importer),
         
-            templateStep = wizbar.addStep({title: highed.getLocalizedStr('stepTemplates')}),
+            templateStep = wizbar.addStep({ title: highed.getLocalizedStr('stepTemplates') }),
             chartTemplateSelector = highed.ChartTemplateSelector(templateStep.body),
 
             chartContainer = highed.dom.cr('div', 'highed-box-size highed-chart-container'),
-            chartPreview = highed.ChartPreview(chartContainer, {defaultChartOptions: properties.defaultChartOptions, expandTo: expandContainer}),
+            chartPreview = highed.ChartPreview(chartContainer, { defaultChartOptions: properties.defaultChartOptions, expandTo: expandContainer }),
 
-            customizerStep = wizbar.addStep({title: highed.getLocalizedStr('stepCustomize'), id: 'customize'}),
+            customizerStep = wizbar.addStep({ title: highed.getLocalizedStr('stepCustomize'), id: 'customize' }),
             chartCustomizer = highed.ChartCustomizer(customizerStep.body, {
                 availableSettings: properties.availableSettings
             }),
 
-            dataExpStep = wizbar.addStep({title: highed.getLocalizedStr('stepExport'), id: 'export'}),
+            dataExpStep = wizbar.addStep({ title: highed.getLocalizedStr('stepExport'), id: 'export' }),
             dataExp = highed.Exporter(dataExpStep.body, properties.exporter),
 
             cmenu = highed.DefaultContextMenu(chartPreview)
