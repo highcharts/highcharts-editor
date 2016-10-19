@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="/css/theme.default.css" type="text/css" rel="stylesheet"/>
+    
+    <script src="https://code.highcharts.com/stock/highstock.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://code.highcharts.com/adapters/standalone-framework.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://code.highcharts.com/modules/data.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/funnel.js"></script>
+    <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+
+    {{#each scripts}}
+    <script src="{{{this}}}" type="text/javascript"></script>
+    {{/each}}
+    
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width:100%;
+            height:100%;
+            background:#F5F5F5;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .highed-index-box {
+            height:100%;
+            position: relative;
+            left:50%;
+            width:80%;
+            max-width: 600px;
+            padding:20px;
+            transform:translate(-50%, 0);
+            background: #FFF;
+
+            box-sizing:border-box !important;
+            -moz-box-sizing:border-box !important;
+            -webkit-box-sizing:border-box !important;
+        }
+
+        .highed-index-group {
+            text-decoration: none;
+            padding:20px;
+            border-radius:10px;
+            background:#01579b;
+            color:#fff;
+            font-size: 24px;
+            width:100%;
+            min-height:30px;
+            margin-bottom: 10px;
+
+            text-align: center;
+            display: block;
+
+            box-sizing:border-box !important;
+            -moz-box-sizing:border-box !important;
+            -webkit-box-sizing:border-box !important;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            cursor:default !important;
+            transition:0.2s ease all; 
+            -moz-transition:0.2s ease all; 
+            -webkit-transition:0.2s ease all;
+        }
+
+        .highed-index-group:hover {
+            background:#0288d1;
+        }
+
+        .highed-index-headline {
+            padding-left:10px;
+            font-weight: 100;
+            text-align: center;
+        }
+
+        .highed-index-footer {
+            margin-top:50px;
+            border-top:1px solid #ddd;
+            padding-top:10px;
+            text-align: center;
+            font-size: 10px;
+            font-style: italic;
+        }
+
+    </style>
+
+</head>
+
+<body>
+{{{body}}}
+</body>
+
+</html>

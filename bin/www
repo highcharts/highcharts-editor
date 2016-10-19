@@ -31,17 +31,79 @@ This is a simple test server to run the unbuilt sources.
 const express = require('express');
 const expressLess = require('express-less');
 const app = express();
+const exphbs = require('express-handlebars');
+const package = require(__dirname + '/../package.json');
+
+var files = [];
+
+function updateFiles() {
+    files = require(__dirname + '/../res/filelist.json');
+}
+
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
 
 app.use('/css', expressLess(__dirname + '/../less', {
 	debug: true
 }));
 
 app.use('/src', express.static(__dirname + '/../src'));
-app.use('/', express.static(__dirname + '/../html'));
+//app.use('/', express.static(__dirname + '/../html'));
 app.use('/img', express.static(__dirname + '/../img'));
 app.use('/docs', express.static(__dirname + '/../out'));
 app.use('/plugins', express.static(__dirname + '/../plugins'));
 app.use('/integrations', express.static(__dirname + '/../integrations'));
 
+app.get('/', function (req, res) {
+    res.render('home', {
+        scripts: files,
+        package: package
+    });
+});
+
+app.get('/full', function (req, res) {
+    updateFiles();
+
+    res.render('full', {
+        scripts: files,
+        package: package
+    });
+});
+
+app.get('/modal', function (req, res) {
+    updateFiles();
+
+    res.render('modal', {
+        scripts: files,
+        package: package
+    });
+});
+
+app.get('/simple', function (req, res) {
+    updateFiles();
+
+    res.render('simplemodal', {
+        scripts: files,
+        package: package
+    });
+});
+
+app.get('/tinymce', function (req, res) {
+    updateFiles();
+
+    res.render('tinymce', {
+        scripts: files,
+        package: package
+    });
+});
+
+app.get('/ckeditor', function (req, res) {
+    updateFiles();
+
+    res.render('ckeditor', {
+        scripts: files,
+        package: package
+    });
+});
 
 app.listen(3005);

@@ -46,6 +46,14 @@ The editor is pushed to NPM and Bower under `highcharts-editor`.
 
 This will put a built version in the `dist` folder.
 
+## Test Server
+
+If extending/modifying the editor code itself (or adding themes etc.), use the bundled
+express server. This server uses the source files directly without minifying/concatenating which
+makes it easier to debug and test things. It also bakes the Less files for each request.
+
+Run `node bin/www` to start it, then head to `http://127.0.0.1:3005`.
+
 ## Embedding Hello World
 
 	<!DOCTYPE html>

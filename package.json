@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "express": "*",
-    "express-less": "0.1.0"
+    "express-less": "0.1.0",
+    "express-handlebars": "*"
   }
 }

@@ -1,0 +1,25 @@
+<div style="padding:10px;" class="highed-box-size">
+    <div style="font-size:26px; font-weight:100;">Simple Modal Editor</div>
+    <br/><br/>
+    Result:
+    <br/><br/>
+    <textarea id="chart-result" class="highed-box-size" style="font-family:monospace;width:100%;height:400px"></textarea>
+    <br/><br/>
+    <button id="modal-btn" class="highed-imp-button">Create a chart</button>
+</div>
+
+<script>
+
+    highed.ready(function () {
+        highed.ModalEditor('modal-btn', {
+            allowDone: true,
+            type: 'simple',
+            importer: {
+                options: 'web csv json samples'
+            }
+        }, function (html) {
+            highed.dom.get('chart-result').value = html;
+        });
+    });
+
+</script>

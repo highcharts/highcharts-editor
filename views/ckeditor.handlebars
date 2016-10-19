@@ -1,0 +1,18 @@
+<script src="//cdn.ckeditor.com/4.5.11/standard/ckeditor.js"></script>
+<script src="/integrations/ckeditor.js" type="text/javascript" charset="utf-8" ></script>
+
+<div style="padding:10px;" class="highed-box-size">
+    <div style="font-size:26px; font-weight:100;">CKEditor Integration Test</div>
+    <br/><br/>
+    <textarea id="editor" class="highed-box-size" style="font-family:monospace;width:100%;height:200px"></textarea>
+
+</div>
+
+<script>
+
+    CKEDITOR.replace('editor', {
+        allowedContent: true,
+        extraPlugins: 'highcharts'
+    });
+
+</script>
