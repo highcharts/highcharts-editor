@@ -60,7 +60,7 @@ highed.Slider = function (parent, attributes) {
             ms = highed.dom.size(indicator)
         ;
 
-        x = (value / properties.max) * (s.w - ms.w);
+        x = ((value - properties.min) / (properties.max - properties.min)) * (s.w - ms.w);
 
         highed.dom.style(indicator, {
             left: x + 'px'
@@ -93,7 +93,7 @@ highed.Slider = function (parent, attributes) {
         ;
         
         //Set the value based on the new X
-        value = Math.round((x / (s.w - ms.w)) * properties.max);
+        value = properties.min + Math.round(((x / (s.w - ms.w))) * (properties.max - properties.min));
 
         textIndicator.innerHTML = value;
         events.emit('Change', value);
