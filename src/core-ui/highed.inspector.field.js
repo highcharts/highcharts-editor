@@ -67,8 +67,9 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
             string: function (val, callback) {
                 var input = highed.dom.cr('input', 'highed-field-input', '', fieldID);
 
-                highed.dom.on(input, 'change', function () {
+                highed.dom.on(input, 'change', function (e) {
                     tryCallback(callback, input.value);
+                    e.cancelBubble = true;          
                 });
 
                 input.value = val || value;

@@ -130,7 +130,7 @@ highed.List = function (parent, responsive) {
             cs = highed.dom.size(container)
         ;
 
-        if (responsive && ps.h < cs.h) {
+        if (responsive && ps.h < 50) {
             highed.dom.style(compactIndicator, {
                 display: 'block'
             });
