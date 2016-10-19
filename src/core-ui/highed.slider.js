@@ -46,14 +46,37 @@ highed.Slider = function (parent, attributes) {
         value = properties.resetTo,
         container = highed.dom.cr('div', 'highed-slider'),
         indicator = highed.dom.cr('div', 'highed-slider-indicator'),
-        mover = highed.Movable(indicator)
+        textIndicator = highed.dom.cr('div', 'highed-slider-text-indicator'),
+        sliderBackground = highed.dom.cr('div', 'highed-slider-background'),
+        mover = highed.Movable(indicator, 'x', true)
     ;
 
     ////////////////////////////////////////////////////////////////////////////
 
     // Calculate the indicator X
     function calcIndicator() {
+        var x = 0,
+            s = highed.dom.size(container),
+            ms = highed.dom.size(indicator)
+        ;
 
+        x = (value / properties.max) * (s.w - ms.w);
+
+        console.log(x, value, properties.max, s, ms);
+
+        highed.dom.style(indicator, {
+            left: x + 'px'
+        });
+    }
+
+    //Waits until the slider is in the dom
+    function tryUpdateIndicators() {
+        textIndicator.innerHTML = value;
+        if (container.parentNode) {            
+            calcIndicator();
+        } else {
+            setTimeout(tryUpdateIndicators, 10);
+        }
     }
 
     /** Set the value
@@ -62,11 +85,20 @@ highed.Slider = function (parent, attributes) {
      */
     function set(newValue) {
         value = highed.clamp(properties.min, properties.max, newValue);
+        textIndicator.innerHTML = value;
         calcIndicator();
     }
 
-    mover.on('Moving', function (x, y) {
+    mover.on('Moving', function (x) {
+        var s = highed.dom.size(container),
+            ms = highed.dom.size(indicator)
+        ;
+        
         //Set the value based on the new X
+        value = Math.round((x / (s.w - ms.w)) * properties.max);
+
+        textIndicator.innerHTML = value;
+        events.emit('Change', value);
     });
 
     ////////////////////////////////////////////////////////////////////////////
@@ -77,8 +109,13 @@ highed.Slider = function (parent, attributes) {
     }
 
     highed.dom.ap(container,
-        indicator
+        sliderBackground,
+        highed.dom.ap(indicator,
+            textIndicator
+        )
     );
+
+    tryUpdateIndicators();
 
     // Public interface
     return {

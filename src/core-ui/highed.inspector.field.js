@@ -95,42 +95,54 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 return input;
             },
             range: function (val, callback) {
-                var f = highed.dom.cr('input', 'highed-field-input', '', fieldID),
-                    indicator = highed.dom.cr('div', 'highed-field-range-indicator', '&nbsp;'),
-                    nullIt = highed.dom.cr('span', 'highed-icon highed-field-range-null fa fa-undo', '')
-                ;  
-
-                f.className = 'highed-field-range';           
-                f.type = 'range';
-                f.step = properties.custom.step;
-                f.min = properties.custom.minValue;
-                f.max = properties.custom.maxValue;
-
-                highed.dom.on(f, 'input', function () {
-                    indicator.innerHTML = f.value;
+                var slider = highed.Slider(false, {
+                    min: properties.custom.minValue,
+                    max: properties.custom.maxValue,
+                    step: properties.custom.step,
+                    resetTo: val || value
                 });
 
-                highed.dom.on(f, 'change', function () {
-                    tryCallback(callback, f.value);
+                slider.on('Change', function (v) {
+                    tryCallback(callback, v);
                 });
 
-                if ((val || value) === null || ((val || value)) === 'null') {
-                    indicator.innerHTML = 'auto';
-                } else if (!highed.isNull(val || value)) {
-                    indicator.innerHTML = val || value;                    
-                } else {
-                    indicator.innerHTML = '&nbsp;';
-                }
+                return slider.container;
+                // var f = highed.dom.cr('input', 'highed-field-input', '', fieldID),
+                //     indicator = highed.dom.cr('div', 'highed-field-range-indicator', '&nbsp;'),
+                //     nullIt = highed.dom.cr('span', 'highed-icon highed-field-range-null fa fa-undo', '')
+                // ;  
 
-                f.value = val || value;
+                // f.className = 'highed-field-range';           
+                // f.type = 'range';
+                // f.step = properties.custom.step;
+                // f.min = properties.custom.minValue;
+                // f.max = properties.custom.maxValue;
 
-                highed.dom.on(nullIt, 'click', function () {
-                    f.value = 0;
-                    indicator.innerHTML = 'auto';
-                    tryCallback(callback, null);
-                });
+                // highed.dom.on(f, 'input', function () {
+                //     indicator.innerHTML = f.value;
+                // });
 
-                return [f, indicator, nullIt];
+                // highed.dom.on(f, 'change', function () {
+                //     tryCallback(callback, f.value);
+                // });
+
+                // if ((val || value) === null || ((val || value)) === 'null') {
+                //     indicator.innerHTML = 'auto';
+                // } else if (!highed.isNull(val || value)) {
+                //     indicator.innerHTML = val || value;                    
+                // } else {
+                //     indicator.innerHTML = '&nbsp;';
+                // }
+
+                // f.value = val || value;
+
+                // highed.dom.on(nullIt, 'click', function () {
+                //     f.value = 0;
+                //     indicator.innerHTML = 'auto';
+                //     tryCallback(callback, null);
+                // });
+
+                // return [f, indicator, nullIt];
             },
             boolean: function (val, callback) {
                 var input = highed.dom.cr('input', '', '', fieldID);             

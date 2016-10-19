@@ -33,7 +33,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @param target {domnode} - the node to make movable
  *  @param constrain {string} - constrain moving: `XY`, `Y`, or `X`
  */
- highed.Movable = function (target, constrain) {
+ highed.Movable = function (target, constrain, constrainParent) {
     var events = highed.events()
     ;
 
@@ -43,6 +43,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     if (target) {
         highed.dom.on(target, 'mousedown', function (e) {
             var cp = highed.dom.pos(target),
+                ps = highed.dom.size(target.parentNode),
+                ns = highed.dom.size(target),
                 x = cp.x,
                 y = cp.y,
                 offsetX = 0,
@@ -53,6 +55,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     }
                     if (constrain === 'Y' || constrain === 'XY') {
                         y = cp.y + (moveE.clientY - offsetY);                        
+                    }
+
+                    if (constrainParent) {
+                        if (x < 0) x = 0;
+                        if (y < 0) y = 0;
+                        if (x > ps.w - ns.w) x = ps.w - ns.w;
+                        if (y > ps.h - ns.h) y = ps.h - ns.h;
                     }
 
                     highed.dom.style(target, {
@@ -66,12 +75,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     //Detach the document listeners
                     upper();
                     mover();    
+                    document.body.className = document.body.className.replace(' highed-nosel', '');
                     events.emit('EndMove', x, y);
                 })
             ;
 
-            offsetX = e.clientX - x;
-            offsetY = e.clientY - y;
+            document.body.className += ' highed-nosel';
+            offsetX = e.clientX;
+            offsetY = e.clientY;
             events.emit('StartMove', cp.x, cp.y);
         });
     }
