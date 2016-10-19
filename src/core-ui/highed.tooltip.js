@@ -48,6 +48,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      *  @param blowup {boolean}  - blow the tooltip up
      */
     highed.Tooltip = function (x, y, tip, blowup) {
+        var ds = highed.dom.size(document.body);
+
+        if (x < 0) x = 0;
+        if (y < 0) y = 0;
+        if (x > ds.w - 200) x = ds.w - 200;        
+
         highed.dom.style(container, {
             opacity: 1,
             'pointer-events': 'auto',
