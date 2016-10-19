@@ -110,7 +110,6 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
                 display: 'none'
             });
         }
-        console.log(width, paneBar.scrollWidth);
     }
 
     /** Select the first tab

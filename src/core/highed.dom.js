@@ -205,6 +205,18 @@ highed.dom = {
         if (!target) {
           return function () {};
         }
+
+        if (highed.isArr(event)) {
+          event.forEach(function (event) {
+            s.push(highed.dom.on(target, event, callback, context));
+          });
+
+          return function () {
+            s.forEach(function(f) {
+              f();
+            });
+          };
+        }
     
         if (target === document.body && event === 'resize') {
           //Need some special magic here eventually.

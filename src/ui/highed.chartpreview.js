@@ -459,7 +459,7 @@ highed.ChartPreview = function (parent, attributes) {
                 init(chart.options, properties.expandTo);
                 expanded = true;
 
-                toggleButton.className = 'highed-icon highed-chart-preview-expand fa fa-angle-double-right';
+                toggleButton.className = 'highed-icon highed-chart-preview-expand fa fa-times-circle';
 
             }
         });

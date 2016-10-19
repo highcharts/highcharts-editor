@@ -5,11 +5,22 @@
 	border: @border-main;
 	z-index: 10010;
 	width:200px;
-	height:200px;
+	height:280px;
 	opacity: 0;
 	padding:5px;
 	pointer-events: none;
 	.highed-transition-opacity;
+	.highed-box-size;
+}
+
+
+@media (max-width: 600px) {
+	.highed-colorpicker-responsive {
+		left:0px !important;
+		top:0px !important;
+		width:100% !important;
+		height:100% !important;		
+	}
 }
 
 .highed-colorpicker .picker {
@@ -23,5 +34,8 @@
 .highed-colorpicker .manual {
 	width: 100%;
 	outline: none;
+	height:32px;
+	font-size:14px;
+	border:@border-strong;
 	.highed-box-size;
 }

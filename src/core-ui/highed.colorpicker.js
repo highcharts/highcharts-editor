@@ -24,8 +24,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 (function () {
-    var container = highed.dom.cr('div', 'highed-colorpicker'),
+    var container = highed.dom.cr('div', 'highed-colorpicker highed-colorpicker-responsive'),
         canvas = highed.dom.cr('canvas', 'picker'),
+        closeBtn = highed.dom.cr('div', 'highed-ok-button', 'Close'),
         ctx = canvas.getContext('2d'),
         manualInput = highed.dom.cr('input', 'manual')      
     ;
@@ -34,6 +35,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     highed.ready(function () {
         highed.dom.ap(document.body, container);
     });
+
+    function updatePickerBackground(current) {
+        highed.dom.style(manualInput, {
+            background: current,
+            color: highed.getContrastedColor(current)
+        });
+    }
 
     /** Color picker 
      *  Component to pick colors from the google material design color palette.
@@ -59,11 +67,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             containerSize = highed.dom.size(container),
             pickerSize = highed.dom.size(canvas),
             binder = false,
-            pbinder = false
+            pbinder = false,
+            cbinder = false,
+            dbinder = false
         ;
 
         ///////////////////////////////////////////////////////////////////////
-        
+
         /* Draws the color picker itself */
         function drawPicker() {
             //There's 14 hues per. color, 19 colors in total.
@@ -95,6 +105,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             });
             binder();
             pbinder();
+            cbinder();
+            dbinder();
         }
 
         function rgbToHex(r, g, b){
@@ -117,9 +129,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             manualInput.value = col;
 
+            updatePickerBackground(col);
+
             if (highed.isFn(fn)) {
                 fn(col);
             }
+
+            e.cancelBubble = true;
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            return false;
         }
 
         ///////////////////////////////////////////////////////////////////////
@@ -140,7 +160,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             'pointer-events': 'auto'
         });
 
-        highed.showDimmer(hide, true, true, 5);
+        dbinder = highed.showDimmer(hide, true, true, 5);
+
+        cbinder = highed.dom.on(closeBtn, 'click', hide);
 
         binder = highed.dom.on(manualInput, 'keyup', function () {
             if (highed.isFn(fn)) {
@@ -148,9 +170,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             }
         });
 
-        pbinder = highed.dom.on(canvas, 'mousedown', function (e) {
-            var mover = highed.dom.on(canvas, 'mousemove', pickColor),
-                cancel = highed.dom.on(document.body, 'mouseup', function () {
+        pbinder = highed.dom.on(canvas, ['mousedown', 'touchstart'], function (e) {
+            var mover = highed.dom.on(canvas, ['mousemove', 'touchmove'], pickColor),
+                cancel = highed.dom.on(document.body, ['mouseup', 'touchend'], function () {
                     mover();
                     cancel();
                 })
@@ -160,6 +182,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         });
 
         manualInput.value = current;
+        updatePickerBackground(current);
 
         drawPicker();
 
@@ -172,7 +195,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     highed.dom.ap(container,
         canvas,
-        manualInput
+        manualInput,
+        closeBtn
     );
 
 })();
