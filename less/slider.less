@@ -3,6 +3,7 @@
     position: relative;
     width:100%;
     overflow: hidden;
+    padding-right:36px;
     .highed-box-size;
 }
 
@@ -17,6 +18,24 @@
     .highed-nosel;
 }
 
+.highed-slider-reset {
+    height:32px;
+    width:32px;
+    position: absolute;
+    top:0px;
+    right:0px;
+    text-align: center;
+    line-height: 32px !important;
+    background: @wiz-bar-background;
+    color: @wiz-bar-color;
+    .highed-transition;
+}
+
+.highed-slider-reset:hover {
+    background:@accent-color;
+    color:@accent-text;
+}
+
 .highed-slider-text-indicator {
     color: @wiz-bar-color;
     text-align: center;
@@ -27,5 +46,5 @@
     margin-top:15px;
     height:2px;
     margin-bottom: 15px;
-    background: @border-strong-color;
+    background: @wiz-bar-background;
 }

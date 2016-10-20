@@ -33,7 +33,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @param target {domnode} - the node to make movable
  *  @param constrain {string} - constrain moving: `XY`, `Y`, or `X`
  */
- highed.Movable = function (target, constrain, constrainParent) {
+ highed.Movable = function (target, constrain, constrainParent, parentNode) {
     var events = highed.events(),
         moving = false
     ;
@@ -46,7 +46,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
          //   if (moving) return;
             moving = true;
             var cp = highed.dom.pos(target),
-                ps = highed.dom.size(target.parentNode),
+                ps = highed.dom.size(parentNode || target.parentNode),
                 ns = highed.dom.size(target),
                 x = cp.x,
                 y = cp.y,
@@ -55,16 +55,19 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 mover = highed.dom.on(document.body, ['mousemove', 'touchmove'], function (moveE) {
                     if (constrain === 'X' || constrain === 'XY') {
                         x = cp.x + ((moveE.clientX || moveE.touches[0].clientX) - offsetX);                        
+                    
+                        if (constrainParent) {
+                            if (x < 0) x = 0;
+                            if (x > ps.w - ns.w) x = ps.w - ns.w;                            
+                        }
                     }
                     if (constrain === 'Y' || constrain === 'XY') {
                         y = cp.y + ((moveE.clientY || moveE.touches[0].clientY) - offsetY);                        
-                    }
-
-                    if (constrainParent) {
-                        if (x < 0) x = 0;
-                        if (y < 0) y = 0;
-                        if (x > ps.w - ns.w) x = ps.w - ns.w;
-                        if (y > ps.h - ns.h) y = ps.h - ns.h;
+                    
+                        if (constrainParent) {                            
+                            if (y < 0) y = 0;
+                            if (y > ps.h - ns.h) y = ps.h - ns.h;
+                        }
                     }
 
                     highed.dom.style(target, {

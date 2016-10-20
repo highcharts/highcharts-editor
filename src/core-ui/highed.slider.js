@@ -48,7 +48,8 @@ highed.Slider = function (parent, attributes) {
         indicator = highed.dom.cr('div', 'highed-slider-indicator'),
         textIndicator = highed.dom.cr('div', 'highed-slider-text-indicator'),
         sliderBackground = highed.dom.cr('div', 'highed-slider-background'),
-        mover = highed.Movable(indicator, 'x', true)
+        resetIcon = highed.dom.cr('div', 'highed-slider-reset fa fa-undo'),
+        mover = highed.Movable(indicator, 'x', true, sliderBackground)
     ;
 
     ////////////////////////////////////////////////////////////////////////////
@@ -56,11 +57,15 @@ highed.Slider = function (parent, attributes) {
     // Calculate the indicator X
     function calcIndicator() {
         var x = 0,
-            s = highed.dom.size(container),
+            s = highed.dom.size(sliderBackground),
             ms = highed.dom.size(indicator)
         ;
 
-        x = ((value - properties.min) / (properties.max - properties.min)) * (s.w - ms.w);
+        if (!highed.isNum(value) || !value) {            
+            x = 0;
+        } else {
+            x = ((value - properties.min) / (properties.max - properties.min)) * (s.w - ms.w);            
+        }
 
         highed.dom.style(indicator, {
             left: x + 'px'
@@ -88,7 +93,7 @@ highed.Slider = function (parent, attributes) {
     }
 
     mover.on('Moving', function (x) {
-        var s = highed.dom.size(container),
+        var s = highed.dom.size(sliderBackground),
             ms = highed.dom.size(indicator)
         ;
         
@@ -101,6 +106,25 @@ highed.Slider = function (parent, attributes) {
 
     ////////////////////////////////////////////////////////////////////////////
     
+    highed.dom.on(resetIcon, 'mouseover', function (e) {
+      //  highed.Tooltip(e.clientX, e.clientY, 'Reset to initial value');
+    });
+
+    highed.dom.on(resetIcon, 'click', function() {
+        value = properties.resetTo;
+        textIndicator.innerHTML = value;
+        calcIndicator();
+
+        if (value === 'null') {
+            value = null;
+        }
+        if (value === 'undefined') {
+            value = undefined;
+        }
+
+        events.emit('Change', value);
+    });
+
     if (parent) {
         parent = highed.dom.get(parent);
         highed.dom.ap(parent, container);
@@ -108,6 +132,7 @@ highed.Slider = function (parent, attributes) {
 
     highed.dom.ap(container,
         sliderBackground,
+        resetIcon,
         highed.dom.ap(indicator,
             textIndicator
         )

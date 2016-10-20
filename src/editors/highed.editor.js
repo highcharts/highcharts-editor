@@ -380,7 +380,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         applyFeatures();
 
         mainToolbar.addIcon({
-            css: 'fa-gear',
+            css: 'fa-bars',
             click: function(e) {
                 cmenu.show(e.clientX, e.clientY);
             }

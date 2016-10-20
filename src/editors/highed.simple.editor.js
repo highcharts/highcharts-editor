@@ -141,7 +141,7 @@ highed.SimpleEditor = function (parent, attributes) {
     );
 
     mainToolbar.addIcon({
-        css: 'fa-gear',
+        css: 'fa-bars',
         click: function (e) {
             cmenu.show(e.clientX, e.clientY);
         }
