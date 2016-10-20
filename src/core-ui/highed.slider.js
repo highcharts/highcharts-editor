@@ -104,6 +104,18 @@ highed.Slider = function (parent, attributes) {
         events.emit('Change', value);
     });
 
+    mover.on('StartMove', function () {
+        if (highed.onPhone()) {
+            textIndicator.className = 'highed-slider-text-indicator highed-slider-text-indicator-popup';
+        }
+    });
+
+    mover.on('EndMove', function () {
+        if (highed.onPhone()) {
+            textIndicator.className = 'highed-slider-text-indicator';
+        }
+    });
+
     ////////////////////////////////////////////////////////////////////////////
     
     highed.dom.on(resetIcon, 'mouseover', function (e) {
