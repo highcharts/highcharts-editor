@@ -24,7 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 (function () {
-    var dropdownItems = highed.dom.cr('div', 'highed-dropdown-items');
+    var dropdownItems = highed.dom.cr('div', 'highed-dropdown-items highed-dropdown-items-responsive');
 
     highed.ready(function () {
         highed.dom.ap(document.body, dropdownItems);

@@ -59,7 +59,8 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
         ctx.build(tabs.map(function (tab) {
             return {
                 title: tab.title,
-                click: tab.focus
+                click: tab.focus,
+                selected: tab.selected
             };
         }));
     }
@@ -159,7 +160,9 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
             tab = highed.dom.cr('div', 'tab', properties.title),
             tbody = highed.dom.cr('div', 'tab-body'),
             visible = true,
-            texports = {}
+            texports = {
+                selected: false
+            }
         ;
 
         if (extraPadding) {
@@ -188,6 +191,7 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
 
             if (selectedTab) {
                 selectedTab.node.className = 'tab';
+                selectedTab.selected = false;
 
                 highed.dom.style(selectedTab.body, {
                     opacity: 0,
@@ -210,6 +214,7 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
             });
 
             selectedTab = texports;
+            selectedTab.selected = true;
             tevents.emit('Focus');
 
             events.emit('Focus', texports);
