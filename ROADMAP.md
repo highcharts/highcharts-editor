@@ -37,6 +37,7 @@
   * Data import plugins
   * Data export plugins
   * Editor plugins
+  * Basic phone/tablet support
 
 **Ecosystem/Tooling**
     
