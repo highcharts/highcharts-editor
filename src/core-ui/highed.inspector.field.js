@@ -341,9 +341,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     addCompositeItem();
                 });
 
-                if (highed.isStr(value)) {
-                    value = value.split(',');
-                }
+          
 
                 if (highed.isArr(value)) {
                     value.forEach(function (item) {
