@@ -65,6 +65,11 @@ highed.ChartCustomizer = function (parent, attributes) {
         highlighted = false
     ;
 
+    //If we're on mobile, completely disable the advanced view
+    if (highed.onPhone()) {
+        properties.noAdvanced = true;
+    }
+
     body.className += ' highed-customizer-body';
 
     properties.availableSettings = highed.arrToObj(properties.availableSettings);
