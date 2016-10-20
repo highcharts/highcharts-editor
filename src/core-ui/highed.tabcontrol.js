@@ -269,6 +269,7 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
     ///////////////////////////////////////////////////////////////////////////
 
     return {
+        container: container,
         on: events.on,
         createTab: Tab,
         resize: resize,

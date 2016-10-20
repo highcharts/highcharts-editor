@@ -50,8 +50,8 @@ highed.OverlayModal = function (contents, attributes) {
         properties = highed.merge({
             width: 200,
             height: 200,
-            minWidth: 690,
-            minHeight: 0,
+            minWidth: 10,
+            minHeight: 10,
             showOnInit: true,
             zIndex: 10000
         }, attributes),
