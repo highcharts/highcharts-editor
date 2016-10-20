@@ -101,7 +101,9 @@ highed.Slider = function (parent, attributes) {
         value = properties.min + Math.round(((x / (s.w - ms.w))) * (properties.max - properties.min));
 
         textIndicator.innerHTML = value;
-        events.emit('Change', value);
+        if (!highed.onPhone()) {
+            events.emit('Change', value);
+        }
     });
 
     mover.on('StartMove', function () {
@@ -113,6 +115,8 @@ highed.Slider = function (parent, attributes) {
     mover.on('EndMove', function () {
         if (highed.onPhone()) {
             textIndicator.className = 'highed-slider-text-indicator';
+            //We're not emitting changes until done on mobile
+            events.emit('Change', value);
         }
     });
 
