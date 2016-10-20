@@ -115,7 +115,7 @@ highed.ChartPreview = function (parent, attributes) {
         window.clearTimeout(throttleTimeout);
         throttleTimeout = window.setTimeout(function () {
             events.emit('ChartChangeLately', aggregatedOptions);
-        }, 800);
+        }, 200);
     }
 
     /* Init the chart */
@@ -503,6 +503,11 @@ highed.ChartPreview = function (parent, attributes) {
         });
     }
 
+    function changeParent(newParent) {
+        parent = newParent;
+        init();
+    }
+
     ///////////////////////////////////////////////////////////////////////////
 
     //Init the initial chart
@@ -520,6 +525,7 @@ highed.ChartPreview = function (parent, attributes) {
         expand: expand,
         collapse: collapse,
         new: newChart,
+        changeParent: changeParent,
 
         loadTemplate: loadTemplate,
         resize: resize,

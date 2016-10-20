@@ -198,6 +198,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             dataExpStep = wizbar.addStep({ title: highed.getLocalizedStr('stepExport'), id: 'export' }),
             dataExp = highed.Exporter(dataExpStep.body, properties.exporter),
 
+            chartIcon = highed.dom.cr('div', 'highed-chart-container-icon'),
+
             cmenu = highed.DefaultContextMenu(chartPreview)
 
         ;
@@ -207,6 +209,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         });
 
         ///////////////////////////////////////////////////////////////////////////
+
+        function updateToolbarIcon() {
+            if (highed.onPhone()) {
+                highed.dom.style(chartIcon, {
+                    'background-image': 'url("data:image/svg+xml;utf8,' + 
+                          encodeURIComponent(chartPreview.export.svg()) +
+                    '")'
+                });
+            }
+        }
 
         //Hide features that are disabled
         function applyFeatures() {
@@ -341,7 +353,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         });
 
         //Route preview events
-        chartPreview.on('ChartChange', function (newData) { events.emit('ChartChange', newData);});
+        chartPreview.on('ChartChange', function (newData) { 
+            events.emit('ChartChange', newData);
+
+        });
         chartPreview.on('ChartChangeLately', function (newData) { events.emit('ChartChangeLately', newData);});
 
         ///////////////////////////////////////////////////////////////////////////
@@ -359,6 +374,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             highed.log(2, 'on object in editor properties is not a valid object');
         }
 
+
+
         //Activate plugins
         properties.plugins = highed.arrToObj(properties.plugins);
         Object.keys(properties.plugins).forEach(function (name) {
@@ -367,6 +384,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         //Dispatch change events to the active plugins
         chartPreview.on('ChartChangeLately', function (options) {
+
+            updateToolbarIcon();
+
             Object.keys(activePlugins).forEach(function (key) {
                 var plugin = activePlugins[key];
                 if (highed.isFn(plugin.definition.chartchange)) {
@@ -379,6 +399,23 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         applyFeatures();
 
+
+        chartCustomizer.init(chartPreview.options.customized, chartPreview.options.chart);
+
+        if (highed.onPhone()) {
+            chartContainer.className = 'highed-chart-container-icon';
+            highed.dom.ap(mainToolbar.right, chartIcon);
+
+            highed.dom.on(chartIcon, 'click', function (e) {
+                chartPreview.expand();
+                e.cancelBubble = true;
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                return false;
+            });
+        }
+
         mainToolbar.addIcon({
             css: 'fa-bars',
             click: function(e) {
@@ -386,7 +423,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             }
         });
 
-        chartCustomizer.init(chartPreview.options.customized, chartPreview.options.chart);
+        updateToolbarIcon();
 
         ///////////////////////////////////////////////////////////////////////////
 

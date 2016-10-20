@@ -109,14 +109,14 @@ highed.DefaultContextMenu = function (chartPreview) {
             {
                 title: highed.getLocalizedStr('help'),
                 icon: 'question-circle'
-            },
-            {
-                title: highed.getLocalizedStr('licenseInfo'),
-                icon: 'key',
-                click: function () {
-                    highed.licenseInfo.show();
-                }
-            }
+            }//,
+            // {
+            //     title: highed.getLocalizedStr('licenseInfo'),
+            //     icon: 'key',
+            //     click: function () {
+            //         highed.licenseInfo.show();
+            //     }
+            // }
         ])
     ;
 
