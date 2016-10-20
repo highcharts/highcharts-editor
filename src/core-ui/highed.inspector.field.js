@@ -169,7 +169,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 }           
 
                 highed.dom.on(box, 'click', function (e) {
-                    highed.pickColor(e.clientX, e.clientY, value, function (col) {
+                    highed.pickColor(e.clientX, e.clientY, val || value, function (col) {
                         update(col);
                         tryCallback(callback, col);
                     });
@@ -340,6 +340,10 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 highed.dom.on(add, 'click', function () {
                     addCompositeItem();
                 });
+
+                if (highed.isStr(value)) {
+                    value = value.split(',');
+                }
 
                 if (highed.isArr(value)) {
                     value.forEach(function (item) {
