@@ -61,7 +61,7 @@ highed.ChartPreview = function (parent, attributes) {
         throttleTimeout = false,
         chart = false,
         preExpandSize = false,
-        toggleButton = highed.dom.cr('div', 'highed-icon highed-chart-preview-expand fa fa-angle-double-left'),
+        toggleButton = highed.dom.cr('div', 'highed-icon highed-chart-preview-expand fa fa-external-link-square'),
         expanded = false,
         wysiwyg = {
             'g.highcharts-legend': { tab: 'Legend', id: 'legend--enabled'},
@@ -475,7 +475,7 @@ highed.ChartPreview = function (parent, attributes) {
                     display: 'none'
                 });
 
-                toggleButton.className = 'highed-icon highed-chart-preview-expand fa fa-angle-double-left';
+                toggleButton.className = 'highed-icon highed-chart-preview-expand fa fa-external-link-square';
 
                 init(chart.options, parent);
                 expanded = false;
