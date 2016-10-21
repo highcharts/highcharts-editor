@@ -54,6 +54,18 @@ highed.Slider = function (parent, attributes) {
 
     ////////////////////////////////////////////////////////////////////////////
 
+
+    function updateText() {
+        textIndicator.innerHTML = value;
+
+        if (value === 'null' || value === null) {
+            textIndicator.innerHTML = 'auto';
+        }
+        if (value === 'undefined' || typeof value === 'undefined') {
+            textIndicator.innerHTML = 'auto';
+        }
+    }
+
     // Calculate the indicator X
     function calcIndicator() {
         var x = 0,
@@ -74,7 +86,7 @@ highed.Slider = function (parent, attributes) {
 
     //Waits until the slider is in the dom
     function tryUpdateIndicators() {
-        textIndicator.innerHTML = value;
+        updateText();
         if (container.parentNode) {            
             calcIndicator();
         } else {
@@ -126,9 +138,9 @@ highed.Slider = function (parent, attributes) {
       //  highed.Tooltip(e.clientX, e.clientY, 'Reset to initial value');
     });
 
+
     highed.dom.on(resetIcon, 'click', function() {
         value = properties.resetTo;
-        textIndicator.innerHTML = value;
         calcIndicator();
 
         if (value === 'null') {
@@ -138,6 +150,7 @@ highed.Slider = function (parent, attributes) {
             value = undefined;
         }
 
+        updateText();
         events.emit('Change', value);
     });
 
