@@ -33,8 +33,14 @@ const expressLess = require('express-less');
 const app = express();
 const exphbs = require('express-handlebars');
 const package = require(__dirname + '/../package.json');
+const args = process.argv;
 
 var files = [];
+var port = 3005;
+
+if (args.length === 3) {
+    port = parseInt(args[2], 10);
+}
 
 function updateFiles() {
     files = require(__dirname + '/../res/filelist.json');
@@ -106,4 +112,5 @@ app.get('/ckeditor', function (req, res) {
     });
 });
 
-app.listen(3005);
+console.log('starting on port', port);
+app.listen(port);
