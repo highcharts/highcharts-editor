@@ -41,14 +41,17 @@
 .highed-dropdown-item {
     position: relative;
     height:20px;
-    padding:3px;
-    padding-left:30px;
+    padding: 5px 5px 5px 10px;
     font-size: 12px;
     line-height: 20px;
     font-family: @font-secondary;
     min-width: 100px;
     overflow: hidden;
     .highed-nosel;
+}
+
+.highed-dropdown-item:hover {
+    background: @background-panel;
 }
 
 .highed-dropdown-arrow {
@@ -84,16 +87,14 @@
     color:@accent-text;
 }
 
-.highed-dropdown-item-selected {
+.highed-dropdown-item-selected, .highed-dropdown-item-selected:hover {
     background:@accent-color;
     color:@accent-text;
 }
 
 .highed-dropdown-items {
-    border-left:@border-main;
-    border-right:@border-main;
-    border-bottom:@border-main;
-    background:@background-main;
+    border:@border-main;
+    background:@bright-background;
     color:@text-main;
 
     opacity:0;
