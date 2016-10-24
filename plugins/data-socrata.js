@@ -10,7 +10,7 @@ highed.plugins.import.install('Socrata',  {
     description: 'Socrata is an open data format commonly used for various government sources. <a href="http://www.opendatanetwork.com/" target="_blank">http://www.opendatanetwork.com/</a>',
     treatAs: 'csv',
     fetchAs: 'json',
-    defaultURL: 'https://finances.worldbank.org/resource/czdd-amke.json?$order=fiscal_year ASC',
+    defaultURL: 'https://finances.worldbank.org/resource/czdd-amke.json?$order=fiscal_year ASC&$where=vpu_group_code=\'REG\'',
     options: {
         includeFields: {
             type: 'string',
@@ -48,7 +48,7 @@ highed.plugins.import.install('Socrata',  {
                         header.push(key);
                     }
 
-                    rdata.push(col);
+                    rdata.push(parseInt(col) || col);
                     
                 });
                 csv.push(rdata.join(','));
