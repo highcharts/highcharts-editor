@@ -61,7 +61,7 @@ highed.plugins.import.install('Difi', {
             });
         }
 
-        fn(false, [header.join(',')].concat(csv).join('\n'));
+        fn(false, ['row,' + header.join(',')].concat(csv).join('\n'));
     }
 }
 );
