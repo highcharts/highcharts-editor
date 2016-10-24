@@ -45,6 +45,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 licenseInfo: 'License Information',
 
                 //Steps
+                stepDone: 'Done',
                 stepStart: 'Start',
                 stepImport: 'Import',
                 stepTemplates: 'Templates',

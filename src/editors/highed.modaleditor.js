@@ -81,15 +81,17 @@ highed.ModalEditor = function (summoner, attributes, fn) {
         sumFn = highed.dom.on(highed.dom.get(nn), 'click', modal.show);
     }
 
-    //Resize the editor when showing the modal
-    modal.on('Show', editor.resize);
-    
-    highed.dom.on(doneEditing, 'click', function () {
+    function doDone() {
         if (highed.isFn(fn)) {
             fn(editor.chart.export.html(true), editor.chart.export.svg());
         }
         modal.hide();
-    });
+    }
+
+    //Resize the editor when showing the modal
+    modal.on('Show', editor.resize);
+    
+    highed.dom.on(doneEditing, 'click', doDone);
 
     attachToSummoner(summoner);
 
@@ -97,6 +99,7 @@ highed.ModalEditor = function (summoner, attributes, fn) {
         highed.dom.ap(editor.toolbar.center, doneEditing);           
     }
 
+    editor.on('Done', doDone);
     editor.resize();
 
     ///////////////////////////////////////////////////////////////////////////

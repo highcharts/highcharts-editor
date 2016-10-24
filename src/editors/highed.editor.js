@@ -199,6 +199,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             dataExpStep = wizbar.addStep({ title: highed.getLocalizedStr('stepExport'), id: 'export' }),
             dataExp = highed.Exporter(dataExpStep.body, properties.exporter),
 
+            doneBtn = highed.dom.cr('div', 'highed-ok-button', 'Done'),
+            doneStep = wizbar.addStep({title: highed.getLocalizedStr('stepDone')}),
+
             chartIcon = highed.dom.cr('div', 'highed-chart-container-icon'),
 
             cmenu = highed.DefaultContextMenu(chartPreview)
@@ -244,6 +247,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             if (!things.welcome) {
                 welcomeStep.hide();
             }
+
+            if (!things.done) {
+                doneStep.hide();
+            }
         
             wizbar.selectFirst();
         }
@@ -281,6 +288,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         ///////////////////////////////////////////////////////////////////////////
 
+        highed.dom.on(doneBtn, 'click', function () {
+            events.emit('Done');
+        });
+
         //Attach to parent node
         parent = highed.dom.get(parent);
         if (parent) {
@@ -297,6 +308,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             highed.dom.style(splitter.right, {
             //    overflow: 'hidden'
             });
+
+            doneStep.body.className += ' highed-done-pane';
+
+            highed.dom.ap(doneStep.body, 
+                highed.dom.cr('div', '', [
+                    '<h2>All done? Great!</h2>',
+                    'Click the button below to close the editor'
+                ].join('<br/>')),
+                doneBtn
+            );
 
             highed.dom.ap(mainToolbar.left,
                 highed.dom.style(highed.dom.cr('div', 'highed-logo'), {

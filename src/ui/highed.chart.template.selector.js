@@ -67,6 +67,10 @@ highed.ChartTemplateSelector = function (parent) {
                 titleBar = highed.dom.cr('div', 'highed-chart-template-title', t.title)
             ;
 
+            if (t.constr === 'StockChart' && typeof Highcharts.StockChart === 'undefined') {
+                return;
+            }
+
             if (selected && selected.id === masterID + key + t.title) {
                 node.className = 'highed-chart-template-preview highed-chart-template-preview-selected';
                 selected.node = node;
@@ -129,6 +133,9 @@ highed.ChartTemplateSelector = function (parent) {
 
     /* Build the UI */
     function build() {
+        //Need to check that highstock is included here, and remove things
+        //parents that only have highstock templates.
+        
         list.addItems(Object.keys(highed.meta.chartTemplates).map(function (key) {
             return {
                 id: key,
