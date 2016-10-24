@@ -13,16 +13,6 @@
 	.highed-box-size;
 }
 
-
-@media (max-width: 600px) {
-	.highed-colorpicker-responsive {
-		left:0px !important;
-		top:40px !important;
-		width:100% !important;
-		height:100% !important;		
-	}
-}
-
 .highed-colorpicker .picker {
 	width: 100%;
 	height:180px;
@@ -38,4 +28,28 @@
 	font-size:14px;
 	border:@border-strong;
 	.highed-box-size;
+}
+
+@media (max-width: 600px) {
+
+	.highed-colorpicker .picker {
+		height:75%;
+	}
+
+	.highed-colorpicker .manual {
+		height:10%;
+		max-height:30px;
+	}
+
+	.highed-colorpicker .highed-ok-button {
+		height:10%;
+		max-height:30px;
+	}
+
+	.highed-colorpicker-responsive {
+		left:0px !important;
+		top:40px !important;
+		width:100% !important;
+		height:100% !important;		
+	}
 }

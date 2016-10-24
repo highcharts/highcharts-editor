@@ -174,7 +174,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             splitter = highed.HSplitter(container, { 
                 leftWidth: 60, 
                 rightClasses: 'highed-chart-preview-bar', 
-                allowResize: false
+                allowResize: false,
+                leftMax: 800
             }),
 
             wizbar = highed.WizardBar(container, splitter.left),

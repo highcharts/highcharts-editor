@@ -40,6 +40,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *    > leftClasses {string} - additional css classes to use for the left body
  *    > rightClasses {string} - additional css classes to use for the right body
  *    > allowResize {boolean} - set to true to enable user-resizing
+ *    > leftMax {number} - the max width of the left panel
+ *    > rightMax {number} - the max width of the right panel
  */
 highed.HSplitter = function (parent, attributes) {
     var properties = highed.merge({
@@ -48,7 +50,9 @@ highed.HSplitter = function (parent, attributes) {
             leftClasses: '',
             rightClasses: '',
             allowResize: false,
-            responsive: false
+            responsive: false,
+            leftMax: false,
+            rightMax: false
         }, attributes),
         container = highed.dom.cr('div', 'highed-hsplitter'),
         left = highed.dom.cr('div', 'panel left ' + properties.leftClasses),
@@ -92,7 +96,7 @@ highed.HSplitter = function (parent, attributes) {
      *  @param h {number} - the height of the splitter (will use parent if null)
      */
     function resize(w, h) {
-        var s = highed.dom.size(parent), st;
+        var s = highed.dom.size(parent), st, ps;
 
         //Check if the right side is visible
         if (!highed.dom.isVisible(right)) {
@@ -125,6 +129,26 @@ highed.HSplitter = function (parent, attributes) {
         highed.dom.style([left, right, container, resizeBar], {
             height: (h || s.h) + 'px'
         });
+
+        if (properties.rightMax) {
+            highed.dom.style(right, {
+                'max-width': properties.rightMax + 'px'
+            });
+        }
+
+        if (properties.leftMax) {
+            highed.dom.style(left, {
+                'max-width': properties.leftMax + 'px'
+            });
+        }
+
+        //If we're at right max, we need to resize the left panel
+        ps = highed.dom.size(left);
+        if (ps.w === properties.leftMax) {
+            highed.dom.style(right, {
+                width: s.w - properties.leftMax + 'px'
+            });
+        }
 
         updateSizeFromMover();
     }
