@@ -29,7 +29,16 @@ var apiDumpURL = 'http://api.highcharts.com/highcharts/option/dump.json',
     request = require('request'),
     fs = require('fs'), 
     apiSorted = {},
-    license = fs.readFileSync(__dirname + '/../LICENSE')
+    license = fs.readFileSync(__dirname + '/../LICENSE'),
+    ignores = {
+        'chart--spacing': true,
+        'chart--margin': true,
+        'chart--marginLeft': true,
+        'chart--marginBottom': true,
+        'chart--marginTop': true,
+        'chart--marginRight': true,
+        'data': true
+    }
 ;
 
 require('colors');
@@ -136,6 +145,10 @@ function process(data) {
 
         if (entry.name.indexOf('series') !== 0) {
            // return;
+        }
+
+        if (ignores[entry.name]) {
+            return false;
         }
 
         // if (path.length === 1) {
