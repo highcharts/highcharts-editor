@@ -60,6 +60,10 @@ function removeType(str) {
 }
 
 function sortAPI(api) {
+    api.sort(function (a, b) {
+        return a.name.localeCompare(b.name);
+    });
+
     api.forEach(function (entry) {
         var st = extractType(entry.name);
         entry.name = removeType(entry.name);
