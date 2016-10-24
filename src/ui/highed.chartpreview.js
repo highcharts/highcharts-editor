@@ -72,7 +72,7 @@ highed.ChartPreview = function (parent, attributes) {
             '.highcharts-xaxis .highcharts-axis-title': { tab: 'Axes', id: 'xAxis-title--text'},
             '.highcharts-yaxis .highcharts-axis-title': { tab: 'Titles', id: 'yAxis-title--text'},
             'rect.highcharts-background': { tab: 'Appearance', id: 'chart--backgroundColor'},
-            '.highcharts-tracker .highcharts-data-labels': { tab: 'Data series', id: 'series'},
+            '.highcharts-series': { tab: 'Data series', id: 'series'},
             'g.highcharts-tooltip': { tab: 'Tooltip', id: 'tooltip--enabled'}
         }
     ;

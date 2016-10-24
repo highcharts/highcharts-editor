@@ -118,6 +118,23 @@
 	height: 60px !important;
 }
 
+.highed-wizstpper-current-bubble {
+	line-height: 25px;
+	position: absolute;
+	left:50%;
+	text-align: center;
+	//border-radius: 50%;
+	transform: translate(-50%, 0);
+	background-color: @accent-color;
+	color: @accent-text;
+	width:25px;
+	height:25px;
+
+    z-index: 2;
+    top:-12px;
+	.highed-transition;
+}
+
 @media (min-width: 852px) {
 	.highed-wizstepper-current {
 		display: none;
@@ -130,7 +147,8 @@
 	}
 
 	.highed-wizstepper-current {
-		line-height: 50px;
+		position: relative;
+		line-height: 60px;
 		height:100%;
 		.highed-nosel;
 	}

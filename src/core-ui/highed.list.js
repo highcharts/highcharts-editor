@@ -76,7 +76,7 @@ highed.List = function (parent, responsive) {
             selectedItem.selected = true;
             node.className = 'item item-selected';
             events.emit('Select', item.id);
-            compactIndicator.innerHTML = item.title;
+            compactIndicator.innerHTML = '<span class="icon fa fa-th-list"></span>' + item.title;
 
             if (highed.isFn(item.click)) {
                 return item.click(e);

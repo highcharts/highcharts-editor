@@ -12,11 +12,13 @@ highed.plugins.import.install('Google Spreadsheets', {
     options: {
         key: {
             type: 'string',
-            label: 'Spreadsheet key'
+            label: 'Spreadsheet key',
+            default: ''
         },
         sheet: {
             type: 'string',
-            label: 'Worksheet'
+            label: 'Worksheet',
+            default: ''
         }
     },
     request: function (url, options, fn) {

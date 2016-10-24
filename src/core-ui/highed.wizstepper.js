@@ -46,6 +46,7 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
         body = highed.dom.cr('div', 'highed-wizstepper-body'),
         indicators = highed.dom.cr('div', 'highed-wizstepper-indicators'),
         currentIndicator = highed.dom.cr('div', 'highed-wizstepper-current'),
+        currentBubble = highed.dom.cr('div', 'highed-wizstpper-current-bubble'),
 
         activeStep = false,
         stepCount = 0,
@@ -123,6 +124,8 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
 
                 activeStep.label.className = 'label-inactive';
                 currentIndicator.innerHTML = step.title;
+                highed.dom.ap(currentIndicator, currentBubble);
+                currentBubble.innerHTML = stepexports.number + '/' + stepCount;
             }
 
             stepexports.bubble.innerHTML = stepexports.number;
@@ -249,7 +252,7 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
 
     ///////////////////////////////////////////////////////////////////////////
     
-    highed.dom.ap(indicatorParent, indicators, currentIndicator);
+    highed.dom.ap(indicatorParent, indicators, highed.dom.ap(currentIndicator, currentBubble));
     highed.dom.ap(bodyParent, body);
 
     ///////////////////////////////////////////////////////////////////////////
