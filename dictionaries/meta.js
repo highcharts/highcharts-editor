@@ -192,12 +192,12 @@ module.exports = {
 					'<p><b>Formatting</b> can be added after a colon inside the variable, for example <code>USD {value:.2f}</code> to display two decimals, ' +
 					'or <code>{value:%Y-%m-%d}</code> for a certain time format.',
 					dataIndex: 0
-				},
-				{
-					id: 'xAxis-labels--rotation', text: 'Axis labels rotation',
-					custom: {step: 5, minValue: -90, maxValue: 90},
-					dataIndex: 0
-				}
+				}//,
+				// {
+				// 	id: 'xAxis-labels--rotation', text: 'Axis labels rotation',
+				// 	custom: {step: 5, minValue: -90, maxValue: 90},
+				// 	dataIndex: 0
+				// }
 			]
 		}, {
 			id: 'yAxis',
