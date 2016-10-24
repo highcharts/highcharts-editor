@@ -196,6 +196,14 @@ highed.ChartPreview = function (parent, attributes) {
             customizedOptions.xAxis = [customizedOptions.xAxis || {}];
         }
 
+        if (templateOptions.yAxis && !highed.isArr(templateOptions.yAxis)) {
+            templateOptions.yAxis = [templateOptions.yAxis];
+        }
+
+        if (templateOptions.xAxis && !highed.isArr(templateOptions.xAxis)) {
+            templateOptions.xAxis = [templateOptions.xAxis];
+        }
+
         // if (templateOptions.series) {
         //     templateOptions.series = templateOptions.series.map(function (s) {
         //         delete s['data'];
@@ -209,6 +217,23 @@ highed.ChartPreview = function (parent, attributes) {
             highed.merge(highed.merge({}, templateOptions), 
             customizedOptions
         ));
+
+        //This needs to be cleaned up
+        if (aggregatedOptions.yAxis && templateOptions.yAxis) {
+            aggregatedOptions.yAxis.forEach(function (obj, i) {
+                if (i < templateOptions.yAxis.length) {
+                    highed.merge(obj, templateOptions.yAxis[i]);
+                }
+            });            
+        }
+
+         if (aggregatedOptions.xAxis && templateOptions.xAxis) {
+            aggregatedOptions.xAxis.forEach(function (obj, i) {
+                if (i < templateOptions.xAxis.length) {
+                    highed.merge(obj, templateOptions.xAxis[i]);
+                }
+            });            
+        }
 
         //Temporary hack to debug series weirdness
         aggregatedOptions.series = customizedOptions.series;
@@ -229,7 +254,7 @@ highed.ChartPreview = function (parent, attributes) {
         gc(function (chart) {
 
             Object.keys(template.config).forEach(function (key) {
-                highed.setAttr(templateOptions, key, template.config[key]);
+                highed.setAttr(templateOptions, key, template.config[key], 0);
                 flatOptions[key] = template.config[key];
             });
 
