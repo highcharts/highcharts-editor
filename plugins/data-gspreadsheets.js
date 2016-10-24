@@ -13,7 +13,7 @@ highed.plugins.import.install('Google Spreadsheets', {
         key: {
             type: 'string',
             label: 'Spreadsheet key',
-            default: ''
+            default: '0AoIaUO7wH1HwdENPcGVEVkxfUDJkMmFBcXMzOVVPdHc'
         },
         sheet: {
             type: 'string',

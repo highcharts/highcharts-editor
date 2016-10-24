@@ -158,10 +158,19 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 return input;
             },
             color: function (val, callback) {
-                var box = highed.dom.cr('div', 'highed-field-colorpicker', '', fieldID); 
+                var box = highed.dom.cr('div', 'highed-field-colorpicker', '', fieldID),
+                    reset = highed.dom.cr('div', 'highed-field-colorpicker-reset fa fa-undo'),
+                    resetTo = val || value
+                ; 
 
                 function update(col, callback) {
-                    box.innerHTML = col;
+                    if (col && col !== 'null' && col !== 'undefined' && typeof col !== 'undefined') {
+                        box.innerHTML = col;                        
+                    } else {
+                        box.innerHTML = 'auto';
+                        col = '#FFFFFF';
+                    }
+
                     highed.dom.style(box, {
                         background: col,
                         color: highed.getContrastedColor(col)
@@ -175,9 +184,14 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     });
                 });
 
+                highed.dom.on(reset, 'click',function () {
+                    update(resetTo);
+                    tryCallback(callback, resetTo);
+                });
+
                 update(val || value);
 
-                return box;
+                return highed.dom.ap(highed.dom.cr('div', 'highed-field-colorpicker-container'), box, reset);
             },
             font: function (val, callback) {
                 return fields.string(val, callback);             
