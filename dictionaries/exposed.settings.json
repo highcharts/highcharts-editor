@@ -41,6 +41,7 @@
     "yAxis--opposite",
     "yAxis--reversed",
     "yAxis-crosshair",
+    "yAxis-labels--format",
 
     "series--type",
     "series--color",
