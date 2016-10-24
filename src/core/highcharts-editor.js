@@ -419,7 +419,7 @@ var highed = {
             a[bk] = b[bk];
          } else if (highed.isArr(b[bk])) {
            
-           a[bk] = [];
+           a[bk] = a[bk] || [];
            
            b[bk].forEach(function (i) {
              if (highed.isNull(i) || highed.isBasic(i)) {

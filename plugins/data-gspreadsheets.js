@@ -24,7 +24,7 @@ highed.plugins.import.install('Google Spreadsheets', {
     request: function (url, options, fn) {
         fn(false, {
             'data--googleSpreadsheetKey': options.key,
-            'data--googleSpreadsheetWorksheet': options.sheet   
+            'data--googleSpreadsheetWorksheet': options.sheet || false   
         });
     }
 });

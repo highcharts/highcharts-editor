@@ -143,7 +143,7 @@ highed.meta.chartTemplates = {
 					'series[0]--type': 'column',
 					'chart--polar': false
 				},
-				tooltipText: 'Requires one data column for X values or categories, subsequently one data column for the series\' Y values. and two columns for the error bar series maximum and minimum.'
+				tooltipText: 'Requires two data columns.'
 			}
 		}
 	},

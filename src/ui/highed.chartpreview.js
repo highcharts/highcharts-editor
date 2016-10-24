@@ -236,7 +236,25 @@ highed.ChartPreview = function (parent, attributes) {
         }
 
         //Temporary hack to debug series weirdness
-        aggregatedOptions.series = customizedOptions.series;
+        //aggregatedOptions.series = customizedOptions.series;\
+        aggregatedOptions.series = [];
+        if (customizedOptions.series) {
+            customizedOptions.series.forEach(function (obj, i) {
+                aggregatedOptions.series.push(highed.merge({}, obj));
+            });
+        }
+        
+        if (templateOptions.series) {
+            aggregatedOptions.series = aggregatedOptions.series || [];
+
+            templateOptions.series.forEach(function (obj, i) {
+                if (i < aggregatedOptions.series.length) {
+                    highed.merge(aggregatedOptions.series[i], obj);
+                } else {
+                    aggregatedOptions.series.push(highed.merge({}, obj));
+                }
+            });
+        }
     }
 
     /* Load a template from the meta
@@ -254,8 +272,21 @@ highed.ChartPreview = function (parent, attributes) {
         gc(function (chart) {
 
             Object.keys(template.config).forEach(function (key) {
-                highed.setAttr(templateOptions, key, template.config[key], 0);
-                flatOptions[key] = template.config[key];
+                var isArr = key.indexOf('['),
+                    aIndex = 0,
+                    p,
+                    full = key
+                ;
+
+                if (isArr >= 0) {
+                    aIndex = parseInt(key.substr(isArr + 1, key.indexOf(']') - isArr - 1), 10);  
+                    key = key.replace('[' + aIndex + ']', '');
+                    p = key.substr(0, key.indexOf('-'));
+                    templateOptions[p] = templateOptions[p] || [];                     
+                }
+
+                highed.setAttr(templateOptions, key, template.config[full], aIndex);
+                flatOptions[key] = template.config[full];
             });
 
             updateAggregated();
