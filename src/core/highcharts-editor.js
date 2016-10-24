@@ -221,7 +221,15 @@ var highed = {
 
         for (var i = 0; i < str.length; i++) {
             if (str[i] === str[i].toUpperCase()) {
-                s += ' ';
+                if  (
+                        (str[i+1] && str[i+1] === str[i+1].toUpperCase()) ||
+                        (str[i-1] && str[i-1] === str[i-1].toUpperCase())
+                    )
+                {
+
+                } else {
+                    s += ' ';                    
+                }
             }
             s += str[i];            
         }
