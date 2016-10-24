@@ -75,7 +75,7 @@ function sortAPI(api) {
 
     api.forEach(function (entry) {
         var st = extractType(entry.name);
-        entry.name = removeType(entry.name);
+        entry.name = removeType(entry.name); 
 
         if (!apiSorted[entry.name]) {            
 
@@ -123,6 +123,8 @@ function process(data) {
     }
 
     sortAPI(data);
+
+    fs.writeFileSync(__dirname + '/../api.js', JSON.stringify(data, undefined, '  '));
 
     data.forEach(function (entry) {
         var parent = entry.parent || removeType(entry.name),
@@ -180,7 +182,7 @@ function process(data) {
                     dataType: (entry.returnType || '').toLowerCase(),
                     description: entry.description,
                     values: entry.values || undefined,
-                    defaults: entry.defaultsr,
+                    defaults: entry.defaults,
                     subType: apiSorted[entry.name].subType                    
                 };
 
@@ -200,28 +202,32 @@ function process(data) {
                     //as nodes in the general tree. 
                 
                 //If it's an object, skip it. It will appear as a leaf.
-                } else if (c.dataType.indexOf('object') < 0 && !entry.isParent) {
+                } else if ( !entry.isParent) {
+                    //current.children[p].entries[c.id] = c;
                     current.children[p].entries[c.id] = c;
+
                 }  else if (entry.isParent) {
                     current.id = entry.name;
                     current.dataType = (entry.returnType || '').toLowerCase();
-                }
+                } else if (c.dataType.indexOf('object') >= 0) {
+                    console.log('found object', entry.name, 'current', current.id);
 
-                // if (c.dataType.indexOf('object') >= 0) {
-                //     c.attributes = [];
-                //     data.forEach(function (child) {
-                //         if (child.parent === c.name) {
-                //             c.attributes.push({
-                //                 dataType: (child.returnType || '').toLowerCase(),
-                //                 name: child.title,
-                //                 title: child.title,
-                //                 tooltipText: child.description,
-                //                 defaults: child.defaults,
-                //                 values: child.values
-                //             });
-                //         }
-                //     });
-                // }
+                    entry.attributes = [];
+
+                    data.forEach(function (child) {
+                        if (child.parent === entry.name) {
+                            console.log('found child to', entry.name, child.title);
+                            entry.attributes.push({
+                                dataType: (child.returnType || '').toLowerCase(),
+                                name: child.title,
+                                title: child.title,
+                                tooltipText: child.description,
+                                defaults: child.defaults,
+                                values: child.values
+                            });
+                        }
+                    });
+                }
 
             } else {
                 if (typeof current.children[p] === 'undefined') {

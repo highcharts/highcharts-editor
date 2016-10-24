@@ -254,7 +254,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                         highed.dom.ap(stable, 
                             highed.InspectorField(
                                 attr.dataType, 
-                                val[attr.name], 
+                                val[attr.name] || attr.default, 
                                 attr, 
                                 function (nval) {
                                     val[attr.name] = nval;
@@ -386,6 +386,15 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
         value = '';
     }
 
+    if (type === 'cssobject') {
+        // properties = properties || {};
+        // properties.attributes = [
+        //     {name: 'x', title: 'x', title: 'X', values: '0', dataType: 'number'}
+
+        // ];
+        // type = 'object';
+    }
+
     //Choose a type
     if (type && type.indexOf('|') >= 0) {
         type = type.indexOf('object') >= 0 ? 'object' : type.split('|')[0];
@@ -404,8 +413,22 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
     }
 
     if (type === 'object') {
+        if ((!properties.attributes || !properties.attributes.length) && properties.defaults) {
+            properties.attributes = [];
+
+            properties.defaults = JSON.parse(properties.defaults);
+            Object.keys(properties.defaults).forEach(function (k) {
+                properties.attributes.push({
+                    id: k,
+                    title: k,
+                    dataType: highed.isNum(properties.defaults[k]) ? 'number' : 'string',
+                    default: properties.defaults[k]
+                });
+            });
+        }
         nohint = true;
     }
+
 
     highed.dom.on([help], 'mouseover', function (e) {
         highed.Tooltip(e.clientX, e.clientY, properties.tooltip || properties.tooltipText);

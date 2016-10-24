@@ -393,6 +393,7 @@ highed.ChartCustomizer = function (parent, attributes) {
                         title: highed.uncamelize(entry.shortName),
                         tooltip: entry.description,
                         values: entry.values,
+                        defaults: entry.defaults,
                         custom: {},
                         attributes: entry.attributes || []
                     },
