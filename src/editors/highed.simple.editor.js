@@ -59,7 +59,12 @@ highed.SimpleEditor = function (parent, attributes) {
                 'title--text',
                 'subtitle--text',
                 'colors',
-                'chart--backgroundColor'
+                'chart--backgroundColor',
+                'yAxis-title--style',
+                'yAxis--type',
+                'yAxis--opposite',
+                'yAxis--reversed',
+                'yAxis-labels--format'
             ],
             chart: {}
         }, attributes),
