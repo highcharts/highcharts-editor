@@ -470,7 +470,7 @@ module.exports = {
 		],
 
 		'Credits': [{
-			text: 'Chart credits (Requires license)',			
+			text: 'Chart credits',			
 			options: [
 				{
 					id: 'credits--enabled',
