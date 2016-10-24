@@ -54,14 +54,14 @@ highed.plugins.import.install('Difi', {
                         header.push(key);
                     }
 
-                    rdata.push(col);
+                    rdata.push(parseInt(col) || col);
                     
                 });
                 csv.push(rdata.join(','));
             });
         }
 
-        fn(false, ['row,' + header.join(',')].concat(csv).join('\n'));
+        fn(false, [header.join(',')].concat(csv).join('\n'));
     }
 }
 );

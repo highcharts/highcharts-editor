@@ -51,10 +51,10 @@ highed.plugins.import.install('Socrata',  {
                     rdata.push(col);
                     
                 });
-                csv.push(i + ',' + rdata.join(','));
+                csv.push(rdata.join(','));
             });
         }
 
-        fn(false, ['row,' + header.join(',')].concat(csv).join('\n'));
+        fn(false, [header.join(',')].concat(csv).join('\n'));
     }
 });
