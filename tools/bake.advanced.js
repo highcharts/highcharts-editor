@@ -33,10 +33,10 @@ var apiDumpURL = 'http://api.highcharts.com/highcharts/option/dump.json',
     ignores = {
         'chart--spacing': true,
         'chart--margin': true,
-        'chart--marginLeft': true,
-        'chart--marginBottom': true,
-        'chart--marginTop': true,
-        'chart--marginRight': true,
+        // 'chart--marginLeft': true,
+        // 'chart--marginBottom': true,
+        // 'chart--marginTop': true,
+        // 'chart--marginRight': true,
         'data': true
     }
 ;
