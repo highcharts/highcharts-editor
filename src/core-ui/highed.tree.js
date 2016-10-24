@@ -234,7 +234,13 @@ highed.Tree = function (parent) {
                 return;
             }
 
+            if (Object.keys(child.entries).length === 0) {
+                toggle();
+            } else {
+                
+            }
             select();
+
         });
 
         return body;
