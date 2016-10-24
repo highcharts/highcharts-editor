@@ -63,6 +63,7 @@ highed.ChartPreview = function (parent, attributes) {
         preExpandSize = false,
         toggleButton = highed.dom.cr('div', 'highed-icon highed-chart-preview-expand fa fa-external-link-square'),
         expanded = false,
+        constr = 'Chart',
         wysiwyg = {
             'g.highcharts-legend': { tab: 'Legend', id: 'legend--enabled'},
             'text.highcharts-title': { tab: 'Titles', id: 'title--text'},
@@ -140,7 +141,7 @@ highed.ChartPreview = function (parent, attributes) {
         }
 
         try {
-            chart = new Highcharts.Chart(pnode || parent, options);   
+            chart = new Highcharts[constr](pnode || parent, options);   
             //This is super ugly.
            // customizedOptions.series = customizedOptions.series || [];
           //  customizedOptions.series = chart.options.series || [];
@@ -264,6 +265,8 @@ highed.ChartPreview = function (parent, attributes) {
         if (!template || !template.config) {
             return highed.log(1, 'chart preview: templates must be an object {config: {...}}');
         }
+
+        constr = template.constr || 'Chart';
 
         highed.clearObj(templateOptions);
 
@@ -478,7 +481,7 @@ highed.ChartPreview = function (parent, attributes) {
 
                 ' function cl() {',
                     'typeof window["Highcharts"] !== "undefined" && Highcharts.Data ? ',
-                        'new Highcharts.chart("', id, '", ', 
+                        'new Highcharts.' + constr + '("', id, '", ', 
                             JSON.stringify(getEmbeddableJSON()), ')',
                     ' : ',
                     'window.setTimeout(cl, 20);',
@@ -564,6 +567,10 @@ highed.ChartPreview = function (parent, attributes) {
         init();
     }
 
+    function getConstructor() {
+        return constr;
+    }
+
     ///////////////////////////////////////////////////////////////////////////
 
     //Init the initial chart
@@ -577,6 +584,7 @@ highed.ChartPreview = function (parent, attributes) {
     ///////////////////////////////////////////////////////////////////////////
 
     return {
+        getConstructor: getConstructor,
         on: events.on,
         expand: expand,
         collapse: collapse,

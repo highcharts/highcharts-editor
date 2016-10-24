@@ -51,7 +51,7 @@ highed.plugins.export.install('beautify-js', {
             }
 
             this.cm.setValue(([
-                'var chart = new Highcharts.chart(', this.options.node ,', ',
+                'var chart = new Highcharts.' + chart.getConstructor() + '(', this.options.node ,', ',
                 JSON.stringify(json, undefined, '    '),
                 ');'
             ].join('')));
