@@ -123,8 +123,8 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
                 }
 
                 activeStep.label.className = 'label-inactive';
-                currentIndicator.innerHTML = step.title;
-                highed.dom.ap(currentIndicator, currentBubble);
+                currentIndicator.innerHTML = step.title + ' - ' + stepexports.number + '/' + stepCount;
+                //highed.dom.ap(currentIndicator, currentBubble);
                 currentBubble.innerHTML = stepexports.number + '/' + stepCount;
             }
 
@@ -197,8 +197,9 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
      *  @memberof highed.WizardStepper
      */
     function next() {
+        var fsteps = steps.filter(function (t) { return t.visible; });
         if (activeStep && activeStep.number < stepCount) {
-            steps[activeStep.number].activate();
+            fsteps[activeStep.number].activate();
         }
     }
 
@@ -206,8 +207,9 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
      *  @memberof highed.WizardStepper
      */
     function previous() {
+        var fsteps = steps.filter(function (t) { return t.visible; });
         if (activeStep && activeStep.number > 1) {
-            steps[activeStep.number - 2].activate();
+            fsteps[activeStep.number - 2].activate();
         }
     }
 
