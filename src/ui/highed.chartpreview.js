@@ -148,6 +148,7 @@ highed.ChartPreview = function (parent, attributes) {
            // highed.merge(customizedOptions.series, chart.options.series);
             updateAggregated();    
 
+            highed.clearObj(chartOptions);
             highed.merge(chartOptions, chart.options);       
 
             attachWYSIWYG();
