@@ -12,7 +12,7 @@
 
 .highed-chart-container {
 	position: relative;
-	margin-top:5px;
+	margin: 0;
 }
 
 .highed-chart-container-icon {
@@ -30,15 +30,16 @@
 }
 
 @media (max-width: 700px) {
-	.highed-chart-preview-bar {
+	.highed-hsplitter .panel.highed-chart-preview-bar {
 		display:none !important;
 	}
 }
 
 @media (min-width: 700px) {	
-	.highed-chart-preview-bar {
-		padding:4px;
-		background:@bright-background !important;
+	.highed-hsplitter .panel.highed-chart-preview-bar {
+		background:@background-preview;
+		border-left: 1px solid @panel-divider;
+		padding: 10px;
 	}
 }
 
