@@ -210,6 +210,10 @@ highed.Tree = function (parent) {
 
         highed.dom.on(icon, 'click', toggle);
 
+        if (Object.keys(child.entries).length) {
+            highed.dom.on(icon, 'click', select);
+        }
+
         if (child.entries) {
             Object.keys(child.entries).forEach(function (ekey) {
                 var schild = child.entries[ekey];
