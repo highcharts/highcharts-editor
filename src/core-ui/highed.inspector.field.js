@@ -227,13 +227,13 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     }
                 }
 
+                ddown.addItem({title: 'auto', id: undefined});
                 ddown.addItems(properties.values);
 
-                 ddown.selectById(val || value);
+                ddown.selectById(val || value);
                 
                 ddown.on('Change', function (selected) {
                     tryCallback(callback, selected.id());
-                    console.log('options changed');
                 });
 
                 return ddown.container;
