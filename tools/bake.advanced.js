@@ -70,7 +70,7 @@ function removeType(str) {
 
 function sortAPI(api) {
     api.sort(function (a, b) {
-        return a.name.localeCompare(b.name);
+        return a.name.replace(/\-/g, ' ').localeCompare(b.name.replace(/\-/g, ''));
     });
 
     api.forEach(function (entry) {
@@ -186,7 +186,7 @@ function process(data) {
                     subType: apiSorted[entry.name].subType                    
                 };
 
-                if (c.dataType.indexOf('array') === 0 && entry.isParent) {
+                if (c.dataType.indexOf('array') >= 0 && entry.isParent) {
                     //current.children[p] = c;
                     if (current.children[p]) {
                         current.children[p].isInstancedArray = true;
@@ -202,31 +202,31 @@ function process(data) {
                     //as nodes in the general tree. 
                 
                 //If it's an object, skip it. It will appear as a leaf.
-                } else if ( !entry.isParent) {
+                } else if (!entry.isParent) {
                     //current.children[p].entries[c.id] = c;
                     current.children[p].entries[c.id] = c;
 
                 }  else if (entry.isParent) {
-                    current.id = entry.name;
+                    current.id = current.id || entry.name;
                     current.dataType = (entry.returnType || '').toLowerCase();
                 } else if (c.dataType.indexOf('object') >= 0) {
-                    console.log('found object', entry.name, 'current', current.id);
+                    //console.log('found object', entry.name, 'current', current.id);
 
-                    entry.attributes = [];
+                    // entry.attributes = [];
 
-                    data.forEach(function (child) {
-                        if (child.parent === entry.name) {
-                            console.log('found child to', entry.name, child.title);
-                            entry.attributes.push({
-                                dataType: (child.returnType || '').toLowerCase(),
-                                name: child.title,
-                                title: child.title,
-                                tooltipText: child.description,
-                                defaults: child.defaults,
-                                values: child.values
-                            });
-                        }
-                    });
+                    // data.forEach(function (child) {
+                    //     if (child.parent === entry.name) {
+                    //         console.log('found child to', entry.name, child.title);
+                    //         entry.attributes.push({
+                    //             dataType: (child.returnType || '').toLowerCase(),
+                    //             name: child.title,
+                    //             title: child.title,
+                    //             tooltipText: child.description,
+                    //             defaults: child.defaults,
+                    //             values: child.values
+                    //         });
+                    //     }
+                    // });
                 }
 
             } else {

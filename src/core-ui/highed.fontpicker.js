@@ -69,14 +69,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             }
         }
-
-        style = highed.merge({
-            'fontFamily': '"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif',
-            'color': '#333',
-            'fontSize': '18px',
-            'fontWeight': 'normal',
-            'fontStyle': 'normal'
-        }, style);
         
         ///////////////////////////////////////////////////////////////////////
 
@@ -99,20 +91,42 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         ///////////////////////////////////////////////////////////////////////
 
+        /** Set the current options
+         *  @memberof highed.FontPicker
+         *  @param options {object} - the options to set
+         */
+        function set(options) {
+            if (highed.isStr(options)) {
+                try {
+                    options = JSON.parse(options);
+                } catch (e) {
+                    highed.log(0, 'Error in FontPicker::set');
+                    return;
+                }
+            }
+
+            style = highed.merge({
+                'fontFamily': '"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif',
+                'color': '#333',
+                'fontSize': '18px',
+                'fontWeight': 'normal',
+                'fontStyle': 'normal'
+            }, options);
+
+            //Set the current values
+            boldBtn.set(style.fontWeight === 'bold');
+            italicBtn.set(style.fontStyle === 'italic');
+            updateColor(style.color, true);
+            fontFamily.selectById(style.fontFamily);
+            fontSize.selectById(style.fontSize.replace('px', ''));
+        }
+
         //Add fonts to font selector
         fontFamily.addItems(highed.meta.fonts);
         //Add font sizes
         fontSize.addItems([8, 10, 12, 14, 16, 18, 20, 22, 25, 26, 28, 30, 32, 34]);
 
-        //Set the current values
-        boldBtn.set(style.fontWeight === 'bold');
-        italicBtn.set(style.fontStyle === 'italic');
-        updateColor(style.color, true);
-        //highed.dom.val(fontFamily, style.fontFamily);
-        //highed.dom.val(fontSize, style.fontSize.replace('px', ''));
-
-        fontFamily.selectById(style.fontFamily);
-        fontSize.selectById(style.fontSize.replace('px', ''));
+        set(style);
 
         //Listen to font changes
         fontFamily.on('Change', function (selected) {
@@ -159,6 +173,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         ///////////////////////////////////////////////////////////////////////
         
         return {
+            set: set,
             container: container
         };
     };

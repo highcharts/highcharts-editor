@@ -1,3 +1,10 @@
+.highed-field-help {
+	// position: absolute;
+	// top:50%;
+	// left:0px;
+	// transform:translate(0, -50%);
+}
+
 .highed-field-colorpicker {
 	width:100%;
 	border:@input-border;
@@ -8,24 +15,29 @@
 	.highed-box-size;
 }
 
-.highed-field-colorpicker-container {
+.highed-field-container {
 	padding-right:36px;
 	width:100%;
 	position: relative;
 	.highed-box-size;
 }
 
-.highed-field-colorpicker-reset {
+.highed-field-reset {
     height:32px;
     width:32px;
     position: absolute;
-    top:-2px;
+    top:50%;
+    transform:translate(0, -50%);
     right:0px;
     text-align: center;
     line-height: 32px !important;
     cursor: pointer;
     color: @wiz-bar-background;
     .highed-transition;
+}
+
+.highed-field-reset:hover {
+	color: @accent-color;
 }
 
 .highed-field-colorpicker-reset:hover {

@@ -146,7 +146,7 @@ highed.HSplitter = function (parent, attributes) {
         ps = highed.dom.size(left);
         if (ps.w === properties.leftMax) {
             highed.dom.style(right, {
-                width: s.w - properties.leftMax + 'px'
+                width: s.w - properties.leftMax - 1 + 'px'
             });
         }
 

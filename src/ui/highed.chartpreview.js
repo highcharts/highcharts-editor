@@ -257,6 +257,14 @@ highed.ChartPreview = function (parent, attributes) {
                 }
             });
         }
+
+        if (aggregatedOptions.yAxis && !highed.isArr(aggregatedOptions.yAxis)) {
+            aggregatedOptions.yAxis = [aggregatedOptions.yAxis];
+        }
+
+        if (aggregatedOptions.xAxis && !highed.isArr(aggregatedOptions.xAxis)) {
+            aggregatedOptions.xAxis = [aggregatedOptions.xAxis];
+        }
     }
 
     /* Load a template from the meta
