@@ -130,7 +130,13 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 return slider.container;
             },
             boolean: function (val, callback) {
-                var input = highed.dom.cr('input', '', '', fieldID);             
+                var input = highed.dom.cr('input', '', '', fieldID),
+                    reset = createReset(properties.defaults || val || value, function (v) {                        
+                        input.checked = val = highed.toBool(v);
+                        tryCallback(callback, v);
+                    })
+                ;
+
                 input.type = 'checkbox';
 
                 input.checked = highed.toBool(val || value);
@@ -139,7 +145,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     tryCallback(callback, input.checked);
                 });
 
-                return input;
+                return highed.dom.ap(highed.dom.cr('div', 'highed-field-container'), reset, input);
             },
             color: function (val, callback) {
                 var box = highed.dom.cr('div', 'highed-field-colorpicker', '', fieldID),
@@ -179,19 +185,35 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
 
                 return highed.dom.ap(highed.dom.cr('div', 'highed-field-container'), box, reset);
             },
-            font: function (val, callback) {
-                return fields.string(val, callback);             
-
+            font: function (val, callback) {                
+                 return  fields.string(val, callback)                    
             },
             configset: function (val, callback) {
                 return fields.string(val, callback);              
             },
             cssobject: function (val, callback) {
-                var picker = highed.FontPicker(callback || fn, val || value);
-                return picker.container;
+                var picker = highed.FontPicker(callback || fn, val || value),
+                    reset = createReset(properties.defaults || val || value, function (v) {                        
+                        val = v;
+                        picker.set(val);
+                        tryCallback(callback, v);
+                    })
+                ;
+
+                return highed.dom.ap(
+                    highed.dom.cr('div', 'highed-field-container'), 
+                    reset,
+                    picker.container
+                );     
             },
             options: function (val, callback) {
-                var ddown = highed.DropDown();
+                var ddown = highed.DropDown(),
+                    reset = createReset(properties.defaults || val || value, function (v) {                        
+                        val = v;
+                        ddown.selectById(val);
+                        tryCallback(callback, parseFloat(v));
+                    })
+                ;
 
                 if (highed.isStr(properties.values)) {
                     try {
@@ -201,7 +223,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     }
                 }
 
-                ddown.addItem({title: 'auto', id: undefined});
+               // ddown.addItem({title: 'auto', id: undefined});
                 ddown.addItems(properties.values);
 
                 ddown.selectById(val || value);
@@ -210,7 +232,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     tryCallback(callback, selected.id());
                 });
 
-                return ddown.container;
+                return highed.dom.ap(highed.dom.cr('div', 'highed-field-container'), ddown.container, reset);
             },
             object: function (val, callback) {
                 //Create a sub-table of options
