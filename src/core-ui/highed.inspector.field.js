@@ -366,7 +366,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 return container;
             }
         },
-        help = highed.dom.cr('span', 'highed-icon fa fa-question-circle'),
+        help = highed.dom.cr('span', 'highed-icon highed-field-help fa fa-question-circle'),
         helpTD = highed.dom.cr('td'),
         widgetTD = highed.dom.cr('td', 'highed-field-table-widget-column'),
         titleCol = highed.dom.cr('td'),
