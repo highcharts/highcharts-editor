@@ -59,27 +59,26 @@
 
 .highed-done-button {
 
-    padding:5px;
+    padding: 5px 7px;
     border:none;
-    background:@background-ok;
+    background: lighten(@background-toolbar, 24);
     color:@color-ok;
-    font-size:14px;
-  
+    font-size: 12px;
+    font-weight: bold;
     //border-radius:50%;
     border-bottom-right-radius: 5px;
     border-bottom-left-radius: 5px;
 
     margin-right:5px;
     height:100%;
-
+    cursor: pointer;
     outline:none;
     .highed-transition;
     .highed-box-size;
 }
 
 .highed-done-button:hover {
-    background: darken(@background-ok, 10);
-    color: darken(@color-ok, 10);
+    background: lighten(@background-toolbar, 18);
 }
 
 .highed-stretch {
@@ -92,19 +91,36 @@
   text-align: center;
   background: @background-ok;
   color: @color-ok;
-  border-radius: 10px;
-  padding:10px;
+  border-radius: 3px;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
   .highed-transition;
   .highed-nosel;
 }
 
 .highed-done-pane {
-  padding:10px;
+  padding: 0 20px;
+  position: relative;
+}
+
+.highed-step-body.highed-done-pane .highed-ok-button {
+    font-size: 15px;
+    padding: 10px;
+}
+
+.highed-step-body.highed-done-pane .highed-ok-button:before {
+    content: "\f00c";
+    font-family: fontAwesome;
+    font-size: 17px;
+    margin-right: 5px;
 }
 
 .highed-ok-button:hover {
-  background: @wiz-bar-background;
-  color: @wiz-bar-color;
+  background: darken(@background-ok, 6);
 }
 
 @import "editor.style.less";
