@@ -179,12 +179,14 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
 
                 highed.dom.on(box, 'click', function (e) {
                     highed.pickColor(e.clientX, e.clientY, val || value, function (col) {
+                        val = col;
                         update(col);
                         tryCallback(callback, col);
                     });
                 });
 
                 highed.dom.on(reset, 'click',function () {
+                    val = resetTo;
                     update(resetTo);
                     tryCallback(callback, resetTo);
                 });
@@ -416,13 +418,17 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
         if ((!properties.attributes || !properties.attributes.length) && properties.defaults) {
             properties.attributes = [];
 
+            //There's no attributes but it's an object.
+            //Check if there are default values we can use 
+            //to figure out the structure.
             properties.defaults = JSON.parse(properties.defaults);
             Object.keys(properties.defaults).forEach(function (k) {
                 properties.attributes.push({
                     id: k,
                     title: k,
                     dataType: highed.isNum(properties.defaults[k]) ? 'number' : 'string',
-                    default: properties.defaults[k]
+                    default: properties.defaults[k],
+                    tooltip: ''
                 });
             });
         }
