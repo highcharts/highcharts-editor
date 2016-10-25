@@ -367,7 +367,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
             }
         },
         help = highed.dom.cr('span', 'highed-icon highed-field-help fa fa-question-circle'),
-        helpTD = highed.dom.cr('td'),
+        helpTD = highed.dom.cr('td', 'highed-customizer-table-help'),
         widgetTD = highed.dom.cr('td', 'highed-field-table-widget-column'),
         titleCol = highed.dom.cr('td'),
         typeIndicator = highed.dom.cr('span', 'highed-customize-type')
