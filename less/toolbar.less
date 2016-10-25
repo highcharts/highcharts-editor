@@ -1,8 +1,8 @@
 .highed-toolbar {
+	position: relative;
 	height: 40px;
 	width: 100%;
 	background-color: @accent-color;
-	position: relative;
 	line-height: 100%;
 	font-family: @font-secondary;
 	.highed-box-size;
@@ -16,11 +16,15 @@
 }
 
 .highed-toolbar .left {
-	float: left;
+	//float: left;
+	position: absolute;
+	left:0px;
 }
 
 .highed-toolbar .right {
-	float: right;
+	//float: right;
+	position: absolute;
+	right:0px;
 }
 
 .highed-toolbar .icon {
