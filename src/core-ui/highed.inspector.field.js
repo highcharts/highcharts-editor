@@ -240,22 +240,30 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     wasUndefined = highed.isNull(val || value)
                 ;
 
-                val = val || {};
+                val = val || value || {};
+
+                if (highed.isStr(val)) {
+                    try {
+                        val = JSON.parse(val);
+                    } catch (e) {
+
+                    }
+                }
 
                 if (properties && highed.isArr(properties.attributes)) {
                     properties.attributes.forEach(function (attr) {
 
-                        val[attr.name] = val[attr.name] || attr.defaults || (attr.dataType.indexOf('object') >= 0 ? {} : '');
+                        val[attr.name || attr.id] = val[attr.name || attr.id] || attr.defaults || (attr.dataType.indexOf('object') >= 0 ? {} : '');
 
                         attr.title = highed.uncamelize(attr.title);
 
                         highed.dom.ap(stable, 
                             highed.InspectorField(
                                 attr.dataType, 
-                                val[attr.name] || attr.default, 
+                                val[attr.name || attr.id] || attr.defaults, 
                                 attr, 
                                 function (nval) {
-                                    val[attr.name] = nval;
+                                    val[attr.name || attr.id] = nval;
                                     tryCallback(callback, val);
                                 }
                             )
@@ -423,7 +431,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     id: k,
                     title: k,
                     dataType: highed.isNum(properties.defaults[k]) ? 'number' : 'string',
-                    default: properties.defaults[k],
+                    defaults: properties.defaults[k],
                     tooltip: ''
                 });
             });

@@ -270,6 +270,7 @@ highed.ChartCustomizer = function (parent, attributes) {
                         tooltip: group.tooltipText,
                         values: group.values,
                         custom: group.custom,
+                        defaults: group.defaults,
                         attributes: group.attributes || []   
                     },
                     function (newValue) {        
