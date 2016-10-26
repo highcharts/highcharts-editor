@@ -33,7 +33,7 @@ highed.DefaultContextMenu = function (chartPreview) {
         cmenu = highed.ContextMenu([
             {
                 title: highed.getLocalizedStr('previewChart'),
-                icon: 'area-chart',
+                icon: 'bar-chart',
                 click: function () {
                     chartPreview.expand();
                 }

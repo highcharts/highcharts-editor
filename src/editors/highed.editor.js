@@ -423,19 +423,26 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         chartCustomizer.init(chartPreview.options.customized, chartPreview.options.chart);
 
-        if (highed.onPhone()) {
-            chartContainer.className = 'highed-chart-container-icon';
-            highed.dom.ap(mainToolbar.right, chartIcon);
+        // if (highed.onPhone()) {
+        //     chartContainer.className = 'highed-chart-container-icon';
+        //     highed.dom.ap(mainToolbar.right, chartIcon);
 
-            highed.dom.on(chartIcon, 'click', function (e) {
+        //     highed.dom.on(chartIcon, 'click', function (e) {
+        //         chartPreview.expand();
+        //         e.cancelBubble = true;
+        //         e.preventDefault();
+        //         e.stopPropagation();
+        //         e.stopImmediatePropagation();
+        //         return false;
+        //     });
+        // }
+
+        mainToolbar.addIcon({
+            css: 'fa-bar-chart',
+            click: function () {
                 chartPreview.expand();
-                e.cancelBubble = true;
-                e.preventDefault();
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-                return false;
-            });
-        }
+            }
+        });
 
         mainToolbar.addIcon({
             css: 'fa-bars',

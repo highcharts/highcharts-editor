@@ -129,6 +129,10 @@ function process(data) {
 
     fs.writeFileSync(__dirname + '/../api.js', JSON.stringify(data, undefined, '  '));
 
+    data.sort(function (a, b) {
+        return a.name.localeCompare(b.name);
+    });
+
     data.forEach(function (entry) {
         var parent = entry.parent || removeType(entry.name),
             current = tree,
