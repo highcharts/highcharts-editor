@@ -194,7 +194,6 @@ function process(data) {
                 };
 
                 if (c.dataType.indexOf('array') >= 0 && entry.isParent) {
-                    console.log('found array parent', p);
                     //current.children[p] = c;
                     if (current.children[p]) {
                         current.children[p].isInstancedArray = true;
