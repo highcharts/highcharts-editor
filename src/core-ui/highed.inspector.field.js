@@ -223,7 +223,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     }
                 }
 
-                ddown.addItem({title: 'auto', id: properties.defaults});
+                ddown.addItem({title: 'auto', id: properties.defaults} || val || value);
                 ddown.addItems(properties.values);
 
                 ddown.selectById(val || value);
@@ -398,7 +398,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
         //     {name: 'x', title: 'x', title: 'X', values: '0', dataType: 'number'}
 
         // ];
-        // type = 'object';
+         type = 'object';
     }
 
     //Choose a type
@@ -425,16 +425,44 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
             //There's no attributes but it's an object.
             //Check if there are default values we can use 
             //to figure out the structure.
-            properties.defaults = JSON.parse(properties.defaults);
-            Object.keys(properties.defaults).forEach(function (k) {
-                properties.attributes.push({
-                    id: k,
-                    title: k,
-                    dataType: highed.isNum(properties.defaults[k]) ? 'number' : 'string',
-                    defaults: properties.defaults[k],
-                    tooltip: ''
-                });
-            });
+            if (properties.defaults) {     
+                try {                    
+                    properties.defaults = JSON.parse(properties.defaults);
+                    Object.keys(properties.defaults).forEach(function (k) {
+                        var tp = 'string',
+                            def = properties.defaults[k],
+                            up = k.toUpperCase(),
+                            vals
+                        ;
+
+                        //This is hackish.
+                        if (highed.isNum(def)) {
+                            tp = 'number';
+                        }
+
+                        if (def.length && def[0] === '#' && (up.indexOf('BACKGROUND') >= 0 || up.indexOf('COLOR') >= 0)) {
+                            tp = 'color';
+                        }
+
+
+
+                        properties.attributes.push({
+                            id: k,
+                            title: k,
+                            dataType: tp,
+                            defaults: properties.defaults[k],
+                            tooltip: '',
+                            values: vals
+                        });
+                    });
+                } catch (e) {
+                    highed.log(3, 'property', properties.id, 'skipped, no way to deduce the object members');
+                    return;
+                }          
+            } 
+        } else {
+            highed.log(3, 'property', fieldID, 'skipped, no way to deduce the object members');
+            return false;
         }
         nohint = true;
     }
