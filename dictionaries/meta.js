@@ -216,7 +216,7 @@ module.exports = {
 				{
 					id: 'yAxis-title--style',
 					dataType: 'font',
-					text: 'Y axis title',
+					text: 'Y axis title style',
 					tooltipText: 'Styling and text for the X axis title',
 					dataIndex: 0
 				},

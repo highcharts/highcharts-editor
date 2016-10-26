@@ -82,8 +82,7 @@ highed.SimpleEditor = function (parent, attributes) {
         preview = highed.ChartPreview(vsplitterRight.top, {defaultChartOptions: properties.chart, expandTo: expandContainer}),
         importer = highed.DataImporter(vsplitterRight.bottom, properties.importer),        
 
-        customizer = highed.ChartCustomizer(hsplitter.left, {
-            noAdvanced: true,
+        customizer = highed.SimpleCustomizer(hsplitter.left, {            
             availableSettings: properties.availableSettings
         }),
 
@@ -107,13 +106,11 @@ highed.SimpleEditor = function (parent, attributes) {
         hsplitter.resize(ps.w, ps.h - 60);
 
         preview.resize();
-        importer.resize();
-        customizer.resize();
-
+        importer.resize();    
     }
 
     function attachToCustomizer() {
-        customizer.init(preview.options.customized);
+        customizer.build(preview.options.customized);
     }
 
     ///////////////////////////////////////////////////////////////////////////
