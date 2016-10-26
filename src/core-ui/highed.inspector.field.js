@@ -277,7 +277,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
             },
             options: function (val, callback) {
                 var ddown = highed.DropDown(),
-                    reset = createReset(properties.defaults || val, function (v) {                        
+                    reset = createReset(properties.defaults, function (v) {                        
                         val = v;
                         ddown.selectById(val);
                         tryCallback(callback, v);
@@ -293,9 +293,9 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 }
 
                 ddown.addItems(properties.values);
-                ddown.addItem({title: 'auto', id: properties.defaults});
+              //  ddown.addItem({title: 'auto', id: properties.defaults || val || value});
 
-                ddown.selectById(val || properties.defaults);
+                ddown.selectById(val || value || properties.defaults);
                 
                 ddown.on('Change', function (selected) {
                     tryCallback(callback, selected.id());
