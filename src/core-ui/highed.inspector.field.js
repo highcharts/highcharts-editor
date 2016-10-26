@@ -547,6 +547,9 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
       deduceObject();
     }
 
+    if (!properties.tooltip && !properties.tooltipText) {
+        nohint = true;
+    }
 
     highed.dom.on([help], 'mouseover', function (e) {
         highed.Tooltip(e.clientX, e.clientY, properties.tooltip || properties.tooltipText);

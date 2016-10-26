@@ -40,7 +40,12 @@ var apiDumpURL = 'http://api.highcharts.com/highcharts/option/dump.json',
         'data': true,
         'data--rows': true,
         'data--columns': true,
-        'data-csv': true
+        'data-csv': true,
+        'responsive': true,
+        'responsive-rules': true,
+        'responsive-rules-chartOptions': true,
+        'responsive-rules-condition': true,
+        'responsive-rules--callback': true
     }
 ;
 
@@ -72,9 +77,9 @@ function removeType(str) {
 }
 
 function sortAPI(api) {
-    api.sort(function (a, b) {
-        return a.name.replace(/\-/g, ' ').localeCompare(b.name.replace(/\-/g, ''));
-    });
+    // api.sort(function (a, b) {
+    //     return a.name.replace(/\-/g, ' ').localeCompare(b.name.replace(/\-/g, ''));
+    // });
 
     api.forEach(function (entry) {
         var st = extractType(entry.name);
@@ -124,14 +129,15 @@ function process(data) {
         console.log('[error]'.red, e);
         return false;
     }
+  
+    data.sort(function (a, b) {
+        return a.name.localeCompare(b.name);
+    });
 
     sortAPI(data);
 
     fs.writeFileSync(__dirname + '/../api.js', JSON.stringify(data, undefined, '  '));
 
-    data.sort(function (a, b) {
-        return a.name.localeCompare(b.name);
-    });
 
     data.forEach(function (entry) {
         var parent = entry.parent || removeType(entry.name),
@@ -174,6 +180,10 @@ function process(data) {
 
         path.forEach(function(p, i) {
             var c;
+
+            if (ignores[p]) {
+                return;
+            }
 
             if (i === path.length - 1) {                  
 
