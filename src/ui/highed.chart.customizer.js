@@ -24,7 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** UI For customizing a chart
- *
+ *  @todo there be dragons here.
  *  @example
  *  var chart = highed.ChartCustomizer(document.body);
  *  console.log(chart.export.html());
@@ -104,7 +104,7 @@ highed.ChartCustomizer = function (parent, attributes) {
      *  @param coptions {object} - the full chart options
      */
     function init(foptions, coptions) {
-        flatOptions = foptions || {};
+        flatOptions = coptions || {};
         chartOptions = coptions || flatOptions;
         list.reselect();
         buildTree();

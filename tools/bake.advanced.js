@@ -37,7 +37,10 @@ var apiDumpURL = 'http://api.highcharts.com/highcharts/option/dump.json',
         // 'chart--marginBottom': true,
         // 'chart--marginTop': true,
         // 'chart--marginRight': true,
-        'data': true
+        'data': true,
+        'data--rows': true,
+        'data--columns': true,
+        'data-csv': true
     }
 ;
 
