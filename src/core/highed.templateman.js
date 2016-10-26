@@ -56,6 +56,12 @@ highed.installTemplate = function(type, def) {
     } 
 };
 
+/** Flush templates
+ */
+highed.flushTemplates = function () {
+  highed.meta.chartTemplates = {};
+};
+
 /** Add a new template type
  *  If the type allready exists, nothing will happen
  *

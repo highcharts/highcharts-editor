@@ -150,7 +150,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
             color: function (val, callback) {
                 var box = highed.dom.cr('div', 'highed-field-colorpicker', '', fieldID),
                     reset = highed.dom.cr('div', 'highed-field-reset fa fa-undo'),
-                    resetTo = val || value
+                    resetTo = properties.defaults//val || value
                 ; 
 
                 function update(col, callback) {
@@ -539,8 +539,6 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
             deduceObject();
         }
     }
-
-
 
     if (type === 'object') {
       deduceObject();

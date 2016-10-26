@@ -511,13 +511,14 @@ var highed = {
             'notice',
             'verbose'
         ],
-        currentLogLevel = 4,
+        currentLogLevel = 0,
         initQueue = [],
         isReady = false,
         includedScripts = {},
         isOnPhone = false,
         options = {
-            codeMirrorTheme: 'neo'
+            codeMirrorTheme: 'neo',
+            helpURL: '#'
         },
         cdnScripts = [
             "https://code.highcharts.com/stock/highstock.js",   

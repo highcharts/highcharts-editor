@@ -108,7 +108,10 @@ highed.DefaultContextMenu = function (chartPreview) {
             '-',
             {
                 title: highed.getLocalizedStr('help'),
-                icon: 'question-circle'
+                icon: 'question-circle',
+                click: function () {
+                    window.open(highed.option('helpURL'));
+                }
             }//,
             // {
             //     title: highed.getLocalizedStr('licenseInfo'),
