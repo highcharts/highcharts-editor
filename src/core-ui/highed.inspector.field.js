@@ -550,13 +550,16 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
         nohint = true;
     }
 
-    highed.dom.on([help], 'mouseover', function (e) {
-        highed.Tooltip(e.clientX, e.clientY, properties.tooltip || properties.tooltipText);
-    });      
+    if (highed.onPhone()) {
+        highed.dom.on(help, 'click', function () {
+            highed.Tooltip(0, 0, properties.tooltip || properties.tooltipText, true);
+        });
 
-    highed.dom.on(help, 'touchstart', function () {
-        highed.Tooltip(0, 0, properties.tooltip || properties.tooltipText, true);
-    });
+    } else {
+        highed.dom.on([help], 'mouseover', function (e) {
+            highed.Tooltip(e.clientX, e.clientY, properties.tooltip || properties.tooltipText);
+        });              
+    }
 
     if (nohint) {
         highed.dom.style(help, {display: 'none'});
