@@ -147,7 +147,7 @@ function update(root) {
 
         if (typeof apiSorted[entry.id] !== 'undefined') {
             aentry = apiSorted[entry.id];
-            entry.dataType = (aentry.returnType || '').toLowerCase();
+            entry.dataType = (entry.dataType || aentry.returnType || '').toLowerCase();
             entry.context = aentry.context || 'General';
             entry.tooltipText = entry.tooltipText || aentry.description;
             entry.defaults = aentry.defaults || entry.defaults;

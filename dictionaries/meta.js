@@ -80,6 +80,7 @@ module.exports = {
 				{
 					id: 'chart--style',
 					text: 'Font family',
+					dataType: 'font',
 					tooltipText: 'The font to use throughout the chart'
 				}
 			]
@@ -89,12 +90,14 @@ module.exports = {
 				{
 					id: 'title--style',
 					text: 'Main title style',
+					dataType: 'font',
 					tooltipText: 'Styling for the main chart title'
 				},
 				//{id: 'title--text'},
 				{
 					id: 'subtitle--style',
 					text: 'Subtitle style',
+					dataType: 'font',
 					tooltipText: 'Styling for the chart\'s subtitle, normally displayed with smaller fonts below the main title'
 				}
 
@@ -159,6 +162,7 @@ module.exports = {
 				// },
 				{
 					id: 'xAxis-title--style',
+					dataType: 'font',
 					text: 'X axis title',
 					tooltipText: 'Styling and text for the X axis title',
 					dataIndex: 0
@@ -211,6 +215,7 @@ module.exports = {
 				// },
 				{
 					id: 'yAxis-title--style',
+					dataType: 'font',
 					text: 'Y axis title',
 					tooltipText: 'Styling and text for the X axis title',
 					dataIndex: 0
@@ -355,8 +360,8 @@ module.exports = {
 				text: 'Appearance',
 				
 				options: [
-					{id: 'legend--itemStyle', text: 'Text style'},
-					{id: 'legend--itemHiddenStyle', text: 'Text style hidden'},
+					{id: 'legend--itemStyle', text: 'Text style', dataType: 'font'},
+					{id: 'legend--itemHiddenStyle', text: 'Text style hidden', dataType: 'font'},
 					{id: 'legend--backgroundColor', text: 'Background color'},
 					{id: 'legend--borderWidth', text: 'Border width'},
 					{id: 'legend--borderRadius', text: 'Border corner radius'},

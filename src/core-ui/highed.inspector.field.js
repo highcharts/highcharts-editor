@@ -186,7 +186,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 return highed.dom.ap(highed.dom.cr('div', 'highed-field-container'), box, reset);
             },
             font: function (val, callback) {                
-                 return  fields.string(val, callback)                    
+                 return  fields.cssobject(val, callback)                    
             },
             configset: function (val, callback) {
                 return fields.string(val, callback);              
@@ -277,10 +277,10 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
             },
             options: function (val, callback) {
                 var ddown = highed.DropDown(),
-                    reset = createReset(properties.defaults || val || value, function (v) {                        
+                    reset = createReset(properties.defaults || val, function (v) {                        
                         val = v;
                         ddown.selectById(val);
-                        tryCallback(callback, parseFloat(v));
+                        tryCallback(callback, v);
                     })
                 ;
 
@@ -292,10 +292,10 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     }
                 }
 
-                ddown.addItem({title: 'auto', id: properties.defaults} || val || value);
                 ddown.addItems(properties.values);
+                ddown.addItem({title: 'auto', id: properties.defaults});
 
-                ddown.selectById(val || value);
+                ddown.selectById(val || properties.defaults);
                 
                 ddown.on('Change', function (selected) {
                     tryCallback(callback, selected.id());
@@ -507,12 +507,17 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
     }
 
     if (type === 'cssobject') {
+        //So there are more than one version of this thing - one of them
+        //requires a font picker, the other is dynamic.
+        //Figure out which one we're dealing with here.
+  
+
         // properties = properties || {};
         // properties.attributes = [
         //     {name: 'x', title: 'x', title: 'X', values: '0', dataType: 'number'}
 
         // ];
-         //type = 'object';
+         type = 'object';
     }
 
     //Choose a type

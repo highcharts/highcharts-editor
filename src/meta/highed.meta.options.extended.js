@@ -128,8 +128,8 @@ highed.meta.optionsExtended = {
           {
             "id": "chart--style",
             "text": "Font family",
+            "dataType": "font",
             "tooltipText": "The font to use throughout the chart",
-            "dataType": "cssobject",
             "context": "General",
             "defaults": "{\"fontFamily\":\"\\\"Lucida Grande\\\", \\\"Lucida Sans Unicode\\\", Verdana, Arial, Helvetica, sans-serif\",\"fontSize\":\"12px\"}",
             "parent": "chart"
@@ -142,8 +142,8 @@ highed.meta.optionsExtended = {
           {
             "id": "title--style",
             "text": "Main title style",
+            "dataType": "font",
             "tooltipText": "Styling for the main chart title",
-            "dataType": "cssobject",
             "context": "General",
             "defaults": "{ \"color\": \"#333333\", \"fontSize\": \"18px\" }",
             "parent": "title"
@@ -151,8 +151,8 @@ highed.meta.optionsExtended = {
           {
             "id": "subtitle--style",
             "text": "Subtitle style",
+            "dataType": "font",
             "tooltipText": "Styling for the chart's subtitle, normally displayed with smaller fonts below the main title",
-            "dataType": "cssobject",
             "context": "General",
             "defaults": "{ \"color\": \"#666666\" }",
             "parent": "subtitle"
@@ -280,10 +280,10 @@ highed.meta.optionsExtended = {
         "options": [
           {
             "id": "xAxis-title--style",
+            "dataType": "font",
             "text": "X axis title",
             "tooltipText": "Styling and text for the X axis title",
             "dataIndex": 0,
-            "dataType": "cssobject",
             "context": "General",
             "defaults": "{ \"color\": \"#666666\" }",
             "parent": "xAxis-title"
@@ -346,10 +346,10 @@ highed.meta.optionsExtended = {
         "options": [
           {
             "id": "yAxis-title--style",
+            "dataType": "font",
             "text": "Y axis title",
             "tooltipText": "Styling and text for the X axis title",
             "dataIndex": 0,
-            "dataType": "cssobject",
             "context": "General",
             "defaults": "{ \"color\": \"#666666\" }",
             "parent": "yAxis-title"
@@ -416,31 +416,31 @@ highed.meta.optionsExtended = {
             "tooltipText": "The type of series",
             "dataType": "string",
             "context": "General",
-            "parent": "series<arearange>",
+            "parent": "series<heatmap>",
             "values": "[null, \"line\", \"spline\", \"column\", \"area\", \"areaspline\", \"pie\", \"arearange\", \"areasplinerange\", \"boxplot\", \"bubble\", \"columnrange\", \"errorbar\", \"funnel\", \"gauge\", \"scatter\", \"waterfall\"]",
             "subType": [
-              "arearange",
-              "pie",
-              "solidgauge",
-              "column",
-              "boxplot",
-              "line",
-              "area",
-              "areaspline",
-              "polygon",
-              "columnrange",
-              "gauge",
-              "funnel",
-              "bar",
-              "areasplinerange",
-              "scatter",
-              "bubble",
-              "waterfall",
-              "spline",
               "heatmap",
-              "pyramid",
+              "funnel",
+              "pie",
+              "column",
+              "columnrange",
+              "line",
               "treemap",
-              "errorbar"
+              "polygon",
+              "gauge",
+              "areaspline",
+              "arearange",
+              "pyramid",
+              "boxplot",
+              "spline",
+              "bar",
+              "scatter",
+              "waterfall",
+              "errorbar",
+              "bubble",
+              "area",
+              "areasplinerange",
+              "solidgauge"
             ],
             "subTypeDefaults": {}
           },
@@ -451,30 +451,32 @@ highed.meta.optionsExtended = {
             "dataType": "color",
             "context": "General",
             "defaults": "null",
-            "parent": "series<treemap>",
+            "parent": "series<area>",
+            "values": "",
             "subType": [
-              "treemap",
-              "column",
-              "spline",
-              "scatter",
               "area",
-              "columnrange",
-              "line",
-              "bubble",
-              "gauge",
-              "errorbar",
-              "bar",
               "arearange",
+              "line",
+              "treemap",
               "boxplot",
+              "gauge",
               "waterfall",
-              "heatmap",
+              "bar",
+              "areaspline",
               "polygon",
+              "column",
+              "heatmap",
+              "columnrange",
+              "scatter",
+              "spline",
               "areasplinerange",
-              "areaspline"
+              "bubble",
+              "errorbar"
             ],
             "subTypeDefaults": {
-              "errorbar": "#000000",
-              "heatmap": "null"
+              "treemap": "null",
+              "heatmap": "null",
+              "errorbar": "#000000"
             }
           },
           {
@@ -484,37 +486,37 @@ highed.meta.optionsExtended = {
             "dataType": "color",
             "context": "General",
             "defaults": "null",
-            "parent": "series<bar>",
+            "parent": "series<spline>",
             "subType": [
-              "bar",
-              "line",
+              "spline",
+              "column",
+              "areasplinerange",
+              "area",
               "arearange",
               "errorbar",
-              "scatter",
-              "polygon",
-              "areasplinerange",
-              "spline",
-              "area",
-              "column",
-              "boxplot",
+              "bar",
               "bubble",
+              "areaspline",
+              "polygon",
+              "boxplot",
               "gauge",
-              "areaspline"
+              "line",
+              "scatter"
             ],
             "subTypeDefaults": {
-              "line": "null",
+              "column": "null",
+              "areasplinerange": "null",
+              "area": "null",
               "arearange": "null",
               "errorbar": "null",
-              "scatter": "null",
-              "polygon": "null",
-              "areasplinerange": "null",
-              "spline": "null",
-              "area": "null",
-              "column": "null",
-              "boxplot": "null",
+              "bar": "null",
               "bubble": "null",
+              "areaspline": "null",
+              "polygon": "null",
+              "boxplot": "null",
               "gauge": "null",
-              "areaspline": "null"
+              "line": "null",
+              "scatter": "null"
             }
           },
           {
@@ -524,25 +526,25 @@ highed.meta.optionsExtended = {
             "dataType": "boolean",
             "context": "General",
             "defaults": "false",
-            "parent": "series<treemap>",
+            "parent": "series<boxplot>",
             "subType": [
-              "treemap",
-              "errorbar",
-              "bar",
-              "columnrange",
-              "waterfall",
-              "heatmap",
               "boxplot",
-              "column"
+              "heatmap",
+              "waterfall",
+              "errorbar",
+              "column",
+              "treemap",
+              "columnrange",
+              "bar"
             ],
             "subTypeDefaults": {
-              "errorbar": "false",
-              "bar": "false",
-              "columnrange": "false",
-              "waterfall": "false",
               "heatmap": "false",
-              "boxplot": "false",
-              "column": "false"
+              "waterfall": "false",
+              "errorbar": "false",
+              "column": "false",
+              "treemap": "false",
+              "columnrange": "false",
+              "bar": "false"
             }
           },
           {
@@ -552,30 +554,30 @@ highed.meta.optionsExtended = {
             "context": "General",
             "tooltipText": "A name for the dash style to use for the graph. Applies only to series type having a graph, like <code>line</code>, <code>spline</code>, <code>area</code> and <code>scatter</code> in  case it has a <code>lineWidth</code>. The value for the <code>dashStyle</code> include:\r\n\t\t    <ul>\r\n\t\t    \t<li>Solid</li>\r\n\t\t    \t<li>ShortDash</li>\r\n\t\t    \t<li>ShortDot</li>\r\n\t\t    \t<li>ShortDashDot</li>\r\n\t\t    \t<li>ShortDashDotDot</li>\r\n\t\t    \t<li>Dot</li>\r\n\t\t    \t<li>Dash</li>\r\n\t\t    \t<li>LongDash</li>\r\n\t\t    \t<li>DashDot</li>\r\n\t\t    \t<li>LongDashDot</li>\r\n\t\t    \t<li>LongDashDotDot</li>\r\n\t\t    </ul>",
             "defaults": "Solid",
-            "parent": "series<polygon>",
+            "parent": "series<scatter>",
             "values": "[\"Solid\", \"ShortDash\", \"ShortDot\", \"ShortDashDot\", \"ShortDashDotDot\", \"Dot\", \"Dash\" ,\"LongDash\", \"DashDot\", \"LongDashDot\", \"LongDashDotDot\"]",
             "subType": [
-              "polygon",
-              "line",
-              "area",
-              "arearange",
-              "areaspline",
+              "scatter",
               "waterfall",
               "areasplinerange",
-              "scatter",
+              "area",
+              "polygon",
+              "line",
+              "areaspline",
               "bubble",
-              "spline"
+              "spline",
+              "arearange"
             ],
             "subTypeDefaults": {
-              "line": "Solid",
-              "area": "Solid",
-              "arearange": "Solid",
-              "areaspline": "Solid",
               "waterfall": "Dot",
               "areasplinerange": "Solid",
-              "scatter": "Solid",
+              "area": "Solid",
+              "polygon": "Solid",
+              "line": "Solid",
+              "areaspline": "Solid",
               "bubble": "Solid",
-              "spline": "Solid"
+              "spline": "Solid",
+              "arearange": "Solid"
             }
           },
           {
@@ -585,23 +587,23 @@ highed.meta.optionsExtended = {
             "context": "General",
             "tooltipText": "Enable or disable the point marker. If <code>null</code>, the markers are hidden when the data is dense, and shown for more widespread data points.",
             "defaults": "null",
-            "parent": "series<line>-marker",
+            "parent": "series<areaspline>-marker",
             "subType": [
-              "line",
-              "area",
-              "bubble",
-              "scatter",
               "areaspline",
+              "bubble",
+              "line",
               "polygon",
-              "spline"
+              "spline",
+              "area",
+              "scatter"
             ],
             "subTypeDefaults": {
-              "area": "null",
               "bubble": "null",
-              "scatter": "null",
-              "areaspline": "null",
+              "line": "null",
               "polygon": "null",
-              "spline": "null"
+              "spline": "null",
+              "area": "null",
+              "scatter": "null"
             }
           },
           {
@@ -610,16 +612,16 @@ highed.meta.optionsExtended = {
             "dataType": "string",
             "context": "General",
             "tooltipText": "<p>A predefined shape or symbol for the marker. When null, the symbol is pulled from options.symbols. Other possible values are \"circle\", \"square\", \"diamond\", \"triangle\" and \"triangle-down\".</p>\r\n\r\n<p>Additionally, the URL to a graphic can be given on this form:  \"url(graphic.png)\". Note that for the image to be applied to exported charts, its URL needs to be accessible by the export server.</p>\r\n\r\n<p>Custom callbacks for symbol path generation can also be added to <code>Highcharts.SVGRenderer.prototype.symbols</code>. The callback is then used by its method name, as shown in the demo.</p>",
-            "parent": "series<bubble>-marker",
+            "parent": "series<polygon>-marker",
             "values": "[null, \"circle\", \"square\", \"diamond\", \"triangle\", \"triangle-down\"]",
             "subType": [
-              "bubble",
-              "areaspline",
               "polygon",
-              "scatter",
-              "area",
               "line",
-              "spline"
+              "area",
+              "bubble",
+              "spline",
+              "areaspline",
+              "scatter"
             ],
             "subTypeDefaults": {}
           }
@@ -735,7 +737,7 @@ highed.meta.optionsExtended = {
           {
             "id": "legend--itemStyle",
             "text": "Text style",
-            "dataType": "cssobject",
+            "dataType": "font",
             "context": "General",
             "tooltipText": "CSS styles for each legend item. Only a subset of CSS is supported, notably those options related to text.",
             "defaults": "{ \"color\": \"#333333\", \"cursor\": \"pointer\", \"fontSize\": \"12px\", \"fontWeight\": \"bold\" }",
@@ -744,7 +746,7 @@ highed.meta.optionsExtended = {
           {
             "id": "legend--itemHiddenStyle",
             "text": "Text style hidden",
-            "dataType": "cssobject",
+            "dataType": "font",
             "context": "General",
             "tooltipText": "CSS styles for each legend item when the corresponding series or point is hidden. Only a subset of CSS is supported, notably those options related to text. Properties are inherited from <code>style</code> unless overridden here.",
             "defaults": "{ \"color\": \"#cccccc\" }",

@@ -263,7 +263,7 @@ highed.ChartCustomizer = function (parent, attributes) {
             //highed.dom.ap(sub, highed.dom.cr('span', '', referenced[0].returnType));
             highed.dom.ap(table, 
                 highed.InspectorField(
-                    group.values ? 'options' : group.dataType, 
+                    group.values ? 'options' : (group.dataType), 
                     (highed.getAttr(options, group.id, detailIndex) || (filter && group.subTypeDefaults[filter] ? group.subTypeDefaults[filter] : group.defaults)), 
                     {
                         title: group.text,

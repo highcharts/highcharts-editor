@@ -62,3 +62,4 @@
 
 ## 0.0.2
 
+  * Sample data for each template

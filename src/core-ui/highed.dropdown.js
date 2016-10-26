@@ -124,8 +124,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
          *    > select {function} - function to call when the item is selected
          */
         function addItem(item) {
+            if (items.filter(function (b) {
+                return b.id() === item.id;
+            }).length > 0) {
+                return false;
+            }
+
             var node = highed.dom.cr('div', 'highed-dropdown-item'),
-                id = highed.uuid(),
+                id =  highed.uuid(),
                 index = items.length,
                 itemInstance = {
                     //The node
@@ -182,7 +188,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 id = item;
             } else {
                 node.innerHTML = item.title || '';
-                id = item.id || id;
+                id = item.id;// || id;
 
                 if (item.selected) {
                     itemInstance.select();
