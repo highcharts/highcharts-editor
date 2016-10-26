@@ -191,6 +191,71 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
             configset: function (val, callback) {
                 return fields.string(val, callback);              
             },
+            json: function (val, callback) {
+                var textArea = highed.dom.cr('textarea', 'highed-field-input', '', fieldID),
+                    errorBar = highed.dom.cr('div', 'highed-field-error'),
+                    editor = false,
+                    updateIt = function (v) {
+
+                        if (editor) {
+                            editor.setValue(JSON.stringify(v, undefined, '\t'));
+                        } else {
+                            textArea.value = JSON.stringify(v, undefined, '\t');
+                        }
+                    },
+                    reset = createReset(properties.defaults || val || value, function (v) {                        
+                        val = v;
+                        updateIt(v);
+                        tryCallback(callback, v);
+                    }),
+                    parent = highed.dom.ap(highed.dom.cr('div', 'highed-field-container'), textArea, reset, errorBar)
+                ;
+
+                function resizePoll() {
+                    if (document.body && editor) {
+                        if (document.getElementById(fieldID)) {
+                            editor.refresh();
+                        } else {
+                            setTimeout(resizePoll, 10);
+                        }
+                    }
+                }
+
+                function callHome(v) {
+                    try {
+                        v = JSON.parse(v);
+                        tryCallback(callback, v);
+                        errorBar.innerHTML = '';
+                        highed.dom.style(errorBar, {display: 'none', opacity: 0});
+                    } catch (e) {
+                        //highed.snackBar('There\'s an error in your JSON: ' + e);
+                        errorBar.innerHTML = 'Syntax error: ' + e;
+                        highed.dom.style(errorBar, {display: 'block', opacity: 1});
+                    }
+                }
+
+                if (typeof window['CodeMirror'] !== 'undefined') {
+                    editor = CodeMirror.fromTextArea(textArea, {
+                        lineNumbers: true,
+                        mode: 'application/json',
+                        theme: highed.option('codeMirrorTheme')
+                    });
+
+                    editor.on('change', function () {
+                        callHome(editor.getValue());
+                    });
+
+                    resizePoll();
+                } else {
+                    highed.dom.on(textArea, 'change', function () {
+                        callHome(textArea.value);                    
+                    });                    
+                }
+
+                updateIt(val || value || properties.defaults);
+
+                return parent;
+            },
             cssobject: function (val, callback) {
                 var picker = highed.FontPicker(callback || fn, val || value),
                     reset = createReset(properties.defaults || val || value, function (v) {                        
@@ -444,8 +509,6 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                             tp = 'color';
                         }
 
-
-
                         properties.attributes.push({
                             id: k,
                             title: k,
@@ -461,10 +524,10 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 }          
             } 
         } else {
-            highed.log(3, 'property', fieldID, 'skipped, no way to deduce the object members');
-            return false;
+          type = 'json';
+          properties.defaults = properties.defaults || {};
         }
-        nohint = true;
+      //  nohint = true;
     }
 
 

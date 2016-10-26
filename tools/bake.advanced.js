@@ -190,6 +190,7 @@ function process(data) {
                 };
 
                 if (c.dataType.indexOf('array') >= 0 && entry.isParent) {
+                    console.log('found array parent', p);
                     //current.children[p] = c;
                     if (current.children[p]) {
                         current.children[p].isInstancedArray = true;
@@ -201,8 +202,6 @@ function process(data) {
                     // }
                     //c.entries = [];
                     //c.children = {};
-                    //Now we have an interesting problem, because the children appear
-                    //as nodes in the general tree. 
                 
                 //If it's an object, skip it. It will appear as a leaf.
                 } else if (!entry.isParent) {
