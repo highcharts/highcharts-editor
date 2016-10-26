@@ -125,14 +125,12 @@ function process(data) {
     }
   
     data.sort(function (a, b) {
-        return a.name.localeCompare(b.name);
+        return a.name.toUpperCase().localeCompare(b.name.toUpperCase());
     });
 
     sortAPI(data);
 
     fs.writeFileSync(__dirname + '/../api.js', JSON.stringify(data, undefined, '  '));
-
-
 
     data.forEach(function (entry) {
         var parent = entry.parent || removeType(entry.name),
