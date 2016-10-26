@@ -419,13 +419,13 @@ var highed = {
             a[bk] = b[bk];
          } else if (highed.isArr(b[bk])) {
            
-           a[bk] = a[bk] || [];
+           a[bk] = [];
            
            b[bk].forEach(function (i) {
              if (highed.isNull(i) || highed.isBasic(i)) {
                a[bk].push(i);
              } else {
-               a[bk].push(highed.merge({}, i));
+               a[bk].push(highed.merge(highed.isArr(i) ? [] : {}, i));
              }
            });
          } else if (b[bk].tagName && b[bk].appendChild && b[bk].removeChild && b[bk].style) {  
