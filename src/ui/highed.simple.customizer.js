@@ -48,6 +48,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     /** Simple version of the customizer. Whitelisted options
      *  @constructor
+     *  @emits PropertyChange - when a property is modified
      *  @param parent {domnode} - the node to append to
      *  @param attributes {object} - settings
      *    > availableSettings {array} - whitelist of options to include
@@ -73,6 +74,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         ////////////////////////////////////////////////////////////////////////
 
+        /** Build the property setter
+         *  @memberof highed.SimpleCustomizer
+         *  @param options {object} - the current chart options
+         */
         function build(options) {
             table.innerHTML = '';
 
@@ -111,8 +116,35 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             });
         }
 
-        function focus(thing, x, y) {
+        function highlightNode(n) {
+            if (!n) return;
 
+            highed.dom.style(n, {
+                border: '2px solid #33aa33'
+            });
+
+            n.focus();
+            n.scrollIntoView(true);
+
+            window.setTimeout(function () {
+                highed.dom.style(n, {
+                    border: ''
+                });
+            }, 2000);
+        }
+
+        /** Focus a field in the inspector
+         *  @memberof highed.SimpleCustomizer
+         *  @param thing {object} - the thing to focus
+         *    > id {anything} - the id of the field
+         *  @param x {number} - the x position the request came from
+         *  @param y {number} - the y position the request came from
+         */
+        function focus(thing, x, y) {
+            var id = thing.id;
+            if (id.indexOf('-') >= 0) {            
+                highlightNode(table.querySelector('#' + id));
+            }
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -120,7 +152,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         highed.ready(function () {
             highed.dom.ap(parent,
                 highed.dom.ap(container,
-                    highed.dom.cr('div', 'highed-customizer-table-heading', 'Chart Settings'),
+                    highed.dom.cr('div', 'highed-customizer-table-heading', 'Edit Chart'),
                     table
                 )
             );

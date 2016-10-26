@@ -124,6 +124,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
          *    > select {function} - function to call when the item is selected
          */
         function addItem(item) {
+            if (item && item.id) {
+                if (!highed.isBasic(item.id)) {
+                    item.id = '1234';
+                }
+            }
+
             if (items.filter(function (b) {
                 return b.id() === item.id;
             }).length > 0) {

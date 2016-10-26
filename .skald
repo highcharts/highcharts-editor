@@ -40,7 +40,8 @@
             "./src/ui/highed.dataimporter.js",
             "./src/ui/highed.exporter.js",
             "./src/ui/highed.chartpreview.js",
-            "./src/ui/highed.licenseinfo.js"
+            "./src/ui/highed.licenseinfo.js",
+            "./src/ui/highed.simple.customizer.js"
         ],
 
         "Editors": [

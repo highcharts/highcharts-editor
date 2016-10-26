@@ -293,7 +293,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 }
 
                 ddown.addItems(properties.values);
-              //  ddown.addItem({title: 'auto', id: properties.defaults || val || value});
+                ddown.addItem({title: 'auto', id: properties.defaults});
 
                 ddown.selectById(val || value || properties.defaults);
                 
