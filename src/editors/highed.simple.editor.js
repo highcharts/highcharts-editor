@@ -127,6 +127,8 @@ highed.SimpleEditor = function (parent, attributes) {
         customizer.focus(event, x, y);
     });
 
+    preview.on('New', attachToCustomizer);
+
     ///////////////////////////////////////////////////////////////////////////
 
     highed.dom.ap(highed.dom.get(parent), container, expandContainer);

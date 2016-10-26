@@ -565,6 +565,7 @@ highed.ChartPreview = function (parent, attributes) {
         init(aggregatedOptions);
         
         emitChange();
+        events.emit('New');
     }
 
     function exportChart(options) {
