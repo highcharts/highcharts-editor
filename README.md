@@ -24,11 +24,13 @@ It requires no back-end service to operate.
 
 **Pre-built**
 
-You can find pre-built stable releases [here](https://github.com/highcharts/highcharts-editor/releases).
+We strongly encourage you to use the pre-built stable versions of the editor.
+
+You can find these here [here](https://github.com/highcharts/highcharts-editor/releases).
 
 **Package Managers**
 
-The editor is pushed to NPM and Bower under `highcharts-editor`.
+The editor is pushed to NPM under `highcharts-editor`.
 
 **Cloning and building the repository**
 
@@ -52,7 +54,7 @@ If extending/modifying the editor code itself (or adding themes etc.), use the b
 express server. This server uses the source files directly without minifying/concatenating which
 makes it easier to debug and test things. It also bakes the Less files for each request.
 
-Run `node bin/www` to start it, then head to `http://127.0.0.1:3005`.
+Run `node bin/www` to start it, then head to `http://127.0.0.1:3005` for further instructions.
 
 ## Embedding Hello World
 

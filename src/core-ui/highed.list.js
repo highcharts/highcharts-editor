@@ -37,6 +37,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  @constructor
  *  @param parent {domnode} - the node to attach the list to
+ *  @param responsive {boolean} - set to true to get JS-based responsive functionality
  */
 highed.List = function (parent, responsive) {
     var container = highed.dom.cr('div', 'highed-list'),
