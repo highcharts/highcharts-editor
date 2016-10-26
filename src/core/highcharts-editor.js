@@ -556,7 +556,9 @@ var highed = {
      *  @returns {anything} - the option value
      */
     highed.option = function (option, value) {
-        if (options[option]) {
+        if (!highed.isBasic(option)) {
+            highed.merge(options, option);
+        } else if (options[option]) {
             if (value) {
                 options[option] = value;
             }
