@@ -453,6 +453,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         updateToolbarIcon();
 
+        highed.ready(function () {
+            window.scrollTo(0, 1);
+        });
+
         ///////////////////////////////////////////////////////////////////////////
 
         //Public interface

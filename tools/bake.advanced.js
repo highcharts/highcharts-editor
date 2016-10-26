@@ -38,14 +38,8 @@ var apiDumpURL = 'http://api.highcharts.com/highcharts/option/dump.json',
         // 'chart--marginTop': true,
         // 'chart--marginRight': true,
         'data': true,
-        'data--rows': true,
-        'data--columns': true,
-        'data-csv': true,
         'responsive': true,
-        'responsive-rules': true,
-        'responsive-rules-chartOptions': true,
-        'responsive-rules-condition': true,
-        'responsive-rules--callback': true
+        'responsive--rules': true
     }
 ;
 
@@ -139,6 +133,7 @@ function process(data) {
     fs.writeFileSync(__dirname + '/../api.js', JSON.stringify(data, undefined, '  '));
 
 
+
     data.forEach(function (entry) {
         var parent = entry.parent || removeType(entry.name),
             current = tree,
@@ -163,6 +158,10 @@ function process(data) {
         }
 
         if (ignores[entry.name]) {
+            return false;
+        }
+
+        if (ignores[path[0]]) {
             return false;
         }
 
