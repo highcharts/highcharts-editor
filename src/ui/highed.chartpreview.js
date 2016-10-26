@@ -237,7 +237,7 @@ highed.ChartPreview = function (parent, attributes) {
             });            
         }
 
-        //Temporary hack to debug series weirdness
+        //Temporary hack
         //aggregatedOptions.series = customizedOptions.series;\
         aggregatedOptions.series = [];
         if (customizedOptions.series) {
@@ -279,7 +279,7 @@ highed.ChartPreview = function (parent, attributes) {
 
         highed.clearObj(templateOptions);
 
-        highed.setAttr(customizedOptions, 'series', []);
+       // highed.setAttr(customizedOptions, 'series', []);
 
         gc(function (chart) {
 
@@ -327,6 +327,8 @@ highed.ChartPreview = function (parent, attributes) {
 
         gc(function (chart) {
             highed.setAttr(customizedOptions, 'series', []);
+            highed.setAttr(aggregatedOptions, 'series', []);
+
             highed.setAttr(customizedOptions, 'plotOptions--series--animation', true);
             highed.setAttr(customizedOptions, 'data--csv', data.csv);
             highed.setAttr(customizedOptions, 'data--googleSpreadsheetKey', undefined);

@@ -449,7 +449,6 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
     ;
 
     function tryCallback(cb, val) {
-        console.log(fieldID, 'callback');
         cb = cb || fn;
         if (highed.isFn(cb)) {
             cb(val);

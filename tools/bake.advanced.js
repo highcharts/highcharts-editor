@@ -147,8 +147,7 @@ function process(data) {
         }
 
         //Temp
-        entry.name = removeType(entry.name);
-        
+        entry.name = removeType(entry.name);        
 
         parent = removeType(parent);
         path = parent.replace(/\-\-/g, '.').replace(/\-/g, '.').split('.');
