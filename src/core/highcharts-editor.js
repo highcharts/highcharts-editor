@@ -516,6 +516,9 @@ var highed = {
         isReady = false,
         includedScripts = {},
         isOnPhone = false,
+        options = {
+            codeMirrorTheme: 'neo'
+        },
         cdnScripts = [
             "https://code.highcharts.com/stock/highstock.js",   
             "http://code.highcharts.com/adapters/standalone-framework.js",  
@@ -544,6 +547,22 @@ var highed = {
     pollForReady();
 
     ///////////////////////////////////////////////////////////////////////////
+    
+    /** Set an option
+     *  Skip `value` to get the value 
+     *  @param option {string} - the option to set
+     *  @param value {anything} - the value to set
+     *  @returns {anything} - the option value
+     */
+    highed.option = function (option, value) {
+        if (options[option]) {
+            if (value) {
+                options[option] = value;
+            }
+            return options[option];
+        }
+        return false;
+    };
 
     /** Add a function to call when the document is ready
      * @param {function} fn - the function to call
