@@ -241,18 +241,22 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                         theme: highed.option('codeMirrorTheme')
                     });
 
+                    updateIt(val || value || properties.defaults);
+
                     editor.on('change', function () {
                         callHome(editor.getValue());
                     });
 
                     resizePoll();
                 } else {
+                    updateIt(val || value || properties.defaults);
+
                     highed.dom.on(textArea, 'change', function () {
                         callHome(textArea.value);                    
                     });                    
                 }
 
-                updateIt(val || value || properties.defaults);
+                
 
                 return parent;
             },
@@ -337,7 +341,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 }
 
                 if (wasUndefined) {
-                    tryCallback(callback, val);
+                   // tryCallback(callback, val);
                 }
 
                 return stable;
@@ -426,8 +430,6 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     addCompositeItem();
                 });
 
-          
-
                 if (highed.isArr(value)) {
                     value.forEach(function (item) {
                         addCompositeItem(item, true);
@@ -447,43 +449,14 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
     ;
 
     function tryCallback(cb, val) {
+        console.log(fieldID, 'callback');
         cb = cb || fn;
         if (highed.isFn(cb)) {
             cb(val);
         }
     }
 
-    if (highed.isNull(value)) {
-        value = '';
-    }
-
-    if (type === 'cssobject') {
-        // properties = properties || {};
-        // properties.attributes = [
-        //     {name: 'x', title: 'x', title: 'X', values: '0', dataType: 'number'}
-
-        // ];
-         type = 'object';
-    }
-
-    //Choose a type
-    if (type && type.indexOf('|') >= 0) {
-        type = type.indexOf('object') >= 0 ? 'object' : type.split('|')[0];
-    }
-
-    if (!highed.isNull(properties.custom) && 
-        !highed.isNull(properties.custom.minValue) && 
-        !highed.isNull(properties.custom.maxValue) && 
-        !highed.isNull(properties.custom.step)) {
-        type = 'range';
-    }
-
-    if (type && type.indexOf('array') === 0) {
-        properties.subType = type.substr(6, type.length - 7);
-        type = 'array';
-    }
-
-    if (type === 'object') {
+    function deduceObject() {
         if ((!properties.attributes || !properties.attributes.length) && properties.defaults) {
             properties.attributes = [];
 
@@ -526,8 +499,47 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
         } else {
           type = 'json';
           properties.defaults = properties.defaults || {};
+        }        
+    }
+
+    if (highed.isNull(value)) {
+        value = '';
+    }
+
+    if (type === 'cssobject') {
+        // properties = properties || {};
+        // properties.attributes = [
+        //     {name: 'x', title: 'x', title: 'X', values: '0', dataType: 'number'}
+
+        // ];
+         //type = 'object';
+    }
+
+    //Choose a type
+    if (type && type.indexOf('|') >= 0) {
+        type = type.indexOf('object') >= 0 ? 'object' : type.split('|')[0];
+    }
+
+    if (!highed.isNull(properties.custom) && 
+        !highed.isNull(properties.custom.minValue) && 
+        !highed.isNull(properties.custom.maxValue) && 
+        !highed.isNull(properties.custom.step)) {
+        type = 'range';
+    }
+
+    if (type && type.indexOf('array') === 0) {
+        properties.subType = type.substr(6, type.length - 7);
+        type = 'array';
+
+        if (properties.subType === 'object') {
+            deduceObject();
         }
-      //  nohint = true;
+    }
+
+
+
+    if (type === 'object') {
+      deduceObject();
     }
 
 
