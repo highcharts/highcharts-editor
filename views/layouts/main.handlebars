@@ -5,8 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link href="/css/theme.default.css" type="text/css" rel="stylesheet"/>
-    
     <script src="https://code.highcharts.com/stock/highstock.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://code.highcharts.com/adapters/standalone-framework.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://code.highcharts.com/highcharts-more.js" type="text/javascript" charset="utf-8"></script>
@@ -19,6 +17,11 @@
     {{#each scripts}}
     <script src="{{{this}}}" type="text/javascript"></script>
     {{/each}}
+    {{#if static}}
+    <link href="highcharts-editor.min.css" type="text/css" rel="stylesheet"/>
+
+    {{else}}
+    <link href="/css/theme.default.css" type="text/css" rel="stylesheet"/>
     <script src="./src/meta/highed.meta.options.advanced.js" type="text/javascript"></script>
     <script src="./plugins/data-csv.js" type="text/javascript"></script>
     <script src="./plugins/data-difi.js" type="text/javascript"></script>
@@ -26,7 +29,8 @@
     <script src="./plugins/data-socrata.js" type="text/javascript"></script>
     <script src="./plugins/export-beautified-json.js" type="text/javascript"></script>
     <script src="./plugins/export-beautified.js" type="text/javascript"></script>
-    
+    {{/if}}
+
     <style>
         html, body {
             margin: 0;

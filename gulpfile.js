@@ -59,7 +59,7 @@ gulp.task('zip-ckeditor', ['less', 'minify', 'ckeditor'], function () {
 
 gulp.task('zip-standalone', ['less', 'minify'], function () {
   return gulp.src([
-            'html/' + name + '.html',
+            'res/standalone.html',
             'dist/' + name + '.min.css',
             'dist/' + name + '.min.js'
          ]).pipe(zip(name + '.standalone.' + packageJson.version + '.zip'))

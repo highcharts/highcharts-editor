@@ -1,7 +1,7 @@
 
 # Highcharts Editor Roadmap
 
-## 0.1.0-beta: Release mid-October, 2016
+## 0.1.0-beta: Release late-October, 2016
 
 **Editor Features**
 
@@ -60,6 +60,10 @@
     * Wordpress
     * CKEditor
 
-## 0.2.0: Initial non-beta release
+## 0.2.0: Initial non-beta release, date TBA
+
+*Main focus will be bug fixes and general improvements*
+
+**Editor Features**
 
   * Sample data for each template

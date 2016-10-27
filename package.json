@@ -1,7 +1,7 @@
 {
   "name": "highcharts-editor",
   "author": "Chris Vasseng <christer@highsoft.com>",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -22,7 +22,8 @@
     "gulp-jshint": "*",
     "jshint": "^2.9.3",
     "request": "2.74.0",
-    "mkdirp": "0.5.1"
+    "mkdirp": "0.5.1",
+    "handlebars": "*"
   },
   "dependencies": {
     "express": "*",
