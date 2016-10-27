@@ -518,7 +518,7 @@ var highed = {
         isOnPhone = false,
         options = {
             codeMirrorTheme: 'neo',
-            helpURL: 'http://announcements.highcharts.com/editor-help/'
+            helpURL: 'http://www.highcharts.com/products/editor'
         },
         cdnScripts = [
             "https://code.highcharts.com/stock/highstock.js",   
