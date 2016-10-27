@@ -96,7 +96,7 @@ highed.ChartPreview = function (parent, attributes) {
     /* Get the chart if it's initied */
     function gc(fn) {
         if (highed.isFn(fn)) {
-            if (chart && chart.options) {
+            if (chart !== false) {
                 return fn(chart);
             } else {                
                 return fn(init());

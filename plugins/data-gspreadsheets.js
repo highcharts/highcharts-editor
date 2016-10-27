@@ -21,6 +21,9 @@ highed.plugins.import.install('Google Spreadsheets', {
             default: ''
         }
     },
+    dependencies: [
+        "https://code.jquery.com/jquery-2.2.4.min.js"
+    ],
     request: function (url, options, fn) {
         fn(false, {
             'data--googleSpreadsheetKey': options.key,
