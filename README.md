@@ -5,7 +5,7 @@ Highcharts Editor
 
 ![screenshots/customize.png](screenshots/customize.png)
 
-[Live Demos](http://editor.highcharts.com)
+**[Live Demos](http://editor.highcharts.com)**
 
 ## Introduction
 
