@@ -375,12 +375,19 @@ highed.ChartCustomizer = function (parent, attributes) {
         highlighted = false;
     });
 
-    advTree.on('Select', function (item, selected, arrIndex) {
+    function buildAdvTree(item, selected, arrIndex, filter) {
         var table = highed.dom.cr('table', 'highed-customizer-table');
         advBody.innerHTML = '';
 
         Object.keys(item.entries).forEach(function (key) {
             var entry = item.entries[key];
+
+            if (filter && entry.subType) {
+                //Check if the sub type is valid
+                if (!entry.subType[filter]) {
+                    return;
+                }
+            }
             
             if (!entry.shortName.length) {
                 return;
@@ -400,6 +407,13 @@ highed.ChartCustomizer = function (parent, attributes) {
                     },
                     function (newValue) {          
                         events.emit('PropertyChange', entry.id, newValue, arrIndex);
+
+                        //This should not be hardcoded.
+                        if (entry.id === 'series--type') {
+                            //Need to reselect with a filter applied
+                            buildAdvTree(item, selected, arrIndex, newValue);
+                        }
+
                     },
                     false,
                     entry.id
@@ -413,6 +427,16 @@ highed.ChartCustomizer = function (parent, attributes) {
                 table
             )
         );
+        
+    }
+
+    advTree.on('Select', function (item, selected, arrIndex, filter) {
+        //This is a hack - we need a dynamic system for this later.
+        if (item.id === 'series') {
+            filter = highed.getAttr(chartOptions, 'series--type', arrIndex);
+        }
+
+        buildAdvTree(item, selected, arrIndex, filter);
     });
 
     advTree.on('DataUpdate', function (path, data) {

@@ -84,16 +84,24 @@ function sortAPI(api) {
             apiSorted[entry.name] = entry;
 
             if (st !== false) {
-                entry.subType = [st];            
+                entry.subType = {};
+                entry.subType[st] = true;                        
             }
         } else if (st) {
-            apiSorted[entry.name].subType = apiSorted[entry.name].subType || [];
-            apiSorted[entry.name].subType.push(st);
+            apiSorted[entry.name].subType = apiSorted[entry.name].subType || {};
+            //apiSorted[entry.name].subType.push(st);
+            apiSorted[entry.name].subType[st] = true;
             apiSorted[entry.name].values = apiSorted[entry.name].values || entry.values;
             apiSorted[entry.name].defaults = apiSorted[entry.name].defaults || entry.defaults;
 
             apiSorted[entry.name].subTypeDefaults = apiSorted[entry.name].subTypeDefaults || {};
             apiSorted[entry.name].subTypeDefaults[st] = entry.defaults;
+        }
+
+        if (entry.name === 'series') {
+            //Hack
+            apiSorted[entry.name].filteredBy = entry.filteredBy = 'series--type';
+            
         }
     });
 }
@@ -196,7 +204,8 @@ function process(data) {
                     description: entry.description,
                     values: entry.values || undefined,
                     defaults: entry.defaults,
-                    subType: apiSorted[entry.name].subType                    
+                    subType: apiSorted[entry.name].subType,
+                    filteredBy: entry.filteredBy                    
                 };
 
                 if (c.dataType.indexOf('array') >= 0 && entry.isParent) {

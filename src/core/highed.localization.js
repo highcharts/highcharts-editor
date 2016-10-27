@@ -52,6 +52,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 stepCustomize: 'Customize',
                 stepExport: 'Export',
 
+                //Done button caption
+                doneCaption: 'Done creating',
+
                 //Customizer
                 customizeSimple: 'SIMPLE',
                 customizeAdvanced: 'ADVANCED'

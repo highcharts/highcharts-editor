@@ -199,7 +199,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             dataExpStep = wizbar.addStep({ title: highed.getLocalizedStr('stepExport'), id: 'export' }),
             dataExp = highed.Exporter(dataExpStep.body, properties.exporter),
 
-            doneBtn = highed.dom.cr('div', 'highed-ok-button', 'Done'),
+            doneBtn = highed.dom.cr('div', 'highed-ok-button', highed.getLocalizedStr('doneCaption')),
             doneStep = wizbar.addStep({title: highed.getLocalizedStr('stepDone')}),
 
             chartIcon = highed.dom.cr('div', 'highed-chart-container-icon'),
