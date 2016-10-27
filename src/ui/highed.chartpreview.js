@@ -148,8 +148,10 @@ highed.ChartPreview = function (parent, attributes) {
            // highed.merge(customizedOptions.series, chart.options.series);
             updateAggregated();    
 
-            highed.clearObj(chartOptions);
-            highed.merge(chartOptions, chart.options);       
+            if (chart && chart.options) {
+                highed.clearObj(chartOptions);
+                highed.merge(chartOptions, chart.options);                       
+            }
 
             attachWYSIWYG();
 
@@ -181,7 +183,9 @@ highed.ChartPreview = function (parent, attributes) {
     /* Resize the preview */
     function resize() {
         gc(function (chart) {
-            chart.reflow();
+            if (chart.reflow) {
+                chart.reflow();                
+            }
         });
     }
 
