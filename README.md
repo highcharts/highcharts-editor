@@ -30,10 +30,6 @@ We strongly encourage you to use the pre-built stable versions of the editor.
 
 You can find these here [here](https://github.com/highcharts/highcharts-editor/releases).
 
-**Package Managers**
-
-The editor is pushed to NPM under `highcharts-editor`.
-
 **Cloning and building the repository**
 
 	git clone https://github.com/highcharts/highcharts-editor
