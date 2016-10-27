@@ -28,7 +28,7 @@ It requires no back-end service to operate.
 
 We strongly encourage you to use the pre-built stable versions of the editor.
 
-You can find these here [here](https://github.com/highcharts/highcharts-editor/releases).
+You can find these [here](https://github.com/highcharts/highcharts-editor/releases).
 
 **Cloning and building the repository**
 
