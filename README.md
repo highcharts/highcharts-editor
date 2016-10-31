@@ -54,6 +54,11 @@ makes it easier to debug and test things. It also bakes the Less files for each 
 
 Run `node bin/www` to start it, then head to `http://127.0.0.1:3005` for further instructions.
 
+If you want to add new source files, add it to `res/filelist.json`,
+and it should be picked up in both the build script and the server. 
+Note that the include order matters, so be sure to add it at the bottom, or before
+any other files that might depend on its content.
+
 ## Embedding Hello World
 
 	<!DOCTYPE html>
