@@ -157,6 +157,12 @@ gulp.task('lint-advanced', function () {
   ;
 });
 
+gulp.task('move-standalone', function () {
+  return gulp.src([__dirname + '/res/standalone.html'])
+         .pipe(gulp.dest(dest))
+  ;
+});
+
 gulp.task('minify', function () {
     return gulp.src(sources)
                .pipe(concat(name + '.js'))       
@@ -246,7 +252,7 @@ gulp.task('electron', function () {
 });
 
 gulp.task('default', function () {
-    gulp.start('minify', 'tinymce', 'ckeditor', 'less', 'update-deps', 'plugins', 'wordpress', 'zip-standalone', 'zip-dist', 'zip-standalone-nominify', 'zip-tinymce', 'zip-ckeditor');
+    gulp.start('minify', 'tinymce', 'ckeditor', 'less', 'move-standalone', 'update-deps', 'plugins', 'wordpress', 'zip-standalone', 'zip-dist', 'zip-standalone-nominify', 'zip-tinymce', 'zip-ckeditor');
 });
 
 gulp.task('with-advanced', function () {

@@ -427,7 +427,6 @@ highed.ChartCustomizer = function (parent, attributes) {
                 table
             )
         );
-        
     }
 
     advTree.on('Select', function (item, selected, arrIndex, filter) {

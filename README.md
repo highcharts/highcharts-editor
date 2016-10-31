@@ -50,7 +50,7 @@ The editor is pushed to NPM under `highcharts-editor`.
 
 This will put a built version in the `dist` folder.
 
-## Test Server
+## Running from unminified sources locally
 
 If extending/modifying the editor code itself (or adding themes etc.), use the bundled
 express server. This server uses the source files directly without minifying/concatenating which
