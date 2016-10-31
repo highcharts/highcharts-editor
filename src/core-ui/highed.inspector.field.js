@@ -25,7 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /** An editable field
  *
- *  Creates a table row with thre columns:
+ *  Creates a table row with three columns:
  *    - label
  *    - widget
  *    - help icon
@@ -363,7 +363,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     }
                 }
 
-                function addCompositeItem(val, supressCallback) {
+                function addCompositeItem(val, suppressCallback) {
                     var item,
                         rem = highed.dom.cr('span', 'highed-icon fa fa-trash'),
                         row = highed.dom.cr('tr'),
@@ -419,7 +419,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                         return false;
                     });
 
-                    if (!supressCallback) {
+                    if (!suppressCallback) {
                         processChange();
                     }
                 }       

@@ -78,13 +78,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             }
         }
 
-        function updateColor(ncol, supressCallback) {
+        function updateColor(ncol, suppressCallback) {
             highed.dom.style(color, {
                 background: ncol
             });
 
             style.color = ncol;
-            if (!supressCallback) {
+            if (!suppressCallback) {
                 callback();             
             }
         }
