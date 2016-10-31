@@ -78,7 +78,7 @@ var highed = {
      *    > success {function} - function to call on success
      *    > error {function} - function to call on request fail
      *    > data {object} - the payload
-     *    > autoFire {boolean} - wether or not to fire the request right away
+     *    > autoFire {boolean} - whether or not to fire the request right away
      * 
      *   @emits Error {string} - when there's an error 
      *   @emits OK {string} - when the request succeeded
@@ -441,7 +441,7 @@ var highed = {
     /** Check if something is null or undefined
      *  @namespace highed
      *  @param {anything} what - the value to check
-     *  @return {bool} - true if nulll
+     *  @return {bool} - true if null
      */
     isNull: function (what) {
         return (typeof what === 'undefined' || what === null);

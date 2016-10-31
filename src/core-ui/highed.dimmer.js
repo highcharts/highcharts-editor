@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     /** Show a dimmer backdrop 
      *
-     *  Used to catch input when showing modals, context menues etc.
+     *  Used to catch input when showing modals, context menus etc.
      *
      *  @example
      *  highed.showDimmer(function () {

@@ -33,10 +33,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  highed.dom.ap(splitter.right, highed.dom.cr('div', '', 'Right!')); 
  *
  *  @constructor
- *  @param parent {domnode} - the parant to attach to
+ *  @param parent {domnode} - the parent to attach to
  *  @param attributes {object} - the settings for the splitter
  *    > leftWidth {number} - the width in percent of the left cell
- *    > noOverflow {bool} - wether or not overflowing is allowed
+ *    > noOverflow {bool} - whether or not overflowing is allowed
  *    > leftClasses {string} - additional css classes to use for the left body
  *    > rightClasses {string} - additional css classes to use for the right body
  *    > allowResize {boolean} - set to true to enable user-resizing
