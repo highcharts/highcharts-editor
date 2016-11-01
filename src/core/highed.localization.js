@@ -89,7 +89,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      *  @param url {string} - the location of the pack
      */
 
-    /** Set the active langauge
+    /** Set the active language
      *  @param lang {string} - the language to activate
      *  @return {boolean} - true if the language exists, and was applied
      */ 

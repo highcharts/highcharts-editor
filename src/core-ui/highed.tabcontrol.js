@@ -23,7 +23,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-/** Standard tabcontrol compopnent
+/** Standard tabcontrol component
  *  @example 
  *  var tabs = highed.TabControl(document.body),
  *      tab1 = tabs.createTab({title: 'Tab 1'}),
@@ -94,7 +94,7 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
             selectedTab.focus();
         }
 
-        //clientWidth/scrollWidth doesnt produce what we need,
+        //clientWidth/scrollWidth doesn't produce what we need,
         //so let's check the accumulated width of the tabs.
 
         tabs.forEach(function (tab) {

@@ -32,10 +32,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  highed.dom.ap(splitter.bottom, highed.dom.cr('div', '', 'Bottom!')); 
  *
  *  @constructor
- *  @param parent {domnode} - the parant to attach to
+ *  @param parent {domnode} - the parent to attach to
  *  @param attributes {object} - the settings for the splitter
  *    > topHeight {number} - the height in percent of the left cell. Alternatively, use '123px' to set a capped size.
- *    > noOverflow {bool} - wether or not overflowing is allowed
+ *    > noOverflow {bool} - whether or not overflowing is allowed
  */
 highed.VSplitter = function (parent, attributes) {
     var properties = highed.merge({

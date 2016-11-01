@@ -37,7 +37,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  @param parent {domnode} (optional) - the parent to attach the button to
  *  @param icon {string} - the button icon
- *  @param state {boolean} - the innitial state of the button
+ *  @param state {boolean} - the initial state of the button
  */
 highed.PushButton = function (parent, icon, state) {
     var button = highed.dom.cr('span', 'highed-pushbutton fa fa-' + icon),

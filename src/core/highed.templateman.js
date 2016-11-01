@@ -30,7 +30,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *      title: 'My company template',
  *      tooltipText: 'Company template: requires no particular data',
  *      config: {
- *           'chart--title': 'Copany Chart' 
+ *           'chart--title': 'Company Chart'
  *      } 
  *  });
  *
@@ -63,7 +63,7 @@ highed.flushTemplates = function () {
 };
 
 /** Add a new template type
- *  If the type allready exists, nothing will happen
+ *  If the type already exists, nothing will happen
  *
  *  @example
  *  highed.addTemplateType('custom', 'My company templates');

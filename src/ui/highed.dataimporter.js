@@ -177,7 +177,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         );
                     });
 
-                    if (options.supressURL) {
+                    if (options.suppressURL) {
                         highed.dom.style([url, urlTitle], {
                             display: 'none'
                         });
