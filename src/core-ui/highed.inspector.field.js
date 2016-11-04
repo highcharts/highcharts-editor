@@ -154,6 +154,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 ; 
 
                 function update(col, callback) {
+
                     if (col && col !== 'null' && col !== 'undefined' && typeof col !== 'undefined') {
                         box.innerHTML = col;                        
                     } else {
@@ -165,10 +166,30 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                         background: col,
                         color: highed.getContrastedColor(col)
                     });
+
                 }           
+
+                function fixVal() {     
+                    //This is very ugly
+                    try {
+                        val = JSON.parse(val);
+                    } catch (e) {
+
+                    }
+
+                    if (highed.isArr(val)) {
+                        val = '#FFF';
+                    }                    
+                }
+
+                fixVal();
 
                 highed.dom.on(box, 'click', function (e) {
                     highed.pickColor(e.clientX, e.clientY, val || value, function (col) {
+                        if (highed.isArr(val)) {
+                            val = '#FFF';
+                        }
+
                         val = col;
                         update(col);
                         tryCallback(callback, col);
@@ -177,8 +198,9 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
 
                 highed.dom.on(reset, 'click',function () {
                     val = resetTo;
-                    update(resetTo);
-                    tryCallback(callback, resetTo);
+                    fixVal();
+                    update(val);
+                    tryCallback(callback, val);
                 });
 
                 update(val || value);
@@ -385,6 +407,10 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                         }    
                     }
 
+                    if (highed.isArr(val)) {
+                        val = val[id];
+                    }
+
                     items[id] = {
                         id: id,
                         row: row,
@@ -392,7 +418,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     };
 
                     item = fields[properties.subType] ? 
-                           fields[properties.subType](val, processChange) : 
+                           fields[properties.subType](val || value[id] || properties.defaults, processChange) : 
                            fields.string(val, processChange);
                     
                     highed.dom.ap(itemTable, 
