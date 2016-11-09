@@ -160,6 +160,7 @@ highed.ChartPreview = function (parent, attributes) {
 
             Highcharts.addEvent(chart, 'afterPrint', function () {
                 events.emit('RequestResize');
+                highed.dom.ap(pnode || parent, toggleButton);
             });
         } catch (ex) {
             var e = ex.toString();
