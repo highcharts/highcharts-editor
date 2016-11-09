@@ -380,7 +380,7 @@ module.exports = {
 					tooltipText: 'Enable or disable the tooltip. The tooltip is the information box ' +
 					'that appears on mouse-over or touch on a point.'
 				},
-				{id: 'tooltip--shared', text: 'Shared between series'}
+				{id: 'tooltip--shared', text: 'Shared between series', tooltipText: 'When the tooltip is shared, the entire plot area will capture mouse movement or touch events. Tooltip texts for series types with ordered data (not pie, scatter, flags etc) will be shown in a single bubble. This is recommended for single series charts and for tablet/mobile optimized charts.'}
 			]
 		}, {
 			text: 'Color and border',			
