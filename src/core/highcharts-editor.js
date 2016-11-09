@@ -260,6 +260,11 @@ var highed = {
      *    > b {number} - blue
      */
     hexToRgb: function (hex) {
+        if (hex.length === 4) {
+            hex += hex[hex.length - 1];
+            hex += hex[hex.length - 1];
+            hex += hex[hex.length - 1];
+        }
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result ? {
             r: parseInt(result[1], 16),
