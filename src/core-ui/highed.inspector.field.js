@@ -155,7 +155,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
             color: function (val, callback) {
                 var box = highed.dom.cr('div', 'highed-field-colorpicker', '', fieldID),
                     reset = highed.dom.cr('div', 'highed-field-reset fa fa-undo'),
-                    resetTo = properties.defaults//val || value
+                    resetTo =  val || value || properties.defaults
                 ; 
 
                 if (resetTo === 'null') {
