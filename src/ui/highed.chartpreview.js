@@ -313,7 +313,9 @@ highed.ChartPreview = function (parent, attributes) {
 
     function loadSeries() {
         if (!gc(function (chart) {
-            customizedOptions.series = chart.options.series;    
+            if (chart.options && chart.options.series) {
+                customizedOptions.series = chart.options.series;                    
+            }
             return true;
         })) {
             customizedOptions.series = [];
@@ -370,7 +372,9 @@ highed.ChartPreview = function (parent, attributes) {
                 templateOptions = {};
                 highed.clearObj(customizedOptions);
                 highed.merge(customizedOptions, highed.merge({}, data));
-                customizedOptions.series = data.series;
+                if (!highed.isNull(data.series)) {
+                    customizedOptions.series = data.series;                    
+                }
                 updateAggregated();
                 init(customizedOptions);
                 loadSeries();
