@@ -133,7 +133,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 var input = highed.dom.cr('input', '', '', fieldID),
                     reset = createReset(properties.defaults || val || value, function (v) {                        
                         input.checked = val = highed.toBool(v);
-                        tryCallback(callback, v);
+                        tryCallback(callback, val);
                     })
                 ;
 
