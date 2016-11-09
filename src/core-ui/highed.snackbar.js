@@ -27,6 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     var container = highed.dom.cr('div', 'highed-snackbar'),
         title = highed.dom.cr('span', 'snackbar-title', 'THIS IS A SNACKBAR'),
         action = highed.dom.cr('span', 'snackbar-action', 'ACTION'),
+        closeNode = highed.dom.cr('span', 'highed-snackbar-close fa fa-times-circle', ''),
         timeout = false,
         callback = false
     ;
@@ -35,7 +36,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         highed.dom.ap(document.body, 
             highed.dom.ap(container,
                 title,
-                action
+                action,
+                closeNode
             )
         );
     });
@@ -46,6 +48,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     highed.dom.on(container, 'mouseout', function () {
         hide();
+    });
+
+    highed.dom.on(closeNode, 'click', function () {
+        highed.dom.style(container, {
+            bottom: '-58px'
+        });
     });
 
     ///////////////////////////////////////////////////////////////////////////
