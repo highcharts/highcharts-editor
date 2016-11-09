@@ -260,11 +260,22 @@ var highed = {
      *    > b {number} - blue
      */
     hexToRgb: function (hex) {
+        if (hex.indexOf('rgba') === 0) {
+            hex = hex.substr(5).replace(')', '').split(',');
+            return {
+                r: parseInt(hex[0], 10),
+                g: parseInt(hex[1], 10),
+                b: parseInt(hex[2], 10),
+                a: parseInt(hex[3], 10)
+            }
+        }
+
         if (hex.length === 4) {
             hex += hex[hex.length - 1];
             hex += hex[hex.length - 1];
             hex += hex[hex.length - 1];
         }
+
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result ? {
             r: parseInt(result[1], 16),
