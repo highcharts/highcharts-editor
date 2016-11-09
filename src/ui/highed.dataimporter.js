@@ -90,7 +90,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             properties = highed.merge({          
                 options: ['csv', 'json', 'plugins', 'samples'],
-                plugins: ['CSV', 'JSON', 'Difi', 'Socrata', 'Google Spreadsheets']
+                plugins: ['blah']//['CSV', 'JSON', 'Difi', 'Socrata', 'Google Spreadsheets']
             }, attributes),
 
             tabs = highed.TabControl(parent, false, true),
@@ -138,7 +138,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             if (!properties.options.json) {
                 jsonTab.hide();
             }
-            if (Object.keys(properties.plugins) === 0 || !properties.options.plugins) {
+            if (Object.keys(properties.plugins).length === 0 || !properties.options.plugins) {
                 webTab.hide();
             }
 
