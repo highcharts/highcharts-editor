@@ -53,7 +53,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 stepExport: 'Export',
 
                 //Done button caption
-                doneCaption: 'Done creating',
+                doneCaption: 'Close & Generate Chart',
 
                 //Customizer
                 customizeSimple: 'SIMPLE',
