@@ -187,7 +187,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 highed.dom.on(box, 'click', function (e) {
                     highed.pickColor(e.clientX, e.clientY, val || value, function (col) {
                         if (highed.isArr(val)) {
-                            val = '#FFF';
+                            val = '#FFFFFF';
                         }
 
                         val = col;
