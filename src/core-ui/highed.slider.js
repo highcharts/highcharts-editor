@@ -40,10 +40,11 @@ highed.Slider = function (parent, attributes) {
             max: 100,
             min: 1,
             step: 1,
-            resetTo: 0
+            resetTo: 0,
+            value: 0
         }, attributes),
         events = highed.events(),
-        value = properties.resetTo,
+        value = properties.value || properties.resetTo,
         container = highed.dom.cr('div', 'highed-slider'),
         indicator = highed.dom.cr('div', 'highed-slider-indicator'),
         textIndicator = highed.dom.cr('div', 'highed-slider-text-indicator'),

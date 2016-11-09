@@ -65,6 +65,10 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
     var createReset = function (resetTo, callback) {
             var node = highed.dom.cr('div', 'highed-field-reset fa fa-undo');
 
+            if (resetTo === 'null') {
+                resetTo = null;
+            }
+
             highed.dom.on(node, 'click', function () {
                 if (highed.isFn(callback)) {
                     callback(properties.defaults || resetTo);
@@ -120,7 +124,8 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     min: properties.custom.minValue,
                     max: properties.custom.maxValue,
                     step: properties.custom.step,
-                    resetTo: val || value
+                    value: val || value,                    
+                    resetTo: properties.defaults
                 });
 
                 slider.on('Change', function (v) {
@@ -152,6 +157,10 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     reset = highed.dom.cr('div', 'highed-field-reset fa fa-undo'),
                     resetTo = properties.defaults//val || value
                 ; 
+
+                if (resetTo === 'null') {
+                    resetTo = null;
+                }
 
                 function update(col, callback) {
 
