@@ -90,7 +90,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             properties = highed.merge({          
                 options: ['csv', 'json', 'plugins', 'samples'],
-                plugins: ['blah']//['CSV', 'JSON', 'Difi', 'Socrata', 'Google Spreadsheets']
+                plugins: ['CSV', 'JSON', 'Difi', 'Socrata', 'Google Spreadsheets']
             }, attributes),
 
             tabs = highed.TabControl(parent, false, true),
