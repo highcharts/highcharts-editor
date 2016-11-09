@@ -124,6 +124,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         properties.options = highed.arrToObj(properties.options);
         properties.plugins = highed.arrToObj(properties.plugins);
 
+        //Remove referenced un-installed plugins.
+        Object.keys(properties.plugins).forEach(function (plugin) {
+            if (highed.isNull(webImports[plugin])) {
+                delete properties.plugins[plugin];
+            }
+        });
+
         function updateOptions() {
             if (!properties.options.csv) {
                 csvTab.hide();
@@ -134,6 +141,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             if (Object.keys(properties.plugins) === 0 || !properties.options.plugins) {
                 webTab.hide();
             }
+
             if (!properties.options.samples) {
                 samplesTab.hide();
             }
