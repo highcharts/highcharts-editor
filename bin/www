@@ -69,7 +69,8 @@ app.get('/full', function (req, res) {
 
     res.render('full', {
         scripts: files,
-        package: package
+        package: package,
+        title: 'Highcharts Editor - Full'
     });
 });
 
@@ -78,7 +79,8 @@ app.get('/modal', function (req, res) {
 
     res.render('modal', {
         scripts: files,
-        package: package
+        package: package,
+        title: 'Highcharts Editor - Modal'
     });
 });
 
@@ -87,7 +89,8 @@ app.get('/simple', function (req, res) {
 
     res.render('simplemodal', {
         scripts: files,
-        package: package
+        package: package,
+        title: 'Highcharts Editor - Simple'
     });
 });
 
@@ -96,7 +99,8 @@ app.get('/tinymce', function (req, res) {
 
     res.render('tinymce', {
         scripts: files,
-        package: package
+        package: package,
+        title: 'Highcharts Editor - TinyMCE'
     });
 });
 
@@ -105,7 +109,8 @@ app.get('/ckeditor', function (req, res) {
 
     res.render('ckeditor', {
         scripts: files,
-        package: package
+        package: package,
+        title: 'Highcharts Editor - CKEditor'
     });
 });
 

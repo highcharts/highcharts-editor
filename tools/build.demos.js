@@ -42,7 +42,8 @@ const scripts = [
 var settings = {
     static: 'yes',
     scripts: scripts,
-    package: package
+    package: package,
+    title: 'Highcharts Editor'
 };
 
 if (args.length >= 2) {
@@ -65,6 +66,7 @@ mkdirp(__dirname + '/../demos', function () {
                         result = ''
                     ;
 
+                    settings.title = 'Highcharts Editor - '+ file.replace('.handlebars', '');
                     settings.body = t(settings);                    
                     result = mainTemplate(settings);
 
