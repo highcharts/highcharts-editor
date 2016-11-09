@@ -457,6 +457,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             window.scrollTo(0, 1);
         });
 
+
+        chartPreview.on('RequestResize', resize);
+
         ///////////////////////////////////////////////////////////////////////////
 
         //Public interface

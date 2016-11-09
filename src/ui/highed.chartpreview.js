@@ -157,6 +157,10 @@ highed.ChartPreview = function (parent, attributes) {
 
             resize();
             highed.dom.ap(pnode || parent, toggleButton);
+
+            Highcharts.addEvent(chart, 'afterPrint', function () {
+                events.emit('RequestResize');
+            });
         } catch (ex) {
             var e = ex.toString();
 
@@ -402,6 +406,12 @@ highed.ChartPreview = function (parent, attributes) {
      * @index - used if the option is an array
      */
     function set(id, value, index) {
+         if (id.indexOf('lang--') === 0 && customizedOptions.lang) {
+            Highcharts.setOptions({
+                lang: customizedOptions.lang
+            });
+        }
+
         gc(function (chart) {
             highed.setAttr(chart.options, id, value, index);        
             highed.setAttr(chart.options, 'plotOptions--series--animation', false, index);
@@ -417,11 +427,7 @@ highed.ChartPreview = function (parent, attributes) {
         init(aggregatedOptions, false, true);
         emitChange();
 
-        if (id.indexOf('lang--') === 0 && customizedOptions.lang) {
-            Highcharts.setOptions({
-                lang: customizedOptions.lang
-            });
-        }
+       
     }
 
     /* Get embeddable JSON */
