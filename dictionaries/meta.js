@@ -56,12 +56,12 @@ module.exports = {
 					{
 						id: 'chart--width',
 						text: 'Chart width',
-						custom: {minValue: 0, maxValue: 5000, step: 10}
+						custom: {minValue: 50, maxValue: 5000, step: 10}
 					},
 					{
 						id: 'chart--height',
 						text: 'Chart height',
-						custom: {minValue: 0, maxValue: 5000, step: 10}
+						custom: {minValue: 50, maxValue: 5000, step: 10}
 					}
 				]
 			}, {
