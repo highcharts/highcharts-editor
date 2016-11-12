@@ -1,0 +1,213 @@
+
+.highed-dtable-container {
+    width:100%;
+    height:100%;
+    position: relative;
+    overflow: hidden;
+    border:@border-main;
+    border-collapse: collapse;
+    background:@bright-background;
+    .highed-box-size;
+}
+
+.highed-dtable-table-frame {
+    width:100%;
+    height:100%;
+    margin-left:40px;
+    margin-top:40px;
+    overflow: auto;
+    .highed-box-size;   
+}
+
+.highed-dtable-table {
+    table-layout: fixed;
+}
+
+.highed-dtable-head {
+
+}
+
+.highed-dtable-body {
+
+}
+
+.highed-dtable-body tr {
+    height:40px;
+    max-height:40px;
+}
+
+.highed-dtable-body col {
+    min-width: 20px;
+}
+
+.highed-dtable-toolbar {
+    background:@background-panel !important;
+    color:@text-panel !important;
+}
+
+.highed-dtable-toolbar-label {
+    float:left;
+    padding-left:40px;
+    line-height: 40px;
+    font-family: @font-secondary;
+    font-size:14px;
+    font-weight: 100;
+    height:100%;
+    .highed-box-size;
+}
+
+.highed-dtable-body td {
+    position: relative;
+    padding-left:10px;
+    padding-right:10px;
+    min-width:20px;
+    height:40px;
+    max-height: 40px;
+    border-right:@border-main;
+    border-bottom:@border-main;
+    overflow: hidden;
+}
+
+.highed-dtable-body-selected-row {
+    background:@highlight-background !important;
+    color:@highlight-text !important;
+}
+
+.highed-dtable-col-val {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 40px;
+    height:40px;
+    max-height:40px;
+    .highed-box-size;
+}
+
+.highed-dtable-input {
+    position: absolute;
+    left:0px;
+    top:0px;
+    background:lighten(@highlight-background, 5) !important;
+    font-family: @font-secondary;
+    font-weight: 100;
+    width:100%;
+    height:100%;
+    font-size:24px;
+    outline: none;
+    border:none;
+    .highed-box-size;    
+}
+
+.highed-dtable-input-header {
+    text-align: center;
+    background:@background-panel !important;
+    color:@text-panel !important;
+}
+
+.highed-dtable-table td {
+    overflow: hidden;
+}
+
+.highed-dtable-body td input {
+    background:none;
+    font-family: @font-secondary;
+    font-weight: 100;
+    width:100%;
+    height:100%;
+    font-size:24px;
+    outline: none;
+    border:none;
+    .highed-box-size;   
+}
+ 
+
+.highed-dtable-body td input:active {
+
+}
+
+.highed-dtable-resize-handle {
+    position: absolute;
+    right:0px;
+    top:0px;
+    width:5px;
+    height:40px;
+    //background:#AA0000;
+    cursor: ew-resize;
+    z-index: 100;
+}
+
+.highed-dtable-resize-handle-moving {
+    background:@highlight-background;
+}
+
+.highed-dtable-top-bar {
+    padding-left:40px;
+    position: absolute;
+    height:40px;
+    width:10000px;
+    left:0px;
+    top:0px;
+    background:@background-panel;
+    border-bottom: @border-main;
+
+    //color:@color-toolbar;
+}
+
+.highed-dtable-top-bar-col {
+    position: relative;
+    border-right: @border-main;
+    display:inline-block;
+    width:80px;
+    min-width: 20px;
+    height:100%;
+    line-height: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    //padding:5px;
+    text-align: center;
+    .highed-box-size;
+}
+
+.highed-dtable-top-bar-col-options {
+    opacity: 0;
+    padding:5px;
+    position: absolute;
+    left:2px;
+    top:50%;
+    transform:translate(0, -50%);
+    background:@background-panel;
+    .highed-transition;
+}
+
+.highed-dtable-top-bar-col-options:hover {
+    //background: @accent-color !important;
+    color: @accent-color !important;
+}
+
+.highed-dtable-top-left-panel {
+    position: absolute;
+    left:0px;
+    top:0px;
+    padding:10px;
+    width:20px;
+    height:20px;
+    background:@background-panel;
+}
+
+.highed-dtable-left-bar {
+    width:40px;   
+    top:0px;
+    bottom:0px;
+    padding-top:40px;
+    position: absolute;
+    background:@background-panel;
+    //color:@color-toolbar;
+}
+
+.highed-dtable-left-bar-row {
+    height:20px;
+    border-bottom: @border-main;
+    width:100%;
+    padding:10px;
+}

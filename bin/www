@@ -114,5 +114,15 @@ app.get('/ckeditor', function (req, res) {
     });
 });
 
+app.get('/dtable', function (req, res) {
+    updateFiles();
+
+    res.render('dtable', {
+        scripts: files,
+        package: package,
+        title: 'Highcharts Editor - Data Table'
+    });
+});
+
 console.log('starting on port', port);
 app.listen(port);

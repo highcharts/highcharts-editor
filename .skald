@@ -29,6 +29,7 @@
             "./src/core-ui/highed.tree.js",
             "./src/core-ui/highed.snackbar.js",
             "./src/core-ui/highed.dropdown.js",
+            "./src/core-ui/highed.datatable.js",
             "./src/core-ui/highed.contextmenu.js"
         ],
 

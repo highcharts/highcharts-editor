@@ -258,6 +258,14 @@ highed.dom = {
         };
     },
 
+    nodefault: function (e) {
+        e.cancelBubble = true;
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        return false;   
+    },
+
     /** Get or set the value of a node
      * @namespace highed.dom
      * @param node {object} - the node to get the value of

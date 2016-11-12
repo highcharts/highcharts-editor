@@ -33,7 +33,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @param target {domnode} - the node to make movable
  *  @param constrain {string} - constrain moving: `XY`, `Y`, or `X`
  */
- highed.Movable = function (target, constrain, constrainParent, parentNode) {
+ highed.Movable = function (target, constrain, constrainParent, parentNode, min, doOffset) {
     var events = highed.events(),
         moving = false
     ;
@@ -70,8 +70,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         }
                     }
 
+                    if (min && x < min.x) {
+                        x = min.x;
+                    }
+                    if (min && y < min.y) {
+                        y = min.y;
+                    }
+
                     highed.dom.style(target, {
-                        left: x + 'px',
+                        left: x - (doOffset ? ns.w : 0) + 'px',
                         top: y + 'px'
                     });
 

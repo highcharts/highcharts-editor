@@ -25,6 +25,7 @@
     "./src/core-ui/highed.dropdown.js",
     "./src/core-ui/highed.mover.js",
     "./src/core-ui/highed.slider.js",
+    "./src/core-ui/highed.datatable.js",
         
     "./src/meta/highed.meta.charts.js",
     "./src/meta/highed.meta.options.extended.js",

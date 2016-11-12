@@ -54,7 +54,7 @@ highed.Toolbar = function (parent, attributes) {
      *    > css {array} - the additional css class(s) to use
      *    > click {function} - the function to call when the icon is clicked
      */
-    function addIcon(icon) {
+    function addIcon(icon, where) {
         var i = highed.dom.cr('div', 'icon highed-icon fa ' + (icon.css || ''));
 
         highed.dom.on(i, 'click', function (e) {
@@ -63,7 +63,15 @@ highed.Toolbar = function (parent, attributes) {
             }
         });
 
-        highed.dom.ap(right, i);
+        // if (icon.tooltip) {
+        //     highed.dom.on(i, 'mouseenter', function (e) {
+        //         highed.Tooltip(e.clientX + 10, e.clientY - 30, icon.tooltip);
+        //     });
+        // }
+
+        i.title = icon.tooltip;
+
+        highed.dom.ap(where === 'left' ? left : right, i);
     }
 
     ///////////////////////////////////////////////////////////////////////////
