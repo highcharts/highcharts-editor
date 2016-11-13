@@ -40,9 +40,9 @@ highed.Toolbar = function (parent, attributes) {
             additionalCSS: []
         }, attributes),
         container = highed.dom.cr('div', 'highed-toolbar ' + properties.additionalCSS.join(' ')),
-        left = highed.dom.cr('div', 'left'),
-        right = highed.dom.cr('div', 'right'),
-        center = highed.dom.cr('div', 'center'),
+        left = highed.dom.cr('div', 'highed-toolbar-left'),
+        right = highed.dom.cr('div', 'highed-toolbar-right'),
+        center = highed.dom.cr('div', 'highed-toolbar-center'),
         iconsRight = highed.dom.cr('div', 'icons')
     ;
 
@@ -63,11 +63,25 @@ highed.Toolbar = function (parent, attributes) {
             }
         });
 
-        // if (icon.tooltip) {
-        //     highed.dom.on(i, 'mouseenter', function (e) {
-        //         highed.Tooltip(e.clientX + 10, e.clientY - 30, icon.tooltip);
-        //     });
-        // }
+        i.title = icon.tooltip;
+
+        highed.dom.ap(where === 'left' ? left : right, i);
+    }
+
+    /** Add a button to the toolbar
+     *  @memberof highed.Toolbar
+     *  @param icon {object} - an object containing the icon settings.
+     *    > css {array} - the additional css class(s) to use
+     *    > click {function} - the function to call when the icon is clicked
+     */
+    function addButton(icon, where) {
+        var i = highed.dom.cr('div', 'highed-ok-button highed-toolbar-button', (icon.title || ''));
+
+        highed.dom.on(i, 'click', function (e) {
+            if (highed.isFn(icon.click)) {
+                icon.click(e);
+            }
+        });
 
         i.title = icon.tooltip;
 
@@ -93,6 +107,7 @@ highed.Toolbar = function (parent, attributes) {
          */
         container: container,        
         addIcon: addIcon,
+        addButton: addButton,
         /** The left part of the toolbar
          *  @type {domnode}
          *  @memberof highed.Toolbar

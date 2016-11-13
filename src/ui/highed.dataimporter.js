@@ -89,7 +89,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         var events = highed.events(),
 
             properties = highed.merge({          
-                options: ['csv', 'json', 'plugins', 'samples'],
+                options: ['csv', 'plugins', 'samples'],
                 plugins: ['CSV', 'JSON', 'Difi', 'Socrata', 'Google Spreadsheets']
             }, attributes),
 

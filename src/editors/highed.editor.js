@@ -185,6 +185,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             dataImpStep = wizbar.addStep({ title: highed.getLocalizedStr('stepImport') }),
             dataImp = highed.DataImporter(dataImpStep.body, properties.importer),
         
+            dataTableStep = wizbar.addStep({title: highed.getLocalizedStr('stepData')}),
+            dataTable = highed.DataTable(dataTableStep.body),
+            
             templateStep = wizbar.addStep({ title: highed.getLocalizedStr('stepTemplates') }),
             chartTemplateSelector = highed.ChartTemplateSelector(templateStep.body),
 
@@ -202,6 +205,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             doneBtn = highed.dom.cr('div', 'highed-ok-button', highed.getLocalizedStr('doneCaption')),
             doneStep = wizbar.addStep({title: highed.getLocalizedStr('stepDone')}),
 
+
             chartIcon = highed.dom.cr('div', 'highed-chart-container-icon'),
 
             cmenu = highed.DefaultContextMenu(chartPreview)
@@ -211,6 +215,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         cmenu.on('NewChart', function () {
             dataImpStep.activate();
         });
+
+        properties.features = highed.arrToObj(properties.features.split(' '));
 
         ///////////////////////////////////////////////////////////////////////////
 
@@ -226,7 +232,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         //Hide features that are disabled
         function applyFeatures() {
-            var things = highed.arrToObj(properties.features.split(' '));
+            var things = properties.features;
 
             if (!things.export) {
                 dataExpStep.hide();
@@ -251,6 +257,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             if (!things.done) {
                 doneStep.hide();
             }
+
+            if (!things.data) {
+                dataTableStep.hide();
+            }
         
             wizbar.selectFirst();
         }
@@ -272,7 +282,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             dataExp.resize(cs.w, cs.h - ms.h - wb.h);
             chartPreview.resize();
             dataImp.resize(cs.w, cs.h - ms.h - wb.h);
+            dataTable.resize();
             events.emit('Resized');
+
 
             highed.dom.style(chartContainer, {
                 'max-height': (cs.h - ms.h - wb.h) + 'px'                
@@ -358,6 +370,22 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             chartCustomizer.focus(event, x, y);
         });
 
+        if (properties.features.data) {
+            dataTable.on('Change', function (headers, data) {
+                if (data.length) {
+                    var d = dataTable.toDataSeries();
+                   // chartPreview.options.set('xAxis-categories', headers, 0);
+
+                   chartPreview.options.set('xAxis-categories', d.categories, 0);
+                   chartPreview.options.set('series', d.series);
+
+                    // chartPreview.options.set('data', {
+                    //     rows: data 
+                    // });                    
+                }
+            });          
+        }
+
         ///////////////////////////////////////////////////////////////////////////
 
         wizbar.on('Step', function (step, count, thing) {
@@ -395,8 +423,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         } else {
             highed.log(2, 'on object in editor properties is not a valid object');
         }
-
-
 
         //Activate plugins
         properties.plugins = highed.arrToObj(properties.plugins);

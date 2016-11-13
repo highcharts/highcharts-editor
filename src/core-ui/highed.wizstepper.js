@@ -166,6 +166,10 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
             }
         };
 
+        stepexports.visible = function () {
+            return visible;
+        };
+
         highed.dom.on(stepexports.node, 'click', activate);
 
         if (!activeStep) {

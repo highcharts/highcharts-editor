@@ -48,10 +48,11 @@ var highed = {
      *  @param filename {string} - the filename
      *  @param data {string} - the contained data
      */
-    download: function (filename, data) {
+    download: function (filename, data, mime) {
         var l = highed.dom.cr('a');
+        mime = mime || 'application/octet-stream';
         l.download = filename || 'unkown';
-        l.href = 'data:application/octet-stream,' + encodeURIComponent(data);
+        l.href = 'data:' + mime + ',' + encodeURIComponent(data);
         highed.dom.ap(document.body, l);
         l.click();
         document.body.removeChild(l);

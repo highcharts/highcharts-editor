@@ -51,6 +51,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 stepTemplates: 'Templates',
                 stepCustomize: 'Customize',
                 stepExport: 'Export',
+                stepData: 'Data',
 
                 //Done button caption
                 doneCaption: 'Close & Generate Chart',
