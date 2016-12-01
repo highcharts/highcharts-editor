@@ -112,6 +112,7 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
 
                 highed.dom.style(activeStep.body, {
                     opacity: 0,
+                    display: 'none',
                     'pointer-events': 'none'
                 });
 
@@ -139,6 +140,7 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
 
             highed.dom.style(stepexports.body, {
                 opacity: 1,
+                display: 'block',
                 'pointer-events': 'auto'
             });
 

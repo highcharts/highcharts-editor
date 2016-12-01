@@ -140,6 +140,7 @@ highed.ContextMenu = function (stuff) {
         if (!visible) return;
 
         highed.dom.style(container, {
+            left: '-2000px',
             'pointer-events': 'none',
             opacity: 0
         });

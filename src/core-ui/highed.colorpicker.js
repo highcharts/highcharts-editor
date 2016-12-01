@@ -101,6 +101,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         function hide() {
             highed.dom.style(container, {
                 opacity: 0,
+                left: '-20000px',
                 'pointer-events': 'none'
             });
             binder();

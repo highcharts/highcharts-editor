@@ -71,6 +71,9 @@ highed.OverlayModal = function (contents, attributes) {
             width: properties.width + (properties.width.toString().indexOf('%') > 0 ? '' : 'px'),
             height: properties.height + (properties.height.toString().indexOf('%') > 0 ? '' : 'px'),
             opacity: 1,
+            'left': '50%',
+            'top': '50%',
+            'transform': 'translate(-50%, -50%)',
             'pointer-events': 'auto',
             'min-width': properties.minWidth + 'px',
             'min-height': properties.minHeight + 'px',
@@ -101,7 +104,8 @@ highed.OverlayModal = function (contents, attributes) {
         highed.dom.style(container, {
             width: '0px',
             height: '0px',
-            opacity: 0,
+            opacity: 0,            
+            left: '-20000px',
             'pointer-events': 'none'
         });
 

@@ -56,8 +56,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         function buildDOM() {
             dropdownItems.innerHTML = '';
 
-            items.forEach(function (item) {
+            items.forEach(function (item) {                
                 highed.dom.ap(dropdownItems, item.node);
+                //IE fix
+                item.node.innerHTML = item.title();
             });
         }
 
@@ -75,6 +77,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             highed.dom.style(dropdownItems, {
                 opacity: 0,
+                left: '-20000px',
                 'pointer-events': 'none'
             });
 
@@ -83,11 +86,26 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         //Expand the dropdown
         function expand(e) {
+            buildDOM();
+     
             var pos = highed.dom.pos(container, true),
                 s = highed.dom.size(container)
             ;
 
-            buildDOM();
+            //Quick hack for IE...
+            if (!pos || !pos.x) {
+                pos = {
+                    x: 10,
+                    y: 10
+                };
+            }
+
+            if (!s || !s.w) {
+                s = {
+                    w: 200,
+                    h: 200
+                };
+            }
      
             //Need to check the height + y to see if we need to move it
 
@@ -155,7 +173,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
                     //Get the title
                     title: function () {
-                        return node.innerHTML;
+                        return highed.isStr(item) ? item : (item.title || '');
                     },
 
                     //Unselect the item
