@@ -135,7 +135,7 @@ highed.ChartCustomizer = function (parent, attributes) {
     function shouldInclude(group) {
         var doInclude = false;
 
-        if (Object.keys(properties.availableSettings).length > 0) {
+        if (Object.keys(properties.availableSettings || {}).length > 0) {
             if (highed.isArr(group)) {
                 group.forEach(function (sub) {
                     if (shouldInclude(sub)) {
@@ -250,7 +250,7 @@ highed.ChartCustomizer = function (parent, attributes) {
                 }
             }
 
-            if (Object.keys(properties.availableSettings).length > 0) {
+            if (Object.keys(properties.availableSettings || {}).length > 0) {
                 if (!properties.availableSettings[group.id]) {
                     return;
                 }
