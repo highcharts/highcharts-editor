@@ -401,6 +401,28 @@ highed.ChartPreview = function (parent, attributes) {
         });
     }
 
+    function loadSeriesData(seriesArr) {
+        if (!highed.isArr(seriesArr)) return;
+        customizedOptions.series = customizedOptions.series || [];
+
+        if (seriesArr.length < customizedOptions.series.length) {
+            //Need to delete some series
+            customizedOptions.series.splice(
+                seriesArr.length, 
+                customizedOptions.series.length - seriesArr.length
+            );
+        }
+
+        seriesArr.forEach(function (s, i) {
+            if (s.name) {
+                set('series-name', s.name, i);
+            }
+            if (s.data) {
+                set('series-data', s.data, i);
+            }
+        });
+    }
+
     /* Set an attribute
      * @id - the path of the attribute
      * @value - the value to set
@@ -619,6 +641,7 @@ highed.ChartPreview = function (parent, attributes) {
         changeParent: changeParent,
 
         loadTemplate: loadTemplate,
+        loadSeries: loadSeriesData,
         resize: resize,
         
         options: {

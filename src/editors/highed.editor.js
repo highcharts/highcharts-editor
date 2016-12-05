@@ -157,7 +157,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 defaultChartOptions: {},
                 on: {},
                 plugins: {},
-                features: 'import export templates customize welcome',
+                features: 'import export templates customize',
                 includeSVGInHTMLEmbedding: true,
                 importer: {},
                 exporter: {},
@@ -373,15 +373,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         if (properties.features.data) {
             dataTable.on('Change', function (headers, data) {
                 if (data.length) {
-                    var d = dataTable.toDataSeries();
-                   // chartPreview.options.set('xAxis-categories', headers, 0);
+                    var d = dataTable.toDataSeries();                   
 
                    chartPreview.options.set('xAxis-categories', d.categories, 0);
-                   chartPreview.options.set('series', d.series);
 
-                    // chartPreview.options.set('data', {
-                    //     rows: data 
-                    // });                    
+                   chartPreview.loadSeries(d.series);
                 }
             });          
         }
@@ -503,7 +499,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             destroy: destroy,
             /* Toolbar */
             toolbar: mainToolbar,
-            chart: chartPreview            
+            chart: chartPreview,
+            /* The data importer instance */
+            importer: dataImp            
         };
     };
 })();

@@ -23,6 +23,111 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+function parseCSV(inData, delimiter) {
+    var isStr = Highcharts.isString,
+        isArr = Highcharts.isArray,
+        isNum = Highcharts.isNum,
+        each = Highcharts.each,
+        csv = inData || '',
+        options = {
+            delimiter: delimiter || ',',
+            startRow: 0,
+            endRow: Number.MAX_VALUE,
+            startColumn: 0,
+            endColumn: Number.MAX_VALUE
+        },
+        potentialDelimiters = {
+            ',': true,
+            ';': true
+        },
+        //The only thing CSV formats have in common..
+        rows = (csv || '').replace(/\r\n/g, '\n').split('\n')
+    ;
+
+    /*
+        Auto detecting delimiters
+            - If we meet a quoted string, the next symbol afterwards 
+              (that's not \s, \t) is the delimiter
+            - If we meet a date, the next symbol afterwards is the delimiter
+
+        Date formats
+            - If we meet a column with date formats, check all of them to see if 
+              one of the potential months crossing 12. If it does, we now know the
+              format
+
+        It would make things easier to guess the delimiter before
+        doing the actual parsing.
+
+    */
+
+    each(rows, function (row, rowNumber) {
+        var cols = [],
+            inStr = false,
+            i = 0,
+            j,
+            token = '',
+            guessedDel,
+            c,
+            cp,
+            cn
+        ;
+
+        function pushToken() {
+            if (isNum(token)) {
+                token = parseFloat(token);
+            } else if (date.parse(token) !== NaN) {
+                //We can look at the next token now and update the delimiter
+
+            }
+
+            cols.push(token);
+            token = '';
+        }
+
+        for (i = 0; i < row.length; i++) {
+            c = row[i];
+            cn = row[i + 1]
+
+            if (c === '"') {
+                if (inStr) {
+                    //Next symbol that's a potential delimiter 
+                    //is THE delimiter if the CSV is well-formed
+                    //We only do this on the first column.
+                    if (!cols.length && rowNumber === 0) {
+                        j = i;
+                        while (!potentialDelimiters[guessedDel]) {
+                            guessedDel = row[++j];
+                        }
+                        
+                        if (guessedDel !== options.delimiter) {
+                            options.delimiter = guessedDel;
+                        }
+                    }
+
+                    pushToken();
+                } else {
+                    inStr = true;
+                }
+
+            //Everything is allowed inside quotes
+            } else if (inStr) {
+                token += c;
+            
+            //Check if we're done reading a token
+            } else if (c === options.delimiter) {
+                pushToken();
+            
+            //Append to token
+            } else if (c !== ' ') {
+                token += c;   
+            }
+
+            cp = c;
+        }
+    });
+}
+
+
 /** Data table
  *  @constructor
  *  @param {domnode} parent - the node to attach to
@@ -44,7 +149,6 @@ highed.DataTable = function (parent, attributes) {
         topLeftPanel = highed.dom.cr('div', 'highed-dtable-top-left-panel'),
         checkAll = highed.dom.cr('input'),
         mainInput = highed.dom.cr('input', 'highed-dtable-input'),
-       // impButton = highed.dom.cr('span', 'highed-ok-button highed-dtable-imp-button', 'IMPORT'),
         mainInputCb = [],
         mainInputCloseCb = false,
         toolbar,
@@ -100,7 +204,7 @@ highed.DataTable = function (parent, attributes) {
         window.clearTimeout(changeTimeout);
         changeTimeout = window.setTimeout(function () {
             events.emit('Change', getHeaderTextArr(), toData());
-        }, 100);
+        }, 50);
     }
 
     function makeEditable(target, value, fn, keyup, close) {
@@ -142,9 +246,9 @@ highed.DataTable = function (parent, attributes) {
         var value = val || '',
             col = highed.dom.cr('td'),
             colVal = highed.dom.cr('div', 'highed-dtable-col-val', value),
-            input = highed.dom.cr('input')
+            input = highed.dom.cr('input'),
+            exports = {}
         ;
-
 
         function goLeft() {
             if (colNumber >= 1) {
@@ -242,20 +346,35 @@ highed.DataTable = function (parent, attributes) {
             row.select();  
         }
 
+        function destroy() {
+            row.node.removeChild(col);
+            col.innerHTML = '';
+            colVal.innerHTML = '';
+        }
+
         function getVal() {
             return value;
         }
 
+        function addToDOM(me) {
+            colNumber = me || colNumber;
+            highed.dom.ap(row.node,           
+                highed.dom.ap(col, colVal)
+            );            
+        }
+
         highed.dom.on(col, 'click', focus);
 
-        highed.dom.ap(row.node,           
-            highed.dom.ap(col, colVal)
-        );
+        addToDOM();
 
-        return {
+        exports = {
             focus: focus,
-            value: getVal
+            value: getVal,
+            destroy: destroy,
+            addToDOM: addToDOM
         };
+
+        return exports;
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -273,6 +392,11 @@ highed.DataTable = function (parent, attributes) {
 
         function addCol(val) {
             columns.push(Column(exports, columns.length, val));
+        }
+
+        function insertCol(where) {
+            var col = Column(exports, columns.length);
+            columns.splice(where, 0, col);
         }
 
         function select() {
@@ -314,6 +438,20 @@ highed.DataTable = function (parent, attributes) {
             );            
         }
 
+        function rebuildColumns() {
+            row.innerHTML = '';
+            columns.forEach(function (col, i) {
+                col.addToDOM(i);
+            });
+        }
+
+        function delCol(which) {
+            if (which >= 0 && which < columns.length) {
+                columns[which].destroy();       
+                columns.splice(which, 1);
+            }
+        }
+
         highed.dom.on(checker, 'change', function () {
             checked = checker.checked;
         });
@@ -329,7 +467,10 @@ highed.DataTable = function (parent, attributes) {
             isChecked: isChecked,
             check: check,
             node: row,
-            addToDOM: addToDOM
+            addToDOM: addToDOM,
+            insertCol: insertCol,
+            rebuildColumns: rebuildColumns,
+            delCol: delCol
         };
 
         rows.push(exports);
@@ -347,59 +488,11 @@ highed.DataTable = function (parent, attributes) {
         });
     }
 
-    function sortRows(column, direction, asMonths) {
-        tbody.innerHTML = '';
-
-        direction = (direction || '').toUpperCase();
-
-        rows.sort(function (a, b) {
-            var ad = a.columns[column].value(),
-                bd = b.columns[column].value()
-            ;
-
-            if ((highed.isNum(ad) && highed.isNum(bd)) || asMonths) {
-                if (asMonths) {
-                    ad = monthNumbers[ad.toUpperCase().substr(0, 3)] || 13;
-                    bd = monthNumbers[bd.toUpperCase().substr(0, 3)] || 13;                    
-                } else {
-                    ad = parseFloat(ad);
-                    bd = parseFloat(bd);                    
-                }
-                
-                if (direction === 'ASC') {
-                    return ad - bd;
-                } 
-                return bd < ad ? -1 : (bd > ad ? 1 : 0);            
-            }
-            
-            if (direction === 'ASC') {
-                return ad.localeCompare(bd);                
-            } 
-            return bd.localeCompare(ad);
+    function rebuildColumns() {
+        rows.forEach(function (row) {
+            row.rebuildColumns();
         });
-
-        rebuildRows();
-        emitChanged();
-    }
-
-    function clear() {
-        rows = rows.filter(function (row) {
-            row.destroy();
-            return false;
-        });
-
-        gcolumns = gcolumns.filter(function (row) {
-            //Destroy col here
-            return false;
-        });
-
-        tbody.innerHTML = '';
-        leftBar.innerHTML = '';
-        topBar.innerHTML = '';
-        colgroup.innerHTML = '';
-
-        emitChanged();
-    }
+    }  
 
     function init() {
         clear();
@@ -416,15 +509,22 @@ highed.DataTable = function (parent, attributes) {
         resize();
     }
 
-    function addRow() {
-        var r = Row();
-        gcolumns.forEach(function () {
-            r.addCol();
+    function updateColumns() {
+        colgroup.innerHTML = '';
+        topBar.innerHTML = '';
+
+        gcolumns.forEach(function (col, i) {
+            col.colNumber = i;            
+            col.addToDOM();
         });
-        emitChanged();
+
+        rebuildColumns();
+        
+        highed.dom.ap(colgroup, highed.dom.cr('col'));
+        resize();
     }
 
-    function addCol(value) {
+    function addCol(value, where) {
         //The header columns control the colgroup
         var col = highed.dom.cr('col'),
             colNumber = gcolumns.length,
@@ -432,6 +532,12 @@ highed.DataTable = function (parent, attributes) {
             headerTitle = highed.dom.cr('div', '', value),
             moveHandle = highed.dom.cr('div', 'highed-dtable-resize-handle'),
             options = highed.dom.cr('div', 'highed-dtable-top-bar-col-options fa fa-chevron-down'),
+            exports = {
+                col: col,
+                header: header,
+                headerTitle: headerTitle,
+                colNumber: gcolumns.length
+            },
             mover = highed.Movable(moveHandle, 'X', false, false, {
                 x: 20,
                 y: 0
@@ -441,14 +547,14 @@ highed.DataTable = function (parent, attributes) {
                     title: 'Sort Asccending',
                     icon: 'sort-amount-asc',
                     click: function () {
-                        sortRows(colNumber, 'asc');
+                        sortRows(exports.colNumber, 'asc');
                     }     
                 },
                 {
                     title: 'Sort Decending',
                     icon: 'sort-amount-desc',
                     click: function () {
-                        sortRows(colNumber, 'desc');
+                        sortRows(exports.colNumber, 'desc');
                     }        
                 },
                 '-',
@@ -456,37 +562,74 @@ highed.DataTable = function (parent, attributes) {
                     title: 'Sort as Month Names Asccending',
                     icon: 'sort-amount-asc',
                     click: function () {
-                        sortRows(colNumber, 'asc', true);
+                        sortRows(exports.colNumber, 'asc', true);
                     }  
                 },
                 {
                     title: 'Sort as Month Names Decending',
                     icon: 'sort-amount-desc',
                     click: function () {
-                        sortRows(colNumber, 'desc', true);
+                        sortRows(exports.colNumber, 'desc', true);
                     }
                 },
                 '-',
                 {
                     title: 'Delete Column',
-                    icon: 'trash'
+                    icon: 'trash',
+                    click: function () {
+                        if (confirm('Really delete the column?')) {
+                            delCol(exports.colNumber);                            
+                        }
+                    }
                 },
-                {
-                    title: 'Clone Column',
-                    icon: 'clone'
-                },
+                // {
+                //     title: 'Clone Column',
+                //     icon: 'clone'
+                // },
                 '-',
                 {
                     title: 'Insert Column Before',
-                    icon: 'plus'
+                    icon: 'plus',
+                    click: function () {
+                        insertCol(exports.colNumber);
+                    }
                 },
                 {
                     title: 'Insert Column After',
-                    icon: 'plus'
+                    icon: 'plus',
+                    click: function () {
+                        insertCol(exports.colNumber + 1);
+                    }
                 }
             ]),
             ox
         ;
+
+        ////////////////////////////////////////////////////////////////////////
+
+        exports.addToDOM = function () {
+            highed.dom.ap(colgroup, col);
+            highed.dom.ap(topBar, 
+                highed.dom.ap(header,
+                    headerTitle,
+                    options,
+                    moveHandle
+                )
+            );
+        };
+
+        exports.destroy = function () {
+            colgroup.removeChild(col);
+            topBar.removeChild(header);
+
+            gcolumns = gcolumns.filter(function (b) {
+                return b !== exports;
+            });
+        };
+
+        ////////////////////////////////////////////////////////////////////////
+       
+        exports.addToDOM();
 
         highed.dom.showOnHover(header, options);
 
@@ -494,15 +637,6 @@ highed.DataTable = function (parent, attributes) {
         highed.dom.style([col, header], {
             width: col.width + 'px'
         });
-
-        highed.dom.ap(colgroup, col);
-        highed.dom.ap(topBar, 
-            highed.dom.ap(header,
-                headerTitle,
-                options,
-                moveHandle
-            )
-        );
 
         mover.on('StartMove', function (x) {
             ox = x;
@@ -559,20 +693,131 @@ highed.DataTable = function (parent, attributes) {
         });
 
         rows.forEach(function (row) {
-            row.addCol();
+            if (where) {
+                row.insertCol(where);
+            } else {
+                row.addCol();                                
+            }
         });
 
-        gcolumns.push({
-            col: col,
-            header: header,
-            headerTitle: headerTitle
-        });
+        if (where) {
+            gcolumns.splice(where, 0, exports);
+        } else {
+            gcolumns.push(exports);            
+        }
 
         emitChanged();
     }
 
     ////////////////////////////////////////////////////////////////////////////
     // PUBLIC FUNCTIONS FOLLOW
+
+    /** Sort rows
+      * @memberof highed.DataTable
+      * @param column {number} - the column to sort on
+      * @param direction {string} - the direction: `asc` or `desc`
+      * @param asMonths {boolean} - if true, sort by month
+      */
+    function sortRows(column, direction, asMonths) {
+        tbody.innerHTML = '';
+
+        direction = (direction || '').toUpperCase();
+
+        rows.sort(function (a, b) {
+            var ad = a.columns[column].value(),
+                bd = b.columns[column].value()
+            ;
+
+            if ((highed.isNum(ad) && highed.isNum(bd)) || asMonths) {
+                if (asMonths) {
+                    ad = monthNumbers[ad.toUpperCase().substr(0, 3)] || 13;
+                    bd = monthNumbers[bd.toUpperCase().substr(0, 3)] || 13;                    
+                } else {
+                    ad = parseFloat(ad);
+                    bd = parseFloat(bd);                    
+                }
+                
+                if (direction === 'ASC') {
+                    return ad - bd;
+                } 
+                return bd < ad ? -1 : (bd > ad ? 1 : 0);            
+            }
+            
+            if (direction === 'ASC') {
+                return ad.localeCompare(bd);                
+            } 
+            return bd.localeCompare(ad);
+        });
+
+        rebuildRows();
+        emitChanged();
+    }  
+
+    /** Clear the table
+      * @memberof highed.DataTable
+      */
+    function clear() {
+        rows = rows.filter(function (row) {
+            row.destroy();
+            return false;
+        });
+
+        gcolumns = gcolumns.filter(function (row) {
+            //Destroy col here
+            return false;
+        });
+
+        tbody.innerHTML = '';
+        leftBar.innerHTML = '';
+        topBar.innerHTML = '';
+        colgroup.innerHTML = '';
+
+        emitChanged();
+    }
+
+    /** Add a new row
+      * @memberof highed.DataTable
+      */
+    function addRow() {
+        var r = Row();
+        gcolumns.forEach(function () {
+            r.addCol();
+        });
+        emitChanged();
+    }
+
+    /** Insert a new column
+      * @memberof highed.DataTable
+      * @param {number} where - is the position where to add it
+      */
+    function insertCol(where) {
+        if (!where) gcolumns.length;
+        if (where < 0) where = 0;
+        if (where >= gcolumns.length) where = gcolumns.length;
+
+        //Insert into gcolumns and on each row, then call updateColumns()
+        addCol('New Column', where);
+
+        updateColumns();
+    }
+
+    /** Delete a column
+      * @memberof highed.DataTable
+      * @param {number} which - the index of the column to delete
+      */
+    function delCol(which) {
+        if (which >= 0 && which < gcolumns.length) {
+
+            rows.forEach(function (row) {            
+                row.delCol(which);             
+            });
+
+            gcolumns[which].destroy();
+
+            updateColumns();
+            emitChanged();
+        }
+    }
 
     /** Resize the table based on the container size
      *  @memberof highed.DataTable
@@ -599,7 +844,9 @@ highed.DataTable = function (parent, attributes) {
      */
     function getHeaderTextArr() {
         return gcolumns.map(function (item) {
-            return item.headerTitle.innerHTML.length ? item.headerTitle.innerHTML : null;
+            return item.headerTitle.innerHTML.length ? 
+                   item.headerTitle.innerHTML : 
+                   null;
         });
     }
 
@@ -662,7 +909,9 @@ highed.DataTable = function (parent, attributes) {
 
             if (i > 0) {
                 res.series.push({
-                    name: item.headerTitle.innerHTML.length ? item.headerTitle.innerHTML : null,
+                    name: item.headerTitle.innerHTML.length ? 
+                          item.headerTitle.innerHTML : 
+                          null,
                     data: []
                 });
             }
@@ -687,8 +936,7 @@ highed.DataTable = function (parent, attributes) {
                 res.series[ci].data.push(v);
             });
         });
-
-        console.log(res);
+        
         return res;
     }
 
@@ -712,7 +960,7 @@ highed.DataTable = function (parent, attributes) {
         if (data && data.csv) {
             clear();
 
-            //Super primitive parser
+            //Super primitive parser - we need a better one.
             data.csv = data.csv.split('\n');
             data.csv.forEach(function (r, i) {
                 var cols = r.split(','),
@@ -737,6 +985,8 @@ highed.DataTable = function (parent, attributes) {
         highed.snackBar('data imported');
         resize();
     });
+
+    ////////////////////////////////////////////////////////////////////////////
 
     table.cellPadding = 0;
     table.cellSpacing = 0;
@@ -763,6 +1013,8 @@ highed.DataTable = function (parent, attributes) {
             )
         )
     );
+
+    ////////////////////////////////////////////////////////////////////////////
 
     toolbar = highed.Toolbar(container, {
         additionalCSS: ['highed-dtable-toolbar']
@@ -804,13 +1056,6 @@ highed.DataTable = function (parent, attributes) {
         }
     });
 
-    // highed.dom.ap(toolbar.right, impButton);
-
-    // highed.dom.on(impButton, 'click', function () {
-    //     importModal.show();
-    //     importer.resize();
-    // });
-
     highed.dom.on(checkAll, 'change', function () {
         rows.forEach(function (row) {
             row.check(checkAll.checked);
@@ -844,11 +1089,18 @@ highed.DataTable = function (parent, attributes) {
         }
     }, 'left');
 
+    ////////////////////////////////////////////////////////////////////////////
+
     init();
 
     ////////////////////////////////////////////////////////////////////////////
 
     return {
+        sortRows: sortRows,
+        clear: clear,
+        addRow: addRow,
+        insCol: insertCol,
+        delCol: delCol,
         toData: toData,
         toCSV: toCSV,
         toDataSeries: toDataSeries,

@@ -289,6 +289,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             });
         }
 
+        function loadCSVExternal(csv) {
+            csvPasteArea.value = info.data;
+            emitCSVImport();
+        }
+
         function processJSONImport(jsonString) {
             var json = jsonString;
             if (highed.isStr(json)) {            
@@ -409,6 +414,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         
         return {
             on: events.on,
+            loadCSV: loadCSVExternal,
             resize: resize
         };
     };

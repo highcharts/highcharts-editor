@@ -89,8 +89,6 @@ highed.SimpleEditor = function (parent, attributes) {
         cmenu = highed.DefaultContextMenu(preview)
     ;
 
-
-
     ///////////////////////////////////////////////////////////////////////////
 
     /** Force a resize of the editor 
