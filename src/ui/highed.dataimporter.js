@@ -290,7 +290,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         }
 
         function loadCSVExternal(csv) {
-            csvPasteArea.value = info.data;
+            csvPasteArea.value = csv;
             emitCSVImport();
         }
 
