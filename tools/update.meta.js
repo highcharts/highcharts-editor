@@ -33,18 +33,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         parent: always set
 */
 
-var meta = require(__dirname + '/../dictionaries/meta.js'),
-    api = {},
+
+var api = {},
     apiSorted = {},
     fs = require('fs'),
     async = require('async'),
+    i18next = require('i18next'),
     license = fs.readFileSync(__dirname + '/../LICENSE'),
     request = require('request'),
+    requireDir = require('require-dir'),
     apiDumpURL = 'http://api.highcharts.com/highcharts/option/dump.json',
     argv = require('yargs')
+                .default('lang', 'en')
                 .string('exposed')
-                .default('exposed', 'exposed', __dirname + '/../dictionaries/exposed.settings.json')
-                argv  
+                .default('exposed', __dirname + '/../dictionaries/exposed.settings.json')
+                .argv
 ;
 
 require('colors');
@@ -136,7 +139,7 @@ function removeType(str) {
 
 function update(root) {
     var included = mapIncludedProperties(
-            JSON.parse(fs.readFileSync(argv.exposed || __dirname + '/../dictionaries/exposed.settings.json'))
+            JSON.parse(fs.readFileSync(argv.exposed))
         )
     ;
 
@@ -187,7 +190,7 @@ function update(root) {
     });
 }
 
-function process() {
+function process(meta) {
     sortAPI();
     update(meta);
 
@@ -205,16 +208,24 @@ function process() {
 console.log('Higcharts Editor Meta Updater'.green);
 console.log('Fetching latest API dump...'.bold);
 
-request(apiDumpURL, function (error, response, body) {
-    console.log('API Fetched, transforming...'.bold);
-    if (error) {
-        console.log('[error]'.red, error);
-    } else {
-        try {
-            api = JSON.parse(body);
-            process();
-        } catch (e) {
-            console.log('[error]'.red, e);
+i18next.init({
+    lng: argv.lang,
+    resources: requireDir(__dirname + '/../dictionaries/localisations')
+}, function(err, t) {
+    var meta = require(__dirname + '/../dictionaries/meta.js')(i18next);
+
+    request(apiDumpURL, function (error, response, body) {
+        console.log('API Fetched, transforming...'.bold);
+        if (error) {
+            console.log('[error]'.red, error);
+        } else {
+            try {
+                api = JSON.parse(body);
+                process(meta);
+            } catch (e) {
+                console.log('[error]'.red, e);
+            }
         }
-    }
+    });
 });
+
