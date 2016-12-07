@@ -125,6 +125,24 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
         });
     }
 
+    /** Hide the tab control
+     *  @memberof highed.TabControl
+     */
+    function hide() {
+        highed.dom.style(container, {
+            display: 'none'
+        });
+    }
+
+    /** Show the tab control
+     *  @memberof highed.TabControl
+     */
+    function show() {
+        highed.dom.style(container, {
+            display: 'block'
+        });
+    }
+
     function updateVisibility() {
         var c = tabs.filter(function (a) {
             return a.visible();
@@ -279,6 +297,8 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
         createTab: Tab,
         resize: resize,
         selectFirst: selectFirst,
+        show: show,
+        hide: hide,
         /** Get the size of the title bar
          *  @memberof highed.TabControl
          *  @returns {object}

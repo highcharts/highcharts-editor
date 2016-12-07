@@ -44,17 +44,18 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  @param parent {domnode} - the node to attach to
  *  @param attributes {object} - the options for the editor
+ *    > availableSettings {array<string>} - the settings to include
+ *    > chart {object} - default chart settings
  *    > importer {object} - options passed to the importer widget
  *      > options {string|array<string>} - the options to include
  *      > plugins {string|array<sting>} - the plugins to enable
- *    > availableSettings {array<string>} - the settings to include
- *    > chart {object} - default chart settings
  */
 highed.SimpleEditor = function (parent, attributes) {
     var properties = highed.merge({
             importer: {
                 options: 'csv'
             },
+            features: 'import preview customizer',
             availableSettings: [
                 'title--text',
                 'subtitle--text',
@@ -73,13 +74,29 @@ highed.SimpleEditor = function (parent, attributes) {
         container = highed.dom.cr('div', 'highed-container'),
         expandContainer = highed.dom.cr('div', 'highed-expand-container'),
 
-        mainVSplitter = highed.VSplitter(container, {topHeight: '60px', noOverflow: true}),
-        mainToolbar = highed.Toolbar(mainVSplitter.top, {additionalCSS: ['highed-header']}),
+        mainVSplitter = highed.VSplitter(container, {
+            topHeight: '60px', 
+            noOverflow: true
+        }),
 
-        hsplitter = highed.HSplitter(mainVSplitter.bottom, {leftWidth: 60, noOverflow: true}),
+        mainToolbar = highed.Toolbar(mainVSplitter.top, {
+            additionalCSS: ['highed-header']
+        }),
 
-        vsplitterRight = highed.VSplitter(hsplitter.right, {noOverflow: true}),
-        preview = highed.ChartPreview(vsplitterRight.top, {defaultChartOptions: properties.chart, expandTo: expandContainer}),
+        hsplitter = highed.HSplitter(mainVSplitter.bottom, {
+            leftWidth: 60, 
+            noOverflow: true
+        }),
+
+        vsplitterRight = highed.VSplitter(hsplitter.right, {
+            noOverflow: true
+        }),
+        
+        preview = highed.ChartPreview(vsplitterRight.top, {
+            defaultChartOptions: properties.chart, 
+            expandTo: expandContainer
+        }),
+        
         importer = highed.DataImporter(vsplitterRight.bottom, properties.importer),        
 
         customizer = highed.SimpleCustomizer(hsplitter.left, {            
@@ -90,6 +107,24 @@ highed.SimpleEditor = function (parent, attributes) {
     ;
 
     ///////////////////////////////////////////////////////////////////////////
+
+    properties.features = highed.arrToObj(properties.features.split(' '));
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    function applyFeatures() {
+        if (!properties.features.import) {
+            importer.hide();
+        }
+
+        if (!properties.features.preview) {
+
+        }
+
+        if (!properties.features.customizer) {
+
+        }
+    }
 
     /** Force a resize of the editor 
      *  @memberof highed.SimpleEditor
@@ -149,8 +184,8 @@ highed.SimpleEditor = function (parent, attributes) {
         }
     });
 
+    applyFeatures();
     resize();
-
     attachToCustomizer();
 
     //Public interface

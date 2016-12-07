@@ -325,6 +325,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             webList.resize(w || ps.w, (h || ps.h) - bsize.h);
         }
 
+        /** Show the importer
+         *  @memberof highed.DataImporter
+         */
+        function show() {
+            tabs.show();
+        }
+
+        /** Hide the importer
+         *  @memberof highed.DataImporter
+         */
+        function hide() {
+            tabs.hide();
+        }
+
         ///////////////////////////////////////////////////////////////////////////
 
         highed.dom.ap(csvTab.body, 
@@ -415,7 +429,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         return {
             on: events.on,
             loadCSV: loadCSVExternal,
-            resize: resize
+            resize: resize,
+            show: show,
+            hide: hide
         };
     };
 })();
