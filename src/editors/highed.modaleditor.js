@@ -41,7 +41,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * @param attributes {object} - properties. Note that this object is also passed to the editor constructor.
  *   > type {string} - either `full` or `simple`.
  *   > allowDone {bool} - if set to true (default is false) a "Close and use" button will appear on the top bar
- * @param fn {function} - function to call when done editing, argument is embeddable HTML
+ * @param fn {function} - function to call when done editing, argument is an instance of highed.ChartPreview
  *
  */
 highed.ModalEditor = function (summoner, attributes, fn) {
