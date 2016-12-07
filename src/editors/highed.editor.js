@@ -148,6 +148,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      *   > importer {object} - options passed to the contained importer object (see highed.DataImporter)
      *   > exporter {object} - options passd to the contained export object (see highed.DataExporter)
      *   > availableSettings {array} - array containing a whitelist of editable properties. Default is "show all available"
+     *   > useContextMenu {boolean} - enable/disable gear icon in header
+     *   > useHeader {boolean} - enable/disable the header
      * @return {highed.Editor} - A new instance of an editor
      */
     highed.Editor = function (parent, attributes) {
@@ -157,15 +159,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 defaultChartOptions: {},
                 on: {},
                 plugins: {},
-                features: 'import export templates customize',
+                events: {},
+                features: 'welcome import export templates customize',
                 includeSVGInHTMLEmbedding: true,
                 importer: {},
                 exporter: {},
-                availableSettings: false   
+                availableSettings: false,
+                useContextMenu: true,
+                useHeader: true   
             }, attributes),
 
             container = highed.dom.cr('div', 'highed-container'),
             expandContainer = highed.dom.cr('div', 'highed-expand-container'),
+
+            wizbody = highed.dom.cr('div'),
 
             mainToolbar = highed.Toolbar(container, {
                 additionalCSS: ['highed-header']
@@ -205,12 +212,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             doneBtn = highed.dom.cr('div', 'highed-ok-button', highed.getLocalizedStr('doneCaption')),
             doneStep = wizbar.addStep({title: highed.getLocalizedStr('stepDone')}),
 
-
             chartIcon = highed.dom.cr('div', 'highed-chart-container-icon'),
 
             cmenu = highed.DefaultContextMenu(chartPreview)
 
         ;
+
+    
 
         cmenu.on('NewChart', function () {
             dataImpStep.activate();
@@ -274,6 +282,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 ms = highed.dom.size(mainToolbar.container),
                 wb = highed.dom.size(wizbar.container)
             ;
+
+            if (!properties.useHeader) {
+                ms = {
+                    w: 0,
+                    h: 0
+                };
+            }
 
             //wizbar.resize(undefined, cs.h - ms.h - wb.h);
             chartCustomizer.resize(undefined, cs.h - ms.h - wb.h);
@@ -466,12 +481,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             }
         });
 
-        mainToolbar.addIcon({
-            css: 'fa-gear',
-            click: function(e) {
-                cmenu.show(e.clientX, e.clientY);
-            }
-        });
+        if (properties.useContextMenu) {
+            mainToolbar.addIcon({ 
+                css: 'fa-gear',
+                click: function(e) {
+                    cmenu.show(e.clientX, e.clientY);
+                }
+            });            
+        }
 
         updateToolbarIcon();
 
@@ -479,6 +496,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             window.scrollTo(0, 1);
         });
 
+        if (!properties.useHeader) {
+            highed.dom.style(mainToolbar.container, {
+                display: 'none'
+            });
+        }
+
+        Object.keys(properties.events).forEach(function (k) {
+            if (highed.isFn(properties.events[k])) {
+                events.on(k, properties.events[k]);                
+            }
+        });
 
         chartPreview.on('RequestResize', resize);
 

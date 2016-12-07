@@ -83,7 +83,7 @@ highed.ModalEditor = function (summoner, attributes, fn) {
 
     function doDone() {
         if (highed.isFn(fn)) {
-            fn(editor.chart.export.html(true), editor.chart.export.svg());
+            fn(editor.chart);
         }
         modal.hide();
     }

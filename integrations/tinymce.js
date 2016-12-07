@@ -28,7 +28,8 @@ tinymce.PluginManager.add('highcharts', function (editor, url) {
     var modal = highed.ModalEditor(false, {
                     features: 'import templates customize welcome done',
                     allowDone: true
-                }, function (html) {
+                }, function (chart) {
+                    var html = chart.export.html(true);
                    editor.insertContent('<div class="mceNonEditable">' + html + '</div><p></p>');                
                 })
     ; 

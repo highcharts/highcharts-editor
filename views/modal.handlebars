@@ -18,7 +18,8 @@
             importer: {
                 options: 'plugins csv json samples'
             }
-        }, function (html) {
+        }, function (chart) {
+            var html = chart.export.html(true);
             highed.dom.get('chart-result').value = html;
         });
     });

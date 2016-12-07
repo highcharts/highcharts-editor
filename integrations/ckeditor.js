@@ -38,7 +38,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             var modal = highed.ModalEditor(false, {
                     features: 'import templates customize welcome done',
                     allowDone: true
-                }, function (html) {
+                }, function (chart) {
+                    var html = chart.export.html(true);
                    editor.insertHtml('<div contenteditable="false">' + html + '</div><p></p>');                
                 })
             ;        
