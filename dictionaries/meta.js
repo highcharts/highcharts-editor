@@ -26,25 +26,25 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 module.exports = function(i18next) {
     return {
         options: {
-            'Titles': [{
-                text: 'Main titles',
+            [i18next.t('Titles')]: [{
+                text: i18next.t('Main titles'),
                 options: [{
-                    text: 'Chart title',
+                    text: i18next.t('Chart title'),
                     id: 'title--text',
-                    tooltipText: 'The main chart title.'
+                    tooltipText: i18next.t('The main chart title.'),
                 }, {
-                    text: 'Chart subtitle',
+                    text: i18next.t('Chart subtitle'),
                     id: 'subtitle--text',
-                    tooltipText: 'The chart\'s subtitle, normally displayed with smaller fonts below the main title.'
+                    tooltipText: i18next.t('The chart\'s subtitle, normally displayed with smaller fonts below the main title.'),
                 }, {
-                    text: 'Y axis title',
+                    text: i18next.t('Y axis title'),
                     id: 'yAxis-title--text',
-                    tooltipText: 'The Y axis title, normally displayed vertically along the Y axis.',
+                    tooltipText: i18next.t('The Y axis title, normally displayed vertically along the Y axis.'),
                     dataIndex: 0
                 }]
             }],
 
-            'General': [
+            [i18next.t('General')]: [
                 // {
                 //  text: 'Label Items',
                 //  options: [
@@ -52,107 +52,105 @@ module.exports = function(i18next) {
                 //  ]
                 // },
                 {
-                    text: 'Chart size',
+                    text: i18next.t('Chart size'),
                     options: [
                         {
                             id: 'chart--width',
-                            text: 'Chart width',
+                            text: i18next.t('Chart width'),
                             custom: {minValue: 50, maxValue: 5000, step: 10}
                         },
                         {
                             id: 'chart--height',
-                            text: 'Chart height',
+                            text: i18next.t('Chart height'),
                             custom: {minValue: 50, maxValue: 5000, step: 10}
                         }
                     ]
                 }, {
-                    text: 'Chart Interaction',
+                    text: i18next.t('Chart Interaction'),
                     options: [
-                        {id: 'chart--zoomType', text: 'Allow zooming'},
-                        {id: 'chart--polar', text: 'Polar (radar) projection'},
-                        {id: 'chart--reflow', text: 'Reflow on window resize'}
+                        {id: 'chart--zoomType', text: i18next.t('Allow zooming')},
+                        {id: 'chart--polar', text: i18next.t('Polar (radar) projection')},
+                        {id: 'chart--reflow', text: i18next.t('Reflow on window resize')}
                     ]
                 }
             ],
 
-            'Appearance': [{
-                text: 'Fonts',
+            [i18next.t('Appearance')]: [{
+                text: i18next.t('Fonts'),
                 options: [
                     {
                         id: 'chart--style',
-                        text: 'Font family',
+                        text: i18next.t('Font family'),
                         dataType: 'font',
-                        tooltipText: 'The font to use throughout the chart'
+                        tooltipText: i18next.t('The font to use throughout the chart')
                     }
                 ]
             }, {
-                text: 'Titles',
+                text: i18next.t('Titles'),
                 options: [
                     {
                         id: 'title--style',
-                        text: 'Main title style',
+                        text: i18next.t('Main title style'),
                         dataType: 'font',
-                        tooltipText: 'Styling for the main chart title'
+                        tooltipText: i18next.t('Styling for the main chart title')
                     },
                     //{id: 'title--text'},
                     {
                         id: 'subtitle--style',
-                        text: 'Subtitle style',
+                        text: i18next.t('Subtitle style'),
                         dataType: 'font',
-                        tooltipText: 'Styling for the chart\'s subtitle, normally displayed with smaller fonts below the main title'
+                        tooltipText: i18next.t('Styling for the chart\'s subtitle, normally displayed with smaller fonts below the main title')
                     }
 
                 ]
             }, {
-                text: 'Series colors',
+                text: i18next.t('Series colors'),
 
                 options: [{
                     id: 'colors',
-                    text: 'Colors',
-                    tooltipText: 'Default colors for the data series, or for individual points in a pie series or a column series ' +
-                    'with individual colors. Colors will be picked in succession. If a color is explicitly set for each series ' +
-                    'in the <em>Data series</em> view, that color will take precedence.'
+                    text: i18next.t('Colors'),
+                    tooltipText: i18next.t('Default colors for the data series, or for individual points in a pie series or a column series with individual colors. Colors will be picked in succession. If a color is explicitly set for each series in the <em>Data series</em> view, that color will take precedence.')
                 }]
             }, {
-                text: 'Chart area',
+                text: i18next.t('Chart area'),
 
                 options: [
                     {
                         id: 'chart--backgroundColor',
-                        text: 'Background color',
-                        tooltipText: 'Background color for the full chart area'
+                        text: i18next.t('Background color'),
+                        tooltipText: i18next.t('Background color for the full chart area')
                     },
-                    {id: 'chart--borderWidth', text: 'Border width', custom: {minValue: 0}},
-                    {id: 'chart--borderRadius', text: 'Border corner radius', custom: {minValue: 0}},
-                    {id: 'chart--borderColor', text: 'Border color'}
+                    {id: 'chart--borderWidth', text: i18next.t('Border width'), custom: {minValue: 0}},
+                    {id: 'chart--borderRadius', text: i18next.t('Border corner radius'), custom: {minValue: 0}},
+                    {id: 'chart--borderColor', text: i18next.t('Border color')}
                 ]
             }, {
-                text: 'Plot area',
+                text: i18next.t('Plot area'),
 
                 options: [
                     {
-                        id: 'chart--plotBackgroundColor', text: 'Background color',
-                        tooltipText: 'Background color for the plot area, the area inside the axes'
+                        id: 'chart--plotBackgroundColor', text: i18next.t('Background color'),
+                        tooltipText: i18next.t('Background color for the plot area, the area inside the axes')
                     },
                     {
-                        id: 'chart--plotBackgroundImage', text: 'Background image URL',
-                        tooltipText: 'The online URL for an image to use as the plot area background'
+                        id: 'chart--plotBackgroundImage', text: i18next.t('Background image URL'),
+                        tooltipText: i18next.t('The online URL for an image to use as the plot area background')
                     },
-                    {id: 'chart--plotBorderWidth', text: 'Border width'},
-                    {id: 'chart--plotBorderColor', text: 'Border color'}
+                    {id: 'chart--plotBorderWidth', text: i18next.t('Border width')},
+                    {id: 'chart--plotBorderColor', text: i18next.t('Border color')}
                 ]
             }
             ],
 
-            'Axes': [{
-                text: 'Axes setup',
+            [i18next.t('Axes')]: [{
+                text: i18next.t('Axes setup'),
 
                 options: [
-                    {id: 'chart--inverted', text: 'Inverted axes'}
+                    {id: 'chart--inverted', text: i18next.t('Inverted axes')}
                 ]
             }, {
                 id: 'xAxis',
-                text: 'X-Axis',
+                text: i18next.t('X-Axis'),
 
                 options: [
                     // {
@@ -164,38 +162,35 @@ module.exports = function(i18next) {
                     {
                         id: 'xAxis-title--style',
                         dataType: 'font',
-                        text: 'X axis title',
-                        tooltipText: 'Styling and text for the X axis title',
+                        text: i18next.t('X axis title'),
+                        tooltipText: i18next.t('Styling and text for the X axis title'),
                         dataIndex: 0
                     },
                     {
                         id: 'xAxis-title--text',
-                        text: 'Text',
+                        text: i18next.t('Text'),
                         dataIndex: 0
                     },
                     {
                         id: 'xAxis--type',
-                        text: 'Type',
-                        tooltipText: 'The type of axis',
+                        text: i18next.t('Type'),
+                        tooltipText: i18next.t('The type of axis'),
                         dataIndex: 0
                     },
                     {
                         id: 'xAxis--opposite',
-                        text: 'Opposite side of chart',
+                        text: i18next.t('Opposite side of chart'),
                         dataIndex: 0
                     },
                     {
                         id: 'xAxis--reversed',
-                        text: 'Reversed direction',
+                        text: i18next.t('Reversed direction'),
                         dataIndex: 0
                     },
                     {
                         id: 'xAxis-labels--format',
-                        text: 'Axis labels format',
-                        tooltipText: '<p>A format string for the axis labels. The value is available through a variable <code>{value}</code>.</p>' +
-                        '<p><b>Units</b> can be added for example like <code>{value} USD</code>.</p>' +
-                        '<p><b>Formatting</b> can be added after a colon inside the variable, for example <code>USD {value:.2f}</code> to display two decimals, ' +
-                        'or <code>{value:%Y-%m-%d}</code> for a certain time format.',
+                        text: i18next.t('Axis labels format'),
+                        tooltipText: i18next.t('<p>A format string for the axis labels. The value is available through a variable <code>{value}</code>.</p><p><b>Units</b> can be added for example like <code>{value} USD</code>.</p><p><b>Formatting</b> can be added after a colon inside the variable, for example <code>USD {value:.2f}</code> to display two decimals,or <code>{value:%Y-%m-%d}</code> for a certain time format.'),
                         dataIndex: 0
                     }//,
                     // {
@@ -206,7 +201,7 @@ module.exports = function(i18next) {
                 ]
             }, {
                 id: 'yAxis',
-                text: 'Y-Axis',
+                text: i18next.t('Y-Axis'),
 
                 options: [
                     // {
@@ -217,80 +212,76 @@ module.exports = function(i18next) {
                     {
                         id: 'yAxis-title--style',
                         dataType: 'font',
-                        text: 'Y axis title style',
-                        tooltipText: 'Styling and text for the X axis title',
+                        text: i18next.t('Y axis title style'),
+                        tooltipText: i18next.t('Styling and text for the X axis title'),
                         dataIndex: 0
                     },
                     //{id: 'yAxis-title--text'},
                     {
                         id: 'yAxis--type',
-                        text: 'Type',
-                        tooltipText: 'The type of axis',
+                        text: i18next.t('Type'),
+                        tooltipText: i18next.t('The type of axis'),
                         dataIndex: 0
                     },
                     {
                         id: 'yAxis--opposite',
-                        text: 'Opposite side of chart',
+                        text: i18next.t('Opposite side of chart'),
                         dataIndex: 0
                     },
                     {
                         id: 'yAxis--reversed',
-                        text: 'Reversed direction',
+                        text: i18next.t('Reversed direction'),
                         dataIndex: 0
                     },
                     {
                         id: 'yAxis-labels--format',
-                        text: 'Axis labels format',
-                        tooltipText: '<p>A format string for the axis labels. The value is available through a variable <code>{value}</code>.</p>' +
-                        '<p><b>Units</b> can be added for example like <code>{value} USD</code>.</p>' +
-                        '<p><b>Formatting</b> can be added after a colon inside the variable, for example <code>USD {value:.2f}</code> to display two decimals, ' +
-                        'or <code>{value:%Y-%m-%d}</code> for a certain time format.',
+                        text: i18next.t('Axis labels format'),
+                        tooltipText: i18next.t('<p>A format string for the axis labels. The value is available through a variable <code>{value}</code>.</p><p><b>Units</b> can be added for example like <code>{value} USD</code>.</p><p><b>Formatting</b> can be added after a colon inside the variable, for example <code>USD {value:.2f}</code> to display two decimals, or <code>{value:%Y-%m-%d}</code> for a certain time format.'),
                         dataIndex: 0
                     }
                 ]
             }
             ],
-            'Data series': [{
+            [i18next.t('Data series')]: [{
                 id: 'series',
                 array: true,
-                text: 'Series',
+                text: i18next.t('Series'),
                 controlledBy: {
-                    title: 'Select Series',
+                    title: i18next.t('Select Series'),
                     options: 'series',
                     optionsTitle: 'name'
                 },
                 filteredBy: 'series--type',
                 options: [
-                    {id: 'series--type', text: 'Series type', tooltipText: 'The type of series'},
+                    {id: 'series--type', text: i18next.t('Series type'), tooltipText: i18next.t('The type of series')},
                     {
                         id: 'series--color',
-                        text: 'Color',
-                        tooltipText: 'The main color of the series. If no color is given here, the color ' +
-                        'is pulled from the array of default colors as given in the "Appearance" section.'
+                        text: i18next.t('Color'),
+                        tooltipText: i18next.t('The main color of the series. If no color is given here, the color is pulled from the array of default colors as given in the "Appearance" section.')
                     },
                     {
                         id: 'series--negativeColor',
-                        text: 'Negative color',
-                        tooltipText: 'The negative color of the series below the threshold. Threshold is default zero, this can be changed in the advanced settings.'
+                        text: i18next.t('Negative color'),
+                        tooltipText: i18next.t('The negative color of the series below the threshold. Threshold is default zero, this can be changed in the advanced settings.')
                     },
                     {
                         id: 'series--colorByPoint',
-                        text: 'Color by point',
-                        tooltipText: 'Use one color per point. Colors can be changed in the "Appearance" section.'
+                        text: i18next.t('Color by point'),
+                        tooltipText: i18next.t('Use one color per point. Colors can be changed in the "Appearance" section.')
                     },
-                    {id: 'series--dashStyle', text: 'Dash style'},
-                    {id: 'series-marker--enabled', text: 'Enable point markers'},
-                    {id: 'series-marker--symbol', text: 'Marker symbol'},
+                    {id: 'series--dashStyle', text: i18next.t('Dash style')},
+                    {id: 'series-marker--enabled', text: i18next.t('Enable point markers')},
+                    {id: 'series-marker--symbol', text: i18next.t('Marker symbol')},
                     //{id: 'series<*>-dataLabels--enabled', text: 'Enable data labels'},
                     {
                         id: 'series-tooltip--valuePrefix',
-                        text: 'Prefix in tooltip',
-                        tooltipText: 'Text to prepend before the value in the tooltip'
+                        text: i18next.t('Prefix in tooltip'),
+                        tooltipText: i18next.t('Text to prepend before the value in the tooltip')
                     },
                     {
                         id: 'series-tooltip--valueSuffix',
-                        text: 'Suffix (unit) in tooltip',
-                        tooltipText: 'Text to append after the value in the tooltip'
+                        text: i18next.t('Suffix (unit) in tooltip'),
+                        tooltipText: i18next.t('Text to append after the value in the tooltip')
                     }
                     // {id: 'series-seriesMapping--x', text: 'Explicit x column'},
                     // {id: 'series-seriesMapping--label', text: 'Explicit label column'},
@@ -309,131 +300,123 @@ module.exports = function(i18next) {
                 ]
             }],
 
-            'Value labels': [{
+            [i18next.t('Value labels')]: [{
                 id: 'data-labels',
-                text: 'Value labels',
+                text: i18next.t('Value labels'),
 
                 options: [{
                     id: 'plotOptions-series-dataLabels--enabled',
-                    text: 'Enable data labels for all series',
-                    tooltipText: 'Show small labels next to each data value (point, column, pie slice etc)'
+                    text: i18next.t('Enable data labels for all series'),
+                    tooltipText: i18next.t('Show small labels next to each data value (point, column, pie slice etc)')
                 }, {
                     id: 'plotOptions-series-dataLabels--format',
-                    text: 'Data label format',
-                    tooltipText: '<p>A format string for the value labels. The value is available through a variable <code>{y}</code>. Other available variables ' +
-                    'are <code>{x}</code> and <code>{key}</code> for the category.</p>' +
-                    '<p><b>Units</b> can be added for example like <code>{y} USD</code>.</p>' +
-                    '<p><b>Formatting</b> can be added after a colon inside the variable, for example <code>USD {y:.2f}</code> to display two decimals, ' +
-                    'or <code>{x:%Y-%m-%d}</code> for a certain time format.'
+                    text: i18next.t('Data label format'),
+                    tooltipText: i18next.t('<p>A format string for the value labels. The value is available through a variable <code>{y}</code>. Other available variables are <code>{x}</code> and <code>{key}</code> for the category.</p><p><b>Units</b> can be added for example like <code>{y} USD</code>.</p><p><b>Formatting</b> can be added after a colon inside the variable, for example <code>USD {y:.2f}</code> to display two decimals, or <code>{x:%Y-%m-%d}</code> for a certain time format.')
                 }, {
                     id: 'plotOptions-series-dataLabels--style',
-                    text: 'Text style'
+                    text: i18next.t('Text style')
                 }]
             }],
 
-            'Legend': [
+            [i18next.t('Legend')]: [
                 {
-                    text: 'General',
+                    text: i18next.t('General'),
 
                     options: [
-                        {id: 'legend--enabled', text: 'Enable legend'},
-                        {id: 'legend--layout', text: 'Item layout'}
+                        {id: 'legend--enabled', text: i18next.t('Enable legend')},
+                        {id: 'legend--layout', text: i18next.t('Item layout')}
                     ]
                 }, {
-                    text: 'Placement',
+                    text: i18next.t('Placement'),
 
                     options: [
-                        {id: 'legend--align', text: 'Horizontal alignment'},
+                        {id: 'legend--align', text: i18next.t('Horizontal alignment')},
                         {
                             id: 'legend--x',
-                            text: 'Horizontal offset',
-                            tooltipText: 'The pixel offset of the legend relative to its alignment'
+                            text: i18next.t('Horizontal offset'),
+                            tooltipText: i18next.t('The pixel offset of the legend relative to its alignment')
                         },
-                        {id: 'legend--verticalAlign', text: 'Vertical alignment'},
+                        {id: 'legend--verticalAlign', text: i18next.t('Vertical alignment')},
                         {
                             id: 'legend--y',
-                            text: 'Vertical offset',
-                            tooltipText: 'The pixel offset of the legend relative to its alignment'
+                            text: i18next.t('Vertical offset'),
+                            tooltipText: i18next.t('The pixel offset of the legend relative to its alignment')
                         },
-                        {id: 'legend--floating', text: 'Float on top of plot area'}
+                        {id: 'legend--floating', text: i18next.t('Float on top of plot area')}
                     ]
                 }, {
-                    text: 'Appearance',
+                    text: i18next.t('Appearance'),
 
                     options: [
-                        {id: 'legend--itemStyle', text: 'Text style', dataType: 'font'},
-                        {id: 'legend--itemHiddenStyle', text: 'Text style hidden', dataType: 'font'},
-                        {id: 'legend--backgroundColor', text: 'Background color'},
-                        {id: 'legend--borderWidth', text: 'Border width'},
-                        {id: 'legend--borderRadius', text: 'Border corner radius'},
-                        {id: 'legend--borderColor', text: 'Border color'}
+                        {id: 'legend--itemStyle', text: i18next.t('Text style'), dataType: 'font'},
+                        {id: 'legend--itemHiddenStyle', text: i18next.t('Text style hidden'), dataType: 'font'},
+                        {id: 'legend--backgroundColor', text: i18next.t('Background color')},
+                        {id: 'legend--borderWidth', text: i18next.t('Border width')},
+                        {id: 'legend--borderRadius', text: i18next.t('Border corner radius')},
+                        {id: 'legend--borderColor', text: i18next.t('Border color')}
                     ]
                 }
             ],
 
-            'Tooltip': [{
-                text: 'General',
+            [i18next.t('Tooltip')]: [{
+                text: i18next.t('General'),
 
                 options: [
                     {
                         id: 'tooltip--enabled',
-                        text: 'Enable tooltip',
-                        tooltipText: 'Enable or disable the tooltip. The tooltip is the information box ' +
-                        'that appears on mouse-over or touch on a point.'
+                        text: i18next.t('Enable tooltip'),
+                        tooltipText: i18next.t('Enable or disable the tooltip. The tooltip is the information box that appears on mouse-over or touch on a point.')
                     },
-                    {id: 'tooltip--shared', text: 'Shared between series', tooltipText: 'When the tooltip is shared, the entire plot area will capture mouse movement or touch events. Tooltip texts for series types with ordered data (not pie, scatter, flags etc) will be shown in a single bubble. This is recommended for single series charts and for tablet/mobile optimized charts.'}
+                    {id: 'tooltip--shared', text: i18next.t('Shared between series'), tooltipText: i18next.t('When the tooltip is shared, the entire plot area will capture mouse movement or touch events. Tooltip texts for series types with ordered data (not pie, scatter, flags etc) will be shown in a single bubble. This is recommended for single series charts and for tablet/mobile optimized charts.')}
                 ]
             }, {
-                text: 'Color and border',
+                text: i18next.t('Color and border'),
                 options: [
                     {
                         id: 'tooltip--backgroundColor',
-                        text: 'Background color',
-                        tooltipText: 'The background color of the tooltip'
+                        text: i18next.t('Background color'),
+                        tooltipText: i18next.t('The background color of the tooltip')
                     },
-                    {id: 'tooltip--borderWidth', text: 'Border width', custom: {minValue: 0}},
-                    {id: 'tooltip--borderRadius', text: 'Border corner radius', custom: {minValue: 0}},
+                    {id: 'tooltip--borderWidth', text: i18next.t('Border width'), custom: {minValue: 0}},
+                    {id: 'tooltip--borderRadius', text: i18next.t('Border corner radius'), custom: {minValue: 0}},
                     {
                         id: 'tooltip--borderColor',
-                        text: 'Border color',
-                        tooltipText: 'The border color of the tooltip. If no color is given, ' +
-                        'the corresponding series color is used.'
+                        text: i18next.t('Border color'),
+                        tooltipText: i18next.t('The border color of the tooltip. If no color is given, the corresponding series color is used.')
                     }
                 ]
             }
             ],
 
-            'Exporting': [{
-                text: 'Exporting',
+            [i18next.t('Exporting')]: [{
+                text: i18next.t('Exporting'),
                 options: [{
                     id: 'exporting--enabled',
-                    text: 'Enable exporting',
-                    tooltipText: 'Enable the context button on the top right of the chart, allowing end users ' +
-                    'to download image exports.'
+                    text: i18next.t('Enable exporting'),
+                    tooltipText: i18next.t('Enable the context button on the top right of the chart, allowing end users to download image exports.')
                 }, {
                     id: 'exporting--sourceWidth',
-                    text: 'Exported width',
-                    tooltipText: 'Note that this overrides the scale property',
+                    text: i18next.t('Exported width'),
+                    tooltipText: i18next.t('Note that this overrides the scale property'),
                     custom: {
                         minValue: 10,
                         maxValue: 2000,
                         step: 10
                     },
-                    tooltipText: 'The width of the original chart when exported. The pixel width of the exported image is then ' +
-                    'multiplied by the <em>Scaling factor</em>.'
+                    tooltipText: i18next.t('The width of the original chart when exported. The pixel width of the exported image is then multiplied by the <em>Scaling factor</em>.')
                 }, {
                     id: 'exporting--sourceHeight',
-                    text: 'Exported height',
+                    text: i18next.t('Exported height'),
                     custom: {
                         minValue: 10,
                         maxValue: 2000,
                         step: 10
                     },
-                    tooltipText: 'Analogous to the <em>Exported width</em>'
+                    tooltipText: i18next.t('Analogous to the <em>Exported width</em>')
                 }, {
                     id: 'exporting--scale',
-                    text: 'Scaling factor',
-                    tooltipText: 'The export scale. Note that this is overridden if width is set.',
+                    text: i18next.t('Scaling factor'),
+                    tooltipText: i18next.t('The export scale. Note that this is overridden if width is set.'),
                     custom: {
                         minValue: 1,
                         maxValue: 4
@@ -442,56 +425,56 @@ module.exports = function(i18next) {
             }
             ],
 
-            'Localization': [{
-                text: 'Number formatting',
+            [i18next.t('Localization')]: [{
+                text: i18next.t('Number formatting'),
                 options: [
                     {
                         id: 'lang--decimalPoint',
-                        text: 'Decimal point',
-                        tooltipText: 'The decimal point used for all numbers'
+                        text: i18next.t('Decimal point'),
+                        tooltipText: i18next.t('The decimal point used for all numbers')
                     },
                     {
                         id: 'lang--thousandsSep',
-                        text: 'Thousands separator',
-                        tooltipText: 'The thousands separator used for all numbers'
+                        text: i18next.t('Thousands separator'),
+                        tooltipText: i18next.t('The thousands separator used for all numbers')
                     }
                 ]
             }, {
-                text: 'Exporting button and menu',
+                text: i18next.t('Exporting button and menu'),
                 options: [
-                    {id: 'lang--contextButtonTitle', text: 'Context button title'},
-                    {id: 'lang--printChart', text: 'Print chart'},
-                    {id: 'lang--downloadPNG', text: 'Download PNG'},
-                    {id: 'lang--downloadJPEG', text: 'Download JPEG'},
-                    {id: 'lang--downloadPDF', text: 'Download PDF'},
-                    {id: 'lang--downloadSVG', text: 'Download SVG'}
+                    {id: 'lang--contextButtonTitle', text: i18next.t('Context button title')},
+                    {id: 'lang--printChart', text: i18next.t('Print chart')},
+                    {id: 'lang--downloadPNG', text: i18next.t('Download PNG')},
+                    {id: 'lang--downloadJPEG', text: i18next.t('Download JPEG')},
+                    {id: 'lang--downloadPDF', text: i18next.t('Download PDF')},
+                    {id: 'lang--downloadSVG', text: i18next.t('Download SVG')}
                 ]
             }, {
-                text: 'Zoom button',
+                text: i18next.t('Zoom button'),
                 options: [
-                    {id: 'lang--resetZoom', text: 'Reset zoom button'},
-                    {id: 'lang--resetZoomTitle', text: 'Reset zoom button title'}
+                    {id: 'lang--resetZoom', text: i18next.t('Reset zoom button')},
+                    {id: 'lang--resetZoomTitle', text: i18next.t('Reset zoom button title')}
                 ]
             }
             ],
 
-            'Credits': [{
-                text: 'Chart credits',
+            [i18next.t('Credits')]: [{
+                text: i18next.t('Chart credits'),
                 options: [
                     {
                         id: 'credits--enabled',
-                        text: 'Enable credits',
-                        tooltipText: 'Whether to show the credits text'
+                        text: i18next.t('Enable credits'),
+                        tooltipText: i18next.t('Whether to show the credits text')
                     },
                     {
                         id: 'credits--text',
-                        text: 'Credits text',
-                        tooltipText: 'The text for the credits label'
+                        text: i18next.t('Credits text'),
+                        tooltipText: i18next.t('The text for the credits label')
                     },
                     {
                         id: 'credits--href',
-                        text: 'Link',
-                        tooltipText: 'The URL for the credits label'
+                        text: i18next.t('Link'),
+                        tooltipText: i18next.t('The URL for the credits label')
                     }
                 ]
             }]
