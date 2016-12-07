@@ -45,7 +45,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @param parent {domnode} - the node to attach to
  *  @param attributes {object} - the options for the editor
  *    > availableSettings {array<string>} - the settings to include
- *    > chart {object} - default chart settings
+ *    > defaultChartOptions {object} - default chart settings
  *    > importer {object} - options passed to the importer widget
  *      > options {string|array<string>} - the options to include
  *      > plugins {string|array<sting>} - the plugins to enable
@@ -55,7 +55,7 @@ highed.SimpleEditor = function (parent, attributes) {
             importer: {
                 options: 'csv'
             },
-            features: 'import preview customizer',
+            features: 'import preview customize',
             availableSettings: [
                 'title--text',
                 'subtitle--text',
@@ -67,7 +67,7 @@ highed.SimpleEditor = function (parent, attributes) {
                 'yAxis--reversed',
                 'yAxis-labels--format'
             ],
-            chart: {}
+            defaultChartOptions: {}
         }, attributes),
         events = highed.events(),
 
@@ -93,7 +93,7 @@ highed.SimpleEditor = function (parent, attributes) {
         }),
         
         preview = highed.ChartPreview(vsplitterRight.top, {
-            defaultChartOptions: properties.chart, 
+            defaultChartOptions: properties.defaultChartOptions, 
             expandTo: expandContainer
         }),
         
@@ -121,7 +121,7 @@ highed.SimpleEditor = function (parent, attributes) {
 
         }
 
-        if (!properties.features.customizer) {
+        if (!properties.features.customize) {
 
         }
     }
