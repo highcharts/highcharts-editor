@@ -190,7 +190,7 @@ module.exports = function(i18next) {
                     {
                         id: 'xAxis-labels--format',
                         text: i18next.t('Axis labels format'),
-                        tooltipText: i18next.t('<p>A format string for the axis labels. The value is available through a variable <code>{value}</code>.</p><p><b>Units</b> can be added for example like <code>{value} USD</code>.</p><p><b>Formatting</b> can be added after a colon inside the variable, for example <code>USD {value:.2f}</code> to display two decimals,or <code>{value:%Y-%m-%d}</code> for a certain time format.'),
+                        tooltipText: i18next.t('<p>A format string for the axis labels. The value is available through a variable <code>{value}</code>.</p><p><b>Units</b> can be added for example like <code>{value} USD</code>.</p><p><b>Formatting</b> can be added after a colon inside the variable, for example <code>USD {value:.2f}</code> to display two decimals, or <code>{value:%Y-%m-%d}</code> for a certain time format.'),
                         dataIndex: 0
                     }//,
                     // {
@@ -311,7 +311,7 @@ module.exports = function(i18next) {
                 }, {
                     id: 'plotOptions-series-dataLabels--format',
                     text: i18next.t('Data label format'),
-                    tooltipText: i18next.t('<p>A format string for the value labels. The value is available through a variable <code>{y}</code>. Other available variables are <code>{x}</code> and <code>{key}</code> for the category.</p><p><b>Units</b> can be added for example like <code>{y} USD</code>.</p><p><b>Formatting</b> can be added after a colon inside the variable, for example <code>USD {y:.2f}</code> to display two decimals, or <code>{x:%Y-%m-%d}</code> for a certain time format.')
+                    tooltipText: i18next.t('<p>A format string for the value labels. The value is available through a variable <code>{y}</code>. Other available variables are <code>{x}</code> and <code>{key}</code> for the category.</p><p><b>Units</b> can be added for example like <code>{y} USD</code>.</p><p><b>Formatting</b> can be added after a colon inside the variable, for example <code>USD {y\:.2f}</code> to display two decimals, or <code>{x:%Y-%m-%d}</code> for a certain time format.')
                 }, {
                     id: 'plotOptions-series-dataLabels--style',
                     text: i18next.t('Text style')

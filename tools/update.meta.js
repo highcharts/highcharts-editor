@@ -24,7 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /*  Take a fresh API dump and update the meta dictionary.
-    
+
     This will override options as such:
         tooltipText: set if no text is defined in the meta already
         dataType: always set
@@ -71,12 +71,12 @@ function sortAPI() {
         var st = extractType(entry.name);
         entry.name = removeType(entry.name);
 
-        if (!apiSorted[entry.name]) {            
+        if (!apiSorted[entry.name]) {
 
             apiSorted[entry.name] = entry;
 
             if (st !== false) {
-                entry.subType = [st];            
+                entry.subType = [st];
             }
         } else if (st) {
             apiSorted[entry.name].subType = apiSorted[entry.name].subType || [];
@@ -119,7 +119,7 @@ function filterEachOption(root, fn, parent) {
 
 function extractType(str) {
     var s = str.indexOf('<'),
-        st 
+        st
     ;
 
     if (s >= 0) {
@@ -143,7 +143,7 @@ function update(root) {
         )
     ;
 
-    filterEachOption(root, function (entry, aentry) {   
+    filterEachOption(root, function (entry, aentry) {
         if (!included[entry.id]) {
             return false;
         }
@@ -159,7 +159,7 @@ function update(root) {
             entry.text = entry.text || aentry.title;
 
             if (aentry.subType) {
-                entry.subType = aentry.subType;                
+                entry.subType = aentry.subType;
                 entry.subTypeDefaults = aentry.subTypeDefaults;
             }
             //entry.custom = aentry.custom;
@@ -183,7 +183,7 @@ function update(root) {
             }
 
             return true;
-        } else {    
+        } else {
             console.log('[warn]'.yellow, 'Unknown property:', entry.id.bold, 'skipping...');
             return false;
         }
@@ -209,6 +209,8 @@ console.log('Higcharts Editor Meta Updater'.green);
 console.log('Fetching latest API dump...'.bold);
 
 i18next.init({
+    nsSeparator: false,
+    keySeparator: false,
     lng: argv.lang,
     resources: requireDir(__dirname + '/../dictionaries/localisations')
 }, function(err, t) {
