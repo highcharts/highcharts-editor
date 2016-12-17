@@ -111,9 +111,7 @@ highed.List = function (parent, responsive) {
     function addItems(items) {
         if (highed.isArr(items)) {
             items.forEach(addItem);
-        }
-
-        
+        }        
     }
 
     /** Clear all the items in the list
@@ -131,7 +129,7 @@ highed.List = function (parent, responsive) {
             cs = highed.dom.size(container)
         ;
 
-        if (responsive && ps.h < 50) {
+        if (responsive && ps.h < 50 && ps.h !== 0 && ps.h) {
             highed.dom.style(compactIndicator, {
                 display: 'block'
             });
