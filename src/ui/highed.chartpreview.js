@@ -207,6 +207,8 @@ highed.ChartPreview = function (parent, attributes) {
             customizedOptions.xAxis = [customizedOptions.xAxis || {}];
         }
 
+        templateOptions = templateOptions || {};
+
         if (templateOptions.yAxis && !highed.isArr(templateOptions.yAxis)) {
             templateOptions.yAxis = [templateOptions.yAxis];
         }
@@ -354,6 +356,45 @@ highed.ChartPreview = function (parent, attributes) {
             loadSeries();
             emitChange();
         });
+    }
+
+    /* Load project
+    *  @param projectData - the data to load
+    */
+    function loadProjectData(projectData) {
+        if (highed.isStr(projectData)) {
+            try {
+                return loadProjectData(JSON.parse(projectData));
+            } catch (e) {
+                highed.snackBar('Invalid project');
+            }
+        }
+
+        if (projectData) {
+
+            templateOptions = {};
+            if (projectData.template) {
+                templateOptions = projectData.template;
+            }
+            
+            customizedOptions = {};
+            if (projectData.options) {
+                customizedOptions = projectData.options;
+            }
+
+            updateAggregated();
+            init(aggregatedOptions);
+            emitChange();
+        }
+    }
+
+    /* Export project as JSON
+     */
+    function exportProject() {
+        return {
+            template: templateOptions,
+            options: customizedOptions
+        };
     }
 
     /* Load JSON data
@@ -644,6 +685,9 @@ highed.ChartPreview = function (parent, attributes) {
         loadSeries: loadSeriesData,
         resize: resize,
         
+        toProject: exportProject,
+        loadProject: loadProjectData,
+
         options: {
             set: set,
             customized: aggregatedOptions,

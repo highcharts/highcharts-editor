@@ -54,7 +54,7 @@ highed.DefaultContextMenu = function (chartPreview) {
                 title: highed.getLocalizedStr('saveProject'),
                 icon: 'floppy-o',
                 click: function () {
-                    highed.download('chart.json', JSON.stringify(chartPreview.export.json()));
+                    highed.download('chart.json', JSON.stringify(chartPreview.toProject()));
                 }
             },
             {
@@ -71,7 +71,7 @@ highed.DefaultContextMenu = function (chartPreview) {
                                 return highed.snackBar('Error loading JSON: ' + e);
                             }
 
-                            chartPreview.data.json(file);
+                            chartPreview.loadProject(file);
                         }
                     });
                 }
