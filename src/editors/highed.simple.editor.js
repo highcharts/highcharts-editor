@@ -85,7 +85,7 @@ highed.SimpleEditor = function (parent, attributes) {
 
         hsplitter = highed.HSplitter(mainVSplitter.bottom, {
             leftWidth: 60, 
-            noOverflow: true
+            noOverflow: false
         }),
 
         vsplitterRight = highed.VSplitter(hsplitter.right, {
