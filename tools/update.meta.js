@@ -24,7 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /*  Take a fresh API dump and update the meta dictionary.
-    
+
     This will override options as such:
         tooltipText: set if no text is defined in the meta already
         dataType: always set
@@ -33,18 +33,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         parent: always set
 */
 
-var meta = require(__dirname + '/../dictionaries/meta.js'),
-    api = {},
+
+var api = {},
     apiSorted = {},
     fs = require('fs'),
     async = require('async'),
+    i18next = require('i18next'),
     license = fs.readFileSync(__dirname + '/../LICENSE'),
     request = require('request'),
+    requireDir = require('require-dir'),
     apiDumpURL = 'http://api.highcharts.com/highcharts/option/dump.json',
     argv = require('yargs')
+                .default('lang', 'en')
                 .string('exposed')
-                .default('exposed', 'exposed', __dirname + '/../dictionaries/exposed.settings.json')
-                argv  
+                .default('exposed', __dirname + '/../dictionaries/exposed.settings.json')
+                .argv
 ;
 
 require('colors');
@@ -68,12 +71,12 @@ function sortAPI() {
         var st = extractType(entry.name);
         entry.name = removeType(entry.name);
 
-        if (!apiSorted[entry.name]) {            
+        if (!apiSorted[entry.name]) {
 
             apiSorted[entry.name] = entry;
 
             if (st !== false) {
-                entry.subType = [st];            
+                entry.subType = [st];
             }
         } else if (st) {
             apiSorted[entry.name].subType = apiSorted[entry.name].subType || [];
@@ -116,7 +119,7 @@ function filterEachOption(root, fn, parent) {
 
 function extractType(str) {
     var s = str.indexOf('<'),
-        st 
+        st
     ;
 
     if (s >= 0) {
@@ -136,11 +139,11 @@ function removeType(str) {
 
 function update(root) {
     var included = mapIncludedProperties(
-            JSON.parse(fs.readFileSync(argv.exposed || __dirname + '/../dictionaries/exposed.settings.json'))
+            JSON.parse(fs.readFileSync(argv.exposed))
         )
     ;
 
-    filterEachOption(root, function (entry, aentry) {   
+    filterEachOption(root, function (entry, aentry) {
         if (!included[entry.id]) {
             return false;
         }
@@ -156,7 +159,7 @@ function update(root) {
             entry.text = entry.text || aentry.title;
 
             if (aentry.subType) {
-                entry.subType = aentry.subType;                
+                entry.subType = aentry.subType;
                 entry.subTypeDefaults = aentry.subTypeDefaults;
             }
             //entry.custom = aentry.custom;
@@ -180,14 +183,14 @@ function update(root) {
             }
 
             return true;
-        } else {    
+        } else {
             console.log('[warn]'.yellow, 'Unknown property:', entry.id.bold, 'skipping...');
             return false;
         }
     });
 }
 
-function process() {
+function process(meta) {
     sortAPI();
     update(meta);
 
@@ -205,16 +208,26 @@ function process() {
 console.log('Higcharts Editor Meta Updater'.green);
 console.log('Fetching latest API dump...'.bold);
 
-request(apiDumpURL, function (error, response, body) {
-    console.log('API Fetched, transforming...'.bold);
-    if (error) {
-        console.log('[error]'.red, error);
-    } else {
-        try {
-            api = JSON.parse(body);
-            process();
-        } catch (e) {
-            console.log('[error]'.red, e);
+i18next.init({
+    nsSeparator: false,
+    keySeparator: false,
+    lng: argv.lang,
+    resources: requireDir(__dirname + '/../dictionaries/localisations')
+}, function(err, t) {
+    var meta = require(__dirname + '/../dictionaries/meta.js')(i18next);
+
+    request(apiDumpURL, function (error, response, body) {
+        console.log('API Fetched, transforming...'.bold);
+        if (error) {
+            console.log('[error]'.red, error);
+        } else {
+            try {
+                api = JSON.parse(body);
+                process(meta);
+            } catch (e) {
+                console.log('[error]'.red, e);
+            }
         }
-    }
+    });
 });
+
