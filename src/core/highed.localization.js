@@ -23,44 +23,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+/*
+    Note that the localization system uses attribute names 
+    rather than a default string. This is to make it easier to
+    modify translations.
+
+*/
+
 (function () {
     var currentLang = 'en',
-        langTree = {
-            en: {
-                //General
-                confirmNewChart: 'Are you sure you want to abandon the current chart and start over?',
-
-                //Main context menu
-                previewChart: 'Preview Chart',
-                newChart: 'New Chart',
-                saveProject: 'Save Project',
-                loadProject: 'Load Project',
-
-                exportPNG: 'Export as PNG',
-                exportJPEG: 'Export as JPEG',
-                exportSVG: 'Export as SVG',
-                exportPDF: 'Export as PDF',
-
-                help: 'Help',
-                licenseInfo: 'License Information',
-
-                //Steps
-                stepDone: 'Done',
-                stepStart: 'Start',
-                stepImport: 'Import',
-                stepTemplates: 'Templates',
-                stepCustomize: 'Customize',
-                stepExport: 'Export',
-                stepData: 'Data',
-
-                //Done button caption
-                doneCaption: 'Close & Generate Chart',
-
-                //Customizer
-                customizeSimple: 'SIMPLE',
-                customizeAdvanced: 'ADVANCED'
-            }
-       }
+        langTree = {}
     ;
 
     /** Get a localized string based on the current global language
@@ -82,13 +54,28 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         return 'bad localized string: ' + id;
     };
 
-    /* Install a language pack from a json object
-     *  @param translations {object} - translation objects
+    /** This is an alias for highed.getLocalizedStr
+     *  @param id {string} - the string to get
      */
+    highed.L = highed.getLocalizedStr;
 
-    /* Install a language pack from a url
+    /** Install a language pack from a json object
+     *  @param translations {object} - translation object
+     */
+    highed.installLanguage = function (translations) {
+        if (translations && translations.language && translations.entries) {
+            langTree[translations.language] = translations.entries;
+        }
+    };
+
+    /** Install a language pack from a url  
      *  @param url {string} - the location of the pack
      */
+    highed.installLanguageFromURL = function (url) {
+        highed.ajax({
+            url: url
+        });
+    };
 
     /** Set the active language
      *  @param lang {string} - the language to activate

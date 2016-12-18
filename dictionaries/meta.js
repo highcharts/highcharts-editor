@@ -25,8 +25,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 module.exports = {
 	options: {
-		'Titles': [{
-			text: 'Main titles',			
+		'option.cat.title': [{
+			text: 'option.subcat.titles',			
 			options: [{
 				text: 'Chart title',
 				id: 'title--text',
@@ -43,7 +43,7 @@ module.exports = {
 			}]
 		}],
 
-		'General': [
+		'option.cat.general': [
 			// {
 			// 	text: 'Label Items',
 			// 	options: [
@@ -51,7 +51,7 @@ module.exports = {
 			// 	]
 			// },
 			{
-				text: 'Chart size',				
+				text: 'option.subcat.size',				
 				options: [
 					{
 						id: 'chart--width',
@@ -65,7 +65,7 @@ module.exports = {
 					}
 				]
 			}, {
-				text: 'Chart Interaction',				
+				text: 'option.subcat.interaction',				
 				options: [
 					{id: 'chart--zoomType', text: 'Allow zooming'},
 					{id: 'chart--polar', text: 'Polar (radar) projection'},
@@ -74,8 +74,8 @@ module.exports = {
 			}
 		],
 
-		'Appearance': [{
-			text: 'Fonts',			
+		'option.cat.appearance': [{
+			text: 'option.subcat.fonts',			
 			options: [
 				{
 					id: 'chart--style',
@@ -85,7 +85,7 @@ module.exports = {
 				}
 			]
 		}, {
-			text: 'Titles',			
+			text: 'option.subcat.titlestyle',			
 			options: [
 				{
 					id: 'title--style',
@@ -103,7 +103,7 @@ module.exports = {
 
 			]
 		}, {
-			text: 'Series colors',
+			text: 'option.subcat.seriescolors',
 			
 			options: [{
 				id: 'colors',
@@ -113,7 +113,7 @@ module.exports = {
 				'in the <em>Data series</em> view, that color will take precedence.'
 			}]
 		}, {
-			text: 'Chart area',
+			text: 'option.subcat.chartarea',
 			
 			options: [
 				{
@@ -126,7 +126,7 @@ module.exports = {
 				{id: 'chart--borderColor', text: 'Border color'}
 			]
 		}, {
-			text: 'Plot area',
+			text: 'option.subcat.plotarea',
 			
 			options: [
 				{
@@ -143,15 +143,15 @@ module.exports = {
 		}
 		],
 
-		'Axes': [{
-			text: 'Axes setup',
+		'option.cat.axes': [{
+			text: 'option.subcat.axessetup',
 			
 			options: [
 				{id: 'chart--inverted', text: 'Inverted axes'}
 			]
 		}, {
 			id: 'xAxis',
-			text: 'X-Axis',
+			text: 'option.subcat.xaxis',
 			
 			options: [
 				// {
@@ -205,7 +205,7 @@ module.exports = {
 			]
 		}, {
 			id: 'yAxis',
-			text: 'Y-Axis',
+			text: 'option.subcat.yaxis',
 			
 			options: [
 				// {
@@ -249,10 +249,10 @@ module.exports = {
 			]
 		}
 		],
-		'Data series': [{
+		'option.cat.series': [{
 			id: 'series',
 			array: true,
-			text: 'Series',
+			text: 'option.cat.series',
 			controlledBy: {
 				title: 'Select Series',
 				options: 'series',
@@ -308,9 +308,9 @@ module.exports = {
 			]
 		}],
 
-		'Value labels': [{
+		'option.cat.labels': [{
 			id: 'data-labels',
-			text: 'Value labels',
+			text: 'option.subcat.labels',
 			
 			options: [{
 				id: 'plotOptions-series-dataLabels--enabled',
@@ -330,16 +330,16 @@ module.exports = {
 			}]
 		}],
 
-		'Legend': [
+		'option.cat.legend': [
 			{
-				text: 'General',
+				text: 'option.subcat.general',
 				
 				options: [
 					{id: 'legend--enabled', text: 'Enable legend'},
 					{id: 'legend--layout', text: 'Item layout'}
 				]
 			}, {
-				text: 'Placement',
+				text: 'option.subcat.placement',
 				
 				options: [
 					{id: 'legend--align', text: 'Horizontal alignment'},
@@ -357,7 +357,7 @@ module.exports = {
 					{id: 'legend--floating', text: 'Float on top of plot area'}
 				]
 			}, {
-				text: 'Appearance',
+				text: 'option.subcat.legendappearance',
 				
 				options: [
 					{id: 'legend--itemStyle', text: 'Text style', dataType: 'font'},
@@ -370,8 +370,8 @@ module.exports = {
 			}
 		],
 
-		'Tooltip': [{
-			text: 'General',
+		'option.cat.tooltip': [{
+			text: 'option.subcat.general',
 			
 			options: [
 				{
@@ -383,7 +383,7 @@ module.exports = {
 				{id: 'tooltip--shared', text: 'Shared between series', tooltipText: 'When the tooltip is shared, the entire plot area will capture mouse movement or touch events. Tooltip texts for series types with ordered data (not pie, scatter, flags etc) will be shown in a single bubble. This is recommended for single series charts and for tablet/mobile optimized charts.'}
 			]
 		}, {
-			text: 'Color and border',			
+			text: 'option.subcat.colorborder',			
 			options: [
 				{
 					id: 'tooltip--backgroundColor',
@@ -402,8 +402,8 @@ module.exports = {
 		}
 		],
 
-		'Exporting': [{
-			text: 'Exporting',		
+		'option.cat.exporting': [{
+			text: 'option.cat.exporting',		
 			options: [{
 				id: 'exporting--enabled',
 				text: 'Enable exporting',
@@ -441,8 +441,8 @@ module.exports = {
 		}
 		],
 
-		'Localization': [{
-			text: 'Number formatting',			
+		'option.cat.localization': [{
+			text: 'option.subcat.numberformat',			
 			options: [
 				{
 					id: 'lang--decimalPoint',
@@ -456,7 +456,7 @@ module.exports = {
 				}
 			]
 		}, {
-			text: 'Exporting button and menu',			
+			text: 'option.subcat.exportbutton',			
 			options: [
 				{id: 'lang--contextButtonTitle', text: 'Context button title'},
 				{id: 'lang--printChart', text: 'Print chart'},
@@ -466,7 +466,7 @@ module.exports = {
 				{id: 'lang--downloadSVG', text: 'Download SVG'}
 			]
 		}, {
-			text: 'Zoom button',			
+			text: 'option.subcat.zoombutton',			
 			options: [
 				{id: 'lang--resetZoom', text: 'Reset zoom button'},
 				{id: 'lang--resetZoomTitle', text: 'Reset zoom button title'}
@@ -474,8 +474,8 @@ module.exports = {
 		}
 		],
 
-		'Credits': [{
-			text: 'Chart credits',			
+		'option.cat.credits': [{
+			text: 'option.cat.credits',			
 			options: [
 				{
 					id: 'credits--enabled',

@@ -47,6 +47,8 @@ var meta = require(__dirname + '/../dictionaries/meta.js'),
                 argv  
 ;
 
+var translations = {};
+
 require('colors');
 
 function mapIncludedProperties(includedProperties) {
@@ -137,7 +139,8 @@ function removeType(str) {
 function update(root) {
     var included = mapIncludedProperties(
             JSON.parse(fs.readFileSync(argv.exposed || __dirname + '/../dictionaries/exposed.settings.json'))
-        )
+        ),
+        pid
     ;
 
     filterEachOption(root, function (entry, aentry) {   
@@ -146,14 +149,25 @@ function update(root) {
         }
 
         if (typeof apiSorted[entry.id] !== 'undefined') {
+            
+            pid = entry.id.replace(/\-\-/g, '-');
+            pid = pid.replace(/\-/g, '.');
+
             aentry = apiSorted[entry.id];
+            entry.pid = pid;
             entry.dataType = (entry.dataType || aentry.returnType || '').toLowerCase();
             entry.context = aentry.context || 'General';
-            entry.tooltipText = entry.tooltipText || aentry.description;
             entry.defaults = aentry.defaults || entry.defaults;
             entry.parent = aentry.parent;
             entry.values = aentry.values;
-            entry.text = entry.text || aentry.title;
+            //entry.text = entry.text || aentry.title;
+            //entry.tooltipText = entry.tooltipText || aentry.description;
+
+            delete entry.text;
+            delete entry.tooltipText;
+
+            // translations['option.text.' + pid] = entry.text;
+            // translations['option.tooltip.' + pid] = entry.tooltipText;
 
             if (aentry.subType) {
                 entry.subType = aentry.subType;                
@@ -190,6 +204,10 @@ function update(root) {
 function process() {
     sortAPI();
     update(meta);
+
+    // fs.writeFile(__dirname + '/../loctemplate.json', JSON.stringify(translations, false, '  '), function () {
+
+    // });
 
     fs.writeFile(__dirname + '/../api.js', JSON.stringify(apiSorted, false, '  '), function () {
 

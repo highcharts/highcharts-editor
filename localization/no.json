@@ -1,0 +1,48 @@
+{
+
+    "confirmNewChart": "Are you sure you want to abandon the current chart and start over?",
+
+    "previewChart": "Forhåndsvis",
+    "newChart": "Ny",
+    "saveProject": "Lagre Prosjekt",
+    "loadProject": "Åpne Prosjekt",
+
+    "exportPNG": "Eksporter som PNG",
+    "exportJPEG": "Eksporter som JPEG",
+    "exportSVG": "Eksporter som SVG",
+    "exportPDF": "Eksporter som PDF",
+
+    "help": "Hjelp",
+    "licenseInfo": "Lisensinformasjon",
+
+    "stepDone": "Ferdig",
+    "stepStart": "Start",
+    "stepImport": "Importer",
+    "stepTemplates": "Templates",
+    "stepCustomize": "Juster",
+    "stepExport": "Eksporter",
+    "stepData": "Data",
+
+    "doneCaption": "Lukk & Generer Diagram",
+
+    "dgDeleteRow": "Vil du virkelig slette valgte rader?",
+    "dgWithSelected": "Med valgte rader:",
+    "dgImportBtn": "IMPORTER",
+    "dgExportBtn": "EKPORTER",
+    "dgNewBtn": "NY",
+    "dgAddRow": "LEGG TIL RAD",
+    "dgDataImported": "Data importert",
+    "dgDataImporting": "Importerer data",
+    "dgNewCol": "Ny kolonne",
+    "dgSortAsc": "Sorter Stigende",
+    "dgSortDec": "Sorter Synkende",
+    "dgSortAscMonth": "Sorter som månednavn, stigende",
+    "dgSortDecMonth": "Sorter som månednavn, synkende",
+    "dgDelCol": "Slett kolonne",
+    "dgDelColConfirm": "Vil du virkelig slette kolonnen?",
+    "dgInsColBefore": "Sett inn kolonne før",
+    "dgInsColAfter": "Sett inn kolonne etter",
+
+    "customizeSimple": "ENKEL",
+    "customizeAdvanced": "AVANSERT"
+}

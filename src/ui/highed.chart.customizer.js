@@ -178,7 +178,7 @@ highed.ChartCustomizer = function (parent, attributes) {
 
             highed.dom.ap(body, 
                 highed.dom.ap(container,
-                    highed.dom.cr('div', 'highed-customizer-table-heading', group.text),
+                    highed.dom.cr('div', 'highed-customizer-table-heading', highed.L(group.text)),
                     masterNode,
                     table
                 )
@@ -266,8 +266,8 @@ highed.ChartCustomizer = function (parent, attributes) {
                     group.values ? 'options' : (group.dataType), 
                     (highed.getAttr(options, group.id, detailIndex) || (filter && group.subTypeDefaults[filter] ? group.subTypeDefaults[filter] : group.defaults)), 
                     {
-                        title: group.text,
-                        tooltip: group.tooltipText,
+                        title: highed.L('option.text.' + group.pid),
+                        tooltip: highed.L('options.tooltip.' + group.pid),
                         values: group.values,
                         custom: group.custom,
                         defaults: group.defaults,
@@ -306,7 +306,7 @@ highed.ChartCustomizer = function (parent, attributes) {
 
             list.addItem({
                 id: key,
-                title: key
+                title: highed.L(key)
             });
         });
 
