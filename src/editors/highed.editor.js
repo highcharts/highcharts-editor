@@ -50,7 +50,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       *         > homepage {string}
       *     > dependencies {array<string>} - URLs of script dependencies
       *     > options {object}
-      *         > <option_name> {object}
+      *         > option_name {object}
       *             > type {string} - the type of the option
       *             > label {string} - the label
       *             > default {anything} - the default value
@@ -159,8 +159,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 defaultChartOptions: {},
                 on: {},
                 plugins: {},
-                events: {},
-                features: 'welcome import export templates customize',
+                features: 'data export templates customize',
                 includeSVGInHTMLEmbedding: true,
                 importer: {},
                 exporter: {},
@@ -215,10 +214,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             chartIcon = highed.dom.cr('div', 'highed-chart-container-icon'),
 
             cmenu = highed.DefaultContextMenu(chartPreview)
-
         ;
-
-    
 
         cmenu.on('NewChart', function () {
             dataImpStep.activate();
@@ -311,7 +307,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 container.parentNode.removeChild(container);
             }
         }
-
 
         ///////////////////////////////////////////////////////////////////////////
 
@@ -493,7 +488,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         updateToolbarIcon();
 
         highed.ready(function () {
-            window.scrollTo(0, 1);
+            resize();
+            window.scrollTo(0, 1);          
         });
 
         if (!properties.useHeader) {
@@ -501,12 +497,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 display: 'none'
             });
         }
-
-        Object.keys(properties.events).forEach(function (k) {
-            if (highed.isFn(properties.events[k])) {
-                events.on(k, properties.events[k]);                
-            }
-        });
 
         chartPreview.on('RequestResize', resize);
 
@@ -525,10 +515,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             getEmbeddableSVG: chartPreview.export.svg,
             /* Destroy the editor */
             destroy: destroy,
-            /* Toolbar */
+            /** The main toolbar 
+             *  @memberof highed.Editor
+             *  @type {highed.Toolbar}
+             */
             toolbar: mainToolbar,
+            /** The chart preview attached to the editor
+             *  @memberof highed.Editor
+             *  @type {highed.ChartPreview}
+             */
             chart: chartPreview,
-            /* The data importer instance */
+            /** The data importer instance attached to the editor
+             *  @memberof highed.Editor
+             *  @type {highed.DataImporter}
+             */
             importer: dataImp            
         };
     };
