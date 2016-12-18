@@ -185,7 +185,10 @@ highed.ChartPreview = function (parent, attributes) {
         return chart;
     }
 
-    /* Resize the preview */
+    /** Resize the preview 
+     *  Resizes based on the parent size.
+     *  @memberof highed.ChartPreview
+     */
     function resize() {
         gc(function (chart) {
             if (chart.reflow) {
@@ -278,8 +281,9 @@ highed.ChartPreview = function (parent, attributes) {
         }
     }
 
-    /* Load a template from the meta
-     * @template - the template object
+    /** Load a template from the meta
+     *  @memberof highed.ChartPreview
+     *  @param template - the template object
      */
     function loadTemplate(template) {
         if (!template || !template.config) {
@@ -330,8 +334,10 @@ highed.ChartPreview = function (parent, attributes) {
         updateAggregated();
     }
 
-    /* Load CSV data
-     * @data - the data to load
+    /** Load CSV data
+     *  @memberof highed.ChartPreview
+     *  @name data.csv
+     *  @param data {object} - the data to load
      */
     function loadCSVData(data) {
         if (!data || !data.csv) {
@@ -358,10 +364,11 @@ highed.ChartPreview = function (parent, attributes) {
         });
     }
 
-    /* Load project
-    *  @param projectData - the data to load
-    */
-    function loadProjectData(projectData) {
+    /** Load project
+     *  @memberof highed.ChartPreview
+     *  @param projectData - the data to load
+     */
+    function loadProject(projectData) {
         if (highed.isStr(projectData)) {
             try {
                 return loadProjectData(JSON.parse(projectData));
@@ -388,20 +395,24 @@ highed.ChartPreview = function (parent, attributes) {
         }
     }
 
-    /* Export project as JSON
+    /** Export project as JSON
+     *  @memberof highed.ChartPreview
      */
-    function exportProject() {
+    function toProject() {
         return {
             template: templateOptions,
             options: customizedOptions
         };
     }
 
-    /* Load JSON data
+    /** Load JSON data
      * Functionally, this only instances a new
      * chart with the supplied data as its options.
      * It accepts both a string and and object
-     * @data - the data to load
+     *
+     * @memberof highed.ChartPreview
+     * @name data.json
+     * @param data {object} - the data to load
      */
     function loadJSONData(data) {
         gc(function (chart) {
@@ -429,6 +440,12 @@ highed.ChartPreview = function (parent, attributes) {
         });
     }
 
+    /** Load chart settings
+      * Note that merges the incoming settings with the existing ones.
+      * @memberof highed.ChartPreview
+      * @name data.settings
+      * @param settings {object} - the settings to load
+      */
     function loadChartSettings(settings) {
         gc(function (chart) {
 
@@ -464,10 +481,12 @@ highed.ChartPreview = function (parent, attributes) {
         });
     }
 
-    /* Set an attribute
-     * @id - the path of the attribute
-     * @value - the value to set
-     * @index - used if the option is an array
+    /** Set an attribute
+     *  @memberof highed.ChartPreview
+     *  @name options.set
+     *  @param id {string} - the path of the attribute
+     *  @param value {anything} - the value to set
+     *  @param index {number} - used if the option is an array
      */
     function set(id, value, index) {
          if (id.indexOf('lang--') === 0 && customizedOptions.lang) {
@@ -494,7 +513,13 @@ highed.ChartPreview = function (parent, attributes) {
        
     }
 
-    /* Get embeddable JSON */
+    /** Get embeddable JSON 
+     *  This returns the merged chart, with both customized options
+     *  and options set indirectly through templates.
+     *  @memberof highed.ChartPreview
+     *  @name export.json
+     *  @returns {object} - the chart object
+     */
     function getEmbeddableJSON() {
         var r = highed.merge({}, aggregatedOptions);
 
@@ -510,14 +535,23 @@ highed.ChartPreview = function (parent, attributes) {
         return r;
     }
 
-    /* Get embeddable SVG */
+    /** Get embeddable SVG 
+     *  @memberof highed.ChartPreview
+     *  @name export.svg
+     *  @returns {string} - the result from `Highcharts.Chart.getSVG()`
+     */
     function getEmbeddableSVG() {
         return gc(function (chart) {
             return highed.isFn(chart.getSVG) ? chart.getSVG() : '';
         });
     }
 
-    /* Get embeddable JavaScript */
+    /** Get embeddable JavaScript 
+     *  @memberof highed.ChartPreview
+     *  @name export.js
+     *  @param id {string} - the ID of the node to attach the chart to
+     *  @returns {string} - a string containing JavaScript to reproduce the chart
+     */
     function getEmbeddableJavaScript(id) {
         return gc(function (chart) {            
             var 
@@ -582,7 +616,12 @@ highed.ChartPreview = function (parent, attributes) {
         });
     }
 
-    /* Get embeddable HTML */
+    /** Get embeddable HTML 
+     *  @memberof highed.ChartPreview
+     *  @name export.html
+     *  @param placehold {bool} - if true, SVG will also be embedded
+     *  @returns {string} - a string of embeddable HTML
+     */
     function getEmbeddableHTML(placehold) {
         return gc(function (chart) {       
             var id = 'highcharts-' + highed.uuid();     
@@ -594,7 +633,10 @@ highed.ChartPreview = function (parent, attributes) {
         });
     }
 
-    /* Expand the chart from its drawer */
+    /** 
+     * Expand the chart from its drawer 
+     * @memberof highed.ChartPreview     
+     */
     function expand() {
         gc(function (chart) {
             if (!expanded) {            
@@ -613,7 +655,9 @@ highed.ChartPreview = function (parent, attributes) {
         });
     }
 
-    /* Collapse the chart into its drawer */
+    /** Collapse the chart into its drawer 
+     *  @memberof highed.ChartPreview
+     */
     function collapse() {
         gc(function (chart) {
             if (preExpandSize && expanded) {
@@ -631,6 +675,10 @@ highed.ChartPreview = function (parent, attributes) {
         });
     }
 
+    /** Flush all options and start over
+     *  @memberof highed.ChartPreview
+     *  @name new
+     */
     function newChart() {
         highed.clearObj(templateOptions);
         highed.clearObj(customizedOptions);
@@ -646,17 +694,30 @@ highed.ChartPreview = function (parent, attributes) {
         events.emit('New');
     }
 
+    /** Export the chart - calls `Highcharts.Chart.exportChart(..)`
+     *  @memberof highed.ChartPreview
+     *  @name data.export
+     *  @param optons {object} - the export options
+     */
     function exportChart(options) {
         gc(function (chart) {
             chart.exportChart(options, aggregatedOptions);
         });
     }
 
+    /** Attach to a new DOM parent
+     *  @memberof highed.ChartPreview
+     *  @param newParent {DOMNode} - the node to attach to
+     */
     function changeParent(newParent) {
         parent = newParent;
         init();
     }
 
+    /** Returns the constructor currently in use
+     *  @memberof highed.ChartPreview
+     *  @returns {string}
+     */
     function getConstructor() {
         return constr;
     }
@@ -685,8 +746,8 @@ highed.ChartPreview = function (parent, attributes) {
         loadSeries: loadSeriesData,
         resize: resize,
         
-        toProject: exportProject,
-        loadProject: loadProjectData,
+        toProject: toProject,
+        loadProject: loadProject,
 
         options: {
             set: set,
