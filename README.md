@@ -3,6 +3,8 @@ Highcharts Editor
 
 *Stand-alone and embeddable chart editor for Highcharts*
 
+### This is beta software!
+
 ![screenshots/customize.png](screenshots/customize.png)
 
 **[Click here for live demos](http://editor.highcharts.com)**
