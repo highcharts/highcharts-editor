@@ -267,7 +267,7 @@ highed.ChartCustomizer = function (parent, attributes) {
                     (highed.getAttr(options, group.id, detailIndex) || (filter && group.subTypeDefaults[filter] ? group.subTypeDefaults[filter] : group.defaults)), 
                     {
                         title: highed.L('option.text.' + group.pid),
-                        tooltip: highed.L('options.tooltip.' + group.pid),
+                        tooltip: highed.L('option.tooltip.' + group.pid),
                         values: group.values,
                         custom: group.custom,
                         defaults: group.defaults,
