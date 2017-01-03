@@ -178,7 +178,9 @@ highed.ChartPreview = function (parent, attributes) {
             } else {
                 //Our assumption was wrong. The world is ending.
                 highed.snackBar(e);            
+                console.error('exception trace:', e.stack);
             }
+
             chart = false;
         }       
 
@@ -570,10 +572,6 @@ highed.ChartPreview = function (parent, attributes) {
 
             id = id || '';
 
-         
-            //To avoid a forEach in the generated code, we pre-gen the includes
-
-
             /*
                 This magic code will generate an injection script that will
                 check if highcharts is included, and include it if not.
@@ -582,7 +580,6 @@ highed.ChartPreview = function (parent, attributes) {
                 It's quite messy, could to client-side templating or something,
                 but it works.
             */
-
 
             return '\n' + [  
                 '(function(){ ',
