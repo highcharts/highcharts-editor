@@ -159,7 +159,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 defaultChartOptions: {},
                 on: {},
                 plugins: {},
-                features: 'data export templates customize',
+                features: 'welcome import export templates customize',
                 includeSVGInHTMLEmbedding: true,
                 importer: {},
                 exporter: {},
@@ -222,7 +222,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         properties.features = highed.arrToObj(properties.features.split(' '));
 
-        ///////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
 
         function updateToolbarIcon() {
             if (highed.onPhone()) {
@@ -368,7 +368,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             highed.dom.cr('div', '', 'Follow the steps below to get started!')
         );
 
-        ///////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
         
         chartTemplateSelector.on('Select', chartPreview.loadTemplate);
         chartCustomizer.on('PropertyChange', chartPreview.options.set);
@@ -413,7 +413,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             events.emit('ChartChange', newData);
 
         });
-        chartPreview.on('ChartChangeLately', function (newData) { events.emit('ChartChangeLately', newData);});
+        
+        chartPreview.on('ChartChangeLately', function (newData) { 
+            events.emit('ChartChangeLately', newData);
+        });
 
         ///////////////////////////////////////////////////////////////////////////
             
