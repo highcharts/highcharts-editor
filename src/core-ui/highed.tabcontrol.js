@@ -116,7 +116,7 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
     /** Select the first tab
      *  @memberof highed.TabControl
      */
-    function selectFirst() {
+    function selectFirst() {       
         tabs.some(function (tab) {
             if (tab.visible()) {
                 tab.focus();
@@ -159,8 +159,6 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
         }
     }
 
-   
-
     /* Create and return a new tab
      * @memberof highed.TabControl
      * @name createTab
@@ -202,7 +200,11 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
             updateVisibility();
         }
 
-        function focus() {
+        function focus() {            
+            var tsize = highed.dom.size(tab),
+                tpos = highed.dom.pos(tab)
+            ;
+
             if (!visible) {
                 return;
             }
@@ -218,9 +220,14 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
                 });
             }
 
+            if (!tsize || !tpos || !tsize.w) {
+                //We're not ready yet..
+                
+            }
+
             highed.dom.style(indicator, {
-                width: highed.dom.size(tab).w + 'px',
-                left: highed.dom.pos(tab).x + 'px'
+                width: tsize.w + 'px',
+                left: tpos.x + 'px'
             });
 
             tab.className = 'tab tab-selected';
@@ -275,18 +282,22 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
     
     if (!highed.isNull(parent)) {
 
-        highed.dom.ap(parent,
-            highed.dom.ap(container, 
-                highed.dom.ap(paneBar,
-                    more,
-                    indicator
-                ),
-                body
-            )
-        );
+        highed.ready(function () {
 
-        resize();
-        updateVisibility();
+            highed.dom.ap(parent,
+                highed.dom.ap(container, 
+                    highed.dom.ap(paneBar,
+                        more,
+                        indicator
+                    ),
+                    body
+                )
+            );
+
+            resize();
+            updateVisibility();
+
+        });
     }
 
     ///////////////////////////////////////////////////////////////////////////
