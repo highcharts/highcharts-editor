@@ -583,6 +583,7 @@ highed.ChartPreview = function (parent, attributes) {
                 but it works.
             */
 
+
             return '\n' + [  
                 '(function(){ ',
                 'function include(script, next) {',
