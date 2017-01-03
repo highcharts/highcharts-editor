@@ -544,14 +544,14 @@ highed.DataTable = function (parent, attributes) {
             }, true),
             ctx = highed.ContextMenu([
                 {
-                    title: 'Sort Asccending',
+                    title: highed.L('dgSortAsc'),
                     icon: 'sort-amount-asc',
                     click: function () {
                         sortRows(exports.colNumber, 'asc');
                     }     
                 },
                 {
-                    title: 'Sort Decending',
+                    title: highed.L('dgSortDec'),
                     icon: 'sort-amount-desc',
                     click: function () {
                         sortRows(exports.colNumber, 'desc');
@@ -559,14 +559,14 @@ highed.DataTable = function (parent, attributes) {
                 },
                 '-',
                 {
-                    title: 'Sort as Month Names Asccending',
+                    title: highed.L('dgSortAscMonth'),
                     icon: 'sort-amount-asc',
                     click: function () {
                         sortRows(exports.colNumber, 'asc', true);
                     }  
                 },
                 {
-                    title: 'Sort as Month Names Decending',
+                    title: highed.L('dgSortDecMonth'),
                     icon: 'sort-amount-desc',
                     click: function () {
                         sortRows(exports.colNumber, 'desc', true);
@@ -574,10 +574,10 @@ highed.DataTable = function (parent, attributes) {
                 },
                 '-',
                 {
-                    title: 'Delete Column',
+                    title: highed.L('dgDelCol'),
                     icon: 'trash',
                     click: function () {
-                        if (confirm('Really delete the column?')) {
+                        if (confirm(highed.L('dgDelColConfirm'))) {
                             delCol(exports.colNumber);                            
                         }
                     }
@@ -588,14 +588,14 @@ highed.DataTable = function (parent, attributes) {
                 // },
                 '-',
                 {
-                    title: 'Insert Column Before',
+                    title: highed.L('dgInsColBefore'),
                     icon: 'plus',
                     click: function () {
                         insertCol(exports.colNumber);
                     }
                 },
                 {
-                    title: 'Insert Column After',
+                    title: highed.L('dgInsColAfter'),
                     icon: 'plus',
                     click: function () {
                         insertCol(exports.colNumber + 1);
@@ -796,7 +796,7 @@ highed.DataTable = function (parent, attributes) {
         if (where >= gcolumns.length) where = gcolumns.length;
 
         //Insert into gcolumns and on each row, then call updateColumns()
-        addCol('New Column', where);
+        addCol(highed.L('dgNewCol'), where);
 
         updateColumns();
     }
@@ -954,7 +954,7 @@ highed.DataTable = function (parent, attributes) {
     ////////////////////////////////////////////////////////////////////////////
 
     importer.on('ImportCSV', function (data) {
-        highed.snackBar('Importing data');
+        highed.snackBar(highed.L('dgDataImporting'));
         importModal.hide();
 
         if (data && data.csv) {
@@ -982,7 +982,7 @@ highed.DataTable = function (parent, attributes) {
 
             highed.dom.ap(colgroup, highed.dom.cr('col'));
         }
-        highed.snackBar('data imported');
+        highed.snackBar(highed.L('dgDataImported'));
         resize();
     });
 
@@ -1023,14 +1023,14 @@ highed.DataTable = function (parent, attributes) {
     toolbar.addButton({
         css: 'fa-plus-circle',
         tooltip: 'Add row',
-        title: 'ADD ROW',
+        title: highed.L('dgAddRow'),
         click: addRow
     });
 
     toolbar.addButton({
         css: 'fa-file-o',
         tooltip: 'Reset',
-        title: 'NEW',
+        title: highed.L('dgNewBtn'),
         click: function () {
            if (confirm('Start from scratch?')) {
             init();            
@@ -1040,7 +1040,7 @@ highed.DataTable = function (parent, attributes) {
 
     toolbar.addButton({
         css: 'fa-floppy-o',
-        title: 'EXPORT',
+        title: highed.L('dgExportBtn'),
         tooltip: 'Download data',
         click: function (e) {        
             //console.log(toCSV());    
@@ -1049,7 +1049,7 @@ highed.DataTable = function (parent, attributes) {
     });
     
     toolbar.addButton({
-        title: 'IMPORT',
+        title: highed.L('dgImportBtn'),
         click: function () {
             importModal.show();
             importer.resize();
@@ -1063,13 +1063,17 @@ highed.DataTable = function (parent, attributes) {
     });
 
     highed.dom.ap(toolbar.left,
-        highed.dom.cr('div', 'highed-dtable-toolbar-label', 'With Selected rows: ')
+        highed.dom.cr(
+            'div', 
+            'highed-dtable-toolbar-label', 
+            highed.L('dgWithSelected') + ' '
+        )
     );
 
      toolbar.addIcon({
         css: 'fa-trash',
         click: function () {
-            if (!confirm('Really delete the selected rows?')) {
+            if (!confirm(highed.L('dgDeleteRow'))) {
                 return;
             }
 
@@ -1091,7 +1095,9 @@ highed.DataTable = function (parent, attributes) {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    init();
+    highed.ready(function () {
+        init();
+    });
 
     ////////////////////////////////////////////////////////////////////////////
 
