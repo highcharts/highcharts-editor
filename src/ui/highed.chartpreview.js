@@ -571,6 +571,8 @@ highed.ChartPreview = function (parent, attributes) {
             id = id || '';
 
          
+            //To avoid a forEach in the generated code, we pre-gen the includes
+
 
             /*
                 This magic code will generate an injection script that will
@@ -593,8 +595,17 @@ highed.ChartPreview = function (parent, attributes) {
                     'document.head.appendChild(sc);',
                 '}',
 
-                'var inc = {},incl=[]; document.querySelectorAll("script").forEach(function(t) {inc[t.src.substr(0, t.src.indexOf("?"))] = 1;});',
-                'Object.keys(', JSON.stringify(cdnIncludes), ').forEach(function (k){',
+                'function each(a, fn){',
+                    'if (typeof a.forEach !== "undefined"){a.forEach(fn);}',
+                    'else{',
+                        'for (var i = 0; i < a.length; i++){',
+                            '(fn && fn(a[i]))',
+                        '}',
+                    '}',
+                '}',
+
+                'var inc = {},incl=[]; each(document.querySelectorAll("script"), function(t) {inc[t.src.substr(0, t.src.indexOf("?"))] = 1;});',
+                'each(Object.keys(', JSON.stringify(cdnIncludes), '),function (k){',
                     'if (!inc[k]) {',
                         'incl.push(k)',
                     '}',
