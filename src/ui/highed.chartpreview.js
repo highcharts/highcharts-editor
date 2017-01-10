@@ -300,23 +300,27 @@ highed.ChartPreview = function (parent, attributes) {
 
         gc(function (chart) {
 
-            Object.keys(template.config).forEach(function (key) {
-                var isArr = key.indexOf('['),
-                    aIndex = 0,
-                    p,
-                    full = key
-                ;
+            if (template.newStyle) {
+                templateOptions = highed.merge({}, template.config || {});
+            } else {
+                Object.keys(template.config).forEach(function (key) {
+                    var isArr = key.indexOf('['),
+                        aIndex = 0,
+                        p,
+                        full = key
+                    ;
 
-                if (isArr >= 0) {
-                    aIndex = parseInt(key.substr(isArr + 1, key.indexOf(']') - isArr - 1), 10);  
-                    key = key.replace('[' + aIndex + ']', '');
-                    p = key.substr(0, key.indexOf('-'));
-                    templateOptions[p] = templateOptions[p] || [];                     
-                }
+                    if (isArr >= 0) {
+                        aIndex = parseInt(key.substr(isArr + 1, key.indexOf(']') - isArr - 1), 10);  
+                        key = key.replace('[' + aIndex + ']', '');
+                        p = key.substr(0, key.indexOf('-'));
+                        templateOptions[p] = templateOptions[p] || [];                     
+                    }
 
-                highed.setAttr(templateOptions, key, template.config[full], aIndex);
-                flatOptions[key] = template.config[full];
-            });
+                    highed.setAttr(templateOptions, key, template.config[full], aIndex);
+                    flatOptions[key] = template.config[full];
+                });                
+            }
 
             updateAggregated();
             init(aggregatedOptions);
@@ -597,7 +601,7 @@ highed.ChartPreview = function (parent, attributes) {
                     'if (typeof a.forEach !== "undefined"){a.forEach(fn);}',
                     'else{',
                         'for (var i = 0; i < a.length; i++){',
-                            '(fn && fn(a[i]))',
+                            'if (fn) {fn(a[i]);}',
                         '}',
                     '}',
                 '}',
