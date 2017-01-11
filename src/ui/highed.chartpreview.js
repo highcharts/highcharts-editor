@@ -495,12 +495,7 @@ highed.ChartPreview = function (parent, attributes) {
      *  @param index {number} - used if the option is an array
      */
     function set(id, value, index) {
-         if (id.indexOf('lang--') === 0 && customizedOptions.lang) {
-            Highcharts.setOptions({
-                lang: customizedOptions.lang
-            });
-        }
-
+        
         gc(function (chart) {
             highed.setAttr(chart.options, id, value, index);        
             highed.setAttr(chart.options, 'plotOptions--series--animation', false, index);
@@ -512,11 +507,15 @@ highed.ChartPreview = function (parent, attributes) {
 
         flatOptions[id] = value;
 
+        if (id.indexOf('lang--') === 0 && customizedOptions.lang) {
+            Highcharts.setOptions({
+                lang: customizedOptions.lang
+            });
+        }
+
         updateAggregated();
         init(aggregatedOptions, false, true);
         emitChange();
-
-       
     }
 
     /** Get embeddable JSON 
