@@ -395,6 +395,12 @@ highed.ChartPreview = function (parent, attributes) {
                 customizedOptions = projectData.options;
             }
 
+            if (customizedOptions.lang) {
+                Highcharts.setOptions({
+                    lang: customizedOptions.lang
+                });                
+            }
+
             updateAggregated();
             init(aggregatedOptions);
             emitChange();
