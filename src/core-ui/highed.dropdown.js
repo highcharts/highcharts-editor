@@ -148,6 +148,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 }
             }
 
+            if (highed.isBasic(item)) {
+                item = {
+                    id: item,
+                    title: item
+                };
+            }
+
             if (items.filter(function (b) {
                 return b.id() === item.id;
             }).length > 0) {
