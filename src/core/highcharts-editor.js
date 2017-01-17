@@ -582,7 +582,7 @@ var highed = {
             return options[option];
         }
         return false;
-    };
+    };    
 
     /** Add a function to call when the document is ready
      * @param {function} fn - the function to call
@@ -651,18 +651,18 @@ var highed = {
         includedScripts[what] = true;
 
         if (asCSS || what.lastIndexOf('.css') === what.length - 4) {
-            n = highed.dom.cr('link');
+            n = document.createElement('link');
             n.rel = 'stylesheet';
             n.type = 'text/css';
             n.href = what;
             n.onload = fn;
         } else {
-            n = highed.dom.cr('script');
+            n = document.createElement('script');
             n.src = what;
             n.onload = fn;
         }
 
-        highed.dom.ap(document.head, n);
+        document.head.appendChild(n);        
     };
 
     /** Returns true if running on a phone
