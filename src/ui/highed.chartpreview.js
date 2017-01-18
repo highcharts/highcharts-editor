@@ -621,10 +621,13 @@ highed.ChartPreview = function (parent, attributes) {
                 'if (incl.length > 0) { include(incl[0], 0); }',
 
                 ' function cl() {',
-                    'typeof window["Highcharts"] !== "undefined" && Highcharts.Data ? ',
+                    'if(typeof window["Highcharts"] !== "undefined"){',//' && Highcharts.Data ? ',
+
+                        !customizedOptions.lang ? '' : 'Highcharts.setOptions({lang:' + JSON.stringify(customizedOptions.lang) + '});',
+
                         'new Highcharts.' + constr + '("', id, '", ', 
-                            JSON.stringify(getEmbeddableJSON()), ')',
-                    ' : ',
+                            JSON.stringify(getEmbeddableJSON()), ');',
+                    '}else ',
                     'window.setTimeout(cl, 20);',
                 '}',
                 'cl();',
