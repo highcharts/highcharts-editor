@@ -315,58 +315,59 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         });
 
         //Attach to parent node
-        parent = highed.dom.get(parent);
-        if (parent) {
-            highed.dom.ap(parent, 
-                highed.dom.ap(container,
-                    expandContainer
-                )                           
-            );
+        highed.ready(function () {
+            parent = highed.dom.get(parent);
+            if (parent) {
+                highed.dom.ap(parent, 
+                    highed.dom.ap(container,
+                        expandContainer
+                    )                           
+                );
 
-            highed.dom.ap(splitter.right, 
-                chartContainer
-            );
+                highed.dom.ap(splitter.right, 
+                    chartContainer
+                );
 
-            highed.dom.style(splitter.right, {
-            //    overflow: 'hidden'
-            });
+                highed.dom.style(splitter.right, {
+                //    overflow: 'hidden'
+                });
 
-            doneStep.body.className += ' highed-done-pane';
+                doneStep.body.className += ' highed-done-pane';
 
-            highed.dom.ap(doneStep.body, 
-                highed.dom.cr('div', '', [
-                    '<h2>All done? Great!</h2>',
-                    'Click the button below to close the editor'
-                ].join('<br/>')),
-                doneBtn
-            );
+                highed.dom.ap(doneStep.body, 
+                    highed.dom.cr('div', '', [
+                        '<h2>All done? Great!</h2>',
+                        'Click the button below to close the editor'
+                    ].join('<br/>')),
+                    doneBtn
+                );
 
-            highed.dom.ap(mainToolbar.left,
-                highed.dom.style(highed.dom.cr('div', 'highed-logo'), {
+                highed.dom.ap(mainToolbar.left,
+                    highed.dom.style(highed.dom.cr('div', 'highed-logo'), {
                         'background-image': 'url("data:image/svg+xml;utf8,' + 
                                   encodeURIComponent(highed.resources.logo) +
                         '")'
-                    }
-                )
-            );
+                    })
+                );
 
                 resize();                
 
-            if (!highed.onPhone()) {
-                highed.dom.on(window, 'resize', resize);
-            } 
-        } else {
-            highed.log(1, 'no valid parent supplied to editor');
-        }
+                if (!highed.onPhone()) {
+                    highed.dom.on(window, 'resize', resize);
+                } 
+            } else {
+                highed.log(1, 'no valid parent supplied to editor');
+            }
 
-        highed.dom.style(welcomeStep.body, {padding: '0 20px'});
+            highed.dom.style(welcomeStep.body, {padding: '0 20px'});
 
-        highed.dom.ap(welcomeStep.body, 
-            highed.dom.cr('h2', '', 'Welcome'),
-            highed.dom.cr('div', '', 'This wizard will take you through the process of creating your very own chart.'),
-            highed.dom.cr('br'),
-            highed.dom.cr('div', '', 'Follow the steps below to get started!')
-        );
+            highed.dom.ap(welcomeStep.body, 
+                highed.dom.cr('h2', '', 'Welcome'),
+                highed.dom.cr('div', '', 'This wizard will take you through the process of creating your very own chart.'),
+                highed.dom.cr('br'),
+                highed.dom.cr('div', '', 'Follow the steps below to get started!')
+            );
+        });
 
         ////////////////////////////////////////////////////////////////////////
         
