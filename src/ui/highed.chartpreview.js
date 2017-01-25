@@ -281,6 +281,8 @@ highed.ChartPreview = function (parent, attributes) {
         if (aggregatedOptions.xAxis && !highed.isArr(aggregatedOptions.xAxis)) {
             aggregatedOptions.xAxis = [aggregatedOptions.xAxis];
         }
+
+        highed.merge(aggregatedOptions, highed.option('stickyChartProperties'));
     }
 
     /** Load a template from the meta
@@ -401,6 +403,13 @@ highed.ChartPreview = function (parent, attributes) {
                 });                
             }
 
+            // Not sure if this should be part of the project files yet
+            // if (projectData.editorOptions) {
+            //     Object.keys(projectData.editorOptions, function (key) {
+            //         highed.option(key, projectData.editorOptions[key]);
+            //     });
+            // }
+
             updateAggregated();
             init(aggregatedOptions);
             emitChange();
@@ -414,6 +423,7 @@ highed.ChartPreview = function (parent, attributes) {
         return {
             template: templateOptions,
             options: customizedOptions
+            //editorOptions: highed.serializeEditorOptions()
         };
     }
 

@@ -535,7 +535,12 @@ var highed = {
         isOnPhone = false,
         options = {
             codeMirrorTheme: 'neo',
-            helpURL: 'http://www.highcharts.com/products/highcharts-editor'
+            helpURL: 'http://www.highcharts.com/products/highcharts-editor',
+            stickyChartProperties: {
+                title: {
+                    text: 'Overriden!'
+                }
+            }
         },
         cdnScripts = [
             "https://code.highcharts.com/stock/highstock.js",   
@@ -566,7 +571,7 @@ var highed = {
 
     ///////////////////////////////////////////////////////////////////////////
     
-    /** Set an option
+    /** Set/get an option
      *  Skip `value` to get the value 
      *  @param option {string} - the option to set
      *  @param value {anything} - the value to set
@@ -582,7 +587,14 @@ var highed = {
             return options[option];
         }
         return false;
-    };    
+    };
+
+    /** Serialize the global options
+     *  @returns {object} - a copy of the global options
+     */
+    highed.serializeEditorOptions = function () {
+        return highed.merge({}, options);
+    };
 
     /** Add a function to call when the document is ready
      * @param {function} fn - the function to call
