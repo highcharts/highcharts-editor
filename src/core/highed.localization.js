@@ -31,7 +31,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 (function () {
-    var currentLang = 'en',
+    var currentLang = highed.option('defaultLanguage'),
         langTree = {}
     ;
 
