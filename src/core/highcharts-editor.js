@@ -536,11 +536,8 @@ var highed = {
         options = {
             codeMirrorTheme: 'neo',
             helpURL: 'http://www.highcharts.com/products/highcharts-editor',
-            stickyChartProperties: {
-                title: {
-                    text: 'Overriden!'
-                }
-            }
+            defaultLanguage: 'en',
+            stickyChartProperties: {}
         },
         cdnScripts = [
             "https://code.highcharts.com/stock/highstock.js",   
@@ -587,6 +584,15 @@ var highed = {
             return options[option];
         }
         return false;
+    };
+
+    /** Set a set of options
+     *  @param options {object} - an object of options to set
+     */
+    highed.options = function (options) {
+        Object.keys(options || {}).forEach(function (key) {
+            highed.option(key, options[key]);
+        });
     };
 
     /** Serialize the global options
