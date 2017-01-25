@@ -71,9 +71,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     /** Install a language pack from a url  
      *  @param url {string} - the location of the pack
      */
-    highed.installLanguageFromURL = function (url) {
+    highed.installLanguageFromURL = function (url, fn) {
         highed.ajax({
-            url: url
+            url: url,
+            success: function (res) {
+                if (res) {
+                    if (highed.installLanguage(res)) {
+                        return fn && fn(false);
+                    }
+                    return fn && fn(true);
+                }
+            },
+            error: function (err) {
+                return fn && fn(err);
+            }
         });
     };
 
