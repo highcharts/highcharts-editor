@@ -1,7 +1,8 @@
 # 0.1.4-beta
   * Added sticky chart properties. See [wiki](https://github.com/highcharts/highcharts-editor/wiki/Sticky-Chart-Options).
-  * Added `highd.options` to set multiple options in one call.
+  * Added `highed.options` to set multiple options in one call.
   * Added `defaultLanguage` to global options
+  * Added `includeCDNInExport` to global options, which when false will not include CDN references in HTML exports
 
 # 0.1.3-beta, January 24th 2017
   * Fixed an issue with font sizes in font widget

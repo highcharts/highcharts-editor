@@ -29,6 +29,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  where the initial state can be as part of the main DOM,
  *  and where the expanded state covers most of the screen (90%)
  *
+ *  @todo this is a proper mess right now - need a good refactoring
+ *
  *  @constructor
  *
  *  @param parent {domnode} - the node to attach the preview to
@@ -586,6 +588,7 @@ highed.ChartPreview = function (parent, attributes) {
                     "http://code.highcharts.com/modules/funnel.js": 1,
                     "http://code.highcharts.com/modules/solid-gauge.js": 1
                 },
+                cdnIncludesArr = [],
                 title = chart.options.titles ? chart.options.titles.text || 'untitled chart' : 'untitled chart'
             ;
 
@@ -600,35 +603,42 @@ highed.ChartPreview = function (parent, attributes) {
                 but it works.
             */
 
-            return '\n' + [  
-                '(function(){ ',
-                'function include(script, next) {',
-                    'var sc=document.createElement("script");',
-                    'sc.src = script;',
-                    'sc.type="text/javascript";',
-                    'sc.onload=function() {',
-                        'if (++next < incl.length) include(incl[next], next);',
-                    '};',
-                    'document.head.appendChild(sc);',
-                '}',
+            if (highed.option('includeCDNInExport')) {
+                cdnIncludesArr = [
+                     'function include(script, next) {',
+                        'var sc=document.createElement("script");',
+                        'sc.src = script;',
+                        'sc.type="text/javascript";',
+                        'sc.onload=function() {',
+                            'if (++next < incl.length) include(incl[next], next);',
+                        '};',
+                        'document.head.appendChild(sc);',
+                    '}',
 
-                'function each(a, fn){',
-                    'if (typeof a.forEach !== "undefined"){a.forEach(fn);}',
-                    'else{',
-                        'for (var i = 0; i < a.length; i++){',
-                            'if (fn) {fn(a[i]);}',
+                    'function each(a, fn){',
+                        'if (typeof a.forEach !== "undefined"){a.forEach(fn);}',
+                        'else{',
+                            'for (var i = 0; i < a.length; i++){',
+                                'if (fn) {fn(a[i]);}',
+                            '}',
                         '}',
                     '}',
-                '}',
 
-                'var inc = {},incl=[]; each(document.querySelectorAll("script"), function(t) {inc[t.src.substr(0, t.src.indexOf("?"))] = 1;});',
-                'each(Object.keys(', JSON.stringify(cdnIncludes), '),function (k){',
-                    'if (!inc[k]) {',
-                        'incl.push(k)',
-                    '}',
-                '});',
+                    'var inc = {},incl=[]; each(document.querySelectorAll("script"), function(t) {inc[t.src.substr(0, t.src.indexOf("?"))] = 1;});',
+                    'each(Object.keys(', JSON.stringify(cdnIncludes), '),function (k){',
+                        'if (!inc[k]) {',
+                            'incl.push(k)',
+                        '}',
+                    '});',
 
-                'if (incl.length > 0) { include(incl[0], 0); }',
+                    'if (incl.length > 0) { include(incl[0], 0); }'
+                ];                
+            }
+
+            return '\n' + [  
+                '(function(){ ',
+                
+                cdnIncludesArr.join(''),
 
                 ' function cl() {',
                     'if(typeof window["Highcharts"] !== "undefined"){',//' && Highcharts.Data ? ',

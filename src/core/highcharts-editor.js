@@ -537,6 +537,7 @@ var highed = {
             codeMirrorTheme: 'neo',
             helpURL: 'http://www.highcharts.com/products/highcharts-editor',
             defaultLanguage: 'en',
+            includeCDNInExport: true,
             stickyChartProperties: {}
         },
         cdnScripts = [
