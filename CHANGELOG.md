@@ -1,4 +1,7 @@
-# 0.1.3-beta
+# 0.1.4-beta
+  * Added sticky chart properties. See [wiki]()
+
+# 0.1.3-beta, January 24th 2017
   * Fixed an issue with font sizes in font widget
   * Fixed an issue with embedding charts in Wordpress
   * Fixed an issues with global options (i.e. localization/language options)
