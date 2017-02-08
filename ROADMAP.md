@@ -68,3 +68,5 @@
 
   * Sample data for each template
   * Interface for multiple axis in simple view
+  * Property search
+  
