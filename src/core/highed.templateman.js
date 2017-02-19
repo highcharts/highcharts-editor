@@ -47,11 +47,11 @@ highed.installTemplate = function(type, def) {
         tooltipText: ''
     }, def);
 
-    if (typeof highed.meta.chartTemplates === 'undefined') {
+    if (typeof highed.meta.chartTemplates === undefined) {
         highed.meta.chartTemplates = {};
     }
 
-    if (highed.meta.chartTemplates[type] !== 'undefined' && properties.title.length) {
+    if (highed.meta.chartTemplates[type] !== undefined && properties.title.length) {
         highed.meta.chartTemplates[type].templates[properties.title] = properties;
     } 
 };
@@ -72,11 +72,11 @@ highed.flushTemplates = function () {
  *  @param title {string} - the title as it appears in the category list     
  */
 highed.addTemplateType = function (type, title) {
-    if (typeof highed.meta.chartTemplates === 'undefined') {
+    if (typeof highed.meta.chartTemplates === undefined) {
         highed.meta.chartTemplates = {};
     }
 
-    if (highed.meta.chartTemplates[type] === 'undefined') {
+    if (highed.meta.chartTemplates[type] === undefined) {
         highed.meta.chartTemplates[type] = {
             title: title,
             templates: {}
@@ -94,7 +94,7 @@ highed.addTemplateType = function (type, title) {
   *
   */
  highed.installMultipleTemplates = function (templates) {
-    if (typeof highed.meta.chartTemplates === 'undefined') {
+    if (typeof highed.meta.chartTemplates === undefined) {
         highed.meta.chartTemplates = {};
     }
 
