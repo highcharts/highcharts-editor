@@ -51,7 +51,7 @@ highed.installTemplate = function(type, def) {
         highed.meta.chartTemplates = {};
     }
 
-    if (highed.meta.chartTemplates[type] !== 'undefined' && properties.title.length) {
+    if (typeof highed.meta.chartTemplates[type] !== 'undefined' && properties.title.length) {
         highed.meta.chartTemplates[type].templates[properties.title] = properties;
     } 
 };
@@ -76,7 +76,7 @@ highed.addTemplateType = function (type, title) {
         highed.meta.chartTemplates = {};
     }
 
-    if (highed.meta.chartTemplates[type] === 'undefined') {
+    if (typeof highed.meta.chartTemplates[type] === 'undefined') {
         highed.meta.chartTemplates[type] = {
             title: title,
             templates: {}
