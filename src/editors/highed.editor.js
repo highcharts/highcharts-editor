@@ -437,7 +437,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         //Activate plugins
         properties.plugins = highed.arrToObj(properties.plugins);
         Object.keys(properties.plugins).forEach(function (name) {
-            highed.plugins.use(name, properties.plugins[name] || {});
+            highed.plugins.editor.use(name, properties.plugins[name] || {});
         });
 
         //Dispatch change events to the active plugins
