@@ -41,7 +41,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *    > noAdvanced {bool} - set to false to force disable the advance view
  *    > availableSettings {string|array} - whitelist of exposed settings
  */
-highed.ChartCustomizer = function (parent, attributes) {
+highed.ChartCustomizer = function (parent, attributes, chartPreview) {
     var properties = highed.merge({
             noAdvanced: false,
             availableSettings: []
@@ -105,10 +105,9 @@ highed.ChartCustomizer = function (parent, attributes) {
      */
     function init(foptions, coptions) {
         flatOptions = coptions || {};
-        chartOptions = coptions || flatOptions;
+        chartOptions = highed.merge({}, foptions || {});
         list.reselect();
         buildTree();
-        advTree.reselect();
     }
 
     function buildBody(entry) {
@@ -162,7 +161,7 @@ highed.ChartCustomizer = function (parent, attributes) {
     function selectGroup(group, table, options, detailIndex, filteredBy, filter) {
         var master, vals, doInclude = true, container, masterNode;
 
-        options = options || flatOptions;
+        options = chartPreview.options.getCustomized();
 
         if (highed.isArr(group.options)) {
             table = highed.dom.cr('table', 'highed-customizer-table');
@@ -189,8 +188,7 @@ highed.ChartCustomizer = function (parent, attributes) {
             }
 
             if (group.controlledBy) {
-                master = highed.DropDown(); //highed.dom.cr('select', 'highed-box-size highed-stretch');
-
+                master = highed.DropDown(); 
                 highed.dom.style(masterNode, {
                     display: 'block'
                 });
@@ -224,8 +222,6 @@ highed.ChartCustomizer = function (parent, attributes) {
                                 selectGroup(sub, table, options, detailIndex, group.filteredBy, filter);
                             });
                         });
-
-                        
 
                         highed.dom.ap(masterNode, master.container);               
                         detailIndex = detailIndex || 0;
@@ -294,7 +290,10 @@ highed.ChartCustomizer = function (parent, attributes) {
         if (properties.noAdvanced || highed.isNull(highed.meta.optionsAdvanced)) {
             advancedTab.hide();
         } else {
-            advTree.build(highed.meta.optionsAdvanced, chartOptions);        
+            advTree.build(
+                highed.meta.optionsAdvanced,
+                highed.merge({}, chartPreview.options.getCustomized())
+            );        
         }
     }
 
@@ -375,45 +374,56 @@ highed.ChartCustomizer = function (parent, attributes) {
         highlighted = false;
     });
 
-    function buildAdvTree(item, selected, arrIndex, filter) {
-        var table = highed.dom.cr('table', 'highed-customizer-table');
+    function buildAdvTree(item, selected, instancedData, filter, propFilter) {
+        var table = highed.dom.cr('table', 'highed-customizer-table'),
+            componentCount = 0
+        ;
+
         advBody.innerHTML = '';
 
-        Object.keys(item.entries).forEach(function (key) {
-            var entry = item.entries[key];
-
-            if (filter && entry.subType) {
-                //Check if the sub type is valid
-                if (!entry.subType[filter]) {
-                    return;
-                }
-            }
+        item.children.forEach(function (entry) {
             
-            if (!entry.shortName.length) {
+            if (!entry.meta.leafNode) {
                 return;
             }
 
+            if (propFilter && entry.meta.validFor) {
+                if (!entry.meta.validFor[propFilter]) {
+                    console.log('filtered', entry.meta.name, 'based on', propFilter);
+                    return false;
+                }
+            }
+
+            if (
+                filter && 
+                entry.meta.products && 
+                Object.keys(entry.meta.products) > 0 && 
+                !entry.meta.products[filter]) {
+                return;
+            }
+
+            componentCount++;
+           
+            entry.values = entry.meta.enumValues;
+
             highed.dom.ap(table,
                 highed.InspectorField(
-                    entry.values ?  'options' : (entry.dataType || 'string'), 
-                    (highed.getAttr(chartOptions, entry.id, arrIndex)  || entry.defaults), 
+                    entry.values ?  'options' : (Object.keys(entry.meta.types)[0] || 'string'), 
+                    instancedData[entry.meta.name] || entry.meta.default,//(highed.getAttr(chartOptions, entry.id)  || entry.defaults), 
                     {
-                        title: highed.uncamelize(entry.shortName),
-                        tooltip: entry.description,
-                        values: entry.values,
-                        defaults: entry.defaults,
+                        title: highed.uncamelize(entry.meta.name),
+                        tooltip: entry.meta.description,
+                        values: entry.meta.enumValues,
+                        defaults: entry.meta.default,
                         custom: {},
                         attributes: entry.attributes || []
                     },
                     function (newValue) {          
-                        events.emit('PropertyChange', entry.id, newValue, arrIndex);
-
-                        //This should not be hardcoded.
-                        if (entry.id === 'series--type') {
-                            //Need to reselect with a filter applied
-                            buildAdvTree(item, selected, arrIndex, newValue);
+                        instancedData[entry.meta.name] = newValue;
+                        events.emit('PropertySetChange', advTree.getMasterData());
+                        if (advTree.isFilterController(entry.meta.ns, entry.meta.name)) {
+                            buildTree();
                         }
-
                     },
                     false,
                     entry.id
@@ -429,14 +439,15 @@ highed.ChartCustomizer = function (parent, attributes) {
         );
     }
 
-    advTree.on('Select', function (item, selected, arrIndex, filter) {
-        //This is a hack - we need a dynamic system for this later.
-        if (item.id === 'series') {
-            filter = highed.getAttr(chartOptions, 'series--type', arrIndex);
-        }
-
-        buildAdvTree(item, selected, arrIndex, filter);
+    advTree.on('ForceSave', function (data) {
+        events.emit('PropertySetChange', data);
     });
+
+    advTree.on('ClearSelection', function () {
+        advBody.innerHTML = '';
+    });
+
+    advTree.on('Select', buildAdvTree);
 
     advTree.on('DataUpdate', function (path, data) {
         events.emit('PropertyChange', path, data);
