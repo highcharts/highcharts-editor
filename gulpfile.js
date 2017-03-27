@@ -18,8 +18,64 @@ var dest = 'dist/',
     header = require('gulp-header'),
     license = fs.readFileSync(__dirname + '/LICENSE'),
     //The order is important, so we don't do wildcard
-    sources = require(__dirname + '/res/filelist.json')
+    sources = require(__dirname + '/res/filelist.json'),
+    products = [
+        //'highcharts', this one is baked into the editor always
+        'highstock',
+        'highmaps'
+    ]
 ;
+
+////////////////////////////////////////////////////////////////////////////////
+
+function appendFilesFromProduct(prodName) {
+    var path = __dirname + '/src/products/' + prodName + '/',
+        files = []
+    ;
+
+    function include(folder) {
+        var f;
+
+        try {
+          f = fs.readdirSync(path + folder);
+          
+          if (f) {
+              f.forEach(function (f) {
+                  if (f.indexOf('.js') >= 0) {
+                      files.push(path + folder + '/' + f);       
+                  }
+              });
+          }
+          
+        } catch (e) {
+            console.log('error when including module', prodName, e);
+        }
+    }
+
+    include('validators');
+    include('samples');
+    include('templates');
+
+    return files;
+}
+
+products.forEach(function (product) {
+  gulp.task(product + '-module', function () {
+      return gulp.src(appendFilesFromProduct(product))
+                 .pipe(concat(name + '.module.' + product  + '.js'))       
+                 .pipe(gulp.dest(dest + '/modules/' + product))
+                 .pipe(rename(name + '.module.' + product + '.min.js'))
+                 .pipe(uglify())
+                 .pipe(header(license, packageJson))
+                 .pipe(gulp.dest(dest + '/modules/' + product))
+                 .pipe(zip(name + '.module.' + product + '.' + packageJson.version + '.min.zip'))
+                 .pipe(gulp.dest(buildDest));
+  });
+});
+
+gulp.task('modules', function () {
+  gulp.start(products.map(function (p) { return p + '-module'}));
+});
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -28,7 +84,24 @@ gulp.task('update-deps', function () {
 });
 
 gulp.task('bake-advanced', function () {
-  return run('node tools/bake.advanced.js').exec();
+  return run('node tools/dump2advanced.js').exec();
+});
+
+gulp.task('localization', function () {
+  return run('node tools/gen.localization.js').exec();
+});
+
+gulp.task('fetch-thumbnails', function () {
+  return run('node tools/bake.previews.js').exec();
+});
+
+gulp.task('cache-thumbnails', ['fetch-thumbnails'], function () {
+  return gulp.src('generated_src/highed.meta.images.js')
+             .pipe(gulp.dest(dest))
+             .pipe(rename(name + '.thumbnails.min.js'))
+             .pipe(uglify())
+             .pipe(header(license, packageJson))
+             .pipe(gulp.dest(dest))
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -149,7 +222,7 @@ gulp.task('lint', function () {
 });
 
 gulp.task('lint-advanced', function () {
-  return gulp.src(sources.concat(['./src/meta/highed.meta.options.advanced.js']))
+  return gulp.src(sources.concat(['./generated_src/highed.meta.options.advanced.js']))
          .pipe(jslint({
         //  global: ['XMLHttpRequest']
          }))
@@ -164,7 +237,7 @@ gulp.task('move-standalone', function () {
 });
 
 gulp.task('minify', function () {
-    return gulp.src(sources)
+    return gulp.src(sources.concat(appendFilesFromProduct('highcharts')))
                .pipe(concat(name + '.js'))       
                .pipe(gulp.dest(dest))           
                .pipe(rename(name + '.min.js'))
@@ -177,7 +250,7 @@ gulp.task('minify', function () {
 });
 
 gulp.task('minify-advanced', ['bake-advanced', 'less'], function () {
-    return gulp.src('./src/meta/highed.meta.options.advanced.js')
+    return gulp.src('./generated_src/highed.meta.options.advanced.js')
                .pipe(concat(name + '.advanced.js'))
                .pipe(gulp.dest(dest))               
                .pipe(rename(name + '.advanced.min.js'))
@@ -252,7 +325,7 @@ gulp.task('electron', function () {
 });
 
 gulp.task('default', function () {
-    gulp.start('minify', 'tinymce', 'ckeditor', 'less', 'move-standalone', 'update-deps', 'plugins', 'wordpress', 'zip-standalone', 'zip-dist', 'zip-standalone-nominify', 'zip-tinymce', 'zip-ckeditor');
+    gulp.start('minify', 'tinymce', 'ckeditor', 'less', 'move-standalone', 'update-deps', 'plugins', 'wordpress', 'zip-standalone', 'zip-dist', 'zip-standalone-nominify', 'zip-tinymce', 'zip-ckeditor', 'modules');
 });
 
 gulp.task('with-advanced', function () {
@@ -260,5 +333,5 @@ gulp.task('with-advanced', function () {
 });
 
 gulp.task('all', function () {
-  gulp.start('default', 'electron', 'with-advanced');
+  gulp.start('default', 'electron', 'with-advanced', 'localization');
 });
