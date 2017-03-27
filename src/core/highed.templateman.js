@@ -23,86 +23,185 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-/** Install a new template
- *
- *  @example 
- *  highed.installTemplate('custom', {
- *      title: 'My company template',
- *      tooltipText: 'Company template: requires no particular data',
- *      config: {
- *           'chart--title': 'Company Chart'
- *      } 
- *  });
- *
- *  @param type {string} - template type: `line area column bar scatter pie polar stock`
- *  @param def {object} - the template definition
- *    > title {string} - the template title
- *    > config {object} - the highcharts attributes
- *    > tooltipText {string} - the tooltip text
- */
-highed.installTemplate = function(type, def) {
-    var properties = highed.merge({
-        title: '',
-        config: {},
-        tooltipText: ''
-    }, def);
+highed.templates = {};
 
-    if (typeof highed.meta.chartTemplates === 'undefined') {
-        highed.meta.chartTemplates = {};
-    }
+(function () {
+    /* Templates */
+    var templates = {};
 
-    if (typeof highed.meta.chartTemplates[type] !== 'undefined' && properties.title.length) {
-        highed.meta.chartTemplates[type].templates[properties.title] = properties;
-    } 
-};
+    /** Install a new template
+     *
+     *  @example 
+     *  highed.installTemplate('custom', {
+     *      title: 'My company template',
+     *      tooltipText: 'Company template: requires no particular data',
+     *      config: {
+     *           'chart--title': 'Company Chart'
+     *      } 
+     *  });
+     *
+     *  @param type {string} - template type: `line area column bar scatter pie polar stock`
+     *  @param def {object} - the template definition
+     *    > title {string} - the template title
+     *    > config {object} - the highcharts attributes
+     *    > tooltipText {string} - the tooltip text
+     */
+    highed.templates.add = function(type, def) {
+        var properties = highed.merge({
+            title: '',
+            description: '',
+            constructor: '',
+            thumbnail: '',
+            sampleSets: [],
+            validator: false,
+            config: {}
+        }, def);
 
-/** Flush templates
- */
-highed.flushTemplates = function () {
-  highed.meta.chartTemplates = {};
-};
+        if (!highed.isBasic(type)) {
+            return false;
+        }
 
-/** Add a new template type
- *  If the type already exists, nothing will happen
- *
- *  @example
- *  highed.addTemplateType('custom', 'My company templates');
- *
- *  @param type {string} - the type id
- *  @param title {string} - the title as it appears in the category list     
- */
-highed.addTemplateType = function (type, title) {
-    if (typeof highed.meta.chartTemplates === 'undefined') {
-        highed.meta.chartTemplates = {};
-    }
-
-    if (typeof highed.meta.chartTemplates[type] === 'undefined') {
-        highed.meta.chartTemplates[type] = {
-            title: title,
+        templates[type] = templates[type] || {
+            description: '',
+            sampleData: [],
             templates: {}
         };
-    }
-};
 
-/** Add a set of templates
-  * @example
-  * highed.installMultipleTemplates([
-  *   {type: 'line', template: {title: 'My Line Template', config: {}}} 
-  * ]);
-  *
-  * @param templates {array} - an array of templates
-  *
-  */
- highed.installMultipleTemplates = function (templates) {
-    if (typeof highed.meta.chartTemplates === 'undefined') {
-        highed.meta.chartTemplates = {};
-    }
+        if (properties.title.length) {
+            templates[type].templates[properties.title] = properties;
+            highed.log(4, '[templateman] - added template', properties.title);
+            return true;
+        } 
 
-    if (highed.isArr(templates)) {
-        templates.forEach(function (template) {
-            if (template.type && template.template) {
-                highed.installTemplate(template.type, template.template);
-            }
+        return false;
+    };
+
+    /**
+     * Do something for each template
+     * @param fn {function} - the callback
+     */
+    highed.templates.each = function(fn) {
+        if (highed.isFn(fn)) {
+            Object.keys(templates).forEach(function (cat) {
+                Object.keys(templates[cat].templates).forEach(function (id) {
+                    fn(cat, templates[cat].templates[id]);
+                });
+            });
+        }
+    };
+
+    /**
+     * Do something for each template within a given category
+     * @param cat {string} - the category to filter by
+     * @param fn {function} - the callback
+     */
+    highed.templates.eachInCategory = function (cat, fn) {
+      if (highed.isFn(fn) && templates[cat]) {
+          Object.keys(templates[cat].templates).forEach(function (id) {
+              fn(templates[cat].templates[id]);
+          });
+      }
+    };
+
+    /**
+     * Get a reference to the templates within a given category
+     */
+    highed.templates.getAllInCat = function (cat) {
+        return templates[cat] ? templates[cat].templates : false;
+    };
+
+    /**
+     * Get category meta
+     */
+    highed.templates.getCatInfo = function (cat) {
+        return highed.merge({
+          id: cat
+        }, templates[cat] || {});
+    };
+
+    /**
+     * Get a list of id/title pairs for templates
+     */
+    highed.templates.getCatArray = function () {
+        return Object.keys(templates).map(function (cat) {
+            return {
+                id: cat,
+                title: cat
+            };
         });
-    }
- };
+    };
+
+    /**
+     * Add meta information to a category
+     */
+    highed.templates.addCategory = function (id, meta) {
+        templates[id] = templates[id] || {
+            templates: {}
+        };
+
+        highed.merge(templates[id], meta, false, {'templates': 1});
+    };
+
+    /**
+     * Do something with each category
+     * @param fn {function} - the callback
+     */
+    highed.templates.eachCategory = function (fn) {
+        if (highed.isFn(fn)) {
+            Object.keys(templates).forEach(function (id) {
+                fn(id, templates[id]);
+            });
+        }
+    };
+
+    /** Flush templates */
+    highed.templates.flush = function () {
+      templates = {};
+    };
+
+    /** Add a new template type
+     *  If the type already exists, nothing will happen
+     *
+     *  @example
+     *  highed.addTemplateType('custom', 'My company templates');
+     *
+     *  @param type {string} - the type id
+     *  @param title {string} - the title as it appears in the category list     
+     */
+    highed.templates.addType = function (type, title) {
+        if (typeof templates === 'undefined') {
+            templates = {};
+        }
+
+        if (typeof templates[type] === 'undefined') {
+            templates[type] = {
+                title: title,
+                templates: {}
+            };
+        }
+    };
+
+    /** Add a set of templates
+      * @example
+      * highed.installMultipleTemplates([
+      *   {type: 'line', template: {title: 'My Line Template', config: {}}} 
+      * ]);
+      *
+      * @param templates {array} - an array of templates
+      *
+      */
+     highed.templates.addMultiple = function (templates) {
+        if (typeof templates === 'undefined') {
+            templates = {};
+        }
+
+        if (highed.isArr(templates)) {
+            templates.forEach(function (template) {
+                if (template.type && template.template) {
+                    highed.installTemplate(template.type, template.template);
+                }
+            });
+        }
+     };
+})();
+
