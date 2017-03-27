@@ -40,82 +40,188 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @emits Hover - when hovering a template
  *    > {object} - the template definition
  */
-highed.ChartTemplateSelector = function (parent) {
+highed.ChartTemplateSelector = function (parent, chartPreview) {
     var events = highed.events(),
-        container = highed.dom.cr('div', 'highed-chart-template-container'),
+        container = highed.dom.cr('div', 'highed-chart-templates'),
         splitter = highed.HSplitter(container, {leftWidth: 30}),
-        hintNode = highed.dom.cr('div', 'highed-tooltip'),
         list = highed.List(splitter.left),
         templates = splitter.right,
+        catNode = highed.dom.cr('div', 'highed-chart-template-cat-desc'),
         selected = false
     ;
-
-    highed.dom.style(hintNode, {
-        display: 'none'
-    });
 
     highed.dom.ap(parent, container);
 
     ///////////////////////////////////////////////////////////////////////////
+    
+    function createSampleBtn(target, sample) {
+         var btn, dset = highed.samples.get(sample);
 
-    function showTemplates(templateList, masterID) {
+          if (!dset) {
+              return;  
+          }
+                  
+          btn = sampleBtn = highed.dom.cr('div', 'highed-ok-button', dset.title);
+
+          highed.dom.on(btn, 'click', function () {
+          
+              if (confirm('You are about to load the ' + dset.title + ' sample set. This will purge any existing data in the chart. Continue?')) {
+                  events.emit('LoadDataSet', dset); 
+              }
+          });
+
+          highed.dom.ap(target,
+              btn
+          );
+    }
+    
+    function buildCatMeta(catmeta) {
+        var title = highed.dom.cr('h3', '', catmeta.id),
+            desc = highed.dom.cr('div'),
+            samples = highed.dom.cr('div')
+        ;
+        
+       desc.innerHTML = (highed.isArr(catmeta.description) ? catmeta.description.join('<br/><br/>') : catmeta.description || '');
+
+        if (catmeta.samples && catmeta.samples.length > 0) {
+            highed.dom.ap(samples, highed.dom.cr('h4', '',  'Sample Data Sets'));
+        
+            catmeta.samples.forEach(function (sample) {
+              createSampleBtn(samples, sample);
+            });
+        }
+
+        highed.dom.ap(catNode,
+            title,
+            desc,
+            samples
+        );
+    }
+
+    function showTemplates(templateList, masterID, catmeta) {
+        var compatible = 0;
+        
         templates.innerHTML = '';
+        catNode.innerHTML = '';
+
+        if (catmeta) {
+            buildCatMeta(catmeta);
+        }
+
+        highed.dom.ap(templates, catNode);
 
         Object.keys(templateList).forEach(function (key) {
             var t = templateList[key],
-                node = highed.dom.cr('div', 'highed-chart-template-preview'),
-                titleBar = highed.dom.cr('div', 'highed-chart-template-title', t.title)
+                node = highed.dom.cr('div', 'highed-chart-template-container'),
+                body = highed.dom.cr('div', 'highed-chart-template-body'),
+                preview = highed.dom.cr('div', 'highed-chart-template-thumbnail'),
+                titleBar = highed.dom.cr('div', 'highed-chart-template-title', t.title),
+                description = highed.dom.cr('div', 'highed-chart-template-description'),
+                samples = highed.dom.cr('div', 'highed-chart-template-samples')
             ;
 
-            if (t.constr === 'StockChart' && typeof Highcharts.StockChart === 'undefined') {
-                return;
+            if (t.validator) {
+                if (!highed.validators.validate(t.validator, chartPreview || false)) {
+                    return;
+                }
             }
 
+            compatible++;
+
+            (highed.isArr(t.sampleSets) ? t.sampleSets : (t.sampleSets || '').split('.')).forEach(function (sample, i) {
+                if (i === 0) {
+                    highed.dom.ap(samples, highed.dom.cr('h4', '', 'Sample Data Sets'));
+                }
+                
+                createSampleBtn(samples, sample);
+            });
+          
+
+            description.innerHTML = highed.isArr(t.description) ? 
+                                      t.description.join('<br/><br/>') : 
+                                      t.description;
+
             if (selected && selected.id === masterID + key + t.title) {
-                node.className = 'highed-chart-template-preview highed-chart-template-preview-selected';
+                node.className = 'highed-chart-template-container highed-chart-template-preview-selected';
                 selected.node = node;
             }
 
-            highed.dom.style(node, {
-                'background-image': 'url(' + t.urlImg + ')'         
-            });
-
-            highed.dom.showOnHover(node, titleBar);
-
-            highed.dom.on(node, 'mouseenter', function () {
-                if (t.tooltipText) {
-                    hintNode.innerHTML = t.tooltipText;
-                    highed.dom.style(hintNode, {display: 'block'});
-                    events.emit('Hover', t);                    
-                }
-            });
-
-            highed.dom.on(node, 'mouseleave', function () {                
-                hintNode.innerHTML = '';
-                highed.dom.style(hintNode, {display: 'none'});
+            highed.dom.style(preview, {
+                "background-image": 'url(' + t.thumbnail + ')'
             });
 
             highed.dom.on(node, 'click', function () {
                 if (selected) {
-                    selected.node.className = 'highed-chart-template-preview';
+                    selected.node.className = 'highed-chart-template-container';
                 }
 
-                node.className = 'highed-chart-template-preview highed-chart-template-preview-selected';
+                node.className = 'highed-chart-template-container highed-chart-template-preview-selected';
 
                 selected = {
                     id: masterID + key + t.title,
                     node: node
                 };
 
-                events.emit('Select', templateList[key]);
+                // If this is a map, we need to include the map collection
+                if (t.constructor === 'Map') {
+                    var loadedSeries = 0;
+
+                    (t.config.series || []).forEach(function (series) {
+        
+                        function incAndCheck() {
+                            loadedSeries++;
+                            if (loadedSeries === t.config.series.length) {
+                                events.emit('Select', t);
+                            }
+                        }
+
+                        if (series.mapData) {
+
+                            if (highed.isStr(series.mapData)) {
+                                highed.include(
+                                    'https://code.highcharts.com/mapdata/' + series.mapData + '.js',
+                                    function () {
+                                        series.mapData = Highcharts.maps[series.mapData];
+                                        incAndCheck();
+                                    }
+                                );
+                            } else {
+                                incAndCheck();
+                            }
+                        } else {
+                            incAndCheck();
+                        }
+                    });
+                } else {
+                    events.emit('Select', t);
+                }
             });
 
             highed.dom.ap(templates, 
-                highed.dom.ap(node,
-                    titleBar
-                )
+              highed.dom.ap(node,
+                  preview,
+                  highed.dom.ap(body,
+                      titleBar,
+                      description,
+                     // highed.dom.cr('h4', '', 'Sample Data Sets'),
+                      samples
+                  )
+              )
             );
         });
+
+        if (compatible === 0) {
+            highed.dom.ap(templates,
+                highed.dom.ap(highed.dom.cr('div', 'highed-chart-template-404'),
+                    highed.dom.cr('h4', '', 'None of the templates in this category fits your dataset.'),
+                    highed.dom.cr('div', '', catmeta ? catmeta.nofits || '' : '')
+                )
+            );
+        } else {
+            highed.dom.ap(catNode,
+                highed.dom.cr('h3', 'highed-template-choose-text',  'Choose a template below by clicking it')
+            );
+        }
     }
     
     /* Force a resize */
@@ -133,28 +239,20 @@ highed.ChartTemplateSelector = function (parent) {
 
     /* Build the UI */
     function build() {
-        //Need to check that highstock is included here, and remove things
-        //parents that only have highstock templates.
-        
-        list.addItems(Object.keys(highed.meta.chartTemplates).map(function (key) {
-            return {
-                id: key,
-                title: highed.meta.chartTemplates[key].title
-            };
-        }));
-
+        list.addItems(highed.templates.getCatArray() );
         list.selectFirst();
     }
 
     ///////////////////////////////////////////////////////////////////////////
 
     list.on('Select', function (id) {
-        showTemplates(highed.meta.chartTemplates[id].templates, id);
+        var templates = highed.templates.getAllInCat(id);
+        if (templates) {
+            showTemplates(templates, id, highed.templates.getCatInfo(id));
+        }
     });
 
     build();
-
-    highed.dom.ap(splitter.left, hintNode);
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -164,3 +262,4 @@ highed.ChartTemplateSelector = function (parent) {
         rebuild: build
     };
 };
+
