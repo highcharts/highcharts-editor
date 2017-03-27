@@ -59,6 +59,8 @@ highed.ChartPreview = function (parent, attributes) {
         flatOptions = {},   
         templateOptions = {},
         chartOptions = {},
+
+        exports = {},
       
         throttleTimeout = false,
         chart = false,
@@ -148,7 +150,7 @@ highed.ChartPreview = function (parent, attributes) {
            // customizedOptions.series = customizedOptions.series || [];
           //  customizedOptions.series = chart.options.series || [];
            // highed.merge(customizedOptions.series, chart.options.series);
-            updateAggregated();    
+            //updateAggregated();    
 
             if (chart && chart.options) {
                 highed.clearObj(chartOptions);
@@ -157,7 +159,10 @@ highed.ChartPreview = function (parent, attributes) {
 
             attachWYSIWYG();
 
-            resize();
+            if (chart && chart.reflow) {
+                //chart.reflow();
+            }
+
             highed.dom.ap(pnode || parent, toggleButton);
 
             Highcharts.addEvent(chart, 'afterPrint', function () {
@@ -179,8 +184,9 @@ highed.ChartPreview = function (parent, attributes) {
                 });
             } else {
                 //Our assumption was wrong. The world is ending.
-                highed.snackBar(e);            
-                console.error('exception trace:', e.stack);
+                highed.snackBar(e);
+                console.error(e);
+                console.error('exception trace:', ex.stack);
             }
 
             chart = false;
@@ -296,7 +302,7 @@ highed.ChartPreview = function (parent, attributes) {
             return highed.log(1, 'chart preview: templates must be an object {config: {...}}');
         }
 
-        constr = template.constr || 'Chart';
+        constr = template.constructor || 'Chart';
 
         highed.clearObj(templateOptions);
 
@@ -304,28 +310,8 @@ highed.ChartPreview = function (parent, attributes) {
 
         gc(function (chart) {
 
-            if (template.newStyle) {
-                templateOptions = highed.merge({}, template.config || {});
-            } else {
-                Object.keys(template.config).forEach(function (key) {
-                    var isArr = key.indexOf('['),
-                        aIndex = 0,
-                        p,
-                        full = key
-                    ;
-
-                    if (isArr >= 0) {
-                        aIndex = parseInt(key.substr(isArr + 1, key.indexOf(']') - isArr - 1), 10);  
-                        key = key.replace('[' + aIndex + ']', '');
-                        p = key.substr(0, key.indexOf('-'));
-                        templateOptions[p] = templateOptions[p] || [];                     
-                    }
-
-                    highed.setAttr(templateOptions, key, template.config[full], aIndex);
-                    flatOptions[key] = template.config[full];
-                });                
-            }
-
+            templateOptions = highed.merge({}, template.config || {});
+            
             updateAggregated();
             init(aggregatedOptions);
             emitChange();
@@ -351,7 +337,15 @@ highed.ChartPreview = function (parent, attributes) {
      */
     function loadCSVData(data) {
         if (!data || !data.csv) {
-            return highed.log(1, 'chart load csv: data.csv is required');
+            if (highed.isStr(data)) {
+                data = {
+                    csv: data,
+                    itemDelimiter: ',',
+                    firstRowAsNames: true
+                };
+            } else {
+                return highed.log(1, 'chart load csv: data.csv is required');
+            }
         }
 
         gc(function (chart) {
@@ -453,15 +447,37 @@ highed.ChartPreview = function (parent, attributes) {
                 templateOptions = {};
                 highed.clearObj(customizedOptions);
                 highed.merge(customizedOptions, highed.merge({}, data));
+                
                 if (!highed.isNull(data.series)) {
                     customizedOptions.series = data.series;                    
                 }
+                
                 updateAggregated();
                 init(customizedOptions);
                 loadSeries();
                 emitChange();
             }
         });
+    }
+
+    /**
+     * Load raw dataset (array of arrays)
+     */
+    //function 
+
+    /** Set chart options from an object
+     *
+     */
+    function setChartOptions(options) {
+        console.time('remblanks');
+        customizedOptions = highed.transform.remBlanks(
+              highed.merge({}, options, false)
+        );
+        console.timeEnd('remblanks');
+
+        updateAggregated();
+        init(aggregatedOptions, false, true);
+        emitChange();
     }
 
     /** Load chart settings
@@ -515,7 +531,7 @@ highed.ChartPreview = function (parent, attributes) {
     function set(id, value, index) {
         
         gc(function (chart) {
-            highed.setAttr(chart.options, id, value, index);        
+            //highed.setAttr(chart.options, id, value, index);        
             highed.setAttr(chart.options, 'plotOptions--series--animation', false, index);
         });
 
@@ -775,7 +791,7 @@ highed.ChartPreview = function (parent, attributes) {
 
     ///////////////////////////////////////////////////////////////////////////
 
-    return {
+    exports = {
         getConstructor: getConstructor,
         on: events.on,
         expand: expand,
@@ -792,7 +808,12 @@ highed.ChartPreview = function (parent, attributes) {
 
         options: {
             set: set,
-            customized: aggregatedOptions,
+            setAll: setChartOptions,
+            customized: customizedOptions,
+            getCustomized: function () {
+                return customizedOptions;
+            },
+            full: aggregatedOptions,
             flat: flatOptions,
             chart: chartOptions
         },
@@ -811,4 +832,6 @@ highed.ChartPreview = function (parent, attributes) {
             js: getEmbeddableJavaScript
         }
     };
+
+    return exports;
 };
