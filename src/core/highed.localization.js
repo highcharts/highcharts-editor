@@ -55,6 +55,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     };
 
     /** This is an alias for highed.getLocalizedStr
+     *  @type {function}
      *  @param id {string} - the string to get
      */
     highed.L = highed.getLocalizedStr;
