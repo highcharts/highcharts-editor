@@ -26,16 +26,19 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 const templates = require(__dirname + '/../src/meta/highed.meta.charts.js');
 const request = require('request');
 const async = require('async');
-const output = 'src/meta/highed.meta.images.js';
+const outputFolder = 'generated_src/';
+const output = outputFolder + 'highed.meta.images.js';
 const fs = require('fs');
-const license = fs.readFileSync(__dirname + '/../LICENSE').toString();
+const pkg = require(__dirname + '/../package.json');
+const license = fs.readFileSync(__dirname + '/../LICENSE').toString().replace('<%= version %>', pkg.version);
 const logoPath = __dirname + '/../res/logo.svg';
+const mkdir = require('mkdirp');
 
 require('colors');
 
 var funs = [],
     images = {
-        'logo.svg': fs.readFileSync(logoPath).toString();
+        'logo.svg': fs.readFileSync(logoPath, 'utf8').toString()
     }
 ;
 
@@ -60,9 +63,15 @@ Object.keys(templates).forEach(function (cat) {
 });
 
 async.waterfall(funs, function () {
-    var res = '/*\n' + license + '\n*/\n\nhighed.meta.images = ' + JSON.stringify(images, undefined, '  ') + ';';
-    fs.writeFile(__dirname + '/../' + output, res, function (err) {
-        if (err) return console.log('[error]'.red, err);
-        console.log('All done. Stored at', output);
+    var res = license + '\n\nhighed.meta.images = ' + 
+              JSON.stringify(images, undefined, '  ') + ';'
+    ;
+
+    mkdir(outputFolder, function () {
+       fs.writeFile(__dirname + '/../' + output, res, function (err) {
+          if (err) return console.log('[error]'.red, err);
+          console.log('All done. Stored at', output);
+      });
     });
 });
+

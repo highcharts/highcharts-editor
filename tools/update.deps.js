@@ -23,7 +23,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-const templates = require(__dirname + '/../src/meta/highed.meta.charts.js');
 const request = require('request');
 const async = require('async');
 const fs = require('fs');
