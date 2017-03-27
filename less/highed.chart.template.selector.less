@@ -2,26 +2,74 @@
     padding:10px;
 }*/
 
-.highed-step-body .highed-chart-template-container .highed-hsplitter .panel.right .highed-hsplitter-body {
+.highed-step-body .highed-chart-templates .highed-hsplitter .panel.right .highed-hsplitter-body {
     padding-top: 10px;
 }
 
 .highed-chart-template-title {
-	position: absolute;
-	display: block;
-    background-color: rgba(66, 66, 100, 0.8);
-    bottom: 0px;
+	  //position: absolute;
+	  //display: block;
+    //background-color: rgba(66, 66, 100, 0.8);
+    //bottom: 0px;
     width: 100%;
     line-height: 2em;
-    border-radius: 0;
-    position: absolute;
-    font-size: 0.8em;
-    color: #ffffff;
-    text-align: center;
-    transition: bottom 0.2s;
-    z-index: 1;
-    opacity: 0;
-    .highed-transition;
+    //border-radius: 0;
+    //position: absolute;
+    font-size: 1.2em;
+    //color: #ffffff;
+    //text-align: center;
+    //transition: bottom 0.2s;
+    //z-index: 1;
+    //opacity: 0;
+    //.highed-transition;
+}
+
+.highed-template-choose-text {
+  //padding:10px;
+  //text-align:center;
+  //font-style:italic;
+}
+
+.highed-chart-template-cat-desc {
+    //padding:10px;
+    font-size:0.9em;
+   //background: @bright-background;
+    margin-bottom:10px;
+    .highed-box-size;
+}
+
+.highed-chart-template-description {
+    font-size:0.9em;
+    padding-bottom:5px;
+    padding-top:5px;
+}
+
+.highed-chart-template-container {
+    position:relative;
+    cursor: pointer;
+    margin-bottom:10px;
+    padding:5px;
+    background: @bright-background;
+    color: @bright-text;
+    box-shadow: 0px 3px 7px @bright-shadow;
+    .highed-box-size;
+}
+
+.highed-chart-template-body {
+    padding-left:130px;
+    min-height:100px;
+}
+
+.highed-chart-template-thumbnail {
+  position:absolute;
+  background-repeat:no-repeat;
+  width: 120px;
+  height: 80px;
+  background-size:90% auto;
+  background-position: middle middle;
+  top:50%;
+  transform:translate(0, -50%);
+  .highed-box-size;
 }
 
 .highed-chart-template-preview {
@@ -42,7 +90,7 @@
 }
 
 .highed-chart-template-preview-selected {
-    border: 5px solid #a3edba !important;
+    border: 5px solid @background-ok !important;
 }
 
 .highed-chart-template-preview:hover {
