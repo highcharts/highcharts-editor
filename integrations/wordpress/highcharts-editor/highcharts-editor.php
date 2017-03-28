@@ -76,7 +76,7 @@ function setup_highcharts_plugin () {
     }
 
     if (get_option('enable_highstock') == 1) {
-      wp_enqueue_script('highcharts-editor-highmaps', plugin_dir_url(__FILE__) . 'highcharts-editor.module.highstock.min.js');
+      wp_enqueue_script('highcharts-editor-highstock', plugin_dir_url(__FILE__) . 'highcharts-editor.module.highstock.min.js');
     }
 
     wp_enqueue_style('highcharts-editor', plugin_dir_url(__FILE__) . 'highcharts-editor.min.css');        
