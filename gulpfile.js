@@ -20,7 +20,7 @@ var dest = 'dist/',
     //The order is important, so we don't do wildcard
     sources = require(__dirname + '/res/filelist.json'),
     products = [
-        //'highcharts', this one is baked into the editor always
+        'highcharts',
         'highstock',
         'highmaps'
     ]
@@ -68,6 +68,7 @@ products.forEach(function (product) {
                  .pipe(uglify())
                  .pipe(header(license, packageJson))
                  .pipe(gulp.dest(dest + '/modules/' + product))
+                 .pipe(gulp.dest(wpPluginDest))
                  .pipe(zip(name + '.module.' + product + '.' + packageJson.version + '.min.zip'))
                  .pipe(gulp.dest(buildDest));
   });
@@ -237,7 +238,7 @@ gulp.task('move-standalone', function () {
 });
 
 gulp.task('minify', function () {
-    return gulp.src(sources.concat(appendFilesFromProduct('highcharts')))
+    return gulp.src(sources)
                .pipe(concat(name + '.js'))       
                .pipe(gulp.dest(dest))           
                .pipe(rename(name + '.min.js'))

@@ -1,17 +1,24 @@
 <?php
 /**
-* Plugin Name: Highcharts
+* Plugin Name: Highcharts Editor
 * Description: Highcharts editor integration
-* Version: 0.2
+* Version: 0.3
 * Tags: charts, highcharts
 * Author: Highcharts
 * License: mit
-*/
+ */
+
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
+if (!defined('WPINC')) {
+  die;
+}
 
 function init_highcharts_plugin( $plugins ) {
-     $plugins['highcharts'] = plugin_dir_url(__FILE__) . '/editor_plugin.js';
-     $plugins['noneditable'] = plugin_dir_url(__FILE__) . '/noneditable.js';
-     return $plugins;
+  $plugins['highcharts'] = plugin_dir_url(__FILE__) . '/editor_plugin.js';
+  $plugins['noneditable'] = plugin_dir_url(__FILE__) . '/noneditable.js';
+  return $plugins;
 }
 
 function add_tinymce_toolbar_button( $buttons ) {
@@ -46,14 +53,34 @@ function setup_highcharts_plugin () {
     wp_enqueue_script("highcharts-data",       plugin_dir_url(__FILE__) . "data.js");  
     wp_enqueue_script("highcharts-exporting",  plugin_dir_url(__FILE__) . "exporting.js");
 
-    wp_enqueue_script('highcharts-editor', plugin_dir_url(__FILE__) . 'highcharts-editor.min.js', array(
+    $includedScripts = array(
         "highcharts-highstock",
         "highcharts-framework",
         "highcharts-more",
         "highcharts-3d",
         "highcharts-data",
         "highcharts-exporting"
-    ));        
+
+    );
+
+    wp_enqueue_script('highcharts-editor', plugin_dir_url(__FILE__) . 'highcharts-editor.min.js', $includedScripts);  
+
+    //Always include highcharts
+    wp_enqueue_script('highcharts-editor-highcharts', plugin_dir_url(__FILE__) . 'highcharts-editor.module.highcharts.min.js');
+
+    if (get_option('enable_advanced') == 1) {
+      wp_enqueue_script('highcharts-editor-advanced', plugin_dir_url(__FILE__) . 'highcharts-editor.advanced.min.js');
+    }    
+
+    if (get_option('enable_highmaps') == 1) {
+      wp_enqueue_script('highcharts-editor-highmaps', plugin_dir_url(__FILE__) . 'highcharts-editor.module.highmaps.min.js');
+      wp_enqueue_script('highcharts-editor-higmaps-src', 'https://code.highcharts.com/maps/modules/map.js');
+      wp_enqueue_script('highcharts-editor-higmaps-data-src', 'https://code.highcharts.com/maps/modules/data.js');
+    }
+
+    if (get_option('enable_highstock') == 1) {
+      wp_enqueue_script('highcharts-editor-highmaps', plugin_dir_url(__FILE__) . 'highcharts-editor.module.highstock.min.js');
+    }
 
     wp_enqueue_style('highcharts-editor', plugin_dir_url(__FILE__) . 'highcharts-editor.min.css');        
 
@@ -66,6 +93,33 @@ function setup_highcharts_plugin () {
     ));
 }
 
+function highcharts_doAdminPage() {
+  include(plugin_dir_path(__FILE__) . 'highcharts-editor-settings.php');
+}
+
+function highcharts_adminMenu() {
+    add_options_page(
+      'Highcharts Editor Settings', 
+      'Highcharts Editor', 
+      'manage_options', 
+      'highcharts-editor-settings',
+      'highcharts_doAdminPage' 
+    );
+}
+
+function highcharts_adminInit() {
+  register_setting('highcharts-editor', 'enable_advanced');
+  register_setting('highcharts-editor', 'enable_highstock');
+  register_setting('highcharts-editor', 'enable_highmaps');
+
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 add_action('init', 'setup_highcharts_plugin');
+add_action('admin_menu', 'highcharts_adminMenu');
+add_action( 'admin_init', 'highcharts_adminInit' );
+
 
 ?>
