@@ -204,7 +204,7 @@ highed.DataTable = function (parent, attributes) {
         window.clearTimeout(changeTimeout);
         changeTimeout = window.setTimeout(function () {
             events.emit('Change', getHeaderTextArr(), toData());
-        }, 50);
+        }, 1000);
     }
 
     function makeEditable(target, value, fn, keyup, close) {
@@ -885,6 +885,10 @@ highed.DataTable = function (parent, attributes) {
                     v = parseFloat(v);
                 }
 
+                if (highed.isStr(v) && Date.parse(v) !== NaN) {
+                    //v = (new Date(v)).getTime();
+                }
+
                 rarr.push(v);
             });
 
@@ -923,14 +927,23 @@ highed.DataTable = function (parent, attributes) {
                 var v = col.value();
 
                 if (!ci) {
+                    
+                    if (v && highed.isStr(v) && Date.parse(v) !== NaN) {
+                       // v = new Date(v);
+                    }
+                    
                     res.categories.push(v);
                     return;
                 }
 
                 ci--;
 
-                if (highed.isNum(v)) {
+                if (v && highed.isNum(v)) {
                     v = parseFloat(v);
+                }
+
+                if (v && highed.isStr(v) && Date.parse(v) !== NaN) {
+                   // v = (new Date(v)).getTime();
                 }
 
                 res.series[ci].data.push(v);
@@ -944,9 +957,9 @@ highed.DataTable = function (parent, attributes) {
      *  @memberof highed.DataTable
      *  @param delimiter {string} - the delimiter to use. Defaults to `,`.
      */
-    function toCSV(delimiter) {  
+    function toCSV(delimiter, quoteStrings) {  
         delimiter = delimiter || ',';      
-        return toData(true, true).map(function (cols) {
+        return toData(quoteStrings, true).map(function (cols) {
             return cols.join(delimiter);
         }).join('\n')
     }
@@ -1032,9 +1045,10 @@ highed.DataTable = function (parent, attributes) {
         tooltip: 'Reset',
         title: highed.L('dgNewBtn'),
         click: function () {
-           if (confirm('Start from scratch?')) {
-            init();            
-           }
+            if (confirm('Start from scratch?')) {
+                init();
+                emitChanged();
+            }
         }
     });
 
