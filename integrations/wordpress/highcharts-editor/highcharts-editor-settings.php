@@ -16,12 +16,12 @@
       <th scope="row">Enable Highmaps Support</th>
       <td><input type="checkbox" name="enable_highmaps" value="1" <?php if(esc_attr(get_option('enable_highmaps')) == 1) { echo "checked";} ?>/></td>
     </tr>
-
+<!--
     <tr valign="top">
       <th scope="row">Enable Advanced Mode</th>
       <td><input type="checkbox" name="enable_advanced" value="1" <?php if(esc_attr(get_option('enable_advanced')) == 1) { echo "checked";} ?>/></td>
     </tr>
-
+-->
 
   </table>
 
