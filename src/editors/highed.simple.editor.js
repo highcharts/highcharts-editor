@@ -97,7 +97,8 @@ highed.SimpleEditor = function (parent, attributes) {
             expandTo: expandContainer
         }),
         
-        importer = highed.DataImporter(vsplitterRight.bottom, properties.importer),        
+        //importer = highed.DataImporter(vsplitterRight.bottom, properties.importer),        
+        importer = highed.DataTable(vsplitterRight.bottom),
 
         customizer = highed.SimpleCustomizer(hsplitter.left, {            
             availableSettings: properties.availableSettings
@@ -152,9 +153,19 @@ highed.SimpleEditor = function (parent, attributes) {
         preview.options.set(id, value, index);
         events.emit('Change', preview);
     });
-    importer.on('ImportCSV', [preview.data.csv, attachToCustomizer]);
-    importer.on('ImportJSON', [preview.data.json, attachToCustomizer]);
-    importer.on('ImportChartSettings', [preview.data.settings, attachToCustomizer]);
+    // importer.on('ImportCSV', [preview.data.csv, attachToCustomizer]);
+    // importer.on('ImportJSON', [preview.data.json, attachToCustomizer]);
+    // importer.on('ImportChartSettings', [preview.data.settings, attachToCustomizer]);
+
+    importer.on('Change', function (headers, data) {
+        if (data.length) {
+            var d = importer.toDataSeries();                   
+
+           preview.options.set('xAxis-categories', d.categories, 0);
+
+           preview.loadSeries(d.series);
+        }
+    });     
 
     preview.on('RequestEdit', function (event, x, y) {
         customizer.focus(event, x, y);
