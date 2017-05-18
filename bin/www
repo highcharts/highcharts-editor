@@ -34,6 +34,7 @@ const app = express();
 const exphbs = require('express-handlebars');
 const package = require(__dirname + '/../package.json');
 const args = process.argv;
+const fs = require('fs');
 
 var files = [];
 var port = 3005;
@@ -42,8 +43,46 @@ if (args.length === 3) {
     port = parseInt(args[2], 10);
 }
 
+function appendFilesFromProduct(prodName) {
+    var path = __dirname + '/../src/products/' + prodName + '/';
+
+    console.log('appending', prodName, 'module:', path);
+
+    function include(folder) {
+        var f;
+
+        try {
+          f = fs.readdirSync(path + folder);
+          
+          if (f) {
+              f.forEach(function (f) {
+                  if (f.indexOf('.js') >= 0) {
+                      files.push('src/products/' + prodName + '/' + folder + '/' + f);       
+                      console.log('  added', f);
+                  }
+              });
+          }
+          
+        } catch (e) {
+            console.log('error when including module', prodName, e);
+        }
+    }
+
+    include('validators');
+    include('samples');
+    include('templates');
+    include('ui');
+
+}
+
 function updateFiles() {
     files = require(__dirname + '/../res/filelist.json');
+
+    // Include product files
+    appendFilesFromProduct('highcharts'); 
+    appendFilesFromProduct('highstock'); 
+    //appendFilesFromProduct('highmaps'); 
+
 }
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
@@ -121,6 +160,19 @@ app.get('/dtable', function (req, res) {
         scripts: files,
         package: package,
         title: 'Highcharts Editor - Data Table'
+    });
+});
+
+app.get('/test-angular', function (req, res) {
+    updateFiles();
+
+    res.render('test-angular', {
+        scripts: files.concat([
+            'https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js',
+            'integrations/angular.1.6.js'
+        ]),
+        package: package,
+        title: 'Highcharts Editor - Angular 1.6'
     });
 });
 

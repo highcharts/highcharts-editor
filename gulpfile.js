@@ -1,3 +1,5 @@
+"use strict";
+
 const fs = require('fs');
 
 var dest = 'dist/',
@@ -21,8 +23,8 @@ var dest = 'dist/',
     sources = require(__dirname + '/res/filelist.json'),
     products = [
         'highcharts',
-        'highstock',
-        'highmaps'
+        'highstock'//,
+        //'highmaps'
     ]
 ;
 
