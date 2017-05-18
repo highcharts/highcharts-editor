@@ -12,6 +12,8 @@
     "exportSVG": "Export as SVG",
     "exportPDF": "Export as PDF",
 
+    "loadCloud": "Load From Cloud",
+
     "help": "Help",
     "licenseInfo": "License Information",
 
