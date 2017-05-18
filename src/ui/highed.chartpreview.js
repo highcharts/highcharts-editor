@@ -212,11 +212,11 @@ highed.ChartPreview = function (parent, attributes) {
        // customizedOptions.plotOptions.series = customizedOptions.plotOptions.series || [];
       //  customizedOptions.series = customizedOptions.series || [];
 
-        if (customizedOptions && !highed.isArr(customizedOptions.yAxis)) {
+        if (customizedOptions && !highed.isArr(customizedOptions.yAxis) && customizedOptions.yAxis) {
             customizedOptions.yAxis = [customizedOptions.yAxis || {}];
         }
 
-        if (customizedOptions && !highed.isArr(customizedOptions.xAxis)) {
+        if (customizedOptions && !highed.isArr(customizedOptions.xAxis) && customizedOptions.xAxis) {
             customizedOptions.xAxis = [customizedOptions.xAxis || {}];
         }
 
@@ -264,7 +264,7 @@ highed.ChartPreview = function (parent, attributes) {
         //Temporary hack
         //aggregatedOptions.series = customizedOptions.series;\
         aggregatedOptions.series = [];
-        if (customizedOptions.series) {
+        if (highed.isArr(customizedOptions.series)) {
             customizedOptions.series.forEach(function (obj, i) {
                 aggregatedOptions.series.push(highed.merge({}, obj));
             });
@@ -305,6 +305,14 @@ highed.ChartPreview = function (parent, attributes) {
         constr = template.constructor || 'Chart';
 
         highed.clearObj(templateOptions);
+
+        if (customizedOptions.xAxis) {
+            delete customizedOptions.xAxis;
+        }
+
+        if (customizedOptions.yAxis) {
+            delete customizedOptions.yAxis;
+        }
 
        // highed.setAttr(customizedOptions, 'series', []);
 
@@ -475,6 +483,16 @@ highed.ChartPreview = function (parent, attributes) {
         );
         console.timeEnd('remblanks');
 
+        if (customizedOptions && customizedOptions.lang) {
+            Highcharts.setOptions({
+                lang: customizedOptions.lang
+            });
+        }
+
+        if (options && options.global) {
+            
+        }
+
         updateAggregated();
         init(aggregatedOptions, false, true);
         emitChange();
@@ -560,16 +578,16 @@ highed.ChartPreview = function (parent, attributes) {
      *  @returns {object} - the chart object
      */
     function getEmbeddableJSON() {
-        var r = highed.merge({}, aggregatedOptions);
+        var r;
+        
+        updateAggregated();
+        r = highed.merge({}, aggregatedOptions);
 
         //This should be part of the series
         if (!highed.isNull(r.data)) {
             r.data = undefined;
             //delete r['data'];
         }
-
-        //Temprorary hack - need to fix the merge function
-        r.series = aggregatedOptions.series;
 
         return r;
     }
@@ -599,7 +617,8 @@ highed.ChartPreview = function (parent, attributes) {
                     "https://code.highcharts.com/adapters/standalone-framework.js": 1,  
                     "https://code.highcharts.com/highcharts-more.js": 1,   
                     "https://code.highcharts.com/highcharts-3d.js": 1, 
-                    "https://code.highcharts.com/modules/data.js": 1,  
+                    "https://code.highcharts.com/modules/data.js": 1, 
+                    "https://code.highcharts.com/modules/map.js": 1,
                     "https://code.highcharts.com/modules/exporting.js": 1,
                     "http://code.highcharts.com/modules/funnel.js": 1,
                     "http://code.highcharts.com/modules/solid-gauge.js": 1
@@ -737,6 +756,8 @@ highed.ChartPreview = function (parent, attributes) {
      *  @name new
      */
     function newChart() {
+        highed.cloud.flush();
+
         highed.clearObj(templateOptions);
         highed.clearObj(customizedOptions);
         highed.clearObj(flatOptions);
