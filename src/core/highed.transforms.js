@@ -78,7 +78,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             // Unfortunatly we need to take series into special consideration
             // until we have a more robust way of handling its meta
             if (trigger && trigger.indexOf('series') === 0) {
-                console.log('merge triggered by', trigger);
 
                 Object.keys(current.subtree || {}).forEach(function (key) {                
                     dest.subtree[key] = dest.subtree[key] || highed.merge({}, current.subtree[key]);
