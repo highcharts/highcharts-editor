@@ -73,7 +73,9 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
 
             step.number = ++stepCount;
 
-            step.bar.className += ' ' + (properties.indicatorPos === 'bottom' ? 'bar-bottom' : 'bar-top');
+            step.bar.className += ' ' + (
+                properties.indicatorPos === 'bottom' ? 'bar-bottom' : 'bar-top'
+            );
         });
     }
     
@@ -124,7 +126,13 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
                 }
 
                 activeStep.label.className = 'label-inactive';
-                currentIndicator.innerHTML = step.title + ' - ' + stepexports.number + '/' + stepCount;
+                
+                currentIndicator.innerHTML = step.title + 
+                                             ' - ' + 
+                                             stepexports.number + 
+                                             '/' + 
+                                             stepCount;
+
                 //highed.dom.ap(currentIndicator, currentBubble);
                 currentBubble.innerHTML = stepexports.number + '/' + stepCount;
             }
@@ -165,6 +173,18 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
                 stepCount--;
                 stepexports.visible = false;
                 updateBarCSS();                
+            }
+        };
+
+        stepexports.show = function () {
+            highed.dom.style(stepexports.node, {
+              display: ''
+            });
+
+            if (!stepexports.visible) {
+                stepCount++;
+                stepexports.visible = true;
+                updateBarCSS();
             }
         };
 
@@ -260,7 +280,13 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
 
     ///////////////////////////////////////////////////////////////////////////
     
-    highed.dom.ap(indicatorParent, indicators, highed.dom.ap(currentIndicator, currentBubble));
+    highed.dom.ap(indicatorParent, 
+        indicators, 
+        highed.dom.ap(currentIndicator, 
+          currentBubble
+        )
+    );
+    
     highed.dom.ap(bodyParent, body);
 
     ///////////////////////////////////////////////////////////////////////////
