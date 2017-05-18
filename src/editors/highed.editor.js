@@ -27,7 +27,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     var instanceCount = 0,
         installedPlugins = {},
         activePlugins = {},
-        pluginEvents = highed.events()
+        pluginEvents = highed.events(),
+        stepPlugins = {}
     ;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -104,7 +105,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             activePlugins[name] = {
                 definition: plugin,
                 options: filteredOptions
-            };
+            };filteredOptions
 
             if (highed.isFn(plugin.activate)) {
                 activePlugins[name].definition.activate(filteredOptions);
@@ -121,6 +122,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     highed.plugins.editor = {    
         install: install,
         use: use
+    };
+
+    //UI plugin interface
+    highed.plugins.step = {
+        install: function (def) {
+            stepPlugins[def.title] = def;  
+        }
     };
 
     ///////////////////////////////////////////////////////////////////////////
@@ -154,12 +162,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      */
     highed.Editor = function (parent, attributes) {
         var events = highed.events(),
-
+            exports = {},
             properties = highed.merge({
                 defaultChartOptions: {},
                 on: {},
                 plugins: {},
-                features: 'welcome import export templates customize',
+                features: 'data export templates customize',
                 includeSVGInHTMLEmbedding: true,
                 importer: {},
                 exporter: {},
@@ -203,7 +211,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             customizerStep = wizbar.addStep({ title: highed.getLocalizedStr('stepCustomize'), id: 'customize' }),
             chartCustomizer = highed.ChartCustomizer(customizerStep.body, {
                 availableSettings: properties.availableSettings
-            }),
+            }, chartPreview),
 
             dataExpStep = wizbar.addStep({ title: highed.getLocalizedStr('stepExport'), id: 'export' }),
             dataExp = highed.Exporter(dataExpStep.body, properties.exporter),
@@ -213,7 +221,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             chartIcon = highed.dom.cr('div', 'highed-chart-container-icon'),
 
-            cmenu = highed.DefaultContextMenu(chartPreview)
+            cmenu = highed.DefaultContextMenu(chartPreview),
+
+            activeStepPlugins = []
         ;
 
         cmenu.on('NewChart', function () {
@@ -223,6 +233,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         properties.features = highed.arrToObj(properties.features.split(' '));
 
         ////////////////////////////////////////////////////////////////////////
+        
+        Object.keys(stepPlugins).forEach(function (key) {
+            var plugin = stepPlugins[key],
+                step = wizbar.addStep({title: plugin.title})
+            ;
+
+            step.hide();
+
+            activeStepPlugins.push({
+              plugin: plugin,
+              instance: plugin.create(chartPreview, step.body),
+              step: step   
+            });
+        });
 
         function updateToolbarIcon() {
             if (highed.onPhone()) {
@@ -371,8 +395,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         ////////////////////////////////////////////////////////////////////////
         
-        chartTemplateSelector.on('Select', chartPreview.loadTemplate);
+        chartTemplateSelector.on('Select', function (template) {
+           activeStepPlugins.forEach(function (o) {
+                var c = highed.arrToObj(o.plugin.validConstructors);
+                if (c[template.constructor]) {
+                    o.step.show();
+                } else {
+                    o.step.hide();
+                }
+            }); 
+          chartPreview.loadTemplate(template);
+          //Need to update the product filter also
+        });
+
         chartCustomizer.on('PropertyChange', chartPreview.options.set);
+        chartCustomizer.on('PropertySetChange', chartPreview.options.setAll);
         dataImp.on('ImportCSV', chartPreview.data.csv);
         dataImp.on('ImportJSON', chartPreview.data.json);
         dataImp.on('ImportChartSettings', chartPreview.data.settings);
@@ -384,6 +421,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         if (properties.features.data) {
             dataTable.on('Change', function (headers, data) {
                 if (data.length) {
+
+                    return chartPreview.data.csv({
+                      csv: dataTable.toCSV(',', false),
+                      itemDelimiter: ','
+                    });
                     var d = dataTable.toDataSeries();                   
 
                    chartPreview.options.set('xAxis-categories', d.categories, 0);
@@ -417,6 +459,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         
         chartPreview.on('ChartChangeLately', function (newData) { 
             events.emit('ChartChangeLately', newData);
+        });
+
+        chartTemplateSelector.on('LoadDataSet', function (sample) {
+            if (sample.type === 'csv') {
+                if (highed.isArr(sample.dataset)) {
+                    chartPreview.data.csv(sample.dataset.join('\n'));
+                } else {
+                    chartPreview.data.csv(sample.dataset);
+                }
+                
+                chartPreview.options.set('subtitle-text', '');
+                chartPreview.options.set('title-text', sample.title);
+            }
+
+            
         });
 
         ///////////////////////////////////////////////////////////////////////////
@@ -507,7 +564,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         ///////////////////////////////////////////////////////////////////////////
 
         //Public interface
-        return {
+        exports = {
             on: events.on,
             /* Force a resize of the editor */
             resize: resize,
