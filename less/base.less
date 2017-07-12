@@ -1,4 +1,11 @@
 
+@media print {    
+  .no-print, .no-print * {
+      display: none !important;
+  }
+}
+
+
 .highed-box-size {
   box-sizing:border-box !important;
   -moz-box-sizing:border-box !important;
@@ -86,6 +93,8 @@
 }
 
 .highed-ok-button {
+  border: none;
+  outline: none;
   margin-bottom: 10px;
   margin-top: 10px;
   text-align: center;
@@ -123,6 +132,17 @@
   background: darken(@background-ok, 6);
 }
 
+.highed-background-normal {
+    background: @background-main;
+    color: @text-main;
+}
+
+.highed-titlebar {
+  text-align: center;
+  font-weight: 200;
+  color: @text-main;
+}
+
 @import "editor.style.less";
 @import "icon.less";
 @import "dimmer.less";
@@ -149,3 +169,4 @@
 @import "plugins.less";
 @import "slider.less";
 @import "dtable.less";
+@import "cloud.less";
