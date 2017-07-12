@@ -35,10 +35,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  highed.dom.ap(document.body,
  *      highed.dom.ap(highed.dom.cr('table'),
  *          highed.InspectorField('color', '#FFF', {
- *              title: 'Set the color!'  
+ *              title: 'Set the color!'
  *          }, function (newValue) {
  *              highed.dom.style(document.body, {
- *                  backgroundColor: newValue   
+ *                  backgroundColor: newValue
  *              });
  *          })
  *      )
@@ -88,16 +88,16 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
 
                 highed.dom.on(input, 'change', function (e) {
                     tryCallback(callback, input.value);
-                    e.cancelBubble = true;          
+                    e.cancelBubble = true;
                 });
 
                 input.value = val || value;
-                
+
                 return highed.dom.ap(highed.dom.cr('div', 'highed-field-container'), reset, input);
             },
             number: function (val, callback) {
                 var input = highed.dom.cr('input', 'highed-field-input', '', fieldID),
-                    reset = createReset(properties.defaults || val || value, function (v) {                        
+                    reset = createReset(properties.defaults || val || value, function (v) {
                         input.value = val = v;
                         tryCallback(callback, parseFloat(v));
                     })
@@ -108,7 +108,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 if (!highed.isNull(properties.custom)) {
                     input.step = properties.custom.step;
                     input.min = properties.custom.minValue;
-                    input.max = properties.custom.maxValue;                    
+                    input.max = properties.custom.maxValue;
                 }
 
                 highed.dom.on(input, 'change', function () {
@@ -116,7 +116,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 });
 
                 input.value = val || value;
-                
+
                 return highed.dom.ap(highed.dom.cr('div', 'highed-field-container'), reset, input);
             },
             range: function (val, callback) {
@@ -124,7 +124,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     min: properties.custom.minValue,
                     max: properties.custom.maxValue,
                     step: properties.custom.step,
-                    value: val || value,                    
+                    value: val || value,
                     resetTo: properties.defaults
                 });
 
@@ -136,7 +136,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
             },
             boolean: function (val, callback) {
                 var input = highed.dom.cr('input', '', '', fieldID),
-                    reset = createReset(properties.defaults || val || value, function (v) {                        
+                    reset = createReset(properties.defaults || val || value, function (v) {
                         input.checked = val = highed.toBool(v);
                         tryCallback(callback, val);
                     })
@@ -146,7 +146,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
 
                 input.checked = highed.toBool(val || value);
 
-                highed.dom.on(input, 'change', function () {                    
+                highed.dom.on(input, 'change', function () {
                     tryCallback(callback, input.checked);
                 });
 
@@ -156,7 +156,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 var box = highed.dom.cr('div', 'highed-field-colorpicker', '', fieldID),
                     reset = highed.dom.cr('div', 'highed-field-reset fa fa-undo'),
                     resetTo =  val || value || properties.defaults
-                ; 
+                ;
 
                 if (resetTo === 'null') {
                     resetTo = null;
@@ -165,7 +165,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 function update(col, callback) {
 
                     if (col && col !== 'null' && col !== 'undefined' && typeof col !== 'undefined') {
-                        box.innerHTML = col;                        
+                        box.innerHTML = col;
                     } else {
                         box.innerHTML = 'auto';
                         col = '#FFFFFF';
@@ -176,9 +176,9 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                         color: highed.getContrastedColor(col)
                     });
 
-                }           
+                }
 
-                function fixVal() {     
+                function fixVal() {
                     //This is very ugly
                     try {
                         val = JSON.parse(val);
@@ -188,7 +188,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
 
                     if (highed.isArr(val)) {
                         val = '#FFF';
-                    }                    
+                    }
                 }
 
                 fixVal();
@@ -216,11 +216,11 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
 
                 return highed.dom.ap(highed.dom.cr('div', 'highed-field-container'), box, reset);
             },
-            font: function (val, callback) {                
-                 return  fields.cssobject(val, callback)                    
+            font: function (val, callback) {
+                 return  fields.cssobject(val, callback)
             },
             configset: function (val, callback) {
-                return fields.string(val, callback);              
+                return fields.string(val, callback);
             },
             json: function (val, callback) {
                 var textArea = highed.dom.cr('textarea', 'highed-field-input', '', fieldID),
@@ -234,7 +234,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                             textArea.value = JSON.stringify(v, undefined, '\t');
                         }
                     },
-                    reset = createReset(properties.defaults || val || value, function (v) {                        
+                    reset = createReset(properties.defaults || val || value, function (v) {
                         val = v;
                         updateIt(v);
                         tryCallback(callback, v);
@@ -257,11 +257,11 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                         v = JSON.parse(v);
                         tryCallback(callback, v);
                         errorBar.innerHTML = '';
-                        highed.dom.style(errorBar, {display: 'none', opacity: 0});
+                        highed.dom.style(errorBar, { display: 'none', opacity: 0 });
                     } catch (e) {
                         //highed.snackBar('There\'s an error in your JSON: ' + e);
                         errorBar.innerHTML = 'Syntax error: ' + e;
-                        highed.dom.style(errorBar, {display: 'block', opacity: 1});
+                        highed.dom.style(errorBar, { display: 'block', opacity: 1 });
                     }
                 }
 
@@ -283,17 +283,17 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     updateIt(val || value || properties.defaults);
 
                     highed.dom.on(textArea, 'change', function () {
-                        callHome(textArea.value);                    
-                    });                    
+                        callHome(textArea.value);
+                    });
                 }
 
-                
+
 
                 return parent;
             },
             cssobject: function (val, callback) {
                 var picker = highed.FontPicker(callback || fn, val || value),
-                    reset = createReset(properties.defaults || val || value, function (v) {                        
+                    reset = createReset(properties.defaults || val || value, function (v) {
                         val = v;
                         picker.set(val);
                         tryCallback(callback, v);
@@ -301,14 +301,14 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 ;
 
                 return highed.dom.ap(
-                    highed.dom.cr('div', 'highed-field-container'), 
+                    highed.dom.cr('div', 'highed-field-container'),
                     reset,
                     picker.container
-                );     
+                );
             },
             options: function (val, callback) {
                 var ddown = highed.DropDown(),
-                    reset = createReset(properties.defaults, function (v) {                        
+                    reset = createReset(properties.defaults, function (v) {
                         val = v;
                         ddown.selectById(val);
                         tryCallback(callback, v);
@@ -324,10 +324,10 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 }
 
                 ddown.addItems(properties.values);
-                ddown.addItem({title: 'auto', id: properties.defaults});
+                ddown.addItem({ title: 'auto', id: properties.defaults });
 
                 ddown.selectById(val || value || properties.defaults);
-                
+
                 ddown.on('Change', function (selected) {
                     tryCallback(callback, selected.id());
                 });
@@ -357,11 +357,11 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
 
                         attr.title = highed.uncamelize(attr.title);
 
-                        highed.dom.ap(stable, 
+                        highed.dom.ap(stable,
                             highed.InspectorField(
-                                attr.dataType, 
-                                val[attr.name || attr.id] || attr.defaults, 
-                                attr, 
+                                attr.dataType,
+                                val[attr.name || attr.id] || attr.defaults,
+                                attr,
                                 function (nval) {
                                     val[attr.name || attr.id] = nval;
                                     tryCallback(callback, val);
@@ -384,7 +384,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     items = {},
                     itemCounter = 0,
                     itemTable = highed.dom.cr('table', 'highed-field-table')
-                ;         
+                ;
 
                 if (highed.isStr(value)) {
                     try {
@@ -404,16 +404,16 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     function processChange(newVal) {
                         if (newVal) {
                             items[id].value = newVal;
-                            doEmitCallback();                            
+                            doEmitCallback();
                         }
                     }
 
                     function doEmitCallback() {
                         if (highed.isFn(fn)) {
                             fn(Object.keys(items).map(function (key) {
-                                return items[key].value;  
+                                return items[key].value;
                             }));
-                        }    
+                        }
                     }
 
                     if (highed.isArr(val)) {
@@ -426,11 +426,11 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                         value: val
                     };
 
-                    item = fields[properties.subType] ? 
-                           fields[properties.subType](val || value[id] || properties.defaults, processChange) : 
+                    item = fields[properties.subType] ?
+                           fields[properties.subType](val || value[id] || properties.defaults, processChange) :
                            fields.string(val, processChange);
-                    
-                    highed.dom.ap(itemTable, 
+
+                    highed.dom.ap(itemTable,
                         highed.dom.ap(row,
                             highed.dom.ap(highed.dom.cr('td'),
                                 item
@@ -439,7 +439,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                                 rem
                             )
                         )
-                    );      
+                    );
 
                     highed.dom.on(rem, 'click', function (e) {
                         delete items[id];
@@ -457,7 +457,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     if (!suppressCallback) {
                         processChange();
                     }
-                }       
+                }
 
                 highed.dom.ap(container, itemTable);
 
@@ -495,10 +495,10 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
             properties.attributes = [];
 
             //There's no attributes but it's an object.
-            //Check if there are default values we can use 
+            //Check if there are default values we can use
             //to figure out the structure.
-            if (properties.defaults) {     
-                try {                    
+            if (properties.defaults) {
+                try {
                     properties.defaults = JSON.parse(properties.defaults);
                     Object.keys(properties.defaults).forEach(function (k) {
                         var tp = 'string',
@@ -528,12 +528,12 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                 } catch (e) {
                     highed.log(3, 'property', properties.id, 'skipped, no way to deduce the object members');
                     return;
-                }          
-            } 
+                }
+            }
         } else {
           type = 'json';
           properties.defaults = properties.defaults || {};
-        }        
+        }
     }
 
     if (highed.isNull(value)) {
@@ -544,7 +544,7 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
         //So there are more than one version of this thing - one of them
         //requires a font picker, the other is dynamic.
         //Figure out which one we're dealing with here.
-  
+
 
         // properties = properties || {};
         // properties.attributes = [
@@ -559,9 +559,9 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
         type = type.indexOf('object') >= 0 ? 'object' : type.split('|')[0];
     }
 
-    if (!highed.isNull(properties.custom) && 
-        !highed.isNull(properties.custom.minValue) && 
-        !highed.isNull(properties.custom.maxValue) && 
+    if (!highed.isNull(properties.custom) &&
+        !highed.isNull(properties.custom.minValue) &&
+        !highed.isNull(properties.custom.maxValue) &&
         !highed.isNull(properties.custom.step)) {
         type = 'range';
     }
@@ -591,11 +591,11 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
     } else {
         highed.dom.on([help], 'mouseover', function (e) {
             highed.Tooltip(e.clientX, e.clientY, properties.tooltip || properties.tooltipText);
-        });              
+        });
     }
 
     if (nohint) {
-        highed.dom.style(help, {display: 'none'});
+        highed.dom.style(help, { display: 'none' });
         widgetTD.colSpan = 2;
     }
 
@@ -610,9 +610,9 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
             highed.dom.ap(widgetTD,
                 fields[type] ? fields[type]() : fields.string()
             ),
-            (!nohint ? 
+            (!nohint ?
              highed.dom.ap(helpTD,
-                 //highed.dom.cr('span', 'highed-field-tooltip', properties.tooltip) 
+                 //highed.dom.cr('span', 'highed-field-tooltip', properties.tooltip)
                  help
             ) : false)
         )

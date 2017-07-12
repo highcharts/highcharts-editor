@@ -25,11 +25,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /** A wizard-type stepper
  *  This is sort of like a tab control, but with a logical
- *  x -> y flow. 
+ *  x -> y flow.
  *
  *  @emits Step - when going back/forth
  *  @emits AddStep - when a new step is added
- * 
+ *
  *  @constructor
  *  @param bodyParent {domnode} - the node to attach the body to
  *  @param indicatorParent {domnode} - the node to attach the indicators to
@@ -38,9 +38,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *       > top
  *       > bottom
  */
-highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
+highed.WizardStepper = function (bodyParent, indicatorParent, attributes) {
     var properties = highed.merge({
-            indicatorPos: 'top'         
+            indicatorPos: 'top'
         }, attributes),
         events = highed.events(),
         body = highed.dom.cr('div', 'highed-wizstepper-body'),
@@ -59,14 +59,14 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
     /* Update the bar CSS - this is more stable than doing it in pure CS */
     function updateBarCSS() {
         var fsteps = steps.filter(function (t) { return t.visible; });
-        
+
         stepCount = 0;
 
         fsteps.forEach(function (step, i) {
             if (i === 0) {
                 step.bar.className = 'bar bar-first';
             } else if (i === fsteps.length - 1) {
-                step.bar.className = 'bar bar-last';   
+                step.bar.className = 'bar bar-last';
             } else {
                 step.bar.className = 'bar';
             }
@@ -78,7 +78,7 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
             );
         });
     }
-    
+
     /** Add a new step
      *  @memberof highed.WizardStepper
      *  @param step {object} - an object describing the step
@@ -88,7 +88,7 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
      *    > bubble {domnode} - the node for the bubble
      *    > body {domnode} - the node for the step body
      */
-    function addStep(step) {        
+    function addStep(step) {
         var stepexports = {
             number: ++stepCount,
             node: highed.dom.cr('div', 'highed-wizstepper-item'),
@@ -104,7 +104,7 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
         function activate() {
             if (activeStep) {
                 activeStep.bubble.innerHTML = '';
-                
+
                 highed.dom.style(activeStep.bubble, {
                     height: '',
                     width: '',
@@ -126,11 +126,11 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
                 }
 
                 activeStep.label.className = 'label-inactive';
-                
-                currentIndicator.innerHTML = step.title + 
-                                             ' - ' + 
-                                             stepexports.number + 
-                                             '/' + 
+
+                currentIndicator.innerHTML = step.title +
+                                             ' - ' +
+                                             stepexports.number +
+                                             '/' +
                                              stepCount;
 
                 //highed.dom.ap(currentIndicator, currentBubble);
@@ -138,10 +138,10 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
             }
 
             stepexports.bubble.innerHTML = stepexports.number;
-            
+
             highed.dom.style(stepexports.bubble, {
-                height: "25px",
-                width: "25px",
+                height: '25px',
+                width: '25px',
                 bottom: '-8px',
                 'font-size': '16px'
             });
@@ -172,7 +172,7 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
                 //This needs fixing
                 stepCount--;
                 stepexports.visible = false;
-                updateBarCSS();                
+                updateBarCSS();
             }
         };
 
@@ -196,15 +196,15 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
 
         if (!activeStep) {
             activate();
-        }       
+        }
 
         stepexports.activate = activate;
 
         steps.push(stepexports);
-        
+
         updateBarCSS();
 
-        highed.dom.ap(indicators, 
+        highed.dom.ap(indicators,
             highed.dom.ap(stepexports.node,
                 stepexports.label,
                 stepexports.bar,
@@ -219,7 +219,7 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
         return stepexports;
     }
 
-    /** Go to the next step 
+    /** Go to the next step
      *  @memberof highed.WizardStepper
      */
     function next() {
@@ -229,7 +229,7 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
         }
     }
 
-    /** Go to the previous step 
+    /** Go to the previous step
      *  @memberof highed.WizardStepper
      */
     function previous() {
@@ -255,7 +255,7 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
     /** Select the first step
       * @memberof highed.WizardStepper
       */
-    function selectFirst() {        
+    function selectFirst() {
         steps.some(function (step, i) {
             if (step.visible) {
                 step.activate();
@@ -279,14 +279,14 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
     });
 
     ///////////////////////////////////////////////////////////////////////////
-    
-    highed.dom.ap(indicatorParent, 
-        indicators, 
-        highed.dom.ap(currentIndicator, 
+
+    highed.dom.ap(indicatorParent,
+        indicators,
+        highed.dom.ap(currentIndicator,
           currentBubble
         )
     );
-    
+
     highed.dom.ap(bodyParent, body);
 
     ///////////////////////////////////////////////////////////////////////////
@@ -300,7 +300,7 @@ highed.WizardStepper = function(bodyParent, indicatorParent, attributes) {
         selectFirst: selectFirst,
         /** The main body
          *  @memberof highed.WizardStepper
-         *  @type {domnode} 
+         *  @type {domnode}
          */
         body: body
     };

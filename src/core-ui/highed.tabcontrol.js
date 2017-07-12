@@ -24,7 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** Standard tabcontrol component
- *  @example 
+ *  @example
  *  var tabs = highed.TabControl(document.body),
  *      tab1 = tabs.createTab({title: 'Tab 1'}),
  *      tab2 = tabs.createTab({title: 'Tab 2'})
@@ -32,9 +32,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  //Append things to tab1|tab2.body
  *
  *  @constructor
- *  
+ *
  *  @emits Focus {object} - when a new tab gets focus.
- * 
+ *
  *  @param parent {domnode} - the node to attach to
  *  @param noOverflow {boolean} - set to true to disable scrollbars
  *  @param extraPadding {boolean} - set to true to have extra padding in bodies
@@ -88,7 +88,7 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
         highed.dom.style(body, {
             height: (h || cs.h) - ps.h + 'px'
         });
-    
+
         //Also re-focus the active tab
         if (selectedTab) {
             selectedTab.focus();
@@ -116,7 +116,7 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
     /** Select the first tab
      *  @memberof highed.TabControl
      */
-    function selectFirst() {       
+    function selectFirst() {
         tabs.some(function (tab) {
             if (tab.visible()) {
                 tab.focus();
@@ -190,17 +190,17 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
 
         function hide() {
             visible = false;
-            highed.dom.style(tab, {display: 'none'});
+            highed.dom.style(tab, { display: 'none' });
             updateVisibility();
         }
 
         function show() {
             visible = true;
-            highed.dom.style(tab, {display: ''});
+            highed.dom.style(tab, { display: '' });
             updateVisibility();
         }
 
-        function focus() {            
+        function focus() {
             var tsize = highed.dom.size(tab),
                 tpos = highed.dom.pos(tab)
             ;
@@ -222,7 +222,7 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
 
             if (!tsize || !tpos || !tsize.w) {
                 //We're not ready yet..
-                
+
             }
 
             highed.dom.style(indicator, {
@@ -279,13 +279,13 @@ highed.TabControl = function (parent, noOverflow, extraPadding) {
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    
+
     if (!highed.isNull(parent)) {
 
         highed.ready(function () {
 
             highed.dom.ap(parent,
-                highed.dom.ap(container, 
+                highed.dom.ap(container,
                     highed.dom.ap(paneBar,
                         more,
                         indicator

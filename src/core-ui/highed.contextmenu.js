@@ -24,7 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** A context menu component
- *  Does a typicall right-click menu. 
+ *  Does a typicall right-click menu.
  *  Note that each instance get their own DOM node in the document body.
  *
  *  @example
@@ -32,10 +32,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *     {
  *         title: "Hello World",
  *         click: function (e) {
- *             alert('hello world!');   
- *         }   
+ *             alert('hello world!');
+ *         }
  *     }
- *  ]);  
+ *  ]);
  *
  *  @constructor
  *  @param stuff {object} - things to add (optional)
@@ -53,14 +53,14 @@ highed.ContextMenu = function (stuff) {
 
     /** Add an entry to the menu
      *  @memberof highed.ContextMenu
-     *  @param entry {object} - the definition of the entry to add 
+     *  @param entry {object} - the definition of the entry to add
      *    > title {string} - the title of the entry
      *    > click {function} - the function to call when clicking the item
      */
     function addEntry(entry) {
         var item = highed.dom.cr('div', 'highed-ctx-item highed-ctx-item-responsive', entry.title),
-            right = highed.dom.cr('div', 'highed-ctx-child-icon fa fa-angle-right'),           
-            childCtx 
+            right = highed.dom.cr('div', 'highed-ctx-child-icon fa fa-angle-right'),
+            childCtx
         ;
 
         if (entry === '-') {
@@ -89,14 +89,13 @@ highed.ContextMenu = function (stuff) {
             });
         }
 
-        highed.dom.ap(container, 
-            highed.dom.ap(item, 
-                entry.icon ? 
+        highed.dom.ap(container,
+            highed.dom.ap(item,
+                entry.icon ?
                         highed.dom.cr(
-                            'div', 
-                            'ctx-child-licon highed-ctx-child-licon-responsive fa fa-' + 
-                            entry.icon) 
-                        : false,
+                            'div',
+                            'ctx-child-licon highed-ctx-child-licon-responsive fa fa-' +
+                            entry.icon) : false,
                         entry.children ? right : false
             )
         );
@@ -115,8 +114,8 @@ highed.ContextMenu = function (stuff) {
         if (visible) return;
 
         if (x > psize.w - size.w - 20) {
-            x = psize.w - size.w - 20;      
-        } 
+            x = psize.w - size.w - 20;
+        }
 
         if (y > psize.h - size.h - 20) {
             y = psize.h - size.h - 20;
@@ -166,13 +165,13 @@ highed.ContextMenu = function (stuff) {
 
         Object.keys(def).forEach(function (key) {
             var entry = def[key];
-            addEntry(highed.merge({title: key}, entry));
+            addEntry(highed.merge({ title: key }, entry));
         });
 
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    
+
     if (stuff) { build (stuff); }
 
     highed.dom.on(closeBtn, 'click', hide);
@@ -186,7 +185,7 @@ highed.ContextMenu = function (stuff) {
     return {
         addEntry: addEntry,
         show: show,
-        hide: hide, 
+        hide: hide,
         build: build
     };
 };

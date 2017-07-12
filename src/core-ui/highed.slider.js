@@ -74,10 +74,10 @@ highed.Slider = function (parent, attributes) {
             ms = highed.dom.size(indicator)
         ;
 
-        if (!highed.isNum(value) || !value) {            
+        if (!highed.isNum(value) || !value) {
             x = 0;
         } else {
-            x = ((value - properties.min) / (properties.max - properties.min)) * (s.w - ms.w);            
+            x = ((value - properties.min) / (properties.max - properties.min)) * (s.w - ms.w);
         }
 
         highed.dom.style(indicator, {
@@ -88,7 +88,7 @@ highed.Slider = function (parent, attributes) {
     //Waits until the slider is in the dom
     function tryUpdateIndicators() {
         updateText();
-        if (container.parentNode) {            
+        if (container.parentNode) {
             calcIndicator();
         } else {
             window.setTimeout(tryUpdateIndicators, 10);
@@ -109,7 +109,7 @@ highed.Slider = function (parent, attributes) {
         var s = highed.dom.size(sliderBackground),
             ms = highed.dom.size(indicator)
         ;
-        
+
         //Set the value based on the new X
         value = properties.min + Math.round(((x / (s.w - ms.w))) * (properties.max - properties.min));
 
@@ -134,13 +134,13 @@ highed.Slider = function (parent, attributes) {
     });
 
     ////////////////////////////////////////////////////////////////////////////
-    
+
     highed.dom.on(resetIcon, 'mouseover', function (e) {
       //  highed.Tooltip(e.clientX, e.clientY, 'Reset to initial value');
     });
 
 
-    highed.dom.on(resetIcon, 'click', function() {
+    highed.dom.on(resetIcon, 'click', function () {
         value = properties.resetTo;
         calcIndicator();
 

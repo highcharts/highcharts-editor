@@ -26,7 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /** Tree component
  *  For an example of formatting, build the editor with `gulp with-advanced`,
  *  and look in `src/meta/highed.options.advanced.js`.
- * 
+ *
  *  @emits Select {object} - when a node is selected
  *
  *  @constructor
@@ -50,8 +50,8 @@ highed.Tree = function (parent) {
         }
     ;
 
-    ////////////////////////////////////////////////////////////////////////////    
-    
+    ////////////////////////////////////////////////////////////////////////////
+
     function createNode(child, pnode, instancedData, productFilter, myIndex) {
         var node = highed.dom.cr('div', 'node', '', (child.meta.ns ? child.meta.ns : '') + child.meta.name),
             title = highed.dom.cr('div', 'parent-title', highed.uncamelize(child.meta.title || child.meta.name)),
@@ -62,7 +62,7 @@ highed.Tree = function (parent) {
             remIcon = highed.dom.cr('div', 'highed-icon fa fa-minus-square-o'),
             addIcon = highed.dom.cr('div', 'highed-icon fa fa-plus-square-o'),
 
-            index = (child.meta.ns ? child.meta.ns + '.' : '') + 
+            index = (child.meta.ns ? child.meta.ns + '.' : '') +
                     (myIndex ? '[' + myIndex + '].' : '') +
                     child.meta.name,
 
@@ -71,10 +71,10 @@ highed.Tree = function (parent) {
 
         child.meta.fullname = index;
 
-        function pushExpandState() {   
+        function pushExpandState() {
             if (!child.meta.types.array && typeof expandState[index] !== 'undefined' || expanded) {
-                expandState[index] = expanded;                
-            }            
+                expandState[index] = expanded;
+            }
         }
 
         function select() {
@@ -84,44 +84,44 @@ highed.Tree = function (parent) {
 
             selectedNode = title;
             selectedPath = index;
-            
+
             title.className = 'parent-title parent-title-selected';
-            
+
             events.emit(
-                'Select', 
-                child, 
-                title.innerHTML, 
-                child.data, 
+                'Select',
+                child,
+                title.innerHTML,
+                child.data,
                 productFilter,
                 filters[index] ? child.data[filters[index].controller] : false
             );
         }
 
-        function expand(noSelect, force) {            
+        function expand(noSelect, force) {
             if ((force || !expanded) && child.children.length && child.meta.hasSubTree) {
                 icon.className = 'exp-col-icon fa fa-folder-open-o';
-                highed.dom.style(body, {display: 'block'});
+                highed.dom.style(body, { display: 'block' });
                 expanded = true;
                 pushExpandState();
             }
-            
+
             if (!noSelect) {
-                select();                
+                select();
             }
         }
 
         function collapse(noSelect, noPush) {
             if (expanded && child.children.length && child.meta.hasSubTree) {
                 icon.className = 'exp-col-icon fa fa-folder-o';
-                highed.dom.style(body, {display: 'none'});
+                highed.dom.style(body, { display: 'none' });
                 expanded = false;
                 if (!noPush) {
-                    pushExpandState();                    
+                    pushExpandState();
                 }
             }
 
             if (!noSelect) {
-               select();                
+               select();
             }
         }
 
@@ -134,7 +134,7 @@ highed.Tree = function (parent) {
 
             if (e) {
                 return highed.dom.nodefault(e);
-            }               
+            }
         }
 
         function buildSubtree(activeFilter) {
@@ -142,16 +142,16 @@ highed.Tree = function (parent) {
 
             // Skip this element if it's not part of the current product
             if (
-                productFilter &&             
-                Object.keys(child.meta.products || {}).length > 0 && 
+                productFilter &&
+                Object.keys(child.meta.products || {}).length > 0 &&
                 !child.meta.products[productFilter]
             ) {
                 //return false;
-            }      
-        
+            }
+
             if (child.meta.isArrayElement) {
 
-                highed.dom.ap(node, 
+                highed.dom.ap(node,
                     highed.dom.ap(rightIcons,
                         remIcon
                     )
@@ -167,11 +167,11 @@ highed.Tree = function (parent) {
                             selectedPath = false;
                             events.emit('ClearSelection');
                         }
-                        
+
                         body.parentNode.removeChild(body);
                         node.parentNode.removeChild(node);
 
-                        // This is a bit convuluted, but we can't do a filter                    
+                        // This is a bit convuluted, but we can't do a filter
                         child.meta.arrayData.some(function (a, i) {
                             if (a === child.data) {
                                 delIndex = i;
@@ -184,21 +184,21 @@ highed.Tree = function (parent) {
                         events.emit('ForceSave', attachedData);
 
                         highed.snackBar(
-                            'Removed element ' + 
-                            delIndex + 
-                            ' from ' + 
-                            (child.meta.ns ? child.meta.ns + '.' : '') + 
+                            'Removed element ' +
+                            delIndex +
+                            ' from ' +
+                            (child.meta.ns ? child.meta.ns + '.' : '') +
                             child.meta.name
                         );
                     }
-                    
+
                     return highed.dom.nodefault(e);
                 });
             }
 
             // This node contains an array of stuff
             if (child.meta.types.array) {
-                highed.dom.ap(node, 
+                highed.dom.ap(node,
                     highed.dom.ap(rightIcons,
                         addIcon
                     )
@@ -233,18 +233,18 @@ highed.Tree = function (parent) {
                             // the last child data accross all instances.
                             children: highed.merge([], child.children)
                         },
-                        node = createNode(cat, body, data, productFilter, i)                
+                        node = createNode(cat, body, data, productFilter, i)
                     ;
 
                     if (node) {
-                        build(cat, node.body, data, productFilter);                    
+                        build(cat, node.body, data, productFilter);
                     }
                 }
 
                 highed.dom.on(addIcon, 'click', function () {
                     var newElement = {};
 
-                    highed.snackBar('Added new element to ' + child.meta.name);                
+                    highed.snackBar('Added new element to ' + child.meta.name);
                     child.data.push(newElement);
                     addArrayElementToList(newElement, child.data.length - 1);
 
@@ -252,8 +252,8 @@ highed.Tree = function (parent) {
                 });
 
                 child.data.forEach(addArrayElementToList);
-                
-            } else {            
+
+            } else {
                 // Only allow expanding on non-array parents
                 highed.dom.on(node, 'click', function () {
                     expand();
@@ -263,16 +263,16 @@ highed.Tree = function (parent) {
 
                 if (!child.meta.hasSubTree) {
                     icon.className = 'exp-col-icon fa fa-sliders';
-                } 
-                
+                }
+
                 // Add data instance
                 if (!child.meta.isArrayElement) {
-                    child.data = instancedData[child.meta.name] = instancedData[child.meta.name] || {};                
+                    child.data = instancedData[child.meta.name] = instancedData[child.meta.name] || {};
                 }
-                
+
                  // Collapsed by default
                 if (!expandState[index]) {
-                    collapse(true, true);                
+                    collapse(true, true);
                 } else {
                     expand(true, true);
                 }
@@ -284,7 +284,7 @@ highed.Tree = function (parent) {
         }
 
         ////////////////////////////////////////////////////////////////////////
-        
+
         highed.dom.ap(pnode,
             highed.dom.ap(node,
                 icon,
@@ -294,9 +294,9 @@ highed.Tree = function (parent) {
         );
 
         expands[index] = expand;
-            
+
         buildSubtree();
-        
+
         return {
             data: child.data,
             body: body,
@@ -328,11 +328,11 @@ highed.Tree = function (parent) {
      *  for all entries in the API. The definitions are structured as an actual
      *  tree, where each node has an array of children, and a meta object with
      *  meta information such as data type, default, and GH links.
-     * 
+     *
      *  @memberof highed.Tree
      *  @param tree {object} - the tree to display
      *    > children {object} - the children of the node
-     *    > entries {array} - array of orphan children 
+     *    > entries {array} - array of orphan children
      *  @param pnode {domnode} - the parent node
      *  @param instancedData {object} - the actual tree data
      *  @param dataIndex {number} - the path to data in arrays
@@ -348,8 +348,8 @@ highed.Tree = function (parent) {
         }
 
         if (
-            productFilter && 
-            Object.keys(tree.meta.products || {}).length > 0 && 
+            productFilter &&
+            Object.keys(tree.meta.products || {}).length > 0 &&
             !tree.meta.products[productFilter]
         ) {
             return;
@@ -394,7 +394,7 @@ highed.Tree = function (parent) {
     highed.dom.ap(parent, container);
 
     ////////////////////////////////////////////////////////////////////////////
-    
+
     return {
         on: events.on,
         expandTo: expandTo,
