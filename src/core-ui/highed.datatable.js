@@ -46,12 +46,12 @@ function parseCSV(inData, delimiter) {
 
     /*
         Auto detecting delimiters
-            - If we meet a quoted string, the next symbol afterwards 
+            - If we meet a quoted string, the next symbol afterwards
               (that's not \s, \t) is the delimiter
             - If we meet a date, the next symbol afterwards is the delimiter
 
         Date formats
-            - If we meet a column with date formats, check all of them to see if 
+            - If we meet a column with date formats, check all of them to see if
               one of the potential months crossing 12. If it does, we now know the
               format
 
@@ -90,7 +90,7 @@ function parseCSV(inData, delimiter) {
 
             if (c === '"') {
                 if (inStr) {
-                    //Next symbol that's a potential delimiter 
+                    //Next symbol that's a potential delimiter
                     //is THE delimiter if the CSV is well-formed
                     //We only do this on the first column.
                     if (!cols.length && rowNumber === 0) {
@@ -98,7 +98,7 @@ function parseCSV(inData, delimiter) {
                         while (!potentialDelimiters[guessedDel]) {
                             guessedDel = row[++j];
                         }
-                        
+
                         if (guessedDel !== options.delimiter) {
                             options.delimiter = guessedDel;
                         }
@@ -112,14 +112,14 @@ function parseCSV(inData, delimiter) {
             //Everything is allowed inside quotes
             } else if (inStr) {
                 token += c;
-            
+
             //Check if we're done reading a token
             } else if (c === options.delimiter) {
                 pushToken();
-            
+
             //Append to token
             } else if (c !== ' ') {
-                token += c;   
+                token += c;
             }
 
             cp = c;
@@ -160,6 +160,7 @@ highed.DataTable = function (parent, attributes) {
         rows = [],
         gcolumns = [],
         changeTimeout = false,
+        surpressChangeEvents = false,
         monthNumbers = {
             'JAN': 1,
             'FEB': 2,
@@ -188,7 +189,7 @@ highed.DataTable = function (parent, attributes) {
                 }
             }
         ]);
-    ;    
+    ;
 
     checkAll.type = 'checkbox';
 
@@ -199,7 +200,11 @@ highed.DataTable = function (parent, attributes) {
     ////////////////////////////////////////////////////////////////////////////
 
     function emitChanged() {
-        //We use an interval to stop a crazy amount of changes to be 
+        if (surpressChangeEvents) {
+            return;
+        }
+
+        //We use an interval to stop a crazy amount of changes to be
         //emitted in succession when e.g. loading sets.
         window.clearTimeout(changeTimeout);
         changeTimeout = window.setTimeout(function () {
@@ -228,11 +233,11 @@ highed.DataTable = function (parent, attributes) {
            //(highed.isFn(fn) && fn(mainInput.value));
            if (highed.isFn(keyup)) {
                 return keyup(e);
-           } 
+           }
         }));
 
         mainInputCb.push(highed.dom.on(mainInput, 'keyup', function (e) {
-           return (highed.isFn(fn) && fn(mainInput.value));        
+           return (highed.isFn(fn) && fn(mainInput.value));
         }));
 
         highed.dom.ap(target, mainInput);
@@ -258,7 +263,7 @@ highed.DataTable = function (parent, attributes) {
                 if (row.number - 1 >= 0 ) {
                     rows[row.number - 1].columns[rows[row.number - 1].columns.length - 1].focus();
                 }
-            }  
+            }
         }
 
         function goRight() {
@@ -273,7 +278,7 @@ highed.DataTable = function (parent, attributes) {
         }
 
         function goUp() {
-            if (row.number > 0 && 
+            if (row.number > 0 &&
                 rows[row.number - 1].columns.length > colNumber
             ) {
                 rows[row.number - 1].columns[colNumber].focus();
@@ -281,7 +286,7 @@ highed.DataTable = function (parent, attributes) {
         }
 
         function goBelow() {
-            if (row.number < rows.length - 1 && 
+            if (row.number < rows.length - 1 &&
                 rows[row.number + 1].columns.length > colNumber
             ) {
                 rows[row.number + 1].columns[colNumber].focus();
@@ -293,33 +298,33 @@ highed.DataTable = function (parent, attributes) {
             if (e.keyCode === 37) {
                 goLeft();
                 return highed.dom.nodefault(e);
-            
+
             //Go to the column above
             } else if (e.keyCode === 38) {
-                goUp();                
+                goUp();
                 return highed.dom.nodefault(e);
-            
+
             //Go to the column to the right
             } else if (e.keyCode === 39 || e.keyCode === 9) {
                 goRight();
                 return highed.dom.nodefault(e);
-            
+
             //Go to the column below
             } else if (e.keyCode === 40) {
                 goBelow();
                 return highed.dom.nodefault(e);
-            
-            //Go to next row 
+
+            //Go to next row
             } else if (e.keyCode === 13) {
                 //If we're standing in the last column of the last row,
                 //insert a new row.
                 if (row.number === rows.length - 1) {// && colNumber === rows.columns.length - 1) {
                     addRow();
-                    rows[row.number + 1].columns[0].focus();                    
+                    rows[row.number + 1].columns[0].focus();
                 } else {
-                    goBelow();                    
+                    goBelow();
                 }
-                return highed.dom.nodefault(e);            
+                return highed.dom.nodefault(e);
             }
         };
 
@@ -327,23 +332,23 @@ highed.DataTable = function (parent, attributes) {
             input.setSelectionRange(0, input.value.length);
         }
 
-        function focus() {      
-            mainInput.className = 'highed-dtable-input';      
+        function focus() {
+            mainInput.className = 'highed-dtable-input';
             makeEditable(
-                col, 
+                col,
                 value,
                 function (val) {
                     var changed = value !== val;
                     value = val;
                     colVal.innerHTML = val;
                     if (changed) {
-                        emitChanged();                        
+                        emitChanged();
                     }
-                }, 
+                },
                 handleKeyup
             );
-                  
-            row.select();  
+
+            row.select();
         }
 
         function destroy() {
@@ -358,9 +363,9 @@ highed.DataTable = function (parent, attributes) {
 
         function addToDOM(me) {
             colNumber = me || colNumber;
-            highed.dom.ap(row.node,           
+            highed.dom.ap(row.node,
                 highed.dom.ap(col, colVal)
-            );            
+            );
         }
 
         highed.dom.on(col, 'click', focus);
@@ -383,7 +388,7 @@ highed.DataTable = function (parent, attributes) {
         var columns = [],
             row = highed.dom.cr('tr'),
             leftItem = highed.dom.cr('div', 'highed-dtable-left-bar-row', ''),
-            checker = highed.dom.cr('input'),
+            checker = highed.dom.cr('input', 'highed-dtable-row-select-box'),
             checked = false,
             exports = {}
         ;
@@ -431,11 +436,11 @@ highed.DataTable = function (parent, attributes) {
                 row
             );
 
-            highed.dom.ap(leftBar, 
+            highed.dom.ap(leftBar,
                 highed.dom.ap(leftItem,
                     checker
                 )
-            );            
+            );
         }
 
         function rebuildColumns() {
@@ -447,7 +452,7 @@ highed.DataTable = function (parent, attributes) {
 
         function delCol(which) {
             if (which >= 0 && which < columns.length) {
-                columns[which].destroy();       
+                columns[which].destroy();
                 columns.splice(which, 1);
             }
         }
@@ -492,7 +497,7 @@ highed.DataTable = function (parent, attributes) {
         rows.forEach(function (row) {
             row.rebuildColumns();
         });
-    }  
+    }
 
     function init() {
         clear();
@@ -500,7 +505,7 @@ highed.DataTable = function (parent, attributes) {
         for (var i = 0; i < 1; i++) {
             var r = Row();
         }
-     
+
         for (var j = 0; j < 2; j++) {
             addCol('Column ' + (j + 1));
         }
@@ -514,12 +519,12 @@ highed.DataTable = function (parent, attributes) {
         topBar.innerHTML = '';
 
         gcolumns.forEach(function (col, i) {
-            col.colNumber = i;            
+            col.colNumber = i;
             col.addToDOM();
         });
 
         rebuildColumns();
-        
+
         highed.dom.ap(colgroup, highed.dom.cr('col'));
         resize();
     }
@@ -548,14 +553,14 @@ highed.DataTable = function (parent, attributes) {
                     icon: 'sort-amount-asc',
                     click: function () {
                         sortRows(exports.colNumber, 'asc');
-                    }     
+                    }
                 },
                 {
                     title: highed.L('dgSortDec'),
                     icon: 'sort-amount-desc',
                     click: function () {
                         sortRows(exports.colNumber, 'desc');
-                    }        
+                    }
                 },
                 '-',
                 {
@@ -563,7 +568,7 @@ highed.DataTable = function (parent, attributes) {
                     icon: 'sort-amount-asc',
                     click: function () {
                         sortRows(exports.colNumber, 'asc', true);
-                    }  
+                    }
                 },
                 {
                     title: highed.L('dgSortDecMonth'),
@@ -578,7 +583,7 @@ highed.DataTable = function (parent, attributes) {
                     icon: 'trash',
                     click: function () {
                         if (confirm(highed.L('dgDelColConfirm'))) {
-                            delCol(exports.colNumber);                            
+                            delCol(exports.colNumber);
                         }
                     }
                 },
@@ -609,7 +614,7 @@ highed.DataTable = function (parent, attributes) {
 
         exports.addToDOM = function () {
             highed.dom.ap(colgroup, col);
-            highed.dom.ap(topBar, 
+            highed.dom.ap(topBar,
                 highed.dom.ap(header,
                     headerTitle,
                     options,
@@ -628,7 +633,7 @@ highed.DataTable = function (parent, attributes) {
         };
 
         ////////////////////////////////////////////////////////////////////////
-       
+
         exports.addToDOM();
 
         highed.dom.showOnHover(header, options);
@@ -648,7 +653,7 @@ highed.DataTable = function (parent, attributes) {
 
         mover.on('Moving', function (x) {
             col.width = x;
-            
+
             highed.dom.style([col, header], {
                 width: x + 'px'
             });
@@ -657,7 +662,7 @@ highed.DataTable = function (parent, attributes) {
         });
 
         mover.on('EndMove', function (x) {
- 
+
             highed.dom.style(document.body, {
                 cursor: ''
             });
@@ -673,13 +678,13 @@ highed.DataTable = function (parent, attributes) {
         highed.dom.on(header, 'click', function (e) {
 
             //Ugly.
-            mainInput.className = 'highed-dtable-input highed-dtable-input-header'; 
+            mainInput.className = 'highed-dtable-input highed-dtable-input-header';
 
             //Spawn an edit box in the node
             makeEditable(
-                header, 
-                value, 
-                function (val) {                
+                header,
+                value,
+                function (val) {
                     headerTitle.innerHTML = value = val;
                     emitChanged();
                 },
@@ -696,14 +701,14 @@ highed.DataTable = function (parent, attributes) {
             if (where) {
                 row.insertCol(where);
             } else {
-                row.addCol();                                
+                row.addCol();
             }
         });
 
         if (where) {
             gcolumns.splice(where, 0, exports);
         } else {
-            gcolumns.push(exports);            
+            gcolumns.push(exports);
         }
 
         emitChanged();
@@ -731,27 +736,27 @@ highed.DataTable = function (parent, attributes) {
             if ((highed.isNum(ad) && highed.isNum(bd)) || asMonths) {
                 if (asMonths) {
                     ad = monthNumbers[ad.toUpperCase().substr(0, 3)] || 13;
-                    bd = monthNumbers[bd.toUpperCase().substr(0, 3)] || 13;                    
+                    bd = monthNumbers[bd.toUpperCase().substr(0, 3)] || 13;
                 } else {
                     ad = parseFloat(ad);
-                    bd = parseFloat(bd);                    
+                    bd = parseFloat(bd);
                 }
-                
+
                 if (direction === 'ASC') {
                     return ad - bd;
-                } 
-                return bd < ad ? -1 : (bd > ad ? 1 : 0);            
+                }
+                return bd < ad ? -1 : (bd > ad ? 1 : 0);
             }
-            
+
             if (direction === 'ASC') {
-                return ad.localeCompare(bd);                
-            } 
+                return ad.localeCompare(bd);
+            }
             return bd.localeCompare(ad);
         });
 
         rebuildRows();
         emitChanged();
-    }  
+    }
 
     /** Clear the table
       * @memberof highed.DataTable
@@ -778,12 +783,15 @@ highed.DataTable = function (parent, attributes) {
     /** Add a new row
       * @memberof highed.DataTable
       */
-    function addRow() {
+    function addRow(supressChange) {
         var r = Row();
         gcolumns.forEach(function () {
             r.addCol();
         });
-        emitChanged();
+
+        if (!supressChange) {
+          emitChanged();
+        }
     }
 
     /** Insert a new column
@@ -808,8 +816,8 @@ highed.DataTable = function (parent, attributes) {
     function delCol(which) {
         if (which >= 0 && which < gcolumns.length) {
 
-            rows.forEach(function (row) {            
-                row.delCol(which);             
+            rows.forEach(function (row) {
+                row.delCol(which);
             });
 
             gcolumns[which].destroy();
@@ -831,21 +839,21 @@ highed.DataTable = function (parent, attributes) {
         highed.dom.style(frame, {
             height: ps.h - hs.h - tb.h + 'px',
             width: ps.w - hs.h + 'px'
-        });   
+        });
 
-        highed.dom.style(table, { 
+        highed.dom.style(table, {
             width: ps.w - hs.h + 'px'
-        });        
+        });
     }
-    
+
     /** Returns the header titles as an array
      *  @memberof highed.DataTable
      *  @returns {array<string>} - the headers
      */
     function getHeaderTextArr() {
         return gcolumns.map(function (item) {
-            return item.headerTitle.innerHTML.length ? 
-                   item.headerTitle.innerHTML : 
+            return item.headerTitle.innerHTML.length ?
+                   item.headerTitle.innerHTML :
                    null;
         });
     }
@@ -893,7 +901,7 @@ highed.DataTable = function (parent, attributes) {
             });
 
             if (hasData) {
-                data.push(rarr);                
+                data.push(rarr);
             }
         });
 
@@ -913,8 +921,8 @@ highed.DataTable = function (parent, attributes) {
 
             if (i > 0) {
                 res.series.push({
-                    name: item.headerTitle.innerHTML.length ? 
-                          item.headerTitle.innerHTML : 
+                    name: item.headerTitle.innerHTML.length ?
+                          item.headerTitle.innerHTML :
                           null,
                     data: []
                 });
@@ -927,11 +935,11 @@ highed.DataTable = function (parent, attributes) {
                 var v = col.value();
 
                 if (!ci) {
-                    
+
                     if (v && highed.isStr(v) && Date.parse(v) !== NaN) {
                        // v = new Date(v);
                     }
-                    
+
                     res.categories.push(v);
                     return;
                 }
@@ -949,7 +957,7 @@ highed.DataTable = function (parent, attributes) {
                 res.series[ci].data.push(v);
             });
         });
-        
+
         return res;
     }
 
@@ -957,18 +965,20 @@ highed.DataTable = function (parent, attributes) {
      *  @memberof highed.DataTable
      *  @param delimiter {string} - the delimiter to use. Defaults to `,`.
      */
-    function toCSV(delimiter, quoteStrings) {  
-        delimiter = delimiter || ',';      
+    function toCSV(delimiter, quoteStrings) {
+        delimiter = delimiter || ',';
         return toData(quoteStrings, true).map(function (cols) {
             return cols.join(delimiter);
         }).join('\n')
     }
 
-    ////////////////////////////////////////////////////////////////////////////
-
-    importer.on('ImportCSV', function (data) {
+    function loadCSV(data, surpressEvents) {
         highed.snackBar(highed.L('dgDataImporting'));
         importModal.hide();
+
+        if (surpressChangeEvents) {
+          surpressChangeEvents = true;
+        }
 
         if (data && data.csv) {
             clear();
@@ -977,7 +987,7 @@ highed.DataTable = function (parent, attributes) {
             data.csv = data.csv.split('\n');
             data.csv.forEach(function (r, i) {
                 var cols = r.split(','),
-                    row 
+                    row
                 ;
 
                 if (i) {
@@ -986,7 +996,7 @@ highed.DataTable = function (parent, attributes) {
 
                 cols.forEach(function (c) {
                     if (i === 0) {
-                        addCol(c);  
+                        addCol(c);
                     } else {
                         row.addCol(c);
                     }
@@ -997,6 +1007,15 @@ highed.DataTable = function (parent, attributes) {
         }
         highed.snackBar(highed.L('dgDataImported'));
         resize();
+
+        surpressChangeEvents = false;
+
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    importer.on('ImportCSV', function (data) {
+      loadCSV(data);
     });
 
     ////////////////////////////////////////////////////////////////////////////
@@ -1056,12 +1075,12 @@ highed.DataTable = function (parent, attributes) {
         css: 'fa-floppy-o',
         title: highed.L('dgExportBtn'),
         tooltip: 'Download data',
-        click: function (e) {        
-            //console.log(toCSV());    
+        click: function (e) {
+            //console.log(toCSV());
             saveCtx.show(e.clientX, e.clientY);
         }
     });
-    
+
     toolbar.addButton({
         title: highed.L('dgImportBtn'),
         click: function () {
@@ -1078,8 +1097,8 @@ highed.DataTable = function (parent, attributes) {
 
     highed.dom.ap(toolbar.left,
         highed.dom.cr(
-            'div', 
-            'highed-dtable-toolbar-label', 
+            'div',
+            'highed-dtable-toolbar-label',
             highed.L('dgWithSelected') + ' '
         )
     );
@@ -1121,6 +1140,7 @@ highed.DataTable = function (parent, attributes) {
         addRow: addRow,
         insCol: insertCol,
         delCol: delCol,
+        loadCSV: loadCSV,
         toData: toData,
         toCSV: toCSV,
         toDataSeries: toDataSeries,
