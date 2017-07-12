@@ -6,6 +6,10 @@
     "./src/core/highed.events.js",
     "./src/core/highed.fileupload.js",
     "./src/core/highed.templateman.js",
+    "./src/core/highed.transforms.js",
+    "./src/core/highed.sampleman.js",
+    "./src/core/highed.dvalidatorman.js",
+    "./src/core/highed.cloud.js",
 
     "./src/core-ui/highed.dimmer.js",
     "./src/core-ui/highed.overlaymodal.js",
@@ -28,11 +32,9 @@
     "./src/core-ui/highed.slider.js",
     "./src/core-ui/highed.datatable.js",
         
-    "./src/meta/highed.meta.charts.js",
     "./src/meta/highed.meta.options.extended.js",
     "./src/meta/highed.meta.colors.js",
     "./src/meta/highed.meta.fonts.js",
-    "./src/meta/highed.meta.sample.data.js",
         
     "./src/ui/highed.chart.template.selector.js",
     "./src/ui/highed.defctx.js",
@@ -43,7 +45,8 @@
     "./src/ui/highed.chartpreview.js",
     "./src/ui/highed.licenseinfo.js",
     "./src/ui/highed.simple.customizer.js",
-        
+    "./src/ui/highed.cloud.ui.js",
+    
     "./src/editors/highed.editor.js",
     "./src/editors/highed.simple.editor.js",
     "./src/editors/highed.modaleditor.js"
