@@ -48,14 +48,22 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
         }, attributes),
         events = highed.events(),
         tabs = highed.TabControl(parent, true),
-        simpleTab = tabs.createTab({title: highed.getLocalizedStr('customizeSimple')}),
-        advancedTab = tabs.createTab({title: highed.getLocalizedStr('customizeAdvanced')}),
+        simpleTab = tabs.createTab({
+          title: highed.getLocalizedStr('customizeSimple')
+        }),
+        advancedTab = tabs.createTab({
+          title: highed.getLocalizedStr('customizeAdvanced')
+        }),
         
-        splitter = highed.HSplitter(simpleTab.body, {leftWidth: 30, responsive: true}),
+        splitter = highed.HSplitter(simpleTab.body, {
+          leftWidth: 30, responsive: true
+        }),
         list = highed.List(splitter.left, true),
         body = splitter.right,
 
-        advSplitter = highed.HSplitter(advancedTab.body, {leftWidth: 30}),
+        advSplitter = highed.HSplitter(advancedTab.body, {
+          leftWidth: 30
+        }),
         advBody = advSplitter.right,
         advTree = highed.Tree(advSplitter.left),
 
@@ -344,7 +352,9 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
             highlightNode(advSplitter.right.querySelector('#' + id));
 
             if (n) {
-                n.scrollIntoView({block: "end"});
+                n.scrollIntoView({
+                  block: 'end'
+                });
             }
         }
     }
@@ -389,7 +399,7 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
 
             if (propFilter && entry.meta.validFor) {
                 if (!entry.meta.validFor[propFilter]) {
-                    console.log('filtered', entry.meta.name, 'based on', propFilter);
+                    // console.log('filtered', entry.meta.name, 'based on', propFilter);
                     return false;
                 }
             }
