@@ -35,7 +35,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  @param parent {domnode} - the node to attach the preview to
  *  @param attributes {object} - the settings
- *    > defaultChartOptions {object} - the default chart options 
+ *    > defaultChartOptions {object} - the default chart options
  */
 highed.ChartPreview = function (parent, attributes) {
     var properties = highed.merge({
@@ -56,12 +56,12 @@ highed.ChartPreview = function (parent, attributes) {
         events = highed.events(),
         customizedOptions = highed.merge({}, properties.defaultChartOptions),
         aggregatedOptions = {},
-        flatOptions = {},   
+        flatOptions = {},
         templateOptions = {},
         chartOptions = {},
 
         exports = {},
-      
+
         throttleTimeout = false,
         chart = false,
         preExpandSize = false,
@@ -69,30 +69,30 @@ highed.ChartPreview = function (parent, attributes) {
         expanded = false,
         constr = 'Chart',
         wysiwyg = {
-            'g.highcharts-legend': { tab: 'Legend', id: 'legend--enabled'},
-            'text.highcharts-title': { tab: 'Titles', id: 'title--text'},
-            'text.highcharts-subtitle': { tab: 'Titles', id: 'subtitle--text'},
-            '.highcharts-yaxis-labels': { tab: 'Axes', id: 'yAxis-labels--format'},
-            '.highcharts-xaxis-labels': { tab: 'Axes', id: 'xAxis-labels--format'},
-            '.highcharts-xaxis .highcharts-axis-title': { tab: 'Axes', id: 'xAxis-title--text'},
-            '.highcharts-yaxis .highcharts-axis-title': { tab: 'Titles', id: 'yAxis-title--text'},
-            'rect.highcharts-background': { tab: 'Appearance', id: 'chart--backgroundColor'},
-            '.highcharts-series': { tab: 'Data series', id: 'series'},
-            'g.highcharts-tooltip': { tab: 'Tooltip', id: 'tooltip--enabled'}
+            'g.highcharts-legend': { tab: 'Legend', id: 'legend--enabled' },
+            'text.highcharts-title': { tab: 'Titles', id: 'title--text' },
+            'text.highcharts-subtitle': { tab: 'Titles', id: 'subtitle--text' },
+            '.highcharts-yaxis-labels': { tab: 'Axes', id: 'yAxis-labels--format' },
+            '.highcharts-xaxis-labels': { tab: 'Axes', id: 'xAxis-labels--format' },
+            '.highcharts-xaxis .highcharts-axis-title': { tab: 'Axes', id: 'xAxis-title--text' },
+            '.highcharts-yaxis .highcharts-axis-title': { tab: 'Titles', id: 'yAxis-title--text' },
+            'rect.highcharts-background': { tab: 'Appearance', id: 'chart--backgroundColor' },
+            '.highcharts-series': { tab: 'Data series', id: 'series' },
+            'g.highcharts-tooltip': { tab: 'Tooltip', id: 'tooltip--enabled' }
         }
     ;
 
     ///////////////////////////////////////////////////////////////////////////
 
     function attachWYSIWYG() {
-        Object.keys(wysiwyg).forEach(function (key) {            
+        Object.keys(wysiwyg).forEach(function (key) {
             highed.dom.on(parent.querySelector(key), 'click', function (e) {
                 events.emit('RequestEdit', wysiwyg[key], e.clientX, e.clientY);
                 e.cancelBubble = true;
                 e.preventDefault();
                 e.stopPropagation();
                 e.stopImmediatePropagation();
-                return false; 
+                return false;
             });
         });
     }
@@ -102,11 +102,9 @@ highed.ChartPreview = function (parent, attributes) {
         if (highed.isFn(fn)) {
             if (chart !== false) {
                 return fn(chart);
-            } else {                
-                return fn(init());
-                //highed.log(1, 'chart is undefined: chart preview');
             }
-        } 
+            return fn(init());
+        }
         return false;
     }
 
@@ -129,10 +127,11 @@ highed.ChartPreview = function (parent, attributes) {
 
         //We want to work on a copy..
         options = options || aggregatedOptions;
+        constr = constr || 'Chart';
         // options = highed.merge({}, options || aggregatedOptions);
-        
+
         // if (aggregatedOptions && aggregatedOptions.series) {
-        //     options = aggregatedOptions.series; 
+        //     options = aggregatedOptions.series;
         // }
 
         if (noAnimation) {
@@ -145,16 +144,16 @@ highed.ChartPreview = function (parent, attributes) {
         }
 
         try {
-            chart = new Highcharts[constr](pnode || parent, options);   
+            chart = new Highcharts[constr](pnode || parent, options);
             //This is super ugly.
            // customizedOptions.series = customizedOptions.series || [];
           //  customizedOptions.series = chart.options.series || [];
            // highed.merge(customizedOptions.series, chart.options.series);
-            //updateAggregated();    
+            //updateAggregated();
 
             if (chart && chart.options) {
                 highed.clearObj(chartOptions);
-                highed.merge(chartOptions, chart.options);                       
+                highed.merge(chartOptions, chart.options);
             }
 
             attachWYSIWYG();
@@ -177,7 +176,7 @@ highed.ChartPreview = function (parent, attributes) {
             highed.log(1, 'error initializing chart:', e);
 
             i = e.indexOf('www.');
-            
+
             if (i > 0) {
                 highed.snackBar('There\'s a problem with your chart!', e.substr(i), function () {
                     window.open('http://' + e.substr(i));
@@ -190,19 +189,19 @@ highed.ChartPreview = function (parent, attributes) {
             }
 
             chart = false;
-        }       
+        }
 
         return chart;
     }
 
-    /** Resize the preview 
+    /** Resize the preview
      *  Resizes based on the parent size.
      *  @memberof highed.ChartPreview
      */
     function resize() {
         gc(function (chart) {
             if (chart.reflow) {
-                chart.reflow();                
+                chart.reflow();
             }
         });
     }
@@ -239,8 +238,8 @@ highed.ChartPreview = function (parent, attributes) {
 
         //Merge fest
         highed.clearObj(aggregatedOptions);
-        highed.merge(aggregatedOptions, 
-            highed.merge(highed.merge({}, templateOptions), 
+        highed.merge(aggregatedOptions,
+            highed.merge(highed.merge({}, templateOptions),
             customizedOptions
         ));
 
@@ -250,7 +249,7 @@ highed.ChartPreview = function (parent, attributes) {
                 if (i < templateOptions.yAxis.length) {
                     highed.merge(obj, templateOptions.yAxis[i]);
                 }
-            });            
+            });
         }
 
          if (aggregatedOptions.xAxis && templateOptions.xAxis) {
@@ -258,7 +257,7 @@ highed.ChartPreview = function (parent, attributes) {
                 if (i < templateOptions.xAxis.length) {
                     highed.merge(obj, templateOptions.xAxis[i]);
                 }
-            });            
+            });
         }
 
         //Temporary hack
@@ -269,7 +268,7 @@ highed.ChartPreview = function (parent, attributes) {
                 aggregatedOptions.series.push(highed.merge({}, obj));
             });
         }
-        
+
         if (templateOptions.series) {
             aggregatedOptions.series = aggregatedOptions.series || [];
 
@@ -319,7 +318,7 @@ highed.ChartPreview = function (parent, attributes) {
         gc(function (chart) {
 
             templateOptions = highed.merge({}, template.config || {});
-            
+
             updateAggregated();
             init(aggregatedOptions);
             emitChange();
@@ -329,7 +328,7 @@ highed.ChartPreview = function (parent, attributes) {
     function loadSeries() {
         if (!gc(function (chart) {
             if (chart.options && chart.options.series) {
-                customizedOptions.series = chart.options.series;                    
+                customizedOptions.series = chart.options.series;
             }
             return true;
         })) {
@@ -383,7 +382,7 @@ highed.ChartPreview = function (parent, attributes) {
     function loadProject(projectData) {
         if (highed.isStr(projectData)) {
             try {
-                return loadProjectData(JSON.parse(projectData));
+                return loadProject(JSON.parse(projectData));
             } catch (e) {
                 highed.snackBar('Invalid project');
             }
@@ -395,7 +394,7 @@ highed.ChartPreview = function (parent, attributes) {
             if (projectData.template) {
                 templateOptions = projectData.template;
             }
-            
+
             customizedOptions = {};
             if (projectData.options) {
                 customizedOptions = projectData.options;
@@ -404,7 +403,26 @@ highed.ChartPreview = function (parent, attributes) {
             if (customizedOptions.lang) {
                 Highcharts.setOptions({
                     lang: customizedOptions.lang
-                });                
+                });
+            }
+
+            if (projectData.settings && projectData.settings.dataProvider) {
+              if (projectData.settings.dataProvider.csv) {
+                loadCSVData({
+                  csv: projectData.settings.dataProvider.csv
+                });
+
+                events.emit(
+                  'LoadProjectData',
+                  projectData.settings.dataProvider.csv
+                );
+              }
+            }
+
+            if (projectData.settings && highed.isStr(projectData.settings.constructor)) {
+              constr = projectData.settings.constructor;
+            } else {
+              constr = 'Chart';
             }
 
             // Not sure if this should be part of the project files yet
@@ -417,6 +435,8 @@ highed.ChartPreview = function (parent, attributes) {
             updateAggregated();
             init(aggregatedOptions);
             emitChange();
+
+            events.emit('LoadProject', projectData);
         }
     }
 
@@ -424,9 +444,21 @@ highed.ChartPreview = function (parent, attributes) {
      *  @memberof highed.ChartPreview
      */
     function toProject() {
+        var loadedCSVRaw = false;
+
+        if (chart && chart.options.data && chart.options.data.csv) {
+          loadedCSVRaw = chart.options.data.csv;
+        }
+
         return {
             template: templateOptions,
-            options: customizedOptions
+            options: customizedOptions,
+            settings: {
+              constructor: constr,
+              dataProvider: {
+                csv: loadedCSVRaw
+              }
+            }
             //editorOptions: highed.serializeEditorOptions()
         };
     }
@@ -455,11 +487,11 @@ highed.ChartPreview = function (parent, attributes) {
                 templateOptions = {};
                 highed.clearObj(customizedOptions);
                 highed.merge(customizedOptions, highed.merge({}, data));
-                
+
                 if (!highed.isNull(data.series)) {
-                    customizedOptions.series = data.series;                    
+                    customizedOptions.series = data.series;
                 }
-                
+
                 updateAggregated();
                 init(customizedOptions);
                 loadSeries();
@@ -471,17 +503,17 @@ highed.ChartPreview = function (parent, attributes) {
     /**
      * Load raw dataset (array of arrays)
      */
-    //function 
+    //function
 
     /** Set chart options from an object
      *
      */
     function setChartOptions(options) {
-        console.time('remblanks');
+        // console.time('remblanks');
         customizedOptions = highed.transform.remBlanks(
               highed.merge({}, options, false)
         );
-        console.timeEnd('remblanks');
+        // console.timeEnd('remblanks');
 
         if (customizedOptions && customizedOptions.lang) {
             Highcharts.setOptions({
@@ -490,7 +522,7 @@ highed.ChartPreview = function (parent, attributes) {
         }
 
         if (options && options.global) {
-            
+
         }
 
         updateAggregated();
@@ -524,7 +556,7 @@ highed.ChartPreview = function (parent, attributes) {
         if (seriesArr.length < customizedOptions.series.length) {
             //Need to delete some series
             customizedOptions.series.splice(
-                seriesArr.length, 
+                seriesArr.length,
                 customizedOptions.series.length - seriesArr.length
             );
         }
@@ -547,15 +579,15 @@ highed.ChartPreview = function (parent, attributes) {
      *  @param index {number} - used if the option is an array
      */
     function set(id, value, index) {
-        
+
         gc(function (chart) {
-            //highed.setAttr(chart.options, id, value, index);        
+            //highed.setAttr(chart.options, id, value, index);
             highed.setAttr(chart.options, 'plotOptions--series--animation', false, index);
         });
 
-        //We want to be able to set the customized options even if the chart 
+        //We want to be able to set the customized options even if the chart
         //doesn't exist
-        highed.setAttr(customizedOptions, id, value, index);        
+        highed.setAttr(customizedOptions, id, value, index);
 
         flatOptions[id] = value;
 
@@ -570,7 +602,7 @@ highed.ChartPreview = function (parent, attributes) {
         emitChange();
     }
 
-    /** Get embeddable JSON 
+    /** Get embeddable JSON
      *  This returns the merged chart, with both customized options
      *  and options set indirectly through templates.
      *  @memberof highed.ChartPreview
@@ -579,7 +611,7 @@ highed.ChartPreview = function (parent, attributes) {
      */
     function getEmbeddableJSON() {
         var r;
-        
+
         updateAggregated();
         r = highed.merge({}, aggregatedOptions);
 
@@ -592,7 +624,7 @@ highed.ChartPreview = function (parent, attributes) {
         return r;
     }
 
-    /** Get embeddable SVG 
+    /** Get embeddable SVG
      *  @memberof highed.ChartPreview
      *  @name export.svg
      *  @returns {string} - the result from `Highcharts.Chart.getSVG()`
@@ -603,21 +635,21 @@ highed.ChartPreview = function (parent, attributes) {
         });
     }
 
-    /** Get embeddable JavaScript 
+    /** Get embeddable JavaScript
      *  @memberof highed.ChartPreview
      *  @name export.js
      *  @param id {string} - the ID of the node to attach the chart to
      *  @returns {string} - a string containing JavaScript to reproduce the chart
      */
     function getEmbeddableJavaScript(id) {
-        return gc(function (chart) {            
-            var 
+        return gc(function (chart) {
+            var
                 cdnIncludes = {
-                    "https://code.highcharts.com/stock/highstock.js": 1,   
-                    "https://code.highcharts.com/adapters/standalone-framework.js": 1,  
-                    "https://code.highcharts.com/highcharts-more.js": 1,   
-                    "https://code.highcharts.com/highcharts-3d.js": 1, 
-                    "https://code.highcharts.com/modules/data.js": 1, 
+                    "https://code.highcharts.com/stock/highstock.js": 1,
+                    "https://code.highcharts.com/adapters/standalone-framework.js": 1,
+                    "https://code.highcharts.com/highcharts-more.js": 1,
+                    "https://code.highcharts.com/highcharts-3d.js": 1,
+                    "https://code.highcharts.com/modules/data.js": 1,
                     "https://code.highcharts.com/modules/map.js": 1,
                     "https://code.highcharts.com/modules/exporting.js": 1,
                     "http://code.highcharts.com/modules/funnel.js": 1,
@@ -667,12 +699,12 @@ highed.ChartPreview = function (parent, attributes) {
                     '});',
 
                     'if (incl.length > 0) { include(incl[0], 0); }'
-                ];                
+                ];
             }
 
-            return '\n' + [  
+            return '\n' + [
                 '(function(){ ',
-                
+
                 cdnIncludesArr.join(''),
 
                 ' function cl() {',
@@ -680,7 +712,7 @@ highed.ChartPreview = function (parent, attributes) {
 
                         !customizedOptions.lang ? '' : 'Highcharts.setOptions({lang:' + JSON.stringify(customizedOptions.lang) + '});',
 
-                        'new Highcharts.' + constr + '("', id, '", ', 
+                        'new Highcharts.' + constr + '("', id, '", ',
                             JSON.stringify(getEmbeddableJSON()), ');',
                     '}else ',
                     'window.setTimeout(cl, 20);',
@@ -692,15 +724,15 @@ highed.ChartPreview = function (parent, attributes) {
         });
     }
 
-    /** Get embeddable HTML 
+    /** Get embeddable HTML
      *  @memberof highed.ChartPreview
      *  @name export.html
      *  @param placehold {bool} - if true, SVG will also be embedded
      *  @returns {string} - a string of embeddable HTML
      */
     function getEmbeddableHTML(placehold) {
-        return gc(function (chart) {       
-            var id = 'highcharts-' + highed.uuid();     
+        return gc(function (chart) {
+            var id = 'highcharts-' + highed.uuid();
             return '\n' + [
                 '<div id="', id, '">',
                 placehold ? getEmbeddableSVG() : '',
@@ -709,13 +741,13 @@ highed.ChartPreview = function (parent, attributes) {
         });
     }
 
-    /** 
-     * Expand the chart from its drawer 
-     * @memberof highed.ChartPreview     
+    /**
+     * Expand the chart from its drawer
+     * @memberof highed.ChartPreview
      */
     function expand() {
         gc(function (chart) {
-            if (!expanded) {            
+            if (!expanded) {
                 highed.dom.style(properties.expandTo, {
                     width: '100%',
                     display: 'block'
@@ -731,7 +763,7 @@ highed.ChartPreview = function (parent, attributes) {
         });
     }
 
-    /** Collapse the chart into its drawer 
+    /** Collapse the chart into its drawer
      *  @memberof highed.ChartPreview
      */
     function collapse() {
@@ -765,9 +797,9 @@ highed.ChartPreview = function (parent, attributes) {
         highed.merge(customizedOptions, properties.defaultChartOptions);
 
         updateAggregated();
-        
+
         init(aggregatedOptions);
-        
+
         emitChange();
         events.emit('New');
     }
@@ -823,7 +855,7 @@ highed.ChartPreview = function (parent, attributes) {
         loadTemplate: loadTemplate,
         loadSeries: loadSeriesData,
         resize: resize,
-        
+
         toProject: toProject,
         loadProject: loadProject,
 
