@@ -34,8 +34,7 @@ highed.templates.add('Line', {
     "sampleSets": [],
     "config": {
         "chart": {
-            "type": "line",
-            "polar": false
+            "type": "line"
         }
     }
 });
