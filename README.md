@@ -3,13 +3,15 @@ Highcharts Editor
 
 *Stand-alone and embeddable chart editor for Highcharts*
 
-### This is beta software!
+# IMPORTANT NOTICE
+
+**The Highcharts Editor is currently in Beta. The master branch is not suited for production - use one of the [pre-built releases](https://github.com/highcharts/highcharts-editor/releases).
+
+## Introduction
 
 ![screenshots/customize.png](screenshots/customize.png)
 
 **[Click here for live demos](http://editor.highcharts.com)**
-
-## Introduction
 
 `highcharts-editor` is a lightweight chart editor for highcharts that can be embedded into existing frameworks and libraries, or used stand-alone.
 It requires no back-end service to operate.
