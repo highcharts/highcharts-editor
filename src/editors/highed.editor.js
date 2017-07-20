@@ -64,7 +64,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     homepage: 'unknown'
                 },
                 dependencies: [],
-                options: {}                
+                options: {}
             }, definition)
         ;
 
@@ -109,7 +109,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             if (highed.isFn(plugin.activate)) {
                 activePlugins[name].definition.activate(filteredOptions);
-            }    
+            }
 
             pluginEvents.emit('Use', activePlugins[name]);
 
@@ -119,7 +119,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     }
 
     //Public interface
-    highed.plugins.editor = {    
+    highed.plugins.editor = {
         install: install,
         use: use
     };
@@ -127,20 +127,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     //UI plugin interface
     highed.plugins.step = {
         install: function (def) {
-            stepPlugins[def.title] = def;  
+            stepPlugins[def.title] = def;
         }
     };
 
     ///////////////////////////////////////////////////////////////////////////
 
-    /**The main chart editor object 
+    /**The main chart editor object
      * @constructor
      *
      * @example
      * var editor = highed.Editor('my-div', {
-     *   
+     *
      * });
-     * 
+     *
      * @emits ChartChange - when the chart changes
      *   > {object} - new chart data
      * @emits ChartChangedLately - when the chart changes, on a throttle so events are not emitted more frequently than every 100ms
@@ -162,7 +162,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      */
     highed.Editor = function (parent, attributes) {
         var events = highed.events(),
-            exports = {},
             properties = highed.merge({
                 defaultChartOptions: {},
                 on: {},
@@ -173,7 +172,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 exporter: {},
                 availableSettings: false,
                 useContextMenu: true,
-                useHeader: true   
+                useHeader: true
             }, attributes),
 
             container = highed.dom.cr('div', 'highed-container'),
@@ -185,9 +184,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 additionalCSS: ['highed-header']
             }),
 
-            splitter = highed.HSplitter(container, { 
-                leftWidth: 60, 
-                rightClasses: 'highed-chart-preview-bar', 
+            splitter = highed.HSplitter(container, {
+                leftWidth: 60,
+                rightClasses: 'highed-chart-preview-bar',
                 allowResize: false,
                 leftMax: 800
             }),
@@ -198,10 +197,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             dataImpStep = wizbar.addStep({ title: highed.getLocalizedStr('stepImport') }),
             dataImp = highed.DataImporter(dataImpStep.body, properties.importer),
-        
-            dataTableStep = wizbar.addStep({title: highed.getLocalizedStr('stepData')}),
+
+            dataTableStep = wizbar.addStep({ title: highed.getLocalizedStr('stepData'), id: 'stepData' }),
             dataTable = highed.DataTable(dataTableStep.body),
-            
+
             templateStep = wizbar.addStep({ title: highed.getLocalizedStr('stepTemplates') }),
             chartTemplateSelector = highed.ChartTemplateSelector(templateStep.body),
 
@@ -217,7 +216,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             dataExp = highed.Exporter(dataExpStep.body, properties.exporter),
 
             doneBtn = highed.dom.cr('div', 'highed-ok-button', highed.getLocalizedStr('doneCaption')),
-            doneStep = wizbar.addStep({title: highed.getLocalizedStr('stepDone')}),
+            doneStep = wizbar.addStep({ title: highed.getLocalizedStr('stepDone') }),
 
             chartIcon = highed.dom.cr('div', 'highed-chart-container-icon'),
 
@@ -227,31 +226,34 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         ;
 
         cmenu.on('NewChart', function () {
-            dataImpStep.activate();
+            dataTableStep.activate();
         });
 
         properties.features = highed.arrToObj(properties.features.split(' '));
 
         ////////////////////////////////////////////////////////////////////////
-        
+
         Object.keys(stepPlugins).forEach(function (key) {
             var plugin = stepPlugins[key],
-                step = wizbar.addStep({title: plugin.title})
+                step = wizbar.addStep({ title: plugin.title })
             ;
 
-            step.hide();
+            if (!plugin.alwaysShow) {
+              step.hide();
+            }
 
             activeStepPlugins.push({
+              alwaysShow: plugin.alwaysShow,
               plugin: plugin,
               instance: plugin.create(chartPreview, step.body),
-              step: step   
+              step: step
             });
         });
 
         function updateToolbarIcon() {
             if (highed.onPhone()) {
                 highed.dom.style(chartIcon, {
-                    'background-image': 'url("data:image/svg+xml;utf8,' + 
+                    'background-image': 'url("data:image/svg+xml;utf8,' +
                           encodeURIComponent(chartPreview.export.svg()) +
                     '")'
                 });
@@ -289,11 +291,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             if (!things.data) {
                 dataTableStep.hide();
             }
-        
+
             wizbar.selectFirst();
         }
 
-        /** 
+        /**
          * Force a resize of the editor
          * @memberof highed.Editor
          */
@@ -322,7 +324,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
             highed.dom.style(chartContainer, {
-                'max-height': (cs.h - ms.h - wb.h) + 'px'                
+                'max-height': (cs.h - ms.h - wb.h) + 'px'
             });
         }
 
@@ -342,13 +344,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         highed.ready(function () {
             parent = highed.dom.get(parent);
             if (parent) {
-                highed.dom.ap(parent, 
+                highed.dom.ap(parent,
                     highed.dom.ap(container,
                         expandContainer
-                    )                           
+                    )
                 );
 
-                highed.dom.ap(splitter.right, 
+                highed.dom.ap(splitter.right,
                     chartContainer
                 );
 
@@ -358,7 +360,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
                 doneStep.body.className += ' highed-done-pane';
 
-                highed.dom.ap(doneStep.body, 
+                highed.dom.ap(doneStep.body,
                     highed.dom.cr('div', '', [
                         '<h2>All done? Great!</h2>',
                         'Click the button below to close the editor'
@@ -368,24 +370,26 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
                 highed.dom.ap(mainToolbar.left,
                     highed.dom.style(highed.dom.cr('div', 'highed-logo'), {
-                        'background-image': 'url("data:image/svg+xml;utf8,' + 
+                        'background-image': 'url("data:image/svg+xml;utf8,' +
                                   encodeURIComponent(highed.resources.logo) +
                         '")'
                     })
                 );
 
-                resize();                
+                resize();
 
                 if (!highed.onPhone()) {
                     highed.dom.on(window, 'resize', resize);
-                } 
+                }
             } else {
                 highed.log(1, 'no valid parent supplied to editor');
             }
 
-            highed.dom.style(welcomeStep.body, {padding: '0 20px'});
+            highed.dom.style(welcomeStep.body, {
+              padding: '0 20px'
+            });
 
-            highed.dom.ap(welcomeStep.body, 
+            highed.dom.ap(welcomeStep.body,
                 highed.dom.cr('h2', '', 'Welcome'),
                 highed.dom.cr('div', '', 'This wizard will take you through the process of creating your very own chart.'),
                 highed.dom.cr('br'),
@@ -394,16 +398,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         });
 
         ////////////////////////////////////////////////////////////////////////
-        
+
         chartTemplateSelector.on('Select', function (template) {
            activeStepPlugins.forEach(function (o) {
-                var c = highed.arrToObj(o.plugin.validConstructors);
-                if (c[template.constructor]) {
+                var c = highed.arrToObj(o.plugin.validConstructors || []);
+                if (c && c.length && c[template.constructor]) {
                     o.step.show();
-                } else {
+                } else if (!o.alwaysShow) {
                     o.step.hide();
                 }
-            }); 
+            });
           chartPreview.loadTemplate(template);
           //Need to update the product filter also
         });
@@ -426,13 +430,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                       csv: dataTable.toCSV(',', false),
                       itemDelimiter: ','
                     });
-                    var d = dataTable.toDataSeries();                   
+                    var d = dataTable.toDataSeries();
 
                    chartPreview.options.set('xAxis-categories', d.categories, 0);
 
                    chartPreview.loadSeries(d.series);
                 }
-            });          
+            });
         }
 
         ///////////////////////////////////////////////////////////////////////////
@@ -440,24 +444,27 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         wizbar.on('Step', function (step, count, thing) {
             if (thing.id === 'export') {
                 dataExp.init(
-                    chartPreview.export.json(), 
+                    chartPreview.export.json(),
                     chartPreview.export.html(properties.includeSVGInHTMLEmbedding),
                     chartPreview.export.svg(),
                     chartPreview
                 );
                 dataExp.buildPluginUI();
             } else if (thing.id === 'customize') {
-                chartCustomizer.init(chartPreview.options.customized, chartPreview.options.chart);                
+                chartCustomizer.init(chartPreview.options.customized, chartPreview.options.chart);
+                chartCustomizer.resize();
+            } else if (thing.id === 'stepData') {
+              dataTable.resize();
             }
         });
 
         //Route preview events
-        chartPreview.on('ChartChange', function (newData) { 
+        chartPreview.on('ChartChange', function (newData) {
             events.emit('ChartChange', newData);
 
         });
-        
-        chartPreview.on('ChartChangeLately', function (newData) { 
+
+        chartPreview.on('ChartChangeLately', function (newData) {
             events.emit('ChartChangeLately', newData);
         });
 
@@ -468,16 +475,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 } else {
                     chartPreview.data.csv(sample.dataset);
                 }
-                
+
                 chartPreview.options.set('subtitle-text', '');
                 chartPreview.options.set('title-text', sample.title);
             }
 
-            
+
         });
 
         ///////////////////////////////////////////////////////////////////////////
-            
+
         //Attach event listeners defined in the properties
         if (!highed.isBasic(properties.on)) {
             Object.keys(properties.on).forEach(function (event) {
@@ -512,6 +519,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             });
         });
 
+        chartPreview.on('LoadProjectData', function (csv) {
+          // Load the data into the data grid
+            dataTable.loadCSV({
+              csv: csv
+            }, true);
+        });
+
         applyFeatures();
 
         chartCustomizer.init(chartPreview.options.customized, chartPreview.options.chart);
@@ -538,19 +552,19 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         });
 
         if (properties.useContextMenu) {
-            mainToolbar.addIcon({ 
+            mainToolbar.addIcon({
                 css: 'fa-gear',
-                click: function(e) {
+                click: function (e) {
                     cmenu.show(e.clientX, e.clientY);
                 }
-            });            
+            });
         }
 
         updateToolbarIcon();
 
         highed.ready(function () {
             resize();
-            window.scrollTo(0, 1);          
+            window.scrollTo(0, 1);
         });
 
         if (!properties.useHeader) {
@@ -576,7 +590,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             getEmbeddableSVG: chartPreview.export.svg,
             /* Destroy the editor */
             destroy: destroy,
-            /** The main toolbar 
+            /** The main toolbar
              *  @memberof highed.Editor
              *  @type {highed.Toolbar}
              */
@@ -590,7 +604,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
              *  @memberof highed.Editor
              *  @type {highed.DataImporter}
              */
-            importer: dataImp            
+            importer: dataImp
         };
+
+        return exports;
     };
 })();
