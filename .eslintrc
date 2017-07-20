@@ -1,6 +1,3 @@
-extends:
-    "./tools/eslint-default-config.yml"
-
 rules:
     comma-dangle: [2, "never"]
     dot-location: [2, "property"]
