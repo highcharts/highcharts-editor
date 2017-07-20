@@ -1,4 +1,4 @@
-# 0.2.0-beta
+# 0.2.0-beta-preview
   * Added `complete` target to build script which bakes in all modules and advanced mode into one source file
   * Re-implemented advanced view: now has a smaller footprint, and bugs regarding arrays are fixed
   * Grid data importer is now the default (can be disabled by overriding `features` when instancing the editor)
