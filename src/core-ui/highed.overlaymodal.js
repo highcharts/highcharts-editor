@@ -134,12 +134,12 @@ highed.OverlayModal = function (contents, attributes) {
     });
 
     if (contents) {
-        if (highed.isStr(contents)) {
-            contents = highed.dom.cr('div', '', contents);
-        }
-        highed.dom.ap(container,
-            contents
-        );
+        // if (highed.isStr(contents)) {
+        //    contents = highed.dom.cr('div', '', contents);
+        // }
+        // highed.dom.ap(container,
+        //    contents
+        // );
     }
 
     hide(true);
