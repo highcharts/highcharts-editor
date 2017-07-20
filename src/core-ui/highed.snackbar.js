@@ -24,16 +24,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 (function () {
-    var container = highed.dom.cr('div', 'highed-snackbar'),
-        title = highed.dom.cr('span', 'snackbar-title', 'THIS IS A SNACKBAR'),
-        action = highed.dom.cr('span', 'snackbar-action', 'ACTION'),
+    var container = highed.dom.cr('div', 'highed-snackbar no-print'),
+        title = highed.dom.cr('span', 'snackbar-title', ''),
+        action = highed.dom.cr('span', 'snackbar-action', ''),
         closeNode = highed.dom.cr('span', 'highed-snackbar-close fa fa-times-circle', ''),
         timeout = false,
         callback = false
     ;
 
     highed.ready(function () {
-        highed.dom.ap(document.body, 
+        highed.dom.ap(document.body,
             highed.dom.ap(container,
                 title,
                 action,
@@ -57,7 +57,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     });
 
     ///////////////////////////////////////////////////////////////////////////
-    
+
     function hide() {
         timeout = window.setTimeout(function () {
             highed.dom.style(container, {
@@ -68,11 +68,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     ///////////////////////////////////////////////////////////////////////////
 
-    /**  Show a snackbar 
+    /**  Show a snackbar
      *   A snack bar is those info rectangles showing up on the bottom left.
      *
      *   @example
-     *   highed.snackBar('Hello world!'); 
+     *   highed.snackBar('Hello world!');
      *
      *   @param stitle {string} (optional) - the snackbar title
      *   @param saction {string} (optional) - the snackbar action text
@@ -82,9 +82,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         title.innerHTML = stitle.toUpperCase();
 
         window.clearTimeout(timeout);
-        
+
         if (saction) {
-            action.innerHTML = saction.toUpperCase();           
+            action.innerHTML = saction.toUpperCase();
         }
 
         if (callback) {
