@@ -40,15 +40,15 @@ function appendFilesFromProduct(prodName) {
 
         try {
           f = fs.readdirSync(path + folder);
-          
+
           if (f) {
               f.forEach(function (f) {
                   if (f.indexOf('.js') >= 0) {
-                      files.push(path + folder + '/' + f);       
+                      files.push(path + folder + '/' + f);
                   }
               });
           }
-          
+
         } catch (e) {
             console.log('error when including module', prodName, e);
         }
@@ -61,10 +61,15 @@ function appendFilesFromProduct(prodName) {
     return files;
 }
 
+let productFilenames = [];
+
 products.forEach(function (product) {
   gulp.task(product + '-module', function () {
-      return gulp.src(appendFilesFromProduct(product))
-                 .pipe(concat(name + '.module.' + product  + '.js'))       
+      let files = appendFilesFromProduct(product);
+      productFilenames = productFilenames.concat(files);
+
+      return gulp.src(files)
+                 .pipe(concat(name + '.module.' + product  + '.js'))
                  .pipe(gulp.dest(dest + '/modules/' + product))
                  .pipe(rename(name + '.module.' + product + '.min.js'))
                  .pipe(uglify())
@@ -78,6 +83,30 @@ products.forEach(function (product) {
 
 gulp.task('modules', function () {
   gulp.start(products.map(function (p) { return p + '-module'}));
+});
+
+gulp.task('bundled-modules', ['modules'], function () {
+  return gulp.src([dest + '/' + name + '.min.js'].concat(productFilenames))
+         .pipe(concat(name + '.with.modules.min.js'))
+         .pipe(uglify())
+         .pipe(header(license, packageJson))
+         .pipe(gulp.dest(dest))
+  ;
+});
+
+gulp.task('complete', ['default', 'bundled-modules', 'with-advanced'], function () {
+  return gulp.src([
+    dest + '/' + name + '.with.modules.min.js',
+    dest + '/' + name + '.advanced.js'
+  ])
+  .pipe(concat(name + '.complete.js'))
+  .pipe(uglify())
+  .pipe(header(license, packageJson))
+  .pipe(gulp.dest(dest))
+  //.pipe(gulp.src([dest + '/' + name + 'min.css']))
+  .pipe(zip(name + '.complete.min.zip'))
+  .pipe(gulp.dest(buildDest))
+  ;
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -206,13 +235,13 @@ gulp.task('less', function () {
     return gulp.src('less/theme.default.less')
                .pipe(less({
                     paths: ['less/'],
-                    compress: true 
+                    compress: true
                }))
                .pipe(rename(name + '.min.css'))
                .pipe(gulp.dest(dest))
                .pipe(gulp.dest(electronDest))
                .pipe(gulp.dest(wpPluginDest))
-    ; 
+    ;
 });
 
 gulp.task('lint', function () {
@@ -241,8 +270,8 @@ gulp.task('move-standalone', function () {
 
 gulp.task('minify', function () {
     return gulp.src(sources)
-               .pipe(concat(name + '.js'))       
-               .pipe(gulp.dest(dest))           
+               .pipe(concat(name + '.js'))
+               .pipe(gulp.dest(dest))
                .pipe(rename(name + '.min.js'))
                .pipe(uglify())
                .pipe(header(license, packageJson))
@@ -255,7 +284,7 @@ gulp.task('minify', function () {
 gulp.task('minify-advanced', ['bake-advanced', 'less'], function () {
     return gulp.src('./generated_src/highed.meta.options.advanced.js')
                .pipe(concat(name + '.advanced.js'))
-               .pipe(gulp.dest(dest))               
+               .pipe(gulp.dest(dest))
                .pipe(rename(name + '.advanced.min.js'))
                .pipe(uglify())
                .pipe(header(license, packageJson))
@@ -308,7 +337,7 @@ gulp.task('build-electron', ['less', 'minify', 'update-deps'], function () {
                     }
                }))
                .pipe(gulp.dest(''))
-  
+
     ;
 });
 
@@ -336,5 +365,5 @@ gulp.task('with-advanced', function () {
 });
 
 gulp.task('all', function () {
-  gulp.start('default', 'electron', 'with-advanced', 'localization');
+  gulp.start('default', 'electron', 'with-advanced', 'localization', 'complete');
 });
