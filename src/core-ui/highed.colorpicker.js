@@ -77,7 +77,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         /* Draws the color picker itself */
         function drawPicker() {
             //There's 14 hues per. color, 19 colors in total.
-            var tx = Math.floor(pickerSize.w / 14),
+            var x,
+                y,
+                tx = Math.floor(pickerSize.w / 14),
                 ty = Math.floor(pickerSize.h / 19),             
                 col = -1
             ; 
@@ -89,8 +91,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             ctx.fillStyle = '#FFF';
             ctx.fillRect(0, 0, pickerSize.w, pickerSize.h);
 
-            for (var y = 0; y < 19; y++) {
-                for (var x = 0; x < 15; x++) {
+            for (y = 0; y < 19; y++) {
+                for (x = 0; x < 15; x++) {
                     ctx.fillStyle = highed.meta.colors[++col];//highed.meta.colors[x + y * tx];
                     ctx.fillRect(x * tx, y * ty, tx, ty);
                 }
@@ -110,7 +112,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             dbinder();
         }
 
-        function rgbToHex(r, g, b){
+        function rgbToHex(r, g, b) {
             var res = '#' + ((r << 16) | (g << 8) | b).toString(16);
             if (res.length === 5) {
                 return res.replace('#', '#00');
