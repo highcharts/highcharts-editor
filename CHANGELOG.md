@@ -17,14 +17,12 @@
 
 ## NOTES
 
-  *There are several API changes in this version which may impact your application if you're upgrading.*
-
-  These are:
-    * The template manager now follow the same pattern as the other managers (e.g. `highed.templates.add`)
+  The template manager now follow the same pattern as the other managers (e.g. `highed.templates.add`).
 
   *There's also changes to the way Highstock/Highcharts is loaded*
-  If you need support for Highstock, Highcharts, and/or Highmaps, this now has to be explicitly included using the modules `highcharts-editor.nodule.highstock|highmaps.js`.
-
+  If you need support for Highstock, Highcharts, and/or Highmaps, this now has to be explicitly included using the modules `highcharts-editor.module.highstock|highcharts.js`.
+  Alternatively, build with the `complete` target which bundles all available modules as well as advanced mode into one source script.
+  
 # 0.1.3-beta, January 24th 2017
   * Fixed an issue with font sizes in font widget
   * Fixed an issue with embedding charts in Wordpress
