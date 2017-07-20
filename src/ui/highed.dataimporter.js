@@ -135,9 +135,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             if (!properties.options.csv) {
                 csvTab.hide();
             }
-            if (!properties.options.json) {
+
+            //Always disable json options..
+            if (1 === 1 || !properties.options.json) {
                 jsonTab.hide();
             }
+
             if (Object.keys(properties.plugins).length === 0 || !properties.options.plugins) {
                 webTab.hide();
             }
@@ -254,11 +257,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         function buildSampleTab() {
             samplesTab.innerHTML = '';
 
-            if (!highed.isNull(highed.meta.sampleData)) {
-                Object.keys(highed.meta.sampleData).forEach(function (name) {
-                    var data = highed.meta.sampleData[name].join('\n'),
+                highed.samples.each(function (sample) {
+                    var data = sample.dataset.join('\n'),
 
-                        loadBtn = highed.dom.cr('button', 'highed-box-size highed-imp-button', name)
+                        loadBtn = highed.dom.cr('button', 'highed-box-size highed-imp-button', sample.title)
                     ;
 
                     highed.dom.style(loadBtn, {width: '99%'});
@@ -276,7 +278,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         highed.dom.cr('br')
                     );
                 });
-            }
         }
 
         function emitCSVImport(csv) {
