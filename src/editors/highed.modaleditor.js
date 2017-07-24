@@ -25,14 +25,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /** A modal editor
  * The modal editor connects to a "summoner", which is the DOM node that should
- * spawn the editor. This arg is however optional, and if not present, 
+ * spawn the editor. This arg is however optional, and if not present,
  * `show()` should be called instead when wanting to display it.
  *
- * The contained editor can either be a full editor, or a simple editor. 
+ * The contained editor can either be a full editor, or a simple editor.
  *
  * @example
  * highed.ModalEditor('icon', {allowDone: true}, function (html) {
- *    doSomethingWithTheExportedHTML(html);   
+ *    doSomethingWithTheExportedHTML(html);
  * });
  *
  * @constructor
@@ -48,7 +48,7 @@ highed.ModalEditor = function (summoner, attributes, fn) {
     var properties = highed.merge({
             type: 'full',
             allowDone: false
-        }, attributes), 
+        }, attributes),
         modal = highed.OverlayModal(false, {
             width: '95%',
             height: '95%',
@@ -77,7 +77,7 @@ highed.ModalEditor = function (summoner, attributes, fn) {
             sumFn();
         }
 
-        //Show the modal when clicking the summoner 
+        //Show the modal when clicking the summoner
         sumFn = highed.dom.on(highed.dom.get(nn), 'click', modal.show);
     }
 
@@ -90,13 +90,13 @@ highed.ModalEditor = function (summoner, attributes, fn) {
 
     //Resize the editor when showing the modal
     modal.on('Show', editor.resize);
-    
+
     highed.dom.on(doneEditing, 'click', doDone);
 
     attachToSummoner(summoner);
 
     if (properties.allowDone) {
-        highed.dom.ap(editor.toolbar.center, doneEditing);           
+        highed.dom.ap(editor.toolbar.center, doneEditing);
     }
 
     editor.on('Done', doDone);
@@ -105,9 +105,10 @@ highed.ModalEditor = function (summoner, attributes, fn) {
     ///////////////////////////////////////////////////////////////////////////
 
     return {
+        editor: editor,
         show: modal.show,
         hide: modal.hide,
         on: editor.on,
-        attachToSummoner: attachToSummoner       
+        attachToSummoner: attachToSummoner
     };
 };
