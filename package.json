@@ -28,6 +28,6 @@
     "express-less": "0.1.0",
     "express-handlebars": "*",
     "colors": "1.1.2",
-    "mkdirp": "-1.5.1"
+    "mkdirp": "0.5.1"
   }
 }
