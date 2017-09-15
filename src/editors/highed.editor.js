@@ -416,7 +416,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         chartCustomizer.on('PropertySetChange', chartPreview.options.setAll);
         dataImp.on('ImportCSV', chartPreview.data.csv);
         dataImp.on('ImportJSON', chartPreview.data.json);
-        dataImp.on('ImportChartSettings', chartPreview.data.settings);
+        dataImp.on('ImportChartSettings', function (data) {
+          chartPreview.data.settings(data);
+        });
+
+        dataTable.on('ImportChartSettings', chartPreview.data.settings);
 
         chartPreview.on('RequestEdit', function (event, x, y) {
             chartCustomizer.focus(event, x, y);

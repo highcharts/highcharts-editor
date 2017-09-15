@@ -78,6 +78,21 @@ highed.DefaultContextMenu = function (chartPreview) {
             },
             '-',
             {
+                title: 'Save to Cloud',
+                icon: 'upload',
+                click: function () {
+                  highed.cloud.save(chartPreview);
+                }
+            },
+            {
+                title: highed.getLocalizedStr('loadCloud'),
+                icon: 'cloud',
+                click: function () {
+                    highed.cloud.showUI(chartPreview);
+                }
+            },
+            '-',
+            {
                 title: highed.getLocalizedStr('exportPNG'),
                 icon: 'file-image-o',
                 click: function () {

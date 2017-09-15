@@ -1018,6 +1018,12 @@ highed.DataTable = function (parent, attributes) {
       loadCSV(data);
     });
 
+    importer.on('ImportChartSettings', function (settings, format) {
+      // Do something with the data here
+      events.emit('ImportChartSettings', settings, format);
+      importModal.hide();
+    });
+
     ////////////////////////////////////////////////////////////////////////////
 
     table.cellPadding = 0;

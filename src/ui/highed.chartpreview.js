@@ -656,7 +656,7 @@ highed.ChartPreview = function (parent, attributes) {
                     "http://code.highcharts.com/modules/solid-gauge.js": 1
                 },
                 cdnIncludesArr = [],
-                title = chart.options.titles ? chart.options.titles.text || 'untitled chart' : 'untitled chart'
+                title = chart.options && chart.options.title ? chart.options.title.text || 'untitled chart' : 'untitled chart'
             ;
 
             id = id || '';
