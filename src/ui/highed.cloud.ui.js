@@ -88,6 +88,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   highed.dom.on(saveNewBtn, 'click', function () {
 
     saveNewBtn.disabled = true;
+    saveNewBtn.innerHTML = 'SAVING TO CLOUD...';
 
     highed.cloud.saveNewChart(
       activeTeam,
@@ -95,9 +96,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       JSON.stringify(chartPreview.toProject()),
       function (data) {
         saveNewBtn.disabled = false;
-        if (!data.error && data.ids.length > 0) {
-          activeChart = data.ids[0];
+        if (!data.error && data) {
+          activeChart = data;
           saveNewModal.hide();
+          saveNewBtn.innerHTML = 'SAVE TO CLOUD';
           highed.snackBar('SAVED TO CLOUD');
         } else {
           highed.snackBar('Error saving to cloud');
