@@ -35,6 +35,8 @@
     "./src/meta/highed.meta.options.extended.js",
     "./src/meta/highed.meta.colors.js",
     "./src/meta/highed.meta.fonts.js",
+
+    "./gen_src/highed.meta.options.advanced.js",
         
     "./src/ui/highed.chart.template.selector.js",
     "./src/ui/highed.defctx.js",

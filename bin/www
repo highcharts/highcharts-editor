@@ -92,6 +92,7 @@ app.use('/css', expressLess(__dirname + '/../less', {
 	debug: true
 }));
 
+app.use('/gen_src', express.static(__dirname + '/../generated_src'));
 app.use('/src', express.static(__dirname + '/../src'));
 app.use('/plugins', express.static(__dirname + '/../plugins'));
 app.use('/integrations', express.static(__dirname + '/../integrations'));
