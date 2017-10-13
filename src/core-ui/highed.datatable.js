@@ -24,17 +24,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 function parseCSV(inData, delimiter) {
-    var isStr = Highcharts.isString,
-        isArr = Highcharts.isArray,
-        isNum = Highcharts.isNum,
-        each = Highcharts.each,
+  var isStr = highed.isString,
+        isArr = highed.isArray,
+        isNum = highed.isNum,
         csv = inData || '',
+        result = [],
         options = {
-            delimiter: delimiter || ',',
-            startRow: 0,
-            endRow: Number.MAX_VALUE,
-            startColumn: 0,
-            endColumn: Number.MAX_VALUE
+            delimiter: delimiter
         },
         potentialDelimiters = {
             ',': true,
@@ -44,23 +40,57 @@ function parseCSV(inData, delimiter) {
         rows = (csv || '').replace(/\r\n/g, '\n').split('\n')
     ;
 
-    /*
-        Auto detecting delimiters
-            - If we meet a quoted string, the next symbol afterwards
-              (that's not \s, \t) is the delimiter
-            - If we meet a date, the next symbol afterwards is the delimiter
+    // If there's no delimiter, look at the first few rows to guess it.
 
-        Date formats
-            - If we meet a column with date formats, check all of them to see if
-              one of the potential months crossing 12. If it does, we now know the
-              format
+    if (!options.delimiter) {
+      rows.some(function (row, i) {
+          if (i > 10) return true;
 
-        It would make things easier to guess the delimiter before
-        doing the actual parsing.
+          var inStr = false,
+              c,
+              cn,
+              cl,
+              token = ''
+          ;
 
-    */
+          for (var j = 0; j < row.length; j++) {
+            c = row[j];
+            cn = row[j + 1];
+            cl = row[j - 1];
 
-    each(rows, function (row, rowNumber) {
+            if (c === '"') {
+              if (inStr) {
+                if (cl !== '"' && cn !== '"') {
+                  // The next non-blank character is likely the delimiter.
+
+                  while (cn === ' ') {
+                    cn = row[++j];
+                  }
+
+                  if (potentialDelimiters[cn]) {
+                    options.delimiter = cn;
+                    return true;
+                  }
+
+                  inStr = false;
+                }
+              } else {
+                inStr = true;
+              }
+            } else if (potentialDelimiters[c]) {
+              if (!isNaN(Date.parse(token))) {
+                // Yup, likely the right delimiter
+                options.delimiter = c;
+                token = '';
+              }
+            } else {
+              token += c;
+            }
+          }
+      });
+    }
+
+    rows.forEach(function (row, rowNumber) {
         var cols = [],
             inStr = false,
             i = 0,
@@ -75,7 +105,7 @@ function parseCSV(inData, delimiter) {
         function pushToken() {
             if (isNum(token)) {
                 token = parseFloat(token);
-            } else if (date.parse(token) !== NaN) {
+            } else if (Date.parse(token) !== NaN) {
                 //We can look at the next token now and update the delimiter
 
             }
@@ -86,45 +116,38 @@ function parseCSV(inData, delimiter) {
 
         for (i = 0; i < row.length; i++) {
             c = row[i];
-            cn = row[i + 1]
+            cn = row[i + 1];
+            cp = row[i - 1];
 
             if (c === '"') {
                 if (inStr) {
-                    //Next symbol that's a potential delimiter
-                    //is THE delimiter if the CSV is well-formed
-                    //We only do this on the first column.
-                    if (!cols.length && rowNumber === 0) {
-                        j = i;
-                        while (!potentialDelimiters[guessedDel]) {
-                            guessedDel = row[++j];
-                        }
-
-                        if (guessedDel !== options.delimiter) {
-                            options.delimiter = guessedDel;
-                        }
-                    }
-
                     pushToken();
                 } else {
-                    inStr = true;
+                    inStr = false;
                 }
 
             //Everything is allowed inside quotes
             } else if (inStr) {
                 token += c;
-
             //Check if we're done reading a token
             } else if (c === options.delimiter) {
                 pushToken();
 
             //Append to token
-            } else if (c !== ' ') {
+            } else {
                 token += c;
             }
 
-            cp = c;
+            // Push if this was the last character
+            if (i === row.length - 1) {
+              pushToken();
+            }
         }
+
+        result.push(cols);
     });
+
+    return result;
 }
 
 
@@ -150,6 +173,7 @@ highed.DataTable = function (parent, attributes) {
         checkAll = highed.dom.cr('input'),
         mainInput = highed.dom.cr('input', 'highed-dtable-input'),
         mainInputCb = [],
+        rawCSV = false,
         mainInputCloseCb = false,
         toolbar,
         importModal = highed.OverlayModal(false, {
@@ -196,6 +220,53 @@ highed.DataTable = function (parent, attributes) {
     highed.dom.on(mainInput, 'click', function (e) {
         return highed.dom.nodefault(e);
     });
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    // Handle drag 'n drop of files
+
+    function handleFileUpload(f) {
+      if (f.type !== 'text/csv') {
+        return highed.snackBar('The file is not a valid CSV file');
+      }
+
+      console.log('Uploading file', f);
+
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+        loadCSV({ csv: e.target.result });
+      };
+
+      reader.readAsText(f);
+
+    }
+
+    frame.ondrop = function (e) {
+      e.preventDefault();
+
+      var d = e.dataTransfer;
+      var f;
+      var i;
+
+      if (d.items) {
+        for (i = 0; i < d.items.length; i++) {
+          f = d.items[i];
+          if (f.kind === 'file') {
+            handleFileUpload(f.getAsFile());
+          }
+        }
+      } else {
+        for (i = 0; i < d.files.length; i++) {
+          f = d.files[i];
+          handleFileUpload(f);
+        }
+      }
+    };
+
+    frame.ondragover = function (e) {
+      e.preventDefault();
+    };
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -973,6 +1044,8 @@ highed.DataTable = function (parent, attributes) {
     }
 
     function loadCSV(data, surpressEvents) {
+        var rows;
+
         highed.snackBar(highed.L('dgDataImporting'));
         importModal.hide();
 
@@ -980,15 +1053,15 @@ highed.DataTable = function (parent, attributes) {
           surpressChangeEvents = true;
         }
 
+        rawCSV = data.csv;
+
         if (data && data.csv) {
             clear();
 
-            //Super primitive parser - we need a better one.
-            data.csv = data.csv.split('\n');
-            data.csv.forEach(function (r, i) {
-                var cols = r.split(','),
-                    row
-                ;
+            rows = parseCSV(data.csv);
+
+            rows.forEach(function (cols, i) {
+                var row;
 
                 if (i) {
                     row = Row();
@@ -1005,6 +1078,7 @@ highed.DataTable = function (parent, attributes) {
 
             highed.dom.ap(colgroup, highed.dom.cr('col'));
         }
+
         highed.snackBar(highed.L('dgDataImported'));
         resize();
 
@@ -1051,6 +1125,11 @@ highed.DataTable = function (parent, attributes) {
             )
         )
     );
+
+
+    function getRawCSV() {
+      return rawCSV;
+    }
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -1147,6 +1226,7 @@ highed.DataTable = function (parent, attributes) {
         insCol: insertCol,
         delCol: delCol,
         loadCSV: loadCSV,
+        getRawCSV: getRawCSV,
         toData: toData,
         toCSV: toCSV,
         toDataSeries: toDataSeries,
