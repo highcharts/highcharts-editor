@@ -24,7 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 function parseCSV(inData, delimiter) {
-  var isStr = highed.isString,
+  var isStr = highed.isStr,
         isArr = highed.isArray,
         isNum = highed.isNum,
         csv = inData || '',
@@ -36,6 +36,10 @@ function parseCSV(inData, delimiter) {
             ',': true,
             ';': true
         },
+        delimiterCounts = {
+          ',': 0,
+          ';': 0
+        }
         //The only thing CSV formats have in common..
         rows = (csv || '').replace(/\r\n/g, '\n').split('\n')
     ;
@@ -68,7 +72,7 @@ function parseCSV(inData, delimiter) {
                   }
 
                   if (potentialDelimiters[cn]) {
-                    options.delimiter = cn;
+                    delimiterCounts[c]++;
                     return true;
                   }
 
@@ -80,14 +84,23 @@ function parseCSV(inData, delimiter) {
             } else if (potentialDelimiters[c]) {
               if (!isNaN(Date.parse(token))) {
                 // Yup, likely the right delimiter
-                options.delimiter = c;
                 token = '';
+                delimiterCounts[c]++;
+              } else if (!isNum(token) && token.length) {
+                token = '';
+                delimiterCounts[c]++;
               }
             } else {
               token += c;
             }
           }
       });
+
+      if (delimiterCounts[','] > delimiterCounts[';']) {
+        options.delimiter = ',';
+      } else {
+        options.delimiter = ';';
+      }
     }
 
     rows.forEach(function (row, rowNumber) {
@@ -105,9 +118,6 @@ function parseCSV(inData, delimiter) {
         function pushToken() {
             if (isNum(token)) {
                 token = parseFloat(token);
-            } else if (Date.parse(token) !== NaN) {
-                //We can look at the next token now and update the delimiter
-
             }
 
             cols.push(token);
@@ -319,7 +329,7 @@ highed.DataTable = function (parent, attributes) {
     ////////////////////////////////////////////////////////////////////////////
 
     function Column(row, colNumber, val) {
-        var value = val || '',
+        var value = typeof val === 'undefined' ? '' : val,
             col = highed.dom.cr('td'),
             colVal = highed.dom.cr('div', 'highed-dtable-col-val', value),
             input = highed.dom.cr('input'),
