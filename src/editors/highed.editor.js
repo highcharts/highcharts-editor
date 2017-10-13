@@ -429,16 +429,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         if (properties.features.data) {
             dataTable.on('Change', function (headers, data) {
                 if (data.length) {
-
                     return chartPreview.data.csv({
-                      csv: dataTable.toCSV(',', false),
-                      itemDelimiter: ','
+                      csv: dataTable.toCSV(';', true)
                     });
-                    var d = dataTable.toDataSeries();
-
-                   chartPreview.options.set('xAxis-categories', d.categories, 0);
-
-                   chartPreview.loadSeries(d.series);
                 }
             });
         }
