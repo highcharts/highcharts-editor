@@ -59,8 +59,35 @@ highed.ChartPreview = function (parent, attributes) {
         flatOptions = {},
         templateOptions = {},
         chartOptions = {},
-
+        themeOptions = {},
+        themeMeta = {},
         exports = {},
+        customCodeDefault = [
+
+          '/*',
+          '// Sample of extending options:',
+          'Highcharts.extend(options, Highcharts.merge(options, {',
+          '    chart: {',
+          '        backgroundColor: "#bada55"',
+          '    },',
+          '    plotOptions: {',
+          '        series: {',
+          '            cursor: "pointer",',
+          '            events: {',
+          '                click: function(event) {',
+          '                    alert(this.name + " clicked\\n" +',
+          '                          "Alt: " + event.altKey + "\\n" +',
+          '                          "Control: " + event.ctrlKey + "\\n" +',
+          '                          "Shift: " + event.shiftKey + "\\n");',
+          '                }',
+          '            }',
+          '        }',
+          '    }',
+          '}));',
+          '*/'
+        ].join('\n'),
+        customCode = '',
+        customCodeStr = '',
 
         throttleTimeout = false,
         chart = false,
@@ -95,6 +122,16 @@ highed.ChartPreview = function (parent, attributes) {
                 return false;
             });
         });
+    }
+
+    function stringifyFn(obj, tabs) {
+      return JSON.stringify(obj, function (key, value) {
+        if (highed.isFn(value)) {
+          return value.toString();
+        }
+
+        return value;
+      }, tabs);
     }
 
     /* Get the chart if it's initied */
@@ -206,7 +243,42 @@ highed.ChartPreview = function (parent, attributes) {
         });
     }
 
-    function updateAggregated() {
+    /**
+     * Assign a theme to the chart
+     * theme can either be a straight-up option set, or a theme object with
+     * ID and so on.
+     */
+    function assignTheme(theme) {
+      if (highed.isStr(theme)) {
+        return assignTheme(JSON.parse(theme));
+      }
+
+      if (theme && theme.options && theme.id) {
+
+        // Assume that this uses the new format
+        themeMeta = {
+          id: theme.id,
+          name: theme.name || theme.id
+        };
+
+        themeOptions = highed.merge({}, theme.options);
+
+      } else {
+
+        themeMeta = {
+          id: 1,
+          name: 'Untitled Theme'
+        };
+
+        themeOptions = highed.merge({}, theme);
+      }
+
+      updateAggregated();
+      init(aggregatedOptions);
+      emitChange();
+    }
+
+    function updateAggregated(noCustomCode) {
        // customizedOptions.plotOptions = customizedOptions.plotOptions || {};
        // customizedOptions.plotOptions.series = customizedOptions.plotOptions.series || [];
       //  customizedOptions.series = customizedOptions.series || [];
@@ -237,7 +309,16 @@ highed.ChartPreview = function (parent, attributes) {
         // }
 
         //Merge fest
+
         highed.clearObj(aggregatedOptions);
+
+        // Apply theme first
+        if (themeOptions && Object.keys(themeOptions).length) {
+          highed.merge(aggregatedOptions,
+            highed.merge(highed.merge({}, themeOptions)
+          ));
+        }
+
         highed.merge(aggregatedOptions,
             highed.merge(highed.merge({}, templateOptions),
             customizedOptions
@@ -290,6 +371,11 @@ highed.ChartPreview = function (parent, attributes) {
         }
 
         highed.merge(aggregatedOptions, highed.option('stickyChartProperties'));
+
+        // Finally, do custom code
+        if (!noCustomCode && highed.isFn(customCode)) {
+          customCode(aggregatedOptions);
+        }
     }
 
     /** Load a template from the meta
@@ -347,7 +433,7 @@ highed.ChartPreview = function (parent, attributes) {
             if (highed.isStr(data)) {
                 data = {
                     csv: data,
-                    itemDelimiter: ',',
+                    // itemDelimiter: ';',
                     firstRowAsNames: true
                 };
             } else {
@@ -406,6 +492,14 @@ highed.ChartPreview = function (parent, attributes) {
                 });
             }
 
+            if (projectData.theme) {
+              assignTheme(projectData.theme);
+            }
+
+            setCustomCode(projectData.customCode, function (err) {
+              highed.snackBar('Error in custom code: ' + err);
+            });
+
             if (projectData.settings && projectData.settings.dataProvider) {
               if (projectData.settings.dataProvider.csv) {
                 loadCSVData({
@@ -453,6 +547,12 @@ highed.ChartPreview = function (parent, attributes) {
         return {
             template: templateOptions,
             options: customizedOptions,
+            customCode: highed.isFn(customCode) ? customCodeStr : '',
+            theme: {
+              id: themeMeta.id,
+              name: themeMeta.name,
+              options: themeOptions
+            },
             settings: {
               constructor: constr,
               dataProvider: {
@@ -461,6 +561,13 @@ highed.ChartPreview = function (parent, attributes) {
             }
             //editorOptions: highed.serializeEditorOptions()
         };
+    }
+
+    /**
+     * Export project as a JSON string
+     */
+    function toProjectStr(tabs) {
+      return stringifyFn(toProject(), tabs);
     }
 
     /** Load JSON data
@@ -609,10 +716,10 @@ highed.ChartPreview = function (parent, attributes) {
      *  @name export.json
      *  @returns {object} - the chart object
      */
-    function getEmbeddableJSON() {
+    function getEmbeddableJSON(noCustomCode) {
         var r;
 
-        updateAggregated();
+        updateAggregated(noCustomCode);
         r = highed.merge({}, aggregatedOptions);
 
         //This should be part of the series
@@ -622,6 +729,13 @@ highed.ChartPreview = function (parent, attributes) {
         }
 
         return r;
+    }
+
+    /**
+     * Convert the chart to a string
+     */
+    function toString(tabs) {
+      return stringifyFn(getEmbeddableJSON(), tabs);
     }
 
     /** Get embeddable SVG
@@ -711,9 +825,9 @@ highed.ChartPreview = function (parent, attributes) {
                     'if(typeof window["Highcharts"] !== "undefined"){',//' && Highcharts.Data ? ',
 
                         !customizedOptions.lang ? '' : 'Highcharts.setOptions({lang:' + JSON.stringify(customizedOptions.lang) + '});',
-
-                        'new Highcharts.' + constr + '("', id, '", ',
-                            JSON.stringify(getEmbeddableJSON()), ');',
+                        'var options=', stringifyFn(getEmbeddableJSON(true)), ';',
+                        (highed.isFn(customCode) ? customCodeStr : ''),
+                        'new Highcharts.' + constr + '("', id, '", options);',
                     '}else ',
                     'window.setTimeout(cl, 20);',
                 '}',
@@ -723,6 +837,9 @@ highed.ChartPreview = function (parent, attributes) {
             ].join('') + '\n';
         });
     }
+
+
+
 
     /** Get embeddable HTML
      *  @memberof highed.ChartPreview
@@ -794,6 +911,8 @@ highed.ChartPreview = function (parent, attributes) {
         highed.clearObj(customizedOptions);
         highed.clearObj(flatOptions);
 
+        customCode = false;
+
         highed.merge(customizedOptions, properties.defaultChartOptions);
 
         updateAggregated();
@@ -832,6 +951,43 @@ highed.ChartPreview = function (parent, attributes) {
         return constr;
     }
 
+    function getTheme() {
+      return {
+        id: themeMeta.id,
+        name: themeMeta.name,
+        options: themeOptions
+      };
+    }
+
+    function getCustomCode() {
+      return highed.isFn(customCode) ?
+        customCodeStr :
+        customCode || customCodeDefault;
+    }
+
+    function setCustomCode(newCode, errFn) {
+      var fn;
+
+      if (!newCode) {
+        customCode = false;
+      }
+
+      try {
+        // eval('(var options = {};' + newCode + ')');
+
+        customCode = new Function('options', newCode);
+        customCodeStr = newCode;
+      } catch (e) {
+        customCode = newCode;
+        return highed.isFn(errFn) && errFn(e);
+      }
+
+      updateAggregated();
+      init(aggregatedOptions);
+      emitChange();
+
+    }
+
     ///////////////////////////////////////////////////////////////////////////
 
     //Init the initial chart
@@ -845,6 +1001,8 @@ highed.ChartPreview = function (parent, attributes) {
     ///////////////////////////////////////////////////////////////////////////
 
     exports = {
+        assignTheme: assignTheme,
+        getTheme: getTheme,
         getConstructor: getConstructor,
         on: events.on,
         expand: expand,
@@ -856,8 +1014,14 @@ highed.ChartPreview = function (parent, attributes) {
         loadSeries: loadSeriesData,
         resize: resize,
 
+        setCustomCode: setCustomCode,
+        getCustomCode: getCustomCode,
+
         toProject: toProject,
+        toProjectStr: toProjectStr,
         loadProject: loadProject,
+
+        toString: toString,
 
         options: {
             set: set,

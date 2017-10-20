@@ -13,13 +13,13 @@ highed.plugins.export.install('beautify-js', {
         'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/codemirror.min.js',
         'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/codemirror.min.css',
         'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/theme/neo.min.css',
-        'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/mode/javascript/javascript.min.js' 
-    ],        
+        'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.18.2/mode/javascript/javascript.min.js'
+    ],
     //Set this to true to trigger a download when doing the export.
     //Useful for cases where the export is completely clientside.
     downloadOutput: true,
     //Set the title of the export button - default is "Export".
-    exportTitle: 'Download',   
+    exportTitle: 'Download',
 
     //Options can be fetched in the hooks using this.options.<name of option>.
     options: {
@@ -44,15 +44,20 @@ highed.plugins.export.install('beautify-js', {
         });
 
         this.update = function (chart) {
-            var json = chart.export.json();
+            var json = chart.export.json(true),
+                custom = chart.getCustomCode()
+            ;
 
             if (json.chart && json.chart.renderTo) {
                 delete json.chart.renderTo;
             }
 
             this.cm.setValue(([
-                'var chart = new Highcharts.' + chart.getConstructor() + '(', this.options.node ,', ',
-                JSON.stringify(json, undefined, '    '),
+                'var options = ', JSON.stringify(json, false, '    '), ';\n',
+                custom ? custom + '\n' : '',
+                'var chart = new Highcharts.' + chart.getConstructor() + '(',
+                this.options.node,
+                ', options',
                 ');'
             ].join('')));
             this.cm.refresh();
@@ -60,7 +65,7 @@ highed.plugins.export.install('beautify-js', {
         };
 
         this.update.call(this, chart);
-    },                  
+    },
     //Called when showing the UI. Also called when the options change.
     show: function (chart) {
         this.update.call(this, chart);

@@ -235,7 +235,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         Object.keys(stepPlugins).forEach(function (key) {
             var plugin = stepPlugins[key],
-                step = wizbar.addStep({ title: plugin.title })
+                step = wizbar.addStep({
+                  title: plugin.title,
+                  onshow: function () {
+                    if (plugin.show) {
+                      plugin.show(chartPreview, step.body);
+                    }
+                  }
+                })
             ;
 
             if (!plugin.alwaysShow) {

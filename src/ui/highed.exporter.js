@@ -52,7 +52,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     };
 
     /** Export widget
-     *  
+     *
      *  @example
      *  var exporter = highed.Exporter(document.body),
      *      preview = highed.ChartPreview(document.body)
@@ -72,7 +72,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             properties = highed.merge({
                 options: 'svg html json plugins',
                 plugins: 'beautify-js beautify-json'
-            }, attributes),    
+            }, attributes),
 
             tctrl = highed.TabControl(parent, false, true),
             htmlTab = tctrl.createTab({title: 'Export HTML'}),
@@ -101,7 +101,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         properties.options = highed.arrToObj(properties.options);
         properties.plugins = highed.arrToObj(properties.plugins);
 
-        ///////////////////////////////////////////////////////////////////////////        
+        ///////////////////////////////////////////////////////////////////////////
 
         //Hides unwanted stuff
         function updateOptions() {
@@ -140,26 +140,26 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     return false;
                 }
 
-                function buildBody() {                      
+                function buildBody() {
                     var container = highed.dom.cr('div', 'highed-plugin-details'),
                         executeBtn = highed.dom.cr('button', 'highed-imp-button', options.exportTitle || 'Export'),
                         dynamicOptionsContainer = highed.dom.cr('table', 'highed-customizer-table'),
                         additionalUI = highed.dom.cr('div'),
                         dynamicOptions = pluginData[name].options
                     ;
-                    
-                   // pluginSplitter.right.innerHTML = '';            
+
+                   // pluginSplitter.right.innerHTML = '';
 
                     Object.keys(options.options || {}).forEach(function (pname) {
                         dynamicOptions[pname] = options.options[pname].default;
 
                         highed.dom.ap(dynamicOptionsContainer,
                             highed.InspectorField(
-                                options.options[pname].type, 
-                                options.options[pname].default, 
+                                options.options[pname].type,
+                                options.options[pname].default,
                                 {
                                     title: options.options[pname].label
-                                }, 
+                                },
                                 function (nval) {
                                     dynamicOptions[pname] = nval;
 
@@ -196,7 +196,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         Object.keys(options.options || {}).length ? dynamicOptionsContainer : false,
                         additionalUI,
                         options.export ? executeBtn : false
-                    );              
+                    );
 
                     if (highed.isFn(options.create)) {
                         options.create.apply(pluginData[name], [currentChartPreview, additionalUI]);
@@ -219,14 +219,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 }
 
                 buildBody();
-                
+
                 pluginList.addItem({
                     id: name,
                     title: options.title || name,
                     click: activePlugins[name].show
                 });
 
-            });            
+            });
         }
 
         /** Set the export boxes based on chart JSON data (chart.options)
@@ -247,7 +247,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             jsonValue.value = JSON.stringify(chartData);
             exportJSON.href = 'data:application/octet-stream,' + jsonValue.value;
-        
+
             htmlValue.value = chartHTML;
             exportHTML.href = 'data:application/octet-stream,' + encodeURIComponent(chartHTML);
 
@@ -271,12 +271,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             }
 
             hasBeenVisible = true;
-        }   
+        }
 
         /** Force a resize of the UI
          *  @memberof highed.Exporter
          *  @param w {number} - the new width
-         *  @param h {number} - the new height 
+         *  @param h {number} - the new height
          */
         function resize(w, h) {
             var bsize;

@@ -135,6 +135,12 @@ highed.WizardStepper = function (bodyParent, indicatorParent, attributes) {
 
                 //highed.dom.ap(currentIndicator, currentBubble);
                 currentBubble.innerHTML = stepexports.number + '/' + stepCount;
+
+
+                if (step.onshow) {
+                  step.onshow();
+                }
+
             }
 
             stepexports.bubble.innerHTML = stepexports.number;
@@ -185,6 +191,11 @@ highed.WizardStepper = function (bodyParent, indicatorParent, attributes) {
                 stepCount++;
                 stepexports.visible = true;
                 updateBarCSS();
+
+                if (step.onshow) {
+                  step.onshow();
+                }
+
             }
         };
 

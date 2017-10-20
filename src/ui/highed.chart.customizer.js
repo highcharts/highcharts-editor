@@ -44,54 +44,124 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.ChartCustomizer = function (parent, attributes, chartPreview) {
     var properties = highed.merge({
             noAdvanced: false,
+            noCustomCode: false,
             availableSettings: []
         }, attributes),
+
         events = highed.events(),
         tabs = highed.TabControl(parent, true),
+
         simpleTab = tabs.createTab({
           title: highed.getLocalizedStr('customizeSimple')
         }),
+
         advancedTab = tabs.createTab({
           title: highed.getLocalizedStr('customizeAdvanced')
         }),
-        
+
+        customCodeTab = tabs.createTab({
+          title: highed.getLocalizedStr('customizeCustomCode')
+        }),
+
         splitter = highed.HSplitter(simpleTab.body, {
           leftWidth: 30, responsive: true
         }),
+
         list = highed.List(splitter.left, true),
         body = splitter.right,
 
         advSplitter = highed.HSplitter(advancedTab.body, {
           leftWidth: 30
         }),
+
         advBody = advSplitter.right,
         advTree = highed.Tree(advSplitter.left),
 
         flatOptions = {},
         chartOptions = {},
 
+        customCodeSplitter = highed.VSplitter(customCodeTab.body, {
+          topHeight: 90,
+          noOverflow: true
+        }),
+        customCodeDebug = highed.dom.cr('pre', 'highed-custom-debug'),
+        codeMirrorBox = false,
+        customCodeBox = highed.dom.cr('textarea', 'highed-custom-code highed-box-size highed-stretch'),
         highlighted = false
     ;
 
     //If we're on mobile, completely disable the advanced view
     if (highed.onPhone()) {
         properties.noAdvanced = true;
+        properties.noCustomCode = true;
     }
 
     body.className += ' highed-customizer-body';
 
     properties.availableSettings = highed.arrToObj(properties.availableSettings);
 
+
     ///////////////////////////////////////////////////////////////////////////
 
-     /** Force a resize of the editor 
+    function loadCustomCode() {
+      if (chartPreview) {
+        if (codeMirrorBox) {
+          codeMirrorBox.setValue(chartPreview.getCustomCode());
+        } else {
+          customCodeBox.value = chartPreview.getCustomCode();
+        }
+      }
+    }
+
+    /**
+     * Init the custom code stuff
+     */
+    function initCustomCode() {
+
+      // Build the custom code tab
+      highed.dom.ap(customCodeSplitter.top,
+        customCodeBox
+      );
+
+      highed.dom.ap(customCodeSplitter.bottom,
+        customCodeDebug
+      );
+
+      function setCustomCode() {
+        customCodeDebug.innerHTML = '';
+        if (chartPreview) {
+          chartPreview.setCustomCode(
+            codeMirrorBox ? codeMirrorBox.getValue() : customCodeBox.value,
+            function (err) {
+              customCodeDebug.innerHTML = err;
+            }
+          );
+        }
+      }
+
+      if (typeof window['CodeMirror'] !== 'undefined') {
+        codeMirrorBox = CodeMirror.fromTextArea(customCodeBox, {
+          lineNumbers: true,
+          mode: 'application/javascript',
+          theme: highed.option('codeMirrorTheme')
+        });
+        codeMirrorBox.setSize('100%', '100%');
+        codeMirrorBox.on('change', setCustomCode);
+      } else {
+        highed.dom.on(customCodeBox, 'change', function () {
+          setCustomCode();
+        });
+      }
+    }
+
+     /** Force a resize of the editor
      *  @memberof highed.ChartCustomizer
      *  @param w {number} - the new width
      *  @param h {number} - the new height
      */
     function resize(w, h) {
         var bsize, lsize;
-        
+
         tabs.resize(w, h);
         bsize = tabs.barSize();
 
@@ -104,6 +174,12 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
         highed.dom.style(body, {
             minHeight: lsize.h + 'px'
         });
+
+        customCodeSplitter.resize(w, h);
+
+        if (codeMirrorBox) {
+          codeMirrorBox.refresh();
+        }
     }
 
     /** Init the customizer
@@ -111,31 +187,35 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
      *  @param foptions {object} - the customized options
      *  @param coptions {object} - the full chart options
      */
-    function init(foptions, coptions) {
+    function init(foptions, coptions, chartp) {
         flatOptions = coptions || {};
         chartOptions = highed.merge({}, foptions || {});
         list.reselect();
         buildTree();
+        chartPreview = chartp || chartPreview;
+
+        customCodeSplitter.resize();
+        loadCustomCode();
     }
 
     function buildBody(entry) {
 
     }
 
-    function applyFilter(detailIndex, filteredBy, filter) {       
+    function applyFilter(detailIndex, filteredBy, filter) {
         var selected = list.selected(),
             id = selected.id,
             entry = highed.meta.optionsExtended.options[id]
         ;
 
         if (!selected) return false;
-        
+
         body.innerHTML = '';
 
         entry.forEach(function (thing) {
             selectGroup(thing, false, false, detailIndex, filteredBy, filter);
         });
-        
+
         highlighted = false;
     }
 
@@ -157,11 +237,11 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
                 });
             } else if (properties.availableSettings[group.id]) {
                 doInclude = true;
-            } 
+            }
 
             return doInclude;
         }
-        
+
         return true;
     }
 
@@ -183,7 +263,7 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
             container = highed.dom.cr('div', 'highed-customize-group');
             masterNode = highed.dom.cr('div', 'highed-customize-master-dropdown');
 
-            highed.dom.ap(body, 
+            highed.dom.ap(body,
                 highed.dom.ap(container,
                     highed.dom.cr('div', 'highed-customizer-table-heading', highed.L(group.text)),
                     masterNode,
@@ -196,11 +276,11 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
             }
 
             if (group.controlledBy) {
-                master = highed.DropDown(); 
+                master = highed.DropDown();
                 highed.dom.style(masterNode, {
                     display: 'block'
                 });
-            
+
                 if (highed.isStr(group.controlledBy.options)) {
                     vals = highed.getAttr(options, group.controlledBy.options, detailIndex);
 
@@ -214,7 +294,7 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
                             vals.map(function (t) {
                                 return group.controlledBy.optionsTitle ? t[group.controlledBy.optionsTitle] : t;
                             })
-                        );  
+                        );
 
                         master.selectByIndex(detailIndex || 0);
 
@@ -225,13 +305,13 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
 
                             group.options.forEach(function (sub) {
                                 if (group.filteredBy) {
-                                    filter = highed.getAttr(options, group.filteredBy, detailIndex);                                    
+                                    filter = highed.getAttr(options, group.filteredBy, detailIndex);
                                 }
                                 selectGroup(sub, table, options, detailIndex, group.filteredBy, filter);
                             });
                         });
 
-                        highed.dom.ap(masterNode, master.container);               
+                        highed.dom.ap(masterNode, master.container);
                         detailIndex = detailIndex || 0;
                     } else {
                         return;
@@ -244,8 +324,8 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
             group.options.forEach(function (sub) {
                 selectGroup(sub, table, options, detailIndex, group.filteredBy, filter);
             });
-                   
-        } else if (typeof group.id !== 'undefined') {     
+
+        } else if (typeof group.id !== 'undefined') {
 
             //Check if we should filter out this column
             if (filter && group.subType && group.subType.length) {
@@ -265,24 +345,24 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
             }
 
             //highed.dom.ap(sub, highed.dom.cr('span', '', referenced[0].returnType));
-            highed.dom.ap(table, 
+            highed.dom.ap(table,
                 highed.InspectorField(
-                    group.values ? 'options' : (group.dataType), 
-                    (highed.getAttr(options, group.id, detailIndex) || (filter && group.subTypeDefaults[filter] ? group.subTypeDefaults[filter] : group.defaults)), 
+                    group.values ? 'options' : (group.dataType),
+                    (highed.getAttr(options, group.id, detailIndex) || (filter && group.subTypeDefaults[filter] ? group.subTypeDefaults[filter] : group.defaults)),
                     {
                         title: highed.L('option.text.' + group.pid),
                         tooltip: highed.L('option.tooltip.' + group.pid),
                         values: group.values,
                         custom: group.custom,
                         defaults: group.defaults,
-                        attributes: group.attributes || []   
+                        attributes: group.attributes || []
                     },
-                    function (newValue) {        
+                    function (newValue) {
                         events.emit('PropertyChange', group.id, newValue, detailIndex);
-                        
+
                         if (group.id === filteredBy) {
                             //This is a master for the rest of the childs,
-                            //which means that we need to rebuild everything 
+                            //which means that we need to rebuild everything
                             //here somehow and check their subType
                             applyFilter(detailIndex, filteredBy, newValue);
                         }
@@ -301,7 +381,11 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
             advTree.build(
                 highed.meta.optionsAdvanced,
                 highed.merge({}, chartPreview.options.getCustomized())
-            );        
+            );
+        }
+
+        if (properties.noCustomCode) {
+          customCodeTab.hide();
         }
     }
 
@@ -345,8 +429,8 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
      *  @param id {string} - is the id of the field to highlight
      */
     function highlightField(id) {
-        if (id.indexOf('-') >= 0) {            
-            var n = advSplitter.left.querySelector('#' + id.substr(0, id.indexOf('-')));        
+        if (id.indexOf('-') >= 0) {
+            var n = advSplitter.left.querySelector('#' + id.substr(0, id.indexOf('-')));
 
             highlightNode(body.querySelector('#' + id));
             highlightNode(advSplitter.right.querySelector('#' + id));
@@ -370,11 +454,11 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
 
         list.select(thing.tab);
         advTree.expandTo(thing.id);
-        highlightField(thing.id);        
+        highlightField(thing.id);
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    
+
     list.on('Select', function (id){
         var entry = highed.meta.optionsExtended.options[id];
         body.innerHTML = '';
@@ -392,9 +476,14 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
         advBody.innerHTML = '';
 
         item.children.forEach(function (entry) {
-            
+
             if (!entry.meta.leafNode) {
                 return;
+            }
+
+            // Skip functions for now
+            if (Object.keys(entry.meta.types)[0] === 'function') {
+              return;
             }
 
             if (propFilter && entry.meta.validFor) {
@@ -405,21 +494,21 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
             }
 
             if (
-                filter && 
-                entry.meta.products && 
-                Object.keys(entry.meta.products) > 0 && 
+                filter &&
+                entry.meta.products &&
+                Object.keys(entry.meta.products) > 0 &&
                 !entry.meta.products[filter]) {
                 return;
             }
 
             componentCount++;
-           
+
             entry.values = entry.meta.enumValues;
 
             highed.dom.ap(table,
                 highed.InspectorField(
-                    entry.values ?  'options' : (Object.keys(entry.meta.types)[0] || 'string'), 
-                    instancedData[entry.meta.name] || entry.meta.default,//(highed.getAttr(chartOptions, entry.id)  || entry.defaults), 
+                    entry.values ?  'options' : (Object.keys(entry.meta.types)[0] || 'string'),
+                    instancedData[entry.meta.name] || entry.meta.default,//(highed.getAttr(chartOptions, entry.id)  || entry.defaults),
                     {
                         title: highed.uncamelize(entry.meta.name),
                         tooltip: entry.meta.description,
@@ -428,7 +517,7 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
                         custom: {},
                         attributes: entry.attributes || []
                     },
-                    function (newValue) {          
+                    function (newValue) {
                         instancedData[entry.meta.name] = newValue;
                         events.emit('PropertySetChange', advTree.getMasterData());
                         if (advTree.isFilterController(entry.meta.ns, entry.meta.name)) {
@@ -441,7 +530,7 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
             );
         });
 
-        highed.dom.ap(advBody, 
+        highed.dom.ap(advBody,
             highed.dom.ap(highed.dom.cr('div', 'highed-customize-group'),
                 highed.dom.cr('div', 'highed-customizer-table-heading', selected),
                 table
@@ -472,6 +561,7 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
     });
 
     build();
+    initCustomCode();
 
     return {
         /* Listen to an event */
