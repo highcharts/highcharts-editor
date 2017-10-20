@@ -63,7 +63,6 @@ highed.ChartPreview = function (parent, attributes) {
         themeMeta = {},
         exports = {},
         customCodeDefault = [
-
           '/*',
           '// Sample of extending options:',
           'Highcharts.extend(options, Highcharts.merge(options, {',
@@ -961,7 +960,7 @@ highed.ChartPreview = function (parent, attributes) {
 
     function getCustomCode() {
       return highed.isFn(customCode) ?
-        customCodeStr :
+        customCodeStr || customCodeDefault :
         customCode || customCodeDefault;
     }
 
@@ -970,6 +969,7 @@ highed.ChartPreview = function (parent, attributes) {
 
       if (!newCode) {
         customCode = false;
+        customCodeStr = '';
       }
 
       try {
@@ -978,7 +978,8 @@ highed.ChartPreview = function (parent, attributes) {
         customCode = new Function('options', newCode);
         customCodeStr = newCode;
       } catch (e) {
-        customCode = newCode;
+        customCode = false;
+        customCodeStr = newCode;
         return highed.isFn(errFn) && errFn(e);
       }
 

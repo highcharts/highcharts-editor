@@ -104,11 +104,14 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
     ///////////////////////////////////////////////////////////////////////////
 
     function loadCustomCode() {
+      var code;
+
       if (chartPreview) {
+        code = chartPreview.getCustomCode() || '';
         if (codeMirrorBox) {
-          codeMirrorBox.setValue(chartPreview.getCustomCode());
+          codeMirrorBox.setValue(code);
         } else {
-          customCodeBox.value = chartPreview.getCustomCode();
+          customCodeBox.value = code;
         }
       }
     }
