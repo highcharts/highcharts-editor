@@ -1,6 +1,6 @@
 .highed-toolbar {
 	position: relative;
-	height: 40px;
+	height: 60px;
 	width: 100%;
 	background-color: @accent-color;
 	line-height: 100%;
@@ -28,7 +28,20 @@
 }
 
 .highed-toolbar .icon {
-	line-height:40px;
+  font-size: 20px !important;
+	line-height:60px;
+  margin-right: 10px;
+  color: @text-panel;
+}
+
+.highed-toolbar .separator {
+  border: 1px solid @text-panel;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.highed-toolbar .icon:hover {
+  color: @bright-background !important;
 }
 
 .highed-toolbar-button {

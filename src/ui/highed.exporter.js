@@ -75,9 +75,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             }, attributes),
 
             tctrl = highed.TabControl(parent, false, true),
-            htmlTab = tctrl.createTab({title: 'Export HTML'}),
-            jsonTab = tctrl.createTab({title: 'Export JSON'}),
-            svgTab = tctrl.createTab({title: 'Export SVG'}),
+            htmlTab = tctrl.createTab({title: 'HTML'}),
+            jsonTab = tctrl.createTab({title: 'JSON'}),
+            svgTab = tctrl.createTab({title: 'SVG'}),
             pluginTab = tctrl.createTab({title: 'Plugins'}),
 
             pluginSplitter = highed.HSplitter(pluginTab.body, {leftWidth: 30}),

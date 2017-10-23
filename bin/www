@@ -79,8 +79,8 @@ function updateFiles() {
     files = require(__dirname + '/../res/filelist.json');
 
     // Include product files
-    appendFilesFromProduct('highcharts'); 
-    appendFilesFromProduct('highstock'); 
+    //appendFilesFromProduct('highcharts'); 
+    //appendFilesFromProduct('highstock'); 
     //appendFilesFromProduct('highmaps'); 
 
 }
@@ -108,6 +108,16 @@ app.get('/full', function (req, res) {
     updateFiles();
 
     res.render('full', {
+        scripts: files,
+        package: package,
+        title: 'Highcharts Editor - Full'
+    });
+});
+
+app.get('/experiment', function (req, res) {
+    updateFiles();
+
+    res.render('ui-test', {
         scripts: files,
         package: package,
         title: 'Highcharts Editor - Full'

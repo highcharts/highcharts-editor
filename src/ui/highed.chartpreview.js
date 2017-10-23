@@ -179,6 +179,15 @@ highed.ChartPreview = function (parent, attributes) {
             return;
         }
 
+        // options.chart = options.chart || {};
+        // options.chart.width = '100%';
+        // options.chart.height = '100%';
+
+        // if (options && options.chart) {
+        //   delete options.chart.width;
+        //   delete options.chart.height;
+        // }
+
         try {
             chart = new Highcharts[constr](pnode || parent, options);
             //This is super ugly.
@@ -234,8 +243,12 @@ highed.ChartPreview = function (parent, attributes) {
      *  Resizes based on the parent size.
      *  @memberof highed.ChartPreview
      */
-    function resize() {
+    function resize(width, height) {
         gc(function (chart) {
+            if (width && height) {
+              // chart.setSize(width, height);
+            }
+
             if (chart.reflow) {
                 chart.reflow();
             }
