@@ -1,0 +1,221 @@
+
+<script>
+
+    highed.ready(function () {
+        var hsplitter = highed.VSplitter(document.body, {
+          topHeight: '60px',
+          noOverflow: true
+        });
+
+        var toolbar = highed.Toolbar(hsplitter.top);
+        var toolbox = highed.Toolbox(hsplitter.bottom);
+
+        highed.dom.ap(toolbar.left, 
+          highed.dom.style(highed.dom.cr('span'), {
+            'margin-left': '5px',
+            width: '200px', // 30px
+            height: '60px',
+            float: 'left',
+            display: 'inline-block',
+            'background-position': 'left middle',
+            'background-size': 'auto 100%',
+            'background-repeat': 'no-repeat',
+            'background-image': 'url("data:image/svg+xml;utf8,' + 
+              encodeURIComponent(highed.resources.logo) + 
+            '")' 
+          })
+        );
+
+        highed.dom.style(hsplitter.bottom, {
+          'overflow-x': 'hidden'
+        });
+
+        toolbar.addIcon({
+          title: highed.L('newChart'),
+          css: 'fa-file',
+          click: function () {
+              if (window.confirm(highed.getLocalizedStr('confirmNewChart'))) {
+                  chartPreview.new();
+              }
+          }
+        });
+
+        toolbar.addIcon({
+          title: highed.L('saveProject'),
+          css: 'fa-floppy-o',
+          click: function () {
+            highed.download('chart.json', chartPreview.toProjectStr());
+          }
+        }, 'right');
+
+        toolbar.addIcon({
+          title: highed.L('openProject'),
+          css: 'fa-folder-open',
+          click: function () {
+              highed.readLocalFile({
+                        type: 'text',
+                        accept: '.json',
+                        success: function (file) {
+                            try {
+                                file = JSON.parse(file.data);
+                            } catch (e) {
+                                return highed.snackBar('Error loading JSON: ' + e);
+                            }
+
+                            chartPreview.loadProject(file);
+                        }
+                    });
+
+          }
+        }, 'right');
+
+        toolbar.addSeparator();
+
+        toolbar.addIcon({
+          title: highed.L('saveCloud'),
+          css: 'fa-cloud-upload',
+          click: function () {
+             highed.cloud.save(chartPreview);
+          }
+        });
+
+        toolbar.addIcon({
+          title: highed.L('loadCloud'),
+          css: 'fa-cloud-download',
+          click: function () {
+            highed.cloud.showUI(chartPreview);
+          }
+        });
+
+        toolbar.addSeparator()
+        
+        toolbar.addIcon({
+          title: 'Help',
+          css: 'fa-question-circle',
+          click: function () {
+            window.open(highed.option('helpURL'));
+          }
+        });
+
+        var chartFrame = highed.dom.cr('div', 'highed-transition highed-box-size');
+        var chartContainer = highed.dom.cr('div', 'highed-box-size');
+
+        var chartPreview = highed.ChartPreview(chartContainer);
+
+        highed.dom.style(hsplitter.bottom, {
+          position: 'relative'
+        });
+
+        highed.dom.style(chartContainer, {
+          'background': '#FFF',
+          'width': '100%',
+          'height': '100%',
+          'box-shadow': '13px 10px 23px -14px #000'
+        });
+
+        highed.dom.style(chartFrame, {
+          'position': 'absolute',
+          'left': '40px',
+          'top': '0px',
+          'height': '100%',
+          'padding': '50px'
+        });
+
+        highed.dom.ap(chartFrame, chartContainer);
+        highed.dom.ap(hsplitter.bottom, chartFrame);
+
+
+        var entry2 = toolbox.addEntry({
+          width: 800,
+          icon: 'fa-table',
+          title: 'Chart Data'
+        });
+
+        var dt = highed.DataTable(entry2.body);
+        entry2.on('Expanded', function (width, height) {
+        console.log('done expanding', width, height);
+          dt.resize(width, height);
+        });
+
+        dt.on('Change', function (headers, data) {
+          if (data.length) {
+            return chartPreview.data.csv({
+              csv: dt.toCSV(';', true)
+            });
+          }
+        });
+
+        var entry = toolbox.addEntry({
+          icon: 'fa-paint-brush',
+          title: 'Themes'
+        });
+
+        var templates = toolbox.addEntry({
+          icon: 'fa-image',
+          title: 'Templates'
+        });
+
+        var customizeEntry = toolbox.addEntry({
+          icon: 'fa-sliders',
+          title: 'Customize',
+          width: 800
+        });
+
+        var exportEntry = toolbox.addEntry({
+          icon: 'fa-download',
+          title: 'Export',
+          width: 400
+        });
+
+        var exporter = highed.Exporter(exportEntry.body);
+
+        exportEntry.on('Expanded', function (width, height) {
+          exporter.resize(width, height);
+          exporter.init(
+            chartPreview.export.json(),
+            chartPreview.export.html(),
+            chartPreview.export.svg(),
+            chartPreview
+          );
+        });
+
+        var customizer = highed.ChartCustomizer(customizeEntry.body, {
+        
+        }, chartPreview);
+
+        customizer.on('PropertyChange', chartPreview.options.set);
+        customizer.on('PropertySetChange', chartPreview.options.setAll);
+
+        customizeEntry.on('Expanded', function (width, height) {
+          customizer.resize(width, height);
+        });
+
+        toolbox.addEntry({
+          icon: 'fa-gear',
+          title: 'Settings',
+          width: 300
+        });
+
+        toolbox.on('BeforeResize', function (newWidth) {
+          console.log('Want to expand to', newWidth);
+        
+          var psize = highed.dom.size(hsplitter.bottom);
+
+          highed.dom.style(chartFrame, {
+            left: newWidth + 'px',
+            width: psize.w - newWidth + 'px',
+            height: psize.h + 'px'
+          });
+
+          highed.dom.style(chartContainer, {
+            width: psize.w - newWidth - 100 + 'px',
+            height: psize.h - 100 + 'px'
+          }); 
+
+          chartPreview.resize();
+        });
+
+        hsplitter.resize();
+    });
+
+</script>
