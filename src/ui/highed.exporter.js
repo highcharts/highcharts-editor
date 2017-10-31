@@ -86,9 +86,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             exportJSON = highed.dom.cr('a', '', 'Download'),
             exportHTML = highed.dom.cr('a', '', 'Download'),
             exportSVG = highed.dom.cr('a', '', 'Download'),
-            jsonValue = highed.dom.cr('textarea', 'highed-imp-pastearea'),
-            htmlValue = highed.dom.cr('textarea', 'highed-imp-pastearea'),
-            svgValue = highed.dom.cr('textarea', 'highed-imp-pastearea'),
+            jsonValue = highed.dom.cr('textarea', 'highed-imp-pastearea highed-scrollbar'),
+            htmlValue = highed.dom.cr('textarea', 'highed-imp-pastearea highed-scrollbar'),
+            svgValue = highed.dom.cr('textarea', 'highed-imp-pastearea highed-scrollbar'),
 
             currentChartPreview = false,
             hasBuiltPlugins = false,

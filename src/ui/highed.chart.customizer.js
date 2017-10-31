@@ -64,7 +64,7 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
         }),
 
         splitter = highed.HSplitter(simpleTab.body, {
-          leftWidth: 30, responsive: true
+          leftWidth: 20, responsive: true
         }),
 
         list = highed.List(splitter.left, true),

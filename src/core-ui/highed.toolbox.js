@@ -25,42 +25,63 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // @format
 
-highed.Toolbox = function (parent, attr) {
+highed.Toolbox = function(parent, attr) {
   var events = highed.events(),
-      container = highed.dom.cr('div', 'highed-transition highed-toolbox highed-box-size'),
-      bar = highed.dom.cr('div', 'highed-toolbox-bar highed-box-size'),
-      body = highed.dom.cr('div', 'highed-toolbox-body highed-box-size highed-transition'),
-      expanded = false,
-      activeItem = false,
-      properties = highed.merge({
+    container = highed.dom.cr(
+      'div',
+      'highed-transition highed-toolbox highed-box-size'
+    ),
+    bar = highed.dom.cr('div', 'highed-toolbox-bar highed-box-size'),
+    body = highed.dom.cr(
+      'div',
+      'highed-toolbox-body highed-box-size highed-transition'
+    ),
+    expanded = false,
+    activeItem = false,
+    properties = highed.merge(
+      {
         animate: true
-      }, attr)
-  ;
+      },
+      attr
+    );
 
   function addEntry(def) {
-    var props = highed.merge({
+    var props = highed.merge(
+        {
           title: 'Tooltip Missing',
           icon: 'fa-trash',
           width: 200
-        }, def),
-        entryEvents = highed.events(),
-        title = highed.dom.cr('div', 'highed-toolbox-body-title', props.title),
-        contents = highed.dom.cr('div', 'highed-box-size highed-toolbox-inner-body'),
-        userContents = highed.dom.cr('div', 'highed-box-size highed-toolbox-user-contents'),
-        iconClass= 'highed-box-size highed-toolbox-bar-icon fa ' + props.icon,
-        icon = highed.dom.cr('div', iconClass),
-        exports = {}
-    ;
+        },
+        def
+      ),
+      entryEvents = highed.events(),
+      title = highed.dom.cr('div', 'highed-toolbox-body-title', props.title),
+      contents = highed.dom.cr(
+        'div',
+        'highed-box-size highed-toolbox-inner-body'
+      ),
+      userContents = highed.dom.cr(
+        'div',
+        'highed-box-size highed-toolbox-user-contents'
+      ),
+      iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + props.icon,
+      icon = highed.dom.cr('div', iconClass),
+      exports = {};
 
     function resizeBody() {
       var bsize = highed.dom.size(body),
-          tsize = highed.dom.size(title)
-      ;
+        tsize = highed.dom.size(title),
+        size = {
+          w: bsize.w,
+          h: bsize.h - tsize.h
+        };
 
       highed.dom.style(contents, {
-        width: bsize.w + 'px',
-        height: bsize.h - tsize.h + 'px'
+        width: size.w + 'px',
+        height: size.h + 'px'
       });
+
+      return size;
     }
 
     function expand() {
@@ -92,14 +113,13 @@ highed.Toolbox = function (parent, attr) {
 
       events.emit('BeforeResize', newWidth);
 
-
       expanded = true;
 
-      setTimeout(function () {
-        resizeBody();
+      setTimeout(function() {
+        var height = resizeBody().h;
 
         events.emit('Expanded', exports, newWidth);
-        entryEvents.emit('Expanded', bsize.h, newWidth);
+        entryEvents.emit('Expanded', newWidth, height - 20);
       }, 300);
 
       icon.className = iconClass + ' highed-toolbox-bar-icon-sel';
@@ -110,7 +130,6 @@ highed.Toolbox = function (parent, attr) {
       var newWidth = highed.dom.size(bar).w;
 
       if (expanded) {
-
         highed.dom.style(body, {
           width: '0px',
           opacity: 0.1
@@ -144,10 +163,7 @@ highed.Toolbox = function (parent, attr) {
 
     highed.dom.ap(bar, icon);
 
-    highed.dom.ap(contents,
-      title,
-      userContents
-    );
+    highed.dom.ap(contents, title, userContents);
 
     exports = {
       on: entryEvents.on,
@@ -162,20 +178,17 @@ highed.Toolbox = function (parent, attr) {
 
   function width() {
     var bodySize = highed.dom.size(body),
-        barSize = highed.dom.size(bar)
-    ;
+      barSize = highed.dom.size(bar);
 
     return bodySize.w + barSize.w;
   }
 
-  highed.dom.ap(parent,
-    highed.dom.ap(container,
-      bar,
-      body
-    )
-  );
+  function clear() {}
+
+  highed.dom.ap(parent, highed.dom.ap(container, bar, body));
 
   return {
+    clear: clear,
     on: events.on,
     addEntry: addEntry,
     width: width

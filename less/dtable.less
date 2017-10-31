@@ -6,7 +6,8 @@
     overflow: hidden;
     // border:@border-main;
     border-collapse: collapse;
-    background:@bright-background;
+    background:@secondary-background-panel;
+    color: @secondary-color-panel;
     .highed-box-size;
 }
 
@@ -80,8 +81,8 @@
 }
 
 .highed-dtable-body-selected-row {
-    background:@highlight-background !important;
-    color:@highlight-text !important;
+    background:@selected-item-color !important;
+    color:@selected-item-text !important;
 }
 
 .highed-dtable-col-val {
@@ -98,7 +99,8 @@
     position: absolute;
     left:0px;
     top:0px;
-    background:lighten(@highlight-background, 5) !important;
+    background:lighten(@selected-item-color, 5) !important;
+    color: @selected-item-text;
     font-family: @font-secondary;
     font-weight: 100;
     width:100%;
@@ -181,19 +183,19 @@
 }
 
 .highed-dtable-top-bar-col-options {
-    opacity: 0;
+    // opacity: 0;
     padding:5px;
     position: absolute;
     left:2px;
     top:50%;
     transform:translate(0, -50%);
-    background:@background-panel;
+    color:@secondary-color-panel;
     .highed-transition;
 }
 
 .highed-dtable-top-bar-col-options:hover {
     //background: @accent-color !important;
-    color: @accent-color !important;
+    color: @selected-item-color !important;
 }
 
 .highed-dtable-top-left-panel {

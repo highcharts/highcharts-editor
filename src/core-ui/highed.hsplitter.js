@@ -29,8 +29,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  @example
  *  var splitter = highed.HSplitter(document.body);
- *  highed.dom.ap(splitter.left, highed.dom.cr('div', '', 'Left!')); 
- *  highed.dom.ap(splitter.right, highed.dom.cr('div', '', 'Right!')); 
+ *  highed.dom.ap(splitter.left, highed.dom.cr('div', '', 'Left!'));
+ *  highed.dom.ap(splitter.right, highed.dom.cr('div', '', 'Right!'));
  *
  *  @constructor
  *  @param parent {domnode} - the parent to attach to
@@ -55,10 +55,10 @@ highed.HSplitter = function (parent, attributes) {
             rightMax: false
         }, attributes),
         container = highed.dom.cr('div', 'highed-hsplitter'),
-        left = highed.dom.cr('div', 'panel left ' + properties.leftClasses),
-        right = highed.dom.cr('div', 'panel right ' + properties.rightClasses),
-        leftBody = highed.dom.cr('div', 'highed-hsplitter-body ' + properties.leftClasses),
-        rightBody = highed.dom.cr('div', 'highed-hsplitter-body ' + properties.rightClasses),
+        left = highed.dom.cr('div', 'highed-scrollbar panel left ' + properties.leftClasses),
+        right = highed.dom.cr('div', 'highed-scrollbar panel right ' + properties.rightClasses),
+        leftBody = highed.dom.cr('div', 'highed-scrollbar highed-hsplitter-body ' + properties.leftClasses),
+        rightBody = highed.dom.cr('div', 'highed-scrollbar highed-hsplitter-body ' + properties.rightClasses),
         resizeBar = highed.dom.cr('div', 'highed-hsplitter-resize-bar'),
         mover
     ;
@@ -111,13 +111,13 @@ highed.HSplitter = function (parent, attributes) {
           resetSize();
         }
 
-        if (properties.responsive) {  
-            st = window.getComputedStyle(left);          
+        if (properties.responsive) {
+            st = window.getComputedStyle(left);
             if (st.float === 'none') {
                 highed.dom.style(right,{
                     width: '100%'
                 });
-                
+
                 highed.dom.style(resizeBar, {
                     display: 'none'
                 });
@@ -162,13 +162,13 @@ highed.HSplitter = function (parent, attributes) {
             width: (100 - properties.leftWidth) + '%'
         });
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
 
     parent = highed.dom.get(parent);
 
-    highed.dom.ap(highed.dom.get(parent), 
-        highed.dom.ap(container, 
+    highed.dom.ap(highed.dom.get(parent),
+        highed.dom.ap(container,
             highed.dom.ap(left, leftBody),
             highed.dom.ap(right, rightBody)
         )

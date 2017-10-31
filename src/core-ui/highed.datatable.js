@@ -172,7 +172,7 @@ highed.DataTable = function (parent, attributes) {
         }, attributes),
         events = highed.events(),
         container = highed.dom.cr('div', 'highed-dtable-container'),
-        frame = highed.dom.cr('div', 'highed-dtable-table-frame'),
+        frame = highed.dom.cr('div', 'highed-dtable-table-frame highed-scrollbar'),
         table = highed.dom.cr('table', 'highed-dtable-table'),
         thead = highed.dom.cr('thead', 'highed-dtable-head'),
         tbody = highed.dom.cr('tbody', 'highed-dtable-body'),
@@ -239,8 +239,6 @@ highed.DataTable = function (parent, attributes) {
       if (f.type !== 'text/csv') {
         return highed.snackBar('The file is not a valid CSV file');
       }
-
-      console.log('Uploading file', f);
 
       var reader = new FileReader();
 
@@ -717,7 +715,7 @@ highed.DataTable = function (parent, attributes) {
 
         exports.addToDOM();
 
-        highed.dom.showOnHover(header, options);
+        // highed.dom.showOnHover(header, options);
 
         col.width = 140;
         highed.dom.style([col, header], {
