@@ -79,8 +79,8 @@ function updateFiles() {
     files = require(__dirname + '/../res/filelist.json');
 
     // Include product files
-    //appendFilesFromProduct('highcharts'); 
-    //appendFilesFromProduct('highstock'); 
+    appendFilesFromProduct('highcharts'); 
+    appendFilesFromProduct('highstock'); 
     //appendFilesFromProduct('highmaps'); 
 
 }
@@ -92,6 +92,7 @@ app.use('/css', expressLess(__dirname + '/../less', {
 	debug: true
 }));
 
+app.use('/help', express.static(__dirname + '/../res/help'));
 app.use('/gen_src', express.static(__dirname + '/../generated_src'));
 app.use('/src', express.static(__dirname + '/../src'));
 app.use('/plugins', express.static(__dirname + '/../plugins'));
