@@ -64,8 +64,13 @@ highed.Toolbox = function(parent, attr) {
         'div',
         'highed-box-size highed-toolbox-user-contents'
       ),
+      helpIcon = highed.dom.cr(
+        'div',
+        'highed-toolbox-help highed-icon fa fa-question-circle'
+      ),
       iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + props.icon,
       icon = highed.dom.cr('div', iconClass),
+      helpModal = highed.HelpModal(props.help || []),
       exports = {};
 
     function resizeBody() {
@@ -91,8 +96,6 @@ highed.Toolbox = function(parent, attr) {
       if (expanded && activeItem === exports) {
         return;
       }
-
-      console.log('expanding', newWidth);
 
       if (activeItem) {
         activeItem.disselect();
@@ -124,6 +127,10 @@ highed.Toolbox = function(parent, attr) {
 
       icon.className = iconClass + ' highed-toolbox-bar-icon-sel';
       activeItem = exports;
+
+      highed.dom.style(helpIcon, {
+        display: 'block'
+      });
     }
 
     function collapse() {
@@ -144,6 +151,10 @@ highed.Toolbox = function(parent, attr) {
         disselect();
         expanded = false;
         activeItem = false;
+
+        highed.dom.style(helpIcon, {
+          display: 'none'
+        });
       }
     }
 
@@ -159,11 +170,56 @@ highed.Toolbox = function(parent, attr) {
       icon.className = iconClass;
     }
 
+    function showHelp() {
+      helpModal.show();
+      return;
+
+      // Hack.
+      var h = highed.OverlayModal(false, {
+        width: 600,
+        height: 500
+      });
+
+      highed.dom.ap(h.body,
+        highed.dom.cr('div', 'highed-toolbox-body-title', 'Manualy Defining Data'),
+        highed.dom.style(highed.dom.cr('div'), {
+          'background-image': 'url("help/dataImport.gif")',
+          'background-size': '100% auto',
+          'height': '200px',
+          'background-repeat': 'no-repeat',
+          'width': '100%'
+        }),
+        highed.dom.style(highed.dom.cr('div', '', [
+          'Data can be manually entered and modified directly in the data table.<br/><br/>',
+          'The cells can be navigated using the arrow keys.',
+          'Pressing Enter creates a new row, or navigates to the row directly below the current row.<br/><br/>',
+          'The headings are used as the axis titles, and can be changed by clicking them.'
+        ].join(' ')), {
+          'margin-top': '10px',
+           'padding': '5px',
+          'text-align': 'center'
+        }),
+        highed.dom.ap(highed.dom.style(highed.dom.cr('div'), {
+            'width': '120px',
+            'height': '25px',
+            'position': 'absolute',
+            'bottom': '10px',
+            'left': '50%',
+            'transform': 'translate(-50%, 0)'
+          }),
+          highed.dom.cr('span', 'highed-icon fa fa-circle'),
+          highed.dom.cr('span', 'highed-icon fa fa-circle-o'),
+          highed.dom.cr('span', 'highed-icon fa fa-circle-o')
+        )
+      );
+
+      h.show();
+    }
+
+    highed.dom.on(helpIcon, 'click', showHelp);
     highed.dom.on(icon, 'click', toggle);
-
     highed.dom.ap(bar, icon);
-
-    highed.dom.ap(contents, title, userContents);
+    highed.dom.ap(contents, highed.dom.ap(title, helpIcon), userContents);
 
     exports = {
       on: entryEvents.on,

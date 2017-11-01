@@ -53,8 +53,14 @@ highed.DrawerEditor = function(parent, options) {
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
     dataTable = highed.DataTable(dataTableContainer),
     // Chart preview
-    chartFrame = highed.dom.cr('div', 'highed-transition highed-box-size highed-chart-frame'),
-    chartContainer = highed.dom.cr('div', 'highed-box-size highed-chart-frame-body'),
+    chartFrame = highed.dom.cr(
+      'div',
+      'highed-transition highed-box-size highed-chart-frame'
+    ),
+    chartContainer = highed.dom.cr(
+      'div',
+      'highed-box-size highed-chart-frame-body'
+    ),
     chartPreview = highed.ChartPreview(chartContainer),
     // Exporter
     exporterContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
@@ -134,6 +140,27 @@ highed.DrawerEditor = function(parent, options) {
         icon: 'fa-table',
         title: 'Chart Data',
         width: 800,
+        help: [
+          {
+            title: 'Manually Add/Edit Data',
+            gif: '/help/dataImport.gif',
+            description: [
+              'Data can be manually entered and modified directly in the data table.<br/><br/>',
+              'The cells can be navigated using the arrow keys.',
+              'Pressing Enter creates a new row, or navigates to the row directly below the current row.<br/><br/>',
+              'The headings are used as the axis titles, and can be changed by clicking them.'
+            ]
+          },
+          {
+            title: 'Importing Data',
+            description: [
+              'To import data, simply drag and drop CSV files onto the table.<br/><br/>',
+              'For more advanced data import, click the IMPORT button to',
+              'summon the import panel. Here, you can paste CSV, import CSV from',
+              'an URL, import data from a google spreadsheet, and more.'
+            ]
+          }
+        ],
         create: function(body) {
           highed.dom.ap(body, dataTableContainer);
           dataTable.resize();
@@ -149,6 +176,18 @@ highed.DrawerEditor = function(parent, options) {
         icon: 'fa-image',
         width: 700,
         title: 'Templates',
+        help: [
+          {
+            title: 'Templates',
+            description: [
+              'The templates view lets you choose a template for your chart.<br/><br/>',
+              'Templates are pre-defined bundles of configuration.',
+              'Start by choosing the template category in the list to the left,',
+              'then pick a suitable template for your data and use case in the',
+              'template list.'
+            ]
+          }
+        ],
         create: function(body) {
           highed.dom.ap(body, templatesContainer);
         },
@@ -162,6 +201,14 @@ highed.DrawerEditor = function(parent, options) {
         icon: 'fa-download',
         title: 'Export',
         width: 600,
+        help: [
+          {
+            title: 'Export',
+            description: [
+              'The export pane lets you export your chart to HTML, SVG, JSON, or JavaScript.<br/><br/>'
+            ]
+          }
+        ],
         create: function(body) {
           highed.dom.ap(body, exporterContainer);
           exporter.resize();
@@ -182,6 +229,18 @@ highed.DrawerEditor = function(parent, options) {
         icon: 'fa-sliders',
         title: 'Customize',
         width: 800,
+        help: [
+          {
+            title: 'Customize',
+            description: [
+              'The customize pane lets you customize your chart.<br/><br/>',
+              'The customizer has three different sections:<br/>',
+              '<li>Simple: A simple customizer with the most used options</li>',
+              '<li>Advanced: All options available in Highcharts/Highstock can be set here</li>',
+              '<li>Custom code: Here, properties can be overridden programatically</li>'
+            ]
+          }
+        ],
         create: function(body) {
           highed.dom.ap(body, customizerContainer);
           customizer.resize();
@@ -211,7 +270,8 @@ highed.DrawerEditor = function(parent, options) {
       var o = toolbox.addEntry({
         title: option.title,
         width: option.width,
-        icon: option.icon
+        icon: option.icon,
+        help: option.help
       });
 
       if (highed.isFn(option.create)) {
@@ -234,7 +294,7 @@ highed.DrawerEditor = function(parent, options) {
    * Create toolbar
    */
   function createToolbar() {
-    toolbarButtons.forEach(function (b) {
+    toolbarButtons.forEach(function(b) {
       if (b === '-') {
         toolbar.addSeparator();
       } else {
@@ -301,12 +361,10 @@ highed.DrawerEditor = function(parent, options) {
     chartPreview.loadTemplate(template);
   });
 
-  dataTable.on('Change', function (headers, data) {
-    if (data.length) {
-      return chartPreview.data.csv({
-        csv: dataTable.toCSV(';', true)
-      });
-    }
+  dataTable.on('Change', function(headers, data) {
+    return chartPreview.data.csv({
+      csv: dataTable.toCSV(';', true)
+    });
   });
 
   if (!highed.onPhone()) {

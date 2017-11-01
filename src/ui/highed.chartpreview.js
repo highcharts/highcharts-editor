@@ -207,11 +207,11 @@ highed.ChartPreview = function (parent, attributes) {
                 //chart.reflow();
             }
 
-            highed.dom.ap(pnode || parent, toggleButton);
+            // highed.dom.ap(pnode || parent, toggleButton);
 
             Highcharts.addEvent(chart, 'afterPrint', function () {
                 events.emit('RequestResize');
-                highed.dom.ap(pnode || parent, toggleButton);
+                // highed.dom.ap(pnode || parent, toggleButton);
             });
         } catch (ex) {
             var e = ex.toString();

@@ -32,6 +32,7 @@
     "./src/core-ui/highed.slider.js",
     "./src/core-ui/highed.datatable.js",
     "./src/core-ui/highed.toolbox.js",
+    "./src/core-ui/highed.helpmodal.js",
 
     "./src/meta/highed.meta.options.extended.js",
     "./src/meta/highed.meta.colors.js",
