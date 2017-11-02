@@ -59,7 +59,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 }, defintion);
 
                 if (webImports[name].dependencies) {
-                    highed.include(webImports[name].dependencies);
+                    webImports[name].dependencies.forEach(function (d) {
+                        highed.include(d);
+                    });
                 }
             } else {
                 highed.log(1, 'tried to register an import plugin which already exists:', name);
@@ -188,13 +190,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         );
                     });
 
-                    if (options.suppressURL) {
+                    if (options.surpressURL) {
                         highed.dom.style([url, urlTitle], {
                             display: 'none'
                         });
                     }
 
                     url.placeholder = 'Enter URL';
+
 
                     highed.dom.on(importBtn, 'click', function () {
                         highed.snackBar('Importing ' + name + ' data');

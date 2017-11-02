@@ -392,6 +392,10 @@ highed.DrawerEditor = function(parent, options) {
     chartPreview.loadTemplate(template);
   });
 
+  dataTable.on('ImportChartSettings', function (settings) {
+    chartPreview.options.setAll(settings);
+  });
+
   dataTable.on('Change', function(headers, data) {
     return chartPreview.data.csv({
       csv: dataTable.toCSV(';', true)

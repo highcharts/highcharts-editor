@@ -644,6 +644,11 @@ highed.ChartPreview = function (parent, attributes) {
 
         }
 
+        // This is nasty
+        if (options && options.data && options.data.googleSpreadsheetKey) {
+          events.emit('LoadedGoogleSpreadsheet');
+        }
+
         updateAggregated();
         init(aggregatedOptions, false, true);
         emitChange();
@@ -736,7 +741,11 @@ highed.ChartPreview = function (parent, attributes) {
 
         //This should be part of the series
         if (!highed.isNull(r.data)) {
-            r.data = undefined;
+
+            // Don't delete spreadsheet stuff
+            if (!r.data.googleSpreadsheetKey) {
+              r.data = undefined;
+            }
             //delete r['data'];
         }
 
