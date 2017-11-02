@@ -30,7 +30,7 @@ highed.DrawerEditor = function(parent, options) {
     // Main properties
     properties = highed.merge(
       {
-        showToolbar: true,
+        useHeader: true,
         features: [
           'data',
           'templates',
@@ -44,7 +44,7 @@ highed.DrawerEditor = function(parent, options) {
       options
     ),
     splitter = highed.VSplitter(parent, {
-      topHeight: '60px',
+      topHeight: properties.useHeader ? '60px' : '0px',
       noOverflow: true
     }),
     toolbar = highed.Toolbar(splitter.top),
@@ -143,7 +143,7 @@ highed.DrawerEditor = function(parent, options) {
         help: [
           {
             title: 'Manually Add/Edit Data',
-            gif: '/help/dataImport.gif',
+            gif: 'dataImport.gif',
             description: [
               'Data can be manually entered and modified directly in the data table.<br/><br/>',
               'The cells can be navigated using the arrow keys.',
@@ -153,6 +153,7 @@ highed.DrawerEditor = function(parent, options) {
           },
           {
             title: 'Importing Data',
+            gif: 'import.gif',
             description: [
               'To import data, simply drag and drop CSV files onto the table.<br/><br/>',
               'For more advanced data import, click the IMPORT button to',
@@ -253,16 +254,24 @@ highed.DrawerEditor = function(parent, options) {
       }
     };
 
+  if (!properties.useHeader) {
+    highed.dom.style(splitter.top.parentNode, {
+      display: 'none'
+    });
+  }
+
   /**
    * Creates the features defined in property.features
    * Call this after changing properties.features to update the options.
    */
   function createFeatures() {
+    var addedOptions = {};
+
     properties.features = highed.isArr(properties.features)
       ? properties.features
       : properties.features.split(' ');
 
-    function addOption(option) {
+    function addOption(option, id) {
       if (!option || !option.icon) {
         return;
       }
@@ -270,6 +279,7 @@ highed.DrawerEditor = function(parent, options) {
       var o = toolbox.addEntry({
         title: option.title,
         width: option.width,
+        iconOnly: option.iconOnly,
         icon: option.icon,
         help: option.help
       });
@@ -281,13 +291,25 @@ highed.DrawerEditor = function(parent, options) {
       Object.keys(option.events || {}).forEach(function(e) {
         o.on(e, option.events[e]);
       });
+
+      addedOptions[id] = o;
     }
 
     toolbox.clear();
+    resize();
 
     properties.features.forEach(function(feature) {
-      addOption(builtInOptions[feature] || customOptions[feature] || false);
+      addOption(
+        builtInOptions[feature] || customOptions[feature] || false,
+        feature
+      );
     });
+
+    if (addedOptions.data) {
+      setTimeout(addedOptions.data.expand, 200);
+    }
+
+    // resizeChart(toolbox.width());
   }
 
   /**
@@ -357,6 +379,15 @@ highed.DrawerEditor = function(parent, options) {
   customizer.on('PropertyChange', chartPreview.options.set);
   customizer.on('PropertySetChange', chartPreview.options.setAll);
 
+  chartPreview.on('LoadProjectData', function(csv) {
+    dataTable.loadCSV(
+      {
+        csv: csv
+      },
+      true
+    );
+  });
+
   templates.on('Select', function(template) {
     chartPreview.loadTemplate(template);
   });
@@ -391,11 +422,11 @@ highed.DrawerEditor = function(parent, options) {
     })
   );
 
+  highed.dom.ap(splitter.bottom, highed.dom.ap(chartFrame, chartContainer));
+
   // Create the features
   createFeatures();
   createToolbar();
-
-  highed.dom.ap(splitter.bottom, highed.dom.ap(chartFrame, chartContainer));
 
   resize();
 

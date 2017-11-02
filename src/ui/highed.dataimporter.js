@@ -100,7 +100,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             samplesTab = tabs.createTab({title: 'Sample Data'}),
 
             csvPasteArea = highed.dom.cr('textarea', 'highed-imp-pastearea'),
-            csvImportBtn = highed.dom.cr('button', 'highed-imp-button', 'Import'),
+            csvImportBtn = highed.dom.cr('button', 'highed-imp-button', 'Import Pasted Data'),
             csvImportFileBtn = highed.dom.cr('button', 'highed-imp-button', 'Upload & Import File'),
             delimiter = highed.dom.cr('input', 'highed-imp-input'),
             dateFormat = highed.dom.cr('input', 'highed-imp-input'),
@@ -346,24 +346,24 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             highed.dom.cr('div', 'highed-imp-help', 'Paste CSV into the below box, or upload a file. Click Import to import your data.'),
             csvPasteArea,
 
-            highed.dom.cr('span', 'highed-imp-label', 'Delimiter'),
-            delimiter,
-            highed.dom.cr('br'),
+            // highed.dom.cr('span', 'highed-imp-label', 'Delimiter'),
+            // delimiter,
+            // highed.dom.cr('br'),
 
-            highed.dom.cr('span', 'highed-imp-label', 'Date Format'),
-            dateFormat,
-            highed.dom.cr('br'),
+            // highed.dom.cr('span', 'highed-imp-label', 'Date Format'),
+            // dateFormat,
+            // highed.dom.cr('br'),
 
-            highed.dom.cr('span', 'highed-imp-label', 'Decimal Point Notation'),
-            decimalPoint,
-            highed.dom.cr('br'),
+            // highed.dom.cr('span', 'highed-imp-label', 'Decimal Point Notation'),
+            // decimalPoint,
+            // highed.dom.cr('br'),
 
-            highed.dom.cr('span', 'highed-imp-label', 'First Row Is Series Names'),
-            firstAsNames,
-            highed.dom.cr('br'),
+            // highed.dom.cr('span', 'highed-imp-label', 'First Row Is Series Names'),
+            // firstAsNames,
+            // highed.dom.cr('br'),
 
-            csvImportFileBtn,
-            csvImportBtn
+            csvImportBtn,
+            csvImportFileBtn
         );
 
         highed.dom.ap(jsonTab.body,

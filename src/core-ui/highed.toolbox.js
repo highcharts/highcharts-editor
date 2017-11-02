@@ -73,6 +73,14 @@ highed.Toolbox = function(parent, attr) {
       helpModal = highed.HelpModal(props.help || []),
       exports = {};
 
+    if (def.iconOnly) {
+      props.width = 0;
+    }
+
+    highed.dom.on(icon, 'click', function() {
+      entryEvents.emit('Click');
+    });
+
     function resizeBody() {
       var bsize = highed.dom.size(body),
         tsize = highed.dom.size(title),
@@ -97,9 +105,15 @@ highed.Toolbox = function(parent, attr) {
         return;
       }
 
+      if (props.iconOnly) {
+        return;
+      }
+
       if (activeItem) {
         activeItem.disselect();
       }
+
+      entryEvents.emit('BeforeExpand');
 
       body.innerHTML = '';
       highed.dom.ap(body, contents);
@@ -125,11 +139,15 @@ highed.Toolbox = function(parent, attr) {
         entryEvents.emit('Expanded', newWidth, height - 20);
       }, 300);
 
-      icon.className = iconClass + ' highed-toolbox-bar-icon-sel';
-      activeItem = exports;
+      if (props.iconOnly) {
+        activeItem = false;
+      } else {
+        icon.className = iconClass + ' highed-toolbox-bar-icon-sel';
+        activeItem = exports;
+      }
 
       highed.dom.style(helpIcon, {
-        display: 'block'
+        display: props.iconOnly ? 'none' : 'block'
       });
     }
 
@@ -172,48 +190,6 @@ highed.Toolbox = function(parent, attr) {
 
     function showHelp() {
       helpModal.show();
-      return;
-
-      // Hack.
-      var h = highed.OverlayModal(false, {
-        width: 600,
-        height: 500
-      });
-
-      highed.dom.ap(h.body,
-        highed.dom.cr('div', 'highed-toolbox-body-title', 'Manualy Defining Data'),
-        highed.dom.style(highed.dom.cr('div'), {
-          'background-image': 'url("help/dataImport.gif")',
-          'background-size': '100% auto',
-          'height': '200px',
-          'background-repeat': 'no-repeat',
-          'width': '100%'
-        }),
-        highed.dom.style(highed.dom.cr('div', '', [
-          'Data can be manually entered and modified directly in the data table.<br/><br/>',
-          'The cells can be navigated using the arrow keys.',
-          'Pressing Enter creates a new row, or navigates to the row directly below the current row.<br/><br/>',
-          'The headings are used as the axis titles, and can be changed by clicking them.'
-        ].join(' ')), {
-          'margin-top': '10px',
-           'padding': '5px',
-          'text-align': 'center'
-        }),
-        highed.dom.ap(highed.dom.style(highed.dom.cr('div'), {
-            'width': '120px',
-            'height': '25px',
-            'position': 'absolute',
-            'bottom': '10px',
-            'left': '50%',
-            'transform': 'translate(-50%, 0)'
-          }),
-          highed.dom.cr('span', 'highed-icon fa fa-circle'),
-          highed.dom.cr('span', 'highed-icon fa fa-circle-o'),
-          highed.dom.cr('span', 'highed-icon fa fa-circle-o')
-        )
-      );
-
-      h.show();
     }
 
     highed.dom.on(helpIcon, 'click', showHelp);
@@ -239,7 +215,10 @@ highed.Toolbox = function(parent, attr) {
     return bodySize.w + barSize.w;
   }
 
-  function clear() {}
+  function clear() {
+    bar.innerHTML = '';
+    body.innerHTML = '';
+  }
 
   highed.dom.ap(parent, highed.dom.ap(container, bar, body));
 

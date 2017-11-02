@@ -181,7 +181,8 @@ highed.DataTable = function (parent, attributes) {
         topBar = highed.dom.cr('div', 'highed-dtable-top-bar'),
         topLeftPanel = highed.dom.cr('div', 'highed-dtable-top-left-panel'),
         checkAll = highed.dom.cr('input'),
-        mainInput = highed.dom.cr('input', 'highed-dtable-input'),
+        mainInput = highed.dom.cr('textarea', 'highed-dtable-input'),
+        dropZone = highed.dom.cr('div', 'highed-dtable-drop-zone highed-transition'),
         mainInputCb = [],
         rawCSV = false,
         mainInputCloseCb = false,
@@ -316,7 +317,17 @@ highed.DataTable = function (parent, attributes) {
         }));
 
         mainInputCb.push(highed.dom.on(mainInput, 'keyup', function (e) {
-           return (highed.isFn(fn) && fn(mainInput.value));
+          // Super hack to allow pasting CSV into cells
+          var ps = parseCSV(mainInput.value);
+          console.log(ps, mainInput.value);
+          if (ps.length > 1) {
+            if (confirm('You are about to load CSV data. This will overwrite your current data. Continue?')) {
+              return loadRows(ps);
+            }
+            return;
+          }
+
+          return (highed.isFn(fn) && fn(mainInput.value));
         }));
 
         highed.dom.ap(target, mainInput);
@@ -506,6 +517,10 @@ highed.DataTable = function (parent, attributes) {
             rows = rows.filter(function (b) {
                 return b !== exports;
             });
+
+            if (rows.length < 2) {
+              showDropzone();
+            }
         }
 
         function addToDOM(number) {
@@ -793,6 +808,18 @@ highed.DataTable = function (parent, attributes) {
         emitChanged();
     }
 
+    function showDropzone() {
+      highed.dom.style(dropZone, {
+        opacity: 1
+      });
+    }
+
+    function hideDropzone() {
+      highed.dom.style(dropZone, {
+        opacity: 0
+      });
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     // PUBLIC FUNCTIONS FOLLOW
 
@@ -857,6 +884,7 @@ highed.DataTable = function (parent, attributes) {
         colgroup.innerHTML = '';
 
         emitChanged();
+        showDropzone();
     }
 
     /** Add a new row
@@ -870,6 +898,10 @@ highed.DataTable = function (parent, attributes) {
 
         if (!supressChange) {
           emitChanged();
+        }
+
+        if (rows.length > 1) {
+          hideDropzone();
         }
     }
 
@@ -1051,6 +1083,37 @@ highed.DataTable = function (parent, attributes) {
         }).join('\n')
     }
 
+    function loadRows(rows) {
+      clear();
+
+      console.log('load rows', rows);
+
+      if (rows.length > 1) {
+        hideDropzone();
+      }
+
+      rows.forEach(function (cols, i) {
+          var row;
+
+          if (i) {
+              row = Row();
+          }
+
+          cols.forEach(function (c) {
+              if (i === 0) {
+                  addCol(c);
+              } else {
+                  row.addCol(c);
+              }
+          });
+      });
+
+      highed.dom.ap(colgroup, highed.dom.cr('col'));
+
+      highed.snackBar(highed.L('dgDataImported'));
+      resize();
+    }
+
     function loadCSV(data, surpressEvents) {
         var rows;
 
@@ -1064,34 +1127,11 @@ highed.DataTable = function (parent, attributes) {
         rawCSV = data.csv;
 
         if (data && data.csv) {
-            clear();
-
-            rows = parseCSV(data.csv);
-
-            rows.forEach(function (cols, i) {
-                var row;
-
-                if (i) {
-                    row = Row();
-                }
-
-                cols.forEach(function (c) {
-                    if (i === 0) {
-                        addCol(c);
-                    } else {
-                        row.addCol(c);
-                    }
-                });
-            });
-
-            highed.dom.ap(colgroup, highed.dom.cr('col'));
+          rows = parseCSV(data.csv);
+          loadRows(rows);
         }
 
-        highed.snackBar(highed.L('dgDataImported'));
-        resize();
-
         surpressChangeEvents = false;
-
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -1107,6 +1147,9 @@ highed.DataTable = function (parent, attributes) {
     });
 
     ////////////////////////////////////////////////////////////////////////////
+
+    dropZone.innerHTML = 'DROP CSV FILES HERE OR ON THE TABLE!<br/>' +
+      '<span class="highed-dtable-drop-zone-small">...you can also paste CSV or Excel data into any cell</span>';
 
     table.cellPadding = 0;
     table.cellSpacing = 0;
@@ -1124,7 +1167,8 @@ highed.DataTable = function (parent, attributes) {
                     colgroup,
                     thead,
                     tbody
-                )
+                ),
+                dropZone
             ),
             leftBar,
             topBar,

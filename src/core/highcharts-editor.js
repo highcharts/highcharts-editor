@@ -565,7 +565,8 @@ var highed = {
             includeCDNInExport: true,
             stickyChartProperties: {},
             includeHighcharts: true,
-            cloudAPIURL: 'http://127.0.0.1:4000/'
+            cloudAPIURL: 'http://127.0.0.1:4000/',
+            helpImgPath: 'help/'
         },
         cdnScripts = [
             'https://code.highcharts.com/stock/highstock.js',

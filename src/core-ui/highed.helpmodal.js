@@ -30,7 +30,7 @@ highed.HelpModal = function (items) {
       counter = highed.dom.cr('div', 'highed-help-counter'),
       modal = highed.OverlayModal(false, {
         width: 600,
-        height: 500
+        height: 600
       });
 
   console.log(items);
@@ -48,9 +48,10 @@ highed.HelpModal = function (items) {
     }
 
     desc.innerHTML = item.description;
+    item.gif = highed.option('helpImgPath') + (item.gif || 'placeholder.gif');
 
     highed.dom.style(gif, {
-      'background-image': 'url("' + (item.gif || 'help/placeholder.gif') + '")'
+      'background-image': 'url("' + item.gif + '")'
     });
 
     function makeActive() {
