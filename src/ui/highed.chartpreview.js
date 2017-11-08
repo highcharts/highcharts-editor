@@ -523,6 +523,10 @@ highed.ChartPreview = function (parent, attributes) {
                   projectData.settings.dataProvider.csv
                 );
               }
+
+              if (projectData.settings.dataProvider.googleSpreadsheet) {
+                events.emit('ProviderGSheet', projectData.settings.dataProvider.googleSpreadsheet);
+              }
             }
 
             if (projectData.settings && highed.isStr(projectData.settings.constructor)) {
@@ -550,10 +554,19 @@ highed.ChartPreview = function (parent, attributes) {
      *  @memberof highed.ChartPreview
      */
     function toProject() {
-        var loadedCSVRaw = false;
+        var loadedCSVRaw = false,
+            gsheet = false
+        ;
 
         if (chart && chart.options.data && chart.options.data.csv) {
           loadedCSVRaw = chart.options.data.csv;
+        }
+
+        if (chart && chart.options.data && chart.options.data.googleSpreadsheetKey) {
+          gsheet = {
+            id: chart.options.data.googleSpreadsheetKey,
+            worksheet: chart.options.data.googleWorksheet
+          };
         }
 
         return {
@@ -568,7 +581,8 @@ highed.ChartPreview = function (parent, attributes) {
             settings: {
               constructor: constr,
               dataProvider: {
-                csv: loadedCSVRaw
+                csv: loadedCSVRaw,
+                googleSpreadsheet: gsheet
               }
             }
             //editorOptions: highed.serializeEditorOptions()

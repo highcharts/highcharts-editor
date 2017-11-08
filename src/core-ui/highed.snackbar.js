@@ -52,7 +52,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     highed.dom.on(closeNode, 'click', function () {
         highed.dom.style(container, {
-            bottom: '-58px'
+            bottom: '-68px'
         });
     });
 
@@ -61,7 +61,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     function hide() {
         timeout = window.setTimeout(function () {
             highed.dom.style(container, {
-                bottom: '-58px'
+                bottom: '-68px'
             });
         }, 5000);
     }
@@ -79,7 +79,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      *   @param fn {function} (optional) - the function to call when clicking the action
      */
     highed.snackBar = function (stitle, saction, fn) {
-        title.innerHTML = stitle.toUpperCase();
+        title.innerHTML = stitle; // .toUpperCase();
 
         window.clearTimeout(timeout);
 

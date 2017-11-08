@@ -36,6 +36,7 @@ highed.Toolbox = function(parent, attr) {
       'div',
       'highed-toolbox-body highed-box-size highed-transition'
     ),
+    activeTimeout,
     expanded = false,
     activeItem = false,
     properties = highed.merge(
@@ -79,6 +80,25 @@ highed.Toolbox = function(parent, attr) {
 
     highed.dom.on(icon, 'click', function() {
       entryEvents.emit('Click');
+    });
+
+    highed.dom.on(icon, 'mouseover', function(e) {
+      var pos = highed.dom.pos(icon),
+        size = highed.dom.size(icon),
+        ppos = highed.dom.pos(parent);
+
+      pos.y += ppos.y;
+
+      clearTimeout(activeTimeout);
+
+      activeTimeout = setTimeout(function() {
+        highed.Tooltip(pos.x + 10 + size.w, pos.y + size.h, def.title);
+      }, 800);
+    });
+
+    highed.dom.on(icon, 'mouseout', function() {
+      clearTimeout(activeTimeout);
+      highed.hideAllTooltips();
     });
 
     function resizeBody() {

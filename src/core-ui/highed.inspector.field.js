@@ -679,6 +679,8 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
 
     if (!properties.tooltip && !properties.tooltipText) {
         nohint = true;
+    } else {
+      // properties.tooltip = properties.tooltip.replace(/\n/g, '<br/><br/>');
     }
 
     if (highed.onPhone()) {
@@ -688,7 +690,9 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
 
     } else {
         highed.dom.on([help], 'mouseover', function (e) {
-            highed.Tooltip(e.clientX, e.clientY, properties.tooltip || properties.tooltipText);
+            highed.Tooltip(e.clientX + 20, e.clientY, properties.tooltip || properties.tooltipText);
+
+            // highed.showDimmer(highed.hideAllTooltips, true, true);
         });
     }
 

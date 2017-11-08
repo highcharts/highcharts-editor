@@ -145,20 +145,26 @@ highed.DrawerEditor = function(parent, options) {
             title: 'Manually Add/Edit Data',
             gif: 'dataImport.gif',
             description: [
-              'Data can be manually entered and modified directly in the data table.<br/><br/>',
-              'The cells can be navigated using the arrow keys.',
-              'Pressing Enter creates a new row, or navigates to the row directly below the current row.<br/><br/>',
-              'The headings are used as the axis titles, and can be changed by clicking them.'
+              'Click a cell to edit its contents.<br/><br/>',
+              'The cells can be navigated using the arrow keys.<br/><br/>',
+              'Pressing Enter creates a new row, or navigates to the row directly below the current row.'
+            ]
+          },
+          {
+            title: 'Setting headings',
+            gif: 'dataImport.gif',
+            description: [
+              'The headings are used as the axis titles.<br/><br/>',
+              'They can be edited by left clicking them.<br/><br/>',
+              'Click the arrow symbol in the header to access column properties.'
             ]
           },
           {
             title: 'Importing Data',
             gif: 'import.gif',
             description: [
-              'To import data, simply drag and drop CSV files onto the table.<br/><br/>',
-              'For more advanced data import, click the IMPORT button to',
-              'summon the import panel. Here, you can paste CSV, import CSV from',
-              'an URL, import data from a google spreadsheet, and more.'
+              'To import data, simply drag and drop CSV files onto the table, or paste CSV/Excel data into any cell.<br/><br/>',
+              'For more advanced data import, click the IMPORT DATA button.'
             ]
           }
         ],
@@ -174,15 +180,14 @@ highed.DrawerEditor = function(parent, options) {
         }
       },
       templates: {
-        icon: 'fa-image',
+        icon: 'fa-bar-chart',
         width: 700,
         title: 'Templates',
         help: [
           {
             title: 'Templates',
             description: [
-              'The templates view lets you choose a template for your chart.<br/><br/>',
-              'Templates are pre-defined bundles of configuration.',
+              'Templates are pre-defined bundles of configuration.<br/><br/>',
               'Start by choosing the template category in the list to the left,',
               'then pick a suitable template for your data and use case in the',
               'template list.'
@@ -204,7 +209,7 @@ highed.DrawerEditor = function(parent, options) {
         width: 600,
         help: [
           {
-            title: 'Export',
+            title: 'Export Chart',
             description: [
               'The export pane lets you export your chart to HTML, SVG, JSON, or JavaScript.<br/><br/>'
             ]
@@ -228,7 +233,7 @@ highed.DrawerEditor = function(parent, options) {
       },
       customize: {
         icon: 'fa-sliders',
-        title: 'Customize',
+        title: 'Customize Chart',
         width: 800,
         help: [
           {
@@ -392,7 +397,7 @@ highed.DrawerEditor = function(parent, options) {
     chartPreview.loadTemplate(template);
   });
 
-  dataTable.on('ImportChartSettings', function (settings) {
+  dataTable.on('ImportChartSettings', function(settings) {
     chartPreview.options.setAll(settings);
   });
 
@@ -400,6 +405,10 @@ highed.DrawerEditor = function(parent, options) {
     return chartPreview.data.csv({
       csv: dataTable.toCSV(';', true)
     });
+  });
+
+  chartPreview.on('ProviderGSheet', function(p) {
+    dataTable.initGSheet(p.id, p.worksheet);
   });
 
   if (!highed.onPhone()) {
