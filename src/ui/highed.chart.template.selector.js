@@ -147,9 +147,16 @@ highed.ChartTemplateSelector = function (parent, chartPreview) {
                 selected.node = node;
             }
 
-            highed.dom.style(preview, {
-                "background-image": 'url(' + t.thumbnail + ')'
-            });
+            if (highed.meta.images && highed.meta.images[t.thumbnail]) {
+              highed.dom.style(preview, {
+                'background-image': 'url("data:image/svg+xml;utf8,' +
+                  highed.meta.images[t.thumbnail] + '")'
+              });
+            } else {
+              highed.dom.style(preview, {
+                'background-image': 'url(' + highed.option('thumbnailURL') + t.thumbnail + ')'
+              });
+            }
 
             highed.dom.on(node, 'click', function () {
                 if (selected) {

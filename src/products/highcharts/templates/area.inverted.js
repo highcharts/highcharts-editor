@@ -1,6 +1,6 @@
 /*
 
-Highcharts Editor 
+Highcharts Editor
 
 Copyright (c) 2016-2017, Highsoft
 
@@ -29,7 +29,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.templates.add('Area', {
     "title": "Inverted",
     "description": "",
-    "thumbnail": "https://cloud.highcharts.com/images/yqenid/0/136.svg",
+    "thumbnail": "yqenid.svg",
     "dataValidator": false,
     "sampleSets": [],
     "config": {

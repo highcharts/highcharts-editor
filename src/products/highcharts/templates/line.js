@@ -32,7 +32,7 @@ highed.templates.add('Line', {
       'Requires one column for X values or categories, subsequently one column for each series\' Y values.'
     ],
     constructor: 'Chart',
-    thumbnail: 'https://cloud.highcharts.com/images/abywon/0/136.svg',
+    thumbnail: 'abywon.svg',
     sampleSets: [
     ],
     validator: 'line',

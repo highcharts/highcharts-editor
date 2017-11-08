@@ -31,7 +31,7 @@ highed.templates.add('Pie', {
       'Good starting point for custom pie series.'
     ],
     constructor: 'Chart',
-    thumbnail: 'https://cloud.highcharts.com/images/yqoxob/3/136.svg',
+    thumbnail: 'yqoxob.svg',
     sampleSets: [
      // 'pie-series-simple'
     ],

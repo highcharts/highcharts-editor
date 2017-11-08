@@ -31,7 +31,7 @@ highed.templates.add('Pie', {
       'Pacman Pie.'
     ],
     constructor: 'Chart',
-    thumbnail: 'https://cloud.highcharts.com/images/yqoxob/3/136.svg',
+    thumbnail: 'yqoxob.svg',
     sampleSets: [
       'pie-pacman'
     ],
@@ -48,7 +48,7 @@ highed.templates.add('Pie', {
             ],
             borderColor: '#000000'
         }]
-         
+
     }
 });
 
