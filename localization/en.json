@@ -28,10 +28,10 @@
     "doneCaption": "Close & Generate Chart",
 
     "dgDeleteRow": "Really delete the selected rows?",
-    "dgWithSelected": "With Selected Rows:",
+    "dgWithSelected": "With Selection:",
     "dgImportBtn": "IMPORT",
-    "dgExportBtn": "EXPORT",
-    "dgNewBtn": "NEW",
+    "dgExportBtn": "EXPORT DATA",
+    "dgNewBtn": "CLEAR DATA",
     "dgAddRow": "ADD ROW",
     "dgDataImported": "Data imported",
     "dgDataImporting": "Importing data",
