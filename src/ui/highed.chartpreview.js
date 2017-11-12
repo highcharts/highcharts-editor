@@ -65,7 +65,7 @@ highed.ChartPreview = function (parent, attributes) {
         customCodeDefault = [
           '/*',
           '// Sample of extending options:',
-          'Highcharts.extend(options, Highcharts.merge(options, {',
+          'Highcharts.merge(true, options, {',
           '    chart: {',
           '        backgroundColor: "#bada55"',
           '    },',
@@ -82,7 +82,7 @@ highed.ChartPreview = function (parent, attributes) {
           '            }',
           '        }',
           '    }',
-          '}));',
+          '});',
           '*/'
         ].join('\n'),
         customCode = '',
