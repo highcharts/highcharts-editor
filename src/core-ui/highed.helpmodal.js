@@ -33,8 +33,6 @@ highed.HelpModal = function (items) {
         height: 600
       });
 
-  console.log(items);
-
   items.forEach(function (item, i) {
     var container = highed.dom.cr('div'),
         heading = highed.dom.cr('div', 'highed-toolbox-body-title', item.title),

@@ -105,8 +105,6 @@ function parseCSV(inData, delimiter) {
     }
   }
 
-  console.log(options.delimiter, delimiterCounts);
-
   rows.forEach(function(row, rowNumber) {
     var cols = [],
       inStr = false,
@@ -358,7 +356,6 @@ highed.DataTable = function(parent, attributes) {
       highed.dom.on(mainInput, 'keyup', function(e) {
         // Super hack to allow pasting CSV into cells
         var ps = parseCSV(mainInput.value);
-        console.log(ps, mainInput.value);
         if (ps.length > 1) {
           if (
             confirm(
@@ -1120,7 +1117,6 @@ highed.DataTable = function(parent, attributes) {
   function loadRows(rows) {
     clear();
 
-    console.log('load rows', rows);
 
     if (rows.length > 1) {
       hideDropzone();
@@ -1371,7 +1367,6 @@ highed.DataTable = function(parent, attributes) {
     title: highed.L('dgExportBtn'),
     tooltip: 'Download data',
     click: function(e) {
-      //console.log(toCSV());
       saveCtx.show(e.clientX, e.clientY);
     }
   });

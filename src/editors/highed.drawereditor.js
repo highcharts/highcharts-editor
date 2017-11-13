@@ -174,7 +174,6 @@ highed.DrawerEditor = function(parent, options) {
         },
         events: {
           Expanded: function(width, height) {
-            console.log('expanding', width, height);
             dataTable.resize(width, height);
           }
         }
@@ -348,8 +347,6 @@ highed.DrawerEditor = function(parent, options) {
     });
 
     chartPreview.resize();
-
-    console.log('resizeChart', newWidth);
   }
 
   /**

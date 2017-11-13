@@ -259,6 +259,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       highed.dom.style(notice, { display: 'none' });
 
       highed.cloud.login(username.value, password.value, function (err, res) {
+        btn.disabled = false;
+
         if (err || !res || typeof res.token === 'undefined') {
           notice.innerHTML = 'Error: Check username/password (' + (err || res.message) + ')';
           highed.dom.style(notice, { display: 'block' });
@@ -268,8 +270,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             loginCallback();
           }
         }
-
-        btn.enabled = true;
       });
     });
 
