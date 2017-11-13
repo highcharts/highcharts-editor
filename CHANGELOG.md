@@ -8,6 +8,9 @@
   * Templates now have sample data sets associated with them
   * Module system for product bundles: Highstock support now lives in its own module so that it's easier to include just what's needed. This is the first step in enabling maps support.
   * WordPress plugin now has a settings page (Under "Settings" in the WP admin panel) where advanced mode, and Highstock support can be toggled
+  * New design
+  * Google Spreadsheets now integrated out-of-the-box
+  * Template thumbnails are now part of the editor rather than linking to cloud.highcharts.com
   * Misc bug fixes and enhancements
   * Custom wizard steps can now be added using the `highed.plugins.step` interface
   * Added sticky chart properties. See [wiki](https://github.com/highcharts/highcharts-editor/wiki/Sticky-Chart-Options).
