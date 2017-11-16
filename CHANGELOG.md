@@ -1,4 +1,4 @@
-# 0.2.0-beta-preview
+# 0.2.0-rc1
   * Added `complete` target to build script which bakes in all modules and advanced mode into one source file
   * Re-implemented advanced view: now has a smaller footprint, and bugs regarding arrays are fixed
   * Grid data importer is now the default (can be disabled by overriding `features` when instancing the editor)
@@ -9,6 +9,8 @@
   * Module system for product bundles: Highstock support now lives in its own module so that it's easier to include just what's needed. This is the first step in enabling maps support.
   * WordPress plugin now has a settings page (Under "Settings" in the WP admin panel) where advanced mode, and Highstock support can be toggled
   * New design
+  * New modal-based help system
+  * Highcharts Cloud integrations - save/load charts to/from the cloud
   * Google Spreadsheets now integrated out-of-the-box
   * Template thumbnails are now part of the editor rather than linking to cloud.highcharts.com
   * Misc bug fixes and enhancements
@@ -17,6 +19,7 @@
   * Added `highed.options` to set multiple options in one call.
   * Added `defaultLanguage` to global options
   * Added `includeCDNInExport` to global options, which when false will not include CDN references in HTML exports
+  * Added `thumbnailURL` to global options, which allows for specifying where to fetch the template thumbnails from
 
 ## NOTES
 
