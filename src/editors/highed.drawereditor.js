@@ -30,6 +30,7 @@ highed.DrawerEditor = function(parent, options) {
     // Main properties
     properties = highed.merge(
       {
+        defaultChartOptions: {},
         useHeader: true,
         features: [
           'data',
@@ -61,7 +62,9 @@ highed.DrawerEditor = function(parent, options) {
       'div',
       'highed-box-size highed-chart-frame-body'
     ),
-    chartPreview = highed.ChartPreview(chartContainer),
+    chartPreview = highed.ChartPreview(chartContainer, {
+      defaultChartOptions: properties.defaultChartOptions
+    }),
     // Exporter
     exporterContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
     exporter = highed.Exporter(exporterContainer),
@@ -390,8 +393,25 @@ highed.DrawerEditor = function(parent, options) {
     );
   });
 
+  chartPreview.on('ChartChange', function(newData) {
+    events.emit('ChartChangedLately', newData);
+  });
+
   templates.on('Select', function(template) {
     chartPreview.loadTemplate(template);
+  });
+
+  templates.on('LoadDataSet', function(sample) {
+    if (sample.type === 'csv') {
+      if (highed.isArr(sample.dataset)) {
+        chartPreview.data.csv(sample.dataset.join('\n'));
+      } else {
+        chartPreview.data.csv(sample.dataset);
+      }
+
+      chartPreview.options.set('subtitle-text', '');
+      chartPreview.options.set('title-text', sample.title);
+    }
   });
 
   dataTable.on('ImportChartSettings', function(settings) {
@@ -418,7 +438,7 @@ highed.DrawerEditor = function(parent, options) {
     toolbar.left,
     highed.dom.style(highed.dom.cr('span'), {
       'margin-left': '2px',
-      width: '200px', // 30px
+      width: '200px',
       height: '60px',
       float: 'left',
       display: 'inline-block',
