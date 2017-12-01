@@ -152,7 +152,36 @@
 
         var templates = toolbox.addEntry({
           icon: 'fa-image',
+          width: 700,
           title: 'Templates'
+        });
+
+        var templateSel = highed.ChartTemplateSelector(templates.body, chartPreview);
+
+        templates.on('Expanded', function (width, height) {
+          templateSel.resize(width, height);
+        });
+
+        templateSel.on('Select', function (template) {
+          chartPreview.loadTemplate(template);
+        });
+
+        templateSel.on('LoadDataSet', function (sample) {
+            var csv = '';
+            if (sample.type === 'csv') {
+
+                if (highed.isArr(sample.dataset)) {
+                    csv = sample.dataset.join('\n');
+                } else {
+                    csv = sample.dataset;
+                }
+
+                chartPreview.data.csv(csv);
+                dt.loadCSV({csv: csv});
+
+                chartPreview.options.set('subtitle-text', '');
+                chartPreview.options.set('title-text', sample.title);
+            }
         });
 
         var customizeEntry = toolbox.addEntry({
@@ -161,10 +190,22 @@
           width: 800
         });
 
+        toolbox.addEntry({
+          icon: 'fa-sitemap',
+          title: 'Advanced Customization',
+          width: 500
+        });
+
+        toolbox.addEntry({
+          icon: 'fa-code',
+          title: 'Custom Code',
+          width: 500
+        });
+
         var exportEntry = toolbox.addEntry({
           icon: 'fa-download',
           title: 'Export',
-          width: 400
+          width: 600
         });
 
         var exporter = highed.Exporter(exportEntry.body);
@@ -187,6 +228,7 @@
         customizer.on('PropertySetChange', chartPreview.options.setAll);
 
         customizeEntry.on('Expanded', function (width, height) {
+          console.log('resizing customizer to', width, height);
           customizer.resize(width, height);
         });
 
