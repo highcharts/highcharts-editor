@@ -23,6 +23,95 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+
+Highcharts.wrap(Highcharts.Data.prototype, 'parseGoogleSpreadsheet',  function (proceed) {
+
+  var self = this,
+      options = this.options,
+      url =  options.googleSpreadsheetKey,
+      worksheet = options.googleSpreadsheetWorksheet || 'od6';
+
+  if (!url) {
+    return;
+  }
+
+  if (worksheet === 'undefined') {
+      worksheet = 'od6';
+  }
+
+  function load (json) {
+      function q(s) {
+        return '"' + s + '"';
+      }
+
+      var csv = [],
+          rawCSV,
+          cells = json.feed.entry,
+          cell,
+          cellCount = cells.length,
+          colCount = 0;
+
+      cells.forEach(function (entry) {
+        var cell = entry.gs$cell || false,
+            row = cell ? parseInt(cell.row, 10) - 1 : false,
+            col = cell ? parseInt(cell.col, 10) - 1 : false,
+            val = null
+        ;
+
+        if (!cell) {
+          return;
+        }
+
+        if (cell.numericValue) {
+          if (cell.$t.indexOf('/') >= 0 || cell.$t.indexOf('-') >= 0) {
+            val = cell.$t;
+          } else if (cell.$t.indexOf('%') >= 0) {
+            val = parseFloat(cell.numericValue) * 100;
+          } else {
+            val = parseFloat(cell.numericValue);
+          }
+        } else if (cell.$t) {
+          val = q(cell.$t);
+        }
+
+        csv[row] = csv[row] || [];
+        csv[row][col] = val;
+
+        if (col > colCount) {
+          colCount = col + 1;
+        }
+      });
+
+      rawCSV = csv.map(function (row) {
+        var pad = [];
+        for (var i = row.length; i < colCount; i++) {
+          pad.push(null);
+        }
+        return row.concat(pad).join(';');
+      }).join('\n');
+
+      self.parseCSV( {
+        startRow: options.startRow,
+        endRow: options.endRow,
+        startColumn: options.startColumn,
+        endColumnd: options.endColumn,
+        csv: rawCSV,
+        itemDelimiter: ';'
+      });
+  }
+
+  highed.ajax({
+    dataType: 'json',
+    url: 'https://spreadsheets.google.com/feeds/cells/' +
+    url + '/' + worksheet +
+    '/public/values?alt=json',
+    error: options.error || function () {
+      highed.snackBar('Error loading spreadsheet: please check the sheet ID, and/or the start/end row/column');
+    },
+    success: load
+  });
+});
+
 function parseCSV(inData, delimiter) {
   var isStr = highed.isStr,
     isArr = highed.isArray,
@@ -118,8 +207,8 @@ function parseCSV(inData, delimiter) {
 
     function pushToken() {
       if (!token.length) {
-        token = '';
-        return;
+        token = null;
+        // return;
       }
 
       if (isNum(token)) {
@@ -200,13 +289,29 @@ highed.DataTable = function(parent, attributes) {
     ),
     gsheetContainer = highed.dom.cr(
       'div',
-      'highed-box-size highed-dtable-gsheet'
+      'highed-box-size highed-prettyscroll highed-dtable-gsheet'
     ),
     gsheetID = highed.dom.cr(
       'input',
       'highed-box-size highed-dtable-gsheet-id'
     ),
     gsheetWorksheetID = highed.dom.cr(
+      'input',
+      'highed-box-size highed-dtable-gsheet-id'
+    ),
+    gsheetStartRow = highed.dom.cr(
+      'input',
+      'highed-box-size highed-dtable-gsheet-id'
+    ),
+    gsheetEndRow = highed.dom.cr(
+      'input',
+      'highed-box-size highed-dtable-gsheet-id'
+    ),
+    gsheetStartCol = highed.dom.cr(
+      'input',
+      'highed-box-size highed-dtable-gsheet-id'
+    ),
+    gsheetEndCol = highed.dom.cr(
       'input',
       'highed-box-size highed-dtable-gsheet-id'
     ),
@@ -1164,9 +1269,13 @@ highed.DataTable = function(parent, attributes) {
     surpressChangeEvents = false;
   }
 
-  function initGSheet(id, worksheet) {
+  function initGSheet(id, worksheet, startRow, endRow, startColumn, endColumn) {
     gsheetID.value = id;
-    gsheetWorksheetID.value = worksheet;
+    gsheetWorksheetID.value = worksheet || '';
+    gsheetStartRow.value = startRow || 0;
+    gsheetEndRow.value = endRow || '';
+    gsheetStartCol.value = startColumn || 0;
+    gsheetEndCol.value = endColumn || 0;
 
     highed.dom.style(gsheetFrame, {
       display: 'block'
@@ -1174,6 +1283,17 @@ highed.DataTable = function(parent, attributes) {
 
     highed.dom.style(container, {
       display: 'none'
+    });
+
+    events.emit('ImportChartSettings', {
+      data: {
+        googleSpreadsheetKey: gsheetID.value,
+        googleSpreadsheetWorksheet: gsheetWorksheetID.value || false,
+        startRow: gsheetStartRow.value || 0,
+        endRow: gsheetEndRow.value || undefined,
+        startColumn: gsheetStartCol.value || 0,
+        endColumn: gsheetEndCol.value || undefined
+      }
     });
   }
 
@@ -1242,7 +1362,11 @@ highed.DataTable = function(parent, attributes) {
     events.emit('ImportChartSettings', {
       data: {
         googleSpreadsheetKey: gsheetID.value,
-        googleSpreadsheetWorksheet: gsheetWorksheetID.value || false
+        googleSpreadsheetWorksheet: gsheetWorksheetID.value || false,
+        startRow: gsheetStartRow.value || 0,
+        endRow: gsheetEndRow.value || Number.MAX_VALUE,
+        startColumn: gsheetStartCol.value || 0,
+        endColumn: gsheetEndCol.value || Number.MAX_VALUE
       }
     });
   });
@@ -1310,6 +1434,27 @@ highed.DataTable = function(parent, attributes) {
         highed.dom.ap(highed.dom.cr('div'), gsheetID),
         highed.dom.cr('div', 'highed-dtable-gsheet-label', 'Worksheet'),
         highed.dom.ap(highed.dom.cr('div'), gsheetWorksheetID),
+        highed.dom.ap(highed.dom.cr('table', 'highed-stretch'),
+          highed.dom.ap(highed.dom.cr('tr'),
+            highed.dom.cr('td', 'highed-dtable-gsheet-label', 'Start Row'),
+            highed.dom.cr('td', 'highed-dtable-gsheet-label', 'End Row')
+          ),
+
+          highed.dom.ap(highed.dom.cr('tr'),
+            highed.dom.ap(highed.dom.cr('td', '', ''), gsheetStartRow),
+            highed.dom.ap(highed.dom.cr('td', '', ''), gsheetEndRow)
+          ),
+
+          highed.dom.ap(highed.dom.cr('tr'),
+            highed.dom.cr('td', 'highed-dtable-gsheet-label', 'Start Column'),
+            highed.dom.cr('td', 'highed-dtable-gsheet-label', 'End Column')
+          ),
+
+          highed.dom.ap(highed.dom.cr('tr'),
+            highed.dom.ap(highed.dom.cr('td', '', ''), gsheetStartCol),
+            highed.dom.ap(highed.dom.cr('td', '', ''), gsheetEndCol)
+          )
+        ),
         highed.dom.ap(
           highed.dom.cr('div'),
           gsheetLoadButton,
