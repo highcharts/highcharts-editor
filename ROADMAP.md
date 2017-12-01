@@ -60,13 +60,9 @@
     * Wordpress
     * CKEditor
 
-## 0.2.0: Initial non-beta release, date TBA
+## Upcoming
 
-*Main focus will be bug fixes and general improvements*
-
-**Editor Features**
-
-  * Sample data for each template
-  * Interface for multiple axis in simple view
-  * Property search
-  
+  * Maps support
+  * Annotations support
+  * Convert to JSDoc instead of jskald
+  * Property searching
