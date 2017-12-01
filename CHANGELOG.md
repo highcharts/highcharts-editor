@@ -14,6 +14,7 @@
   * Google Spreadsheets now integrated out-of-the-box
   * Template thumbnails are now part of the editor rather than linking to cloud.highcharts.com
   * Misc bug fixes and enhancements
+  * Editor plugins are now deprecated: use `editor.on('ChartChangedLately'..)` instead.
   * Custom wizard steps can now be added using the `highed.plugins.step` interface
   * Added sticky chart properties. See [wiki](https://github.com/highcharts/highcharts-editor/wiki/Sticky-Chart-Options).
   * Added `highed.options` to set multiple options in one call.
