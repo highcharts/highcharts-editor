@@ -260,7 +260,7 @@ highed.ChartPreview = function (parent, attributes) {
      * theme can either be a straight-up option set, or a theme object with
      * ID and so on.
      */
-    function assignTheme(theme) {
+    function assignTheme(theme, skipEmit) {
       if (highed.isStr(theme)) {
         return assignTheme(JSON.parse(theme));
       }
@@ -285,12 +285,15 @@ highed.ChartPreview = function (parent, attributes) {
         themeOptions = highed.merge({}, theme);
       }
 
-      updateAggregated();
-      init(aggregatedOptions);
-      emitChange();
+      if (!skipEmit) {
+        updateAggregated();
+        init(aggregatedOptions);
+        emitChange();
+      }
     }
 
     function updateAggregated(noCustomCode) {
+
        // customizedOptions.plotOptions = customizedOptions.plotOptions || {};
        // customizedOptions.plotOptions.series = customizedOptions.plotOptions.series || [];
       //  customizedOptions.series = customizedOptions.series || [];
@@ -345,7 +348,7 @@ highed.ChartPreview = function (parent, attributes) {
             });
         }
 
-         if (aggregatedOptions.xAxis && templateOptions.xAxis) {
+        if (aggregatedOptions.xAxis && templateOptions.xAxis) {
             aggregatedOptions.xAxis.forEach(function (obj, i) {
                 if (i < templateOptions.xAxis.length) {
                     highed.merge(obj, templateOptions.xAxis[i]);
@@ -388,6 +391,7 @@ highed.ChartPreview = function (parent, attributes) {
         if (!noCustomCode && highed.isFn(customCode)) {
           customCode(aggregatedOptions);
         }
+
     }
 
     /** Load a template from the meta
@@ -454,16 +458,34 @@ highed.ChartPreview = function (parent, attributes) {
         }
 
         gc(function (chart) {
-            highed.setAttr(customizedOptions, 'series', []);
-            highed.setAttr(aggregatedOptions, 'series', []);
+            var axis;
 
-            highed.setAttr(customizedOptions, 'plotOptions--series--animation', true);
-            highed.setAttr(customizedOptions, 'data--csv', data.csv);
-            highed.setAttr(customizedOptions, 'data--googleSpreadsheetKey', undefined);
-            highed.setAttr(customizedOptions, 'data--itemDelimiter', data.itemDelimiter);
-            highed.setAttr(customizedOptions, 'data--firstRowAsNames', data.firstRowAsNames);
-            highed.setAttr(customizedOptions, 'data--dateFormat', data.dateFormat);
-            highed.setAttr(customizedOptions, 'data--decimalPoint', data.decimalPoint);
+            // highed.setAttr(customizedOptions, 'series', []);
+            // highed.setAttr(aggregatedOptions, 'series', []);
+
+            // highed.setAttr(customizedOptions, 'plotOptions--series--animation', true);
+            // highed.setAttr(customizedOptions, 'data--csv', data.csv);
+            // highed.setAttr(customizedOptions, 'data--googleSpreadsheetKey', undefined);
+            // highed.setAttr(customizedOptions, 'data--itemDelimiter', data.itemDelimiter);
+            // highed.setAttr(customizedOptions, 'data--firstRowAsNames', data.firstRowAsNames);
+            // highed.setAttr(customizedOptions, 'data--dateFormat', data.dateFormat);
+            // highed.setAttr(customizedOptions, 'data--decimalPoint', data.decimalPoint);
+
+            highed.merge(customizedOptions, {
+              plotOptions: {
+                series: {
+                  animation: false
+                }
+              },
+              data: {
+                csv: data.csv,
+                itemDelimiter: data.itemDelimiter,
+                firstRowAsNames: data.firstRowAsNames,
+                dateFormat: data.dateFormat,
+                decimalPoint: data.decimalPoint,
+                googleSpreadsheetKey: undefined
+              }
+            });
 
             updateAggregated();
 
@@ -471,6 +493,25 @@ highed.ChartPreview = function (parent, attributes) {
             loadSeries();
             emitChange();
         });
+
+        // setTimeout(function () {
+        // gc(function (chart) {
+        //   if (chart && highed.isArr(chart.xAxis) && chart.xAxis.length > 0) {
+        //     customizedOptions.xAxis = customizedOptions.xAxis || [];
+        //     chart.xAxis.forEach(function (a, i) {
+        //       customizedOptions.xAxis[i] = customizedOptions.xAxis[i] || {};
+        //       if (a.isDatetimeAxis) {
+        //         customizedOptions.xAxis[i].type = 'datetime';
+        //       } else if (a.categories) {
+        //         customizedOptions.xAxis[i].type = 'categories';
+        //       } else {
+        //         // customizedOptions.xAxis[i].type = 'linear';
+        //       }
+        //     });
+        //   }
+        //   console.log(chart);
+        // });
+        // }, 1000);
     }
 
     /** Load project
@@ -478,6 +519,8 @@ highed.ChartPreview = function (parent, attributes) {
      *  @param projectData - the data to load
      */
     function loadProject(projectData) {
+        var hasData = false;
+
         if (highed.isStr(projectData)) {
             try {
                 return loadProject(JSON.parse(projectData));
@@ -498,6 +541,16 @@ highed.ChartPreview = function (parent, attributes) {
                 customizedOptions = projectData.options;
             }
 
+            // highed.merge(customizedOptions, {
+            //   data: {
+            //     csv: undefined
+            //   }
+            // });
+
+            // if (customizedOptions && customizedOptions.data) {
+            //   customizedOptions.data.csv = undefined;
+            // }
+
             if (customizedOptions.lang) {
                 Highcharts.setOptions({
                     lang: customizedOptions.lang
@@ -505,15 +558,51 @@ highed.ChartPreview = function (parent, attributes) {
             }
 
             if (projectData.theme) {
-              assignTheme(projectData.theme);
+              assignTheme(projectData.theme, true);
             }
 
             setCustomCode(projectData.customCode, function (err) {
               highed.snackBar('Error in custom code: ' + err);
-            });
+            }, true);
+
+            constr = 'Chart';
+
+            // Support legacy format
+            if (projectData.settings && projectData.settings.templateView) {
+              if (projectData.settings.templateView.activeSection === 'stock') {
+                constr = 'StockChart';
+              }
+            }
+
+            if (projectData.settings && highed.isStr(projectData.settings.constructor)) {
+              constr = projectData.settings.constructor;
+            }
 
             if (projectData.settings && projectData.settings.dataProvider) {
+
+              if (projectData.settings.dataProvider.googleSpreadsheet) {
+
+                if (customizedOptions.data) {
+                  projectData.settings.dataProvider.googleSpreadsheet.startRow = customizedOptions.data.startRow;
+                  projectData.settings.dataProvider.googleSpreadsheet.endRow = customizedOptions.data.endRow;
+                  projectData.settings.dataProvider.googleSpreadsheet.startColumn = customizedOptions.data.startColumn;
+                  projectData.settings.dataProvider.googleSpreadsheet.endColumn = customizedOptions.data.endColumn;
+                }
+
+                events.emit('ProviderGSheet', projectData.settings.dataProvider.googleSpreadsheet);
+                hasData = true;
+              }
+
+              if (projectData.settings.dataProvider.seriesMapping) {
+                highed.merge(customizedOptions, {
+                  data: {
+                    seriesMapping: projectData.settings.dataProvider.seriesMapping
+                  }
+                });
+              }
+
               if (projectData.settings.dataProvider.csv) {
+
                 loadCSVData({
                   csv: projectData.settings.dataProvider.csv
                 });
@@ -522,17 +611,9 @@ highed.ChartPreview = function (parent, attributes) {
                   'LoadProjectData',
                   projectData.settings.dataProvider.csv
                 );
-              }
 
-              if (projectData.settings.dataProvider.googleSpreadsheet) {
-                events.emit('ProviderGSheet', projectData.settings.dataProvider.googleSpreadsheet);
+                hasData = true;
               }
-            }
-
-            if (projectData.settings && highed.isStr(projectData.settings.constructor)) {
-              constr = projectData.settings.constructor;
-            } else {
-              constr = 'Chart';
             }
 
             // Not sure if this should be part of the project files yet
@@ -542,12 +623,39 @@ highed.ChartPreview = function (parent, attributes) {
             //     });
             // }
 
+          if (!hasData) {
             updateAggregated();
             init(aggregatedOptions);
             emitChange();
 
             events.emit('LoadProject', projectData);
+          }
         }
+    }
+
+    function getCleanOptions(source) {
+
+      return source;
+
+      // return highed.merge(highed.merge({}, source), {
+      //   data: {
+      //     csv: false
+      //   }
+      // });
+
+      // var clone = highed.merge({}, source || customizedOptions);
+
+      // if (!highed.isArr(clone.yAxis)) {
+      //   clone.yAxis = [clone.yAxis];
+      // }
+
+      // (clone.yAxis || []).forEach(function (axis) {
+      //   if (axis.series) {
+      //     delete axis.series.data;
+      //   }
+      // });
+
+      // return clone;
     }
 
     /** Export project as JSON
@@ -558,11 +666,11 @@ highed.ChartPreview = function (parent, attributes) {
             gsheet = false
         ;
 
-        if (chart && chart.options.data && chart.options.data.csv) {
+        if (chart && chart.options && chart.options.data && chart.options.data.csv) {
           loadedCSVRaw = chart.options.data.csv;
         }
 
-        if (chart && chart.options.data && chart.options.data.googleSpreadsheetKey) {
+        if (chart && chart.options && chart.options.data && chart.options.data.googleSpreadsheetKey) {
           gsheet = {
             id: chart.options.data.googleSpreadsheetKey,
             worksheet: chart.options.data.googleWorksheet
@@ -571,7 +679,7 @@ highed.ChartPreview = function (parent, attributes) {
 
         return {
             template: templateOptions,
-            options: customizedOptions,
+            options: getCleanOptions(customizedOptions),
             customCode: highed.isFn(customCode) ? customCodeStr : '',
             theme: {
               id: themeMeta.id,
@@ -751,7 +859,7 @@ highed.ChartPreview = function (parent, attributes) {
         var r;
 
         updateAggregated(noCustomCode);
-        r = highed.merge({}, aggregatedOptions);
+        r = getCleanOptions(highed.merge({}, aggregatedOptions));
 
         //This should be part of the series
         if (!highed.isNull(r.data)) {
@@ -1000,7 +1108,7 @@ highed.ChartPreview = function (parent, attributes) {
         customCode || customCodeDefault;
     }
 
-    function setCustomCode(newCode, errFn) {
+    function setCustomCode(newCode, errFn, skipEmit) {
       var fn;
 
       if (!newCode) {
@@ -1010,8 +1118,11 @@ highed.ChartPreview = function (parent, attributes) {
 
       try {
         // eval('(var options = {};' + newCode + ')');
-
-        customCode = new Function('options', newCode);
+        customCode = new Function('options', [
+          'if (options.yAxis && options.yAxis.length === 1) options.yAxis = options.yAxis[0];',
+          'if (options.xAxis && options.xAxis.length === 1) options.xAxis = options.xAxis[0];',
+          'if (options.zAxis && options.zAxis.length === 1) options.zAxis = options.zAxis[0];'
+        ].join('') + newCode);
         customCodeStr = newCode;
       } catch (e) {
         customCode = false;
@@ -1019,10 +1130,11 @@ highed.ChartPreview = function (parent, attributes) {
         return highed.isFn(errFn) && errFn(e);
       }
 
-      updateAggregated();
-      init(aggregatedOptions);
-      emitChange();
-
+      if (!skipEmit) {
+        updateAggregated();
+        init(aggregatedOptions);
+        emitChange();
+      }
     }
 
     ///////////////////////////////////////////////////////////////////////////
