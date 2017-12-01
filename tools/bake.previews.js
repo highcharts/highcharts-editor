@@ -23,55 +23,42 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-const templates = require(__dirname + '/../src/meta/highed.meta.charts.js');
-const request = require('request');
 const async = require('async');
-const outputFolder = 'generated_src/';
+const outputFolder = __dirname + '/../generated_src/';
 const output = outputFolder + 'highed.meta.images.js';
+const inputFolder = __dirname + '/../thumbnails/';
 const fs = require('fs');
+
 const pkg = require(__dirname + '/../package.json');
 const license = fs.readFileSync(__dirname + '/../LICENSE').toString().replace('<%= version %>', pkg.version);
-const logoPath = __dirname + '/../res/logo.svg';
+
 const mkdir = require('mkdirp');
 
 require('colors');
 
-var funs = [],
-    images = {
-        'logo.svg': fs.readFileSync(logoPath, 'utf8').toString()
-    }
-;
-
 console.log('Highcharts Editor Image Baker'.green);
 
-Object.keys(templates).forEach(function (cat) {
-    Object.keys(templates[cat].templates).forEach(function (key) {
-        var template = templates[cat].templates[key];
+mkdir(outputFolder, () => {
+  let ofile = [
+    license,
+    ''
+  ];
 
-        funs.push(function (next) {
-            request(template.urlImg, function (error, response, body) {
-                if (!error) {
-                    console.log('Baking', template.urlImg.bold);
-                    images[template.urlImg] = body;
-                } else {
-                    console.log('[error]'.red, error);
-                }
-                next(error);
-            });
-        });
+  let fileMap = {};
+
+  fs.readdir(inputFolder, (err, files) => {
+    if (err) return console.log('Error:'.red, err);
+
+    files.forEach((filename) => {
+      if (filename.indexOf('.svg') >= 0) {
+        fileMap[filename] = fs.readFileSync(inputFolder + filename, 'utf8');
+      }
     });
-});
 
-async.waterfall(funs, function () {
-    var res = license + '\n\nhighed.meta.images = ' + 
-              JSON.stringify(images, undefined, '  ') + ';'
-    ;
+    // Write the result
+    fs.writeFile(output, ofile.concat(['highed.meta.images = ' + JSON.stringify(fileMap, false, '  ')]).join('\n'), (err) => {
 
-    mkdir(outputFolder, function () {
-       fs.writeFile(__dirname + '/../' + output, res, function (err) {
-          if (err) return console.log('[error]'.red, err);
-          console.log('All done. Stored at', output);
-      });
     });
-});
 
+  });
+});
