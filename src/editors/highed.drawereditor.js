@@ -425,7 +425,14 @@ highed.DrawerEditor = function(parent, options) {
   });
 
   chartPreview.on('ProviderGSheet', function(p) {
-    dataTable.initGSheet(p.id, p.worksheet);
+    dataTable.initGSheet(
+      p.id,
+      p.worksheet,
+      p.startRow,
+      p.endRow,
+      p.startColumn,
+      p.endColumn
+    );
   });
 
   if (!highed.onPhone()) {
