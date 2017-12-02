@@ -216,6 +216,13 @@ highed.Toolbox = function(parent, attr) {
     highed.dom.on(icon, 'click', toggle);
     highed.dom.ap(bar, icon);
     highed.dom.ap(contents, highed.dom.ap(title, helpIcon), userContents);
+    highed.dom.on(window, 'resize', function () {
+      highed.dom.style(body, { height: '' });
+      if (expanded) {
+        var height = resizeBody().h;
+        entryEvents.emit('Expanded', highed.dom.size(bar), height - 20);
+      }
+    });
 
     exports = {
       on: entryEvents.on,
