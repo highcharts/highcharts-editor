@@ -46,11 +46,15 @@ highed.HelpModal = function (items) {
     }
 
     desc.innerHTML = item.description;
-    item.gif = highed.option('helpImgPath') + (item.gif || 'placeholder.gif');
+    if (item.gif) {
+      item.gif = highed.option('helpImgPath') + item.gif;
 
-    highed.dom.style(gif, {
-      'background-image': 'url("' + item.gif + '")'
-    });
+      highed.dom.style(gif, {
+        'background-image': 'url("' + item.gif + '")'
+      });
+    } else {
+      highed.dom.style(gif, { display: 'none' });
+    }
 
     function makeActive() {
       if (active) {
