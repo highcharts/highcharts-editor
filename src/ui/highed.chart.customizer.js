@@ -408,34 +408,72 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
     }
 
     //Highlight a node
-    function highlightNode(n) {
+    function highlightNode(n, x, y) {
          if (!n) return;
 
         var p = highed.dom.pos(n);
 
-        highed.dom.style(n, {
-            border: '2px solid #33aa33'
-        });
+        if (!simpleTab.selected) {
+            simpleTab.focus();
+        }
 
         n.focus();
-        n.scrollIntoView(true);
+        n.scrollIntoView({
+            inline: 'nearest'
+        });
 
+        // Draw a dot where the item was clicked
+        var attention = highed.dom.cr('div', 'highed-attention');
+        highed.dom.style(attention, {
+            width: '10px',
+            height: '10px',
+            left: (x - 5) + 'px',
+            top: (y - 5) + 'px',
+            borderRadius: '50%'
+        });
+        highed.dom.ap(document.body, attention);
+
+        // Animate it to the corresponding element
+        var pos = Highcharts.offset(n);
+
+        var bgColor = n.style.backgroundColor;
+        highed.dom.style(attention, {
+            width: n.clientWidth + 'px',
+            height: n.clientHeight + 'px',
+            borderRadius: 0,
+            left: pos.left + 'px',
+            top: pos.top + 'px'
+        });
         window.setTimeout(function () {
+
             highed.dom.style(n, {
-                border: ''
+                backgroundColor: window.getComputedStyle(attention).backgroundColor,
+                transition: '1s ease background-color'
             });
-        }, 2000);
+
+            attention.parentNode.removeChild(attention);
+            attention = null;
+
+            window.setTimeout(function () {
+                highed.dom.style(n, {
+                    backgroundColor: bgColor
+                });
+            }, 250);
+
+        }, 350);
     }
 
     /** Highlight a field in the customizer
      *  @memberof highed.ChartCustomizer
      *  @param id {string} - is the id of the field to highlight
+     *  @param x {number} - the x coordinate where the focus was triggered
+     *  @param y {number} - the y coordinate where the focus was triggered
      */
-    function highlightField(id) {
+    function highlightField(id, x, y) {
         if (id.indexOf('-') >= 0) {
             var n = advSplitter.left.querySelector('#' + id.substr(0, id.indexOf('-')));
 
-            highlightNode(body.querySelector('#' + id));
+            highlightNode(body.querySelector('#' + id), x, y);
             highlightNode(advSplitter.right.querySelector('#' + id));
 
             if (n) {
@@ -457,7 +495,7 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
 
         list.select(thing.tab);
         advTree.expandTo(thing.id);
-        highlightField(thing.id);
+        highlightField(thing.id, x, y);
     }
 
     ///////////////////////////////////////////////////////////////////////////
