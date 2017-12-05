@@ -488,8 +488,15 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     try {
                         value = JSON.parse(value);
                     } catch (e) {
-
+                      return container;
                     }
+                }
+
+                if (!highed.isArr(value) && !highed.isBasic(value)) {
+                  // This is an object.
+                  value = Object.keys(value).map(function (e) {
+                    return value[e];
+                  });
                 }
 
                 function addCompositeItem(val, suppressCallback) {
