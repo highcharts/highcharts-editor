@@ -414,8 +414,8 @@ highed.DrawerEditor = function(parent, options) {
     }
   });
 
-  dataTable.on('ImportChartSettings', function(settings) {
-    chartPreview.options.setAll(settings);
+  dataTable.on('LoadGSheet', function(settings) {
+    chartPreview.data.gsheet(settings);
   });
 
   dataTable.on('Change', function(headers, data) {
@@ -431,7 +431,8 @@ highed.DrawerEditor = function(parent, options) {
       p.startRow,
       p.endRow,
       p.startColumn,
-      p.endColumn
+      p.endColumn,
+      true
     );
   });
 

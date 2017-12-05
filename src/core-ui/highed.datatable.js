@@ -36,7 +36,7 @@ Highcharts.wrap(Highcharts.Data.prototype, 'parseGoogleSpreadsheet',  function (
   }
 
   if (worksheet === 'undefined') {
-      worksheet = 'od6';
+      worksheet = 1;
   }
 
   function load (json) {
@@ -64,13 +64,13 @@ Highcharts.wrap(Highcharts.Data.prototype, 'parseGoogleSpreadsheet',  function (
 
         if (cell.numericValue) {
           if (cell.$t.indexOf('/') >= 0 || cell.$t.indexOf('-') >= 0) {
-            val = cell.$t;
+            val = q(cell.$t);
           } else if (cell.$t.indexOf('%') >= 0) {
             val = parseFloat(cell.numericValue) * 100;
           } else {
             val = parseFloat(cell.numericValue);
           }
-        } else if (cell.$t) {
+        } else if (cell.$t && cell.$t.length) {
           val = q(cell.$t);
         }
 
@@ -94,7 +94,7 @@ Highcharts.wrap(Highcharts.Data.prototype, 'parseGoogleSpreadsheet',  function (
         startRow: options.startRow,
         endRow: options.endRow,
         startColumn: options.startColumn,
-        endColumnd: options.endColumn,
+        endColumn: options.endColumn,
         csv: rawCSV,
         itemDelimiter: ';'
       });
@@ -1269,7 +1269,7 @@ highed.DataTable = function(parent, attributes) {
     surpressChangeEvents = false;
   }
 
-  function initGSheet(id, worksheet, startRow, endRow, startColumn, endColumn) {
+  function initGSheet(id, worksheet, startRow, endRow, startColumn, endColumn, skipLoad) {
     gsheetID.value = id;
     gsheetWorksheetID.value = worksheet || '';
     gsheetStartRow.value = startRow || 0;
@@ -1285,16 +1285,16 @@ highed.DataTable = function(parent, attributes) {
       display: 'none'
     });
 
-    events.emit('ImportChartSettings', {
-      data: {
-        googleSpreadsheetKey: gsheetID.value,
-        googleSpreadsheetWorksheet: gsheetWorksheetID.value || false,
-        startRow: gsheetStartRow.value || 0,
-        endRow: gsheetEndRow.value || undefined,
-        startColumn: gsheetStartCol.value || 0,
-        endColumn: gsheetEndCol.value || undefined
-      }
-    });
+    if (!skipLoad) {
+      events.emit('LoadGSheet', {
+          googleSpreadsheetKey: gsheetID.value,
+          googleSpreadsheetWorksheet: gsheetWorksheetID.value || false,
+          startRow: gsheetStartRow.value || 0,
+          endRow: gsheetEndRow.value || undefined,
+          startColumn: gsheetStartCol.value || 0,
+          endColumn: gsheetEndCol.value || undefined
+      });
+    }
   }
 
   function showGSheet() {
@@ -1323,11 +1323,9 @@ highed.DataTable = function(parent, attributes) {
       confirm('Are you sure you want to detach the current spreadsheet?')
     ) {
       // Should emit a gsheet clear
-      events.emit('ImportChartSettings', {
-        data: {
+      events.emit('LoadGSheet', {
           googleSpreadsheetKey: '',
           googleSpreadsheetWorksheet: false
-        }
       });
 
       highed.dom.style(gsheetFrame, {
@@ -1359,15 +1357,13 @@ highed.DataTable = function(parent, attributes) {
   });
 
   highed.dom.on(gsheetLoadButton, 'click', function() {
-    events.emit('ImportChartSettings', {
-      data: {
+    events.emit('LoadGSheet', {
         googleSpreadsheetKey: gsheetID.value,
         googleSpreadsheetWorksheet: gsheetWorksheetID.value || false,
         startRow: gsheetStartRow.value || 0,
         endRow: gsheetEndRow.value || Number.MAX_VALUE,
         startColumn: gsheetStartCol.value || 0,
         endColumn: gsheetEndCol.value || Number.MAX_VALUE
-      }
     });
   });
 

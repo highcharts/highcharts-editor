@@ -582,14 +582,21 @@ highed.ChartPreview = function (parent, attributes) {
 
               if (projectData.settings.dataProvider.googleSpreadsheet) {
 
+                var provider = projectData.settings.dataProvider;
+                var sheet = provider.googleSpreadsheet;
+
                 if (customizedOptions.data) {
-                  projectData.settings.dataProvider.googleSpreadsheet.startRow = customizedOptions.data.startRow;
-                  projectData.settings.dataProvider.googleSpreadsheet.endRow = customizedOptions.data.endRow;
-                  projectData.settings.dataProvider.googleSpreadsheet.startColumn = customizedOptions.data.startColumn;
-                  projectData.settings.dataProvider.googleSpreadsheet.endColumn = customizedOptions.data.endColumn;
+
+                  sheet.startRow = provider.startRow || customizedOptions.data.startRow;
+                  sheet.endRow = provider.endRow || customizedOptions.data.endRow;
+                  sheet.startColumn = provider.startColumn || customizedOptions.data.startColumn;
+                  sheet.endColumn = provider.endColumn || customizedOptions.data.endColumn;
                 }
 
                 events.emit('ProviderGSheet', projectData.settings.dataProvider.googleSpreadsheet);
+
+                loadGSpreadsheet(sheet);
+
                 hasData = true;
               }
 
@@ -631,6 +638,24 @@ highed.ChartPreview = function (parent, attributes) {
             events.emit('LoadProject', projectData);
           }
         }
+    }
+
+    function loadGSpreadsheet(options) {
+      if (options.id && !options.googleSpreadsheetKey) {
+        options.googleSpreadsheetKey = options.id;
+      }
+
+      if (options.worksheet && !options.googleSpreasheetWorksheet) {
+        options.googleSpreadsheetWorksheet = options.worksheet;
+      }
+
+      highed.merge(customizedOptions, {
+        data: options
+      });
+
+      updateAggregated();
+      init(aggregatedOptions);
+      emitChange();
     }
 
     function getCleanOptions(source) {
@@ -1188,7 +1213,8 @@ highed.ChartPreview = function (parent, attributes) {
             csv: loadCSVData,
             json: loadJSONData,
             settings: loadChartSettings,
-            export: exportChart
+            export: exportChart,
+            gsheet:  loadGSpreadsheet
         },
 
         export: {
