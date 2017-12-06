@@ -259,7 +259,8 @@ highed.DrawerEditor = function(parent, options) {
           }
         }
       }
-    };
+    },
+    toolboxEntries;
 
   if (!properties.useHeader) {
     highed.dom.style(splitter.top.parentNode, {
@@ -316,6 +317,7 @@ highed.DrawerEditor = function(parent, options) {
       setTimeout(addedOptions.data.expand, 200);
     }
 
+    toolboxEntries = addedOptions;
     // resizeChart(toolbox.width());
   }
 
@@ -416,6 +418,21 @@ highed.DrawerEditor = function(parent, options) {
 
   dataTable.on('LoadGSheet', function(settings) {
     chartPreview.data.gsheet(settings);
+  });
+
+  chartPreview.on('RequestEdit', function (event, x, y) {
+    // Expanded
+    if (toolboxEntries.customize.body.offsetWidth) {
+      customizer.focus(event, x, y);
+
+    // Collapsed
+    } else {
+      var unbind = toolboxEntries.customize.on('Expanded', function () {
+        customizer.focus(event, x, y);
+        unbind();
+      });
+      toolboxEntries.customize.expand();
+    }
   });
 
   dataTable.on('Change', function(headers, data) {
