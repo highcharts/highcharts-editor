@@ -561,6 +561,18 @@ highed.ChartPreview = function (parent, attributes) {
               assignTheme(projectData.theme, true);
             }
 
+            if (customizedOptions && customizedOptions.series) {
+              customizedOptions.series = highed.isArr(customizedOptions.series) ?
+                customizedOptions.series :
+                [customizedOptions.series];
+
+              customizedOptions.series.forEach(function (series) {
+                if (typeof series._colorIndex !== 'undefined') {
+                  delete series._colorIndex;
+                }
+              });
+            }
+
             setCustomCode(projectData.customCode, function (err) {
               highed.snackBar('Error in custom code: ' + err);
             }, true);
@@ -720,6 +732,33 @@ highed.ChartPreview = function (parent, attributes) {
             }
             //editorOptions: highed.serializeEditorOptions()
         };
+    }
+
+    function clearData(skipReinit) {
+      loadedCSVRaw = false;
+
+      if (customizedOptions && customizedOptions.data) {
+        customizedOptions.data = {};
+      }
+
+      if (customizedOptions.series) {
+        customizedOptions.series =
+          highed.isArr(customizedOptions.series) ?
+          customizedOptions.series :
+          [customizedOptions.series];
+
+        customizedOptions.series.forEach(function (series) {
+          if (series.data) {
+            delete series.data;
+          }
+        });
+      }
+
+      if (!skipReinit) {
+        updateAggregated();
+        init(aggregatedOptions);
+        emitChange();
+      }
     }
 
     /**
@@ -1214,7 +1253,8 @@ highed.ChartPreview = function (parent, attributes) {
             json: loadJSONData,
             settings: loadChartSettings,
             export: exportChart,
-            gsheet:  loadGSpreadsheet
+            gsheet:  loadGSpreadsheet,
+            clear: clearData
         },
 
         export: {
