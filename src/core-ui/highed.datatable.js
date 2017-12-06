@@ -273,12 +273,14 @@ highed.DataTable = function(parent, attributes) {
     table = highed.dom.cr('table', 'highed-dtable-table'),
     thead = highed.dom.cr('thead', 'highed-dtable-head'),
     tbody = highed.dom.cr('tbody', 'highed-dtable-body'),
+    tableTail = highed.dom.cr('div', 'highed-dtable-table-tail', 'Only the first 500 rows are shown.'),
     colgroup = highed.dom.cr('colgroup'),
     leftBar = highed.dom.cr('div', 'highed-dtable-left-bar'),
     topBar = highed.dom.cr('div', 'highed-dtable-top-bar'),
     topLeftPanel = highed.dom.cr('div', 'highed-dtable-top-left-panel'),
     checkAll = highed.dom.cr('input'),
     mainInput = highed.dom.cr('textarea', 'highed-dtable-input'),
+    loadIndicator = highed.dom.cr('div', 'highed-dtable-load-indicator', 'Loading Data...'),
     dropZone = highed.dom.cr(
       'div',
       'highed-dtable-drop-zone highed-transition'
@@ -418,9 +420,13 @@ highed.DataTable = function(parent, attributes) {
 
   ////////////////////////////////////////////////////////////////////////////
 
-  function emitChanged() {
+  function emitChanged(noDelay) {
     if (surpressChangeEvents) {
       return;
+    }
+
+    if (noDelay) {
+      return events.emit('Change', getHeaderTextArr(), toData());
     }
 
     //We use an interval to stop a crazy amount of changes to be
@@ -604,7 +610,9 @@ highed.DataTable = function(parent, attributes) {
 
     highed.dom.on(col, 'click', focus);
 
-    addToDOM();
+    if (rows.length <= 500) {
+      addToDOM();
+    }
 
     exports = {
       focus: focus,
@@ -624,6 +632,7 @@ highed.DataTable = function(parent, attributes) {
       leftItem = highed.dom.cr('div', 'highed-dtable-left-bar-row', ''),
       checker = highed.dom.cr('input', 'highed-dtable-row-select-box'),
       checked = false,
+      didAddHTML = false,
       exports = {};
 
     checker.type = 'checkbox';
@@ -654,9 +663,12 @@ highed.DataTable = function(parent, attributes) {
     }
 
     function destroy() {
-      leftBar.removeChild(leftItem);
-      tbody.removeChild(row);
-      row.innerHTML = '';
+      if (didAddHTML) {
+        leftBar.removeChild(leftItem);
+        tbody.removeChild(row);
+        row.innerHTML = '';
+      }
+
       rows = rows.filter(function(b) {
         return b !== exports;
       });
@@ -667,6 +679,7 @@ highed.DataTable = function(parent, attributes) {
     }
 
     function addToDOM(number) {
+      didAddHTML = true;
       exports.number = number;
 
       highed.dom.ap(tbody, row);
@@ -692,7 +705,13 @@ highed.DataTable = function(parent, attributes) {
       checked = checker.checked;
     });
 
-    addToDOM(rows.length);
+    if (rows.length < 500) {
+      addToDOM(rows.length);
+    } else if (rows.length === 500) {
+      highed.dom.style(tableTail, {
+        display: 'block'
+      });
+    }
 
     exports = {
       destroy: destroy,
@@ -1024,6 +1043,12 @@ highed.DataTable = function(parent, attributes) {
     topBar.innerHTML = '';
     colgroup.innerHTML = '';
 
+    highed.dom.style(tableTail, {
+      display: ''
+    });
+
+    events.emit('ClearData');
+
     emitChanged();
     showDropzone();
   }
@@ -1100,11 +1125,17 @@ highed.DataTable = function(parent, attributes) {
      *  @memberof highed.DataTable
      *  @returns {array<string>} - the headers
      */
-  function getHeaderTextArr() {
+  function getHeaderTextArr(quoteStrings) {
     return gcolumns.map(function(item) {
-      return item.headerTitle.innerHTML.length
+      var title = item.headerTitle.innerHTML.length
         ? item.headerTitle.innerHTML
         : null;
+
+      if (quoteStrings) {
+        title = '"' + title + '"';
+      }
+
+      return title;
     });
   }
 
@@ -1118,7 +1149,7 @@ highed.DataTable = function(parent, attributes) {
     var data = [];
 
     if (includeHeaders) {
-      data.push(getHeaderTextArr());
+      data.push(getHeaderTextArr(quoteStrings));
     }
 
     rows.forEach(function(row) {
@@ -1222,40 +1253,50 @@ highed.DataTable = function(parent, attributes) {
   function loadRows(rows) {
     clear();
 
-
     if (rows.length > 1) {
       hideDropzone();
     }
 
-    rows.forEach(function(cols, i) {
-      var row;
-
-      if (i) {
-        row = Row();
-      }
-
-      cols.forEach(function(c) {
-        if (i === 0) {
-          addCol(c);
-        } else {
-          row.addCol(c);
-        }
-      });
+    highed.dom.style(loadIndicator, {
+      opacity: 1
     });
 
-    highed.dom.ap(colgroup, highed.dom.cr('col'));
+    setTimeout(function () {
+      rows.forEach(function(cols, i) {
+        var row;
 
-    highed.snackBar(highed.L('dgDataImported'));
-    resize();
+        if (i) {
+          row = Row();
+        }
+
+        cols.forEach(function(c) {
+          if (i === 0) {
+            addCol(c);
+          } else {
+            row.addCol(c);
+          }
+        });
+      });
+
+      highed.dom.ap(colgroup, highed.dom.cr('col'));
+
+      highed.snackBar(highed.L('dgDataImported'));
+      resize();
+
+      highed.dom.style(loadIndicator, {
+        opacity: 0
+      });
+    }, 10);
   }
 
   function loadCSV(data, surpressEvents) {
     var rows;
 
+
     highed.snackBar(highed.L('dgDataImporting'));
     importModal.hide();
 
-    if (surpressChangeEvents) {
+    if (!surpressChangeEvents) {
       surpressChangeEvents = true;
     }
 
@@ -1267,6 +1308,8 @@ highed.DataTable = function(parent, attributes) {
     }
 
     surpressChangeEvents = false;
+
+    emitChanged(true);
   }
 
   function initGSheet(id, worksheet, startRow, endRow, startColumn, endColumn, skipLoad) {
@@ -1390,12 +1433,14 @@ highed.DataTable = function(parent, attributes) {
       highed.dom.ap(
         frame,
         highed.dom.ap(table, colgroup, thead, tbody),
+        tableTail,
         dropZone
       ),
       leftBar,
       topBar,
       highed.dom.ap(topLeftPanel, checkAll)
-    )
+    ),
+    loadIndicator
   );
 
   gsheetID.placeholder = 'Spreadsheet ID';

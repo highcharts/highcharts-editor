@@ -157,7 +157,7 @@ highed.DrawerEditor = function(parent, options) {
             title: 'Setting headings',
             gif: 'dataImport.gif',
             description: [
-              'The headings are used as the axis titles.<br/><br/>',
+              'The headings are used as the series titles.<br/><br/>',
               'They can be edited by left clicking them.<br/><br/>',
               'Click the arrow symbol in the header to access column properties.'
             ]
@@ -422,6 +422,10 @@ highed.DrawerEditor = function(parent, options) {
     return chartPreview.data.csv({
       csv: dataTable.toCSV(';', true)
     });
+  });
+
+  dataTable.on('ClearData', function() {
+    chartPreview.data.clear();
   });
 
   chartPreview.on('ProviderGSheet', function(p) {
