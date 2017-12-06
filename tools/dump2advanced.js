@@ -218,6 +218,13 @@ function filter(dumpProperties, input, name, pname) {
         // }
     }
 
+    if ((!pname || pname.length === 0) && name === 'series') {
+      console.log('Overriding series type');
+      node.meta = node.meta || {};
+      node.meta.types = node.meta.types || {};
+      node.meta.types.array = 'series';
+    }
+
     if (input.doclet) {
 
         if (input.doclet.products) {
