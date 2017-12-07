@@ -445,6 +445,10 @@ highed.ChartPreview = function (parent, attributes) {
      *  @param data {object} - the data to load
      */
     function loadCSVData(data) {
+        var mergedExisting = false,
+            seriesClones = []
+        ;
+
         if (!data || !data.csv) {
             if (highed.isStr(data)) {
                 data = {
@@ -471,6 +475,19 @@ highed.ChartPreview = function (parent, attributes) {
             // highed.setAttr(customizedOptions, 'data--dateFormat', data.dateFormat);
             // highed.setAttr(customizedOptions, 'data--decimalPoint', data.decimalPoint);
 
+            if (customizedOptions && customizedOptions.series) {
+              (highed.isArr(customizedOptions.series) ?
+                customizedOptions.series :
+                [customizedOptions.series]).forEach(function (series) {
+                  seriesClones.push(highed.merge({}, series, false, {
+                    data: 1,
+                    name: 1
+                  }));
+                });
+            }
+
+            customizedOptions.series = [];
+
             highed.merge(customizedOptions, {
               plotOptions: {
                 series: {
@@ -492,6 +509,20 @@ highed.ChartPreview = function (parent, attributes) {
             init(aggregatedOptions);
             loadSeries();
             emitChange();
+
+            (customizedOptions.series || []).forEach(function (series, i) {
+              if (i < seriesClones.length) {
+                mergedExisting = true;
+                highed.merge(series, seriesClones[i]);
+              }
+            });
+
+            if (mergedExisting) {
+              updateAggregated();
+              init(aggregatedOptions);
+              loadSeries();
+              emitChange();
+            }
         });
 
         // setTimeout(function () {
