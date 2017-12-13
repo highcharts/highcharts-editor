@@ -566,7 +566,7 @@ var highed = {
             includeCDNInExport: true,
             stickyChartProperties: {},
             includeHighcharts: true,
-            cloudAPIURL: 'http://127.0.0.1:4000/',
+            cloudAPIURL: 'https://cloud-api.highcharts.com/',
             helpImgPath: 'help/',
             thumbnailURL: 'https://cloud.highcharts.com/static/thumbnails/'
         },
