@@ -399,10 +399,10 @@ var highed = {
      */
     getAttr: function (obj, path, index) {
         var current = obj,
-            result = false
+            result = undefined
         ;
 
-        if (!current) return false;
+        if (!current) return result;
 
         if (highed.isArr(obj)) {
             obj.forEach(function (thing) {

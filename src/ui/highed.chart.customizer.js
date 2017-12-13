@@ -250,7 +250,7 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
 
     //This function has mutated into a proper mess. Needs refactoring.
     function selectGroup(group, table, options, detailIndex, filteredBy, filter) {
-        var master, vals, doInclude = true, container, masterNode;
+        var master, vals, doInclude = true, container, masterNode, def;
 
         options = chartPreview.options.getCustomized();
 
@@ -347,11 +347,13 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
                 detailIndex = group.dataIndex;
             }
 
+            def = highed.getAttr(options, group.id, detailIndex);
+
             //highed.dom.ap(sub, highed.dom.cr('span', '', referenced[0].returnType));
             highed.dom.ap(table,
                 highed.InspectorField(
                     group.values ? 'options' : (group.dataType),
-                    (highed.getAttr(options, group.id, detailIndex) || (filter && group.subTypeDefaults[filter] ? group.subTypeDefaults[filter] : group.defaults)),
+                    (typeof def !== 'undefined' ? def : (filter && group.subTypeDefaults[filter] ? group.subTypeDefaults[filter] : group.defaults)),
                     {
                         title: highed.L('option.text.' + group.pid),
                         tooltip: highed.L('option.tooltip.' + group.pid),
@@ -549,7 +551,9 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
             highed.dom.ap(table,
                 highed.InspectorField(
                     entry.values ?  'options' : (Object.keys(entry.meta.types)[0] || 'string'),
-                    instancedData[entry.meta.name] || entry.meta.default,//(highed.getAttr(chartOptions, entry.id)  || entry.defaults),
+                    typeof instancedData[entry.meta.name] !== 'undefined' ?
+                      instancedData[entry.meta.name] :
+                      entry.meta.default,//(highed.getAttr(chartOptions, entry.id)  || entry.defaults),
                     {
                         title: highed.uncamelize(entry.meta.name),
                         tooltip: entry.meta.description,
