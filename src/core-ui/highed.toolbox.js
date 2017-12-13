@@ -72,6 +72,7 @@ highed.Toolbox = function(parent, attr) {
       iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + props.icon,
       icon = highed.dom.cr('div', iconClass),
       helpModal = highed.HelpModal(props.help || []),
+      resizeTimeout,
       exports = {};
 
     if (def.iconOnly) {
@@ -216,13 +217,19 @@ highed.Toolbox = function(parent, attr) {
     highed.dom.on(icon, 'click', toggle);
     highed.dom.ap(bar, icon);
     highed.dom.ap(contents, highed.dom.ap(title, helpIcon), userContents);
-    highed.dom.on(window, 'resize', function () {
-      highed.dom.style(body, { height: '' });
-      if (expanded) {
-        var height = resizeBody().h;
-        entryEvents.emit('Expanded', highed.dom.size(bar), height - 20);
-      }
-    });
+
+    function reflowEverything() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function() {
+        highed.dom.style(body, { height: '' });
+        if (expanded) {
+          var height = resizeBody().h;
+          entryEvents.emit('Expanded', highed.dom.size(bar), height - 20);
+        }
+      }, 100);
+    }
+
+    highed.dom.on(window, 'resize', reflowEverything);
 
     exports = {
       on: entryEvents.on,
