@@ -88,6 +88,8 @@ highed.ChartPreview = function (parent, attributes) {
         customCode = '',
         customCodeStr = '',
 
+        lastLoadedCSV = false,
+
         throttleTimeout = false,
         chart = false,
         preExpandSize = false,
@@ -461,6 +463,8 @@ highed.ChartPreview = function (parent, attributes) {
             }
         }
 
+        lastLoadedCSV = data.csv;
+
         gc(function (chart) {
             var axis;
 
@@ -551,6 +555,8 @@ highed.ChartPreview = function (parent, attributes) {
      */
     function loadProject(projectData) {
         var hasData = false;
+
+        lastLoadedCSV = false;
 
         if (highed.isStr(projectData)) {
             try {
@@ -757,7 +763,7 @@ highed.ChartPreview = function (parent, attributes) {
             settings: {
               constructor: constr,
               dataProvider: {
-                csv: loadedCSVRaw,
+                csv: !gsheet ? (loadedCSVRaw || lastLoadedCSV) : false,
                 googleSpreadsheet: gsheet
               }
             }
@@ -766,7 +772,7 @@ highed.ChartPreview = function (parent, attributes) {
     }
 
     function clearData(skipReinit) {
-      loadedCSVRaw = false;
+       lastLoadedCSV = false;
 
       if (customizedOptions && customizedOptions.data) {
         customizedOptions.data = {};
@@ -809,6 +815,8 @@ highed.ChartPreview = function (parent, attributes) {
      * @param data {object} - the data to load
      */
     function loadJSONData(data) {
+        lastLoadedCSV = false;
+
         gc(function (chart) {
             if (highed.isStr(data)) {
                 try {
