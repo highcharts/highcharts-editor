@@ -26,6 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // There be dragons here...
 (function () {
+    var hasTransformedAdvanced = false;
 
     /**
      * Merges/extends advanced meta
@@ -129,8 +130,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      * Duplicating children is faster than arrifying and replacing
      *
      */
-     function transformAdv(input) {
+     function transformAdv(input, onlyOnce) {
         var res;
+
+        if (onlyOnce && hasTransformedAdvanced) {
+          return input;
+        }
 
         function visit(node, pname) {
             var children = node.subtree = node.subtree || {};

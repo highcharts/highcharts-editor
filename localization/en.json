@@ -48,6 +48,7 @@
     "customizeSimple": "SIMPLE",
     "customizeAdvanced": "ADVANCED",
     "customizeCustomCode": "CUSTOM CODE",
+    "customizePreview": "PREVIEW OPTIONS",
 
     "option.cat.title": "Titles",
     "option.subcat.titles": "Main titles",

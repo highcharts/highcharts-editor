@@ -690,11 +690,13 @@ highed.ChartPreview = function (parent, attributes) {
     }
 
     function loadGSpreadsheet(options) {
+      lastLoadedCSV = false;
+
       if (options.id && !options.googleSpreadsheetKey) {
         options.googleSpreadsheetKey = options.id;
       }
 
-      if (options.worksheet && !options.googleSpreasheetWorksheet) {
+      if (options.worksheet && !options.googleSpreadsheetWorksheet) {
         options.googleSpreadsheetWorksheet = options.worksheet;
       }
 
@@ -974,6 +976,24 @@ highed.ChartPreview = function (parent, attributes) {
             //delete r['data'];
         }
 
+        if (r && highed.isArr(r.series)) {
+          r.series = r.series.map(function (s) {
+            var cloned = highed.merge({}, s);
+            delete s.data;
+            return s;
+          });
+        }
+
+        if (lastLoadedCSV) {
+          highed.merge(r, {
+            data: {
+              csv: lastLoadedCSV,
+              googleSpreadsheetKey: false,
+              googleSpreadsheetWorksheet: false
+            }
+          });
+        }
+
         return r;
     }
 
@@ -1085,7 +1105,15 @@ highed.ChartPreview = function (parent, attributes) {
     }
 
 
+    function getCodePreview() {
+      var options = getEmbeddableJSON(true);
 
+      if (highed.isFn(customCode) && customCodeStr) {
+        customCode(options);
+      }
+
+      return stringifyFn(options, '  ');
+    }
 
     /** Get embeddable HTML
      *  @memberof highed.ChartPreview
@@ -1284,7 +1312,8 @@ highed.ChartPreview = function (parent, attributes) {
             },
             full: aggregatedOptions,
             flat: flatOptions,
-            chart: chartOptions
+            chart: chartOptions,
+            getPreview: getCodePreview
         },
 
         data: {

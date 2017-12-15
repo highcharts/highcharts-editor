@@ -49,6 +49,8 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
         }, attributes),
 
         events = highed.events(),
+        advancedLoader = highed.dom.cr('div', 'highed-customizer-adv-loader', 'Loading...'),
+
         tabs = highed.TabControl(parent, true),
 
         simpleTab = tabs.createTab({
@@ -62,6 +64,13 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
         customCodeTab = tabs.createTab({
           title: highed.getLocalizedStr('customizeCustomCode')
         }),
+
+        outputPreviewTab = tabs.createTab({
+          title: highed.getLocalizedStr('customizePreview')
+        }),
+
+        previewEditor = highed.dom.cr('textarea', 'highed-custom-code highed-box-size highed-stretch'),
+        previewCodeMirror = false,
 
         splitter = highed.HSplitter(simpleTab.body, {
           leftWidth: 20, responsive: true
@@ -101,7 +110,36 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
     properties.availableSettings = highed.arrToObj(properties.availableSettings);
 
 
+    highed.dom.ap(parent, advancedLoader);
+    highed.dom.ap(outputPreviewTab.body, previewEditor);
+
     ///////////////////////////////////////////////////////////////////////////
+
+    advancedTab.on('Focus', function () {
+      buildTree();
+    });
+
+    outputPreviewTab.on('Focus', function () {
+      var prev = chartPreview.options.getPreview();
+
+      if (!previewCodeMirror && typeof window.CodeMirror !== 'undefined') {
+        previewCodeMirror = CodeMirror.fromTextArea(previewEditor, {
+          lineNumbers: true,
+          mode: 'application/javascript',
+          theme: highed.option('codeMirrorTheme'),
+          readOnly: true
+        });
+
+        previewCodeMirror.setSize('100%', '100%');
+      }
+
+      if (previewCodeMirror) {
+        previewCodeMirror.setValue(prev);
+      } else {
+        previewEditor.readonly = true;
+        previewEditor.value = prev;
+      }
+    });
 
     function loadCustomCode() {
       var code;
@@ -194,7 +232,7 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
         flatOptions = coptions || {};
         chartOptions = highed.merge({}, foptions || {});
         list.reselect();
-        buildTree();
+        // buildTree();
         chartPreview = chartp || chartPreview;
 
         customCodeSplitter.resize();
@@ -380,18 +418,36 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
     }
 
     function buildTree() {
+        highed.dom.style(advancedLoader, {
+          opacity: 1
+        });
+
         if (properties.noAdvanced || highed.isNull(highed.meta.optionsAdvanced)) {
             advancedTab.hide();
         } else {
+          setTimeout(function () {
+
+            highed.meta.optionsAdvanced = highed.transform.advanced(
+              highed.meta.optionsAdvanced,
+              true
+            );
+
             advTree.build(
                 highed.meta.optionsAdvanced,
                 highed.merge({}, chartPreview.options.getCustomized())
             );
+
+            highed.dom.style(advancedLoader, {
+              opacity: 0
+            });
+
+          }, 10);
         }
 
         if (properties.noCustomCode) {
           customCodeTab.hide();
         }
+
     }
 
     function build() {
@@ -406,7 +462,7 @@ highed.ChartCustomizer = function (parent, attributes, chartPreview) {
             });
         });
 
-        buildTree();
+        // buildTree();
     }
 
     //Highlight a node

@@ -353,7 +353,7 @@ mkdir(__dirname + '/../generated_src/', function () {
       [
           license,
           '\n',
-          'highed.meta.optionsAdvanced = highed.transform.advanced(',
+          'highed.meta.optionsAdvanced = ',
           JSON.stringify(
               filter(
                   dump.children._meta,
@@ -361,7 +361,7 @@ mkdir(__dirname + '/../generated_src/', function () {
               ),
               undefined, '  '
           ),
-          ');\n'
+          ';\n'
       ].join(''),
       (err) => {
 
