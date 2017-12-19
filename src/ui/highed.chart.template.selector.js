@@ -24,13 +24,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /** UI for selecting a chart template from the ones defined in meta/highed.meta.charts.js
- *  
+ *
  *  @example
  *  var picker = highed.ChartTemplateSelector(document.body);
  *  picker.on('Select', function (template) {
- *      console.log('Selected new template:', template);   
+ *      console.log('Selected new template:', template);
  *  });
- * 
+ *
  *  @constructor
  *
  *  @param parent {domnode} - the parent to attach the selector to
@@ -43,7 +43,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.ChartTemplateSelector = function (parent, chartPreview) {
     var events = highed.events(),
         container = highed.dom.cr('div', 'highed-chart-templates'),
-        splitter = highed.HSplitter(container, {leftWidth: 30}),
+        splitter = highed.HSplitter(container, { leftWidth: 30 }),
         list = highed.List(splitter.left),
         templates = splitter.right,
         catNode = highed.dom.cr('div', 'highed-chart-template-cat-desc'),
@@ -51,22 +51,23 @@ highed.ChartTemplateSelector = function (parent, chartPreview) {
     ;
 
     highed.dom.ap(parent, container);
+    splitter.right.className += ' highed-chart-template-frame';
 
     ///////////////////////////////////////////////////////////////////////////
-    
+
     function createSampleBtn(target, sample) {
          var btn, dset = highed.samples.get(sample);
 
           if (!dset) {
-              return;  
+              return;
           }
-                  
+
           btn = sampleBtn = highed.dom.cr('div', 'highed-ok-button', dset.title);
 
           highed.dom.on(btn, 'click', function () {
-          
+
               if (confirm('You are about to load the ' + dset.title + ' sample set. This will purge any existing data in the chart. Continue?')) {
-                  events.emit('LoadDataSet', dset); 
+                  events.emit('LoadDataSet', dset);
               }
           });
 
@@ -74,18 +75,18 @@ highed.ChartTemplateSelector = function (parent, chartPreview) {
               btn
           );
     }
-    
+
     function buildCatMeta(catmeta) {
         var title = highed.dom.cr('h3', '', catmeta.id),
             desc = highed.dom.cr('div'),
             samples = highed.dom.cr('div')
         ;
-        
+
        desc.innerHTML = (highed.isArr(catmeta.description) ? catmeta.description.join('<br/><br/>') : catmeta.description || '');
 
         if (catmeta.samples && catmeta.samples.length > 0) {
             highed.dom.ap(samples, highed.dom.cr('h4', '',  'Sample Data Sets'));
-        
+
             catmeta.samples.forEach(function (sample) {
               createSampleBtn(samples, sample);
             });
@@ -100,7 +101,7 @@ highed.ChartTemplateSelector = function (parent, chartPreview) {
 
     function showTemplates(templateList, masterID, catmeta) {
         var compatible = 0;
-        
+
         templates.innerHTML = '';
         catNode.innerHTML = '';
 
@@ -132,13 +133,13 @@ highed.ChartTemplateSelector = function (parent, chartPreview) {
                 if (i === 0) {
                     highed.dom.ap(samples, highed.dom.cr('h4', '', 'Sample Data Sets'));
                 }
-                
+
                 createSampleBtn(samples, sample);
             });
-          
 
-            description.innerHTML = highed.isArr(t.description) ? 
-                                      t.description.join('<br/><br/>') : 
+
+            description.innerHTML = highed.isArr(t.description) ?
+                                      t.description.join('<br/><br/>') :
                                       t.description;
 
             if (selected && selected.id === masterID + key + t.title) {
@@ -146,9 +147,16 @@ highed.ChartTemplateSelector = function (parent, chartPreview) {
                 selected.node = node;
             }
 
-            highed.dom.style(preview, {
-                "background-image": 'url(' + t.thumbnail + ')'
-            });
+            if (highed.meta.images && highed.meta.images[t.thumbnail]) {
+              highed.dom.style(preview, {
+                'background-image': 'url("data:image/svg+xml;utf8,' +
+                  highed.meta.images[t.thumbnail] + '")'
+              });
+            } else {
+              highed.dom.style(preview, {
+                'background-image': 'url(' + highed.option('thumbnailURL') + t.thumbnail + ')'
+              });
+            }
 
             highed.dom.on(node, 'click', function () {
                 if (selected) {
@@ -167,7 +175,7 @@ highed.ChartTemplateSelector = function (parent, chartPreview) {
                     var loadedSeries = 0;
 
                     (t.config.series || []).forEach(function (series) {
-        
+
                         function incAndCheck() {
                             loadedSeries++;
                             if (loadedSeries === t.config.series.length) {
@@ -197,7 +205,7 @@ highed.ChartTemplateSelector = function (parent, chartPreview) {
                 }
             });
 
-            highed.dom.ap(templates, 
+            highed.dom.ap(templates,
               highed.dom.ap(node,
                   preview,
                   highed.dom.ap(body,
@@ -223,7 +231,7 @@ highed.ChartTemplateSelector = function (parent, chartPreview) {
             );
         }
     }
-    
+
     /* Force a resize */
     function resize(w, h) {
         var lsize;

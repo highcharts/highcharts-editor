@@ -27,8 +27,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  @example
  *  var toolbar = highed.Toolbar('my-node', {
- *    additionalCSS: ['cool-toolbar']  
- *  });  
+ *    additionalCSS: ['cool-toolbar']
+ *  });
  *
  *  @constructor
  *  @param parent {domnode} - the node to attach the toolbar to
@@ -47,7 +47,7 @@ highed.Toolbar = function (parent, attributes) {
     ;
 
     ///////////////////////////////////////////////////////////////////////////
-    
+
     /** Add an icon to the toolbar
      *  @memberof highed.Toolbar
      *  @param icon {object} - an object containing the icon settings.
@@ -63,7 +63,7 @@ highed.Toolbar = function (parent, attributes) {
             }
         });
 
-        i.title = icon.tooltip;
+        i.title = icon.tooltip || icon.title;
 
         highed.dom.ap(where === 'left' ? left : right, i);
     }
@@ -88,6 +88,12 @@ highed.Toolbar = function (parent, attributes) {
         highed.dom.ap(where === 'left' ? left : right, i);
     }
 
+    function addSeparator(where) {
+      highed.dom.ap(where === 'left' ? left : right,
+        highed.dom.cr('span', 'separator')
+      );
+    }
+
     ///////////////////////////////////////////////////////////////////////////
 
     highed.dom.ap(parent,
@@ -99,15 +105,16 @@ highed.Toolbar = function (parent, attributes) {
     );
 
     ///////////////////////////////////////////////////////////////////////////
-    
+
     return {
         /** The toolbar container
          *  @type {domnode}
          *  @memberof highed.Toolbar
          */
-        container: container,        
+        container: container,
         addIcon: addIcon,
         addButton: addButton,
+        addSeparator: addSeparator,
         /** The left part of the toolbar
          *  @type {domnode}
          *  @memberof highed.Toolbar

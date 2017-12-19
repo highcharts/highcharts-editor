@@ -1,38 +1,52 @@
 .highed-toolbar {
-	position: relative;
-	height: 40px;
-	width: 100%;
-	background-color: @accent-color;
-	line-height: 100%;
-	font-family: @font-secondary;
-	.highed-box-size;
+  position: relative;
+  height: 60px;
+  width: 100%;
+  background-color: @accent-color;
+  line-height: 100%;
+  font-family: @font-secondary;
+  .highed-box-size;
 }
 
 .highed-toolbar-center {
-	position: absolute;
-	transform: translate(-50%, 0);
-	left: 50%;
-	.highed-box-size;
+  position: absolute;
+  transform: translate(-50%, 0);
+  left: 50%;
+  .highed-box-size;
 }
 
 .highed-toolbar-left {
-	//float: left;
-	position: absolute;
-	left:0px;
+  //float: left;
+  position: absolute;
+  left: 0px;
 }
 
 .highed-toolbar-right {
-	//float: right;
-	position: absolute;
-	right:0px;
+  //float: right;
+  position: absolute;
+  right: 0px;
 }
 
 .highed-toolbar .icon {
-	line-height:40px;
+  font-size: 20px !important;
+  line-height: 60px;
+  margin-right: 10px;
+  color: @text-panel;
+}
+
+.highed-toolbar .separator {
+  border: 1px solid @text-panel;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.highed-toolbar .icon:hover {
+  color: @bright-background !important;
 }
 
 .highed-toolbar-button {
-    margin-right:10px;
-    display: inline-block;
-    cursor:pointer !important;
+  margin-right: 10px;
+  margin-top: 15px;
+  display: inline-block;
+  cursor: pointer !important;
 }

@@ -1,6 +1,6 @@
 /*
 
-Highcharts Editor 
+Highcharts Editor
 
 Copyright (c) 2016-2017, Highsoft
 
@@ -30,7 +30,7 @@ highed.templates.add('Stock', {
     "title": "Column",
     "description": "",
     "constructor": "StockChart",
-    "thumbnail": "https://cloud.highcharts.com/images/ogywen/136.svg",
+    "thumbnail": "ogywen.svg",
     "dataValidator": false,
     "sampleSets": ['line-series-dates'],
     "config": {

@@ -53,7 +53,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     modal = highed.OverlayModal(document.body, { //eslint-disable-line no-undef
       showOnInit: false,
       width: '90%',
-      height: '90%'
+      height: '90%',
+      zIndex: 10001
     }),
     mainContainer = highed.dom.cr('div'),
     charts = highed.dom.cr('div', 'highed-cloud-chart-container'),
@@ -65,7 +66,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     saveNewModal = highed.OverlayModal(document.body, { //eslint-disable-line no-undef
       showOnInt: false,
       width: 400,
-      height: 300
+      height: 300,
+      zIndex: 10001
     }),
     saveNewTeamsContainer = highed.dom.cr('div'),
     saveNewTeams = createTeamDropDown(saveNewTeamsContainer),
@@ -88,6 +90,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   highed.dom.on(saveNewBtn, 'click', function () {
 
     saveNewBtn.disabled = true;
+    saveNewBtn.innerHTML = 'SAVING TO CLOUD...';
 
     highed.cloud.saveNewChart(
       activeTeam,
@@ -95,9 +98,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       JSON.stringify(chartPreview.toProject()),
       function (data) {
         saveNewBtn.disabled = false;
-        if (!data.error && data.ids.length > 0) {
-          activeChart = data.ids[0];
+        if (!data.error && data) {
+          activeChart = data;
           saveNewModal.hide();
+          saveNewBtn.innerHTML = 'SAVE TO CLOUD';
           highed.snackBar('SAVED TO CLOUD');
         } else {
           highed.snackBar('Error saving to cloud');
@@ -230,7 +234,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         loginCallback = false,
         modal = highed.OverlayModal(false, {
           height: 300,
-          width: 250
+          width: 250,
+          zIndex: 10001
         })
     ;
 
@@ -257,6 +262,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       highed.dom.style(notice, { display: 'none' });
 
       highed.cloud.login(username.value, password.value, function (err, res) {
+        btn.disabled = false;
+
         if (err || !res || typeof res.token === 'undefined') {
           notice.innerHTML = 'Error: Check username/password (' + (err || res.message) + ')';
           highed.dom.style(notice, { display: 'block' });
@@ -266,8 +273,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             loginCallback();
           }
         }
-
-        btn.enabled = true;
       });
     });
 

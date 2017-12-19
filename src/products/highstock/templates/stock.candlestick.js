@@ -1,6 +1,6 @@
 /*
 
-Highcharts Editor 
+Highcharts Editor
 
 Copyright (c) 2016-2017, Highsoft
 
@@ -30,7 +30,7 @@ highed.templates.add('Stock', {
     "title": "Candlestick",
     "description": "",
     "constructor": "StockChart",
-    "thumbnail": "https://cloud.highcharts.com/images/etybef/0/136.svg",
+    "thumbnail": "etybef.svg",
     "dataValidator": false,
     "sampleSets": ['candlestick'],
     "config": {

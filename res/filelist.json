@@ -31,10 +31,14 @@
     "./src/core-ui/highed.mover.js",
     "./src/core-ui/highed.slider.js",
     "./src/core-ui/highed.datatable.js",
-        
+    "./src/core-ui/highed.toolbox.js",
+    "./src/core-ui/highed.helpmodal.js",
+
     "./src/meta/highed.meta.options.extended.js",
     "./src/meta/highed.meta.colors.js",
     "./src/meta/highed.meta.fonts.js",
+
+    "./gen_src/highed.meta.options.advanced.js",
         
     "./src/ui/highed.chart.template.selector.js",
     "./src/ui/highed.defctx.js",
@@ -47,6 +51,7 @@
     "./src/ui/highed.simple.customizer.js",
     "./src/ui/highed.cloud.ui.js",
     
+    "./src/editors/highed.drawereditor.js",
     "./src/editors/highed.editor.js",
     "./src/editors/highed.simple.editor.js",
     "./src/editors/highed.modaleditor.js"

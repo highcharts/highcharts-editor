@@ -28,8 +28,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  @example
  *  var splitter = highed.VSplitter(document.body);
- *  highed.dom.ap(splitter.top, highed.dom.cr('div', '', 'Top!')); 
- *  highed.dom.ap(splitter.bottom, highed.dom.cr('div', '', 'Bottom!')); 
+ *  highed.dom.ap(splitter.top, highed.dom.cr('div', '', 'Top!'));
+ *  highed.dom.ap(splitter.bottom, highed.dom.cr('div', '', 'Bottom!'));
  *
  *  @constructor
  *  @param parent {domnode} - the parent to attach to
@@ -43,10 +43,10 @@ highed.VSplitter = function (parent, attributes) {
             noOverflow: false
         }, attributes),
         container = highed.dom.cr('div', 'highed-vsplitter'),
-        top = highed.dom.cr('div', 'panel top'),
-        bottom = highed.dom.cr('div', 'panel bottom'),
-        topBody = highed.dom.cr('div', 'highed-vsplitter-body'),
-        bottomBody = highed.dom.cr('div', 'highed-vsplitter-body')
+        top = highed.dom.cr('div', 'panel top highed-scrollbar'),
+        bottom = highed.dom.cr('div', 'panel bottom highed-scrollbar'),
+        topBody = highed.dom.cr('div', 'highed-vsplitter-body highed-scrollbar'),
+        bottomBody = highed.dom.cr('div', 'highed-vsplitter-body highed-scrollbar')
     ;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -73,7 +73,7 @@ highed.VSplitter = function (parent, attributes) {
                 height: (h || s.h) - (parseInt(properties.topHeight, 10)) + 'px'
             });
 
-        } else {                       
+        } else {
             highed.dom.style(top, {
                 height: properties.topHeight + '%'
             });
@@ -86,15 +86,15 @@ highed.VSplitter = function (parent, attributes) {
         //    width: (w || s.w) + 'px'
         //});
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
 
-    highed.dom.ap(highed.dom.get(parent), 
-        highed.dom.ap(container, 
+    highed.dom.ap(highed.dom.get(parent),
+        highed.dom.ap(container,
             highed.dom.ap(top, topBody),
             highed.dom.ap(bottom, bottomBody)
         )
-    );    
+    );
 
     if (properties.noOverflow) {
         highed.dom.style([container, top, bottom], {

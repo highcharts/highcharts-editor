@@ -1,23 +1,25 @@
 .highed-overlay-modal {
-	width:0px;
-	height:0px;
+  width: 0px;
+  height: 0px;
 
-	overflow: hidden;
+  overflow: hidden;
 
-	font-family: @font-main;
-	color: @text-main;
-	background: @background-main;
-	border: @border-main;
+  border-radius: 10px;
 
-	position: fixed;
-	z-index: 10000;
-	top:50%;
-	left:-20000px;
-	transform:translate(-50%, -50%);
+  font-family: @font-main;
+  color: @text-panel;
+  background: @background-panel;
+  // border: @border-main;
 
-	padding:2px;
-	opacity: 0;
-	pointer-events: none;
+  position: fixed;
+  z-index: 10000;
+  top: 50%;
+  left: -20000px;
+  transform: translate(-50%, -50%);
 
-	.highed-transition;
-};
+  padding: 5px;
+  opacity: 0;
+  pointer-events: none;
+
+  .highed-transition;
+}

@@ -377,6 +377,104 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
 
                 return stable;
             },
+
+            function: function (val, callback) {
+              var container = highed.dom.cr('div', 'highed-field-container highed-field-code-container'),
+                  field = highed.dom.cr('textarea', 'highed-field-code', '', fieldID),
+                  editor = false,
+                  reset = createReset(properties.defaults || val || value, function (v) {
+                    val = v;
+                    updateIt(v);
+                    callHome(v);
+                  })
+              ;
+
+              function updateIt(v) {
+                if (highed.isFn(v)) {
+                  v = v.toString();
+                }
+
+                if (editor) {
+                  editor.setValue(v);
+                  editor.refresh();
+                } else {
+                  field.value = v;
+                }
+              }
+
+              function callHome(v) {
+                var args = [];
+                var argStart = v.indexOf('(');
+                var argEnd = v.substr(argStart + 1).indexOf(')');
+                var body = '';
+                var balance = 0;
+                var parsing = false;
+
+                try {
+
+                  args = v.substr(argStart + 1, argEnd - 1).trim().split(',');
+
+                  args = args.filter(function (b) {
+                    return b && b.length > 0 && b.indexOf('/*') === -1;
+                  });
+
+                  for (var i = 0; i < v.length; i++) {
+                    if (v[i] === '{') {
+                      balance++;
+                      parsing = true;
+                    } else if (v[i] === '}') {
+                      balance--;
+                      if (balance === 0) {
+                        parsing = false;
+                      }
+                    } else if (parsing) {
+                      body += v[i];
+                    }
+                  }
+
+                  v = new Function(args, body);
+                } catch (e) {
+                  console.log(e);
+                  return;
+                }
+                tryCallback(callback, v);
+              }
+
+              function resizePoll() {
+                if (editor && document.body) {
+                  if (container.parentNode) {
+                    editor.refresh();
+                  } else {
+                    setTimeout(resizePoll, 50);
+                  }
+                }
+              }
+
+              highed.dom.ap(container, field);
+
+              if (typeof window['CodeMirror'] !== 'undefined') {
+                editor = CodeMirror.fromTextArea(field, {
+                  lineNumbers: true,
+                  mode: 'javascript',
+                  theme: highed.option('codeMirrorTheme')
+                });
+
+                editor.on('change', function () {
+                  callHome(editor.getValue());
+                });
+
+                resizePoll();
+              } else {
+                highed.dom.on(field, 'change', function () {
+                  callHome(field.value);
+                });
+              }
+
+              updateIt(val || value || properties.defaults || function () {});
+
+              return container;
+            },
+
             array: function () {
                 var container = highed.dom.cr('div', '', '', fieldID),
                     add = highed.dom.cr('span', 'highed-field-array-add fa fa-plus', ''),
@@ -390,8 +488,15 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
                     try {
                         value = JSON.parse(value);
                     } catch (e) {
-
+                      return container;
                     }
+                }
+
+                if (!highed.isArr(value) && !highed.isBasic(value)) {
+                  // This is an object.
+                  value = Object.keys(value).map(function (e) {
+                    return value[e];
+                  });
                 }
 
                 function addCompositeItem(val, suppressCallback) {
@@ -581,6 +686,8 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
 
     if (!properties.tooltip && !properties.tooltipText) {
         nohint = true;
+    } else {
+      // properties.tooltip = properties.tooltip.replace(/\n/g, '<br/><br/>');
     }
 
     if (highed.onPhone()) {
@@ -590,7 +697,9 @@ highed.InspectorField = function (type, value, properties, fn, nohint, fieldID) 
 
     } else {
         highed.dom.on([help], 'mouseover', function (e) {
-            highed.Tooltip(e.clientX, e.clientY, properties.tooltip || properties.tooltipText);
+            highed.Tooltip(e.clientX + 20, e.clientY, properties.tooltip || properties.tooltipText);
+
+            // highed.showDimmer(highed.hideAllTooltips, true, true);
         });
     }
 

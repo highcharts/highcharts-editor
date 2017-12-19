@@ -1,6 +1,6 @@
 /*
 
-Highcharts Editor 
+Highcharts Editor
 
 Copyright (c) 2016-2017, Highsoft
 
@@ -29,7 +29,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.templates.add('Line', {
     "title": "Line chart",
     "description": "",
-    "thumbnail": "https://cloud.highcharts.com/images/abywon/0/136.svg",
+    "thumbnail": "abywon.svg",
     "dataValidator": false,
     "sampleSets": [],
     "config": {

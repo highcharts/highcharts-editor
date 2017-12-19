@@ -24,7 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 (function () {
-    var container = highed.dom.cr('div', 'highed-tooltip highed-tooltip-fixed')
+    var container = highed.dom.cr('div', 'highed-scrollbar highed-tooltip highed-tooltip-fixed')
     ;
 
     highed.ready(function () {
@@ -52,14 +52,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         if (x < 0) x = 0;
         if (y < 0) y = 0;
-        if (x > ds.w - 200) x = ds.w - 200;        
+        if (x > ds.w - 200) x = ds.w - 200;
 
         highed.dom.style(container, {
             opacity: 1,
             'pointer-events': 'auto',
-            left: x - 20 + 'px',
-            top: y - 20 + 'px',
-            width: '200px'
+            left: x  + 'px',
+            top: y + 'px',
+            'max-width': '300px'
         });
 
         if (blowup) {
@@ -75,5 +75,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         }
 
         container.innerHTML = tip;
+
+        return hide;
     };
+
+    highed.hideAllTooltips = hide;
 })();

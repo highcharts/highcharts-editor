@@ -1,175 +1,186 @@
 .highed-field-help {
-	// position: absolute;
-	// top:50%;
-	// left:0px;
-	// transform:translate(0, -50%);
+  // position: absolute;
+  // top:50%;
+  // left:0px;
+  // transform:translate(0, -50%);
 }
 
 .highed-field-colorpicker {
-	width:100%;
-	border:@input-border;
-	padding: 5px;
-	min-height: 30px;
-	font-size: 13px;
-	.highed-transition;
-	.highed-box-size;
+  width: 100%;
+  border: @input-border;
+  padding: 5px;
+  min-height: 30px;
+  font-size: 13px;
+  .highed-transition;
+  .highed-box-size;
 }
 
 .highed-field-container {
-	padding-right:36px;
-	width:100%;
-	position: relative;
-	.highed-box-size;
+  padding-right: 36px;
+  width: 100%;
+  position: relative;
+  .highed-box-size;
 }
 
 .highed-field-reset {
-    height:32px;
-    width:32px;
-    position: absolute;
-    top:50%;
-    transform:translate(0, -50%);
-    right: -7px;
-    text-align: center;
-    line-height: 32px !important;
-    cursor: pointer;
-    color: @wiz-bar-background;
-    .highed-transition;
+  height: 32px;
+  width: 32px;
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  right: -7px;
+  text-align: center;
+  line-height: 32px !important;
+  cursor: pointer;
+  color: @wiz-bar-background;
+  .highed-transition;
+}
+
+.highed-field-code {
+  outline: none;
+  resize: none;
+  width: 100%;
+  height: 250px;
+  font-family: monospace;
+}
+
+.highed-field-code-container {
 }
 
 .highed-field-reset:hover {
-	color: @accent-color;
+  color: @accent-color;
 }
 
 .highed-field-colorpicker-reset:hover {
-	color:@accent-color;
+  color: @accent-color;
 }
 
 .highed-field-input {
-	width:100%;
-	outline: none;
-	border:@input-border;
-	padding: 7px;
-	font-size: 13px;
-	min-height: 30px;
-	.highed-box-size;
+  width: 100%;
+  outline: none;
+  border: @input-border;
+  color: @text-main !important;
+  padding: 7px;
+  font-size: 13px;
+  min-height: 30px;
+  .highed-box-size;
 }
 
 .highed-field-range {
-	//position: relative;
-	width:100%;
-	padding: 5px;
-	outline: none;
-	height: 30px;
-	border:@input-border;
-	.highed-box-size;
+  //position: relative;
+  width: 100%;
+  padding: 5px;
+  outline: none;
+  height: 30px;
+  border: @input-border;
+  .highed-box-size;
 }
 
 .highed-field-range-indicator {
-	//position:absolute;
-	line-height: 10px;
-	min-height: 15px;
-	text-align: center;
-	font-size: 12px;
+  //position:absolute;
+  line-height: 10px;
+  min-height: 15px;
+  text-align: center;
+  font-size: 12px;
 }
 
 .highed-field-range-null {
-	bottom:0px;
-	left:0px;
-	position: absolute;
-	font-size: 12px;
+  bottom: 0px;
+  left: 0px;
+  position: absolute;
+  font-size: 12px;
 }
 
 .highed-field-select {
-	width: 100%;
-	min-height: 30px;
-	border:@input-border;
-	.highed-box-size;
+  width: 100%;
+  min-height: 30px;
+  border: @input-border;
+  .highed-box-size;
 }
 
 .highed-field-tooltip {
-	font-size: 12px;
-	font-family: @font-secondary;
+  font-size: 12px;
+  font-family: @font-secondary;
 }
 
 .highed-field-colorpicker-compact {
-	position: relative;
-	display: inline-block;
-	padding: 4px;
-	margin-right: 4px;
-	margin-bottom: 4px;
-	border:@input-border;
-	width:30px;
-	height:30px;
+  position: relative;
+  display: inline-block;
+  padding: 4px;
+  margin-right: 4px;
+  margin-bottom: 4px;
+  border: @input-border;
+  width: 30px;
+  height: 30px;
 }
 
 .highed-field-array-add {
-	background:@accent-color;
-	color: @accent-text;
-	float: right;
-	width: 30px;
-	height:30px;
-	padding: 4px;
-	font-size: 14px;
-	line-height: 30px !important;
-	text-align: center;
-	display:inline-block;
-	cursor: pointer;
-	border:@border-main;
-	.highed-transition;
+  background: @accent-color;
+  color: @accent-text;
+  float: right;
+  width: 30px;
+  height: 30px;
+  padding: 4px;
+  font-size: 14px;
+  line-height: 30px !important;
+  text-align: center;
+  display: inline-block;
+  cursor: pointer;
+  border: @border-main;
+  .highed-transition;
 }
 
 .highed-field-table {
-    width:100%;
-    padding:0px;
-    border-collapse: collapse;
-    
-    .highed-box-size;
+  width: 100%;
+  padding: 0px;
+  border-collapse: collapse;
+
+  .highed-box-size;
 }
 
-.highed-field-table td:first-child{
-    min-width: auto !important;
-    width: auto !important;
+.highed-field-table td:first-child {
+  min-width: auto !important;
+  width: auto !important;
 }
 
-.highed-field-table td:last-child{
-    max-width:30px;
+.highed-field-table td:last-child {
+  max-width: 30px;
 }
 
 .highed-field-table-widget-column {
-	width:100%;
-	position: relative;
+  width: 100%;
+  position: relative;
 }
 
 .highed-field-array-add:hover {
-	background: @wiz-bar-background;
-	color: @wiz-bar-color;
+  background: @wiz-bar-background;
+  color: @wiz-bar-color;
 }
 
 .highed-field-array-remove {
-	opacity: 0;
-	position: absolute;
-	bottom: 0px;
-	right:0px;
-	background:@background-main;
-	color:@text-main;
-	font-size:12px;
-	border-left:@border-main;
-	border-top:@border-main;
-	padding:2px;
-	.highed-transition;
+  opacity: 0;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  background: @background-main;
+  color: @text-main;
+  font-size: 12px;
+  border-left: @border-main;
+  border-top: @border-main;
+  padding: 2px;
+  .highed-transition;
 }
 
 .highed-field-error {
-	//position:absolute;
-	opacity: 0;
-	display: none;
-	background:@background-error;
-	color:@color-error;
-	left:0px;
-	bottom:-10px;
-	pointer-events: none;
-	padding:4px;
-	.highed-box-size;
-	.highed-transition;
-
+  //position:absolute;
+  opacity: 0;
+  display: none;
+  background: @background-error;
+  color: @color-error;
+  left: 0px;
+  bottom: -10px;
+  pointer-events: none;
+  padding: 4px;
+  .highed-box-size;
+  .highed-transition;
 }

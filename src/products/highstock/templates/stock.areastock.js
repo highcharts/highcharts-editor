@@ -1,6 +1,6 @@
 /*
 
-Highcharts Editor 
+Highcharts Editor
 
 Copyright (c) 2016-2017, Highsoft
 
@@ -30,7 +30,7 @@ highed.templates.add('Stock', {
     "title": "Area",
     "description": "",
     "constructor": "StockChart",
-    "thumbnail": "https://cloud.highcharts.com/images/ukaqor/136.svg",
+    "thumbnail": "ukaqor.svg",
     "dataValidator": false,
     "sampleSets": ['line-series-dates'],
     "config": {

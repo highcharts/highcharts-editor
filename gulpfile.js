@@ -94,7 +94,7 @@ gulp.task('bundled-modules', ['modules'], function () {
   ;
 });
 
-gulp.task('complete', ['default', 'bundled-modules', 'with-advanced'], function () {
+gulp.task('complete', ['default', 'cache-thumbnails', 'bundled-modules', 'with-advanced'], function () {
   return gulp.src([
     dest + '/' + name + '.with.modules.min.js',
     dest + '/' + name + '.advanced.js'
@@ -123,13 +123,13 @@ gulp.task('localization', function () {
   return run('node tools/gen.localization.js').exec();
 });
 
-gulp.task('fetch-thumbnails', function () {
+gulp.task('bake-thumbnails', function () {
   return run('node tools/bake.previews.js').exec();
 });
 
-gulp.task('cache-thumbnails', ['fetch-thumbnails'], function () {
+gulp.task('cache-thumbnails', ['bake-thumbnails'], function () {
   return gulp.src('generated_src/highed.meta.images.js')
-             .pipe(gulp.dest(dest))
+             // .pipe(gulp.dest(dest))
              .pipe(rename(name + '.thumbnails.min.js'))
              .pipe(uglify())
              .pipe(header(license, packageJson))

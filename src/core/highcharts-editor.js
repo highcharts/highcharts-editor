@@ -125,6 +125,7 @@ var highed = {
                   }
                   events.emit('OK', json);
                 } catch(e) {
+                  console.log('parse error', e);
                   if (highed.isFn(props.error)) {
                     props.error(e.toString(), r.responseText);
                   }
@@ -398,10 +399,10 @@ var highed = {
      */
     getAttr: function (obj, path, index) {
         var current = obj,
-            result = false
+            result = undefined
         ;
 
-        if (!current) return false;
+        if (!current) return result;
 
         if (highed.isArr(obj)) {
             obj.forEach(function (thing) {
@@ -565,7 +566,9 @@ var highed = {
             includeCDNInExport: true,
             stickyChartProperties: {},
             includeHighcharts: true,
-            cloudAPIURL: 'http://127.0.0.1:4000/'
+            cloudAPIURL: 'https://cloud-api.highcharts.com/',
+            helpImgPath: 'help/',
+            thumbnailURL: 'https://cloud.highcharts.com/static/thumbnails/'
         },
         cdnScripts = [
             'https://code.highcharts.com/stock/highstock.js',

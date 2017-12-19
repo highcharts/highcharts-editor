@@ -1,13 +1,105 @@
 
+.highed-dtable-gsheet-frame {
+  display: none;
+  background: @secondary-background-panel;
+  color: @secondary-color-panel;
+  width: 100%;
+  height: 100%;
+  overflow:auto;
+}
+
+.highed-dtable-gsheet {
+  // position: absolute;
+  width: 100%;
+  // height: 700px;
+  // left: 50%;
+  // top: 50%;
+  // transform: translate(-50%, -50%);
+  padding: 50px;
+  // background: @secondary-background-panel;
+  color: @color-header;
+  border-radius: 30px;
+  overflow-y: auto;
+  // border: 8px dashed @border-main-color;
+}
+
+.highed-dtable-gsheet-heading {
+  text-align: center;
+  font-size: 42px;
+  margin-bottom: 20px;
+}
+
+.highed-dtable-gsheet-desc {
+  text-align: left;
+  font-size: 22px;
+}
+
+.highed-dtable-gsheet-label {
+  font-size: 22px;
+  margin-bottom: 5px;
+}
+
+.highed-dtable-gsheet-inner {
+  width: 80%;
+  position: relative;
+  left: 50%;
+  bottom: 0px;
+  transform: translate(-50%, 0);
+}
+
+.highed-dtable-gsheet-id {
+  font-size: 15px;
+  height: 30px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.highed-dtable-gsheet-centered {
+  text-align: center;
+  font-size: 25px;
+  margin-bottom: 10px;
+}
+
+.highed-dtable-gsheet-button {
+  margin-right: 10px;
+  width: 100%;
+}
+
+.highed-dtable-gsheet-half {
+  width: 50%;
+}
+
 .highed-dtable-container {
     width:100%;
     height:100%;
     position: relative;
     overflow: hidden;
-    border:@border-main;
+    // border:@border-main;
     border-collapse: collapse;
-    background:@bright-background;
+    background:@secondary-background-panel;
+    color: @secondary-color-panel;
     .highed-box-size;
+}
+
+.highed-dtable-drop-zone {
+  pointer-events: none;
+  position: absolute;
+  width: 80%;
+  height: 150px;
+  border-radius: 30px;
+  border: 8px dashed @border-main-color;
+  // background: @bright-background-panel;
+  color: @color-header;
+  left: 50%;
+  padding: 20px;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  text-align: center;
+  font-size: 30px;
+}
+
+.highed-dtable-drop-zone-small {
+  font-size: 20px;
 }
 
 .highed-dtable-table-frame {
@@ -59,7 +151,7 @@
 .highed-dtable-toolbar-label {
     float:left;
     padding-left:40px;
-    line-height: 40px;
+    line-height: 60px;
     font-family: @font-secondary;
     font-size:14px;
     font-weight: 100;
@@ -80,8 +172,8 @@
 }
 
 .highed-dtable-body-selected-row {
-    background:@highlight-background !important;
-    color:@highlight-text !important;
+    background:@selected-item-color !important;
+    color:@selected-item-text !important;
 }
 
 .highed-dtable-col-val {
@@ -98,7 +190,8 @@
     position: absolute;
     left:0px;
     top:0px;
-    background:lighten(@highlight-background, 5) !important;
+    background:lighten(@selected-item-color, 5) !important;
+    color: @selected-item-text;
     font-family: @font-secondary;
     font-weight: 100;
     width:100%;
@@ -106,6 +199,7 @@
     font-size:24px;
     outline: none;
     border:none;
+    resize: none;
     .highed-box-size;    
 }
 
@@ -130,8 +224,32 @@
     border:none;
     .highed-box-size;   
 }
- 
 
+.highed-dtable-load-indicator {
+  z-index: 100;
+  position: absolute;
+  width: 200px;
+  height: 30px;
+  border-radius: 40px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: @background-panel;
+  color: @text-panel;
+  text-align: center;
+  font-size: 24px;
+  padding: 20px;
+  opacity: 0;
+  pointer-events:none;
+}
+
+.highed-dtable-table-tail {
+  text-align: center;
+  font-size: 18px;
+  display: none;
+  padding: 20px;
+}
+ 
 .highed-dtable-body td input:active {
 
 }
@@ -159,7 +277,7 @@
     left:0px;
     top:0px;
     background:@background-panel;
-    border-bottom: @border-main;
+    // border-bottom: @border-main;
 
     //color:@color-toolbar;
 }
@@ -181,19 +299,19 @@
 }
 
 .highed-dtable-top-bar-col-options {
-    opacity: 0;
+    // opacity: 0;
     padding:5px;
     position: absolute;
     left:2px;
     top:50%;
     transform:translate(0, -50%);
-    background:@background-panel;
+    color:@secondary-color-panel;
     .highed-transition;
 }
 
 .highed-dtable-top-bar-col-options:hover {
     //background: @accent-color !important;
-    color: @accent-color !important;
+    color: @selected-item-color !important;
 }
 
 .highed-dtable-top-left-panel {
@@ -218,7 +336,7 @@
 
 .highed-dtable-left-bar-row {
     height:41px;
-    border-bottom: @border-main;
+    // border-bottom: @border-main;
     width:100%;
     padding:10px;
     .highed-box-size;

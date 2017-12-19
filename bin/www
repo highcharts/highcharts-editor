@@ -92,6 +92,8 @@ app.use('/css', expressLess(__dirname + '/../less', {
 	debug: true
 }));
 
+app.use('/help', express.static(__dirname + '/../res/help'));
+app.use('/gen_src', express.static(__dirname + '/../generated_src'));
 app.use('/src', express.static(__dirname + '/../src'));
 app.use('/plugins', express.static(__dirname + '/../plugins'));
 app.use('/integrations', express.static(__dirname + '/../integrations'));
@@ -107,6 +109,16 @@ app.get('/full', function (req, res) {
     updateFiles();
 
     res.render('full', {
+        scripts: files,
+        package: package,
+        title: 'Highcharts Editor - Full'
+    });
+});
+
+app.get('/experiment', function (req, res) {
+    updateFiles();
+
+    res.render('ui-test', {
         scripts: files,
         package: package,
         title: 'Highcharts Editor - Full'

@@ -23,7 +23,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-/* 
+/*
  * We are currently altering the dumps for the API docs.
  * The changes are not yet live, but we need the additional information
  * the new format supplies.
@@ -32,7 +32,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * This will in the future work the same as the old meta->advanced baker,
  * where it fetches the current dump from api.highcharts.com rather than from
  * a local file.
- * 
+ *
  */
 
 const fs = require('fs');
@@ -68,8 +68,9 @@ function merge(target, path) {
 function processSeries(tree) {
 
     function process(node) {
-        var ext = [node.doclet.extends, 'plotOptions.series'];
-        
+        node.doclet = node.doclet || {};
+        var ext = [node.doclet.extends || '', 'plotOptions.series'];
+
         Object.keys(node.children).forEach(function (key) {
             var child = node.children[key],
                 excludes = {}
@@ -80,7 +81,7 @@ function processSeries(tree) {
                     var ar;
                     if (tag.title === 'excluding') {
                         ar = tag.value.trim().split(',');
-                        
+
                         ar.forEach(function (p) {
                             excludes[p] = true;
                         });
@@ -141,16 +142,16 @@ function extend(targetName, target, path, ignores) {
             if (source.meta && source.meta.extends) {
                 console.log('merge - recursing', path.join('.'), 'to', source.meta.extends);
                 extend(
-                    source.meta.ns + source.meta.name, 
-                    source, 
+                    source.meta.ns + source.meta.name,
+                    source,
                     source.meta.extends
                 );
             }
 
             Object.keys(source.children || {}).forEach(function (key) {
                 if (ignores && !ignores[key]) {
-                    //if (!target.children[key]) {                                    
-                        target.children[key] = source.children[key];                        
+                    //if (!target.children[key]) {
+                        target.children[key] = source.children[key];
                     //}
                 }
             });
@@ -166,7 +167,7 @@ function extend(targetName, target, path, ignores) {
     path.some(function (p, i) {
         try {
             if (current.children[p].children) {
-                current = current.children[p];                 
+                current = current.children[p];
             } else {
                 console.log('merge - itterated out of bounds:', p, path.join('.'));
                 return true;
@@ -187,7 +188,7 @@ function extend(targetName, target, path, ignores) {
 
 function filter(dumpProperties, input, name, pname) {
     var node = {
-            meta: {            
+            meta: {
                 types: {},
                // ns: pname,
                 name: name
@@ -200,7 +201,7 @@ function filter(dumpProperties, input, name, pname) {
     node.meta.excludes = excludes;
 
     if (input.meta) {
-        
+
         node.meta.default = input.meta.default;
         node.meta.validFor = input.meta.validFor;
 
@@ -214,11 +215,18 @@ function filter(dumpProperties, input, name, pname) {
         //         '#L',
         //         input.meta.line
         //     ].join('');
-        // }        
+        // }
+    }
+
+    if ((!pname || pname.length === 0) && name === 'series') {
+      console.log('Overriding series type');
+      node.meta = node.meta || {};
+      node.meta.types = node.meta.types || {};
+      node.meta.types.array = 'series';
     }
 
     if (input.doclet) {
-        
+
         if (input.doclet.products) {
             // Turn the products array into a hash map for quicker checks in UI
             node.meta.products = {};
@@ -237,25 +245,25 @@ function filter(dumpProperties, input, name, pname) {
         }
 
         if (input.doclet.type) {
-            input.doclet.type.names.forEach(function (t) {                                
+            input.doclet.type.names.forEach(function (t) {
 
                 if (t.trim().toLowerCase().indexOf('array') === 0) {
-                    
+
                     // Unfortunatly we need some special handling here..
                     if ((!pname || pname.length === 0) && name === 'series') {
                         node.meta.types['array'] = 'series';
                     } else {
-                        node.meta.types['array'] = extractArrayType(t);                        
-                    }                
+                        node.meta.types['array'] = extractArrayType(t);
+                    }
                 } else {
-                    node.meta.types[t.trim().toLowerCase()] = 1;                                        
+                    node.meta.types[t.trim().toLowerCase()] = 1;
                 }
             });
         }
 
         if (input.doclet.description) {
             node.meta.description = input.doclet.description;
-        }        
+        }
 
         if (input.doclet.defaultvalue) {
             node.meta.default = input.doclet.defaultvalue;
@@ -265,11 +273,11 @@ function filter(dumpProperties, input, name, pname) {
 
         if (input.doclet.tags) {
             input.doclet.tags.forEach(function (tag) {
-            
+
                 if (tag.title === 'validvalue') {
                     // There are two primary formats here, JSON and , split..
                     // We want to have these end up in a drop-down
-                    
+
                     tag.value = tag.value.trim().replace('undefined', '"undefined"');
 
                     node.meta.types['enum'] = 1;
@@ -305,24 +313,24 @@ function filter(dumpProperties, input, name, pname) {
     //     node.meta.leafNode = 1;
     // }
 
-    // Filter children    
+    // Filter children
     Object.keys(input.children || {}).forEach(function (child) {
         if (child === '' || child === '_meta' || child === 'data') return;
 
-        // We don't include functions, so check that first
-        if (input.children[child].doclet && input.children[child].doclet.type) {
-            if (input.children[child].doclet.type.names.filter(function (a) {
-                return a.toUpperCase() === 'FUNCTION';
-            }).length > 0) {
-                return;
-            }
-        }
+        // // We don't include functions, so check that first
+        // if (input.children[child].doclet && input.children[child].doclet.type) {
+        //     if (input.children[child].doclet.type.names.filter(function (a) {
+        //         return a.toUpperCase() === 'FUNCTION';
+        //     }).length > 0) {
+        //         return;
+        //     }
+        // }
 
         node.subtree[child] = (
             filter(
-                dumpProperties, 
-                input.children[child], 
-                child, 
+                dumpProperties,
+                input.children[child],
+                child,
                 (typeof pname !== 'undefined' && pname.length > 0 ? pname + '.' : '') + (name || '')
             )
         );
@@ -345,15 +353,18 @@ mkdir(__dirname + '/../generated_src/', function () {
       [
           license,
           '\n',
-          'highed.meta.optionsAdvanced = highed.transform.advanced(',
+          'highed.meta.optionsAdvanced = ',
           JSON.stringify(
               filter(
-                  dump.children._meta, 
+                  dump.children._meta,
                   processSeries(dump)
-              ), 
+              ),
               undefined, '  '
           ),
-          ');\n'
-      ].join('')
+          ';\n'
+      ].join(''),
+      (err) => {
+
+      }
   );
 });

@@ -7,8 +7,8 @@
 */
 
 highed.plugins.import.install('Google Spreadsheets', {
-    description: 'Import from Google Spreadsheets. The worksheet option may be left blank to load the first sheet.',   
-    supressURL: true,         
+    description: 'Import from Google Spreadsheets. The worksheet option may be left blank to load the first sheet.',
+    surpressURL: true,
     options: {
         key: {
             type: 'string',
@@ -22,12 +22,14 @@ highed.plugins.import.install('Google Spreadsheets', {
         }
     },
     dependencies: [
-        "https://code.jquery.com/jquery-2.2.4.min.js"
+        'https://code.jquery.com/jquery-2.2.4.min.js'
     ],
     request: function (url, options, fn) {
         fn(false, {
-            'data--googleSpreadsheetKey': options.key,
-            'data--googleSpreadsheetWorksheet': options.sheet || false   
+            data: {
+              googleSpreadsheetKey: options.key,
+              googleSpreadsheetWorksheet: options.sheet || false
+            }
         });
     }
 });

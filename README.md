@@ -5,11 +5,11 @@ Highcharts Editor
 
 # IMPORTANT NOTICE
 
-**The Highcharts Editor is currently in Beta. The master branch is not suited for production - use one of the [pre-built releases](https://github.com/highcharts/highcharts-editor/releases).
+**The Highcharts Editor is currently in Beta. The master branch is not suited for production - use one of the [pre-built releases](https://github.com/highcharts/highcharts-editor/releases).**
 
 ## Introduction
 
-![screenshots/customize.png](screenshots/customize.png)
+![screenshots/customize.png](screenshots/new_design.png)
 
 **[Click here for live demos](http://editor.highcharts.com)**
 
@@ -21,10 +21,27 @@ It requires no back-end service to operate.
   * Light on dependencies: requires only Highcharts, FontAwesome, and (optionally) two Google Fonts
   * Lightweight: weighs in at ~40kb minified and gzipped
   * 100% client-side
+  * Integration with Highcharts Cloud
   * Outputs embeddable HTML, JavaScript, and JSON
-  * Optional wizard-style interface
   * Highly configurable
   * Plug-in system
+
+## Note about upgrading from 0.1.3
+
+The transition from 0.1.3 to 0.2.0 introduces some fundemental changes. 
+
+Most notable is the complete design overhaul.
+
+There are however also changes to the way the editor is built.
+
+Previously, templates were part of the default build - now, templates are bundled
+in separate product bundles. This means that in order for the default templates to
+show up, `highcharts-editor.with.modules.min.js` must also be included.
+
+Alternatively, include `highcharts-editor.complete.js` which includes the editor itself, all templates,
+and advanced mode baked into a single file.
+
+A full list of changes can be found [here](CHANGELOG.md).
 
 ## Installing and Building
 
@@ -45,6 +62,7 @@ You can find these [here](https://github.com/highcharts/highcharts-editor/releas
   * `gulp`: Builds distribution packages for the editor and the bundled integrations and plugins
   * `gulp electron`: Builds Electron packages for Windows/Linux/OSX
   * `gulp with-advanced`: Builds packages for the advanced editor which exposes all API settings
+  * `gulp complete`: Builds a complete bundle with advanced mode, and all supported modules
 
 **Notice for windows users:** You need [7zip](http://www.7-zip.org/) installed and added to your path for `gulp electron` to work!
 
@@ -89,21 +107,13 @@ A number of example integrations are included in the editor:
   * [Electron](https://github.com/highcharts/highcharts-editor/wiki/Native-OSX-Windows-Linux)
   * [CKEditor](https://github.com/highcharts/highcharts-editor/wiki/CKEditor)
 
-## API Reference & General Documentation
-
-  * [API reference](https://github.com/highcharts/highcharts-editor/wiki/API)
+## General Documentation
   * [Full documentation](https://github.com/highcharts/highcharts-editor/wiki)
   * [Using plug-ins](https://github.com/highcharts/highcharts-editor/wiki/Plugins)
   * [Enabling the advanced editor](https://github.com/highcharts/highcharts-editor/wiki/Enable-Advanced-Customization)
   * [Customizing available editable properties](https://github.com/highcharts/highcharts-editor/wiki/Choosing-Options)
   * [Adding custom templates](https://github.com/highcharts/highcharts-editor/wiki/Custom-Templates)
   * [Disabling editor features](https://github.com/highcharts/highcharts-editor/wiki/Disable-Features)
-
-Documentation can also be generated offline by running `js-skald` in the project root, which outputs the API reference
-in the `docs/`.
-
-`js-skald` is a simple doc generator that outputs markdown files and JSON trees representing the code.
-It can be installed by running `npm install -g js-skald`. 
 
 ## License
 

@@ -10,6 +10,6 @@ rules:
     no-unmodified-loop-condition: 0
     object-curly-spacing: [2, "always"]
     operator-linebreak: [2, "after"]
-    space-before-function-paren: [2, {"anonymous": "always", "named": "never"}] # JSLint style
+    # space-before-function-paren: [2, {"anonymous": "always", "named": "never"}] # JSLint style
     strict: 0
     quotes: [2, "single"]

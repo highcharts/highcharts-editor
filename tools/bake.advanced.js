@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 var apiDumpURL = 'http://api.highcharts.com/highcharts/option/dump.json',
     request = require('request'),
-    fs = require('fs'), 
+    fs = require('fs'),
     apiSorted = {},
     license = fs.readFileSync(__dirname + '/../LICENSE'),
     ignores = {
@@ -51,7 +51,7 @@ console.log('Fetching latest API dump...'.bold);
 
 function extractType(str) {
     var s = str.indexOf('<'),
-        st 
+        st
     ;
 
     if (s >= 0) {
@@ -64,7 +64,7 @@ function extractType(str) {
 function removeType(str) {
     var t = extractType(str);
 
-    if (t) {        
+    if (t) {
         return str.replace('<' + t + '>', '');
     }
     return str;
@@ -77,15 +77,15 @@ function sortAPI(api) {
 
     api.forEach(function (entry) {
         var st = extractType(entry.name);
-        entry.name = removeType(entry.name); 
+        entry.name = removeType(entry.name);
 
-        if (!apiSorted[entry.name]) {            
+        if (!apiSorted[entry.name]) {
 
             apiSorted[entry.name] = entry;
 
             if (st !== false) {
                 entry.subType = {};
-                entry.subType[st] = true;                        
+                entry.subType[st] = true;
             }
         } else if (st) {
             apiSorted[entry.name].subType = apiSorted[entry.name].subType || {};
@@ -101,7 +101,7 @@ function sortAPI(api) {
         if (entry.name === 'series') {
             //Hack
             apiSorted[entry.name].filteredBy = entry.filteredBy = 'series--type';
-            
+
         }
     });
 }
@@ -115,7 +115,7 @@ function writeMeta(data) {
     ].join('\n');
 
    fs.writeFile(__dirname + '/../src/meta/highed.meta.options.advanced.js', body, function (err) {
-        return err && console.log('[error]'.red, err); 
+        return err && console.log('[error]'.red, err);
    });
 }
 
@@ -131,7 +131,7 @@ function process(data) {
         console.log('[error]'.red, e);
         return false;
     }
-  
+
     data.sort(function (a, b) {
         return a.name.toUpperCase().localeCompare(b.name.toUpperCase());
     });
@@ -148,12 +148,12 @@ function process(data) {
         ;
 
         //For now we skip functions and multi-types
-        if (entry.returnType === 'Function' || entry.deprecated) {
+        if (entry.deprecated) {
             return;
         }
 
         //Temp
-        entry.name = removeType(entry.name);        
+        entry.name = removeType(entry.name);
 
         parent = removeType(parent);
         path = parent.replace(/\-\-/g, '.').replace(/\-/g, '.').split('.');
@@ -189,7 +189,7 @@ function process(data) {
                 return;
             }
 
-            if (i === path.length - 1) {                  
+            if (i === path.length - 1) {
 
                 current.children[p] = current.children[p] || {
                     entries: {},
@@ -205,7 +205,7 @@ function process(data) {
                     values: entry.values || undefined,
                     defaults: entry.defaults,
                     subType: apiSorted[entry.name].subType,
-                    filteredBy: entry.filteredBy                    
+                    filteredBy: entry.filteredBy
                 };
 
                 if (c.dataType.indexOf('array') >= 0 && entry.isParent) {
@@ -216,11 +216,11 @@ function process(data) {
                         current.children[p].id = p;
                     } //else {
                     //     c.isInstancedArray = true;
-                    //     current.children[p].entries[c.id] = c;                        
+                    //     current.children[p].entries[c.id] = c;
                     // }
                     //c.entries = [];
                     //c.children = {};
-                
+
                 //If it's an object, skip it. It will appear as a leaf.
                 } else if (!entry.isParent) {
                     //current.children[p].entries[c.id] = c;
@@ -259,7 +259,7 @@ function process(data) {
 
                     current = current.children[p];
                 } else {
-                    current = current.children[p];                       
+                    current = current.children[p];
                 }
             }
         });

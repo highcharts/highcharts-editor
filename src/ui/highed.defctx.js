@@ -44,8 +44,8 @@ highed.DefaultContextMenu = function (chartPreview) {
             icon: 'file-o',
             click: function () {
                 if (window.confirm(highed.getLocalizedStr('confirmNewChart'))) {
-                    chartPreview.new();  
-                    events.emit('NewChart');                
+                    chartPreview.new();
+                    events.emit('NewChart');
                 }
             }
             },
@@ -54,7 +54,7 @@ highed.DefaultContextMenu = function (chartPreview) {
                 title: highed.getLocalizedStr('saveProject'),
                 icon: 'floppy-o',
                 click: function () {
-                    highed.download('chart.json', JSON.stringify(chartPreview.toProject()));
+                    highed.download('chart.json', chartPreview.toProjectStr());
                 }
             },
             {
@@ -74,6 +74,21 @@ highed.DefaultContextMenu = function (chartPreview) {
                             chartPreview.loadProject(file);
                         }
                     });
+                }
+            },
+            '-',
+            {
+                title: 'Save to Cloud',
+                icon: 'upload',
+                click: function () {
+                  highed.cloud.save(chartPreview);
+                }
+            },
+            {
+                title: highed.getLocalizedStr('loadCloud'),
+                icon: 'cloud',
+                click: function () {
+                    highed.cloud.showUI(chartPreview);
                 }
             },
             '-',

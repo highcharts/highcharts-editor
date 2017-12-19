@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     var webImports = {};
 
     highed.plugins.import = {
-        /** Install a data import plugin 
+        /** Install a data import plugin
           * @namespace highed.plugins.import
           * @param name {string} - the name of the plugin
           * @param defintion {object} - the plugin definition
@@ -41,7 +41,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           *      > type {string} - the type of the option
           *      > default {string} - the default value
           *   > filter {function} - function to call when executing the plugin
-          *      >  url {anything} - request url 
+          *      >  url {anything} - request url
           *      >  options {object} - contains user-defined options
           *      >  callback {function} - function to call when the import is done
           */
@@ -59,7 +59,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 }, defintion);
 
                 if (webImports[name].dependencies) {
-                    highed.include(webImports[name].dependencies);
+                    webImports[name].dependencies.forEach(function (d) {
+                        highed.include(d);
+                    });
                 }
             } else {
                 highed.log(1, 'tried to register an import plugin which already exists:', name);
@@ -68,13 +70,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     };
 
     /** Data importer widget
-     *  
+     *
      *  @example
      *  var dimp = highed.DataImporter(document.body);
      *  dimp.on('ImportCSV', function (data) {
      *      console.log('Importing csv:', data.csv);
      *  });
-     *  
+     *
      *  @constructor
      *
      *  @emits ImportChartSettings - when importing chart settings
@@ -88,7 +90,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     highed.DataImporter = function (parent, attributes) {
         var events = highed.events(),
 
-            properties = highed.merge({          
+            properties = highed.merge({
                 options: ['csv', 'plugins', 'samples'],
                 plugins: ['CSV', 'JSON', 'Difi', 'Socrata', 'Google Spreadsheets']
             }, attributes),
@@ -100,7 +102,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             samplesTab = tabs.createTab({title: 'Sample Data'}),
 
             csvPasteArea = highed.dom.cr('textarea', 'highed-imp-pastearea'),
-            csvImportBtn = highed.dom.cr('button', 'highed-imp-button', 'Import'),
+            csvImportBtn = highed.dom.cr('button', 'highed-imp-button', 'Import Pasted Data'),
             csvImportFileBtn = highed.dom.cr('button', 'highed-imp-button', 'Upload & Import File'),
             delimiter = highed.dom.cr('input', 'highed-imp-input'),
             dateFormat = highed.dom.cr('input', 'highed-imp-input'),
@@ -112,7 +114,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             jsonImportFileBtn = highed.dom.cr('button', 'highed-imp-button', 'Upload & Import File'),
 
             webSplitter = highed.HSplitter(webTab.body, {leftWidth: 30}),
-            webList = highed.List(webSplitter.left)            
+            webList = highed.List(webSplitter.left)
         ;
 
         jsonPasteArea.value = JSON.stringify({}, undefined, 2);
@@ -159,7 +161,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     return;
                 }
 
-                function buildBody() {            
+                function buildBody() {
                     var options = webImports[name],
                         url = highed.dom.cr('input', 'highed-imp-input-stretch'),
                         urlTitle = highed.dom.cr('div', '', 'URL'),
@@ -175,20 +177,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
                         highed.dom.ap(dynamicOptionsContainer,
                             highed.InspectorField(
-                                options.options[name].type, 
-                                options.options[name].default, 
+                                options.options[name].type,
+                                options.options[name].default,
                                 {
                                     title: options.options[name].label
-                                }, 
+                                },
                                 function (nval) {
                                     dynamicOptions[name] = nval;
-                                }, 
+                                },
                                 true
                             )
                         );
                     });
 
-                    if (options.suppressURL) {
+                    if (options.surpressURL) {
                         highed.dom.style([url, urlTitle], {
                             display: 'none'
                         });
@@ -196,13 +198,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
                     url.placeholder = 'Enter URL';
 
+
                     highed.dom.on(importBtn, 'click', function () {
                         highed.snackBar('Importing ' + name + ' data');
 
                         if (highed.isFn(options.request)) {
                             return options.request(url.value, dynamicOptions, function (err, chartProperties) {
                                 if (err) return highed.snackBar('import error: ' + err);
-                                events.emit('ImportChartSettings', chartProperties);
+                                events.emit('ImportChartSettings', chartProperties, options.newFormat);
                             });
                         }
 
@@ -211,8 +214,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                             type: 'get',
                             dataType: options.fetchAs || 'text',
                             success: function (val) {
-                                options.filter(val, highed.merge({}, dynamicOptions), function (error, val) {       
-                                    if (error) return highed.snackBar('import error: ' + error);                         
+                                options.filter(val, highed.merge({}, dynamicOptions), function (error, val) {
+                                    if (error) return highed.snackBar('import error: ' + error);
                                     if (options.treatAs === 'csv') {
                                         csvTab.focus();
                                         csvPasteArea.value = val;
@@ -271,10 +274,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         csvTab.focus();
                     });
 
-                    highed.dom.ap(samplesTab.body, 
+                    highed.dom.ap(samplesTab.body,
                         //highed.dom.cr('div', '', name),
                         //highed.dom.cr('br'),
-                        loadBtn, 
+                        loadBtn,
                         highed.dom.cr('br')
                     );
                 });
@@ -297,7 +300,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         function processJSONImport(jsonString) {
             var json = jsonString;
-            if (highed.isStr(json)) {            
+            if (highed.isStr(json)) {
                 try {
                     json = JSON.parse(jsonString);
                 } catch(e) {
@@ -308,8 +311,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             events.emit('ImportJSON', json);
             highed.snackBar('imported json');
         }
-        
-        /** Force a resize of the widget 
+
+        /** Force a resize of the widget
          *  @memberof highed.DataImporter
          *  @param w {number} - the new width
          *  @param h {number} - the new height
@@ -321,7 +324,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             tabs.resize(w || ps.w, h || ps.h);
             bsize = tabs.barSize();
-            
+
             webSplitter.resize(w || ps.w, (h || ps.h) - bsize.h - 20);
             webList.resize(w || ps.w, (h || ps.h) - bsize.h);
         }
@@ -342,31 +345,31 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         ///////////////////////////////////////////////////////////////////////////
 
-        highed.dom.ap(csvTab.body, 
+        highed.dom.ap(csvTab.body,
             highed.dom.cr('div', 'highed-imp-help', 'Paste CSV into the below box, or upload a file. Click Import to import your data.'),
             csvPasteArea,
 
-            highed.dom.cr('span', 'highed-imp-label', 'Delimiter'),
-            delimiter,
-            highed.dom.cr('br'),
+            // highed.dom.cr('span', 'highed-imp-label', 'Delimiter'),
+            // delimiter,
+            // highed.dom.cr('br'),
 
-            highed.dom.cr('span', 'highed-imp-label', 'Date Format'),
-            dateFormat,
-            highed.dom.cr('br'),
+            // highed.dom.cr('span', 'highed-imp-label', 'Date Format'),
+            // dateFormat,
+            // highed.dom.cr('br'),
 
-            highed.dom.cr('span', 'highed-imp-label', 'Decimal Point Notation'),
-            decimalPoint,
-            highed.dom.cr('br'),
+            // highed.dom.cr('span', 'highed-imp-label', 'Decimal Point Notation'),
+            // decimalPoint,
+            // highed.dom.cr('br'),
 
-            highed.dom.cr('span', 'highed-imp-label', 'First Row Is Series Names'),
-            firstAsNames,
-            highed.dom.cr('br'),
-            
-            csvImportFileBtn,
-            csvImportBtn
+            // highed.dom.cr('span', 'highed-imp-label', 'First Row Is Series Names'),
+            // firstAsNames,
+            // highed.dom.cr('br'),
+
+            csvImportBtn,
+            csvImportFileBtn
         );
 
-        highed.dom.ap(jsonTab.body, 
+        highed.dom.ap(jsonTab.body,
             highed.dom.cr('div', 'highed-imp-help', 'Paste JSON into the below box, or upload a file. Click Import to import your data. <br/><b>The JSON is the data passed to the chart constructor, and may contain any of the valid <a href="http://api.highcharts.com/highcharts/" target="_blank">options</a>.</b>'),
             jsonPasteArea,
             jsonImportFileBtn,
@@ -426,7 +429,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         resize();
 
         ///////////////////////////////////////////////////////////////////////////
-        
+
         return {
             on: events.on,
             loadCSV: loadCSVExternal,

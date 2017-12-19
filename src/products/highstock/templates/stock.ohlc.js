@@ -1,6 +1,6 @@
 /*
 
-Highcharts Editor 
+Highcharts Editor
 
 Copyright (c) 2016-2017, Highsoft
 
@@ -30,7 +30,7 @@ highed.templates.add('Stock', {
     "title": "OHLC",
     "description": "",
     "constructor": "StockChart",
-    "thumbnail": "https://cloud.highcharts.com/images/opilip/2/136.svg",
+    "thumbnail": "opilip.svg",
     "dataValidator": false,
     "sampleSets": ['candlestick'],
     "config": {
