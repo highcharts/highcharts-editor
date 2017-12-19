@@ -51,8 +51,8 @@
     "./src/ui/highed.simple.customizer.js",
     "./src/ui/highed.cloud.ui.js",
     
+    "./src/editors/highed.drawereditor.js",
     "./src/editors/highed.editor.js",
     "./src/editors/highed.simple.editor.js",
-    "./src/editors/highed.modaleditor.js",
-    "./src/editors/highed.drawereditor.js"
+    "./src/editors/highed.modaleditor.js"
 ]
