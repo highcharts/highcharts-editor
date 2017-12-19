@@ -41,6 +41,8 @@ show up, `highcharts-editor.with.modules.min.js` must also be included.
 Alternatively, include `highcharts-editor.complete.js` which includes the editor itself, all templates,
 and advanced mode baked into a single file.
 
+A full list of changes can be found [here](CHANGELOG.md).
+
 ## Installing and Building
 
 **Pre-built**
