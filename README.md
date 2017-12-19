@@ -5,7 +5,7 @@ Highcharts Editor
 
 # IMPORTANT NOTICE
 
-**The Highcharts Editor is currently in Beta. The master branch is not suited for production - use one of the [pre-built releases](https://github.com/highcharts/highcharts-editor/releases).
+**The Highcharts Editor is currently in Beta. The master branch is not suited for production - use one of the [pre-built releases](https://github.com/highcharts/highcharts-editor/releases).**
 
 ## Introduction
 
@@ -25,6 +25,21 @@ It requires no back-end service to operate.
   * Outputs embeddable HTML, JavaScript, and JSON
   * Highly configurable
   * Plug-in system
+
+## Note about upgrading from 0.1.3
+
+The transition from 0.1.3 to 0.2.0 introduces some fundemental changes. 
+
+Most notable is the complete design overhaul.
+
+There are however also changes to the way the editor is built.
+
+Previously, templates were part of the default build - now, templates are bundled
+in separate product bundles. This means that in order for the default templates to
+show up, `highcharts-editor.with.modules.min.js` must also be included.
+
+Alternatively, include `highcharts-editor.complete.js` which includes the editor itself, all templates,
+and advanced mode baked into a single file.
 
 ## Installing and Building
 
@@ -90,21 +105,13 @@ A number of example integrations are included in the editor:
   * [Electron](https://github.com/highcharts/highcharts-editor/wiki/Native-OSX-Windows-Linux)
   * [CKEditor](https://github.com/highcharts/highcharts-editor/wiki/CKEditor)
 
-## API Reference & General Documentation
-
-  * [API reference](https://github.com/highcharts/highcharts-editor/wiki/API)
+## General Documentation
   * [Full documentation](https://github.com/highcharts/highcharts-editor/wiki)
   * [Using plug-ins](https://github.com/highcharts/highcharts-editor/wiki/Plugins)
   * [Enabling the advanced editor](https://github.com/highcharts/highcharts-editor/wiki/Enable-Advanced-Customization)
   * [Customizing available editable properties](https://github.com/highcharts/highcharts-editor/wiki/Choosing-Options)
   * [Adding custom templates](https://github.com/highcharts/highcharts-editor/wiki/Custom-Templates)
   * [Disabling editor features](https://github.com/highcharts/highcharts-editor/wiki/Disable-Features)
-
-Documentation can also be generated offline by running `js-skald` in the project root, which outputs the API reference
-in the `docs/`.
-
-`js-skald` is a simple doc generator that outputs markdown files and JSON trees representing the code.
-It can be installed by running `npm install -g js-skald`. 
 
 ## License
 
