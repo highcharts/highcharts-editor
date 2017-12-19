@@ -36,7 +36,7 @@ const mkdirp = require('mkdirp');
 const package = require(__dirname + '/../package.json');
 const args = process.argv;
 const scripts = [
-    'highcharts-editor.min.js'
+    'highcharts-editor.complete.js'
 ];
 
 var settings = {
@@ -59,7 +59,7 @@ mkdirp(__dirname + '/../demos', function () {
         files.forEach(function (file) {
             var f;
             if (file.indexOf('.handlebars') >= 0) {
-                fs.readFile(__dirname + '/../views/' + file, function (err, data) {                    
+                fs.readFile(__dirname + '/../views/' + file, function (err, data) {
                     if (err) return console.log(err);
 
                     var t = hb.compile(data.toString()),
@@ -67,7 +67,7 @@ mkdirp(__dirname + '/../demos', function () {
                     ;
 
                     settings.title = 'Highcharts Editor - '+ file.replace('.handlebars', '');
-                    settings.body = t(settings);                    
+                    settings.body = t(settings);
                     result = mainTemplate(settings);
 
                     fs.writeFile(__dirname + '/../demos/' + file.substr(0, file.lastIndexOf('.')) + '.html', result, function (err) {
