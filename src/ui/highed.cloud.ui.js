@@ -53,7 +53,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     modal = highed.OverlayModal(document.body, { //eslint-disable-line no-undef
       showOnInit: false,
       width: '90%',
-      height: '90%'
+      height: '90%',
+      zIndex: 10001
     }),
     mainContainer = highed.dom.cr('div'),
     charts = highed.dom.cr('div', 'highed-cloud-chart-container'),
@@ -65,7 +66,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     saveNewModal = highed.OverlayModal(document.body, { //eslint-disable-line no-undef
       showOnInt: false,
       width: 400,
-      height: 300
+      height: 300,
+      zIndex: 10001
     }),
     saveNewTeamsContainer = highed.dom.cr('div'),
     saveNewTeams = createTeamDropDown(saveNewTeamsContainer),
@@ -232,7 +234,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         loginCallback = false,
         modal = highed.OverlayModal(false, {
           height: 300,
-          width: 250
+          width: 250,
+          zIndex: 10001
         })
     ;
 
