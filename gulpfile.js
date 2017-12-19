@@ -103,6 +103,7 @@ gulp.task('complete', ['default', 'cache-thumbnails', 'bundled-modules', 'with-a
   .pipe(uglify())
   .pipe(header(license, packageJson))
   .pipe(gulp.dest(dest))
+  .pipe(gulp.dest(electronDest))
   //.pipe(gulp.src([dest + '/' + name + 'min.css']))
   .pipe(zip(name + '.complete.min.zip'))
   .pipe(gulp.dest(buildDest))
