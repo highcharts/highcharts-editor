@@ -268,6 +268,9 @@ highed.DrawerEditor = function(parent, options) {
     });
   }
 
+  // Alias import to data
+  builtInOptions.import = builtInOptions.data;
+
   /**
    * Creates the features defined in property.features
    * Call this after changing properties.features to update the options.
@@ -378,6 +381,8 @@ highed.DrawerEditor = function(parent, options) {
     createFeatures();
   }
 
+  function destroy() {}
+
   //////////////////////////////////////////////////////////////////////////////
   // Event attachments
 
@@ -420,14 +425,14 @@ highed.DrawerEditor = function(parent, options) {
     chartPreview.data.gsheet(settings);
   });
 
-  chartPreview.on('RequestEdit', function (event, x, y) {
+  chartPreview.on('RequestEdit', function(event, x, y) {
     // Expanded
     if (toolboxEntries.customize.body.offsetWidth) {
       customizer.focus(event, x, y);
 
-    // Collapsed
-    } else {
-      var unbind = toolboxEntries.customize.on('Expanded', function () {
+      // Collapsed
+    } else {
+      var unbind = toolboxEntries.customize.on('Expanded', function() {
         customizer.focus(event, x, y);
         unbind();
       });
@@ -492,6 +497,7 @@ highed.DrawerEditor = function(parent, options) {
   return {
     on: events.on,
     resize: resize,
+    destroy: destroy,
     /* Get embeddable javascript */
     getEmbeddableHTML: chartPreview.export.html,
     /* Get embeddable json */
