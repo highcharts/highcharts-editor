@@ -358,12 +358,44 @@ highed.ChartPreview = function (parent, attributes) {
             });
         }
 
+       if (themeOptions && themeOptions.xAxis) {
+          themeOptions.xAxis = highed.isArr(themeOptions.xAxis) ?
+                               themeOptions.xAxis :
+                               [themeOptions.xAxis];
+
+            aggregatedOptions.xAxis.forEach(function (obj, i) {
+                if (i < themeOptions.xAxis.length) {
+                    highed.merge(obj, themeOptions.xAxis[i]);
+                }
+            });
+        }
+
+       if (themeOptions && themeOptions.yAxis) {
+          themeOptions.yAxis = highed.isArr(themeOptions.yAxis) ?
+                               themeOptions.yAxis :
+                               [themeOptions.yAxis];
+
+            aggregatedOptions.yAxis.forEach(function (obj, i) {
+                if (i < themeOptions.yAxis.length) {
+                    highed.merge(obj, themeOptions.yAxis[i]);
+                }
+            });
+        }
+
         //Temporary hack
         //aggregatedOptions.series = customizedOptions.series;\
         aggregatedOptions.series = [];
         if (highed.isArr(customizedOptions.series)) {
             customizedOptions.series.forEach(function (obj, i) {
-                aggregatedOptions.series.push(highed.merge({}, obj));
+                var mergeTarget = {};
+
+                if (themeOptions && highed.isArr(themeOptions.series)) {
+                    if (i < themeOptions.series.length) {
+                      mergeTarget = highed.merge({}, themeOptions.series[i]);
+                    }
+                }
+
+                aggregatedOptions.series.push(highed.merge(mergeTarget, obj));
             });
         }
 
