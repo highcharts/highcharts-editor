@@ -89,6 +89,7 @@ highed.ChartPreview = function (parent, attributes) {
         customCodeStr = '',
 
         lastLoadedCSV = false,
+        lastLoadedSheet = false,
 
         throttleTimeout = false,
         chart = false,
@@ -496,6 +497,7 @@ highed.ChartPreview = function (parent, attributes) {
         }
 
         lastLoadedCSV = data.csv;
+        lastLoadedSheet = false;
 
         gc(function (chart) {
             var axis;
@@ -589,6 +591,7 @@ highed.ChartPreview = function (parent, attributes) {
         var hasData = false;
 
         lastLoadedCSV = false;
+        lastLoadedSheet = false;
 
         if (highed.isStr(projectData)) {
             try {
@@ -661,6 +664,14 @@ highed.ChartPreview = function (parent, attributes) {
 
             if (projectData.settings && projectData.settings.dataProvider) {
 
+              if (projectData.settings.dataProvider.seriesMapping) {
+                highed.merge(customizedOptions, {
+                  data: {
+                    seriesMapping: projectData.settings.dataProvider.seriesMapping
+                  }
+                });
+              }
+
               if (projectData.settings.dataProvider.googleSpreadsheet) {
 
                 var provider = projectData.settings.dataProvider;
@@ -679,17 +690,7 @@ highed.ChartPreview = function (parent, attributes) {
                 loadGSpreadsheet(sheet);
 
                 hasData = true;
-              }
-
-              if (projectData.settings.dataProvider.seriesMapping) {
-                highed.merge(customizedOptions, {
-                  data: {
-                    seriesMapping: projectData.settings.dataProvider.seriesMapping
-                  }
-                });
-              }
-
-              if (projectData.settings.dataProvider.csv) {
+              } else if (projectData.settings.dataProvider.csv) {
 
                 loadCSVData({
                   csv: projectData.settings.dataProvider.csv
@@ -723,17 +724,13 @@ highed.ChartPreview = function (parent, attributes) {
 
     function loadGSpreadsheet(options) {
       lastLoadedCSV = false;
+      lastLoadedSheet = options;
 
-      if (options.id && !options.googleSpreadsheetKey) {
-        options.googleSpreadsheetKey = options.id;
-      }
-
-      if (options.worksheet && !options.googleSpreadsheetWorksheet) {
-        options.googleSpreadsheetWorksheet = options.worksheet;
-      }
+      lastLoadedSheet.googleSpreadsheetKey = lastLoadedSheet.googleSpreadsheetKey || lastLoadedSheet.id;
+      lastLoadedSheet.googleSpreadsheetWorksheet = lastLoadedSheet.googleSpreadsheetWorksheet || lastLoadedSheet.worksheet;
 
       highed.merge(customizedOptions, {
-        data: options
+        data: lastLoadedSheet
       });
 
       updateAggregated();
@@ -771,7 +768,7 @@ highed.ChartPreview = function (parent, attributes) {
      */
     function toProject() {
         var loadedCSVRaw = false,
-            gsheet = false
+            gsheet = lastLoadedSheet
         ;
 
         if (chart && chart.options && chart.options.data && chart.options.data.csv) {
@@ -780,8 +777,8 @@ highed.ChartPreview = function (parent, attributes) {
 
         if (chart && chart.options && chart.options.data && chart.options.data.googleSpreadsheetKey) {
           gsheet = {
-            id: chart.options.data.googleSpreadsheetKey,
-            worksheet: chart.options.data.googleWorksheet
+            googleSpreadsheetKey: chart.options.data.googleSpreadsheetKey,
+            googleSpreadsheetWorksheet: chart.options.data.googleSpreadsheetWorksheet
           };
         }
 
@@ -806,7 +803,8 @@ highed.ChartPreview = function (parent, attributes) {
     }
 
     function clearData(skipReinit) {
-       lastLoadedCSV = false;
+      lastLoadedCSV = false;
+      lastLoadedSheet = false;
 
       if (customizedOptions && customizedOptions.data) {
         customizedOptions.data = {};
@@ -1016,7 +1014,11 @@ highed.ChartPreview = function (parent, attributes) {
           });
         }
 
-        if (lastLoadedCSV) {
+        if (lastLoadedSheet) {
+          highed.merge(r, {
+            data: lastLoadedSheet
+          });
+        } else if (lastLoadedCSV) {
           highed.merge(r, {
             data: {
               csv: lastLoadedCSV,

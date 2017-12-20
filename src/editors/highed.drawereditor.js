@@ -452,8 +452,8 @@ highed.DrawerEditor = function(parent, options) {
 
   chartPreview.on('ProviderGSheet', function(p) {
     dataTable.initGSheet(
-      p.id,
-      p.worksheet,
+      p.id || p.googleSpreadsheetKey,
+      p.worksheet || p.googleSpreadsheetWorksheet,
       p.startRow,
       p.endRow,
       p.startColumn,

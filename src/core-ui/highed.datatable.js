@@ -185,12 +185,14 @@ function parseCSV(inData, delimiter) {
       }
     });
 
+    options.delimiter = ';';
+
     if (delimiterCounts[','] > delimiterCounts[';'] && delimiterCounts[','] > delimiterCounts['\t']) {
       options.delimiter = ',';
-    } else if (delimiterCounts['\t'] > delimiterCounts[';'] && delimiterCounts['\t'] > delimiterCounts[',']) {
+    }
+
+    if (delimiterCounts['\t'] >= delimiterCounts[';'] && delimiterCounts['\t'] >= delimiterCounts[',']) {
       options.delimiter = '\t';
-    } else {
-      options.delimiter = ';';
     }
   }
 
@@ -327,6 +329,7 @@ highed.DataTable = function(parent, attributes) {
       'highed-ok-button highed-dtable-gsheet-button',
       'Load Spreadsheet'
     ),
+    isInGSheetMode = false,
     mainInputCb = [],
     rawCSV = false,
     mainInputCloseCb = false,
@@ -421,6 +424,12 @@ highed.DataTable = function(parent, attributes) {
   ////////////////////////////////////////////////////////////////////////////
 
   function emitChanged(noDelay) {
+    window.clearTimeout(changeTimeout);
+
+    if (isInGSheetMode) {
+      return;
+    }
+
     if (surpressChangeEvents) {
       return;
     }
@@ -431,9 +440,10 @@ highed.DataTable = function(parent, attributes) {
 
     //We use an interval to stop a crazy amount of changes to be
     //emitted in succession when e.g. loading sets.
-    window.clearTimeout(changeTimeout);
     changeTimeout = window.setTimeout(function() {
-      events.emit('Change', getHeaderTextArr(), toData());
+      if (!isInGSheetMode) {
+        events.emit('Change', getHeaderTextArr(), toData());
+      }
     }, 1000);
   }
 
@@ -1027,7 +1037,7 @@ highed.DataTable = function(parent, attributes) {
   /** Clear the table
       * @memberof highed.DataTable
       */
-  function clear() {
+  function clear(noWait) {
     rows = rows.filter(function(row) {
       row.destroy();
       return false;
@@ -1049,7 +1059,7 @@ highed.DataTable = function(parent, attributes) {
 
     events.emit('ClearData');
 
-    emitChanged();
+    emitChanged(noWait);
     showDropzone();
   }
 
@@ -1292,6 +1302,17 @@ highed.DataTable = function(parent, attributes) {
   function loadCSV(data, surpressEvents) {
     var rows;
 
+    if (isInGSheetMode) {
+      isInGSheetMode = false;
+
+      highed.dom.style(gsheetFrame, {
+        display: 'none'
+      });
+
+      highed.dom.style(container, {
+        display: 'block'
+      });
+    }
 
     highed.snackBar(highed.L('dgDataImporting'));
     importModal.hide();
@@ -1320,6 +1341,8 @@ highed.DataTable = function(parent, attributes) {
     gsheetStartCol.value = startColumn || 0;
     gsheetEndCol.value = endColumn || 0;
 
+    isInGSheetMode = true;
+
     highed.dom.style(gsheetFrame, {
       display: 'block'
     });
@@ -1345,7 +1368,7 @@ highed.DataTable = function(parent, attributes) {
       rows.length <= 1 ||
       confirm('This will clear your existing data. Continue?')
     ) {
-      clear();
+      clear(true);
 
       gsheetID.value = '';
       gsheetWorksheetID.value = '';
@@ -1357,6 +1380,8 @@ highed.DataTable = function(parent, attributes) {
       highed.dom.style(container, {
         display: 'none'
       });
+
+      isInGSheetMode = true;
     }
   }
 
@@ -1378,6 +1403,8 @@ highed.DataTable = function(parent, attributes) {
       highed.dom.style(container, {
         display: 'block'
       });
+
+      isInGSheetMode = false;
 
       init();
     }
