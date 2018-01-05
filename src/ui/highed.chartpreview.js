@@ -1058,17 +1058,15 @@ highed.ChartPreview = function (parent, attributes) {
     function getEmbeddableJavaScript(id) {
         return gc(function (chart) {
             var
-                cdnIncludes = {
-                    "https://code.highcharts.com/stock/highstock.js": 1,
-                    "https://code.highcharts.com/adapters/standalone-framework.js": 1,
-                    "https://code.highcharts.com/highcharts-more.js": 1,
-                    "https://code.highcharts.com/highcharts-3d.js": 1,
-                    "https://code.highcharts.com/modules/data.js": 1,
-                    "https://code.highcharts.com/modules/map.js": 1,
-                    "https://code.highcharts.com/modules/exporting.js": 1,
-                    "http://code.highcharts.com/modules/funnel.js": 1,
-                    "http://code.highcharts.com/modules/solid-gauge.js": 1
-                },
+                cdnIncludes = [
+                    'https://code.highcharts.com/stock/highstock.js',
+                    'https://code.highcharts.com/highcharts-more.js',
+                    'https://code.highcharts.com/highcharts-3d.js',
+                    'https://code.highcharts.com/modules/data.js',
+                    'https://code.highcharts.com/modules/exporting.js',
+                    'http://code.highcharts.com/modules/funnel.js',
+                    'http://code.highcharts.com/modules/solid-gauge.js'
+                ],
                 cdnIncludesArr = [],
                 title = chart.options && chart.options.title ? chart.options.title.text || 'untitled chart' : 'untitled chart'
             ;
@@ -1086,13 +1084,62 @@ highed.ChartPreview = function (parent, attributes) {
 
             if (highed.option('includeCDNInExport')) {
                 cdnIncludesArr = [
-                     'function include(script, next) {',
+                    'var files = ' , JSON.stringify(cdnIncludes), ',',
+                    'loaded = 0; ',
+                    'if (typeof window["HighchartsEditor"] === "undefined") {',
+                      'window.HighchartsEditor = {',
+                        'ondone: [cl],',
+                        'hasWrapped: false,',
+                        'hasLoaded: false',
+                      '};',
+                      'include(files[0]);',
+                    '} else {',
+                      'if (window.HighchartsEditor.hasLoaded) {',
+                        'cl();',
+                      '} else {',
+                        'window.HighchartsEditor.ondone.push(cl);',
+                      '}',
+                    '}',
+                    'function isScriptAlreadyIncluded(src){',
+                      'var scripts = document.getElementsByTagName("script");',
+                      'for (var i = 0; i < scripts.length; i++) {',
+                        'if (scripts[i].hasAttribute("src")) {',
+                          'if ((scripts[i].getAttribute("src") || "").indexOf(src) >= 0 || (scripts[i].getAttribute("src") === "http://code.highcharts.com/highcharts.js" && src === "https://code.highcharts.com/stock/highstock.js")) {',
+                            'return true;',
+                          '}',
+                        '}',
+                      '}',
+                      'return false;',
+                    '}',
+                    'function check() {',
+                      'if (loaded === files.length) {',
+                        'for (var i = 0; i < window.HighchartsEditor.ondone.length; i++) {',
+                          'try {',
+                            'window.HighchartsEditor.ondone[i]();',
+                          '} catch(e) {',
+                            'console.error(e);',
+                          '}',
+                        '}',
+                        'window.HighchartsEditor.hasLoaded = true;',
+                      '}',
+                    '}',
+
+
+                    'function include(script) {',
+                        'function next() {',
+                          '++loaded;',
+                          'if (loaded < files.length) {',
+                            'include(files[loaded]);',
+                          '}',
+                          'check();',
+                        '}',
+                        'if (isScriptAlreadyIncluded(script)) {',
+                          'return next();',
+                        '}',
                         'var sc=document.createElement("script");',
                         'sc.src = script;',
                         'sc.type="text/javascript";',
-                        'sc.onload=function() {',
-                            'if (++next < incl.length) include(incl[next], next);',
-                        '};',
+                        'sc.onload=function() { next(); };',
                         'document.head.appendChild(sc);',
                     '}',
 
@@ -1105,14 +1152,8 @@ highed.ChartPreview = function (parent, attributes) {
                         '}',
                     '}',
 
-                    'var inc = {},incl=[]; each(document.querySelectorAll("script"), function(t) {inc[t.src.substr(0, t.src.indexOf("?"))] = 1;});',
-                    'each(Object.keys(', JSON.stringify(cdnIncludes), '),function (k){',
-                        'if (!inc[k]) {',
-                            'incl.push(k)',
-                        '}',
-                    '});',
-
-                    'if (incl.length > 0) { include(incl[0], 0); }'
+                    'var inc = {},incl=[]; each(document.querySelectorAll("script"), function(t) {inc[t.src.substr(0, t.src.indexOf("?"))] = 1; ',
+                    '});'
                 ];
             }
 
@@ -1128,10 +1169,8 @@ highed.ChartPreview = function (parent, attributes) {
                         'var options=', stringifyFn(getEmbeddableJSON(true)), ';',
                         (highed.isFn(customCode) ? customCodeStr : ''),
                         'new Highcharts.' + constr + '("', id, '", options);',
-                    '}else ',
-                    'window.setTimeout(cl, 20);',
+                    '}',
                 '}',
-                'cl();',
                 '})();'
 
             ].join('') + '\n';
