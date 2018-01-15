@@ -1307,9 +1307,13 @@ highed.ChartPreview = function (parent, attributes) {
     }
 
     function getCustomCode() {
-      return highed.isFn(customCode) ?
-        customCodeStr || customCodeDefault :
-        customCode || customCodeDefault;
+      return (customCodeStr && customCodeStr.length) ?
+              customCodeStr :
+              customCodeDefault;
+
+      // return highed.isFn(customCode) ?
+        // customCodeStr || customCodeDefault :
+        // customCode || customCodeDefault;
     }
 
     function setCustomCode(newCode, errFn, skipEmit) {
