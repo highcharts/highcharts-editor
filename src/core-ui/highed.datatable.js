@@ -370,6 +370,28 @@ highed.DataTable = function(parent, attributes) {
           highed.download('data.csv', toCSV(';'), 'application/csv');
         }
       }
+    ]),
+    selectedRowIndex = 0,
+    addRowCtx = highed.ContextMenu([
+      {
+        title: 'At the end',
+        icon: '',
+        click: function () {
+          addRow();
+        }
+      },
+      {
+        title: 'After highlighted',
+        click: function () {
+          addRowAfter(selectedRowIndex);
+        }
+      },
+      {
+        title: 'Before highlighted',
+        click: function () {
+          addRowBefore(selectedRowIndex);
+        }
+      }
     ]);
   checkAll.type = 'checkbox';
 
@@ -636,7 +658,7 @@ highed.DataTable = function(parent, attributes) {
 
   ////////////////////////////////////////////////////////////////////////////
 
-  function Row() {
+  function Row(skipAdd) {
     var columns = [],
       row = highed.dom.cr('tr'),
       leftItem = highed.dom.cr('div', 'highed-dtable-left-bar-row', ''),
@@ -662,6 +684,7 @@ highed.DataTable = function(parent, attributes) {
         o.className = '';
       }
       row.className = 'highed-dtable-body-selected-row';
+      selectedRowIndex = exports.rowIndex;
     }
 
     function isChecked() {
@@ -735,10 +758,13 @@ highed.DataTable = function(parent, attributes) {
       addToDOM: addToDOM,
       insertCol: insertCol,
       rebuildColumns: rebuildColumns,
-      delCol: delCol
+      delCol: delCol,
+      rowIndex: rows.length
     };
 
-    rows.push(exports);
+    if (!skipAdd) {
+      rows.push(exports);
+    }
 
     resize();
 
@@ -749,14 +775,33 @@ highed.DataTable = function(parent, attributes) {
 
   function rebuildRows() {
     rows.forEach(function(row, i) {
-      row.addToDOM(i);
+      if (rows.length < 500) {
+        row.addToDOM(i);
+      }
+      row.rowIndex = i;
     });
+
+    emitChanged();
   }
 
   function rebuildColumns() {
     rows.forEach(function(row) {
       row.rebuildColumns();
     });
+  }
+
+  function addRowBefore(index) {
+    if (index > 0 && index < rows.length) {
+      rows.splice(index - 0, 0, addRow(true, true));
+      rebuildRows();
+    }
+  }
+
+  function addRowAfter(index) {
+    if (index >= 0 && index < rows.length) {
+      rows.splice(index + 1, 0, addRow(true, true));
+      rebuildRows();
+    }
   }
 
   function init() {
@@ -1066,8 +1111,9 @@ highed.DataTable = function(parent, attributes) {
   /** Add a new row
       * @memberof highed.DataTable
       */
-  function addRow(supressChange) {
-    var r = Row();
+  function addRow(supressChange, skipAdd) {
+    var r = Row(skipAdd);
+
     gcolumns.forEach(function() {
       r.addCol();
     });
@@ -1079,6 +1125,8 @@ highed.DataTable = function(parent, attributes) {
     if (rows.length > 1) {
       hideDropzone();
     }
+
+    return r;
   }
 
   /** Insert a new column
@@ -1554,7 +1602,9 @@ highed.DataTable = function(parent, attributes) {
     css: 'fa-plus-circle',
     tooltip: 'Add row',
     title: highed.L('dgAddRow'),
-    click: addRow
+    click: function (e) {
+      addRowCtx.show(e. clientX, e.clientY);
+    }
   });
 
   toolbar.addButton({
@@ -1610,6 +1660,7 @@ highed.DataTable = function(parent, attributes) {
   toolbar.addIcon(
     {
       css: 'fa-trash',
+      title: 'Delete row(s)',
       click: function() {
         if (!confirm(highed.L('dgDeleteRow'))) {
           return;
@@ -1625,16 +1676,17 @@ highed.DataTable = function(parent, attributes) {
     'left'
   );
 
-  toolbar.addIcon(
-    {
-      css: 'fa-clone',
-      click: function() {
-        importModal.show();
-        importer.resize();
-      }
-    },
-    'left'
-  );
+  // toolbar.addIcon(
+  //   {
+  //     css: 'fa-clone',
+  //     title: 'Clone Rows',
+  //     click: function() {
+  //       importModal.show();
+  //       importer.resize();
+  //     }
+  //   },
+  //   'left'
+  // );
 
   ////////////////////////////////////////////////////////////////////////////
 
