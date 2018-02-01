@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,6 +23,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+// @format
+
 /** A context menu component
  *  Does a typicall right-click menu.
  *  Note that each instance get their own DOM node in the document body.
@@ -42,150 +44,157 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *      > title {string} - the title of the entry
  *      > click {function} - function to call when selecting the item
  */
-highed.ContextMenu = function (stuff) {
-    var container = highed.dom.cr('div', 'highed-ctx-container-common highed-ctx-container'),
-        closeBtn = highed.dom.cr('div', 'highed-ctx-close-button', 'Close'),
-        visible = false,
-        dimHide = false
-    ;
+highed.ContextMenu = function(stuff) {
+  var container = highed.dom.cr(
+      'div',
+      'highed-ctx-container-common highed-ctx-container'
+    ),
+    closeBtn = highed.dom.cr('div', 'highed-ctx-close-button', 'Close'),
+    visible = false,
+    dimHide = false;
 
-    ///////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////
 
-    /** Add an entry to the menu
+  /** Add an entry to the menu
      *  @memberof highed.ContextMenu
      *  @param entry {object} - the definition of the entry to add
      *    > title {string} - the title of the entry
      *    > click {function} - the function to call when clicking the item
      */
-    function addEntry(entry) {
-        var item = highed.dom.cr('div', 'highed-ctx-item highed-ctx-item-responsive', entry.title),
-            right = highed.dom.cr('div', 'highed-ctx-child-icon fa fa-angle-right'),
-            childCtx
-        ;
+  function addEntry(entry) {
+    var item = highed.dom.cr(
+        'div',
+        'highed-ctx-item highed-ctx-item-responsive',
+        entry.title
+      ),
+      right = highed.dom.cr('div', 'highed-ctx-child-icon fa fa-angle-right'),
+      childCtx;
 
-        if (entry === '-') {
-            return highed.dom.ap(container,
-                highed.dom.cr('div', 'highed-ctx-sep')
-            );
-        }
-
-        highed.dom.on(item, 'click', function () {
-            if (highed.isFn(entry.click)) {
-                entry.click();
-            }
-
-            hide();
-        });
-
-        if (entry.selected) {
-            item.className += ' highed-ctx-item-selected';
-        }
-
-        if (!highed.isNull(entry.children)) {
-            childCtx = highed.ContextMenu(entry.children);
-
-            highed.dom.on(item, 'mouseenter', function (e) {
-                childCtx.show(e.clientX, e.clientY);
-            });
-        }
-
-        highed.dom.ap(container,
-            highed.dom.ap(item,
-                entry.icon ?
-                        highed.dom.cr(
-                            'div',
-                            'ctx-child-licon highed-ctx-child-licon-responsive fa fa-' +
-                            entry.icon) : false,
-                        entry.children ? right : false
-            )
-        );
+    if (entry === '-') {
+      return highed.dom.ap(container, highed.dom.cr('div', 'highed-ctx-sep'));
     }
 
-    /** Show the menu
+    highed.dom.on(item, 'click', function() {
+      if (highed.isFn(entry.click)) {
+        entry.click();
+      }
+
+      hide();
+    });
+
+    if (entry.selected) {
+      item.className += ' highed-ctx-item-selected';
+    }
+
+    if (!highed.isNull(entry.children)) {
+      childCtx = highed.ContextMenu(entry.children);
+
+      highed.dom.on(item, 'mouseenter', function(e) {
+        childCtx.show(e.clientX, e.clientY);
+      });
+    }
+
+    highed.dom.ap(
+      container,
+      highed.dom.ap(
+        item,
+        entry.icon
+          ? highed.dom.cr(
+              'div',
+              'ctx-child-licon highed-ctx-child-licon-responsive fa fa-' +
+                entry.icon
+            )
+          : false,
+        entry.children ? right : false
+      )
+    );
+  }
+
+  /** Show the menu
      *  @memberof highed.ContextMenu
      *  @param x {number} - the x position
      *  @param y {number} - the y position
      */
-    function show(x, y) {
-        var psize = highed.dom.size(document.body),
-            size = highed.dom.size(container)
-        ;
+  function show(x, y) {
+    var psize = highed.dom.size(document.body),
+      size = highed.dom.size(container);
 
-        if (visible) return;
+    if (visible) return;
 
-        if (x > psize.w - size.w - 20) {
-            x = psize.w - size.w - 20;
-        }
-
-        if (y > psize.h - size.h - 20) {
-            y = psize.h - size.h - 20;
-        }
-
-        highed.dom.style(container, {
-            'pointer-events': 'auto',
-            opacity: 1,
-            left: x + 'px',
-            top: y + 'px'
-        });
-
-        visible = true;
-        dimHide = highed.showDimmer(hide, true, true, 10);
+    if (x > psize.w - size.w - 20) {
+      x = psize.w - size.w - 20;
     }
 
-    /** Hide the menu
+    if (y > psize.h - size.h - 20) {
+      y = psize.h - size.h - 20;
+    }
+
+    highed.dom.style(container, {
+      'pointer-events': 'auto',
+      opacity: 1,
+      left: x + 'px',
+      top: y + 'px'
+    });
+
+    visible = true;
+    dimHide = highed.showDimmer(hide, true, true, 10);
+  }
+
+  /** Hide the menu
      *  @memberof highed.ContextMenu
      */
-    function hide() {
-        if (!visible) return;
+  function hide() {
+    if (!visible) return;
 
-        highed.dom.style(container, {
-            left: '-2000px',
-            'pointer-events': 'none',
-            opacity: 0
-        });
+    highed.dom.style(container, {
+      left: '-2000px',
+      'pointer-events': 'none',
+      opacity: 0
+    });
 
-        if (highed.isFn(dimHide)) {
-            dimHide();
-        }
-
-        visible = false;
+    if (highed.isFn(dimHide)) {
+      dimHide();
     }
 
-    /** Build a menu
+    visible = false;
+  }
+
+  /** Build a menu
      *  @memberof highed.ContextMenu
      *  @param def {array<object>} - an array of entries
      */
-    function build(def) {
-        container.innerHTML = '';
-        highed.dom.ap(container, closeBtn);
+  function build(def) {
+    container.innerHTML = '';
+    highed.dom.ap(container, closeBtn);
 
-        if (highed.isArr(def)) {
-            return def.forEach(addEntry);
-        }
-
-        Object.keys(def).forEach(function (key) {
-            var entry = def[key];
-            addEntry(highed.merge({ title: key }, entry));
-        });
-
+    if (highed.isArr(def)) {
+      return def.forEach(addEntry);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-
-    if (stuff) { build (stuff); }
-
-    highed.dom.on(closeBtn, 'click', hide);
-
-    highed.ready(function () {
-        highed.dom.ap(document.body, container);
+    Object.keys(def).forEach(function(key) {
+      var entry = def[key];
+      addEntry(highed.merge({ title: key }, entry));
     });
+  }
 
-    ///////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////
 
-    return {
-        addEntry: addEntry,
-        show: show,
-        hide: hide,
-        build: build
-    };
+  if (stuff) {
+    build(stuff);
+  }
+
+  highed.dom.on(closeBtn, 'click', hide);
+
+  highed.ready(function() {
+    highed.dom.ap(document.body, container);
+  });
+
+  ///////////////////////////////////////////////////////////////////////////
+
+  return {
+    addEntry: addEntry,
+    show: show,
+    hide: hide,
+    build: build
+  };
 };

@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,6 +23,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+// @format
+
 /** Slider widget
  *  @constructor
  *
@@ -35,145 +37,148 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *    > step {number} - the step size
  *    > resetTo {anything} - value to reset to
  */
-highed.Slider = function (parent, attributes) {
-    var properties = highed.merge({
-            max: 100,
-            min: 1,
-            step: 1,
-            resetTo: 0,
-            value: 0
-        }, attributes),
-        events = highed.events(),
-        value = properties.value || properties.resetTo,
-        container = highed.dom.cr('div', 'highed-slider'),
-        indicator = highed.dom.cr('div', 'highed-slider-indicator'),
-        textIndicator = highed.dom.cr('div', 'highed-slider-text-indicator'),
-        sliderBackground = highed.dom.cr('div', 'highed-slider-background'),
-        resetIcon = highed.dom.cr('div', 'highed-slider-reset fa fa-undo'),
-        mover = highed.Movable(indicator, 'x', true, sliderBackground)
-    ;
+highed.Slider = function(parent, attributes) {
+  var properties = highed.merge(
+      {
+        max: 100,
+        min: 1,
+        step: 1,
+        resetTo: 0,
+        value: 0
+      },
+      attributes
+    ),
+    events = highed.events(),
+    value = properties.value || properties.resetTo,
+    container = highed.dom.cr('div', 'highed-slider'),
+    indicator = highed.dom.cr('div', 'highed-slider-indicator'),
+    textIndicator = highed.dom.cr('div', 'highed-slider-text-indicator'),
+    sliderBackground = highed.dom.cr('div', 'highed-slider-background'),
+    resetIcon = highed.dom.cr('div', 'highed-slider-reset fa fa-undo'),
+    mover = highed.Movable(indicator, 'x', true, sliderBackground);
 
-    ////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
 
+  function updateText() {
+    textIndicator.innerHTML = value;
 
-    function updateText() {
-        textIndicator.innerHTML = value;
+    if (value === 'null' || value === null) {
+      textIndicator.innerHTML = 'auto';
+    }
+    if (value === 'undefined' || typeof value === 'undefined') {
+      textIndicator.innerHTML = 'auto';
+    }
+  }
 
-        if (value === 'null' || value === null) {
-            textIndicator.innerHTML = 'auto';
-        }
-        if (value === 'undefined' || typeof value === 'undefined') {
-            textIndicator.innerHTML = 'auto';
-        }
+  // Calculate the indicator X
+  function calcIndicator() {
+    var x = 0,
+      s = highed.dom.size(sliderBackground),
+      ms = highed.dom.size(indicator);
+
+    if (!highed.isNum(value) || !value) {
+      x = 0;
+    } else {
+      x =
+        (value - properties.min) /
+        (properties.max - properties.min) *
+        (s.w - ms.w);
     }
 
-    // Calculate the indicator X
-    function calcIndicator() {
-        var x = 0,
-            s = highed.dom.size(sliderBackground),
-            ms = highed.dom.size(indicator)
-        ;
+    highed.dom.style(indicator, {
+      left: x + 'px'
+    });
+  }
 
-        if (!highed.isNum(value) || !value) {
-            x = 0;
-        } else {
-            x = ((value - properties.min) / (properties.max - properties.min)) * (s.w - ms.w);
-        }
-
-        highed.dom.style(indicator, {
-            left: x + 'px'
-        });
+  //Waits until the slider is in the dom
+  function tryUpdateIndicators() {
+    updateText();
+    if (container.parentNode) {
+      calcIndicator();
+    } else {
+      window.setTimeout(tryUpdateIndicators, 10);
     }
+  }
 
-    //Waits until the slider is in the dom
-    function tryUpdateIndicators() {
-        updateText();
-        if (container.parentNode) {
-            calcIndicator();
-        } else {
-            window.setTimeout(tryUpdateIndicators, 10);
-        }
-    }
-
-    /** Set the value
+  /** Set the value
      *  @memberof highed.Slider
      *  @param newValue {number} - the new value
      */
-    function set(newValue) {
-        value = highed.clamp(properties.min, properties.max, newValue);
-        textIndicator.innerHTML = value;
-        calcIndicator();
+  function set(newValue) {
+    value = highed.clamp(properties.min, properties.max, newValue);
+    textIndicator.innerHTML = value;
+    calcIndicator();
+  }
+
+  mover.on('Moving', function(x) {
+    var s = highed.dom.size(sliderBackground),
+      ms = highed.dom.size(indicator);
+
+    //Set the value based on the new X
+    value =
+      properties.min +
+      Math.round(x / (s.w - ms.w) * (properties.max - properties.min));
+
+    textIndicator.innerHTML = value;
+    if (!highed.onPhone()) {
+      events.emit('Change', value);
+    }
+  });
+
+  mover.on('StartMove', function() {
+    if (highed.onPhone()) {
+      textIndicator.className =
+        'highed-slider-text-indicator highed-slider-text-indicator-popup';
+    }
+  });
+
+  mover.on('EndMove', function() {
+    if (highed.onPhone()) {
+      textIndicator.className = 'highed-slider-text-indicator';
+      //We're not emitting changes until done on mobile
+      events.emit('Change', value);
+    }
+  });
+
+  ////////////////////////////////////////////////////////////////////////////
+
+  highed.dom.on(resetIcon, 'mouseover', function(e) {
+    //  highed.Tooltip(e.clientX, e.clientY, 'Reset to initial value');
+  });
+
+  highed.dom.on(resetIcon, 'click', function() {
+    value = properties.resetTo;
+    calcIndicator();
+
+    if (value === 'null') {
+      value = null;
+    }
+    if (value === 'undefined') {
+      value = undefined;
     }
 
-    mover.on('Moving', function (x) {
-        var s = highed.dom.size(sliderBackground),
-            ms = highed.dom.size(indicator)
-        ;
+    updateText();
+    events.emit('Change', value);
+  });
 
-        //Set the value based on the new X
-        value = properties.min + Math.round(((x / (s.w - ms.w))) * (properties.max - properties.min));
+  if (parent) {
+    parent = highed.dom.get(parent);
+    highed.dom.ap(parent, container);
+  }
 
-        textIndicator.innerHTML = value;
-        if (!highed.onPhone()) {
-            events.emit('Change', value);
-        }
-    });
+  highed.dom.ap(
+    container,
+    sliderBackground,
+    resetIcon,
+    highed.dom.ap(indicator, textIndicator)
+  );
 
-    mover.on('StartMove', function () {
-        if (highed.onPhone()) {
-            textIndicator.className = 'highed-slider-text-indicator highed-slider-text-indicator-popup';
-        }
-    });
+  tryUpdateIndicators();
 
-    mover.on('EndMove', function () {
-        if (highed.onPhone()) {
-            textIndicator.className = 'highed-slider-text-indicator';
-            //We're not emitting changes until done on mobile
-            events.emit('Change', value);
-        }
-    });
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    highed.dom.on(resetIcon, 'mouseover', function (e) {
-      //  highed.Tooltip(e.clientX, e.clientY, 'Reset to initial value');
-    });
-
-
-    highed.dom.on(resetIcon, 'click', function () {
-        value = properties.resetTo;
-        calcIndicator();
-
-        if (value === 'null') {
-            value = null;
-        }
-        if (value === 'undefined') {
-            value = undefined;
-        }
-
-        updateText();
-        events.emit('Change', value);
-    });
-
-    if (parent) {
-        parent = highed.dom.get(parent);
-        highed.dom.ap(parent, container);
-    }
-
-    highed.dom.ap(container,
-        sliderBackground,
-        resetIcon,
-        highed.dom.ap(indicator,
-            textIndicator
-        )
-    );
-
-    tryUpdateIndicators();
-
-    // Public interface
-    return {
-        on: events.on,
-        set: set,
-        container: container
-    };
+  // Public interface
+  return {
+    on: events.on,
+    set: set,
+    container: container
+  };
 };

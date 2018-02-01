@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-Copyright (c) 2016-2017, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,15 +23,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+// @format
+
 highed.samples.add({
-    id: 'pie-series-simple',
-    title: 'Basic Pie Series',
-    description: '',
-    type: 'csv',
-    dataset: [
-      'slice,val',
-      'Cats,20',
-      'Dogs,75',
-      'Birds,5'
-    ]
+  id: 'pie-series-simple',
+  title: 'Basic Pie Series',
+  description: '',
+  type: 'csv',
+  dataset: ['slice,val', 'Cats,20', 'Dogs,75', 'Birds,5']
 });

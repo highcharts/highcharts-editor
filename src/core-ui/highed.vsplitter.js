@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,6 +23,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+// @format
+
 /** Vertical splitter
  *  Splits a view into two vertical cells
  *
@@ -37,87 +39,90 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *    > topHeight {number} - the height in percent of the left cell. Alternatively, use '123px' to set a capped size.
  *    > noOverflow {bool} - whether or not overflowing is allowed
  */
-highed.VSplitter = function (parent, attributes) {
-    var properties = highed.merge({
-            topHeight: 40,
-            noOverflow: false
-        }, attributes),
-        container = highed.dom.cr('div', 'highed-vsplitter'),
-        top = highed.dom.cr('div', 'panel top highed-scrollbar'),
-        bottom = highed.dom.cr('div', 'panel bottom highed-scrollbar'),
-        topBody = highed.dom.cr('div', 'highed-vsplitter-body highed-scrollbar'),
-        bottomBody = highed.dom.cr('div', 'highed-vsplitter-body highed-scrollbar')
-    ;
+highed.VSplitter = function(parent, attributes) {
+  var properties = highed.merge(
+      {
+        topHeight: 40,
+        noOverflow: false
+      },
+      attributes
+    ),
+    container = highed.dom.cr('div', 'highed-vsplitter'),
+    top = highed.dom.cr('div', 'panel top highed-scrollbar'),
+    bottom = highed.dom.cr('div', 'panel bottom highed-scrollbar'),
+    topBody = highed.dom.cr('div', 'highed-vsplitter-body highed-scrollbar'),
+    bottomBody = highed.dom.cr('div', 'highed-vsplitter-body highed-scrollbar');
 
-    ///////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////
 
-    /** Force a resize of the splitter
+  /** Force a resize of the splitter
      *  @memberof highed.VSplitter
      *  @param w {number} - the width of the splitter (will use parent if null)
      *  @param h {number} - the height of the splitter (will use parent if null)
      */
-    function resize(w, h) {
-        var s = highed.dom.size(parent);
+  function resize(w, h) {
+    var s = highed.dom.size(parent);
 
-         highed.dom.style(container, {
-            width: (w || s.w) + 'px',
-            height: (h || s.h) + 'px'
-        });
+    highed.dom.style(container, {
+      width: (w || s.w) + 'px',
+      height: (h || s.h) + 'px'
+    });
 
-        if (properties.topHeight.toString().indexOf('px') > 0) {
-            highed.dom.style(top, {
-                height: properties.topHeight
-            });
+    if (properties.topHeight.toString().indexOf('px') > 0) {
+      highed.dom.style(top, {
+        height: properties.topHeight
+      });
 
-            highed.dom.style(bottom, {
-                height: (h || s.h) - (parseInt(properties.topHeight, 10)) + 'px'
-            });
+      highed.dom.style(bottom, {
+        height: (h || s.h) - parseInt(properties.topHeight, 10) + 'px'
+      });
+    } else {
+      highed.dom.style(top, {
+        height: properties.topHeight + '%'
+      });
 
-        } else {
-            highed.dom.style(top, {
-                height: properties.topHeight + '%'
-            });
-
-            highed.dom.style(bottom, {
-                height: (100 - properties.topHeight) + '%'
-            });
-        }
-        //highed.dom.style([top, bottom, container], {
-        //    width: (w || s.w) + 'px'
-        //});
+      highed.dom.style(bottom, {
+        height: 100 - properties.topHeight + '%'
+      });
     }
+    //highed.dom.style([top, bottom, container], {
+    //    width: (w || s.w) + 'px'
+    //});
+  }
 
-    ///////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////
 
-    highed.dom.ap(highed.dom.get(parent),
-        highed.dom.ap(container,
-            highed.dom.ap(top, topBody),
-            highed.dom.ap(bottom, bottomBody)
-        )
-    );
+  highed.dom.ap(
+    highed.dom.get(parent),
+    highed.dom.ap(
+      container,
+      highed.dom.ap(top, topBody),
+      highed.dom.ap(bottom, bottomBody)
+    )
+  );
 
-    if (properties.noOverflow) {
-        highed.dom.style([container, top, bottom], {
-            'overflow-y': 'hidden'
-        });
-    }
+  if (properties.noOverflow) {
+    highed.dom.style([container, top, bottom], {
+      'overflow-y': 'hidden'
+    });
+  }
 
-    parent = highed.dom.get(parent);
+  parent = highed.dom.get(parent);
 
-    ///////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////
 
-    // Public interface
-    return {
-        resize: resize,
-        /** The dom node for the top cell
+  // Public interface
+  return {
+    resize: resize,
+    /** The dom node for the top cell
          *  @memberof highed.VSplitter
          *  @type {domnode}
          */
-        top: topBody,
-        /** The dom node for the bottom cell
+    top: topBody,
+    /** The dom node for the bottom cell
          *  @memberof highed.VSplitter
          *  @type {domnode}
          */
-        bottom: bottomBody
-    };
+    bottom: bottomBody
+  };
 };

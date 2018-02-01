@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,6 +23,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+// @format
+
 /** A modal editor
  * The modal editor connects to a "summoner", which is the DOM node that should
  * spawn the editor. This arg is however optional, and if not present,
@@ -44,71 +46,80 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * @param fn {function} - function to call when done editing, argument is an instance of highed.ChartPreview
  *
  */
-highed.ModalEditor = function (summoner, attributes, fn) {
-    var properties = highed.merge({
-            type: 'full',
-            allowDone: false
-        }, attributes),
-        modal = highed.OverlayModal(false, {
-            width: '95%',
-            height: '95%',
-            showOnInit: false
-        }),
-        editor = properties.type === 'full' ? highed.Editor(modal.body, attributes) : highed.SimpleEditor(modal.body, attributes),
-        //We don't always know the summoner at create time..
-        sumFn = false,
-        doneEditing = highed.dom.cr('button', 'highed-done-button', 'Close &amp; Use')
-    ;
+highed.ModalEditor = function(summoner, attributes, fn) {
+  var properties = highed.merge(
+      {
+        type: 'full',
+        allowDone: false
+      },
+      attributes
+    ),
+    modal = highed.OverlayModal(false, {
+      width: '95%',
+      height: '95%',
+      showOnInit: false
+    }),
+    editor =
+      properties.type === 'full'
+        ? highed.Editor(modal.body, attributes)
+        : highed.SimpleEditor(modal.body, attributes),
+    //We don't always know the summoner at create time..
+    sumFn = false,
+    doneEditing = highed.dom.cr(
+      'button',
+      'highed-done-button',
+      'Close &amp; Use'
+    );
 
-    ///////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////
 
-    /** Attach to a new summoner
+  /** Attach to a new summoner
      *  @memberof highed.ModalEditor
      *  @param nn {domnode} - the new node to attach to
      */
-    function attachToSummoner(nn) {
-        nn = nn || summoner;
+  function attachToSummoner(nn) {
+    nn = nn || summoner;
 
-        if (!nn) {
-            return;
-        }
-
-        if (highed.isFn(sumFn)) {
-            sumFn();
-        }
-
-        //Show the modal when clicking the summoner
-        sumFn = highed.dom.on(highed.dom.get(nn), 'click', modal.show);
+    if (!nn) {
+      return;
     }
 
-    function doDone() {
-        if (highed.isFn(fn)) {
-            fn(editor.chart);
-        }
-        modal.hide();
+    if (highed.isFn(sumFn)) {
+      sumFn();
     }
 
-    //Resize the editor when showing the modal
-    modal.on('Show', editor.resize);
+    //Show the modal when clicking the summoner
+    sumFn = highed.dom.on(highed.dom.get(nn), 'click', modal.show);
+  }
 
-    highed.dom.on(doneEditing, 'click', doDone);
-
-    attachToSummoner(summoner);
-
-    if (properties.allowDone) {
-        highed.dom.ap(editor.toolbar.center, doneEditing);
+  function doDone() {
+    if (highed.isFn(fn)) {
+      fn(editor.chart);
     }
+    modal.hide();
+  }
 
-    editor.on('Done', doDone);
-    editor.resize();
+  //Resize the editor when showing the modal
+  modal.on('Show', editor.resize);
 
-    ///////////////////////////////////////////////////////////////////////////
+  highed.dom.on(doneEditing, 'click', doDone);
 
-    return {
-        editor: editor,
-        show: modal.show,
-        hide: modal.hide,
-        on: editor.on,
-        attachToSummoner: attachToSummoner
-    };
+  attachToSummoner(summoner);
+
+  if (properties.allowDone) {
+    highed.dom.ap(editor.toolbar.center, doneEditing);
+  }
+
+  editor.on('Done', doDone);
+  editor.resize();
+
+  ///////////////////////////////////////////////////////////////////////////
+
+  return {
+    editor: editor,
+    show: modal.show,
+    hide: modal.hide,
+    on: editor.on,
+    attachToSummoner: attachToSummoner
+  };
 };

@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-Copyright (c) 2017, Highsoft
+Copyright (c) 2017-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -21,21 +21,22 @@ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- ******************************************************************************/
+*******************************************************************************/
 
-(function () {
+// @format
+
+(function() {
   var token = false,
-    url = highed.option('cloudAPIURL')
-  ;
+    url = highed.option('cloudAPIURL');
 
   // Set up namespace for the cloud API
   highed.cloud = {};
 
-  highed.cloud.isLoggedIn = function () {
+  highed.cloud.isLoggedIn = function() {
     return token !== false;
   };
 
-  highed.cloud.login = function (username, password, fn) {
+  highed.cloud.login = function(username, password, fn) {
     url = highed.option('cloudAPIURL');
 
     highed.ajax({
@@ -45,19 +46,19 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         username: username,
         password: password
       },
-      success: function (data) {
+      success: function(data) {
         if (data && data.token) {
           token = data.token;
         }
         return highed.isFn(fn) && fn(typeof data.token === 'undefined', data);
       },
-      error: function (err) {
+      error: function(err) {
         return highed.isFn(fn) && fn(err);
       }
     });
   };
 
-  highed.cloud.getTeams = function (fn) {
+  highed.cloud.getTeams = function(fn) {
     url = highed.option('cloudAPIURL');
 
     highed.ajax({
@@ -66,7 +67,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       headers: {
         'X-Auth-Token': token
       },
-      success: function (data) {
+      success: function(data) {
         if (data.error) {
           return highed.snackBar(data.message);
         }
@@ -75,7 +76,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     });
   };
 
-  highed.cloud.getCharts = function (teamID, fn, page) {
+  highed.cloud.getCharts = function(teamID, fn, page) {
     url = highed.option('cloudAPIURL');
 
     highed.ajax({
@@ -84,7 +85,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       headers: {
         'X-Auth-Token': token
       },
-      success: function (data) {
+      success: function(data) {
         if (data.error) {
           return highed.snackBar(data.message);
         }
@@ -93,7 +94,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     });
   };
 
-  highed.cloud.getChart = function (teamID, chartID, fn) {
+  highed.cloud.getChart = function(teamID, chartID, fn) {
     url = highed.option('cloudAPIURL');
 
     highed.ajax({
@@ -102,7 +103,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       headers: {
         'X-Auth-Token': token
       },
-      success: function (data) {
+      success: function(data) {
         if (data.error) {
           return highed.snackBar(data.message);
         }
@@ -111,7 +112,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     });
   };
 
-  highed.cloud.saveExistingChart = function (teamID, chartID, chart, fn) {
+  highed.cloud.saveExistingChart = function(teamID, chartID, chart, fn) {
     url = highed.option('cloudAPIURL');
 
     highed.ajax({
@@ -123,7 +124,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       data: {
         data: chart
       },
-      success: function (data) {
+      success: function(data) {
         if (data.error) {
           return highed.snackbar(data.message);
         }
@@ -132,7 +133,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     });
   };
 
-  highed.cloud.saveNewChart = function (teamID, name, chart, fn) {
+  highed.cloud.saveNewChart = function(teamID, name, chart, fn) {
     url = highed.option('cloudAPIURL');
 
     highed.ajax({
@@ -145,7 +146,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         name: name,
         data: chart
       },
-      success: function (data) {
+      success: function(data) {
         if (data.error) {
           return highed.snackbar(data.message);
         }
@@ -153,6 +154,4 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       }
     });
   };
-
-}());
-
+})();

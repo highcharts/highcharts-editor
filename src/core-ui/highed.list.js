@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,6 +23,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+// @format
+
 /** A list component
  *
  *  Creates a list with selectable items
@@ -31,26 +33,25 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  var list = highed.List(document.body).addItem({
  *      title: 'My Item',
  *      click: function() {
- *          alert('You clicked the item!');   
- *      }   
- *  });  
+ *          alert('You clicked the item!');
+ *      }
+ *  });
  *
  *  @constructor
  *  @param parent {domnode} - the node to attach the list to
  *  @param responsive {boolean} - set to true to get JS-based responsive functionality
  */
-highed.List = function (parent, responsive) {
-    var container = highed.dom.cr('div', 'highed-list'),
-        compactIndicator = highed.dom.cr('div', 'highed-list-compact', 'compact'),
-        ctx = highed.ContextMenu(),
-        selectedItem = false,
-        events = highed.events(),
-        items = []
-    ;
+highed.List = function(parent, responsive) {
+  var container = highed.dom.cr('div', 'highed-list'),
+    compactIndicator = highed.dom.cr('div', 'highed-list-compact', 'compact'),
+    ctx = highed.ContextMenu(),
+    selectedItem = false,
+    events = highed.events(),
+    items = [];
 
-    ///////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////
 
-    /** Add an item to the list
+  /** Add an item to the list
      * @memberof highed.List
      * @param item {object} - the item meta for the item to add
      *   > title {string} - the title as displayed in the list
@@ -62,187 +63,184 @@ highed.List = function (parent, responsive) {
      *   > node {domnode} - the dom node for the item
      *   > select {function} - selects the item if called
      */
-    function addItem(item) {
-        var node = highed.dom.cr('a', 'item', item.title),
-            iexports = {}
-        ;
+  function addItem(item) {
+    var node = highed.dom.cr('a', 'item', item.title),
+      iexports = {};
 
-        function select(e) {
-            if (selectedItem) {
-                selectedItem.selected = false;
-                selectedItem.node.className = 'item';
-            }
+    function select(e) {
+      if (selectedItem) {
+        selectedItem.selected = false;
+        selectedItem.node.className = 'item';
+      }
 
-            selectedItem = iexports;
-            selectedItem.selected = true;
-            node.className = 'item item-selected';
-            events.emit('Select', item.id);
-            compactIndicator.innerHTML = '<span class="icon fa fa-th-list"></span>' + item.title;
+      selectedItem = iexports;
+      selectedItem.selected = true;
+      node.className = 'item item-selected';
+      events.emit('Select', item.id);
+      compactIndicator.innerHTML =
+        '<span class="icon fa fa-th-list"></span>' + item.title;
 
-            if (highed.isFn(item.click)) {
-                return item.click(e);
-            }
-        }
-
-        highed.dom.on(node, 'click', select);
-        highed.dom.ap(container, node);
-
-        iexports = {
-            id: item.id,
-            title: item.title,
-            node: node,
-            select: select,
-            selected: false
-        };
-
-        items.push(iexports);
-
-        if (!selectedItem) {
-            select();
-        }
-
-        return iexports;
+      if (highed.isFn(item.click)) {
+        return item.click(e);
+      }
     }
 
-    /** Add a set of items to the list
+    highed.dom.on(node, 'click', select);
+    highed.dom.ap(container, node);
+
+    iexports = {
+      id: item.id,
+      title: item.title,
+      node: node,
+      select: select,
+      selected: false
+    };
+
+    items.push(iexports);
+
+    if (!selectedItem) {
+      select();
+    }
+
+    return iexports;
+  }
+
+  /** Add a set of items to the list
      *  @memberof highed.List
      *  @param items {array<object>} - an array of items to add
      */
-    function addItems(items) {
-        if (highed.isArr(items)) {
-            items.forEach(addItem);
-        }        
+  function addItems(items) {
+    if (highed.isArr(items)) {
+      items.forEach(addItem);
     }
+  }
 
-    /** Clear all the items in the list
+  /** Clear all the items in the list
      *  @memberof highed.List
      */
-    function clear() {
-        container.innerHTML = '';
-    }
+  function clear() {
+    container.innerHTML = '';
+  }
 
-    /** Force resize of the list 
+  /** Force resize of the list
      *  @memberof highed.List
      */
-    function resize() {
-        var ps = highed.dom.size(parent),
-            cs = highed.dom.size(container)
-        ;
+  function resize() {
+    var ps = highed.dom.size(parent),
+      cs = highed.dom.size(container);
 
-        if (responsive && ps.h < 50 && ps.h !== 0 && ps.h) {
-            highed.dom.style(compactIndicator, {
-                display: 'block'
-            });
-            highed.dom.style(container, {
-                display: 'none'
-            });
-        } else if (responsive) {
-             highed.dom.style(compactIndicator, {
-                display: 'none'
-            });
-            highed.dom.style(container, {
-                display: ''
-            });
-        }
-
-        // highed.dom.style(container, {
-        //     //height: ps.height + 'px'
-        //     height: '100%'
-        // }); 
+    if (responsive && ps.h < 50 && ps.h !== 0 && ps.h) {
+      highed.dom.style(compactIndicator, {
+        display: 'block'
+      });
+      highed.dom.style(container, {
+        display: 'none'
+      });
+    } else if (responsive) {
+      highed.dom.style(compactIndicator, {
+        display: 'none'
+      });
+      highed.dom.style(container, {
+        display: ''
+      });
     }
 
-    /** Show the list 
+    // highed.dom.style(container, {
+    //     //height: ps.height + 'px'
+    //     height: '100%'
+    // });
+  }
+
+  /** Show the list
     *  @memberof highed.List
     */
-    function show() {
-        highed.dom.style(container, {
+  function show() {
+    highed.dom.style(container, {});
+  }
 
-        });
-    }
-
-    /** Hide the list 
+  /** Hide the list
      *  @memberof highed.List
      */
-    function hide() {
+  function hide() {}
 
-    }
-
-    /** Select the first item 
+  /** Select the first item
      *  @memberof highed.List
      */
-    function selectFirst() {
-        if (items.length > 0) {
-            items[0].select();
-        }
+  function selectFirst() {
+    if (items.length > 0) {
+      items[0].select();
     }
+  }
 
-    /** Select an item
+  /** Select an item
      *  @memberof highed.List
      *  @param which {string} - the id of the item to select
      */
-    function select(which) {
-        items.some(function (item) {
-            if (which === item.title) {
-                item.select();
-                return true;
-            }
-        });
-    }
+  function select(which) {
+    items.some(function(item) {
+      if (which === item.title) {
+        item.select();
+        return true;
+      }
+    });
+  }
 
-    /** Reselect the current item
+  /** Reselect the current item
      *  @memberof highed.List
      */
-    function reselect() {
-        if (selectedItem) {
-            selectedItem.select();
-        }
+  function reselect() {
+    if (selectedItem) {
+      selectedItem.select();
     }
+  }
 
-    /** Count the number of items currently in the list
+  /** Count the number of items currently in the list
      *  @memberof highed.List
      */
-    function countItems() {
-        return items.length;
-    }
+  function countItems() {
+    return items.length;
+  }
 
-    /** Get the selected item
+  /** Get the selected item
      *  @memberof highed.List
      *  @returns {object} - the selected item
      */
-    function selected() {
-        return selectedItem;
-    }
-    ///////////////////////////////////////////////////////////////////////////
-    
-    highed.dom.on(compactIndicator, 'click', function (e) {
-        ctx.build(items.map(function (item) {
-            return {
-                title: item.title,
-                click: item.select,
-                selected: item.selected
-            };
-        }));
-        ctx.show(e.clientX, e.clientY);
-    });
+  function selected() {
+    return selectedItem;
+  }
+  ///////////////////////////////////////////////////////////////////////////
 
-    highed.dom.ap(parent, container, compactIndicator);
+  highed.dom.on(compactIndicator, 'click', function(e) {
+    ctx.build(
+      items.map(function(item) {
+        return {
+          title: item.title,
+          click: item.select,
+          selected: item.selected
+        };
+      })
+    );
+    ctx.show(e.clientX, e.clientY);
+  });
 
-    ///////////////////////////////////////////////////////////////////////////
+  highed.dom.ap(parent, container, compactIndicator);
 
-    //Public interface
-    return {
-        on: events.on,
-        addItem: addItem,
-        addItems: addItems,
-        clear: clear,
-        resize: resize,
-        show: show,
-        hide: hide,
-        selectFirst: selectFirst,
-        select: select,
-        reselect: reselect,
-        selected: selected,
-        count: countItems,
-        container: container
-    };
+  ///////////////////////////////////////////////////////////////////////////
+
+  //Public interface
+  return {
+    on: events.on,
+    addItem: addItem,
+    addItems: addItems,
+    clear: clear,
+    resize: resize,
+    show: show,
+    hide: hide,
+    selectFirst: selectFirst,
+    select: select,
+    reselect: reselect,
+    selected: selected,
+    count: countItems,
+    container: container
+  };
 };

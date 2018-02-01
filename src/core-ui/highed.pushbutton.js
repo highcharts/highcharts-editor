@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,63 +23,67 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+// @format
+
 /** A simple toggle button component
  *
  *  @example
  *  //Create a push button with the gear icon attached
  *  highed.PushButton(document.body, 'gear', false).on('Toggle', function (state) {
- *      alert('Push button is now ' + state);   
+ *      alert('Push button is now ' + state);
  *  });
  *
  *  @constructor
- *  
+ *
  *  @emits Toggle {boolean} - when the state changes
  *
  *  @param parent {domnode} (optional) - the parent to attach the button to
  *  @param icon {string} - the button icon
  *  @param state {boolean} - the initial state of the button
  */
-highed.PushButton = function (parent, icon, state) {
-    var button = highed.dom.cr('span', 'highed-pushbutton fa fa-' + icon),
-        events = highed.events()
-    ;
+highed.PushButton = function(parent, icon, state) {
+  var button = highed.dom.cr('span', 'highed-pushbutton fa fa-' + icon),
+    events = highed.events();
 
-    function updateCSS() {
-        if (state) {
-            button.className += ' highed-pushbutton-active';
-        } else {            
-            button.className = button.className.replace(' highed-pushbutton-active', '');
-        }
+  function updateCSS() {
+    if (state) {
+      button.className += ' highed-pushbutton-active';
+    } else {
+      button.className = button.className.replace(
+        ' highed-pushbutton-active',
+        ''
+      );
     }
+  }
 
-    /** Set the current state
-     *  @memberof highed.PushButton
-     *  @param flag {boolean} - the new state
-     */
-    function set(flag) {
-        state = flag;
-        updateCSS();
-    }
-
-    highed.dom.on(button, 'click', function () {
-        state = !state;
-        updateCSS();
-        events.emit('Toggle', state);
-    });
-
-    if (!highed.isNull(parent) && parent !== false) {
-        highed.dom.ap(parent, button);
-    }
-
+  /** Set the current state
+    *  @memberof highed.PushButton
+    *  @param flag {boolean} - the new state
+    */
+  function set(flag) {
+    state = flag;
     updateCSS();
+  }
 
-    return {
-        set: set,
-        /** The button
+  highed.dom.on(button, 'click', function() {
+    state = !state;
+    updateCSS();
+    events.emit('Toggle', state);
+  });
+
+  if (!highed.isNull(parent) && parent !== false) {
+    highed.dom.ap(parent, button);
+  }
+
+  updateCSS();
+
+  return {
+    set: set,
+    /** The button
          * @memberof highed.PushButton
          * @type {domnode}
          */
-        button: button,
-        on: events.on
-    };
+    button: button,
+    on: events.on
+  };
 };

@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-Copyright (c) 2016-2017, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,14 +23,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+// @format
+
 highed.samples.add({
-    id: 'pie-pacman',
-    title: 'Pacman Pie',
-    description: '',
-    type: 'csv',
-    dataset: [
-      'slice,val',
-      'Not Pacman,24',
-      'Pacman,76'
-    ]
+  id: 'pie-pacman',
+  title: 'Pacman Pie',
+  description: '',
+  type: 'csv',
+  dataset: ['slice,val', 'Not Pacman,24', 'Pacman,76']
 });

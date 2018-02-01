@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,61 +23,65 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-(function () {
-    var container = highed.dom.cr('div', 'highed-scrollbar highed-tooltip highed-tooltip-fixed')
-    ;
+// @format
 
-    highed.ready(function () {
-        highed.dom.ap(document.body, container);
+(function() {
+  var container = highed.dom.cr(
+    'div',
+    'highed-scrollbar highed-tooltip highed-tooltip-fixed'
+  );
+
+  highed.ready(function() {
+    highed.dom.ap(document.body, container);
+  });
+
+  function hide() {
+    highed.dom.style(container, {
+      opacity: 0,
+      'pointer-events': 'none'
     });
+  }
 
-    function hide() {
-        highed.dom.style(container, {
-            opacity: 0,
-            'pointer-events': 'none'
-        });
-    }
+  highed.dom.on(container, 'mouseout', hide);
+  highed.dom.on(container, 'click', hide);
 
-    highed.dom.on(container, 'mouseout', hide);
-    highed.dom.on(container, 'click', hide);
-
-    /** Show a tooltip
+  /** Show a tooltip
      *  @param x {number} - the x position of the tooltip
      *  @param y {number} - the y position of the tooltip
      *  @param tip {string} - the title
      *  @param blowup {boolean}  - blow the tooltip up
      */
-    highed.Tooltip = function (x, y, tip, blowup) {
-        var ds = highed.dom.size(document.body);
+  highed.Tooltip = function(x, y, tip, blowup) {
+    var ds = highed.dom.size(document.body);
 
-        if (x < 0) x = 0;
-        if (y < 0) y = 0;
-        if (x > ds.w - 200) x = ds.w - 200;
+    if (x < 0) x = 0;
+    if (y < 0) y = 0;
+    if (x > ds.w - 200) x = ds.w - 200;
 
-        highed.dom.style(container, {
-            opacity: 1,
-            'pointer-events': 'auto',
-            left: x  + 'px',
-            top: y + 'px',
-            'max-width': '300px'
-        });
+    highed.dom.style(container, {
+      opacity: 1,
+      'pointer-events': 'auto',
+      left: x + 'px',
+      top: y + 'px',
+      'max-width': '300px'
+    });
 
-        if (blowup) {
-            highed.dom.style(container, {
-                opacity: 1,
-                'pointer-events': 'auto',
-                width: '90%',
-                height: '90%',
-                left: '50%',
-                top: '50%',
-                transform: 'translate(-50%, -50%)'
-            });
-        }
+    if (blowup) {
+      highed.dom.style(container, {
+        opacity: 1,
+        'pointer-events': 'auto',
+        width: '90%',
+        height: '90%',
+        left: '50%',
+        top: '50%',
+        transform: 'translate(-50%, -50%)'
+      });
+    }
 
-        container.innerHTML = tip;
+    container.innerHTML = tip;
 
-        return hide;
-    };
+    return hide;
+  };
 
-    highed.hideAllTooltips = hide;
+  highed.hideAllTooltips = hide;
 })();

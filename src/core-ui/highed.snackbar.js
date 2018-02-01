@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,52 +23,54 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-(function () {
-    var container = highed.dom.cr('div', 'highed-snackbar no-print'),
-        title = highed.dom.cr('span', 'snackbar-title', ''),
-        action = highed.dom.cr('span', 'snackbar-action', ''),
-        closeNode = highed.dom.cr('span', 'highed-snackbar-close fa fa-times-circle', ''),
-        timeout = false,
-        callback = false
-    ;
+// @format
 
-    highed.ready(function () {
-        highed.dom.ap(document.body,
-            highed.dom.ap(container,
-                title,
-                action,
-                closeNode
-            )
-        );
+(function() {
+  var container = highed.dom.cr('div', 'highed-snackbar no-print'),
+    title = highed.dom.cr('span', 'snackbar-title', ''),
+    action = highed.dom.cr('span', 'snackbar-action', ''),
+    closeNode = highed.dom.cr(
+      'span',
+      'highed-snackbar-close fa fa-times-circle',
+      ''
+    ),
+    timeout = false,
+    callback = false;
+
+  highed.ready(function() {
+    highed.dom.ap(
+      document.body,
+      highed.dom.ap(container, title, action, closeNode)
+    );
+  });
+
+  highed.dom.on(container, 'mouseover', function() {
+    window.clearTimeout(timeout);
+  });
+
+  highed.dom.on(container, 'mouseout', function() {
+    hide();
+  });
+
+  highed.dom.on(closeNode, 'click', function() {
+    highed.dom.style(container, {
+      bottom: '-68px'
     });
+  });
 
-    highed.dom.on(container, 'mouseover', function () {
-        window.clearTimeout(timeout);
-    });
+  ///////////////////////////////////////////////////////////////////////////
 
-    highed.dom.on(container, 'mouseout', function () {
-        hide();
-    });
+  function hide() {
+    timeout = window.setTimeout(function() {
+      highed.dom.style(container, {
+        bottom: '-68px'
+      });
+    }, 5000);
+  }
 
-    highed.dom.on(closeNode, 'click', function () {
-        highed.dom.style(container, {
-            bottom: '-68px'
-        });
-    });
+  ///////////////////////////////////////////////////////////////////////////
 
-    ///////////////////////////////////////////////////////////////////////////
-
-    function hide() {
-        timeout = window.setTimeout(function () {
-            highed.dom.style(container, {
-                bottom: '-68px'
-            });
-        }, 5000);
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-
-    /**  Show a snackbar
+  /**  Show a snackbar
      *   A snack bar is those info rectangles showing up on the bottom left.
      *
      *   @example
@@ -78,29 +80,29 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      *   @param saction {string} (optional) - the snackbar action text
      *   @param fn {function} (optional) - the function to call when clicking the action
      */
-    highed.snackBar = function (stitle, saction, fn) {
-        title.innerHTML = stitle; // .toUpperCase();
+  highed.snackBar = function(stitle, saction, fn) {
+    title.innerHTML = stitle; // .toUpperCase();
 
-        window.clearTimeout(timeout);
+    window.clearTimeout(timeout);
 
-        if (saction) {
-            action.innerHTML = saction.toUpperCase();
-        }
+    if (saction) {
+      action.innerHTML = saction.toUpperCase();
+    }
 
-        if (callback) {
-            callback();
-        }
+    if (callback) {
+      callback();
+    }
 
-        highed.dom.style(container, {
-            bottom: '10px'
-        });
+    highed.dom.style(container, {
+      bottom: '10px'
+    });
 
-        highed.dom.style(action, {
-            display: saction ? '' : 'none'
-        });
+    highed.dom.style(action, {
+      display: saction ? '' : 'none'
+    });
 
-        callback = highed.dom.on(action, 'click', fn);
+    callback = highed.dom.on(action, 'click', fn);
 
-        hide();
-    };
+    hide();
+  };
 })();

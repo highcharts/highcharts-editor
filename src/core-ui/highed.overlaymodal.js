@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,6 +23,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+// @format
+
 /** Turn a DOM node into an overlay "popup"
  *
  *  @example
@@ -44,116 +46,125 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *    > zIndex {number} - the Z-Index to use for the modal
  *  @return {object} - A new instance of OverlayModal
  */
-highed.OverlayModal = function (contents, attributes) {
-    var container = highed.dom.cr('div', 'highed-overlay-modal'),
-        events = highed.events(),
-        properties = highed.merge({
-            width: 200,
-            height: 200,
-            minWidth: 10,
-            minHeight: 10,
-            showOnInit: true,
-            zIndex: 10000
-        }, attributes),
-        hideDimmer = false,
-        visible = false
-    ;
+highed.OverlayModal = function(contents, attributes) {
+  var container = highed.dom.cr('div', 'highed-overlay-modal'),
+    events = highed.events(),
+    properties = highed.merge(
+      {
+        width: 200,
+        height: 200,
+        minWidth: 10,
+        minHeight: 10,
+        showOnInit: true,
+        zIndex: 10000
+      },
+      attributes
+    ),
+    hideDimmer = false,
+    visible = false;
 
-    ///////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////
 
-    /** Show the modal
+  /** Show the modal
      *  @memberof highed.OverlayModal
      */
-    function show() {
-        if (visible) return;
+  function show() {
+    if (visible) return;
 
-        highed.dom.style(container, {
-            width: properties.width + (properties.width.toString().indexOf('%') > 0 ? '' : 'px'),
-            height: properties.height + (properties.height.toString().indexOf('%') > 0 ? '' : 'px'),
-            opacity: 1,
-            'left': '50%',
-            'top': '50%',
-            'transform': 'translate(-50%, -50%)',
-            'pointer-events': 'auto',
-            'min-width': properties.minWidth + 'px',
-            'min-height': properties.minHeight + 'px',
-            'z-index': properties.zIndex
-        });
+    highed.dom.style(container, {
+      width:
+        properties.width +
+        (properties.width.toString().indexOf('%') > 0 ? '' : 'px'),
+      height:
+        properties.height +
+        (properties.height.toString().indexOf('%') > 0 ? '' : 'px'),
+      opacity: 1,
+      left: '50%',
+      top: '50%',
+      transform: 'translate(-50%, -50%)',
+      'pointer-events': 'auto',
+      'min-width': properties.minWidth + 'px',
+      'min-height': properties.minHeight + 'px',
+      'z-index': properties.zIndex
+    });
 
-        highed.dom.style(document.body, {
-            'overflow-x': 'hidden',
-            'overflow-y': 'hidden'
-        });
+    highed.dom.style(document.body, {
+      'overflow-x': 'hidden',
+      'overflow-y': 'hidden'
+    });
 
-        hideDimmer = highed.showDimmer(hide, true, false, properties.zIndex - 10000);
+    hideDimmer = highed.showDimmer(
+      hide,
+      true,
+      false,
+      properties.zIndex - 10000
+    );
 
-        window.setTimeout(function () {
-            events.emit('Show');            
-        }, 300);
+    window.setTimeout(function() {
+      events.emit('Show');
+    }, 300);
 
-        visible = true;
-    }
+    visible = true;
+  }
 
-    /** Hide the modal
+  /** Hide the modal
      *  @memberof highed.OverlayModal
      *  @param suppress {boolean} - suppress the hide event emitting
      */
-    function hide(suppress) {
-        if (!visible) return;
+  function hide(suppress) {
+    if (!visible) return;
 
-        highed.dom.style(container, {
-            width: '0px',
-            height: '0px',
-            opacity: 0,            
-            left: '-20000px',
-            'pointer-events': 'none'
-        });
-
-        highed.dom.style(document.body, {
-            'overflow-x': '',
-            'overflow-y': ''
-        });
-
-        if (highed.isFn(hideDimmer)) {
-            hideDimmer();
-        }
-
-        visible = false;
-
-        if (!suppress) {
-            events.emit('Hide');            
-        }
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    
-    highed.ready(function () {
-        highed.dom.ap(document.body, 
-            container
-        );        
+    highed.dom.style(container, {
+      width: '0px',
+      height: '0px',
+      opacity: 0,
+      left: '-20000px',
+      'pointer-events': 'none'
     });
 
-    if (contents) {
-        // if (highed.isStr(contents)) {
-        //    contents = highed.dom.cr('div', '', contents);
-        // }
-        // highed.dom.ap(container,
-        //    contents
-        // );
+    highed.dom.style(document.body, {
+      'overflow-x': '',
+      'overflow-y': ''
+    });
+
+    if (highed.isFn(hideDimmer)) {
+      hideDimmer();
     }
 
-    hide(true);
+    visible = false;
 
-    ///////////////////////////////////////////////////////////////////////////
+    if (!suppress) {
+      events.emit('Hide');
+    }
+  }
 
-    //Public interface
-    return {
-        on: events.on,        
-        show: show,        
-        hide: hide,
-        /** The container DOM node
+  ///////////////////////////////////////////////////////////////////////////
+
+  highed.ready(function() {
+    highed.dom.ap(document.body, container);
+  });
+
+  if (contents) {
+    // if (highed.isStr(contents)) {
+    //    contents = highed.dom.cr('div', '', contents);
+    // }
+    // highed.dom.ap(container,
+    //    contents
+    // );
+  }
+
+  hide(true);
+
+  ///////////////////////////////////////////////////////////////////////////
+
+  //Public interface
+  return {
+    on: events.on,
+    show: show,
+    hide: hide,
+    /** The container DOM node
          *  @memberof highed.OverlayModal
          */
-        body: container
-    };
+    body: container
+  };
 };

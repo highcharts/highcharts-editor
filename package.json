@@ -1,27 +1,39 @@
 {
   "name": "highcharts-editor",
   "author": "Chris Vasseng <christer@highsoft.com>",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "license": "MIT",
   "scripts": {
-    "install": "gulp"
+    "install": "gulp",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "src/*.{js,css}": [
+      "prettier --write",
+      "git add"
+    ],
+    "less/*.{.less}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "devDependencies": {
     "async": "^2.0.0",
     "gulp": "3.9.1",
-    "gulp-run": "1.7.1",
     "gulp-concat": "2.6.0",
     "gulp-electron": "0.1.3",
-    "gulp-less": "3.1.0",
-    "gulp-rename": "1.2.2",
-    "gulp-uglify": "2.0.0",
-    "gulp-zip": "3.2.0",
     "gulp-header": "*",
     "gulp-jshint": "*",
+    "gulp-less": "3.1.0",
+    "gulp-rename": "1.2.2",
+    "gulp-run": "1.7.1",
+    "gulp-uglify": "2.0.0",
+    "gulp-zip": "3.2.0",
+    "handlebars": "*",
+    "husky": "^0.14.3",
     "jshint": "^2.9.3",
-    "request": "2.74.0",
-    "handlebars": "*"
+    "request": "2.74.0"
   },
   "dependencies": {
     "express": "*",

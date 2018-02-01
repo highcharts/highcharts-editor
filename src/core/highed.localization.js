@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,82 +23,82 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+// @format
+
 /*
-    Note that the localization system uses attribute names 
+    Note that the localization system uses attribute names
     rather than a default string. This is to make it easier to
     modify translations.
 
 */
 
-(function () {
-    var currentLang = highed.option('defaultLanguage'),
-        langTree = {}
-    ;
+(function() {
+  var currentLang = highed.option('defaultLanguage'),
+    langTree = {};
 
-    /** Get a localized string based on the current global language
+  /** Get a localized string based on the current global language
      *  @param id {string} - the ID of the string to get
      */
-    highed.getLocalizedStr = function (id) {
-        if (langTree[currentLang]) {
-            if (langTree[currentLang][id]) {
-                return langTree[currentLang][id];
-            } 
-        } else {
-            //The current language is invalid, fall back to 'en'
-            if (langTree.en[id]) {
-                return langTree.en[id];
-            } 
-        }
+  highed.getLocalizedStr = function(id) {
+    if (langTree[currentLang]) {
+      if (langTree[currentLang][id]) {
+        return langTree[currentLang][id];
+      }
+    } else {
+      //The current language is invalid, fall back to 'en'
+      if (langTree.en[id]) {
+        return langTree.en[id];
+      }
+    }
 
-        //404
-        return 'bad localized string: ' + id;
-    };
+    //404
+    return 'bad localized string: ' + id;
+  };
 
-    /** This is an alias for highed.getLocalizedStr
+  /** This is an alias for highed.getLocalizedStr
      *  @type {function}
      *  @param id {string} - the string to get
      */
-    highed.L = highed.getLocalizedStr;
+  highed.L = highed.getLocalizedStr;
 
-    /** Install a language pack from a json object
+  /** Install a language pack from a json object
      *  @param translations {object} - translation object
      */
-    highed.installLanguage = function (translations) {
-        if (translations && translations.language && translations.entries) {
-            langTree[translations.language] = translations.entries;
-        }
-    };
+  highed.installLanguage = function(translations) {
+    if (translations && translations.language && translations.entries) {
+      langTree[translations.language] = translations.entries;
+    }
+  };
 
-    /** Install a language pack from a url  
+  /** Install a language pack from a url
      *  @param url {string} - the location of the pack
      */
-    highed.installLanguageFromURL = function (url, fn) {
-        highed.ajax({
-            url: url,
-            success: function (res) {
-                if (res) {
-                    if (highed.installLanguage(res)) {
-                        return fn && fn(false);
-                    }
-                    return fn && fn(true);
-                }
-            },
-            error: function (err) {
-                return fn && fn(err);
-            }
-        });
-    };
+  highed.installLanguageFromURL = function(url, fn) {
+    highed.ajax({
+      url: url,
+      success: function(res) {
+        if (res) {
+          if (highed.installLanguage(res)) {
+            return fn && fn(false);
+          }
+          return fn && fn(true);
+        }
+      },
+      error: function(err) {
+        return fn && fn(err);
+      }
+    });
+  };
 
-    /** Set the active language
+  /** Set the active language
      *  @param lang {string} - the language to activate
      *  @return {boolean} - true if the language exists, and was applied
-     */ 
-    highed.setLang = function (lang) {
-        if (langTree[lang]) {
-            currentLang = lang;
-            return true;
-        }
-        return false;
-    };
-
+     */
+  highed.setLang = function(lang) {
+    if (langTree[lang]) {
+      currentLang = lang;
+      return true;
+    }
+    return false;
+  };
 })();

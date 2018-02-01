@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,23 +23,24 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-highed.HelpModal = function (items) {
-  var active = false,
-      nav = highed.dom.cr('div', 'highed-help-nav'),
-      body = highed.dom.cr('div'),
-      counter = highed.dom.cr('div', 'highed-help-counter'),
-      modal = highed.OverlayModal(false, {
-        width: 600,
-        height: 600
-      });
+// @format
 
-  items.forEach(function (item, i) {
+highed.HelpModal = function(items) {
+  var active = false,
+    nav = highed.dom.cr('div', 'highed-help-nav'),
+    body = highed.dom.cr('div'),
+    counter = highed.dom.cr('div', 'highed-help-counter'),
+    modal = highed.OverlayModal(false, {
+      width: 600,
+      height: 600
+    });
+
+  items.forEach(function(item, i) {
     var container = highed.dom.cr('div'),
-        heading = highed.dom.cr('div', 'highed-toolbox-body-title', item.title),
-        gif = highed.dom.cr('div', 'highed-help-gif'),
-        desc = highed.dom.cr('div', 'highed-scrollbar highed-help-desc'),
-        activate = highed.dom.cr('span', 'highed-icon fa fa-circle-o')
-    ;
+      heading = highed.dom.cr('div', 'highed-toolbox-body-title', item.title),
+      gif = highed.dom.cr('div', 'highed-help-gif'),
+      desc = highed.dom.cr('div', 'highed-scrollbar highed-help-desc'),
+      activate = highed.dom.cr('span', 'highed-icon fa fa-circle-o');
 
     if (highed.isArr(item.description)) {
       item.description = item.description.join(' ');
@@ -66,16 +67,12 @@ highed.HelpModal = function (items) {
       highed.dom.ap(body, container);
       active = activate;
 
-      counter.innerHTML = (i + 1) + '/' + items.length;
+      counter.innerHTML = i + 1 + '/' + items.length;
     }
 
     highed.dom.on(activate, 'click', makeActive);
 
-    highed.dom.ap(container,
-      heading,
-      gif,
-      desc
-    );
+    highed.dom.ap(container, heading, gif, desc);
 
     highed.dom.ap(nav, activate);
 
@@ -90,11 +87,7 @@ highed.HelpModal = function (items) {
     });
   }
 
-  highed.dom.ap(modal.body,
-    body,
-    nav,
-    counter
-  );
+  highed.dom.ap(modal.body, body, nav, counter);
 
   return {
     show: modal.show

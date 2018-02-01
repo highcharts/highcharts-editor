@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,6 +23,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+// @format
+
 /** Make a node movable
  *  @constructor
  *
@@ -33,95 +35,111 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @param target {domnode} - the node to make movable
  *  @param constrain {string} - constrain moving: `XY`, `Y`, or `X`
  */
- highed.Movable = function (target, constrain, constrainParent, parentNode, min, doOffset) {
-    var events = highed.events(),
-        moving = false
-    ;
+highed.Movable = function(
+  target,
+  constrain,
+  constrainParent,
+  parentNode,
+  min,
+  doOffset
+) {
+  var events = highed.events(),
+    moving = false;
 
-    constrain = (constrain || 'XY').toUpperCase();
-    target = highed.dom.get(target);
+  constrain = (constrain || 'XY').toUpperCase();
+  target = highed.dom.get(target);
 
-    if (target) {
-        highed.dom.on(target, ['mousedown', 'touchstart'], function (e) {
-         //   if (moving) return;
-            moving = true;
-            var cp = highed.dom.pos(target),
-                ps = highed.dom.size(parentNode || target.parentNode),
-                ns = highed.dom.size(target),
-                x = cp.x,
-                y = cp.y,
-                offsetX = 0,
-                offsetY = 0,
-                mover = highed.dom.on(document.body, ['mousemove', 'touchmove'], function (moveE) {
-                    if (constrain === 'X' || constrain === 'XY') {
-                        x = cp.x + ((moveE.clientX || moveE.touches[0].clientX) - offsetX);                        
-                    
-                        if (constrainParent) {
-                            if (x < 0) x = 0;
-                            if (x > ps.w - ns.w) x = ps.w - ns.w;                            
-                        }
-                    }
-                    if (constrain === 'Y' || constrain === 'XY') {
-                        y = cp.y + ((moveE.clientY || moveE.touches[0].clientY) - offsetY);                        
-                    
-                        if (constrainParent) {                            
-                            if (y < 0) y = 0;
-                            if (y > ps.h - ns.h) y = ps.h - ns.h;
-                        }
-                    }
+  if (target) {
+    highed.dom.on(target, ['mousedown', 'touchstart'], function(e) {
+      //   if (moving) return;
+      moving = true;
+      var cp = highed.dom.pos(target),
+        ps = highed.dom.size(parentNode || target.parentNode),
+        ns = highed.dom.size(target),
+        x = cp.x,
+        y = cp.y,
+        offsetX = 0,
+        offsetY = 0,
+        mover = highed.dom.on(
+          document.body,
+          ['mousemove', 'touchmove'],
+          function(moveE) {
+            if (constrain === 'X' || constrain === 'XY') {
+              x =
+                cp.x + ((moveE.clientX || moveE.touches[0].clientX) - offsetX);
 
-                    if (min && x < min.x) {
-                        x = min.x;
-                    }
-                    if (min && y < min.y) {
-                        y = min.y;
-                    }
+              if (constrainParent) {
+                if (x < 0) x = 0;
+                if (x > ps.w - ns.w) x = ps.w - ns.w;
+              }
+            }
+            if (constrain === 'Y' || constrain === 'XY') {
+              y =
+                cp.y + ((moveE.clientY || moveE.touches[0].clientY) - offsetY);
 
-                    highed.dom.style(target, {
-                        left: x - (doOffset ? ns.w : 0) + 'px',
-                        top: y + 'px'
-                    });
+              if (constrainParent) {
+                if (y < 0) y = 0;
+                if (y > ps.h - ns.h) y = ps.h - ns.h;
+              }
+            }
 
-                    events.emit('Moving', x, y);
+            if (min && x < min.x) {
+              x = min.x;
+            }
+            if (min && y < min.y) {
+              y = min.y;
+            }
 
-                    moveE.cancelBubble = true;
-                    moveE.preventDefault();
-                    moveE.stopPropagation();
-                    moveE.stopImmediatePropagation();
-                    return false;
-                }),
-                upper = highed.dom.on(document.body, ['mouseup', 'touchend'], function (upE) {                    
-                    //Detach the document listeners
-                    upper();
-                    mover();    
-                    moving = false;
-                    document.body.className = document.body.className.replace(' highed-nosel', '');
-                    events.emit('EndMove', x, y);
+            highed.dom.style(target, {
+              left: x - (doOffset ? ns.w : 0) + 'px',
+              top: y + 'px'
+            });
 
-                    upE.cancelBubble = true;
-                    upE.preventDefault();
-                    upE.stopPropagation();
-                    upE.stopImmediatePropagation();
-                    return false;
-                })
-            ;
+            events.emit('Moving', x, y);
 
-            document.body.className += ' highed-nosel';
-            offsetX = e.clientX || e.touches[0].clientX;
-            offsetY = e.clientY || e.touches[0].clientY;
-            events.emit('StartMove', cp.x, cp.y);
-
-            e.cancelBubble = true;
-            e.preventDefault();
-            e.stopPropagation();
-            e.stopImmediatePropagation();
+            moveE.cancelBubble = true;
+            moveE.preventDefault();
+            moveE.stopPropagation();
+            moveE.stopImmediatePropagation();
             return false;
+          }
+        ),
+        upper = highed.dom.on(document.body, ['mouseup', 'touchend'], function(
+          upE
+        ) {
+          //Detach the document listeners
+          upper();
+          mover();
+          moving = false;
+          document.body.className = document.body.className.replace(
+            ' highed-nosel',
+            ''
+          );
+          events.emit('EndMove', x, y);
+
+          upE.cancelBubble = true;
+          upE.preventDefault();
+          upE.stopPropagation();
+          upE.stopImmediatePropagation();
+          return false;
         });
-    }
 
-    ////////////////////////////////////////////////////////////////////////////
+      document.body.className += ' highed-nosel';
+      offsetX = e.clientX || e.touches[0].clientX;
+      offsetY = e.clientY || e.touches[0].clientY;
+      events.emit('StartMove', cp.x, cp.y);
 
-    return {
-        on: events.on
-    };
- };
+      e.cancelBubble = true;
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      return false;
+    });
+  }
+
+  ////////////////////////////////////////////////////////////////////////////
+
+  return {
+    on: events.on
+  };
+};

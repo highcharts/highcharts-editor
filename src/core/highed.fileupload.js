@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,25 +23,25 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-/** 
+// @format
+
+/**
  * @ignore
  */
-highed.ready(function () {
-    var uploader = highed.dom.cr('input'),
-        cb = false
-    ;
+highed.ready(function() {
+  var uploader = highed.dom.cr('input'),
+    cb = false;
 
-    uploader.type = 'file';
-    uploader.accept = '.csv';
+  uploader.type = 'file';
+  uploader.accept = '.csv';
 
-    highed.dom.ap(document.body, uploader);
+  highed.dom.ap(document.body, uploader);
 
-    highed.dom.style(uploader, {
-        display: 'none'
-    });
+  highed.dom.style(uploader, {
+    display: 'none'
+  });
 
-
- /** Upload and parse a local file
+  /** Upload and parse a local file
   *  Borrowed from almostvanilla which is licensed under MIT.
   *  @param props {object} - the upload settings
   *     > type {string} - the type of data to load
@@ -53,35 +53,37 @@ highed.ready(function () {
   *       > {object} - the file information
   *         > filename {string} - the name of the file
   *         > size {number} - the size of the file in bytes
-  *         > data {string} - the file data  
-  */  
-  highed.readLocalFile = function (props) {
-    var p = highed.merge({
-          type: 'text',
-          multiple: false,
-          accept: '.csv'            
-        }, props)
-    ;
+  *         > data {string} - the file data
+  */
+  highed.readLocalFile = function(props) {
+    var p = highed.merge(
+      {
+        type: 'text',
+        multiple: false,
+        accept: '.csv'
+      },
+      props
+    );
 
     uploader.accept = p.accept;
-    
+
     if (highed.isFn(cb)) {
       cb();
-    }  
-      
-    cb = highed.dom.on(uploader, 'change', function () {      
+    }
+
+    cb = highed.dom.on(uploader, 'change', function() {
       function crReader(file) {
         var reader = new FileReader();
-                
-        reader.onloadstart = function (evt) {
+
+        reader.onloadstart = function(evt) {
           if (highed.isFn(p.progress)) {
-            p.progress(Math.round( (evt.loaded / evt.total) * 100));
+            p.progress(Math.round(evt.loaded / evt.total * 100));
           }
         };
-        
-        reader.onload = function (event) {
+
+        reader.onload = function(event) {
           var data = reader.result;
-          
+
           if (p.type === 'json') {
             try {
               data = JSON.parse(data);
@@ -91,34 +93,34 @@ highed.ready(function () {
               }
             }
           }
-          
+
           if (highed.isFn(p.success)) {
             p.success({
               filename: file.name,
               size: file.size,
-              data: data 
+              data: data
             });
-          }    
+          }
         };
-        
+
         return reader;
       }
-      
+
       for (var i = 0; i < uploader.files.length; i++) {
         if (!p.type || p.type === 'text' || p.type === 'json') {
-          crReader(uploader.files[i]).readAsText(uploader.files[i]);                            
+          crReader(uploader.files[i]).readAsText(uploader.files[i]);
         } else if (p.type === 'binary') {
           crReader(uploader.files[i]).readAsBinaryString(uploader.files[i]);
         } else if (p.type === 'b64') {
           crReader(uploader.files[i]).readAsDataURL(uploader.files[i]);
         }
-      }      
+      }
       cb();
       uploader.value = '';
     });
-    
+
     uploader.multiple = p.multiple;
-    
+
     uploader.click();
   };
 });

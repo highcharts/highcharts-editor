@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,6 +23,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+// @format
+
 /** Horizontal splitter
  *
  *  Splits a view into two horizontal cells
@@ -43,173 +45,191 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *    > leftMax {number} - the max width of the left panel
  *    > rightMax {number} - the max width of the right panel
  */
-highed.HSplitter = function (parent, attributes) {
-    var properties = highed.merge({
-            leftWidth: 40,
-            noOverflow: false,
-            leftClasses: '',
-            rightClasses: '',
-            allowResize: false,
-            responsive: false,
-            leftMax: false,
-            rightMax: false
-        }, attributes),
-        container = highed.dom.cr('div', 'highed-hsplitter'),
-        left = highed.dom.cr('div', 'highed-scrollbar panel left ' + properties.leftClasses),
-        right = highed.dom.cr('div', 'highed-scrollbar panel right ' + properties.rightClasses),
-        leftBody = highed.dom.cr('div', 'highed-scrollbar highed-hsplitter-body ' + properties.leftClasses),
-        rightBody = highed.dom.cr('div', 'highed-scrollbar highed-hsplitter-body ' + properties.rightClasses),
-        resizeBar = highed.dom.cr('div', 'highed-hsplitter-resize-bar'),
-        mover
-    ;
+highed.HSplitter = function(parent, attributes) {
+  var properties = highed.merge(
+      {
+        leftWidth: 40,
+        noOverflow: false,
+        leftClasses: '',
+        rightClasses: '',
+        allowResize: false,
+        responsive: false,
+        leftMax: false,
+        rightMax: false
+      },
+      attributes
+    ),
+    container = highed.dom.cr('div', 'highed-hsplitter'),
+    left = highed.dom.cr(
+      'div',
+      'highed-scrollbar panel left ' + properties.leftClasses
+    ),
+    right = highed.dom.cr(
+      'div',
+      'highed-scrollbar panel right ' + properties.rightClasses
+    ),
+    leftBody = highed.dom.cr(
+      'div',
+      'highed-scrollbar highed-hsplitter-body ' + properties.leftClasses
+    ),
+    rightBody = highed.dom.cr(
+      'div',
+      'highed-scrollbar highed-hsplitter-body ' + properties.rightClasses
+    ),
+    resizeBar = highed.dom.cr('div', 'highed-hsplitter-resize-bar'),
+    mover;
 
-    if (properties.responsive) {
-        left.className += ' highed-hsplitter-body-responsive';
+  if (properties.responsive) {
+    left.className += ' highed-hsplitter-body-responsive';
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+
+  function updateSizeFromMover(x) {
+    var psize;
+
+    if (properties.allowResize && highed.dom.isVisible(right)) {
+      psize = highed.dom.size(container);
+      x = x || highed.dom.pos(resizeBar).x;
+
+      highed.dom.style(left, {
+        width: x + 'px'
+      });
+
+      highed.dom.style(right, {
+        width: psize.w - x + 'px'
+      });
+
+      highed.dom.style(resizeBar, {
+        display: ''
+      });
     }
+  }
 
-    ///////////////////////////////////////////////////////////////////////////
-
-    function updateSizeFromMover(x) {
-        var psize;
-
-        if (properties.allowResize && highed.dom.isVisible(right)) {
-            psize = highed.dom.size(container);
-            x = x || highed.dom.pos(resizeBar).x;
-
-            highed.dom.style(left, {
-                width: x + 'px'
-            });
-
-            highed.dom.style(right, {
-                width: (psize.w - x) + 'px'
-            });
-
-            highed.dom.style(resizeBar, {
-                display: ''
-            });
-        }
-    }
-
-    /** Force a resize of the splitter
+  /** Force a resize of the splitter
      *  @memberof highed.HSplitter
      *  @param w {number} - the width of the splitter (will use parent if null)
      *  @param h {number} - the height of the splitter (will use parent if null)
      */
-    function resize(w, h) {
-        var s = highed.dom.size(parent), st, ps;
+  function resize(w, h) {
+    var s = highed.dom.size(parent),
+      st,
+      ps;
 
-        //Check if the right side is visible
-        if (!highed.dom.isVisible(right)) {
-            highed.dom.style(left, {
-                width: '100%'
-            });
+    //Check if the right side is visible
+    if (!highed.dom.isVisible(right)) {
+      highed.dom.style(left, {
+        width: '100%'
+      });
 
-            highed.dom.style(resizeBar, {
-                display: 'none'
-            });
-        } else {
-          resetSize();
-        }
-
-        if (properties.responsive) {
-            st = window.getComputedStyle(left);
-            if (st.float === 'none') {
-                highed.dom.style(right,{
-                    width: '100%'
-                });
-
-                highed.dom.style(resizeBar, {
-                    display: 'none'
-                });
-            } else {
-              resetSize();
-            }
-        }
-
-        highed.dom.style([left, right, container, resizeBar], {
-            height: (h || s.h) + 'px'
-        });
-
-        if (properties.rightMax) {
-            highed.dom.style(right, {
-                'max-width': properties.rightMax + 'px'
-            });
-        }
-
-        if (properties.leftMax) {
-            highed.dom.style(left, {
-                'max-width': properties.leftMax + 'px'
-            });
-        }
-
-        //If we're at right max, we need to resize the left panel
-        ps = highed.dom.size(left);
-        if (ps.w === properties.leftMax) {
-            highed.dom.style(right, {
-                width: s.w - properties.leftMax - 1 + 'px'
-            });
-        }
-
-        updateSizeFromMover();
+      highed.dom.style(resizeBar, {
+        display: 'none'
+      });
+    } else {
+      resetSize();
     }
 
-    function resetSize() {
-         highed.dom.style(left, {
-            width: properties.leftWidth + '%'
-        });
-
+    if (properties.responsive) {
+      st = window.getComputedStyle(left);
+      if (st.float === 'none') {
         highed.dom.style(right, {
-            width: (100 - properties.leftWidth) + '%'
+          width: '100%'
         });
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-
-    parent = highed.dom.get(parent);
-
-    highed.dom.ap(highed.dom.get(parent),
-        highed.dom.ap(container,
-            highed.dom.ap(left, leftBody),
-            highed.dom.ap(right, rightBody)
-        )
-    );
-
-    resetSize();
-
-    if (properties.noOverflow) {
-        highed.dom.style([container, left, right], {
-            'overflow-y': 'hidden'
-        });
-    }
-
-    if (properties.allowResize) {
-        highed.dom.ap(container, resizeBar);
 
         highed.dom.style(resizeBar, {
-            left: properties.leftWidth + '%'
+          display: 'none'
         });
-
-        mover = highed.Movable(resizeBar, 'x').on('Moving', function (x) {
-            updateSizeFromMover(x);
-        });
+      } else {
+        resetSize();
+      }
     }
 
-    //resize();
+    highed.dom.style([left, right, container, resizeBar], {
+      height: (h || s.h) + 'px'
+    });
 
-    ///////////////////////////////////////////////////////////////////////////
+    if (properties.rightMax) {
+      highed.dom.style(right, {
+        'max-width': properties.rightMax + 'px'
+      });
+    }
 
-    // Public interface
-    return {
-        resize: resize,
-        /** The dom node for the left cell
+    if (properties.leftMax) {
+      highed.dom.style(left, {
+        'max-width': properties.leftMax + 'px'
+      });
+    }
+
+    //If we're at right max, we need to resize the left panel
+    ps = highed.dom.size(left);
+    if (ps.w === properties.leftMax) {
+      highed.dom.style(right, {
+        width: s.w - properties.leftMax - 1 + 'px'
+      });
+    }
+
+    updateSizeFromMover();
+  }
+
+  function resetSize() {
+    highed.dom.style(left, {
+      width: properties.leftWidth + '%'
+    });
+
+    highed.dom.style(right, {
+      width: 100 - properties.leftWidth + '%'
+    });
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+
+  parent = highed.dom.get(parent);
+
+  highed.dom.ap(
+    highed.dom.get(parent),
+    highed.dom.ap(
+      container,
+      highed.dom.ap(left, leftBody),
+      highed.dom.ap(right, rightBody)
+    )
+  );
+
+  resetSize();
+
+  if (properties.noOverflow) {
+    highed.dom.style([container, left, right], {
+      'overflow-y': 'hidden'
+    });
+  }
+
+  if (properties.allowResize) {
+    highed.dom.ap(container, resizeBar);
+
+    highed.dom.style(resizeBar, {
+      left: properties.leftWidth + '%'
+    });
+
+    mover = highed.Movable(resizeBar, 'x').on('Moving', function(x) {
+      updateSizeFromMover(x);
+    });
+  }
+
+  //resize();
+
+  ///////////////////////////////////////////////////////////////////////////
+
+  // Public interface
+  return {
+    resize: resize,
+    /** The dom node for the left cell
          *  @memberof highed.HSplitter
          *  @type {domnode}
          */
-        left: leftBody,
-        /** The dom node for the right cell
+    left: leftBody,
+    /** The dom node for the right cell
          *  @memberof highed.HSplitter
          *  @type {domnode}
          */
-        right: rightBody
-    };
+    right: rightBody
+  };
 };

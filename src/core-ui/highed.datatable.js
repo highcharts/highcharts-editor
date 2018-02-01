@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,91 +23,101 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+// @format
 
-Highcharts.wrap(Highcharts.Data.prototype, 'parseGoogleSpreadsheet',  function (proceed) {
-
+Highcharts.wrap(Highcharts.Data.prototype, 'parseGoogleSpreadsheet', function(
+  proceed
+) {
   var self = this,
-      options = this.options,
-      url =  options.googleSpreadsheetKey,
-      worksheet = options.googleSpreadsheetWorksheet || 'od6';
+    options = this.options,
+    url = options.googleSpreadsheetKey,
+    worksheet = options.googleSpreadsheetWorksheet || 'od6';
 
   if (!url) {
     return;
   }
 
   if (worksheet === 'undefined') {
-      worksheet = 1;
+    worksheet = 1;
   }
 
-  function load (json) {
-      function q(s) {
-        return '"' + s + '"';
+  function load(json) {
+    function q(s) {
+      return '"' + s + '"';
+    }
+
+    var csv = [],
+      rawCSV,
+      cells = json.feed.entry,
+      cell,
+      cellCount = cells.length,
+      colCount = 0;
+
+    cells.forEach(function(entry) {
+      var cell = entry.gs$cell || false,
+        row = cell ? parseInt(cell.row, 10) - 1 : false,
+        col = cell ? parseInt(cell.col, 10) - 1 : false,
+        val = null;
+
+      if (!cell) {
+        return;
       }
 
-      var csv = [],
-          rawCSV,
-          cells = json.feed.entry,
-          cell,
-          cellCount = cells.length,
-          colCount = 0;
-
-      cells.forEach(function (entry) {
-        var cell = entry.gs$cell || false,
-            row = cell ? parseInt(cell.row, 10) - 1 : false,
-            col = cell ? parseInt(cell.col, 10) - 1 : false,
-            val = null
-        ;
-
-        if (!cell) {
-          return;
-        }
-
-        if (cell.numericValue) {
-          if (cell.$t.indexOf('/') >= 0 || cell.$t.indexOf('-') >= 0) {
-            val = q(cell.$t);
-          } else if (cell.$t.indexOf('%') >= 0) {
-            val = parseFloat(cell.numericValue) * 100;
-          } else {
-            val = parseFloat(cell.numericValue);
-          }
-        } else if (cell.$t && cell.$t.length) {
+      if (cell.numericValue) {
+        if (cell.$t.indexOf('/') >= 0 || cell.$t.indexOf('-') >= 0) {
           val = q(cell.$t);
+        } else if (cell.$t.indexOf('%') >= 0) {
+          val = parseFloat(cell.numericValue) * 100;
+        } else {
+          val = parseFloat(cell.numericValue);
         }
+      } else if (cell.$t && cell.$t.length) {
+        val = q(cell.$t);
+      }
 
-        csv[row] = csv[row] || [];
-        csv[row][col] = val;
+      csv[row] = csv[row] || [];
+      csv[row][col] = val;
 
-        if (col > colCount) {
-          colCount = col + 1;
-        }
-      });
+      if (col > colCount) {
+        colCount = col + 1;
+      }
+    });
 
-      rawCSV = csv.map(function (row) {
+    rawCSV = csv
+      .map(function(row) {
         var pad = [];
         for (var i = row.length; i < colCount; i++) {
           pad.push(null);
         }
         return row.concat(pad).join(';');
-      }).join('\n');
+      })
+      .join('\n');
 
-      self.parseCSV( {
-        startRow: options.startRow,
-        endRow: options.endRow,
-        startColumn: options.startColumn,
-        endColumn: options.endColumn,
-        csv: rawCSV,
-        itemDelimiter: ';'
-      });
+    self.parseCSV({
+      startRow: options.startRow,
+      endRow: options.endRow,
+      startColumn: options.startColumn,
+      endColumn: options.endColumn,
+      csv: rawCSV,
+      itemDelimiter: ';'
+    });
   }
 
   highed.ajax({
     dataType: 'json',
-    url: 'https://spreadsheets.google.com/feeds/cells/' +
-    url + '/' + worksheet +
-    '/public/values?alt=json',
-    error: options.error || function () {
-      highed.snackBar('Error loading spreadsheet: please check the sheet ID, and/or the start/end row/column');
-    },
+    url:
+      'https://spreadsheets.google.com/feeds/cells/' +
+      url +
+      '/' +
+      worksheet +
+      '/public/values?alt=json',
+    error:
+      options.error ||
+      function() {
+        highed.snackBar(
+          'Error loading spreadsheet: please check the sheet ID, and/or the start/end row/column'
+        );
+      },
     success: load
   });
 });
@@ -187,11 +197,17 @@ function parseCSV(inData, delimiter) {
 
     options.delimiter = ';';
 
-    if (delimiterCounts[','] > delimiterCounts[';'] && delimiterCounts[','] > delimiterCounts['\t']) {
+    if (
+      delimiterCounts[','] > delimiterCounts[';'] &&
+      delimiterCounts[','] > delimiterCounts['\t']
+    ) {
       options.delimiter = ',';
     }
 
-    if (delimiterCounts['\t'] >= delimiterCounts[';'] && delimiterCounts['\t'] >= delimiterCounts[',']) {
+    if (
+      delimiterCounts['\t'] >= delimiterCounts[';'] &&
+      delimiterCounts['\t'] >= delimiterCounts[',']
+    ) {
       options.delimiter = '\t';
     }
   }
@@ -275,14 +291,22 @@ highed.DataTable = function(parent, attributes) {
     table = highed.dom.cr('table', 'highed-dtable-table'),
     thead = highed.dom.cr('thead', 'highed-dtable-head'),
     tbody = highed.dom.cr('tbody', 'highed-dtable-body'),
-    tableTail = highed.dom.cr('div', 'highed-dtable-table-tail', 'Only the first 500 rows are shown.'),
+    tableTail = highed.dom.cr(
+      'div',
+      'highed-dtable-table-tail',
+      'Only the first 500 rows are shown.'
+    ),
     colgroup = highed.dom.cr('colgroup'),
     leftBar = highed.dom.cr('div', 'highed-dtable-left-bar'),
     topBar = highed.dom.cr('div', 'highed-dtable-top-bar'),
     topLeftPanel = highed.dom.cr('div', 'highed-dtable-top-left-panel'),
     checkAll = highed.dom.cr('input'),
     mainInput = highed.dom.cr('textarea', 'highed-dtable-input'),
-    loadIndicator = highed.dom.cr('div', 'highed-dtable-load-indicator', 'Loading Data...'),
+    loadIndicator = highed.dom.cr(
+      'div',
+      'highed-dtable-load-indicator',
+      'Loading Data...'
+    ),
     dropZone = highed.dom.cr(
       'div',
       'highed-dtable-drop-zone highed-transition'
@@ -376,19 +400,19 @@ highed.DataTable = function(parent, attributes) {
       {
         title: 'At the end',
         icon: '',
-        click: function () {
+        click: function() {
           addRow();
         }
       },
       {
         title: 'After highlighted',
-        click: function () {
+        click: function() {
           addRowAfter(selectedRowIndex);
         }
       },
       {
         title: 'Before highlighted',
-        click: function () {
+        click: function() {
           addRowBefore(selectedRowIndex);
         }
       }
@@ -1319,7 +1343,7 @@ highed.DataTable = function(parent, attributes) {
       opacity: 1
     });
 
-    setTimeout(function () {
+    setTimeout(function() {
       rows.forEach(function(cols, i) {
         var row;
 
@@ -1381,7 +1405,15 @@ highed.DataTable = function(parent, attributes) {
     emitChanged(true);
   }
 
-  function initGSheet(id, worksheet, startRow, endRow, startColumn, endColumn, skipLoad) {
+  function initGSheet(
+    id,
+    worksheet,
+    startRow,
+    endRow,
+    startColumn,
+    endColumn,
+    skipLoad
+  ) {
     gsheetID.value = id;
     gsheetWorksheetID.value = worksheet || '';
     gsheetStartRow.value = startRow || 0;
@@ -1401,12 +1433,12 @@ highed.DataTable = function(parent, attributes) {
 
     if (!skipLoad) {
       events.emit('LoadGSheet', {
-          googleSpreadsheetKey: gsheetID.value,
-          googleSpreadsheetWorksheet: gsheetWorksheetID.value || false,
-          startRow: gsheetStartRow.value || 0,
-          endRow: gsheetEndRow.value || undefined,
-          startColumn: gsheetStartCol.value || 0,
-          endColumn: gsheetEndCol.value || undefined
+        googleSpreadsheetKey: gsheetID.value,
+        googleSpreadsheetWorksheet: gsheetWorksheetID.value || false,
+        startRow: gsheetStartRow.value || 0,
+        endRow: gsheetEndRow.value || undefined,
+        startColumn: gsheetStartCol.value || 0,
+        endColumn: gsheetEndCol.value || undefined
       });
     }
   }
@@ -1440,8 +1472,8 @@ highed.DataTable = function(parent, attributes) {
     ) {
       // Should emit a gsheet clear
       events.emit('LoadGSheet', {
-          googleSpreadsheetKey: '',
-          googleSpreadsheetWorksheet: false
+        googleSpreadsheetKey: '',
+        googleSpreadsheetWorksheet: false
       });
 
       highed.dom.style(gsheetFrame, {
@@ -1476,12 +1508,12 @@ highed.DataTable = function(parent, attributes) {
 
   highed.dom.on(gsheetLoadButton, 'click', function() {
     events.emit('LoadGSheet', {
-        googleSpreadsheetKey: gsheetID.value,
-        googleSpreadsheetWorksheet: gsheetWorksheetID.value || false,
-        startRow: gsheetStartRow.value || 0,
-        endRow: gsheetEndRow.value || Number.MAX_VALUE,
-        startColumn: gsheetStartCol.value || 0,
-        endColumn: gsheetEndCol.value || Number.MAX_VALUE
+      googleSpreadsheetKey: gsheetID.value,
+      googleSpreadsheetWorksheet: gsheetWorksheetID.value || false,
+      startRow: gsheetStartRow.value || 0,
+      endRow: gsheetEndRow.value || Number.MAX_VALUE,
+      startColumn: gsheetStartCol.value || 0,
+      endColumn: gsheetEndCol.value || Number.MAX_VALUE
     });
   });
 
@@ -1550,23 +1582,25 @@ highed.DataTable = function(parent, attributes) {
         highed.dom.ap(highed.dom.cr('div'), gsheetID),
         highed.dom.cr('div', 'highed-dtable-gsheet-label', 'Worksheet'),
         highed.dom.ap(highed.dom.cr('div'), gsheetWorksheetID),
-        highed.dom.ap(highed.dom.cr('table', 'highed-stretch'),
-          highed.dom.ap(highed.dom.cr('tr'),
+        highed.dom.ap(
+          highed.dom.cr('table', 'highed-stretch'),
+          highed.dom.ap(
+            highed.dom.cr('tr'),
             highed.dom.cr('td', 'highed-dtable-gsheet-label', 'Start Row'),
             highed.dom.cr('td', 'highed-dtable-gsheet-label', 'End Row')
           ),
-
-          highed.dom.ap(highed.dom.cr('tr'),
+          highed.dom.ap(
+            highed.dom.cr('tr'),
             highed.dom.ap(highed.dom.cr('td', '', ''), gsheetStartRow),
             highed.dom.ap(highed.dom.cr('td', '', ''), gsheetEndRow)
           ),
-
-          highed.dom.ap(highed.dom.cr('tr'),
+          highed.dom.ap(
+            highed.dom.cr('tr'),
             highed.dom.cr('td', 'highed-dtable-gsheet-label', 'Start Column'),
             highed.dom.cr('td', 'highed-dtable-gsheet-label', 'End Column')
           ),
-
-          highed.dom.ap(highed.dom.cr('tr'),
+          highed.dom.ap(
+            highed.dom.cr('tr'),
             highed.dom.ap(highed.dom.cr('td', '', ''), gsheetStartCol),
             highed.dom.ap(highed.dom.cr('td', '', ''), gsheetEndCol)
           )
@@ -1576,14 +1610,17 @@ highed.DataTable = function(parent, attributes) {
           gsheetLoadButton,
           gsheetCancelButton
         ),
-        highed.dom.cr('div', '', [
-          'When using Google Spreadsheet, Highcharts references the sheet directly.<br/><br/>',
-          'This means that the published chart always loads the latest version of the sheet.<br/><br/>',
+        highed.dom.cr(
+          'div',
+          '',
+          [
+            'When using Google Spreadsheet, Highcharts references the sheet directly.<br/><br/>',
+            'This means that the published chart always loads the latest version of the sheet.<br/><br/>',
 
-          'For more information on how to set up your spreadsheet, visit',
-          '<a target="_blank" href="https://www.highcharts.com/cloud/import-data/how-to-set-up-a-google-spreadsheet-file">the documentation</a>.'
-
-        ].join(' '))
+            'For more information on how to set up your spreadsheet, visit',
+            '<a target="_blank" href="https://www.highcharts.com/cloud/import-data/how-to-set-up-a-google-spreadsheet-file">the documentation</a>.'
+          ].join(' ')
+        )
       )
     )
   );
@@ -1602,8 +1639,8 @@ highed.DataTable = function(parent, attributes) {
     css: 'fa-plus-circle',
     tooltip: 'Add row',
     title: highed.L('dgAddRow'),
-    click: function (e) {
-      addRowCtx.show(e. clientX, e.clientY);
+    click: function(e) {
+      addRowCtx.show(e.clientX, e.clientY);
     }
   });
 

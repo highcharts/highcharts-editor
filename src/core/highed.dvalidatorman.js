@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-Copyright (c) 2016-2017, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,38 +23,37 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+// @format
+
 /* Keeps track of validations */
 
-(function () {
-  
-    // Keyed on ID
-    var validators = {};
+(function() {
+  // Keyed on ID
+  var validators = {};
 
-    highed.validators = {
-        /**
+  highed.validators = {
+    /**
          * Add a validator
          * @param id {string} - the id
          * @param fn {function} - the validator function
          */
-        add: function (id, fn) {
-            if (id && !validators[id] && highed.isFn(fn)) {
-                validators[id] = fn;
-                return true;
-            }
+    add: function(id, fn) {
+      if (id && !validators[id] && highed.isFn(fn)) {
+        validators[id] = fn;
+        return true;
+      }
 
-            return false;
-        },
+      return false;
+    },
 
-        /**
+    /**
          * Execute a validator
          * @param id {string} - the id of the validator
          * @param chart {Chart} - the charts whose data to validate
          * @return {boolean} - true if valid
          */
-        validate: function (id, chart) {
-            return validators[id] ? validators[id](chart) : true;
-        }
-    };
-
+    validate: function(id, chart) {
+      return validators[id] ? validators[id](chart) : true;
+    }
+  };
 })();
-

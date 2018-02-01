@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-Copyright (c) 2016-2017, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,20 +23,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+// @format
+
 highed.samples.add({
-    id: 'line-series-dates',
-    title: 'Dates on X',
-    description: '',
-    type: 'csv',
-    dataset: [
-      'row,val',
-      '2013-01-01,24',
-      '2014-01-01,76',
-      '2015-01-01,23'
-    ]
+  id: 'line-series-dates',
+  title: 'Dates on X',
+  description: '',
+  type: 'csv',
+  dataset: ['row,val', '2013-01-01,24', '2014-01-01,76', '2015-01-01,23']
 });
-
-
-
-
-

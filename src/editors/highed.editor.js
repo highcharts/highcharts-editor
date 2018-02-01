@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,20 +23,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+// @format
+
 // Alias to drawer editor
 highed.Editor = highed.DrawerEditor;
 
-(function () {
-    var instanceCount = 0,
-        installedPlugins = {},
-        activePlugins = {},
-        pluginEvents = highed.events(),
-        stepPlugins = {}
-    ;
+(function() {
+  var instanceCount = 0,
+    installedPlugins = {},
+    activePlugins = {},
+    pluginEvents = highed.events(),
+    stepPlugins = {};
 
-    ///////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////
 
-     /** Install an editor plugin
+  /** Install an editor plugin
       *
       *  Note that plugins must be enabled when creating the editor
       *  for it to be active.
@@ -56,83 +57,90 @@ highed.Editor = highed.DrawerEditor;
       *             > label {string} - the label
       *             > default {anything} - the default value
       */
-     function install(name, definition) {
-        var properties = highed.merge({
-                meta: {
-                    version: 'unknown',
-                    author: 'unknown',
-                    homepage: 'unknown'
-                },
-                dependencies: [],
-                options: {}
-            }, definition)
-        ;
+  function install(name, definition) {
+    var properties = highed.merge(
+      {
+        meta: {
+          version: 'unknown',
+          author: 'unknown',
+          homepage: 'unknown'
+        },
+        dependencies: [],
+        options: {}
+      },
+      definition
+    );
 
-       console.error('Warning: editor plugins are no longer supported.');
+    console.error('Warning: editor plugins are no longer supported.');
 
-        properties.dependencies.forEach(highed.include);
+    properties.dependencies.forEach(highed.include);
 
-        if (!highed.isNull(installedPlugins[name])) {
-            return highed.log(1, 'plugin -', name, 'is already installed');
-        }
-
-        installedPlugins[name] = properties;
+    if (!highed.isNull(installedPlugins[name])) {
+      return highed.log(1, 'plugin -', name, 'is already installed');
     }
 
-    function use(name, options) {
-        var plugin = installedPlugins[name],
-            filteredOptions = {}
-        ;
+    installedPlugins[name] = properties;
+  }
 
-        console.error('Warning: editor plugins are no longer supported.');
+  function use(name, options) {
+    var plugin = installedPlugins[name],
+      filteredOptions = {};
 
-        if (!highed.isNull(plugin)) {
-            if (activePlugins[name]) {
-                return highed.log(2, 'plugin -', name, 'is already active');
-            }
+    console.error('Warning: editor plugins are no longer supported.');
 
-            //Verify options
-            Object.keys(plugin.options).forEach(function (key) {
-                var option = plugin.options[key];
-                if (highed.isBasic(option) || highed.isArr(option)) {
-                    highed.log(2, 'plugin -', name, 'unexpected type definition for option', key, 'expected object');
-                } else {
+    if (!highed.isNull(plugin)) {
+      if (activePlugins[name]) {
+        return highed.log(2, 'plugin -', name, 'is already active');
+      }
 
-                    filteredOptions[key] = options[key] || plugin.options[key].default || '';
-
-                    if (option.required && highed.isNull(options[key])) {
-                        highed.log(1, 'plugin -', name, 'option', key, 'is required');
-                    }
-                }
-            });
-
-            activePlugins[name] = {
-                definition: plugin,
-                options: filteredOptions
-            };filteredOptions
-
-            if (highed.isFn(plugin.activate)) {
-                activePlugins[name].definition.activate(filteredOptions);
-            }
-
-            pluginEvents.emit('Use', activePlugins[name]);
-
+      //Verify options
+      Object.keys(plugin.options).forEach(function(key) {
+        var option = plugin.options[key];
+        if (highed.isBasic(option) || highed.isArr(option)) {
+          highed.log(
+            2,
+            'plugin -',
+            name,
+            'unexpected type definition for option',
+            key,
+            'expected object'
+          );
         } else {
-            highed.log(2, 'plugin -', name, 'is not installed');
+          filteredOptions[key] =
+            options[key] || plugin.options[key].default || '';
+
+          if (option.required && highed.isNull(options[key])) {
+            highed.log(1, 'plugin -', name, 'option', key, 'is required');
+          }
         }
+      });
+
+      activePlugins[name] = {
+        definition: plugin,
+        options: filteredOptions
+      };
+      filteredOptions;
+
+      if (highed.isFn(plugin.activate)) {
+        activePlugins[name].definition.activate(filteredOptions);
+      }
+
+      pluginEvents.emit('Use', activePlugins[name]);
+    } else {
+      highed.log(2, 'plugin -', name, 'is not installed');
     }
+  }
 
-    //Public interface
-    highed.plugins.editor = {
-        install: install,
-        use: use
-    };
+  //Public interface
+  highed.plugins.editor = {
+    install: install,
+    use: use
+  };
 
-    //UI plugin interface
-    highed.plugins.step = {
-        install: function (def) {
-            stepPlugins[def.title] = def;
-        }
-    };
-
+  //UI plugin interface
+  highed.plugins.step = {
+    install: function(def) {
+      stepPlugins[def.title] = def;
+    }
+  };
 })();

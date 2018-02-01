@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,6 +23,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
+// @format
+
 /** A standard toolbar.
  *
  *  @example
@@ -35,100 +37,104 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @param attributes {object} - toolbar settings
  *    > additionalCSS {array} - array of additional css classes to add to the toolbar
  */
-highed.Toolbar = function (parent, attributes) {
-    var properties = highed.merge({
-            additionalCSS: []
-        }, attributes),
-        container = highed.dom.cr('div', 'highed-toolbar ' + properties.additionalCSS.join(' ')),
-        left = highed.dom.cr('div', 'highed-toolbar-left'),
-        right = highed.dom.cr('div', 'highed-toolbar-right'),
-        center = highed.dom.cr('div', 'highed-toolbar-center'),
-        iconsRight = highed.dom.cr('div', 'icons')
-    ;
+highed.Toolbar = function(parent, attributes) {
+  var properties = highed.merge(
+      {
+        additionalCSS: []
+      },
+      attributes
+    ),
+    container = highed.dom.cr(
+      'div',
+      'highed-toolbar ' + properties.additionalCSS.join(' ')
+    ),
+    left = highed.dom.cr('div', 'highed-toolbar-left'),
+    right = highed.dom.cr('div', 'highed-toolbar-right'),
+    center = highed.dom.cr('div', 'highed-toolbar-center'),
+    iconsRight = highed.dom.cr('div', 'icons');
 
-    ///////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////
 
-    /** Add an icon to the toolbar
+  /** Add an icon to the toolbar
      *  @memberof highed.Toolbar
      *  @param icon {object} - an object containing the icon settings.
      *    > css {array} - the additional css class(s) to use
      *    > click {function} - the function to call when the icon is clicked
      */
-    function addIcon(icon, where) {
-        var i = highed.dom.cr('div', 'icon highed-icon fa ' + (icon.css || ''));
+  function addIcon(icon, where) {
+    var i = highed.dom.cr('div', 'icon highed-icon fa ' + (icon.css || ''));
 
-        highed.dom.on(i, 'click', function (e) {
-            if (highed.isFn(icon.click)) {
-                icon.click(e);
-            }
-        });
+    highed.dom.on(i, 'click', function(e) {
+      if (highed.isFn(icon.click)) {
+        icon.click(e);
+      }
+    });
 
-        i.title = icon.tooltip || icon.title;
+    i.title = icon.tooltip || icon.title;
 
-        highed.dom.ap(where === 'left' ? left : right, i);
-    }
+    highed.dom.ap(where === 'left' ? left : right, i);
+  }
 
-    /** Add a button to the toolbar
+  /** Add a button to the toolbar
      *  @memberof highed.Toolbar
      *  @param icon {object} - an object containing the icon settings.
      *    > css {array} - the additional css class(s) to use
      *    > click {function} - the function to call when the icon is clicked
      */
-    function addButton(icon, where) {
-        var i = highed.dom.cr('div', 'highed-ok-button highed-toolbar-button', (icon.title || ''));
-
-        highed.dom.on(i, 'click', function (e) {
-            if (highed.isFn(icon.click)) {
-                icon.click(e);
-            }
-        });
-
-        i.title = icon.tooltip;
-
-        highed.dom.ap(where === 'left' ? left : right, i);
-    }
-
-    function addSeparator(where) {
-      highed.dom.ap(where === 'left' ? left : right,
-        highed.dom.cr('span', 'separator')
-      );
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-
-    highed.dom.ap(parent,
-        highed.dom.ap(container,
-            left,
-            center,
-            right
-        )
+  function addButton(icon, where) {
+    var i = highed.dom.cr(
+      'div',
+      'highed-ok-button highed-toolbar-button',
+      icon.title || ''
     );
 
-    ///////////////////////////////////////////////////////////////////////////
+    highed.dom.on(i, 'click', function(e) {
+      if (highed.isFn(icon.click)) {
+        icon.click(e);
+      }
+    });
 
-    return {
-        /** The toolbar container
+    i.title = icon.tooltip;
+
+    highed.dom.ap(where === 'left' ? left : right, i);
+  }
+
+  function addSeparator(where) {
+    highed.dom.ap(
+      where === 'left' ? left : right,
+      highed.dom.cr('span', 'separator')
+    );
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+
+  highed.dom.ap(parent, highed.dom.ap(container, left, center, right));
+
+  ///////////////////////////////////////////////////////////////////////////
+
+  return {
+    /** The toolbar container
          *  @type {domnode}
          *  @memberof highed.Toolbar
          */
-        container: container,
-        addIcon: addIcon,
-        addButton: addButton,
-        addSeparator: addSeparator,
-        /** The left part of the toolbar
+    container: container,
+    addIcon: addIcon,
+    addButton: addButton,
+    addSeparator: addSeparator,
+    /** The left part of the toolbar
          *  @type {domnode}
          *  @memberof highed.Toolbar
          */
-        left: left,
-        /** The center part of the toolbar
+    left: left,
+    /** The center part of the toolbar
          *  @type {domnode}
          *  @memberof highed.Toolbar
          */
-        center: center,
-        /** The right part of the toolbar
+    center: center,
+    /** The right part of the toolbar
          *  @type {domnode}
          *  @memberof highed.Toolbar
          */
-        right: right
-    };
+    right: right
+  };
 };

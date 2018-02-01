@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,9 +23,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-(function () {
+// @format
 
-    /** Show a dimmer backdrop
+(function() {
+  /** Show a dimmer backdrop
      *
      *  Used to catch input when showing modals, context menus etc.
      *
@@ -40,56 +41,52 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      *  @param {number} zIndex - the z index *offset*
      *  @return {function} - A function that can be called to hide the dimmer
      */
-    highed.showDimmer = function (fn, autohide, transparent, zIndex) {
-        var dimmer = highed.dom.cr('div', 'highed-dimmer'),
-            unbinder = false
-        ;
+  highed.showDimmer = function(fn, autohide, transparent, zIndex) {
+    var dimmer = highed.dom.cr('div', 'highed-dimmer'),
+      unbinder = false;
 
+    highed.dom.ap(document.body, dimmer);
 
-        highed.dom.ap(document.body, dimmer);
+    highed.dom.style(dimmer, {
+      opacity: 0.7,
+      'pointer-events': 'auto',
+      'z-index': 9999 + (zIndex || 0)
+    });
 
-        highed.dom.style(dimmer, {
-            'opacity': 0.7,
-            'pointer-events': 'auto',
-            'z-index': 9999 + (zIndex || 0)
-        });
+    if (transparent) {
+      highed.dom.style(dimmer, {
+        opacity: 0
+      });
+    }
 
-        if (transparent) {
-            highed.dom.style(dimmer, {
-                'opacity': 0
-            });
+    function hide() {
+      highed.dom.style(dimmer, {
+        opacity: 0,
+        'pointer-events': 'none'
+      });
+
+      if (highed.isFn(unbinder)) {
+        unbinder();
+        unbinder = false;
+      }
+
+      window.setTimeout(function() {
+        if (dimmer.parentNode) {
+          dimmer.parentNode.removeChild(dimmer);
         }
+      }, 300);
+    }
 
-        function hide() {
-            highed.dom.style(dimmer, {
-                'opacity': 0,
-                'pointer-events': 'none'
-            });
+    unbinder = highed.dom.on(dimmer, 'click', function(e) {
+      if (highed.isFn(fn)) {
+        fn();
+      }
 
-            if (highed.isFn(unbinder)) {
-                unbinder();
-                unbinder = false;
-            }
+      if (autohide) {
+        hide();
+      }
+    });
 
-            window.setTimeout(function () {
-                if (dimmer.parentNode) {
-                    dimmer.parentNode.removeChild(dimmer);
-                }
-            }, 300);
-        }
-
-        unbinder = highed.dom.on(dimmer, 'click', function (e) {
-
-            if (highed.isFn(fn)) {
-                fn();
-            }
-
-            if (autohide) {
-                hide();
-            }
-        });
-
-        return hide;
-    };
-
+    return hide;
+  };
 })();
