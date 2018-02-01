@@ -25,17 +25,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Line', {
-    "title": "Spline",
-    "description": "",
-    "thumbnail": "upafes.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "spline",
-            "polar": false
-        }
+  title: 'Spline',
+  description: '',
+  thumbnail: 'upafes.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'spline',
+      polar: false
     }
+  }
 });

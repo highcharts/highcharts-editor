@@ -25,21 +25,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Column', {
-    "title": "Logarithmic",
-    "description": "",
-    "thumbnail": "igipeg.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "column",
-            "polar": false
-        },
-        "yAxis": {
-            "type": "logarithmic",
-            "minorTickInterval": "auto"
-        }
+  title: 'Logarithmic',
+  description: '',
+  thumbnail: 'igipeg.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'column',
+      polar: false
+    },
+    yAxis: {
+      type: 'logarithmic',
+      minorTickInterval: 'auto'
     }
+  }
 });

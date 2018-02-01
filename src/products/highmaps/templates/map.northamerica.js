@@ -25,62 +25,58 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Map', {
-    "title": "Basic North America Map",
-    "description": [
-        "Basic map of North America.",
-        "Good starting point for North American geographical data."
-    ],
-    "thumbnail": "",
-    "dataValidator": false,
-    "sampleSets": [],
-    "constructor": "Map",
-    "config": {
-        "chart": {
-            "borderWidth": 1
+  title: 'Basic North America Map',
+  description: [
+    'Basic map of North America.',
+    'Good starting point for North American geographical data.'
+  ],
+  thumbnail: '',
+  dataValidator: false,
+  sampleSets: [],
+  constructor: 'Map',
+  config: {
+    chart: {
+      borderWidth: 1
+    },
+
+    mapNavigation: {
+      enabled: true
+    },
+
+    legend: {
+      layout: 'horizontal',
+      borderWidth: 0,
+      backgroundColor: 'rgba(255,255,255,0.85)',
+      verticalAlign: 'bottom'
+    },
+
+    colorAxis: {
+      min: 1,
+      type: 'logarithmic',
+      minColor: '#EEEEFF',
+      maxColor: '#000022',
+      stops: [[0, '#EFEFFF'], [0.67, '#4444FF'], [1, '#000022']]
+    },
+
+    series: [
+      {
+        mapData: 'custom/north-america',
+        joinBy: ['postal-code', 'code'],
+        dataLabels: {
+          enabled: true,
+          color: '#FFFFFF',
+          format: '{point.code}'
         },
-
-        mapNavigation: {
-            enabled: true
+        dataLabels: {
+          enabled: true,
+          color: '#FFFFFF',
+          format: '{point.code}'
         },
-
-        legend: {
-            layout: 'horizontal',
-            borderWidth: 0,
-            backgroundColor: 'rgba(255,255,255,0.85)',
-            verticalAlign: 'bottom'
-        },
-
-        colorAxis: {
-            min: 1,
-            type: 'logarithmic',
-            minColor: '#EEEEFF',
-            maxColor: '#000022',
-            stops: [
-                [0, '#EFEFFF'],
-                [0.67, '#4444FF'],
-                [1, '#000022']
-            ]
-        },
-
-
-        "series": [{
-            mapData: 'custom/north-america',
-            joinBy: ['postal-code', 'code'],
-            dataLabels: {
-                enabled: true,
-                color: '#FFFFFF',
-                format: '{point.code}'
-            },
-            dataLabels: {
-                enabled: true,
-                color: '#FFFFFF',
-                format: '{point.code}'
-            },
-            tooltip: {
-                pointFormat: '{point.code}: {point.value{/km2'
-            }
-        }]
-    }
+        tooltip: {
+          pointFormat: '{point.code}: {point.value{/km2'
+        }
+      }
+    ]
+  }
 });

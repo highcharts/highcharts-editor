@@ -26,20 +26,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /* Standard Line Series */
 
 highed.templates.add('Pie', {
-    title: 'Pie',
-    description: [
-      'Good starting point for custom pie series.'
-    ],
-    constructor: 'Chart',
-    thumbnail: 'yqoxob.svg',
-    sampleSets: [
-     // 'pie-series-simple'
-    ],
-    validator: 'pie',
-    config: {
-        chart: {
-            type: 'pie'
-        }
+  title: 'Pie',
+  description: ['Good starting point for custom pie series.'],
+  constructor: 'Chart',
+  thumbnail: 'yqoxob.svg',
+  sampleSets: [
+    // 'pie-series-simple'
+  ],
+  validator: 'pie',
+  config: {
+    chart: {
+      type: 'pie'
     }
+  }
 });
-

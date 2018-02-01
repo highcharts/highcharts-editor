@@ -25,31 +25,30 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('More', {
-    "title": "Funnel",
-    "description": "",
-    "thumbnail": "exumeq.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "funnel"
+  title: 'Funnel',
+  description: '',
+  thumbnail: 'exumeq.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'funnel'
+    },
+    plotOptions: {
+      series: {
+        datalabels: {
+          color: '#000000'
         },
-        "plotOptions": {
-            "series": {
-                "datalabels": {
-                    "color": "#000000"
-                },
-                "dataLabels": {
-                    "softConnector": true
-                },
-                "neckWidth": "20%",
-                "neckHeight": "35%"
-            }
+        dataLabels: {
+          softConnector: true
         },
-        "series[0]": {
-            "width": "64%"
-        }
+        neckWidth: '20%',
+        neckHeight: '35%'
+      }
+    },
+    'series[0]': {
+      width: '64%'
     }
+  }
 });

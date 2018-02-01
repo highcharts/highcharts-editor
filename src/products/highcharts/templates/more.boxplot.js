@@ -25,16 +25,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('More', {
-    "title": "Boxplot",
-    "description": "",
-    "thumbnail": "idagib.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "boxplot"
-        }
+  title: 'Boxplot',
+  description: '',
+  thumbnail: 'idagib.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'boxplot'
     }
+  }
 });

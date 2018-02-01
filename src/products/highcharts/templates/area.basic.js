@@ -25,17 +25,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Area', {
-    "title": "Basic",
-    "description": "",
-    "thumbnail": "ecexev.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "area",
-            "polar": false
-        }
+  title: 'Basic',
+  description: '',
+  thumbnail: 'ecexev.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'area',
+      polar: false
     }
+  }
 });

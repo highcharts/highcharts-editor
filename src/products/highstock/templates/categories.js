@@ -24,13 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 highed.templates.addCategory('Stock', {
-  description: [
-    'Stock charts are used to display financial data.'  
-  ],
-  
-  samples: [
-  ]
+  description: ['Stock charts are used to display financial data.'],
+
+  samples: []
 });
-
-
-

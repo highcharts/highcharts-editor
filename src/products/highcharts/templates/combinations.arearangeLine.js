@@ -25,19 +25,18 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Combinations', {
-    "title": "Arearange and line",
-    "description": "",
-    "thumbnail": "ypepug.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "line"
-        },
-        "series[0]": {
-            "type": "arearange"
-        }
+  title: 'Arearange and line',
+  description: '',
+  thumbnail: 'ypepug.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'line'
+    },
+    'series[0]': {
+      type: 'arearange'
     }
+  }
 });

@@ -25,18 +25,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Bar', {
-    "title": "Horizontal columnrange",
-    "description": "",
-    "thumbnail": "iqagel.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "columnrange",
-            "inverted": true,
-            "polar": false
-        }
+  title: 'Horizontal columnrange',
+  description: '',
+  thumbnail: 'iqagel.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'columnrange',
+      inverted: true,
+      polar: false
     }
+  }
 });

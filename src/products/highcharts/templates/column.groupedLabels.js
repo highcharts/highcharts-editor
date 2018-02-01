@@ -25,24 +25,23 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Column', {
-    "title": "With label",
-    "description": "",
-    "thumbnail": "ivetir.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "column",
-            "polar": false
-        },
-        "plotOptions": {
-            "series": {
-                "dataLabels": {
-                    "enabled": true
-                }
-            }
+  title: 'With label',
+  description: '',
+  thumbnail: 'ivetir.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'column',
+      polar: false
+    },
+    plotOptions: {
+      series: {
+        dataLabels: {
+          enabled: true
         }
+      }
     }
+  }
 });

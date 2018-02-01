@@ -25,18 +25,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Line', {
-    "title": "Inverted",
-    "description": "",
-    "thumbnail": "ozojul.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "line",
-            "inverted": true,
-            "polar": false
-        }
+  title: 'Inverted',
+  description: '',
+  thumbnail: 'ozojul.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'line',
+      inverted: true,
+      polar: false
     }
+  }
 });

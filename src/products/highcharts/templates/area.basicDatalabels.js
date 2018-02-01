@@ -25,24 +25,23 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Area', {
-    "title": "Area with labels",
-    "description": "",
-    "thumbnail": "atikon.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "area",
-            "polar": false
-        },
-        "plotOptions": {
-            "series": {
-                "dataLabels": {
-                    "enabled": true
-                }
-            }
+  title: 'Area with labels',
+  description: '',
+  thumbnail: 'atikon.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'area',
+      polar: false
+    },
+    plotOptions: {
+      series: {
+        dataLabels: {
+          enabled: true
         }
+      }
     }
+  }
 });

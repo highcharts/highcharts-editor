@@ -25,28 +25,27 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Pie', {
-    "title": "Donut with legend",
-    "description": "",
-    "thumbnail": "arutag.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "pie",
-            "polar": false
-        },
-        "plotOptions": {
-            "pie": {
-                "allowPointSelect": true,
-                "cursor": true,
-                "showInLegend": true,
-                "innerSize": "60%",
-                "dataLabels": {
-                    "enabled": false
-                }
-            }
+  title: 'Donut with legend',
+  description: '',
+  thumbnail: 'arutag.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'pie',
+      polar: false
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: true,
+        showInLegend: true,
+        innerSize: '60%',
+        dataLabels: {
+          enabled: false
         }
+      }
     }
+  }
 });

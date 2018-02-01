@@ -25,17 +25,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Column', {
-    "title": "Basic",
-    "description": "",
-    "thumbnail": "ovobiq.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "column",
-            "polar": false
-        }
+  title: 'Basic',
+  description: '',
+  thumbnail: 'ovobiq.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'column',
+      polar: false
     }
+  }
 });

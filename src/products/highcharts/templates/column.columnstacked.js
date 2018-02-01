@@ -25,22 +25,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Column', {
-    "title": "Stacked",
-    "description": "",
-    "thumbnail": "ycehiz.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "column",
-            "polar": false
-        },
-        "plotOptions": {
-            "series": {
-                "stacking": "normal"
-            }
-        }
+  title: 'Stacked',
+  description: '',
+  thumbnail: 'ycehiz.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'column',
+      polar: false
+    },
+    plotOptions: {
+      series: {
+        stacking: 'normal'
+      }
     }
+  }
 });

@@ -24,8 +24,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 /* Validates that the data is suitable to a line series */
-highed.validators.add('line', function (chart) {
-    return true;
+highed.validators.add('line', function(chart) {
+  return true;
 });
-
-

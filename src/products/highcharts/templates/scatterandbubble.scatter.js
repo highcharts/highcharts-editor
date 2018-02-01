@@ -25,17 +25,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Scatterandbubble', {
-    "title": "Scatter chart",
-    "description": "",
-    "thumbnail": "ezatat.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "scatter",
-            "polar": false
-        }
+  title: 'Scatter chart',
+  description: '',
+  thumbnail: 'ezatat.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'scatter',
+      polar: false
     }
+  }
 });

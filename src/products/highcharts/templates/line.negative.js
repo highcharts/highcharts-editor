@@ -25,21 +25,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Line', {
-    "title": "Negative color",
-    "description": "",
-    "thumbnail": "uxyfys.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "line",
-            "polar": false
-        },
-        "series[0]": {
-            "negativeColor": "#0088FF",
-            "color": "#FF0000"
-        }
+  title: 'Negative color',
+  description: '',
+  thumbnail: 'uxyfys.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'line',
+      polar: false
+    },
+    'series[0]': {
+      negativeColor: '#0088FF',
+      color: '#FF0000'
     }
+  }
 });

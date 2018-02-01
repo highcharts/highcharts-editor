@@ -25,36 +25,35 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Pie', {
-    "title": "3D Donut chart with legend",
-    "description": "",
-    "thumbnail": "oriwyb.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "pie",
-            "options3d": {
-                "enabled": true,
-                "alpha": 45,
-                "beta": 0
-            },
-            "polar": false
-        },
-        "plotOptions": {
-            "pie": {
-                "allowPointSelect": true,
-                "depth": 35,
-                "cursor": "pointer",
-                "showInLegend": true,
-                "innerSize": "60%"
-            },
-            "series": {
-                "dataLabels": {
-                    "enabled": false
-                }
-            }
+  title: '3D Donut chart with legend',
+  description: '',
+  thumbnail: 'oriwyb.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'pie',
+      options3d: {
+        enabled: true,
+        alpha: 45,
+        beta: 0
+      },
+      polar: false
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        depth: 35,
+        cursor: 'pointer',
+        showInLegend: true,
+        innerSize: '60%'
+      },
+      series: {
+        dataLabels: {
+          enabled: false
         }
+      }
     }
+  }
 });

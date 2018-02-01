@@ -25,23 +25,22 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Bar', {
-    "title": "Stacked bar",
-    "description": "",
-    "thumbnail": "epodat.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "column",
-            "inverted": true,
-            "polar": false
-        },
-        "plotOptions": {
-            "series": {
-                "stacking": "normal"
-            }
-        }
+  title: 'Stacked bar',
+  description: '',
+  thumbnail: 'epodat.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'column',
+      inverted: true,
+      polar: false
+    },
+    plotOptions: {
+      series: {
+        stacking: 'normal'
+      }
     }
+  }
 });

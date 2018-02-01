@@ -26,20 +26,18 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /* Standard Line Series */
 
 highed.templates.add('Line', {
-    title: 'Line',
-    description: [
-      'Basic line series. Good starting point for custom line series.',
-      'Requires one column for X values or categories, subsequently one column for each series\' Y values.'
-    ],
-    constructor: 'Chart',
-    thumbnail: 'abywon.svg',
-    sampleSets: [
-    ],
-    validator: 'line',
-    config: {
-        chart: {
-            type: 'line'
-        }
+  title: 'Line',
+  description: [
+    'Basic line series. Good starting point for custom line series.',
+    "Requires one column for X values or categories, subsequently one column for each series' Y values."
+  ],
+  constructor: 'Chart',
+  thumbnail: 'abywon.svg',
+  sampleSets: [],
+  validator: 'line',
+  config: {
+    chart: {
+      type: 'line'
     }
+  }
 });
-

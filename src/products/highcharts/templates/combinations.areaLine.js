@@ -25,19 +25,18 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Combinations', {
-    "title": "Area and line",
-    "description": "",
-    "thumbnail": "ahimym.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "line"
-        },
-        "series[0]": {
-            "type": "area"
-        }
+  title: 'Area and line',
+  description: '',
+  thumbnail: 'ahimym.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'line'
+    },
+    'series[0]': {
+      type: 'area'
     }
+  }
 });

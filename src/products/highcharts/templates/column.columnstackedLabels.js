@@ -25,25 +25,24 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Column', {
-    "title": "Stacked with labels",
-    "description": "",
-    "thumbnail": "acijil.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "column",
-            "polar": false
-        },
-        "plotOptions": {
-            "series": {
-                "stacking": "normal",
-                "dataLabels": {
-                    "enabled": true
-                }
-            }
+  title: 'Stacked with labels',
+  description: '',
+  thumbnail: 'acijil.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'column',
+      polar: false
+    },
+    plotOptions: {
+      series: {
+        stacking: 'normal',
+        dataLabels: {
+          enabled: true
         }
+      }
     }
+  }
 });

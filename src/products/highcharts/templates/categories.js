@@ -27,12 +27,8 @@ highed.templates.addCategory('Line', {
   description: [
     'A line chart is a type of chart which diplays information as a series of data points called "markers" connected by straight line segments'
   ],
-  
-  samples: [
-      'os-stats',
-      'line-series-simple',
-      'line-series-four-series'
-  ]
+
+  samples: ['os-stats', 'line-series-simple', 'line-series-four-series']
 });
 
 highed.templates.addCategory('Pie', {
@@ -41,9 +37,7 @@ highed.templates.addCategory('Pie', {
     'In a pie chart, the arc length of each slice is proportional to the quantity it represents.'
   ],
 
-  samples: [
-    'pie-series-simple' 
-  ]
+  samples: ['pie-series-simple']
 });
 
 highed.templates.addCategory('Bar', {
@@ -53,20 +47,11 @@ highed.templates.addCategory('Bar', {
 
   nofits: 'The dataset must contain at least one column.',
 
-  samples: [
-
-  ]
+  samples: []
 });
 
 highed.templates.addCategory('Column', {
-  description: [
+  description: [],
 
-  ],
-
-  samples: [
-
-  ]
+  samples: []
 });
-
-
-

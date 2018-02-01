@@ -25,21 +25,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Stock', {
-    "title": "Area",
-    "description": "",
-    "constructor": "StockChart",
-    "thumbnail": "ukaqor.svg",
-    "dataValidator": false,
-    "sampleSets": ['line-series-dates'],
-    "config": {
-        "chart": {
-            "type": "area",
-            "polar": false
-        },
-        "rangeSelector": {
-            "enabled": false
-        }
+  title: 'Area',
+  description: '',
+  constructor: 'StockChart',
+  thumbnail: 'ukaqor.svg',
+  dataValidator: false,
+  sampleSets: ['line-series-dates'],
+  config: {
+    chart: {
+      type: 'area',
+      polar: false
+    },
+    rangeSelector: {
+      enabled: false
     }
+  }
 });

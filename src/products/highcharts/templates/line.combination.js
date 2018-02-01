@@ -25,20 +25,19 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Line', {
-    "title": "Combination chart",
-    "description": "",
-    "thumbnail": "ynikoc.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "line",
-            "polar": false
-        },
-        "series[0]": {
-            "type": "column"
-        }
+  title: 'Combination chart',
+  description: '',
+  thumbnail: 'ynikoc.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'line',
+      polar: false
+    },
+    'series[0]': {
+      type: 'column'
     }
+  }
 });

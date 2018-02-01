@@ -25,23 +25,22 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Line', {
-    "title": "Error bar",
-    "description": "",
-    "thumbnail": "ypewak.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "line",
-            "polar": false
-        },
-        "series[0]": {
-            "type": "line"
-        },
-        "series[1]": {
-            "type": "errorbar"
-        }
+  title: 'Error bar',
+  description: '',
+  thumbnail: 'ypewak.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'line',
+      polar: false
+    },
+    'series[0]': {
+      type: 'line'
+    },
+    'series[1]': {
+      type: 'errorbar'
     }
+  }
 });

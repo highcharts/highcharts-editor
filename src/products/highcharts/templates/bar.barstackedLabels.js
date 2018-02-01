@@ -25,26 +25,25 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Bar', {
-    "title": "Stacked with labels",
-    "description": "",
-    "thumbnail": "otupaz.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "column",
-            "inverted": true,
-            "polar": false
-        },
-        "plotOptions": {
-            "series": {
-                "stacking": "normal",
-                "dataLabels": {
-                    "enabled": true
-                }
-            }
+  title: 'Stacked with labels',
+  description: '',
+  thumbnail: 'otupaz.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'column',
+      inverted: true,
+      polar: false
+    },
+    plotOptions: {
+      series: {
+        stacking: 'normal',
+        dataLabels: {
+          enabled: true
         }
+      }
     }
+  }
 });

@@ -25,27 +25,26 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Pie', {
-    "title": "Donut",
-    "description": "",
-    "thumbnail": "upaxab.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "pie",
-            "polar": false
-        },
-        "plotOptions": {
-            "pie": {
-                "allowPointSelect": true,
-                "cursor": true,
-                "innerSize": "60%",
-                "dataLabels": {
-                    "enabled": true
-                }
-            }
+  title: 'Donut',
+  description: '',
+  thumbnail: 'upaxab.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'pie',
+      polar: false
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: true,
+        innerSize: '60%',
+        dataLabels: {
+          enabled: true
         }
+      }
     }
+  }
 });

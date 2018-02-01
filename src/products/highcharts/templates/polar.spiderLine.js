@@ -25,25 +25,24 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Polar', {
-    "title": "Spider line",
-    "description": "",
-    "thumbnail": "uqonaj.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "line",
-            "polar": true
-        },
-        "xAxis": {
-            "tickmarkPlacement": "on",
-            "lineWidth": 0
-        },
-        "yAxis": {
-            "lineWidth": 0,
-            "gridLineInterpolation": "polygon"
-        }
+  title: 'Spider line',
+  description: '',
+  thumbnail: 'uqonaj.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'line',
+      polar: true
+    },
+    xAxis: {
+      tickmarkPlacement: 'on',
+      lineWidth: 0
+    },
+    yAxis: {
+      lineWidth: 0,
+      gridLineInterpolation: 'polygon'
     }
+  }
 });

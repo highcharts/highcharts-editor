@@ -25,22 +25,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Area', {
-    "title": "Stacked percentage",
-    "description": "",
-    "thumbnail": "iporos.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "area",
-            "polar": false
-        },
-        "plotOptions": {
-            "series": {
-                "stacking": "percent"
-            }
-        }
+  title: 'Stacked percentage',
+  description: '',
+  thumbnail: 'iporos.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'area',
+      polar: false
+    },
+    plotOptions: {
+      series: {
+        stacking: 'percent'
+      }
     }
+  }
 });

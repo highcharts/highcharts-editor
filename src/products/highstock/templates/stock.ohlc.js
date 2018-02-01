@@ -25,21 +25,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Stock', {
-    "title": "OHLC",
-    "description": "",
-    "constructor": "StockChart",
-    "thumbnail": "opilip.svg",
-    "dataValidator": false,
-    "sampleSets": ['candlestick'],
-    "config": {
-        "chart": {
-            "type": "ohlc",
-            "polar": false
-        },
-        "rangeSelector": {
-            "enabled": false
-        }
+  title: 'OHLC',
+  description: '',
+  constructor: 'StockChart',
+  thumbnail: 'opilip.svg',
+  dataValidator: false,
+  sampleSets: ['candlestick'],
+  config: {
+    chart: {
+      type: 'ohlc',
+      polar: false
+    },
+    rangeSelector: {
+      enabled: false
     }
+  }
 });

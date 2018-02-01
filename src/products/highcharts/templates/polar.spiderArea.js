@@ -25,25 +25,24 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Polar', {
-    "title": "Spider area",
-    "description": "",
-    "thumbnail": "exajib.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "area",
-            "polar": true
-        },
-        "xAxis": {
-            "tickmarkPlacement": "on",
-            "lineWidth": 0
-        },
-        "yAxis": {
-            "lineWidth": 0,
-            "gridLineInterpolation": "polygon"
-        }
+  title: 'Spider area',
+  description: '',
+  thumbnail: 'exajib.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'area',
+      polar: true
+    },
+    xAxis: {
+      tickmarkPlacement: 'on',
+      lineWidth: 0
+    },
+    yAxis: {
+      lineWidth: 0,
+      gridLineInterpolation: 'polygon'
     }
+  }
 });

@@ -25,21 +25,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Column', {
-    "title": "Negative color",
-    "description": "",
-    "thumbnail": "yxajih.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "column",
-            "polar": false
-        },
-        "series[0]": {
-            "negativeColor": "#0088FF",
-            "color": "#FF0000"
-        }
+  title: 'Negative color',
+  description: '',
+  thumbnail: 'yxajih.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'column',
+      polar: false
+    },
+    'series[0]': {
+      negativeColor: '#0088FF',
+      color: '#FF0000'
     }
+  }
 });

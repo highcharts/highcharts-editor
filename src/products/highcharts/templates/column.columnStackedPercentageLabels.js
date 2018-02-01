@@ -25,25 +25,24 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Column', {
-    "title": "Stacked percent with labels",
-    "description": "",
-    "thumbnail": "iwanyg.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "column",
-            "polar": false
-        },
-        "plotOptions": {
-            "series": {
-                "stacking": "percent",
-                "dataLabels": {
-                    "enabled": true
-                }
-            }
+  title: 'Stacked percent with labels',
+  description: '',
+  thumbnail: 'iwanyg.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'column',
+      polar: false
+    },
+    plotOptions: {
+      series: {
+        stacking: 'percent',
+        dataLabels: {
+          enabled: true
         }
+      }
     }
+  }
 });

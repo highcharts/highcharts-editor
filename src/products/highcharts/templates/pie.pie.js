@@ -25,28 +25,27 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Pie', {
-    "title": "Pie chart",
-    "description": "",
-    "thumbnail": "yqoxob.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "pie",
-            "polar": false
-        },
-        "plotOptions": {
-            "pie": {
-                "allowPointSelect": true,
-                "cursor": true
-            },
-            "series": {
-                "dataLabels": {
-                    "enabled": true
-                }
-            }
+  title: 'Pie chart',
+  description: '',
+  thumbnail: 'yqoxob.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'pie',
+      polar: false
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: true
+      },
+      series: {
+        dataLabels: {
+          enabled: true
         }
+      }
     }
+  }
 });

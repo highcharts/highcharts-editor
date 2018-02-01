@@ -25,22 +25,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Line', {
-    "title": "Step line",
-    "description": "",
-    "thumbnail": "akeduw.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "line",
-            "polar": false
-        },
-        "plotOptions": {
-            "line": {
-                "step": "left"
-            }
-        }
+  title: 'Step line',
+  description: '',
+  thumbnail: 'akeduw.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'line',
+      polar: false
+    },
+    plotOptions: {
+      line: {
+        step: 'left'
+      }
     }
+  }
 });

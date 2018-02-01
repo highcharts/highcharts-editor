@@ -25,22 +25,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Bar', {
-    "title": "Negative color",
-    "description": "",
-    "thumbnail": "efygam.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "column",
-            "inverted": true,
-            "polar": false
-        },
-        "series[0]": {
-            "negativeColor": "#0088FF",
-            "color": "#FF0000"
-        }
+  title: 'Negative color',
+  description: '',
+  thumbnail: 'efygam.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'column',
+      inverted: true,
+      polar: false
+    },
+    'series[0]': {
+      negativeColor: '#0088FF',
+      color: '#FF0000'
     }
+  }
 });

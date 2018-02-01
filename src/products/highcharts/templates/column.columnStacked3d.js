@@ -25,33 +25,32 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Column', {
-    "title": "Stacked 3D",
-    "description": "",
-    "thumbnail": "ahyqyx.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "column",
-            "margin": 75,
-            "options3d": {
-                "enabled": true,
-                "alpha": 15,
-                "beta": 15,
-                "depth": 50,
-                "viewDistance": 15
-            },
-            "polar": false
-        },
-        "plotOptions": {
-            "column": {
-                "depth": 25
-            },
-            "series": {
-                "stacking": "normal"
-            }
-        }
+  title: 'Stacked 3D',
+  description: '',
+  thumbnail: 'ahyqyx.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'column',
+      margin: 75,
+      options3d: {
+        enabled: true,
+        alpha: 15,
+        beta: 15,
+        depth: 50,
+        viewDistance: 15
+      },
+      polar: false
+    },
+    plotOptions: {
+      column: {
+        depth: 25
+      },
+      series: {
+        stacking: 'normal'
+      }
     }
+  }
 });

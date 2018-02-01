@@ -25,23 +25,22 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Bar', {
-    "title": "Stacked percent bar",
-    "description": "",
-    "thumbnail": "yhekaq.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "column",
-            "inverted": true,
-            "polar": false
-        },
-        "plotOptions": {
-            "series": {
-                "stacking": "percent"
-            }
-        }
+  title: 'Stacked percent bar',
+  description: '',
+  thumbnail: 'yhekaq.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'column',
+      inverted: true,
+      polar: false
+    },
+    plotOptions: {
+      series: {
+        stacking: 'percent'
+      }
     }
+  }
 });

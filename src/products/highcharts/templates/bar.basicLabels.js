@@ -25,25 +25,24 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Bar', {
-    "title": "Basic with labels",
-    "description": "",
-    "thumbnail": "ovuvul.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "column",
-            "inverted": true,
-            "polar": false
-        },
-        "plotOptions": {
-            "series": {
-                "dataLabels": {
-                    "enabled": true
-                }
-            }
+  title: 'Basic with labels',
+  description: '',
+  thumbnail: 'ovuvul.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'column',
+      inverted: true,
+      polar: false
+    },
+    plotOptions: {
+      series: {
+        dataLabels: {
+          enabled: true
         }
+      }
     }
+  }
 });

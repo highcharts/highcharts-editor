@@ -25,24 +25,23 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Column', {
-    "title": "Columnrange with labels",
-    "description": "",
-    "thumbnail": "ojykiw.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "columnrange",
-            "polar": false
-        },
-        "plotOptions": {
-            "series": {
-                "dataLabels": {
-                    "enabled": true
-                }
-            }
+  title: 'Columnrange with labels',
+  description: '',
+  thumbnail: 'ojykiw.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'columnrange',
+      polar: false
+    },
+    plotOptions: {
+      series: {
+        dataLabels: {
+          enabled: true
         }
+      }
     }
+  }
 });

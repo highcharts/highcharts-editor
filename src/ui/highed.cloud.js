@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,17 +23,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  ******************************************************************************/
 
+// @format
+
 (function() {
+  var modal = highed.OverlayModal(document.body, {
+    showOnInit: false,
+    width: '90%',
+    height: '90%'
+  });
 
-    var modal = highed.OverlayModal(document.body, {
-        showOnInit: false,
-        width: '90%',
-        height: '90%'
-    });
-
-    highed.cloudUI = function () {
-      modal.show();
-
-    };
-
-}());
+  highed.cloudUI = function() {
+    modal.show();
+  };
+})();

@@ -25,21 +25,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Area', {
-    "title": "Negative color",
-    "description": "",
-    "thumbnail": "ydypal.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "area",
-            "polar": false
-        },
-        "series[0]": {
-            "negativeColor": "#0088FF",
-            "color": "#FF0000"
-        }
+  title: 'Negative color',
+  description: '',
+  thumbnail: 'ydypal.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'area',
+      polar: false
+    },
+    'series[0]': {
+      negativeColor: '#0088FF',
+      color: '#FF0000'
     }
+  }
 });

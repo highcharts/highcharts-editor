@@ -25,22 +25,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Scatterandbubble', {
-    "title": "Scatter with line",
-    "description": "",
-    "thumbnail": "ydaqok.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "scatter",
-            "polar": false
-        },
-        "plotOptions": {
-            "series": {
-                "lineWidth": 1
-            }
-        }
+  title: 'Scatter with line',
+  description: '',
+  thumbnail: 'ydaqok.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'scatter',
+      polar: false
+    },
+    plotOptions: {
+      series: {
+        lineWidth: 1
+      }
     }
+  }
 });

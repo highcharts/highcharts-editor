@@ -25,22 +25,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Area', {
-    "title": "Step line",
-    "description": "",
-    "thumbnail": "abutix.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "area",
-            "polar": false
-        },
-        "plotOptions": {
-            "area": {
-                "step": "left"
-            }
-        }
+  title: 'Step line',
+  description: '',
+  thumbnail: 'abutix.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'area',
+      polar: false
+    },
+    plotOptions: {
+      area: {
+        step: 'left'
+      }
     }
+  }
 });

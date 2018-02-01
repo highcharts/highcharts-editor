@@ -25,25 +25,24 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Area', {
-    "title": "Inverted with labels",
-    "description": "",
-    "thumbnail": "acemyq.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "area",
-            "inverted": true,
-            "polar": false
-        },
-        "plotOptions": {
-            "series": {
-                "dataLabels": {
-                    "enabled": true
-                }
-            }
+  title: 'Inverted with labels',
+  description: '',
+  thumbnail: 'acemyq.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'area',
+      inverted: true,
+      polar: false
+    },
+    plotOptions: {
+      series: {
+        dataLabels: {
+          enabled: true
         }
+      }
     }
+  }
 });

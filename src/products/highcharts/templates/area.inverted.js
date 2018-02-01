@@ -25,18 +25,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Area', {
-    "title": "Inverted",
-    "description": "",
-    "thumbnail": "yqenid.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "area",
-            "inverted": true,
-            "polar": false
-        }
+  title: 'Inverted',
+  description: '',
+  thumbnail: 'yqenid.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'area',
+      inverted: true,
+      polar: false
     }
+  }
 });

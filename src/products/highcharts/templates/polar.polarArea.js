@@ -25,17 +25,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Polar', {
-    "title": "Polar area",
-    "description": "",
-    "thumbnail": "oqajux.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "area",
-            "polar": true
-        }
+  title: 'Polar area',
+  description: '',
+  thumbnail: 'oqajux.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'area',
+      polar: true
     }
+  }
 });

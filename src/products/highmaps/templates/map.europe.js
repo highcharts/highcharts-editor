@@ -25,44 +25,43 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Map', {
-    "title": "Basic European Map",
-    "description": [
-        "Basic European map.",
-        "Good starting point for European geographical data."
-    ],
-    "thumbnail": "",
-    "dataValidator": false,
-    "sampleSets": [
-      'eu-gdp'
-    ],
-    "constructor": "Map",
-    "config": {
-        "chart": {
-            "borderWidth": 1
-        },
+  title: 'Basic European Map',
+  description: [
+    'Basic European map.',
+    'Good starting point for European geographical data.'
+  ],
+  thumbnail: '',
+  dataValidator: false,
+  sampleSets: ['eu-gdp'],
+  constructor: 'Map',
+  config: {
+    chart: {
+      borderWidth: 1
+    },
 
-        mapNavigation: {
-            enabled: true
-        },
+    mapNavigation: {
+      enabled: true
+    },
 
-        legend: {
-            layout: 'horizontal',
-            verticalAlign: 'bottom'
-        },
+    legend: {
+      layout: 'horizontal',
+      verticalAlign: 'bottom'
+    },
 
-        colorAxis: {
-            min: 0
-        },
+    colorAxis: {
+      min: 0
+    },
 
-        "series": [{
-            mapData: 'custom/europe',
-            joinBy: 'name',
-            dataLabels: {
-                enabled: false,
-                format: '{point.name}'
-            }
-        }]
-    }
+    series: [
+      {
+        mapData: 'custom/europe',
+        joinBy: 'name',
+        dataLabels: {
+          enabled: false,
+          format: '{point.name}'
+        }
+      }
+    ]
+  }
 });

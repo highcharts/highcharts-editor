@@ -25,20 +25,19 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Column', {
-    "title": "Error bar",
-    "description": "",
-    "thumbnail": "icytes.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "column",
-            "polar": false
-        },
-        "series[1]": {
-            "type": "errorbar"
-        }
+  title: 'Error bar',
+  description: '',
+  thumbnail: 'icytes.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'column',
+      polar: false
+    },
+    'series[1]': {
+      type: 'errorbar'
     }
+  }
 });

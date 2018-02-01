@@ -25,27 +25,26 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Line', {
-    "title": "Step line with labels",
-    "description": "",
-    "thumbnail": "oxenux.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "line",
-            "polar": false
-        },
-        "plotOptions": {
-            "series": {
-                "dataLabels": {
-                    "enabled": true
-                }
-            },
-            "line": {
-                "step": "left"
-            }
+  title: 'Step line with labels',
+  description: '',
+  thumbnail: 'oxenux.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'line',
+      polar: false
+    },
+    plotOptions: {
+      series: {
+        dataLabels: {
+          enabled: true
         }
+      },
+      line: {
+        step: 'left'
+      }
     }
+  }
 });

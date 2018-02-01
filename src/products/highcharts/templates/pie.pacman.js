@@ -26,29 +26,22 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /* Standard Line Series */
 
 highed.templates.add('Pie', {
-    title: 'Pacman Pie',
-    description: [
-      'Pacman Pie.'
-    ],
-    constructor: 'Chart',
-    thumbnail: 'yqoxob.svg',
-    sampleSets: [
-      'pie-pacman'
-    ],
-    validator: 'pie',
-    config: {
-        chart: {
-            type: 'pie'
-        },
-        series: [{
-            startAngle: 45,
-            colors: [
-                '#fafafa',
-                '#ffff8d'
-            ],
-            borderColor: '#000000'
-        }]
-
-    }
+  title: 'Pacman Pie',
+  description: ['Pacman Pie.'],
+  constructor: 'Chart',
+  thumbnail: 'yqoxob.svg',
+  sampleSets: ['pie-pacman'],
+  validator: 'pie',
+  config: {
+    chart: {
+      type: 'pie'
+    },
+    series: [
+      {
+        startAngle: 45,
+        colors: ['#fafafa', '#ffff8d'],
+        borderColor: '#000000'
+      }
+    ]
+  }
 });
-

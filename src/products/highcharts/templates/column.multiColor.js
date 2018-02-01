@@ -25,22 +25,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Column', {
-    "title": "Multi color",
-    "description": "",
-    "thumbnail": "alyqyz.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "column",
-            "polar": false
-        },
-        "plotOptions": {
-            "series": {
-                "colorByPoint": true
-            }
-        }
+  title: 'Multi color',
+  description: '',
+  thumbnail: 'alyqyz.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'column',
+      polar: false
+    },
+    plotOptions: {
+      series: {
+        colorByPoint: true
+      }
     }
+  }
 });

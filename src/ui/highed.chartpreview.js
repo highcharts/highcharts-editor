@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2018, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -265,9 +265,9 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   /** Resize the preview
-     *  Resizes based on the parent size.
-     *  @memberof highed.ChartPreview
-     */
+   *  Resizes based on the parent size.
+   *  @memberof highed.ChartPreview
+   */
   function resize(width, height) {
     gc(function(chart) {
       if (width && height) {
@@ -281,10 +281,10 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   /**
-     * Assign a theme to the chart
-     * theme can either be a straight-up option set, or a theme object with
-     * ID and so on.
-     */
+   * Assign a theme to the chart
+   * theme can either be a straight-up option set, or a theme object with
+   * ID and so on.
+   */
   function assignTheme(theme, skipEmit) {
     if (highed.isStr(theme)) {
       return assignTheme(JSON.parse(theme));
@@ -456,9 +456,9 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   /** Load a template from the meta
-     *  @memberof highed.ChartPreview
-     *  @param template - the template object
-     */
+   *  @memberof highed.ChartPreview
+   *  @param template - the template object
+   */
   function loadTemplate(template) {
     if (!template || !template.config) {
       return highed.log(
@@ -505,10 +505,10 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   /** Load CSV data
-     *  @memberof highed.ChartPreview
-     *  @name data.csv
-     *  @param data {object} - the data to load
-     */
+   *  @memberof highed.ChartPreview
+   *  @name data.csv
+   *  @param data {object} - the data to load
+   */
   function loadCSVData(data) {
     var mergedExisting = false,
       seriesClones = [];
@@ -545,7 +545,8 @@ highed.ChartPreview = function(parent, attributes) {
       if (customizedOptions && customizedOptions.series) {
         (highed.isArr(customizedOptions.series)
           ? customizedOptions.series
-          : [customizedOptions.series]).forEach(function(series) {
+          : [customizedOptions.series]
+        ).forEach(function(series) {
           seriesClones.push(
             highed.merge({}, series, false, {
               data: 1,
@@ -615,9 +616,9 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   /** Load project
-     *  @memberof highed.ChartPreview
-     *  @param projectData - the data to load
-     */
+   *  @memberof highed.ChartPreview
+   *  @param projectData - the data to load
+   */
   function loadProject(projectData) {
     var hasData = false;
 
@@ -801,8 +802,8 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   /** Export project as JSON
-     *  @memberof highed.ChartPreview
-     */
+   *  @memberof highed.ChartPreview
+   */
   function toProject() {
     var loadedCSVRaw = false,
       gsheet = lastLoadedSheet;
@@ -877,21 +878,21 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   /**
-     * Export project as a JSON string
-     */
+   * Export project as a JSON string
+   */
   function toProjectStr(tabs) {
     return stringifyFn(toProject(), tabs);
   }
 
   /** Load JSON data
-     * Functionally, this only instances a new
-     * chart with the supplied data as its options.
-     * It accepts both a string and and object
-     *
-     * @memberof highed.ChartPreview
-     * @name data.json
-     * @param data {object} - the data to load
-     */
+   * Functionally, this only instances a new
+   * chart with the supplied data as its options.
+   * It accepts both a string and and object
+   *
+   * @memberof highed.ChartPreview
+   * @name data.json
+   * @param data {object} - the data to load
+   */
   function loadJSONData(data) {
     lastLoadedCSV = false;
 
@@ -922,13 +923,13 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   /**
-     * Load raw dataset (array of arrays)
-     */
+   * Load raw dataset (array of arrays)
+   */
   //function
 
   /** Set chart options from an object
-     *
-     */
+   *
+   */
   function setChartOptions(options) {
     // console.time('remblanks');
     customizedOptions = highed.transform.remBlanks(
@@ -956,11 +957,11 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   /** Load chart settings
-      * Note that merges the incoming settings with the existing ones.
-      * @memberof highed.ChartPreview
-      * @name data.settings
-      * @param settings {object} - the settings to load
-      */
+   * Note that merges the incoming settings with the existing ones.
+   * @memberof highed.ChartPreview
+   * @name data.settings
+   * @param settings {object} - the settings to load
+   */
   function loadChartSettings(settings) {
     gc(function(chart) {
       Object.keys(settings || {}).forEach(function(key) {
@@ -996,12 +997,12 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   /** Set an attribute
-     *  @memberof highed.ChartPreview
-     *  @name options.set
-     *  @param id {string} - the path of the attribute
-     *  @param value {anything} - the value to set
-     *  @param index {number} - used if the option is an array
-     */
+   *  @memberof highed.ChartPreview
+   *  @name options.set
+   *  @param id {string} - the path of the attribute
+   *  @param value {anything} - the value to set
+   *  @param index {number} - used if the option is an array
+   */
   function set(id, value, index) {
     gc(function(chart) {
       //highed.setAttr(chart.options, id, value, index);
@@ -1031,12 +1032,12 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   /** Get embeddable JSON
-     *  This returns the merged chart, with both customized options
-     *  and options set indirectly through templates.
-     *  @memberof highed.ChartPreview
-     *  @name export.json
-     *  @returns {object} - the chart object
-     */
+   *  This returns the merged chart, with both customized options
+   *  and options set indirectly through templates.
+   *  @memberof highed.ChartPreview
+   *  @name export.json
+   *  @returns {object} - the chart object
+   */
   function getEmbeddableJSON(noCustomCode) {
     var r;
 
@@ -1078,17 +1079,17 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   /**
-     * Convert the chart to a string
-     */
+   * Convert the chart to a string
+   */
   function toString(tabs) {
     return stringifyFn(getEmbeddableJSON(), tabs);
   }
 
   /** Get embeddable SVG
-     *  @memberof highed.ChartPreview
-     *  @name export.svg
-     *  @returns {string} - the result from `Highcharts.Chart.getSVG()`
-     */
+   *  @memberof highed.ChartPreview
+   *  @name export.svg
+   *  @returns {string} - the result from `Highcharts.Chart.getSVG()`
+   */
   function getEmbeddableSVG() {
     return gc(function(chart) {
       return highed.isFn(chart.getSVG) ? chart.getSVG() : '';
@@ -1096,11 +1097,11 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   /** Get embeddable JavaScript
-     *  @memberof highed.ChartPreview
-     *  @name export.js
-     *  @param id {string} - the ID of the node to attach the chart to
-     *  @returns {string} - a string containing JavaScript to reproduce the chart
-     */
+   *  @memberof highed.ChartPreview
+   *  @name export.js
+   *  @param id {string} - the ID of the node to attach the chart to
+   *  @returns {string} - a string containing JavaScript to reproduce the chart
+   */
   function getEmbeddableJavaScript(id) {
     return gc(function(chart) {
       var cdnIncludes = [
@@ -1247,11 +1248,11 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   /** Get embeddable HTML
-     *  @memberof highed.ChartPreview
-     *  @name export.html
-     *  @param placehold {bool} - if true, SVG will also be embedded
-     *  @returns {string} - a string of embeddable HTML
-     */
+   *  @memberof highed.ChartPreview
+   *  @name export.html
+   *  @param placehold {bool} - if true, SVG will also be embedded
+   *  @returns {string} - a string of embeddable HTML
+   */
   function getEmbeddableHTML(placehold) {
     return gc(function(chart) {
       var id = 'highcharts-' + highed.uuid();
@@ -1272,9 +1273,9 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   /**
-     * Expand the chart from its drawer
-     * @memberof highed.ChartPreview
-     */
+   * Expand the chart from its drawer
+   * @memberof highed.ChartPreview
+   */
   function expand() {
     gc(function(chart) {
       if (!expanded) {
@@ -1294,8 +1295,8 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   /** Collapse the chart into its drawer
-     *  @memberof highed.ChartPreview
-     */
+   *  @memberof highed.ChartPreview
+   */
   function collapse() {
     gc(function(chart) {
       if (preExpandSize && expanded) {
@@ -1314,9 +1315,9 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   /** Flush all options and start over
-     *  @memberof highed.ChartPreview
-     *  @name new
-     */
+   *  @memberof highed.ChartPreview
+   *  @name new
+   */
   function newChart() {
     highed.cloud.flush();
 
@@ -1337,10 +1338,10 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   /** Export the chart - calls `Highcharts.Chart.exportChart(..)`
-     *  @memberof highed.ChartPreview
-     *  @name data.export
-     *  @param optons {object} - the export options
-     */
+   *  @memberof highed.ChartPreview
+   *  @name data.export
+   *  @param optons {object} - the export options
+   */
   function exportChart(options) {
     gc(function(chart) {
       chart.exportChart(options, aggregatedOptions);
@@ -1348,18 +1349,18 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   /** Attach to a new DOM parent
-     *  @memberof highed.ChartPreview
-     *  @param newParent {DOMNode} - the node to attach to
-     */
+   *  @memberof highed.ChartPreview
+   *  @param newParent {DOMNode} - the node to attach to
+   */
   function changeParent(newParent) {
     parent = newParent;
     init();
   }
 
   /** Returns the constructor currently in use
-     *  @memberof highed.ChartPreview
-     *  @returns {string}
-     */
+   *  @memberof highed.ChartPreview
+   *  @returns {string}
+   */
   function getConstructor() {
     return constr;
   }

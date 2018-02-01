@@ -25,22 +25,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Bar', {
-    "title": "Logarithmic",
-    "description": "",
-    "thumbnail": "imykus.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "column",
-            "inverted": true,
-            "polar": false
-        },
-        "yAxis": {
-            "type": "logarithmic",
-            "minorTickInterval": "auto"
-        }
+  title: 'Logarithmic',
+  description: '',
+  thumbnail: 'imykus.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'column',
+      inverted: true,
+      polar: false
+    },
+    yAxis: {
+      type: 'logarithmic',
+      minorTickInterval: 'auto'
     }
+  }
 });

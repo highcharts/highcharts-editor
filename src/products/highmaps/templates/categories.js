@@ -24,13 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 highed.templates.addCategory('Map', {
-  description: [
-    'Maps are used to display data in maps.'  
-  ],
-  
-  samples: [
-  ]
+  description: ['Maps are used to display data in maps.'],
+
+  samples: []
 });
-
-
-

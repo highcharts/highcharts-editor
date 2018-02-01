@@ -25,42 +25,38 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Pie', {
-    "title": "Semi circle donut",
-    "description": "",
-    "thumbnail": "iwyfes.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "pie",
-            "polar": false
+  title: 'Semi circle donut',
+  description: '',
+  thumbnail: 'iwyfes.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'pie',
+      polar: false
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: false,
+        dataLabels: {
+          distance: -30,
+          style: {
+            fontWeight: 'bold',
+            color: 'white',
+            textShadow: '0px 1px 2px black'
+          }
         },
-        "plotOptions": {
-            "pie": {
-                "allowPointSelect": false,
-                "dataLabels": {
-                    "distance": -30,
-                    "style": {
-                        "fontWeight": "bold",
-                        "color": "white",
-                        "textShadow": "0px 1px 2px black"
-                    }
-                },
-                "innerSize": "50%",
-                "startAngle": -90,
-                "endAngle": 90,
-                "center": [
-                    "50%",
-                    "75%"
-                ]
-            },
-            "series": {
-                "dataLabels": {
-                    "enabled": true
-                }
-            }
+        innerSize: '50%',
+        startAngle: -90,
+        endAngle: 90,
+        center: ['50%', '75%']
+      },
+      series: {
+        dataLabels: {
+          enabled: true
         }
+      }
     }
+  }
 });

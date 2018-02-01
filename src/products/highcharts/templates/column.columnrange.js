@@ -25,17 +25,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Column', {
-    "title": "Columnrange",
-    "description": "",
-    "thumbnail": "ihilaq.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "columnrange",
-            "polar": false
-        }
+  title: 'Columnrange',
+  description: '',
+  thumbnail: 'ihilaq.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'columnrange',
+      polar: false
     }
+  }
 });

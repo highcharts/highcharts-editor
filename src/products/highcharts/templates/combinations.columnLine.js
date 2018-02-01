@@ -25,19 +25,18 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Combinations', {
-    "title": "Column and line",
-    "description": "",
-    "thumbnail": "ufafag.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "column"
-        },
-        "series[0]": {
-            "type": "line"
-        }
+  title: 'Column and line',
+  description: '',
+  thumbnail: 'ufafag.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'column'
+    },
+    'series[0]': {
+      type: 'line'
     }
+  }
 });

@@ -25,26 +25,25 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Bar', {
-    "title": "Packed columns",
-    "description": "",
-    "thumbnail": "orixis.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "column",
-            "inverted": true,
-            "polar": false
-        },
-        "plotOptions": {
-            "series": {
-                "pointPadding": 0,
-                "groupPadding": 0,
-                "borderWidth": 0,
-                "shadow": false
-            }
-        }
+  title: 'Packed columns',
+  description: '',
+  thumbnail: 'orixis.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'column',
+      inverted: true,
+      polar: false
+    },
+    plotOptions: {
+      series: {
+        pointPadding: 0,
+        groupPadding: 0,
+        borderWidth: 0,
+        shadow: false
+      }
     }
+  }
 });

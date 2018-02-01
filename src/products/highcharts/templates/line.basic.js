@@ -25,16 +25,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Line', {
-    "title": "Line chart",
-    "description": "",
-    "thumbnail": "abywon.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "line"
-        }
+  title: 'Line chart',
+  description: '',
+  thumbnail: 'abywon.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'line'
     }
+  }
 });

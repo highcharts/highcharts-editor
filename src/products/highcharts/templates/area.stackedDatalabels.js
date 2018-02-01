@@ -25,25 +25,24 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Area', {
-    "title": "Stacked with labels",
-    "description": "",
-    "thumbnail": "iluryh.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "area",
-            "polar": false
-        },
-        "plotOptions": {
-            "series": {
-                "stacking": "normal",
-                "dataLabels": {
-                    "enabled": true
-                }
-            }
+  title: 'Stacked with labels',
+  description: '',
+  thumbnail: 'iluryh.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'area',
+      polar: false
+    },
+    plotOptions: {
+      series: {
+        stacking: 'normal',
+        dataLabels: {
+          enabled: true
         }
+      }
     }
+  }
 });

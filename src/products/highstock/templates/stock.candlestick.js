@@ -25,21 +25,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Stock', {
-    "title": "Candlestick",
-    "description": "",
-    "constructor": "StockChart",
-    "thumbnail": "etybef.svg",
-    "dataValidator": false,
-    "sampleSets": ['candlestick'],
-    "config": {
-        "chart": {
-            "type": "candlestick",
-            "polar": false
-        },
-        "rangeSelector": {
-            "enabled": false
-        }
+  title: 'Candlestick',
+  description: '',
+  constructor: 'StockChart',
+  thumbnail: 'etybef.svg',
+  dataValidator: false,
+  sampleSets: ['candlestick'],
+  config: {
+    chart: {
+      type: 'candlestick',
+      polar: false
+    },
+    rangeSelector: {
+      enabled: false
     }
+  }
 });

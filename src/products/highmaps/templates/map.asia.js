@@ -25,43 +25,42 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Map', {
-    "title": "Basic Asian Map",
-    "description": [
-        "Basic map of Asia.",
-        "Good starting point for Asian geographical data."
-    ],
-    "thumbnail": "",
-    "dataValidator": false,
-    "sampleSets": [
-      'asia-gdp'
-    ],
-    "constructor": "Map",
-    "config": {
-        "chart": {
-            "borderWidth": 1
-        },
+  title: 'Basic Asian Map',
+  description: [
+    'Basic map of Asia.',
+    'Good starting point for Asian geographical data.'
+  ],
+  thumbnail: '',
+  dataValidator: false,
+  sampleSets: ['asia-gdp'],
+  constructor: 'Map',
+  config: {
+    chart: {
+      borderWidth: 1
+    },
 
-        mapNavigation: {
-            enabled: true
-        },
+    mapNavigation: {
+      enabled: true
+    },
 
-        legend: {
-            layout: 'horizontal',
-            verticalAlign: 'bottom'
-        },
+    legend: {
+      layout: 'horizontal',
+      verticalAlign: 'bottom'
+    },
 
-        colorAxis: {
-            min: 0
-         },
+    colorAxis: {
+      min: 0
+    },
 
-        "series": [{
-            mapData: 'custom/asia',
-            joinBy: 'name',
-            dataLabels: {
-                enabled: false
-            }
-        }]
-    }
+    series: [
+      {
+        mapData: 'custom/asia',
+        joinBy: 'name',
+        dataLabels: {
+          enabled: false
+        }
+      }
+    ]
+  }
 });

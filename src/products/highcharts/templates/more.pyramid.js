@@ -25,29 +25,28 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('More', {
-    "title": "Pyramid",
-    "description": "",
-    "thumbnail": "obulek.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "pyramid"
+  title: 'Pyramid',
+  description: '',
+  thumbnail: 'obulek.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'pyramid'
+    },
+    plotOptions: {
+      series: {
+        datalabels: {
+          color: '#000000'
         },
-        "plotOptions": {
-            "series": {
-                "datalabels": {
-                    "color": "#000000"
-                },
-                "dataLabels": {
-                    "softConnector": true
-                }
-            }
-        },
-        "series[0]": {
-            "width": "64%"
+        dataLabels: {
+          softConnector: true
         }
+      }
+    },
+    'series[0]': {
+      width: '64%'
     }
+  }
 });

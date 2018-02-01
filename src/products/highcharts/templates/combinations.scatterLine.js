@@ -25,19 +25,18 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 highed.templates.add('Combinations', {
-    "title": "Scatter and line",
-    "description": "",
-    "thumbnail": "etakof.svg",
-    "dataValidator": false,
-    "sampleSets": [],
-    "config": {
-        "chart": {
-            "type": "line"
-        },
-        "series[0]": {
-            "type": "scatter"
-        }
+  title: 'Scatter and line',
+  description: '',
+  thumbnail: 'etakof.svg',
+  dataValidator: false,
+  sampleSets: [],
+  config: {
+    chart: {
+      type: 'line'
+    },
+    'series[0]': {
+      type: 'scatter'
     }
+  }
 });
