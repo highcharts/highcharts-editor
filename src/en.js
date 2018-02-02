@@ -87,7 +87,7 @@ highed.installLanguage({
     'option.tooltip.title.text': 'The main chart title.',
     'option.text.subtitle.text': 'Chart subtitle',
     'option.tooltip.subtitle.text':
-      "The chart's subtitle, normally displayed with smaller fonts below the main title.",
+      'The subtitle, normally displayed with smaller fonts below the main title.',
     'option.text.yAxis.title.text': 'Y axis title',
     'option.tooltip.yAxis.title.text':
       'The Y axis title, normally displayed vertically along the Y axis.',
@@ -96,7 +96,7 @@ highed.installLanguage({
       'An explicit width for the chart. By default (when <code>null</code>) the width is calculated from the offset width of the containing element.',
     'option.text.chart.height': 'Chart height',
     'option.tooltip.chart.height':
-      "An explicit height for the chart. By default (when <code>null</code>) the height is calculated from the offset height of the containing element, or 400 pixels if the containing element's height is 0.",
+      'An explicit height for the chart. By default (when <code>null</code>) the height is calculated from the offset height of the containing element, or 400 pixels if the containing element has a height of 0.',
     'option.text.chart.zoomType': 'Allow zooming',
     'option.tooltip.chart.zoomType':
       'Decides in what dimensions the user can zoom by dragging the mouse. Can be one of <code>x</code>, <code>y</code> or <code>xy</code>.',
@@ -109,7 +109,7 @@ highed.installLanguage({
     'option.tooltip.title.style': 'Styling for the main chart title',
     'option.text.subtitle.style': 'Subtitle style',
     'option.tooltip.subtitle.style':
-      "Styling for the chart's subtitle, normally displayed with smaller fonts below the main title",
+      'Styling for the subtitle, normally displayed with smaller fonts below the main title',
     'option.text.colors': 'Colors',
     'option.tooltip.colors':
       'Default colors for the data series, or for individual points in a pie series or a column series with individual colors. Colors will be picked in succession. If a color is explicitly set for each series in the <em>Data series</em> view, that color will take precedence.',
