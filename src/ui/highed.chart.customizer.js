@@ -343,10 +343,12 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
             }
 
             master.addItems(
-              vals.map(function(t) {
-                return group.controlledBy.optionsTitle
-                  ? t[group.controlledBy.optionsTitle]
-                  : t;
+              vals.map(function(t, i) {
+                return (
+                  (group.controlledBy.optionsTitle
+                    ? t[group.controlledBy.optionsTitle]
+                    : '#' + (i + 1)) || '#' + (i + 1)
+                );
               })
             );
 
