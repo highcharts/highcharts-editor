@@ -774,7 +774,16 @@ highed.ChartPreview = function(parent, attributes) {
 
     updateAggregated();
     init(aggregatedOptions);
+    loadSeries();
     emitChange();
+
+    // The sheet will be loaded async, so we should listen to the load event.
+    gc(function(chart) {
+      var found = Highcharts.addEvent(chart, 'load', function() {
+        loadSeries();
+        found();
+      });
+    });
   }
 
   function getCleanOptions(source) {
