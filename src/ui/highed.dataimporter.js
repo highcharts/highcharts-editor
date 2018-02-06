@@ -116,6 +116,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         'highed-imp-button',
         'Import Pasted Data'
       ),
+      liveDataImportBtn = highed.dom.cr('button', 'highed-imp-button', 'Import Live Data'),
       csvImportFileBtn = highed.dom.cr(
         'button',
         'highed-imp-button',
@@ -416,7 +417,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       // highed.dom.cr('br'),
 
       csvImportBtn,
-      csvImportFileBtn
+      csvImportFileBtn,
+      liveDataImportBtn
     );
 
     highed.dom.ap(
@@ -435,6 +437,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       emitCSVImport();
     });
 
+    highed.dom.on(liveDataImportBtn, 'click', function () {
+      //console.log(liveDataInput);
+      //console.log(liveDataInput.value);
+      events.emit('ImportLiveData', {
+      //  url: liveDataInput.value
+      });
+    });
+    
     highed.dom.on(csvPasteArea, 'keyup', function(e) {
       if (e.keyCode === 13 || ((e.metaKey || e.ctrlKey) && e.key === 'z')) {
         emitCSVImport(csvPasteArea.value);

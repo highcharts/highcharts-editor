@@ -421,6 +421,14 @@ highed.DrawerEditor = function(parent, options) {
     }
   });
 
+  dataTable.on('LoadLiveData', function(settings){
+    chartPreview.data.live(settings);
+  });
+
+  dataTable.on('UpdateLiveData', function(p){
+    chartPreview.data.liveURL(p);
+  });
+
   dataTable.on('LoadGSheet', function(settings) {
     chartPreview.data.gsheet(settings);
   });
@@ -460,6 +468,11 @@ highed.DrawerEditor = function(parent, options) {
       p.endColumn,
       true
     );
+  });
+  
+  chartPreview.on('ProviderLiveData', function(p) {
+    console.log("ProviderLiveData", p);
+    dataTable.loadRowsFromJSON(p);
   });
 
   if (!highed.onPhone()) {
