@@ -786,70 +786,70 @@ highed.ChartPreview = function(parent, attributes) {
       return;
     }
 
-    function load (json) {
+    function load (response) {
         lastLoadedCSV = false;
         lastLoadedSheet = false;
+        var csv;
+        if (options.type === 'json'){
+          
+          var rawCSV,
+          cells = response,
+          cell,
+          cellCount = cells.length,
+          colCount = 0,
+          row = 0,
+          col = 0,
+          headers;
 
-        function q(s) {
-          return '"' + s + '"';
+          csv = [];
+          
+          cells.forEach(function (entry, i) {
+            var cell = entry || false,
+                val = null
+            ;
+
+            col = 0;
+
+            if (!cell) {
+              return;
+            }
+            if (i === 0){
+              headers = Object.keys(entry);
+              headers.forEach(function(header){
+                val = header; //q(header);
+                csv[row] = csv[row] || [];
+                csv[row][col] = val;
+                ++col;
+              });
+              col = 0;
+              row++;
+            }
+            headers.forEach(function(header){
+              csv[row] = csv[row] || [];
+
+              if (Number.isInteger(entry[header] || '')) val = parseInt(entry[header]);
+              else val = entry[header] || '';
+
+              csv[row][col] = val;
+              col++;
+            });
+            row++;
+          });
         }
 
-        var csv = [],
-            rawCSV,
-            cells = json,
-            cell,
-            cellCount = cells.length,
-            colCount = 0,
-            row = 0,
-            col = 0,
-            headers;
+        //loadCSVData(rawCSV)
+        loadLiveDataContent({ options:options, csv: csv }, response);
+        updateAggregated();
+        init(aggregatedOptions);
+        events.emit('ProviderLiveData', { csv: csv, options: options });
+      // emitChange();
+      //loadRows(csv);
 
-        cells.forEach(function (entry, i) {
-          var cell = entry || false,
-              val = null
-          ;
-
-          col = 0;
-
-          if (!cell) {
-            return;
-          }
-          if (i === 0){
-            headers = Object.keys(entry);
-            headers.forEach(function(header){
-              val = header; //q(header);
-              csv[row] = csv[row] || [];
-              csv[row][col] = val;
-              ++col;
-            });
-            col = 0;
-            row++;
-          }
-          headers.forEach(function(header){
-            csv[row] = csv[row] || [];
-
-            if (Number.isInteger(entry[header] || '')) val = parseInt(entry[header]);
-            else val = entry[header] || '';
-
-            csv[row][col] = val;
-            col++;
-          });
-          row++;
-        });
-
-          //loadCSVData(rawCSV)
-          loadJSONURL({ options:options, csv: csv });
-          updateAggregated();
-          init(aggregatedOptions);
-          events.emit('ProviderLiveData', { csv: csv, options:options });
-        // emitChange();
-        //loadRows(csv);
-
-        //events.emit('LoadLiveData', { url: url });
+      //events.emit('LoadLiveData', { url: url });
     }
 
     highed.ajax({
-      dataType: 'json',
+      dataType: options.type,
       url: options.url,
       error: function () {
         highed.snackBar('Error loading data from url: please check the url returns valid json');
@@ -859,7 +859,7 @@ highed.ChartPreview = function(parent, attributes) {
 
   }
 
-  function loadJSONURL(options){
+  function loadLiveDataContent(options, response){
 
     var colCount = 0;
 
@@ -868,20 +868,28 @@ highed.ChartPreview = function(parent, attributes) {
     lastLoadedSheet = false;
 
     lastLoadedLiveData.url = lastLoadedLiveData.url;
+    var rawCSV;
 
-    var rawCSV = options.csv.map(function (row) {
-      var pad = [];
-      for (var i = row.length; i < colCount; i++) {
-        pad.push(null);
-      }
-      return row.concat(pad).join(';');
-    }).join('\n');
-
-    highed.merge(customizedOptions, {
-        data: {
-          csv: rawCSV
+    if (options.options.type === 'json'){
+      rawCSV = options.csv.map(function (row) {
+        var pad = [];
+        for (var i = row.length; i < colCount; i++) {
+          pad.push(null);
         }
+        return row.concat(pad).join(';');
+      }).join('\n');
+    } else {
+      rawCSV = response;
+    }
+
+    lastLoadedLiveData.csv = rawCSV;
+/*
+    highed.merge(customizedOptions, {
+      data: {
+        csv: rawCSV
+      }
     });
+    */
     highed.merge(customizedOptions, {
       data: lastLoadedLiveData
     });
@@ -977,7 +985,9 @@ highed.ChartPreview = function(parent, attributes) {
         chart.options.data.url
       ) {
         livedata = {
-          url: chart.options.data.url
+          url: chart.options.data.url,
+          interval: chart.options.data.interval,
+          type: chart.options.data.type
         };
     }
     
@@ -1631,7 +1641,7 @@ highed.ChartPreview = function(parent, attributes) {
       gsheet: loadGSpreadsheet,
       clear: clearData,
       live: loadLiveData,
-      liveURL: loadJSONURL
+      liveURL: loadLiveDataContent
     },
 
     export: {

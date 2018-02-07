@@ -328,6 +328,12 @@ highed.DataTable = function(parent, attributes) {
       'highed-box-size highed-prettyscroll highed-dtable-gsheet'
     ),
     liveDataInput = highed.dom.cr('input', 'highed-imp-input-stretch'),
+    liveDataIntervalInput = highed.dom.cr('input', 'highed-imp-input-stretch'),
+    liveDataTypeSelect = highed.DropDown(),
+
+    liveDataTypeContainer = highed.dom.cr('div', 'highed-customize-group'),
+    liveDataTypeMasterNode = highed.dom.cr('div', 'highed-customize-master-dropdown'),
+
     gsheetID = highed.dom.cr(
       'input',
       'highed-box-size highed-dtable-gsheet-id'
@@ -372,6 +378,7 @@ highed.DataTable = function(parent, attributes) {
       'highed-ok-button highed-dtable-gsheet-button',
       'Cancel'
     ),
+    detailValue = 0,
     isInGSheetMode = false,
     isInLiveDataMode = false,
     mainInputCb = [],
@@ -443,6 +450,9 @@ highed.DataTable = function(parent, attributes) {
     return highed.dom.nodefault(e);
   });
 
+  highed.dom.style(liveDataIntervalInput, {
+    padding: '8px'
+  });
   ////////////////////////////////////////////////////////////////////////////
 
   // Handle drag 'n drop of files
@@ -1394,7 +1404,7 @@ highed.DataTable = function(parent, attributes) {
     }, 10);
   }
 
-  function loadRowsFromJSON(params){
+  function loadRowsFromLiveData(params){
       //loadRows(params.csv);
 
       isInLiveDataMode = true;
@@ -1407,13 +1417,19 @@ highed.DataTable = function(parent, attributes) {
       highed.dom.style(liveDataFrame, {
         display: 'block'
       });
+      
       liveDataInput.value = params.options.url;
+      liveDataIntervalInput.value = params.options.interval;
+      liveDataTypeSelect.selectById(params.options.type);
+
       events.emit('UpdateLiveData', params);
   }
 
-  function loadJSONFromURL(url) {
+  function loadLiveDataFromURL(url, interval, type) {
     isInLiveDataMode = true;
-    events.emit('LoadLiveData', { url: url });
+    events.emit('LoadLiveData', { url: url,
+                                  interval: interval,
+                                  type: type });
   }
 
   function loadCSV(data, surpressEvents) {
@@ -1507,6 +1523,8 @@ highed.DataTable = function(parent, attributes) {
       clear(true);
 
       liveDataInput.value = '';
+      liveDataIntervalInput.value = '';
+      liveDataTypeSelect.selectByIndex(0);
 
       highed.dom.style(gsheetFrame, {
         display: 'none'
@@ -1621,7 +1639,7 @@ highed.DataTable = function(parent, attributes) {
   importer.on('ImportLiveData', function(data) {
     isInLiveDataMode = true;
     showLiveData();
-    //loadJSONFromURL(data.url);
+    //loadLiveDataFromURL(data.url);
   });
     
   importer.on('ImportChartSettings', function(settings, format) {
@@ -1639,7 +1657,12 @@ highed.DataTable = function(parent, attributes) {
   });
 
   highed.dom.on(liveDataLoadButton, 'click', function() {
-    loadJSONFromURL(liveDataInput.value);
+    console.log(detailValue);
+    //console.log(liveDataTypeSelect);
+    //console.log(liveDataTypeSelect.selectByIndex(detailIndex || 0));
+    //console.log(liveDataTypeSelect.selectByIndex(0));
+    //console.log(liveDataTypeSelect.selectById('csv'));
+    loadLiveDataFromURL(liveDataInput.value, liveDataIntervalInput.value, detailValue || 'json');
   });
 
   highed.dom.on(gsheetLoadButton, 'click', function() {
@@ -1762,6 +1785,23 @@ highed.DataTable = function(parent, attributes) {
     )
   );
 
+  liveDataTypeSelect.addItems([
+    {id: 'json', title: "JSON"},
+    {id: 'csv', title: "CSV"}
+  ]
+  );
+
+  liveDataTypeSelect.on('Change', function(selected) {
+    //detailIndex = selected.index();
+    detailValue = selected.id();
+    //liveDataTypeSelect.selectById(detailValue || 'json');
+  });
+
+  highed.dom.ap(liveDataTypeMasterNode, liveDataTypeSelect.container);
+  highed.dom.style(liveDataTypeMasterNode, {
+    display: 'block'
+  });
+  
   highed.dom.ap(
     liveDataFrame,
     highed.dom.ap(
@@ -1789,6 +1829,21 @@ highed.DataTable = function(parent, attributes) {
           'URL'
         ),
         highed.dom.ap(highed.dom.cr('div'), liveDataInput),
+
+        highed.dom.ap(
+          highed.dom.cr('table', 'highed-stretch'),
+          highed.dom.ap(
+            highed.dom.cr('tr'),
+            highed.dom.cr('td', 'highed-dtable-gsheet-label', 'Chart Refresh Time (Seconds)'),
+            highed.dom.cr('td', 'highed-dtable-gsheet-label', 'Data Type')
+          ),
+          highed.dom.ap(
+            highed.dom.cr('tr'),
+            highed.dom.ap(highed.dom.cr('td', '', ''), liveDataIntervalInput),
+            highed.dom.ap(highed.dom.cr('td', '', ''), liveDataTypeMasterNode)
+          )
+        ),
+
         highed.dom.ap(
           highed.dom.cr('div'),
           liveDataLoadButton,
@@ -1925,7 +1980,7 @@ highed.DataTable = function(parent, attributes) {
     initGSheet: initGSheet,
     on: events.on,
     resize: resize,
-    loadJSONFromURL: loadJSONFromURL,
-    loadRowsFromJSON: loadRowsFromJSON
+    loadLiveDataFromURL: loadLiveDataFromURL,
+    loadRowsFromLiveData: loadRowsFromLiveData
   };
 };
