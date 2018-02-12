@@ -852,7 +852,7 @@ highed.ChartPreview = function(parent, attributes) {
       dataType: options.type,
       url: options.url,
       error: function () {
-        highed.snackBar('Error loading data from url: please check the url returns valid json');
+        highed.snackBar('Error loading data from url: please check the url returns valid ' + options.type);
       },
       success: load
     });
@@ -955,7 +955,8 @@ highed.ChartPreview = function(parent, attributes) {
   function toProject() {
     var loadedCSVRaw = false,
       gsheet = lastLoadedSheet,
-      livedata = lastLoadedLiveData;
+      livedata = lastLoadedLiveData,
+      provider = 'csv';
 
     if (
       chart &&
@@ -977,6 +978,7 @@ highed.ChartPreview = function(parent, attributes) {
         googleSpreadsheetWorksheet:
           chart.options.data.googleSpreadsheetWorksheet
       };
+      provider = 'googlespreadsheet';
     }
     
     if (chart && 
@@ -989,6 +991,7 @@ highed.ChartPreview = function(parent, attributes) {
           interval: chart.options.data.interval,
           type: chart.options.data.type
         };
+        provider = 'livedata';
     }
     
 
@@ -1008,7 +1011,8 @@ highed.ChartPreview = function(parent, attributes) {
           googleSpreadsheet: gsheet,
           liveData: livedata
         }
-      }
+      },
+      provider: provider
       //editorOptions: highed.serializeEditorOptions()
     };
   }
