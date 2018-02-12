@@ -1064,11 +1064,11 @@ highed.DataTable = function(parent, attributes) {
   // PUBLIC FUNCTIONS FOLLOW
 
   /** Sort rows
-      * @memberof highed.DataTable
-      * @param column {number} - the column to sort on
-      * @param direction {string} - the direction: `asc` or `desc`
-      * @param asMonths {boolean} - if true, sort by month
-      */
+   * @memberof highed.DataTable
+   * @param column {number} - the column to sort on
+   * @param direction {string} - the direction: `asc` or `desc`
+   * @param asMonths {boolean} - if true, sort by month
+   */
   function sortRows(column, direction, asMonths) {
     tbody.innerHTML = '';
 
@@ -1104,8 +1104,8 @@ highed.DataTable = function(parent, attributes) {
   }
 
   /** Clear the table
-      * @memberof highed.DataTable
-      */
+   * @memberof highed.DataTable
+   */
   function clear(noWait) {
     rows = rows.filter(function(row) {
       row.destroy();
@@ -1133,8 +1133,8 @@ highed.DataTable = function(parent, attributes) {
   }
 
   /** Add a new row
-      * @memberof highed.DataTable
-      */
+   * @memberof highed.DataTable
+   */
   function addRow(supressChange, skipAdd) {
     var r = Row(skipAdd);
 
@@ -1154,9 +1154,9 @@ highed.DataTable = function(parent, attributes) {
   }
 
   /** Insert a new column
-      * @memberof highed.DataTable
-      * @param {number} where - is the position where to add it
-      */
+   * @memberof highed.DataTable
+   * @param {number} where - is the position where to add it
+   */
   function insertCol(where) {
     if (!where) gcolumns.length;
     if (where < 0) where = 0;
@@ -1169,9 +1169,9 @@ highed.DataTable = function(parent, attributes) {
   }
 
   /** Delete a column
-      * @memberof highed.DataTable
-      * @param {number} which - the index of the column to delete
-      */
+   * @memberof highed.DataTable
+   * @param {number} which - the index of the column to delete
+   */
   function delCol(which) {
     if (which >= 0 && which < gcolumns.length) {
       rows.forEach(function(row) {
@@ -1186,8 +1186,8 @@ highed.DataTable = function(parent, attributes) {
   }
 
   /** Resize the table based on the container size
-     *  @memberof highed.DataTable
-     */
+   *  @memberof highed.DataTable
+   */
   function resize() {
     var ps = highed.dom.size(parent),
       hs = highed.dom.size(topBar),
@@ -1204,9 +1204,9 @@ highed.DataTable = function(parent, attributes) {
   }
 
   /** Returns the header titles as an array
-     *  @memberof highed.DataTable
-     *  @returns {array<string>} - the headers
-     */
+   *  @memberof highed.DataTable
+   *  @returns {array<string>} - the headers
+   */
   function getHeaderTextArr(quoteStrings) {
     return gcolumns.map(function(item) {
       var title = item.headerTitle.innerHTML.length
@@ -1222,11 +1222,11 @@ highed.DataTable = function(parent, attributes) {
   }
 
   /** Get the table contents as an array of arrays
-     *  @memberof highed.DataTable
-     *  @param {boolean} quoteStrings - if true, strings are wrapped in double quotes
-     *  @param {boolean} includeHeaders - if true, the header texts will be included as the first row
-     *  @returns {array<array<string>>}
-     */
+   *  @memberof highed.DataTable
+   *  @param {boolean} quoteStrings - if true, strings are wrapped in double quotes
+   *  @param {boolean} includeHeaders - if true, the header texts will be included as the first row
+   *  @returns {array<array<string>>}
+   */
   function toData(quoteStrings, includeHeaders) {
     var data = [];
 
@@ -1270,8 +1270,8 @@ highed.DataTable = function(parent, attributes) {
   }
 
   /** Get the table contents as series
-     *  @memberof highed.DataTable
-     */
+   *  @memberof highed.DataTable
+   */
   function toDataSeries(ignoreFirst) {
     var res = {
       categories: [],
@@ -1320,9 +1320,9 @@ highed.DataTable = function(parent, attributes) {
   }
 
   /** Get the table contents as standard CSV
-     *  @memberof highed.DataTable
-     *  @param delimiter {string} - the delimiter to use. Defaults to `,`.
-     */
+   *  @memberof highed.DataTable
+   *  @param delimiter {string} - the delimiter to use. Defaults to `,`.
+   */
   function toCSV(delimiter, quoteStrings) {
     delimiter = delimiter || ',';
     return toData(quoteStrings, true)
@@ -1389,9 +1389,7 @@ highed.DataTable = function(parent, attributes) {
     highed.snackBar(highed.L('dgDataImporting'));
     importModal.hide();
 
-    if (!surpressChangeEvents) {
-      surpressChangeEvents = true;
-    }
+    surpressChangeEvents = true;
 
     rawCSV = data.csv;
 
@@ -1402,7 +1400,9 @@ highed.DataTable = function(parent, attributes) {
 
     surpressChangeEvents = false;
 
-    emitChanged(true);
+    if (!surpressEvents) {
+      emitChanged(true);
+    }
   }
 
   function initGSheet(
