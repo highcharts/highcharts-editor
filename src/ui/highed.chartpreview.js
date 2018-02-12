@@ -620,7 +620,12 @@ highed.ChartPreview = function(parent, attributes) {
    *  @param projectData - the data to load
    */
   function loadProject(projectData) {
-    var hasData = false;
+    var hasData = false,
+      htmlEntities = {
+        '&amp;': '&',
+        '&lt;': '<',
+        '&gt;': '>'
+      };
 
     lastLoadedCSV = false;
     lastLoadedSheet = false;
@@ -732,6 +737,14 @@ highed.ChartPreview = function(parent, attributes) {
 
           hasData = true;
         } else if (projectData.settings.dataProvider.csv) {
+          // We need to fix potential html-entities as they will mess up separators
+          Object.keys(htmlEntities).forEach(function(ent) {
+            projectData.settings.dataProvider.csv = projectData.settings.dataProvider.csv.replace(
+              new RegExp(ent, 'g'),
+              htmlEntities[ent]
+            );
+          });
+
           loadCSVData({
             csv: projectData.settings.dataProvider.csv
           });
