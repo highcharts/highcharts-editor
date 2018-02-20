@@ -766,9 +766,9 @@ highed.ChartPreview = function(parent, attributes) {
         updateAggregated();
         init(aggregatedOptions);
         emitChange();
-
-        events.emit('LoadProject', projectData);
       }
+
+      events.emit('LoadProject', projectData);
     }
   }
 
