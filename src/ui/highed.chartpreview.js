@@ -290,6 +290,16 @@ highed.ChartPreview = function(parent, attributes) {
       return assignTheme(JSON.parse(theme));
     }
 
+    themeMeta = {};
+
+    if (highed.isBasic(theme) || highed.isArr(theme)) {
+      return false;
+    }
+
+    if (Object.keys(theme).length === 0) {
+      return false;
+    }
+
     if (theme && theme.options && theme.id) {
       // Assume that this uses the new format
       themeMeta = {
@@ -312,6 +322,8 @@ highed.ChartPreview = function(parent, attributes) {
       init(aggregatedOptions);
       emitChange();
     }
+
+    return true;
   }
 
   function updateAggregated(noCustomCode) {
@@ -665,7 +677,7 @@ highed.ChartPreview = function(parent, attributes) {
         });
       }
 
-      if (projectData.theme) {
+      if (typeof projectData.theme !== 'undefined') {
         assignTheme(projectData.theme, true);
       }
 
