@@ -840,7 +840,8 @@ highed.ChartPreview = function(parent, attributes) {
    */
   function toProject() {
     var loadedCSVRaw = false,
-      gsheet = lastLoadedSheet;
+      gsheet = lastLoadedSheet,
+      themeData = false;
 
     if (
       chart &&
@@ -864,15 +865,19 @@ highed.ChartPreview = function(parent, attributes) {
       };
     }
 
+    if (themeMeta && themeMeta.id && themeOptions) {
+      themeData = {
+        id: themeMeta.id,
+        name: themeMeta.name,
+        options: themOptions || {}
+      };
+    }
+
     return {
       template: templateOptions,
       options: getCleanOptions(customizedOptions),
       customCode: highed.isFn(customCode) ? customCodeStr : '',
-      theme: {
-        id: themeMeta.id,
-        name: themeMeta.name,
-        options: themeOptions
-      },
+      theme: themeData,
       settings: {
         constructor: constr,
         dataProvider: {
