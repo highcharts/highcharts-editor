@@ -300,7 +300,7 @@ highed.ChartPreview = function(parent, attributes) {
       themeOptions = highed.merge({}, theme.options);
     } else {
       themeMeta = {
-        id: 1,
+        id: highed.uuid(),
         name: 'Untitled Theme'
       };
 
