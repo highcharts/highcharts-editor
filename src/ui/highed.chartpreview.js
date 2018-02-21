@@ -869,7 +869,7 @@ highed.ChartPreview = function(parent, attributes) {
       themeData = {
         id: themeMeta.id,
         name: themeMeta.name,
-        options: themOptions || {}
+        options: themeOptions || {}
       };
     }
 
