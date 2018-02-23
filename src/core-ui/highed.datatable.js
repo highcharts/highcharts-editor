@@ -281,7 +281,8 @@ function parseCSV(inData, delimiter) {
 highed.DataTable = function(parent, attributes) {
   var properties = highed.merge(
       {
-        checkable: true
+        checkable: true,
+        importer: {}
       },
       attributes
     ),
@@ -362,7 +363,7 @@ highed.DataTable = function(parent, attributes) {
       minWidth: 600,
       minHeight: 600
     }),
-    importer = highed.DataImporter(importModal.body),
+    importer = highed.DataImporter(importModal.body, properties.importer),
     rows = [],
     gcolumns = [],
     changeTimeout = false,

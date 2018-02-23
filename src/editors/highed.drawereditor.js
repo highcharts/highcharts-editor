@@ -25,6 +25,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // @format
 
+/* global window */
+
 highed.DrawerEditor = function(parent, options) {
   var events = highed.events(),
     // Main properties
@@ -40,6 +42,8 @@ highed.DrawerEditor = function(parent, options) {
           'advanced',
           'export'
         ],
+        importer: {},
+        dataGrid: {},
         toolbarIcons: []
       },
       options
@@ -52,7 +56,9 @@ highed.DrawerEditor = function(parent, options) {
     toolbox = highed.Toolbox(splitter.bottom),
     // Data table
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
-    dataTable = highed.DataTable(dataTableContainer),
+    dataTable = highed.DataTable(dataTableContainer, highed.merge({
+      importer: properties.importer
+    }, properties.dataGrid)),
     // Chart preview
     chartFrame = highed.dom.cr(
       'div',
@@ -65,6 +71,12 @@ highed.DrawerEditor = function(parent, options) {
     chartPreview = highed.ChartPreview(chartContainer, {
       defaultChartOptions: properties.defaultChartOptions
     }),
+    // Res preview bar
+    resPreviewBar = highed.dom.cr('div', 'highed-res-preview'),
+    resQuickSelContainer = highed.dom.cr('div', 'highed-res-quicksel'),
+    resQuickSel = highed.DropDown(resQuickSelContainer),
+    resWidth = highed.dom.cr('input', 'highed-res-number'),
+    resHeight = highed.dom.cr('input', 'highed-res-number'),
     // Exporter
     exporterContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
     exporter = highed.Exporter(exporterContainer),
@@ -357,6 +369,22 @@ highed.DrawerEditor = function(parent, options) {
     chartPreview.resize();
   }
 
+  function sizeChart(w, h) {
+    var s = highed.dom.size(chartFrame);
+
+    highed.dom.style(chartFrame, {
+      paddingLeft: (s.w / 2) - (w / 2) + 'px',
+      paddingTop: (s.h / 2) - (h / 2) + 'px'
+    });
+
+    highed.dom.style(chartContainer, {
+      width: w + 'px',
+      height: h + 'px'
+    });
+
+    chartPreview.resize();
+  }
+
   /**
    * Resize everything
    */
@@ -486,13 +514,46 @@ highed.DrawerEditor = function(parent, options) {
     })
   );
 
-  highed.dom.ap(splitter.bottom, highed.dom.ap(chartFrame, chartContainer));
+  highed.dom.ap(splitter.bottom,
+    highed.dom.ap(
+      chartFrame,
+
+      // highed.dom.ap(resPreviewBar,
+      //   resQuickSelContainer,
+      //   resWidth,
+      //   highed.dom.cr('span', '', 'x'),
+      //   resHeight
+      // ),
+
+      chartContainer
+    )
+  );
+
+  highed.dom.on([resWidth, resHeight], 'change', function () {
+    sizeChart(parseInt(resWidth.value, 10), parseInt(resHeight.value, 10));
+  });
 
   // Create the features
   createFeatures();
   createToolbar();
 
   resize();
+
+  resQuickSel.addItems([
+    {
+      id: 'iphone',
+      title: 'iPhone'
+    },
+    {
+      id: 'gal_s7',
+      title: 'Samsung Galaxy S7'
+    },
+    {
+      id: 'ipadmini',
+      title: 'iPad Mini'
+    }
+
+  ]);
 
   return {
     on: events.on,
