@@ -199,10 +199,13 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
       updateVisibility();
     }
 
+    function resize(w, h) {
+      highed.dom.style(container, { width: w + 'px', height: h + 'px' });
+    }
+
     function focus() {
       var tsize = highed.dom.size(tab),
         tpos = highed.dom.pos(tab);
-
       if (!visible) {
         return;
       }
@@ -251,6 +254,7 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
       body: tbody,
       hide: hide,
       show: show,
+      resize: resize,
       title: properties.title,
       visible: function() {
         return visible;

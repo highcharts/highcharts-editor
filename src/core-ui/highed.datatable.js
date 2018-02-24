@@ -1514,6 +1514,10 @@ highed.DataTable = function(parent, attributes) {
       });
     }
   }
+  
+  function addImportTab(tabOptions){
+    importer.addImportTab(tabOptions);
+  }
 
   function showLiveData() {
     if (
@@ -1977,6 +1981,7 @@ highed.DataTable = function(parent, attributes) {
     toCSV: toCSV,
     toDataSeries: toDataSeries,
     getHeaderTextArr: getHeaderTextArr,
+    addImportTab: addImportTab,
     initGSheet: initGSheet,
     on: events.on,
     resize: resize,

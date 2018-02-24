@@ -383,6 +383,9 @@ highed.DrawerEditor = function(parent, options) {
 
   function destroy() {}
 
+  function addImportTab(tabOptions) {
+    dataTable.addImportTab(tabOptions);
+  }
   //////////////////////////////////////////////////////////////////////////////
   // Event attachments
 
@@ -517,7 +520,7 @@ highed.DrawerEditor = function(parent, options) {
     getEmbeddableJSON: chartPreview.export.json,
     /* Get embeddable SVG */
     getEmbeddableSVG: chartPreview.export.svg,
-
+    addImportTab: addImportTab,
     setEnabledFeatures: setEnabledFeatures,
     addFeature: addFeature,
     chart: chartPreview,

@@ -956,7 +956,7 @@ highed.ChartPreview = function(parent, attributes) {
     var loadedCSVRaw = false,
       gsheet = lastLoadedSheet,
       livedata = lastLoadedLiveData,
-      provider = 'csv';
+      provider = 1;
 
     if (
       chart &&
@@ -978,7 +978,7 @@ highed.ChartPreview = function(parent, attributes) {
         googleSpreadsheetWorksheet:
           chart.options.data.googleSpreadsheetWorksheet
       };
-      provider = 'googlespreadsheet';
+      provider = 2;
     }
     
     if (chart && 
@@ -991,7 +991,7 @@ highed.ChartPreview = function(parent, attributes) {
           interval: chart.options.data.interval,
           type: chart.options.data.type
         };
-        provider = 'livedata';
+        provider = 3;
     }
     
 
