@@ -524,6 +524,9 @@ highed.DrawerEditor = function(parent, options) {
     setEnabledFeatures: setEnabledFeatures,
     addFeature: addFeature,
     chart: chartPreview,
-    toolbar: toolbar
+    toolbar: toolbar,
+    data: {
+      on: dataTable.on
+    }
   };
 };

@@ -1654,10 +1654,12 @@ highed.DataTable = function(parent, attributes) {
 
   highed.dom.on(gsheetCancelButton, 'click', function() {
     hideGSheet();
+    events.emit('CancelDataInput');
   });
 
   highed.dom.on(liveDataCancelButton, 'click', function() {
     hideLiveData();
+    events.emit('CancelDataInput');
   });
 
   highed.dom.on(liveDataLoadButton, 'click', function() {
