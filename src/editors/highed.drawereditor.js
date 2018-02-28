@@ -44,10 +44,13 @@ highed.DrawerEditor = function(parent, options) {
         ],
         importer: {},
         dataGrid: {},
+        customizer: {},
         toolbarIcons: []
       },
       options
     ),
+    lastSetWidth = false,
+    fixedSize = false,
     splitter = highed.VSplitter(parent, {
       topHeight: properties.useHeader ? '60px' : '0px',
       noOverflow: true
@@ -56,13 +59,19 @@ highed.DrawerEditor = function(parent, options) {
     toolbox = highed.Toolbox(splitter.bottom),
     // Data table
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
-    dataTable = highed.DataTable(dataTableContainer, highed.merge({
-      importer: properties.importer
-    }, properties.dataGrid)),
+    dataTable = highed.DataTable(
+      dataTableContainer,
+      highed.merge(
+        {
+          importer: properties.importer
+        },
+        properties.dataGrid
+      )
+    ),
     // Chart preview
     chartFrame = highed.dom.cr(
       'div',
-      'highed-transition highed-box-size highed-chart-frame'
+      'highed-transition highed-box-size highed-chart-frame highed-scrollbar'
     ),
     chartContainer = highed.dom.cr(
       'div',
@@ -85,7 +94,7 @@ highed.DrawerEditor = function(parent, options) {
     templates = highed.ChartTemplateSelector(templatesContainer, chartPreview),
     // Customizer
     customizerContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
-    customizer = highed.ChartCustomizer(customizerContainer, {}, chartPreview),
+    customizer = highed.ChartCustomizer(customizerContainer, properties.customizer, chartPreview),
     // Toolbar buttons
     toolbarButtons = [
       {
@@ -272,7 +281,33 @@ highed.DrawerEditor = function(parent, options) {
         }
       }
     },
-    toolboxEntries;
+    toolboxEntries,
+    resolutions = {
+      'Stretch to fit': [false, false],
+      'iPhone X': [375, 812],
+      'iPhone 8 Plus': [414, 736],
+      'iPhone 8': [375, 667],
+      'iPhone 7 Plus': [414, 736],
+      'iPhone 7': [375, 667],
+      'iPhone 6 Plus': [414, 736],
+      'iPhone 6/6S': [375, 667],
+      'iPhone 5': [320, 568],
+      'iPad Pro': [1024, 1366],
+      iPad: [768, 1024],
+      'Nexus 6P': [411, 731],
+      'Nexus 5X': [411, 731],
+      'Google Pixel': [411, 731],
+      'Google Pixel XL': [411, 731],
+      'Google Pixel 2': [411, 731],
+      'Google Pixel 2 XL': [411, 731],
+      'Samsung Galaxy Note 5': [480, 853],
+      'LG G5': [480, 853],
+      'One Plus 3': [480, 853],
+      'Samsung Galaxy S8': [360, 740],
+      'Samsung Galaxy S8+': [360, 740],
+      'Samsung Galaxy S7': [360, 640],
+      'Samsung Galaxy S7 Edge': [360, 640]
+    };
 
   if (!properties.useHeader) {
     highed.dom.style(splitter.top.parentNode, {
@@ -355,11 +390,23 @@ highed.DrawerEditor = function(parent, options) {
   function resizeChart(newWidth) {
     var psize = highed.dom.size(splitter.bottom);
 
+    lastSetWidth = newWidth;
+
+
     highed.dom.style(chartFrame, {
       left: newWidth + 'px',
       width: psize.w - newWidth + 'px',
       height: psize.h + 'px'
     });
+
+
+    if (fixedSize) {
+      // Update size after the animation is done
+      setTimeout(function () {
+        sizeChart(fixedSize.w, fixedSize.h);
+      }, 400);
+      return;
+    }
 
     highed.dom.style(chartContainer, {
       width: psize.w - newWidth - 100 + 'px',
@@ -370,19 +417,34 @@ highed.DrawerEditor = function(parent, options) {
   }
 
   function sizeChart(w, h) {
-    var s = highed.dom.size(chartFrame);
+    if ((!w || w.length === 0) && (!h || h.length === 0)) {
+      fixedSize = false;
+      resHeight.value = '';
+      resWidth.value = '';
+      resizeChart(lastSetWidth);
+    } else {
+      var s = highed.dom.size(chartFrame);
 
-    highed.dom.style(chartFrame, {
-      paddingLeft: (s.w / 2) - (w / 2) + 'px',
-      paddingTop: (s.h / 2) - (h / 2) + 'px'
-    });
+      // highed.dom.style(chartFrame, {
+      //   paddingLeft: (s.w / 2) - (w / 2) + 'px',
+      //   paddingTop: (s.h / 2) - (h / 2) + 'px'
+      // });
 
-    highed.dom.style(chartContainer, {
-      width: w + 'px',
-      height: h + 'px'
-    });
+      fixedSize = {
+        w: w,
+        h: h
+      };
 
-    chartPreview.resize();
+      w = w || (s.w - 100);
+      h = h || (s.h - 100);
+
+      highed.dom.style(chartContainer, {
+        width: w + 'px',
+        height: h + 'px'
+      });
+
+      chartPreview.resize();
+    }
   }
 
   /**
@@ -514,22 +576,28 @@ highed.DrawerEditor = function(parent, options) {
     })
   );
 
-  highed.dom.ap(splitter.bottom,
+  highed.dom.ap(
+    splitter.bottom,
     highed.dom.ap(
       chartFrame,
 
-      // highed.dom.ap(resPreviewBar,
-      //   resQuickSelContainer,
-      //   resWidth,
-      //   highed.dom.cr('span', '', 'x'),
-      //   resHeight
-      // ),
+      highed.dom.ap(
+        resPreviewBar,
+        highed.dom.cr('div', 'highed-res-headline', 'Size Preview:'),
+        resQuickSelContainer,
+        highed.dom.ap(
+          highed.dom.cr('div', 'highed-res-quicksel'),
+          resWidth,
+          highed.dom.cr('span', '', 'x'),
+          resHeight
+        )
+      ),
 
       chartContainer
     )
   );
 
-  highed.dom.on([resWidth, resHeight], 'change', function () {
+  highed.dom.on([resWidth, resHeight], 'change', function() {
     sizeChart(parseInt(resWidth.value, 10), parseInt(resHeight.value, 10));
   });
 
@@ -539,21 +607,63 @@ highed.DrawerEditor = function(parent, options) {
 
   resize();
 
-  resQuickSel.addItems([
-    {
-      id: 'iphone',
-      title: 'iPhone'
-    },
-    {
-      id: 'gal_s7',
-      title: 'Samsung Galaxy S7'
-    },
-    {
-      id: 'ipadmini',
-      title: 'iPad Mini'
-    }
+  function setToActualSize() {
+    resWidth.disabled = resHeight.disabled = 'disabled';
+    chartPreview.getHighchartsInstance(function(chart) {
+      var w, h;
 
-  ]);
+      w = chart.options.chart.width;
+      h = chart.options.chart.height || 400;
+
+      resWidth.value = w;
+      resHeight.value = h;
+
+      sizeChart(w, h);
+    });
+
+    highed.dom.style(chartFrame, {
+      'overflow-x': 'auto'
+    });
+
+  }
+
+  resQuickSel.addItem({
+    id: 'actual',
+    title: 'Actual Size',
+    select: function() {
+      setToActualSize();
+    }
+  });
+
+  chartPreview.on('AttrChange', function (option) {
+    if (option.id === 'chart.height' || option.id === 'chart.width') {
+      resQuickSel.selectByIndex(0);
+      // setToActualSize();
+    }
+  });
+
+  Object.keys(resolutions).forEach(function(devName) {
+    resQuickSel.addItem({
+      id: devName,
+      title: devName,
+      select: function() {
+        resWidth.disabled = resHeight.disabled = undefined;
+
+        resWidth.value = resolutions[devName][0];
+        resHeight.value = resolutions[devName][1];
+
+        sizeChart(resolutions[devName][0], resolutions[devName][1]);
+
+
+        highed.dom.style(chartFrame, {
+          'overflow-x': ''
+        });
+
+      }
+    });
+  });
+
+  resQuickSel.selectByIndex(0);
 
   return {
     on: events.on,

@@ -1,3 +1,16 @@
+# Current
+  * Fixed issue causing propagation of importer properties to fail
+  * Added auto code formatting on commit
+  * Fixed issue with `assignTheme` and null values
+  * Load project now emits the proper `LoadProject` event when there's data in the project
+  * Fixed issue with HTML entities in CSV columns
+  * Now loading series properly when using Google Spreadsheets
+  * Rows can now be added before/after the selected row in the data grid
+  * Fixed issue causing custom code to revert to default value when containing invalid code
+  * Fixed issue with script loading
+  * Added controls to preview the chart with different sizes
+  * Misc minor bug fixes and enhancements
+
 # 0.2.0-rc1
   * Added `complete` target to build script which bakes in all modules and advanced mode into one source file
   * Re-implemented advanced view: now has a smaller footprint, and bugs regarding arrays are fixed

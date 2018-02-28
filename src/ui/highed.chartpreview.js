@@ -970,6 +970,46 @@ highed.ChartPreview = function(parent, attributes) {
    *
    */
   function setChartOptions(options) {
+    function emitWidthChange() {
+      events.emit('AttrChange', {
+        id: 'chart.width'
+      });
+    }
+
+    function emitHeightChange() {
+      events.emit('AttrChange', {
+        id: 'chart.height'
+      });
+    }
+
+    var doEmitHeightChange = false,
+      doEmitWidthChange = false;
+
+    // Temp. hack to deal with actual sizing
+    if (options && options.chart) {
+      if (typeof options.chart.width !== 'undefined') {
+        if (
+          !customizedOptions.chart ||
+          typeof customizedOptions.chart === 'undefined'
+        ) {
+          doEmitWidthChange = true;
+        } else if (customizedOptions.chart.width !== options.chart.width) {
+          doEmitWidthChange = true;
+        }
+      }
+
+      if (typeof options.chart.height !== 'undefined') {
+        if (
+          !customizedOptions.chart ||
+          typeof customizedOptions.chart === 'undefined'
+        ) {
+          doEmitHeightChange = true;
+        } else if (customizedOptions.chart.height !== options.chart.height) {
+          doEmitHeightChange = true;
+        }
+      }
+    }
+
     // console.time('remblanks');
     customizedOptions = highed.transform.remBlanks(
       highed.merge({}, options, false)
@@ -993,6 +1033,14 @@ highed.ChartPreview = function(parent, attributes) {
     updateAggregated();
     init(aggregatedOptions, false, true);
     emitChange();
+
+    if (doEmitHeightChange) {
+      emitHeightChange();
+    }
+
+    if (doEmitWidthChange) {
+      emitWidthChange();
+    }
   }
 
   /** Load chart settings
@@ -1068,6 +1116,11 @@ highed.ChartPreview = function(parent, attributes) {
     updateAggregated();
     init(aggregatedOptions, false, true);
     emitChange();
+
+    events.emit('AttrChange', {
+      id: id.replace(/\-\-/g, '.').replace(/\-/g, '.'),
+      value: value
+    });
   }
 
   /** Get embeddable JSON
@@ -1475,6 +1528,8 @@ highed.ChartPreview = function(parent, attributes) {
     collapse: collapse,
     new: newChart,
     changeParent: changeParent,
+
+    getHighchartsInstance: gc,
 
     loadTemplate: loadTemplate,
     loadSeries: loadSeriesData,
