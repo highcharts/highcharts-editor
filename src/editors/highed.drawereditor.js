@@ -179,7 +179,8 @@ highed.DrawerEditor = function(parent, options) {
           Expanded: function(width, height) {
             dataTable.resize(width, height);
           }
-        }
+        },
+        showLiveStatus: true
       },
       templates: {
         icon: 'fa-bar-chart',
@@ -292,7 +293,8 @@ highed.DrawerEditor = function(parent, options) {
         width: option.width,
         iconOnly: option.iconOnly,
         icon: option.icon,
-        help: option.help
+        help: option.help,
+        showLiveStatus: option.showLiveStatus
       });
 
       if (highed.isFn(option.create)) {
@@ -526,7 +528,9 @@ highed.DrawerEditor = function(parent, options) {
     chart: chartPreview,
     toolbar: toolbar,
     data: {
-      on: dataTable.on
+      on: dataTable.on,
+      showLiveStatus: toolbox.showLiveStatus,
+      hideLiveStatus: toolbox.hideLiveStatus
     }
   };
 };

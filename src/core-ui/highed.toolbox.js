@@ -44,6 +44,11 @@ highed.Toolbox = function(parent, attr) {
         animate: true
       },
       attr
+    ),
+    liveDiv = highed.dom.cr(
+      'div',
+      'highed-toolbox-live',
+      'LIVE'
     );
 
   function addEntry(def) {
@@ -216,7 +221,7 @@ highed.Toolbox = function(parent, attr) {
     highed.dom.on(helpIcon, 'click', showHelp);
     highed.dom.on(icon, 'click', toggle);
     highed.dom.ap(bar, icon);
-    highed.dom.ap(contents, highed.dom.ap(title, helpIcon), userContents);
+    highed.dom.ap(contents, (props.showLiveStatus ? highed.dom.ap(title, liveDiv, helpIcon) :  highed.dom.ap(title, helpIcon)), userContents);
 
     function reflowEverything() {
       clearTimeout(resizeTimeout);
@@ -254,12 +259,26 @@ highed.Toolbox = function(parent, attr) {
     body.innerHTML = '';
   }
 
+  function showLiveStatus() {
+    highed.dom.style(liveDiv, {
+      display: 'inline'
+    });
+  }
+
+  function hideLiveStatus() {
+    highed.dom.style(liveDiv, {
+      display: 'none'
+    });
+  }
+
   highed.dom.ap(parent, highed.dom.ap(container, bar, body));
 
   return {
     clear: clear,
     on: events.on,
     addEntry: addEntry,
-    width: width
+    width: width,
+    showLiveStatus: showLiveStatus,
+    hideLiveStatus: hideLiveStatus
   };
 };
