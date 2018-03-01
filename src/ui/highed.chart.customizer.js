@@ -48,6 +48,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
       {
         noAdvanced: false,
         noCustomCode: false,
+        noPreview: false,
         availableSettings: []
       },
       attributes
@@ -105,6 +106,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
   if (highed.onPhone()) {
     properties.noAdvanced = true;
     properties.noCustomCode = true;
+    properties.noPreview = true;
   }
 
   body.className += ' highed-customizer-body';
@@ -447,6 +449,10 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
   }
 
   function buildTree() {
+    if (properties.noAdvanced) {
+      return;
+    }
+
     highed.dom.style(advancedLoader, {
       opacity: 1
     });
@@ -469,10 +475,6 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
           opacity: 0
         });
       }, 10);
-    }
-
-    if (properties.noCustomCode) {
-      customCodeTab.hide();
     }
   }
 
@@ -599,6 +601,10 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
 
     advBody.innerHTML = '';
 
+    if (properties.noAdvanced) {
+      return;
+    }
+
     item.children.forEach(function(entry) {
       if (!entry.meta.leafNode) {
         return;
@@ -693,6 +699,18 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
 
   build();
   initCustomCode();
+
+  if (properties.noCustomCode) {
+    customCodeTab.hide();
+  }
+
+  if (properties.noAdvanced) {
+    advancedTab.hide();
+  }
+
+  if (properties.noPreview) {
+    outputPreviewTab.hide();
+  }
 
   return {
     /* Listen to an event */
