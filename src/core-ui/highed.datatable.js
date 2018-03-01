@@ -1735,6 +1735,7 @@ highed.DataTable = function(parent, attributes) {
   ////////////////////////////////////////////////////////////////////////////
 
   return {
+    toolbar: toolbar,
     sortRows: sortRows,
     clear: clear,
     addRow: addRow,

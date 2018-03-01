@@ -679,6 +679,7 @@ highed.DrawerEditor = function(parent, options) {
     setEnabledFeatures: setEnabledFeatures,
     addFeature: addFeature,
     chart: chartPreview,
+    dataTable: dataTable,
     toolbar: toolbar
   };
 };
