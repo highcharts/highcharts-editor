@@ -787,6 +787,15 @@ highed.ChartPreview = function(parent, attributes) {
     }
 
     function load (response) {
+        if (typeof response === 'string' && options.type === 'json'){
+          try {
+            response = JSON.parse(response);
+          } catch (e) {
+            highed.snackBar('invalid json: ' + e);
+            return;
+          }
+        }
+
         lastLoadedCSV = false;
         lastLoadedSheet = false;
         var csv;
@@ -847,11 +856,10 @@ highed.ChartPreview = function(parent, attributes) {
 
       //events.emit('LoadLiveData', { url: url });
     }
-
     highed.ajax({
-      dataType: options.type,
+      dataType: (options.type === 'json' ? 'text' : options.type),
       url: options.url,
-      error: function () {
+      error: function (e) {
         highed.snackBar('Error loading data from url: please check the url returns valid ' + options.type);
       },
       success: load
