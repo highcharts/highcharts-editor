@@ -1,13 +1,14 @@
 # Current
   * Fixed issue causing propagation of importer properties to fail
-  * Added auto code formatting on commit
-  * Fixed issue with `assignTheme` and null values
-  * Load project now emits the proper `LoadProject` event when there's data in the project
+  * Fixed issue with hiding the advanced/custom code/preview tabs in customizer
   * Fixed issue with HTML entities in CSV columns
-  * Now loading series properly when using Google Spreadsheets
-  * Rows can now be added before/after the selected row in the data grid
   * Fixed issue causing custom code to revert to default value when containing invalid code
   * Fixed issue with script loading
+  * Fixed issue with `assignTheme` and null values
+  * Added auto code formatting on commit
+  * Load project now emits the proper `LoadProject` event when there's data in the project
+  * Now loading series properly when using Google Spreadsheets
+  * Rows can now be added before/after the selected row in the data grid
   * Added controls to preview the chart with different sizes
   * Misc minor bug fixes and enhancements
 
