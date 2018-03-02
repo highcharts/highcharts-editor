@@ -832,6 +832,8 @@ highed.DataTable = function(parent, attributes) {
   function init() {
     clear();
 
+    surpressChangeEvents = true;
+
     for (var i = 0; i < 1; i++) {
       var r = Row();
     }
@@ -842,6 +844,8 @@ highed.DataTable = function(parent, attributes) {
 
     highed.dom.ap(colgroup, highed.dom.cr('col'));
     resize();
+
+    surpressChangeEvents = false;
   }
 
   function updateColumns() {
@@ -1400,13 +1404,14 @@ highed.DataTable = function(parent, attributes) {
 
     if (data && data.csv) {
       rows = parseCSV(data.csv);
-      loadRows(rows, function () {
-        surpressChangeEvents = false;
-      });
+      loadRows(rows, function() {});
     } else {
-      surpressChangeEvents = false;
+      // surpressChangeEvents = false;
+      // if (!surpressEvents) {
+      //   emitChanged(true);
+      // }
     }
-
+    surpressChangeEvents = false;
     if (!surpressEvents) {
       emitChanged(true);
     }

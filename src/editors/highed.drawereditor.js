@@ -49,11 +49,20 @@ highed.DrawerEditor = function(parent, options) {
       },
       options
     ),
-
-    errorBar = highed.dom.cr('div', 'highed-errorbar highed-box-size highed-transition'),
-    errorBarHeadline = highed.dom.cr('div', 'highed-errorbar-headline', 'This is an error!'),
-    errorBarBody = highed.dom.cr('div', 'highed-errorbar-body highed-scrollbar', 'Oh noes! something is very wrong!'),
-
+    errorBar = highed.dom.cr(
+      'div',
+      'highed-errorbar highed-box-size highed-transition'
+    ),
+    errorBarHeadline = highed.dom.cr(
+      'div',
+      'highed-errorbar-headline',
+      'This is an error!'
+    ),
+    errorBarBody = highed.dom.cr(
+      'div',
+      'highed-errorbar-body highed-scrollbar',
+      'Oh noes! something is very wrong!'
+    ),
     lastSetWidth = false,
     fixedSize = false,
     splitter = highed.VSplitter(parent, {
@@ -99,7 +108,11 @@ highed.DrawerEditor = function(parent, options) {
     templates = highed.ChartTemplateSelector(templatesContainer, chartPreview),
     // Customizer
     customizerContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
-    customizer = highed.ChartCustomizer(customizerContainer, properties.customizer, chartPreview),
+    customizer = highed.ChartCustomizer(
+      customizerContainer,
+      properties.customizer,
+      chartPreview
+    ),
     // Toolbar buttons
     toolbarButtons = [
       {
@@ -397,17 +410,15 @@ highed.DrawerEditor = function(parent, options) {
 
     lastSetWidth = newWidth;
 
-
     highed.dom.style(chartFrame, {
       left: newWidth + 'px',
       width: psize.w - newWidth + 'px',
       height: psize.h + 'px'
     });
 
-
     if (fixedSize) {
       // Update size after the animation is done
-      setTimeout(function () {
+      setTimeout(function() {
         sizeChart(fixedSize.w, fixedSize.h);
       }, 400);
       return;
@@ -440,8 +451,8 @@ highed.DrawerEditor = function(parent, options) {
         h: h
       };
 
-      w = w || (s.w - 100);
-      h = h || (s.h - 100);
+      w = w || s.w - 100;
+      h = h || s.h - 100;
 
       highed.dom.style(chartContainer, {
         width: w + 'px',
@@ -574,29 +585,29 @@ highed.DrawerEditor = function(parent, options) {
     );
   });
 
-  chartPreview.on('Error', function (e) {
+  chartPreview.on('Error', function(e) {
     if (e.indexOf('Highcharts error') >= 0) {
       var i1 = e.indexOf('#'),
-          i = e.substr(i1).indexOf(':'),
-          id = parseInt(e.substr(i1 + 1, i), 10),
-          item = highed.highchartsErrors[id],
-          urlStart = e.indexOf('www.'),
-          url = ''
-      ;
+        i = e.substr(i1).indexOf(':'),
+        id = parseInt(e.substr(i1 + 1, i), 10),
+        item = highed.highchartsErrors[id],
+        urlStart = e.indexOf('www.'),
+        url = '';
 
       if (urlStart >= 0) {
-        url = '<div class="highed-errorbar-more"><a href="https://' +
-              e.substr(urlStart) +
-              '" target="_blank">Click here for more information</a></div>';
+        url =
+          '<div class="highed-errorbar-more"><a href="https://' +
+          e.substr(urlStart) +
+          '" target="_blank">Click here for more information</a></div>';
       }
 
       return showError(
-        (item.title || 'There\'s a problem with your chart') + '!',
+        (item.title || "There's a problem with your chart") + '!',
         (item.text || e) + url
       );
     }
 
-    showError('There\'s a problem with your chart!', e);
+    showError("There's a problem with your chart!", e);
   });
 
   chartPreview.on('ChartRecreated', hideError);
@@ -643,10 +654,7 @@ highed.DrawerEditor = function(parent, options) {
       ),
 
       chartContainer,
-      highed.dom.ap(errorBar,
-        errorBarHeadline,
-        errorBarBody
-      )
+      highed.dom.ap(errorBar, errorBarHeadline, errorBarBody)
     )
   );
 
@@ -665,8 +673,12 @@ highed.DrawerEditor = function(parent, options) {
     chartPreview.getHighchartsInstance(function(chart) {
       var w, h;
 
-      w = chart.options.chart.width;
-      h = chart.options.chart.height || 400;
+      if (!chart || !chart.options || !chart.options.chart) {
+        h = 400;
+      } else {
+        w = chart.options.chart.width;
+        h = chart.options.chart.height || 400;
+      }
 
       resWidth.value = w;
       resHeight.value = h;
@@ -677,7 +689,6 @@ highed.DrawerEditor = function(parent, options) {
     highed.dom.style(chartFrame, {
       'overflow-x': 'auto'
     });
-
   }
 
   resQuickSel.addItem({
@@ -688,7 +699,7 @@ highed.DrawerEditor = function(parent, options) {
     }
   });
 
-  chartPreview.on('AttrChange', function (option) {
+  chartPreview.on('AttrChange', function(option) {
     if (option.id === 'chart.height' || option.id === 'chart.width') {
       resQuickSel.selectByIndex(0);
       // setToActualSize();
@@ -707,11 +718,9 @@ highed.DrawerEditor = function(parent, options) {
 
         sizeChart(resolutions[devName][0], resolutions[devName][1]);
 
-
         highed.dom.style(chartFrame, {
           'overflow-x': ''
         });
-
       }
     });
   });

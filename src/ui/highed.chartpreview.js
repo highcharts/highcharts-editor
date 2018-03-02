@@ -199,6 +199,8 @@ highed.ChartPreview = function(parent, attributes) {
       return;
     }
 
+    // (pnode || parent).innerHTML = 'Chart not loaded yet';
+
     // options.chart = options.chart || {};
     // options.chart.width = '100%';
     // options.chart.height = '100%';
@@ -262,6 +264,8 @@ highed.ChartPreview = function(parent, attributes) {
         console.error('exception trace:', ex.stack);
       }
 
+      (pnode || parent).innerHTML = '';
+
       chart = false;
     }
 
@@ -278,8 +282,13 @@ highed.ChartPreview = function(parent, attributes) {
         // chart.setSize(width, height);
       }
 
-      if (chart.reflow) {
-        chart.reflow();
+      if (chart && chart.reflow) {
+        // && chart.options) {
+        try {
+          chart.reflow();
+        } catch (e) {
+          // No idea why this keeps failing
+        }
       }
     });
   }
@@ -525,7 +534,7 @@ highed.ChartPreview = function(parent, attributes) {
    *  @name data.csv
    *  @param data {object} - the data to load
    */
-  function loadCSVData(data) {
+  function loadCSVData(data, emitLoadSignal) {
     var mergedExisting = false,
       seriesClones = [];
 
@@ -610,8 +619,9 @@ highed.ChartPreview = function(parent, attributes) {
         emitChange();
       }
 
-      events.emit('LoadProjectData', data.csv);
-
+      if (emitLoadSignal) {
+        events.emit('LoadProjectData', data.csv);
+      }
     });
 
     // setTimeout(function () {
@@ -764,9 +774,12 @@ highed.ChartPreview = function(parent, attributes) {
             );
           });
 
-          loadCSVData({
-            csv: projectData.settings.dataProvider.csv
-          });
+          loadCSVData(
+            {
+              csv: projectData.settings.dataProvider.csv
+            },
+            true
+          );
 
           // events.emit('LoadProjectData', projectData.settings.dataProvider.csv);
 
