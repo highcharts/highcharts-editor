@@ -1333,7 +1333,7 @@ highed.DataTable = function(parent, attributes) {
       .join('\n');
   }
 
-  function loadRows(rows) {
+  function loadRows(rows, done) {
     clear();
 
     if (rows.length > 1) {
@@ -1369,6 +1369,10 @@ highed.DataTable = function(parent, attributes) {
       highed.dom.style(loadIndicator, {
         opacity: 0
       });
+
+      if (highed.isFn(done)) {
+        done();
+      }
     }, 10);
   }
 
@@ -1396,10 +1400,12 @@ highed.DataTable = function(parent, attributes) {
 
     if (data && data.csv) {
       rows = parseCSV(data.csv);
-      loadRows(rows);
+      loadRows(rows, function () {
+        surpressChangeEvents = false;
+      });
+    } else {
+      surpressChangeEvents = false;
     }
-
-    surpressChangeEvents = false;
 
     if (!surpressEvents) {
       emitChanged(true);

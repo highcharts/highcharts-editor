@@ -609,6 +609,9 @@ highed.ChartPreview = function(parent, attributes) {
         loadSeries();
         emitChange();
       }
+
+      events.emit('LoadProjectData', data.csv);
+
     });
 
     // setTimeout(function () {
@@ -765,7 +768,7 @@ highed.ChartPreview = function(parent, attributes) {
             csv: projectData.settings.dataProvider.csv
           });
 
-          events.emit('LoadProjectData', projectData.settings.dataProvider.csv);
+          // events.emit('LoadProjectData', projectData.settings.dataProvider.csv);
 
           hasData = true;
         }
