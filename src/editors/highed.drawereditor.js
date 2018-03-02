@@ -49,6 +49,11 @@ highed.DrawerEditor = function(parent, options) {
       },
       options
     ),
+
+    errorBar = highed.dom.cr('div', 'highed-errorbar highed-box-size highed-transition'),
+    errorBarHeadline = highed.dom.cr('div', 'highed-errorbar-headline', 'This is an error!'),
+    errorBarBody = highed.dom.cr('div', 'highed-errorbar-body highed-scrollbar', 'Oh noes! something is very wrong!'),
+
     lastSetWidth = false,
     fixedSize = false,
     splitter = highed.VSplitter(parent, {
@@ -473,6 +478,23 @@ highed.DrawerEditor = function(parent, options) {
 
   function destroy() {}
 
+  function showError(title, message) {
+    highed.dom.style(errorBar, {
+      opacity: 1,
+      'pointer-events': 'auto'
+    });
+
+    errorBarHeadline.innerHTML = title;
+    errorBarBody.innerHTML = message;
+  }
+
+  function hideError() {
+    highed.dom.style(errorBar, {
+      opacity: 0,
+      'pointer-events': 'none'
+    });
+  }
+
   //////////////////////////////////////////////////////////////////////////////
   // Event attachments
 
@@ -552,6 +574,33 @@ highed.DrawerEditor = function(parent, options) {
     );
   });
 
+  chartPreview.on('Error', function (e) {
+    if (e.indexOf('Highcharts error') >= 0) {
+      var i1 = e.indexOf('#'),
+          i = e.substr(i1).indexOf(':'),
+          id = parseInt(e.substr(i1 + 1, i), 10),
+          item = highed.highchartsErrors[id],
+          urlStart = e.indexOf('www.'),
+          url = ''
+      ;
+
+      if (urlStart >= 0) {
+        url = '<div class="highed-errorbar-more"><a href="https://' +
+              e.substr(urlStart) +
+              '" target="_blank">Click here for more information</a></div>';
+      }
+
+      return showError(
+        (item.title || 'There\'s a problem with your chart') + '!',
+        (item.text || e) + url
+      );
+    }
+
+    showError('There\'s a problem with your chart!', e);
+  });
+
+  chartPreview.on('ChartRecreated', hideError);
+
   if (!highed.onPhone()) {
     highed.dom.on(window, 'resize', resize);
   }
@@ -593,7 +642,11 @@ highed.DrawerEditor = function(parent, options) {
         )
       ),
 
-      chartContainer
+      chartContainer,
+      highed.dom.ap(errorBar,
+        errorBarHeadline,
+        errorBarBody
+      )
     )
   );
 

@@ -233,6 +233,8 @@ highed.ChartPreview = function(parent, attributes) {
         events.emit('RequestResize');
         // highed.dom.ap(pnode || parent, toggleButton);
       });
+
+      events.emit('ChartRecreated');
     } catch (ex) {
       var e = ex.toString();
 
@@ -242,19 +244,21 @@ highed.ChartPreview = function(parent, attributes) {
 
       i = e.indexOf('www.');
 
+      events.emit('Error', e);
+
       if (i > 0) {
-        highed.snackBar(
-          'There is a problem with your chart!',
-          e.substr(i),
-          function() {
-            window.open('http://' + e.substr(i));
-          }
-        );
+        // highed.snackBar(
+        //   'There is a problem with your chart!',
+        //   e.substr(i),
+        //   function() {
+        //     window.open('http://' + e.substr(i));
+        //   }
+        // );
       } else {
         //Our assumption was wrong. The world is ending.
-        highed.snackBar(e);
+        // highed.snackBar(e);
 
-        console.error(e);
+        // console.error(e);
         console.error('exception trace:', ex.stack);
       }
 
