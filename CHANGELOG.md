@@ -5,6 +5,7 @@
   * Fixed issue causing custom code to revert to default value when containing invalid code
   * Fixed issue with script loading
   * Fixed issue with `assignTheme` and null values
+  * Fixed issue with setting global options to `0`/`false`/etc.
   * Added auto code formatting on commit
   * Load project now emits the proper `LoadProject` event when there's data in the project
   * Now loading series properly when using Google Spreadsheets
