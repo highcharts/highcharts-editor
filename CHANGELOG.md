@@ -6,6 +6,7 @@
   * Fixed issue with script loading
   * Fixed issue with `assignTheme` and null values
   * Fixed issue with setting global options to `0`/`false`/etc.
+  * Chart title (if set) is now used when saving projects
   * Added auto code formatting on commit
   * Load project now emits the proper `LoadProject` event when there's data in the project
   * Now loading series properly when using Google Spreadsheets
@@ -48,7 +49,7 @@
   *There's also changes to the way Highstock/Highcharts is loaded*
   If you need support for Highstock, Highcharts, and/or Highmaps, this now has to be explicitly included using the modules `highcharts-editor.module.highstock|highcharts.js`.
   Alternatively, build with the `complete` target which bundles all available modules as well as advanced mode into one source script.
-  
+
 # 0.1.3-beta, January 24th 2017
   * Fixed an issue with font sizes in font widget
   * Fixed an issue with embedding charts in Wordpress
@@ -57,7 +58,6 @@
   * Fixed an issue with localization options in exported (html) charts
 
 # 0.1.2-beta, January 3rd 2017
-
   * Fixed general IE issues
   * Fixed IE issues for exported charts
   * Fixed issue with save/load project

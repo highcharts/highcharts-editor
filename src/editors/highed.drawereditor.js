@@ -128,7 +128,15 @@ highed.DrawerEditor = function(parent, options) {
         title: highed.L('saveProject'),
         css: 'fa-floppy-o',
         click: function() {
-          highed.download('chart.json', chartPreview.toProjectStr());
+          var name;
+
+          if (chartPreview.options.full.title) {
+            name = chartPreview.options.full.title.text;
+          }
+
+          name = (name || 'chart').replace(/\s/g, '_');
+
+          highed.download(name + '.json', chartPreview.toProjectStr());
         }
       },
       {
