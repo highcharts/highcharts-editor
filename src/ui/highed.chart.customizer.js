@@ -271,7 +271,8 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
             doInclude = true;
           }
         });
-      } else if (properties.availableSettings[group.id]) {
+      } else if (properties.availableSettings[group.id] ||
+        properties.availableSettings[group.pid]) {
         doInclude = true;
       }
 
@@ -402,7 +403,8 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
       }
 
       if (Object.keys(properties.availableSettings || {}).length > 0) {
-        if (!properties.availableSettings[group.id]) {
+        if (!properties.availableSettings[group.id]
+            && !properties.availableSettings[group.pid]) {
           return;
         }
       }

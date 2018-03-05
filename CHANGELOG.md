@@ -12,6 +12,7 @@
   * Rows can now be added before/after the selected row in the data grid
   * Added controls to preview the chart with different sizes
   * Improved error feedback on misconfigurations
+  * Customizer `availableSettings` option now support dot-separated options (e.g. `series.title`)
   * Misc minor bug fixes and enhancements
 
 # 0.2.0-rc1
