@@ -579,7 +579,7 @@ var highed = {
     isOnPhone = false,
     options = {
       codeMirrorTheme: 'neo',
-      helpURL: 'http://www.highcharts.com/products/highcharts-editor',
+      helpURL: 'https://www.highcharts.com/products/highcharts-editor',
       defaultLanguage: 'en',
       includeCDNInExport: true,
       stickyChartProperties: {},
