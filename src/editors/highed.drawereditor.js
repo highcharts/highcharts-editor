@@ -552,6 +552,13 @@ highed.DrawerEditor = function(parent, options) {
     }
   });
 
+  chartPreview.on('LoadProject', function () {
+    setTimeout(function () {
+    resQuickSel.selectByIndex(0);
+    setToActualSize();
+    }, 2000);
+  });
+
   dataTable.on('LoadGSheet', function(settings) {
     chartPreview.data.gsheet(settings);
   });
