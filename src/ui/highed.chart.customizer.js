@@ -28,8 +28,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /** UI For customizing a chart
  *  @todo there be dragons here.
  *  @example
- *  var chart = highed.ChartCustomizer(document.body);
- *  console.log(chart.export.html());
+ *  var chart = highed.ChartCustomizer(document.body, {}, chartPreview);
  *
  *  @constructor
  *
@@ -40,8 +39,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  @param parent {domnode} - the node to attach the editor to
  *  @param attributes {object} - the attributes
- *    > noAdvanced {bool} - set to false to force disable the advance view
+ *    > noAdvanced {bool} - set to true to force disable the advance view
+ *    > noCustomCode {bool} - set to true to disable custom code view
+ *    > noPreview {bool} - set to true to disable option preview view
  *    > availableSettings {string|array} - whitelist of exposed settings
+ *  @param chartPreview {ChartPreview} - the chart preview instance
  */
 highed.ChartCustomizer = function(parent, attributes, chartPreview) {
   var properties = highed.merge(
