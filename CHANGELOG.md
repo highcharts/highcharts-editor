@@ -1,4 +1,4 @@
-# Current
+# 2.0.1-rc2
   * Fixed issue causing propagation of importer properties to fail
   * Fixed issue with hiding the advanced/custom code/preview tabs in customizer
   * Fixed issue with HTML entities in CSV columns
@@ -13,6 +13,7 @@
   * Added controls to preview the chart with different sizes
   * Improved error feedback on misconfigurations
   * Customizer `availableSettings` option now support dot-separated options (e.g. `series.title`)
+  * Added `autoIncludeDependencies` option
   * Misc minor bug fixes and enhancements
 
 # 0.2.0-rc1

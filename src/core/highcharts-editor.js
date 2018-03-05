@@ -586,7 +586,8 @@ var highed = {
       includeHighcharts: true,
       cloudAPIURL: 'https://cloud-api.highcharts.com/',
       helpImgPath: 'help/',
-      thumbnailURL: 'https://cloud.highcharts.com/static/thumbnails/'
+      thumbnailURL: 'https://cloud.highcharts.com/static/thumbnails/',
+      autoIncludeDependencies: true
     },
     cdnScripts = [
       'https://code.highcharts.com/stock/highstock.js',
@@ -770,6 +771,10 @@ var highed = {
 
   //Inject dependencies
   highed.ready(function() {
+    if (!options.autoIncludeDependencies) {
+      return false;
+    }
+
     highed.include(
       'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css'
     );
