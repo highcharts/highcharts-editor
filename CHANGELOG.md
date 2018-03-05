@@ -14,6 +14,7 @@
   * Improved error feedback on misconfigurations
   * Customizer `availableSettings` option now support dot-separated options (e.g. `series.title`)
   * Added `autoIncludeDependencies` option
+  * Updated Advanced Meta to use Highcharts 6.0.7
   * Misc minor bug fixes and enhancements
 
 # 0.2.0-rc1
