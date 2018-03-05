@@ -551,6 +551,9 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
     }, 350);
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+  // P U B L I C  F U N S
+
   /** Highlight a field in the customizer
    *  @memberof highed.ChartCustomizer
    *  @param id {string} - is the id of the field to highlight
