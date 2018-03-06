@@ -1,4 +1,4 @@
-# 2.0.1-rc2
+# 0.2.1-rc2
   * Fixed issue causing propagation of importer properties to fail
   * Fixed issue with hiding the advanced/custom code/preview tabs in customizer
   * Fixed issue with HTML entities in CSV columns
