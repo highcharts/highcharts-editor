@@ -476,7 +476,6 @@ highed.DrawerEditor = function(parent, options) {
   });
   
   chartPreview.on('ProviderLiveData', function(p) {
-    console.log("ProviderLiveData", p);
     dataTable.loadRowsFromLiveData(p);
   });
 

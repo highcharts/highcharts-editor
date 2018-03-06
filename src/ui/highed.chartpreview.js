@@ -275,7 +275,7 @@ highed.ChartPreview = function(parent, attributes) {
         // chart.setSize(width, height);
       }
 
-      if (chart.reflow) {
+      if (chart && chart.reflow) {
         chart.reflow();
       }
     });
@@ -513,7 +513,6 @@ highed.ChartPreview = function(parent, attributes) {
   function loadCSVData(data) {
     var mergedExisting = false,
       seriesClones = [];
-
     if (!data || !data.csv) {
       if (highed.isStr(data)) {
         data = {
@@ -736,16 +735,10 @@ highed.ChartPreview = function(parent, attributes) {
 
           hasData = true;
         } else if (projectData.settings.dataProvider.liveData){
-          console.log("Im a live data chart....");
 
           var provider = projectData.settings.dataProvider;
           var live = provider.liveData;
-/*
-          if (customizedOptions.data) {
-            console.log('Do I get in here?', live.url);
-            live.url = provider.url || customizedOptions.data.url;
-          }
-*/
+          
           loadLiveData(provider.liveData);
         } else if (projectData.settings.dataProvider.csv) {
           loadCSVData({
@@ -787,74 +780,68 @@ highed.ChartPreview = function(parent, attributes) {
     }
 
     function load (response) {
-        if (typeof response === 'string' && options.type === 'json'){
-          try {
-            response = JSON.parse(response);
-          } catch (e) {
-            highed.snackBar('invalid json: ' + e);
+      if (typeof response === 'string' && options.type === 'json'){
+        try {
+          response = JSON.parse(response);
+        } catch (e) {
+          highed.snackBar('invalid json: ' + e);
+          return;
+        }
+      }
+
+      lastLoadedCSV = false;
+      lastLoadedSheet = false;
+      var csv;
+      if (options.type === 'json'){
+        
+        var rawCSV,
+        cells = response,
+        cell,
+        cellCount = cells.length,
+        colCount = 0,
+        row = 0,
+        col = 0,
+        headers;
+
+        csv = [];
+        
+        cells.forEach(function (entry, i) {
+          var cell = entry || false,
+              val = null;
+
+          col = 0;
+
+          if (!cell) {
             return;
           }
-        }
-
-        lastLoadedCSV = false;
-        lastLoadedSheet = false;
-        var csv;
-        if (options.type === 'json'){
-          
-          var rawCSV,
-          cells = response,
-          cell,
-          cellCount = cells.length,
-          colCount = 0,
-          row = 0,
-          col = 0,
-          headers;
-
-          csv = [];
-          
-          cells.forEach(function (entry, i) {
-            var cell = entry || false,
-                val = null
-            ;
-
-            col = 0;
-
-            if (!cell) {
-              return;
-            }
-            if (i === 0){
-              headers = Object.keys(entry);
-              headers.forEach(function(header){
-                val = header; //q(header);
-                csv[row] = csv[row] || [];
-                csv[row][col] = val;
-                ++col;
-              });
-              col = 0;
-              row++;
-            }
+          if (i === 0){
+            headers = Object.keys(entry);
             headers.forEach(function(header){
+              val = header; //q(header);
               csv[row] = csv[row] || [];
-
-              if (Number.isInteger(entry[header] || '')) val = parseInt(entry[header]);
-              else val = entry[header] || '';
-
               csv[row][col] = val;
-              col++;
+              ++col;
             });
+            col = 0;
             row++;
+          }
+          headers.forEach(function(header){
+            csv[row] = csv[row] || [];
+
+            if (Number.isInteger(entry[header] || '')) val = parseInt(entry[header]);
+            else val = entry[header] || '';
+
+            csv[row][col] = val;
+            col++;
           });
-        }
+          row++;
+        });
+      }
 
-        //loadCSVData(rawCSV)
-        loadLiveDataContent({ options:options, csv: csv }, response);
-        updateAggregated();
-        init(aggregatedOptions);
-        events.emit('ProviderLiveData', { csv: csv, options: options });
-      // emitChange();
-      //loadRows(csv);
-
-      //events.emit('LoadLiveData', { url: url });
+      loadLiveDataContent({ options:options, csv: csv }, response);
+      updateAggregated();
+      init(aggregatedOptions);
+      events.emit('ProviderLiveData', { csv: csv, options: options });        
     }
     highed.ajax({
       dataType: (options.type === 'json' ? 'text' : options.type),
@@ -867,7 +854,7 @@ highed.ChartPreview = function(parent, attributes) {
 
   }
 
-  function loadLiveDataContent(options, response){
+  function loadLiveDataContent(options, response) {
 
     var colCount = 0;
 
@@ -879,31 +866,21 @@ highed.ChartPreview = function(parent, attributes) {
     var rawCSV;
 
     if (options.options.type === 'json'){
-      rawCSV = options.csv.map(function (row) {
-        var pad = [];
-        for (var i = row.length; i < colCount; i++) {
-          pad.push(null);
-        }
-        return row.concat(pad).join(';');
-      }).join('\n');
+      lastLoadedLiveData.rows = options.csv;
     } else {
       rawCSV = response;
+      const oldDataArr = highed.parseCSV(rawCSV);
+      lastLoadedLiveData.rows = highed.removeNulls(oldDataArr);
     }
-
-    lastLoadedLiveData.csv = rawCSV;
-/*
-    highed.merge(customizedOptions, {
-      data: {
-        csv: rawCSV
-      }
-    });
-    */
     highed.merge(customizedOptions, {
       data: lastLoadedLiveData
     });
 
     updateAggregated();
     init(aggregatedOptions);
+
+    loadSeries();
+    emitChange();
   }
 
   function loadGSpreadsheet(options) {

@@ -122,157 +122,6 @@ Highcharts.wrap(Highcharts.Data.prototype, 'parseGoogleSpreadsheet', function(
   });
 });
 
-function parseCSV(inData, delimiter) {
-  var isStr = highed.isStr,
-    isArr = highed.isArray,
-    isNum = highed.isNum,
-    csv = inData || '',
-    result = [],
-    options = {
-      delimiter: delimiter
-    },
-    potentialDelimiters = {
-      ',': true,
-      ';': true,
-      '\t': true
-    },
-    delimiterCounts = {
-      ',': 0,
-      ';': 0,
-      '\t': 0
-    };
-  //The only thing CSV formats have in common..
-  rows = (csv || '').replace(/\r\n/g, '\n').split('\n');
-
-  // If there's no delimiter, look at the first few rows to guess it.
-
-  if (!options.delimiter) {
-    rows.some(function(row, i) {
-      if (i > 10) return true;
-
-      var inStr = false,
-        c,
-        cn,
-        cl,
-        token = '';
-
-      for (var j = 0; j < row.length; j++) {
-        c = row[j];
-        cn = row[j + 1];
-        cl = row[j - 1];
-
-        if (c === '"') {
-          if (inStr) {
-            if (cl !== '"' && cn !== '"') {
-              // The next non-blank character is likely the delimiter.
-
-              while (cn === ' ') {
-                cn = row[++j];
-              }
-
-              if (potentialDelimiters[cn]) {
-                delimiterCounts[cn]++;
-                return true;
-              }
-
-              inStr = false;
-            }
-          } else {
-            inStr = true;
-          }
-        } else if (potentialDelimiters[c]) {
-          if (!isNaN(Date.parse(token))) {
-            // Yup, likely the right delimiter
-            token = '';
-            delimiterCounts[c]++;
-          } else if (!isNum(token) && token.length) {
-            token = '';
-            delimiterCounts[c]++;
-          }
-        } else {
-          token += c;
-        }
-      }
-    });
-
-    options.delimiter = ';';
-
-    if (
-      delimiterCounts[','] > delimiterCounts[';'] &&
-      delimiterCounts[','] > delimiterCounts['\t']
-    ) {
-      options.delimiter = ',';
-    }
-
-    if (
-      delimiterCounts['\t'] >= delimiterCounts[';'] &&
-      delimiterCounts['\t'] >= delimiterCounts[',']
-    ) {
-      options.delimiter = '\t';
-    }
-  }
-
-  rows.forEach(function(row, rowNumber) {
-    var cols = [],
-      inStr = false,
-      i = 0,
-      j,
-      token = '',
-      guessedDel,
-      c,
-      cp,
-      cn;
-
-    function pushToken() {
-      if (!token.length) {
-        token = null;
-        // return;
-      }
-
-      if (isNum(token)) {
-        token = parseFloat(token);
-      }
-
-      cols.push(token);
-      token = '';
-    }
-
-    for (i = 0; i < row.length; i++) {
-      c = row[i];
-      cn = row[i + 1];
-      cp = row[i - 1];
-
-      if (c === '"') {
-        if (inStr) {
-          pushToken();
-        } else {
-          inStr = false;
-        }
-
-        //Everything is allowed inside quotes
-      } else if (inStr) {
-        token += c;
-        //Check if we're done reading a token
-      } else if (c === options.delimiter) {
-        pushToken();
-
-        //Append to token
-      } else {
-        token += c;
-      }
-
-      // Push if this was the last character
-      if (i === row.length - 1) {
-        pushToken();
-      }
-    }
-
-    result.push(cols);
-  });
-
-  return result;
-}
-
 /** Data table
  *  @constructor
  *  @param {domnode} parent - the node to attach to
@@ -555,7 +404,7 @@ highed.DataTable = function(parent, attributes) {
     mainInputCb.push(
       highed.dom.on(mainInput, 'keyup', function(e) {
         // Super hack to allow pasting CSV into cells
-        var ps = parseCSV(mainInput.value);
+        var ps = highed.parseCSV(mainInput.value);
         if (ps.length > 1) {
           if (
             confirm(
@@ -1266,7 +1115,7 @@ highed.DataTable = function(parent, attributes) {
     if (includeHeaders) {
       data.push(getHeaderTextArr(quoteStrings));
     }
-
+    
     rows.forEach(function(row) {
       var rarr = [],
         hasData = false;
@@ -1298,7 +1147,7 @@ highed.DataTable = function(parent, attributes) {
         data.push(rarr);
       }
     });
-
+    
     return data;
   }
 
@@ -1462,7 +1311,7 @@ highed.DataTable = function(parent, attributes) {
     rawCSV = data.csv;
 
     if (data && data.csv) {
-      rows = parseCSV(data.csv);
+      rows = highed.parseCSV(data.csv);
       loadRows(rows);
     }
 
@@ -1663,11 +1512,6 @@ highed.DataTable = function(parent, attributes) {
   });
 
   highed.dom.on(liveDataLoadButton, 'click', function() {
-    console.log(detailValue);
-    //console.log(liveDataTypeSelect);
-    //console.log(liveDataTypeSelect.selectByIndex(detailIndex || 0));
-    //console.log(liveDataTypeSelect.selectByIndex(0));
-    //console.log(liveDataTypeSelect.selectById('csv'));
     loadLiveDataFromURL(liveDataInput.value, liveDataIntervalInput.value, detailValue || 'json');
   });
 
