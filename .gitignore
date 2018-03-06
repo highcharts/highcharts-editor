@@ -9,4 +9,5 @@ output
 docs/
 demos/
 generated_src
+*.log
 
