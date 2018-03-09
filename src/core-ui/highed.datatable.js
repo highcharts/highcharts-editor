@@ -303,6 +303,15 @@ highed.DataTable = function(parent, attributes) {
     topLeftPanel = highed.dom.cr('div', 'highed-dtable-top-left-panel'),
     checkAll = highed.dom.cr('input'),
     mainInput = highed.dom.cr('textarea', 'highed-dtable-input'),
+    weirdDataModal = highed.OverlayModal(false, {
+      // zIndex: 20000,
+      showOnInit: false,
+      width: 300,
+      height: 350
+    }),
+    weirdDataContainer = highed.dom.cr('div', 'highed-dtable-weird-data highed-box-size'),
+    weirdDataIgnore = highed.dom.cr('button', 'highed-ok-button', 'No, this looks right'),
+    weirdDataFix = highed.dom.cr('button', 'highed-ok-button', 'Yeah, this looks wrong'),
     loadIndicator = highed.dom.cr(
       'div',
       'highed-dtable-load-indicator',
@@ -470,6 +479,19 @@ highed.DataTable = function(parent, attributes) {
 
   ////////////////////////////////////////////////////////////////////////////
 
+
+  function showDataImportError() {
+    highed.dom.style(weirdDataContainer, {
+      display: 'block'
+    });
+  }
+
+  function hideDataImportError() {
+    highed.dom.style(weirdDataContainer, {
+      display: 'none'
+    });
+  }
+
   function emitChanged(noDelay) {
     window.clearTimeout(changeTimeout);
 
@@ -530,6 +552,7 @@ highed.DataTable = function(parent, attributes) {
               'You are about to load CSV data. This will overwrite your current data. Continue?'
             )
           ) {
+            rawCSV = mainInput.value;
             return loadRows(ps);
           }
           return;
@@ -1338,10 +1361,31 @@ highed.DataTable = function(parent, attributes) {
   }
 
   function loadRows(rows, done) {
+    var sanityCounts = {};
+
     clear();
 
     if (rows.length > 1) {
       hideDropzone();
+    }
+
+    // Do a sanity check on rows.
+    // If the column count varries between rows, there may be something wrong.
+    // In those cases we should pop up a dialog allow to specify what the
+    // delimiter should be manually.
+
+    rows.some(function(row, i) {
+      var count = row.length;
+      sanityCounts[count] =
+        typeof sanityCounts[count] === 'undefined' ? 0 : sanityCounts[count];
+      ++sanityCounts[count];
+      return i > 20;
+    });
+
+    if (Object.keys(sanityCounts).length > 4) {
+      // Four or more rows have varrying amounts of columns.
+      // Something is wrong.
+      showDataImportError();
     }
 
     highed.dom.style(loadIndicator, {
@@ -1367,7 +1411,7 @@ highed.DataTable = function(parent, attributes) {
 
       highed.dom.ap(colgroup, highed.dom.cr('col'));
 
-      highed.snackBar(highed.L('dgDataImported'));
+      // highed.snackBar(highed.L('dgDataImported'));
       resize();
 
       highed.dom.style(loadIndicator, {
@@ -1395,7 +1439,7 @@ highed.DataTable = function(parent, attributes) {
       });
     }
 
-    highed.snackBar(highed.L('dgDataImporting'));
+    // highed.snackBar(highed.L('dgDataImporting'));
     importModal.hide();
 
     surpressChangeEvents = true;
@@ -1403,7 +1447,7 @@ highed.DataTable = function(parent, attributes) {
     rawCSV = data.csv;
 
     if (data && data.csv) {
-      rows = parseCSV(data.csv);
+      rows = parseCSV(data.csv, data.delimiter);
       loadRows(rows, function() {});
     } else {
       // surpressChangeEvents = false;
@@ -1529,6 +1573,76 @@ highed.DataTable = function(parent, attributes) {
     });
   });
 
+  highed.dom.on(weirdDataIgnore, 'click', hideDataImportError);
+
+  highed.dom.on(weirdDataFix, 'click', function () {
+    // Pop open a modal with the option of supplying a delimiter manually.
+    var dropdownParent = highed.dom.cr('div'),
+        dropdown = highed.DropDown(dropdownParent),
+        okBtn = highed.dom.cr('button', 'highed-ok-button', 'Rerun Import'),
+        nevermindBtn = highed.dom.cr('button', 'highed-ok-button', 'Nevermind'),
+        selectedDelimiter = undefined
+      ;
+
+    weirdDataModal.body.innerHTML = '';
+    weirdDataModal.show();
+
+    dropdown.addItems([
+      {
+        title: 'Tab',
+        id: 'tab',
+        select: function () {
+          selectedDelimiter = '\t';
+        }
+      },
+      {
+        title: 'Comma',
+        id: 'comma',
+        select: function () {
+          selectedDelimiter = ',';
+        }
+      },
+      {
+        title: 'Semicolon',
+        id: 'semicolon',
+        select: function () {
+          selectedDelimiter = ';';
+        }
+      }
+    ]);
+
+    dropdown.selectByIndex(0);
+
+    highed.dom.ap(weirdDataModal.body,
+      highed.dom.cr('h3', '', 'Data Import Fixer'),
+      highed.dom.cr('div', 'highed-dtable-weird-data-body', [
+        'We could not properly determine how your columns are separated.',
+        '<br/><br/>',
+        'Usually this is caused by commas as thousand separators,',
+        'or something similar. Please choose which delimiter you want to use,',
+        'and click the Rerun button.<br/><br/>'
+      ].join(' ')),
+      dropdownParent,
+      highed.dom.style(okBtn, {
+        marginRight: '5px'
+      }),
+      nevermindBtn
+    );
+
+    highed.dom.on(nevermindBtn, 'click', weirdDataModal.hide);
+
+    highed.dom.on(okBtn, 'click', function () {
+      console.log(selectedDelimiter);
+      weirdDataModal.hide();
+      hideDataImportError();
+
+      loadCSV({
+        csv: rawCSV,
+        delimiter: selectedDelimiter
+      });
+    });
+  });
+
   ////////////////////////////////////////////////////////////////////////////
 
   dropZone.innerHTML =
@@ -1547,7 +1661,7 @@ highed.DataTable = function(parent, attributes) {
   highed.dom.ap(
     parent,
     gsheetFrame,
-    highed.dom.ap(
+       highed.dom.ap(
       container,
       highed.dom.ap(
         frame,
@@ -1559,6 +1673,18 @@ highed.DataTable = function(parent, attributes) {
       topBar,
       highed.dom.ap(topLeftPanel, checkAll)
     ),
+ highed.dom.ap(
+      weirdDataContainer,
+      highed.dom.cr('div', 'highed-dtable-weird-data-body', [
+        'Uh-oh! It looks like our data importer may have had some issues',
+        'processing your data.',
+        'Usually this means that we were unable to deduce how the columns',
+        'are separated.'
+      ].join(' ')),
+      weirdDataIgnore,
+      weirdDataFix
+    ),
+
     loadIndicator
   );
 
