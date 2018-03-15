@@ -1,5 +1,7 @@
 # Latest (Master)
   * Added data import failure detection for when it's not possible to deduce the CSV delimiter
+  * Added special case for handling the dataLabels type
+  * Added support for the `series-label` module
 
 # 0.2.1-rc2
   * Fixed issue causing propagation of importer properties to fail
