@@ -229,6 +229,9 @@ function parseCSV(inData, delimiter) {
         // return;
       }
 
+
+      token = (token || '').replace(/\,/g, '');
+
       if (isNum(token)) {
         token = parseFloat(token);
       }
@@ -309,9 +312,20 @@ highed.DataTable = function(parent, attributes) {
       width: 300,
       height: 350
     }),
-    weirdDataContainer = highed.dom.cr('div', 'highed-dtable-weird-data highed-box-size'),
-    weirdDataIgnore = highed.dom.cr('button', 'highed-ok-button', 'No, this looks right'),
-    weirdDataFix = highed.dom.cr('button', 'highed-ok-button', 'Yeah, this looks wrong'),
+    weirdDataContainer = highed.dom.cr(
+      'div',
+      'highed-dtable-weird-data highed-box-size highed-errobar-body'
+    ),
+    weirdDataIgnore = highed.dom.cr(
+      'button',
+      'highed-ok-button',
+      'No, this looks right'
+    ),
+    weirdDataFix = highed.dom.cr(
+      'button',
+      'highed-ok-button',
+      'Yeah, this looks wrong'
+    ),
     loadIndicator = highed.dom.cr(
       'div',
       'highed-dtable-load-indicator',
@@ -478,7 +492,6 @@ highed.DataTable = function(parent, attributes) {
   };
 
   ////////////////////////////////////////////////////////////////////////////
-
 
   function showDataImportError() {
     highed.dom.style(weirdDataContainer, {
@@ -1575,14 +1588,13 @@ highed.DataTable = function(parent, attributes) {
 
   highed.dom.on(weirdDataIgnore, 'click', hideDataImportError);
 
-  highed.dom.on(weirdDataFix, 'click', function () {
+  highed.dom.on(weirdDataFix, 'click', function() {
     // Pop open a modal with the option of supplying a delimiter manually.
     var dropdownParent = highed.dom.cr('div'),
-        dropdown = highed.DropDown(dropdownParent),
-        okBtn = highed.dom.cr('button', 'highed-ok-button', 'Rerun Import'),
-        nevermindBtn = highed.dom.cr('button', 'highed-ok-button', 'Nevermind'),
-        selectedDelimiter = undefined
-      ;
+      dropdown = highed.DropDown(dropdownParent),
+      okBtn = highed.dom.cr('button', 'highed-ok-button', 'Rerun Import'),
+      nevermindBtn = highed.dom.cr('button', 'highed-ok-button', 'Nevermind'),
+      selectedDelimiter = undefined;
 
     weirdDataModal.body.innerHTML = '';
     weirdDataModal.show();
@@ -1591,21 +1603,21 @@ highed.DataTable = function(parent, attributes) {
       {
         title: 'Tab',
         id: 'tab',
-        select: function () {
+        select: function() {
           selectedDelimiter = '\t';
         }
       },
       {
         title: 'Comma',
         id: 'comma',
-        select: function () {
+        select: function() {
           selectedDelimiter = ',';
         }
       },
       {
         title: 'Semicolon',
         id: 'semicolon',
-        select: function () {
+        select: function() {
           selectedDelimiter = ';';
         }
       }
@@ -1613,15 +1625,20 @@ highed.DataTable = function(parent, attributes) {
 
     dropdown.selectByIndex(0);
 
-    highed.dom.ap(weirdDataModal.body,
+    highed.dom.ap(
+      weirdDataModal.body,
       highed.dom.cr('h3', '', 'Data Import Fixer'),
-      highed.dom.cr('div', 'highed-dtable-weird-data-body', [
-        'We could not properly determine how your columns are separated.',
-        '<br/><br/>',
-        'Usually this is caused by commas as thousand separators,',
-        'or something similar. Please choose which delimiter you want to use,',
-        'and click the Rerun button.<br/><br/>'
-      ].join(' ')),
+      highed.dom.cr(
+        'div',
+        'highed-dtable-weird-data-body',
+        [
+          'We could not properly determine how your columns are separated.',
+          '<br/><br/>',
+          'Usually this is caused by commas as thousand separators,',
+          'or something similar. Please choose which delimiter you want to use,',
+          'and click the Rerun button.<br/><br/>'
+        ].join(' ')
+      ),
       dropdownParent,
       highed.dom.style(okBtn, {
         marginRight: '5px'
@@ -1631,8 +1648,7 @@ highed.DataTable = function(parent, attributes) {
 
     highed.dom.on(nevermindBtn, 'click', weirdDataModal.hide);
 
-    highed.dom.on(okBtn, 'click', function () {
-      console.log(selectedDelimiter);
+    highed.dom.on(okBtn, 'click', function() {
       weirdDataModal.hide();
       hideDataImportError();
 
@@ -1661,7 +1677,7 @@ highed.DataTable = function(parent, attributes) {
   highed.dom.ap(
     parent,
     gsheetFrame,
-       highed.dom.ap(
+    highed.dom.ap(
       container,
       highed.dom.ap(
         frame,
@@ -1673,14 +1689,18 @@ highed.DataTable = function(parent, attributes) {
       topBar,
       highed.dom.ap(topLeftPanel, checkAll)
     ),
- highed.dom.ap(
+    highed.dom.ap(
       weirdDataContainer,
-      highed.dom.cr('div', 'highed-dtable-weird-data-body', [
-        'Uh-oh! It looks like our data importer may have had some issues',
-        'processing your data.',
-        'Usually this means that we were unable to deduce how the columns',
-        'are separated.'
-      ].join(' ')),
+      highed.dom.cr(
+        'div',
+        'highed-dtable-weird-data-body',
+        [
+          'Uh-oh! It looks like our data importer may have had some issues',
+          'processing your data.',
+          'Usually this means that we were unable to deduce how the columns',
+          'are separated.'
+        ].join(' ')
+      ),
       weirdDataIgnore,
       weirdDataFix
     ),
