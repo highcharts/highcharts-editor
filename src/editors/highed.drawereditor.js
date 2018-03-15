@@ -427,13 +427,22 @@ highed.DrawerEditor = function(parent, options) {
   });
 
   dataTable.on('LoadLiveData', function(settings){
-    chartPreview.data.live(settings);
-  });
+    //chartPreview.data.live(settings);
 
+    const liveDataSetting = {};
+
+    liveDataSetting[settings.type] = settings.url;
+    if (settings.interval && settings.interval > 0){
+      liveDataSetting.enablePolling = true;
+      liveDataSetting.dataRefreshRate = settings.interval
+    }
+    chartPreview.data.live(liveDataSetting);
+  });
+/*
   dataTable.on('UpdateLiveData', function(p){
     chartPreview.data.liveURL(p);
   });
-
+*/
   dataTable.on('LoadGSheet', function(settings) {
     chartPreview.data.gsheet(settings);
   });
@@ -476,7 +485,7 @@ highed.DrawerEditor = function(parent, options) {
   });
   
   chartPreview.on('ProviderLiveData', function(p) {
-    dataTable.loadRowsFromLiveData(p);
+    dataTable.loadLiveDataPanel(p);
   });
 
   if (!highed.onPhone()) {

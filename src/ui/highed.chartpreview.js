@@ -768,119 +768,24 @@ highed.ChartPreview = function(parent, attributes) {
     }
   }
 
-  function loadLiveData(options){
-    
-    if (!options || options.url === '') {
-      lastLoadedCSV = false;
-      lastLoadedSheet = false;
-      lastLoadedLiveData = false;
-      updateAggregated();
-      init(aggregatedOptions);
-      return;
-    }
+  function loadLiveData(settings){
 
-    function load (response) {
-      if (typeof response === 'string' && options.type === 'json'){
-        try {
-          response = JSON.parse(response);
-        } catch (e) {
-          highed.snackBar('invalid json: ' + e);
-          return;
-        }
-      }
+    lastLoadedLiveData = settings;
 
-      lastLoadedCSV = false;
-      lastLoadedSheet = false;
-      var csv;
-      if (options.type === 'json'){
-        
-        var rawCSV,
-        cells = response,
-        cell,
-        cellCount = cells.length,
-        colCount = 0,
-        row = 0,
-        col = 0,
-        headers;
-
-        csv = [];
-        
-        cells.forEach(function (entry, i) {
-          var cell = entry || false,
-              val = null;
-
-          col = 0;
-
-          if (!cell) {
-            return;
-          }
-          if (i === 0){
-            headers = Object.keys(entry);
-            headers.forEach(function(header){
-              val = header; //q(header);
-              csv[row] = csv[row] || [];
-              csv[row][col] = val;
-              ++col;
-            });
-            col = 0;
-            row++;
-          }
-          headers.forEach(function(header){
-            csv[row] = csv[row] || [];
-
-            if (Number.isInteger(entry[header] || '')) val = parseInt(entry[header]);
-            else val = entry[header] || '';
-
-            csv[row][col] = val;
-            col++;
-          });
-          row++;
-        });
-      }
-
-      loadLiveDataContent({ options:options, csv: csv }, response);
-      updateAggregated();
-      init(aggregatedOptions);
-      events.emit('ProviderLiveData', { csv: csv, options: options });        
-    }
-    highed.ajax({
-      dataType: (options.type === 'json' ? 'text' : options.type),
-      url: options.url,
-      error: function (e) {
-        highed.snackBar('Error loading data from url: please check the url returns valid ' + options.type);
-      },
-      success: load
-    });
-
-  }
-
-  function loadLiveDataContent(options, response) {
-
-    var colCount = 0;
-
-    lastLoadedLiveData = options.options;
     lastLoadedCSV = false;
     lastLoadedSheet = false;
 
-    lastLoadedLiveData.url = lastLoadedLiveData.url;
-    var rawCSV;
-
-    if (options.options.type === 'json'){
-      lastLoadedLiveData.rows = options.csv;
-    } else {
-      rawCSV = response;
-      const oldDataArr = highed.parseCSV(rawCSV);
-      lastLoadedLiveData.rows = highed.removeNulls(oldDataArr);
-    }
     highed.merge(customizedOptions, {
       data: lastLoadedLiveData
     });
 
+    events.emit('ProviderLiveData', settings);     
     updateAggregated();
     init(aggregatedOptions);
 
     loadSeries();
     emitChange();
+
   }
 
   function loadGSpreadsheet(options) {
@@ -978,7 +883,6 @@ highed.ChartPreview = function(parent, attributes) {
         };
         provider = 3;
     }
-    
 
     return {
       template: templateOptions,
@@ -1629,8 +1533,7 @@ highed.ChartPreview = function(parent, attributes) {
       export: exportChart,
       gsheet: loadGSpreadsheet,
       clear: clearData,
-      live: loadLiveData,
-      liveURL: loadLiveDataContent
+      live: loadLiveData
     },
 
     export: {

@@ -1253,7 +1253,7 @@ highed.DataTable = function(parent, attributes) {
     }, 10);
   }
 
-  function loadRowsFromLiveData(params){
+  function loadLiveDataPanel(params){
       //loadRows(params.csv);
 
       isInLiveDataMode = true;
@@ -1267,11 +1267,9 @@ highed.DataTable = function(parent, attributes) {
         display: 'block'
       });
       
-      liveDataInput.value = params.options.url;
-      liveDataIntervalInput.value = params.options.interval;
-      liveDataTypeSelect.selectById(params.options.type);
-
-      events.emit('UpdateLiveData', params);
+      liveDataInput.value = params.columnsURL || params.rowsURL || params.csvURL;
+      liveDataIntervalInput.value = params.dataRefreshRate;
+      liveDataTypeSelect.selectById((params.columnsURL ? 'columnsURL' : (params.rowsURL ? 'rowsURL': 'csvURL')));
   }
 
   function loadLiveDataFromURL(url, interval, type) {
@@ -1512,7 +1510,7 @@ highed.DataTable = function(parent, attributes) {
   });
 
   highed.dom.on(liveDataLoadButton, 'click', function() {
-    loadLiveDataFromURL(liveDataInput.value, liveDataIntervalInput.value, detailValue || 'json');
+    loadLiveDataFromURL(liveDataInput.value, liveDataIntervalInput.value, detailValue || 'columnsURL');
   });
 
   highed.dom.on(gsheetLoadButton, 'click', function() {
@@ -1636,8 +1634,9 @@ highed.DataTable = function(parent, attributes) {
   );
 
   liveDataTypeSelect.addItems([
-    {id: 'json', title: "JSON"},
-    {id: 'csv', title: "CSV"}
+    {id: 'columnsURL', title: "JSON (Column Ordered)"},
+    {id: 'rowsURL', title: "JSON (Row Ordered)"},
+    {id: 'csvURL', title: "CSV"}
   ]
   );
 
@@ -1832,6 +1831,6 @@ highed.DataTable = function(parent, attributes) {
     on: events.on,
     resize: resize,
     loadLiveDataFromURL: loadLiveDataFromURL,
-    loadRowsFromLiveData: loadRowsFromLiveData
+    loadLiveDataPanel: loadLiveDataPanel
   };
 };
