@@ -724,6 +724,10 @@ highed.ChartPreview = function(parent, attributes) {
               provider.startColumn || customizedOptions.data.startColumn;
             sheet.endColumn =
               provider.endColumn || customizedOptions.data.endColumn;
+            if (provider.dataRefreshRate && provider.dataRefreshRate > 0) {
+              sheet.dataRefreshRate = provider.dataRefreshRate || customizedOptions.data.dataRefreshRate;
+              sheet.enablePolling = true;
+            }
           }
 
           events.emit(
@@ -738,7 +742,7 @@ highed.ChartPreview = function(parent, attributes) {
 
           var provider = projectData.settings.dataProvider;
           var live = provider.liveData;
-          
+
           loadLiveData(provider.liveData);
         } else if (projectData.settings.dataProvider.csv) {
           loadCSVData({
@@ -779,7 +783,7 @@ highed.ChartPreview = function(parent, attributes) {
       data: lastLoadedLiveData
     });
 
-    events.emit('ProviderLiveData', settings);     
+    events.emit('ProviderLiveData', settings);
     updateAggregated();
     init(aggregatedOptions);
 
@@ -870,10 +874,10 @@ highed.ChartPreview = function(parent, attributes) {
       };
       provider = 2;
     }
-    
-    if (chart && 
-        chart.options && 
-        chart.options.data && 
+
+    if (chart &&
+        chart.options &&
+        chart.options.data &&
         chart.options.data.url
       ) {
         livedata = {

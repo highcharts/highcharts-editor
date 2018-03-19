@@ -388,6 +388,10 @@ highed.DrawerEditor = function(parent, options) {
   function addImportTab(tabOptions) {
     dataTable.addImportTab(tabOptions);
   }
+
+  function hideImportModal() {
+    dataTable.hideImportModal();
+  }
   //////////////////////////////////////////////////////////////////////////////
   // Event attachments
 
@@ -480,10 +484,11 @@ highed.DrawerEditor = function(parent, options) {
       p.endRow,
       p.startColumn,
       p.endColumn,
-      true
+      true,
+      p.dataRefreshRate
     );
   });
-  
+
   chartPreview.on('ProviderLiveData', function(p) {
     dataTable.loadLiveDataPanel(p);
   });
@@ -531,6 +536,7 @@ highed.DrawerEditor = function(parent, options) {
     /* Get embeddable SVG */
     getEmbeddableSVG: chartPreview.export.svg,
     addImportTab: addImportTab,
+    hideImportModal: hideImportModal,
     setEnabledFeatures: setEnabledFeatures,
     addFeature: addFeature,
     chart: chartPreview,

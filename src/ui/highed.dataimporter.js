@@ -137,7 +137,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       webList = highed.List(webSplitter.left);
 
     jsonPasteArea.value = JSON.stringify({}, undefined, 2);
-    
+
     setDefaultTabSize(600, 600, [csvTab, jsonTab, webTab, samplesTab]);
     ///////////////////////////////////////////////////////////////////////////
 
@@ -400,7 +400,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     }
 
     function addImportTab(tabOptions){
-      console.log(tabOptions);
       var newTab = tabs.createTab({ title: tabOptions.name || 'Features' });
 
       if (highed.isFn(tabOptions.create)) {
@@ -469,7 +468,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       //  url: liveDataInput.value
       });
     });
-    
+
     highed.dom.on(csvPasteArea, 'keyup', function(e) {
       if (e.keyCode === 13 || ((e.metaKey || e.ctrlKey) && e.key === 'z')) {
         emitCSVImport(csvPasteArea.value);

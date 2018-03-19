@@ -24,104 +24,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 // @format
-
-Highcharts.wrap(Highcharts.Data.prototype, 'parseGoogleSpreadsheet', function(
-  proceed
-) {
-  var self = this,
-    options = this.options,
-    url = options.googleSpreadsheetKey,
-    worksheet = options.googleSpreadsheetWorksheet || 'od6';
-
-  if (!url) {
-    return;
-  }
-
-  if (worksheet === 'undefined') {
-    worksheet = 1;
-  }
-
-  function load(json) {
-    function q(s) {
-      return '"' + s + '"';
-    }
-
-    var csv = [],
-      rawCSV,
-      cells = json.feed.entry,
-      cell,
-      cellCount = cells.length,
-      colCount = 0;
-
-    cells.forEach(function(entry) {
-      var cell = entry.gs$cell || false,
-        row = cell ? parseInt(cell.row, 10) - 1 : false,
-        col = cell ? parseInt(cell.col, 10) - 1 : false,
-        val = null;
-
-      if (!cell) {
-        return;
-      }
-
-      if (cell.numericValue) {
-        if (cell.$t.indexOf('/') >= 0 || cell.$t.indexOf('-') >= 0) {
-          val = q(cell.$t);
-        } else if (cell.$t.indexOf('%') >= 0) {
-          val = parseFloat(cell.numericValue) * 100;
-        } else {
-          val = parseFloat(cell.numericValue);
-        }
-      } else if (cell.$t && cell.$t.length) {
-        val = q(cell.$t);
-      }
-
-      csv[row] = csv[row] || [];
-      csv[row][col] = val;
-
-      if (col > colCount) {
-        colCount = col + 1;
-      }
-    });
-
-    rawCSV = csv
-      .map(function(row) {
-        var pad = [];
-        for (var i = row.length; i < colCount; i++) {
-          pad.push(null);
-        }
-        return row.concat(pad).join(';');
-      })
-      .join('\n');
-
-    self.parseCSV({
-      startRow: options.startRow,
-      endRow: options.endRow,
-      startColumn: options.startColumn,
-      endColumn: options.endColumn,
-      csv: rawCSV,
-      itemDelimiter: ';'
-    });
-  }
-
-  highed.ajax({
-    dataType: 'json',
-    url:
-      'https://spreadsheets.google.com/feeds/cells/' +
-      url +
-      '/' +
-      worksheet +
-      '/public/values?alt=json',
-    error:
-      options.error ||
-      function() {
-        highed.snackBar(
-          'Error loading spreadsheet: please check the sheet ID, and/or the start/end row/column'
-        );
-      },
-    success: load
-  });
-});
-
 /** Data table
  *  @constructor
  *  @param {domnode} parent - the node to attach to
@@ -188,6 +90,10 @@ highed.DataTable = function(parent, attributes) {
       'highed-box-size highed-dtable-gsheet-id'
     ),
     gsheetWorksheetID = highed.dom.cr(
+      'input',
+      'highed-box-size highed-dtable-gsheet-id'
+    ),
+    gsheetRefreshTime = highed.dom.cr(
       'input',
       'highed-box-size highed-dtable-gsheet-id'
     ),
@@ -1115,7 +1021,7 @@ highed.DataTable = function(parent, attributes) {
     if (includeHeaders) {
       data.push(getHeaderTextArr(quoteStrings));
     }
-    
+
     rows.forEach(function(row) {
       var rarr = [],
         hasData = false;
@@ -1147,7 +1053,7 @@ highed.DataTable = function(parent, attributes) {
         data.push(rarr);
       }
     });
-    
+
     return data;
   }
 
@@ -1266,9 +1172,9 @@ highed.DataTable = function(parent, attributes) {
       highed.dom.style(liveDataFrame, {
         display: 'block'
       });
-      
+
       liveDataInput.value = params.columnsURL || params.rowsURL || params.csvURL;
-      liveDataIntervalInput.value = params.dataRefreshRate;
+      liveDataIntervalInput.value = params.dataRefreshRate || '';
       liveDataTypeSelect.selectById((params.columnsURL ? 'columnsURL' : (params.rowsURL ? 'rowsURL': 'csvURL')));
   }
 
@@ -1325,10 +1231,12 @@ highed.DataTable = function(parent, attributes) {
     endRow,
     startColumn,
     endColumn,
-    skipLoad
+    skipLoad,
+    dataRefreshRate
   ) {
     gsheetID.value = id;
     gsheetWorksheetID.value = worksheet || '';
+    gsheetRefreshTime.value = dataRefreshRate || '';
     gsheetStartRow.value = startRow || 0;
     gsheetEndRow.value = endRow || '';
     gsheetStartCol.value = startColumn || 0;
@@ -1354,6 +1262,8 @@ highed.DataTable = function(parent, attributes) {
       events.emit('LoadGSheet', {
         googleSpreadsheetKey: gsheetID.value,
         googleSpreadsheetWorksheet: gsheetWorksheetID.value || false,
+        dataRefreshRate: gsheetRefreshTime.value || false,
+        enablePolling: (parseInt(gsheetRefreshTime.value) !== 0),
         startRow: gsheetStartRow.value || 0,
         endRow: gsheetEndRow.value || undefined,
         startColumn: gsheetStartCol.value || 0,
@@ -1361,9 +1271,13 @@ highed.DataTable = function(parent, attributes) {
       });
     }
   }
-  
+
   function addImportTab(tabOptions){
     importer.addImportTab(tabOptions);
+  }
+
+  function hideImportModal(){
+    importModal.hide();
   }
 
   function showLiveData() {
@@ -1405,6 +1319,7 @@ highed.DataTable = function(parent, attributes) {
 
       gsheetID.value = '';
       gsheetWorksheetID.value = '';
+      gsheetRefreshTime.value = '';
 
       highed.dom.style(gsheetFrame, {
         display: 'block'
@@ -1492,7 +1407,7 @@ highed.DataTable = function(parent, attributes) {
     showLiveData();
     //loadLiveDataFromURL(data.url);
   });
-    
+
   importer.on('ImportChartSettings', function(settings, format) {
     // Do something with the data here
     events.emit('ImportChartSettings', settings, format);
@@ -1517,6 +1432,8 @@ highed.DataTable = function(parent, attributes) {
     events.emit('LoadGSheet', {
       googleSpreadsheetKey: gsheetID.value,
       googleSpreadsheetWorksheet: gsheetWorksheetID.value || false,
+      dataRefreshRate: gsheetRefreshTime.value || false,
+      enablePolling: (parseInt(gsheetRefreshTime.value) !== 0),
       startRow: gsheetStartRow.value || 0,
       endRow: gsheetEndRow.value || Number.MAX_VALUE,
       startColumn: gsheetStartCol.value || 0,
@@ -1560,6 +1477,7 @@ highed.DataTable = function(parent, attributes) {
 
   gsheetID.placeholder = 'Spreadsheet ID';
   gsheetWorksheetID.placeholder = 'Worksheet (leave blank for first)';
+  gsheetRefreshTime.placeholder = 'Refresh Time (leave blank for no refresh)';
 
   highed.dom.ap(
     gsheetFrame,
@@ -1588,10 +1506,18 @@ highed.DataTable = function(parent, attributes) {
           'Google Spreadsheet ID'
         ),
         highed.dom.ap(highed.dom.cr('div'), gsheetID),
-        highed.dom.cr('div', 'highed-dtable-gsheet-label', 'Worksheet'),
-        highed.dom.ap(highed.dom.cr('div'), gsheetWorksheetID),
         highed.dom.ap(
           highed.dom.cr('table', 'highed-stretch'),
+          highed.dom.ap(
+            highed.dom.cr('tr'),
+            highed.dom.cr('td', 'highed-dtable-gsheet-label', 'Worksheet'),
+            highed.dom.cr('td', 'highed-dtable-gsheet-label', 'Refresh Time (Seconds)')
+          ),
+          highed.dom.ap(
+            highed.dom.cr('tr'),
+            highed.dom.ap(highed.dom.cr('td', '', ''), gsheetWorksheetID),
+            highed.dom.ap(highed.dom.cr('td', '', ''), gsheetRefreshTime)
+          ),
           highed.dom.ap(
             highed.dom.cr('tr'),
             highed.dom.cr('td', 'highed-dtable-gsheet-label', 'Start Row'),
@@ -1650,7 +1576,7 @@ highed.DataTable = function(parent, attributes) {
   highed.dom.style(liveDataTypeMasterNode, {
     display: 'block'
   });
-  
+
   highed.dom.ap(
     liveDataFrame,
     highed.dom.ap(
@@ -1827,6 +1753,7 @@ highed.DataTable = function(parent, attributes) {
     toDataSeries: toDataSeries,
     getHeaderTextArr: getHeaderTextArr,
     addImportTab: addImportTab,
+    hideImportModal: hideImportModal,
     initGSheet: initGSheet,
     on: events.on,
     resize: resize,
