@@ -25,103 +25,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // @format
 
-Highcharts.wrap(Highcharts.Data.prototype, 'parseGoogleSpreadsheet', function(
-  proceed
-) {
-  var self = this,
-    options = this.options,
-    url = options.googleSpreadsheetKey,
-    worksheet = options.googleSpreadsheetWorksheet || 'od6';
-
-  if (!url) {
-    return;
-  }
-
-  if (worksheet === 'undefined') {
-    worksheet = 1;
-  }
-
-  function load(json) {
-    function q(s) {
-      return '"' + s + '"';
-    }
-
-    var csv = [],
-      rawCSV,
-      cells = json.feed.entry,
-      cell,
-      cellCount = cells.length,
-      colCount = 0;
-
-    cells.forEach(function(entry) {
-      var cell = entry.gs$cell || false,
-        row = cell ? parseInt(cell.row, 10) - 1 : false,
-        col = cell ? parseInt(cell.col, 10) - 1 : false,
-        val = null;
-
-      if (!cell) {
-        return;
-      }
-
-      if (cell.numericValue) {
-        if (cell.$t.indexOf('/') >= 0 || cell.$t.indexOf('-') >= 0) {
-          val = q(cell.$t);
-        } else if (cell.$t.indexOf('%') >= 0) {
-          val = parseFloat(cell.numericValue) * 100;
-        } else {
-          val = parseFloat(cell.numericValue);
-        }
-      } else if (cell.$t && cell.$t.length) {
-        val = q(cell.$t);
-      }
-
-      csv[row] = csv[row] || [];
-      csv[row][col] = val;
-
-      if (col > colCount) {
-        colCount = col + 1;
-      }
-    });
-
-    rawCSV = csv
-      .map(function(row) {
-        var pad = [];
-        for (var i = row.length; i < colCount; i++) {
-          pad.push(null);
-        }
-        return row.concat(pad).join(';');
-      })
-      .join('\n');
-
-    self.parseCSV({
-      startRow: options.startRow,
-      endRow: options.endRow,
-      startColumn: options.startColumn,
-      endColumn: options.endColumn,
-      csv: rawCSV,
-      itemDelimiter: ';'
-    });
-  }
-
-  highed.ajax({
-    dataType: 'json',
-    url:
-      'https://spreadsheets.google.com/feeds/cells/' +
-      url +
-      '/' +
-      worksheet +
-      '/public/values?alt=json',
-    error:
-      options.error ||
-      function() {
-        highed.snackBar(
-          'Error loading spreadsheet: please check the sheet ID, and/or the start/end row/column'
-        );
-      },
-    success: load
-  });
-});
-
 function parseCSV(inData, delimiter) {
   var isStr = highed.isStr,
     isArr = highed.isArray,
@@ -228,7 +131,6 @@ function parseCSV(inData, delimiter) {
         token = null;
         // return;
       }
-
 
       token = (token || '').replace(/\,/g, '');
 
