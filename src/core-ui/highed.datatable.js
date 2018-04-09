@@ -224,13 +224,12 @@ function parseCSV(inData, delimiter) {
       cn;
 
     function pushToken() {
+      
+      token = (token || '').replace(/\,/g, '');
       if (!token.length) {
         token = null;
         // return;
       }
-
-
-      token = (token || '').replace(/\,/g, '');
 
       if (isNum(token)) {
         token = parseFloat(token);
