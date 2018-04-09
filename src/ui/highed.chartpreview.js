@@ -1223,8 +1223,8 @@ highed.ChartPreview = function(parent, attributes) {
           'https://code.highcharts.com/modules/data.js',
           'https://code.highcharts.com/modules/exporting.js',
           'https://code.highcharts.com/modules/funnel.js',
-          'https://code.highcharts.com/modules/solid-gauge.js',
-          'https://code.highcharts.com/modules/series-label.js'
+          // 'https://code.highcharts.com/modules/series-label.js'
+          'https://code.highcharts.com/modules/solid-gauge.js'
         ],
         cdnIncludesArr = [],
         title =
