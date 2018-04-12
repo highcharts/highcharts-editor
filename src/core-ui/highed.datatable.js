@@ -570,14 +570,17 @@ highed.DataTable = function(parent, attributes) {
     }
 
     function focus() {
+      function checkNull(value){
+        return value === null || value === '';
+      }
       mainInput.className = 'highed-dtable-input';
       makeEditable(
         col,
         value,
         function(val) {
           var changed = value !== val;
-          value = val;
-          colVal.innerHTML = val;
+          value = (checkNull(val) ? null : val);
+          colVal.innerHTML = value;
           if (changed) {
             emitChanged();
           }
