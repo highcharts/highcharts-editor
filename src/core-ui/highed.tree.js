@@ -123,6 +123,12 @@ highed.Tree = function(parent) {
       if (!noSelect) {
         select();
       }
+
+      highed.emit(
+        'UIAction',
+        'AdvancedTreeNavigation',
+        (child.meta.ns ? child.meta.ns + '.' : '') + child.meta.name
+      );
     }
 
     function collapse(noSelect, noPush) {
@@ -307,15 +313,18 @@ highed.Tree = function(parent) {
   }
 
   /** Expand to show a given ID
-     *  @memberof highed.Tree
-     *  @param id {string} - the ID of the element to expand
-     */
+   *  @memberof highed.Tree
+   *  @param id {string} - the ID of the element to expand
+   */
   function expandTo(id) {
     var prev = '';
 
     if (!id) return;
 
-    id = id.replace(/\-\-/g, '.').replace(/\-/g, '.').split('.');
+    id = id
+      .replace(/\-\-/g, '.')
+      .replace(/\-/g, '.')
+      .split('.');
 
     id.forEach(function(seg) {
       seg = prev + seg;
@@ -325,20 +334,20 @@ highed.Tree = function(parent) {
   }
 
   /** Build the tree
-     *
-     *  This function takes in a transformed, compact, meta definitions
-     *  for all entries in the API. The definitions are structured as an actual
-     *  tree, where each node has an array of children, and a meta object with
-     *  meta information such as data type, default, and GH links.
-     *
-     *  @memberof highed.Tree
-     *  @param tree {object} - the tree to display
-     *    > children {object} - the children of the node
-     *    > entries {array} - array of orphan children
-     *  @param pnode {domnode} - the parent node
-     *  @param instancedData {object} - the actual tree data
-     *  @param dataIndex {number} - the path to data in arrays
-     */
+   *
+   *  This function takes in a transformed, compact, meta definitions
+   *  for all entries in the API. The definitions are structured as an actual
+   *  tree, where each node has an array of children, and a meta object with
+   *  meta information such as data type, default, and GH links.
+   *
+   *  @memberof highed.Tree
+   *  @param tree {object} - the tree to display
+   *    > children {object} - the children of the node
+   *    > entries {array} - array of orphan children
+   *  @param pnode {domnode} - the parent node
+   *  @param instancedData {object} - the actual tree data
+   *  @param dataIndex {number} - the path to data in arrays
+   */
   function build(tree, pnode, instancedData, productFilter) {
     if (!tree) {
       return;

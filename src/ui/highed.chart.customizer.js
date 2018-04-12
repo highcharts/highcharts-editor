@@ -169,6 +169,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
     highed.dom.ap(customCodeSplitter.bottom, customCodeDebug);
 
     function setCustomCode() {
+      highed.emit('UIAction', 'CustomCodeUpdate');
       customCodeDebug.innerHTML = '';
       if (chartPreview) {
         chartPreview.setCustomCode(
@@ -273,8 +274,10 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
             doInclude = true;
           }
         });
-      } else if (properties.availableSettings[group.id] ||
-        properties.availableSettings[group.pid]) {
+      } else if (
+        properties.availableSettings[group.id] ||
+        properties.availableSettings[group.pid]
+      ) {
         doInclude = true;
       }
 
@@ -405,8 +408,10 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
       }
 
       if (Object.keys(properties.availableSettings || {}).length > 0) {
-        if (!properties.availableSettings[group.id]
-            && !properties.availableSettings[group.pid]) {
+        if (
+          !properties.availableSettings[group.id] &&
+          !properties.availableSettings[group.pid]
+        ) {
           return;
         }
       }
@@ -437,6 +442,12 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
           },
           function(newValue) {
             events.emit('PropertyChange', group.id, newValue, detailIndex);
+            highed.emit(
+              'UIAction',
+              'SimplePropSet',
+              highed.L('option.text.' + group.pid),
+              newValue
+            );
 
             if (group.id === filteredBy) {
               //This is a master for the rest of the childs,
@@ -600,6 +611,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
       selectGroup(thing);
     });
     highlighted = false;
+    highed.emit('UIAction', 'SimplePropCatChoose', id);
   });
 
   function buildAdvTree(item, selected, instancedData, filter, propFilter) {
@@ -660,6 +672,12 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
             attributes: entry.attributes || []
           },
           function(newValue) {
+            highed.emit(
+              'UIAction',
+              'AdvancedPropSet',
+              (entry.meta.ns ? entry.meta.ns + '.' : '') + highed.uncamelize(entry.meta.name),
+              newValue
+            );
             instancedData[entry.meta.name] = newValue;
             events.emit('PropertySetChange', advTree.getMasterData());
             if (advTree.isFilterController(entry.meta.ns, entry.meta.name)) {

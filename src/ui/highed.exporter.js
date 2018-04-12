@@ -296,6 +296,18 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       exportHTML.download = title + '.html';
       exportSVG.download = title + '.svg';
 
+      highed.dom.on(exportJSON, 'click', function() {
+        highed.events('UIAction', 'BtnDownloadJSON');
+      });
+
+      highed.dom.on(exportHTML, 'click', function() {
+        highed.events('UIAction', 'BtnDownloadHTML');
+      });
+
+      highed.dom.on(exportSVG, 'click', function() {
+        highed.events('UIAction', 'BtnDownloadSVG');
+      });
+
       currentChartPreview = chartPreview;
 
       buildPlugins();
@@ -327,10 +339,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       pluginList.resize(w, h - bsize.h);
     }
 
-    function doSelectOnClick(thing) {
+    function doSelectOnClick(thing, id) {
       highed.dom.on(thing, 'click', function() {
         thing.focus();
         thing.select();
+        highed.emit('UIAction', 'Copy' + id);
       });
     }
 
@@ -360,9 +373,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     resize();
     updateOptions();
 
-    doSelectOnClick(jsonValue);
-    doSelectOnClick(htmlValue);
-    doSelectOnClick(svgValue);
+    doSelectOnClick(jsonValue, 'JSON');
+    doSelectOnClick(htmlValue, 'HTML');
+    doSelectOnClick(svgValue, 'SVG');
 
     ///////////////////////////////////////////////////////////////////////////
 

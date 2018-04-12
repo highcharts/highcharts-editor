@@ -127,7 +127,6 @@ function parseCSV(inData, delimiter) {
       cn;
 
     function pushToken() {
-      
       token = (token || '').replace(/\,/g, '');
       if (!token.length) {
         token = null;
@@ -328,18 +327,21 @@ highed.DataTable = function(parent, attributes) {
         icon: '',
         click: function() {
           addRow();
+          highed.emit('UIAction', 'AddRowAtEnd');
         }
       },
       {
         title: 'After highlighted',
         click: function() {
           addRowAfter(selectedRowIndex);
+          highed.emit('UIAction', 'AddRowAfterHighlight');
         }
       },
       {
         title: 'Before highlighted',
         click: function() {
           addRowBefore(selectedRowIndex);
+          highed.emit('UIAction', 'AddRowBeforeHighlight');
         }
       }
     ]);
@@ -570,7 +572,7 @@ highed.DataTable = function(parent, attributes) {
     }
 
     function focus() {
-      function checkNull(value){
+      function checkNull(value) {
         return value === null || value === '';
       }
       mainInput.className = 'highed-dtable-input';
@@ -579,7 +581,7 @@ highed.DataTable = function(parent, attributes) {
         value,
         function(val) {
           var changed = value !== val;
-          value = (checkNull(val) ? null : val);
+          value = checkNull(val) ? null : val;
           colVal.innerHTML = value;
           if (changed) {
             emitChanged();
@@ -1703,6 +1705,7 @@ highed.DataTable = function(parent, attributes) {
     tooltip: 'Add row',
     title: highed.L('dgAddRow'),
     click: function(e) {
+      highed.emit('UIAction', 'BtnAddRow');
       addRowCtx.show(e.clientX, e.clientY);
     }
   });
@@ -1712,7 +1715,9 @@ highed.DataTable = function(parent, attributes) {
     tooltip: 'Reset',
     title: highed.L('dgNewBtn'),
     click: function() {
+      highed.emit('UIAction', 'BtnFlushData');
       if (confirm('Start from scratch?')) {
+        highed.emit('UIAction', 'FlushDataConfirm');
         init();
         emitChanged();
       }
@@ -1722,7 +1727,10 @@ highed.DataTable = function(parent, attributes) {
   toolbar.addButton({
     tooltip: 'Import Google Spreadsheet',
     title: 'Google Sheet',
-    click: showGSheet
+    click: function() {
+      highed.emit('UIAction', 'BtnGoogleSheet');
+      showGSheet();
+    }
   });
 
   toolbar.addButton({
@@ -1730,6 +1738,7 @@ highed.DataTable = function(parent, attributes) {
     title: highed.L('dgExportBtn'),
     tooltip: 'Download data',
     click: function(e) {
+      highed.emit('UIAction', 'BtnExportData');
       saveCtx.show(e.clientX, e.clientY);
     }
   });
@@ -1737,6 +1746,7 @@ highed.DataTable = function(parent, attributes) {
   toolbar.addButton({
     title: highed.L('dgImportBtn'),
     click: function() {
+      highed.emit('UIAction', 'BtnImport');
       importModal.show();
       importer.resize();
     }
@@ -1762,9 +1772,13 @@ highed.DataTable = function(parent, attributes) {
       css: 'fa-trash',
       title: 'Delete row(s)',
       click: function() {
+        highed.emit('UIAction', 'BtnDeleteRow');
+
         if (!confirm(highed.L('dgDeleteRow'))) {
           return;
         }
+
+        highed.emit('UIAction', 'DeleteRowConfirm');
 
         rows.forEach(function(row) {
           if (row.isChecked()) {

@@ -211,6 +211,8 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
         } else {
           events.emit('Select', t);
         }
+
+        highed.emit('UIAction', 'TemplateChoose', t.title);
       });
 
       highed.dom.ap(
@@ -277,6 +279,9 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
 
   list.on('Select', function(id) {
     var templates = highed.templates.getAllInCat(id);
+
+    highed.emit('UIAction', 'TemplateCatChoose', id);
+
     if (templates) {
       showTemplates(templates, id, highed.templates.getCatInfo(id));
     }

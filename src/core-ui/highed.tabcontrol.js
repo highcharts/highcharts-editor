@@ -73,10 +73,10 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
   });
 
   /** Force a resize of the tab control
-     *  @memberof highed.TabControl
-     *  @param w {number} - the width, uses parent width if null
-     *  @param h {number} - the height, uses parent width if null
-     */
+   *  @memberof highed.TabControl
+   *  @param w {number} - the width, uses parent width if null
+   *  @param h {number} - the height, uses parent width if null
+   */
   function resize(w, h) {
     var cs = highed.dom.size(parent),
       ps = highed.dom.size(paneBar),
@@ -114,8 +114,8 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
   }
 
   /** Select the first tab
-     *  @memberof highed.TabControl
-     */
+   *  @memberof highed.TabControl
+   */
   function selectFirst() {
     tabs.some(function(tab) {
       if (tab.visible()) {
@@ -126,8 +126,8 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
   }
 
   /** Hide the tab control
-     *  @memberof highed.TabControl
-     */
+   *  @memberof highed.TabControl
+   */
   function hide() {
     highed.dom.style(container, {
       display: 'none'
@@ -135,8 +135,8 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
   }
 
   /** Show the tab control
-     *  @memberof highed.TabControl
-     */
+   *  @memberof highed.TabControl
+   */
   function show() {
     highed.dom.style(container, {
       display: 'block'
@@ -242,7 +242,10 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
       events.emit('Focus', texports);
     }
 
-    highed.dom.on(tab, 'click', focus);
+    highed.dom.on(tab, 'click', function() {
+      focus();
+      highed.emit('UIAction', 'TabControlNavigation', properties.title);
+    });
 
     texports = {
       on: tevents.on,
@@ -300,11 +303,11 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
     show: show,
     hide: hide,
     /** Get the size of the title bar
-         *  @memberof highed.TabControl
-         *  @returns {object}
-         *    > w {number} - the width of the control
-         *    > h {number} - the height of the control
-         */
+     *  @memberof highed.TabControl
+     *  @returns {object}
+     *    > w {number} - the width of the control
+     *    > h {number} - the height of the control
+     */
     barSize: function() {
       return highed.dom.size(paneBar);
     }

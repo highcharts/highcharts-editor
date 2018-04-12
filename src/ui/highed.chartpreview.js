@@ -656,6 +656,8 @@ highed.ChartPreview = function(parent, attributes) {
         '&gt;': '>'
       };
 
+    highed.emit('UIAction', 'LoadProject');
+
     lastLoadedCSV = false;
     lastLoadedSheet = false;
 
