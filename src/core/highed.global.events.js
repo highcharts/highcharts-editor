@@ -29,8 +29,4 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   var events = highed.events();
   highed.on = events.on;
   highed.emit = events.emit;
-
-  events.on('UIAction', function () {
-    console.log('UIAction:', arguments);
-  });
 })();
