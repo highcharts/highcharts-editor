@@ -248,6 +248,8 @@ highed.ChartPreview = function(parent, attributes) {
 
       events.emit('Error', e);
 
+      highed.emit('UIAction', 'UnsuccessfulChartGeneration');
+
       if (i > 0) {
         // highed.snackBar(
         //   'There is a problem with your chart!',
@@ -807,6 +809,8 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   function loadGSpreadsheet(options) {
+    var key;
+
     lastLoadedCSV = false;
     lastLoadedSheet = options;
 
@@ -814,6 +818,16 @@ highed.ChartPreview = function(parent, attributes) {
       lastLoadedSheet.googleSpreadsheetKey || lastLoadedSheet.id;
     lastLoadedSheet.googleSpreadsheetWorksheet =
       lastLoadedSheet.googleSpreadsheetWorksheet || lastLoadedSheet.worksheet;
+
+    if (options && (options.googleSpreadsheetKey || '').indexOf('http') === 0) {
+      // Parse out the spreadsheet ID
+      // Located between /d/ and the next slash after that
+      key = options.googleSpreadsheetKey;
+      key = key.substr(key.indexOf('/d/') + 3);
+      key = key.substr(0, key.indexOf('/'));
+
+      options.googleSpreadsheetKey = key;
+    }
 
     highed.merge(customizedOptions, {
       data: lastLoadedSheet
@@ -1225,6 +1239,7 @@ highed.ChartPreview = function(parent, attributes) {
           'https://code.highcharts.com/modules/data.js',
           'https://code.highcharts.com/modules/exporting.js',
           'https://code.highcharts.com/modules/funnel.js',
+          'https://code.highcharts.com/modules/annotations.js',
           // 'https://code.highcharts.com/modules/series-label.js'
           'https://code.highcharts.com/modules/solid-gauge.js'
         ],
