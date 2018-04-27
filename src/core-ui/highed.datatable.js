@@ -1783,6 +1783,7 @@ highed.DataTable = function(parent, attributes) {
         rows.forEach(function(row) {
           if (row.isChecked()) {
             row.destroy();
+            emitChanged();
           }
         });
       }
