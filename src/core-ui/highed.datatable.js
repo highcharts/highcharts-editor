@@ -486,7 +486,7 @@ highed.DataTable = function(parent, attributes) {
   ////////////////////////////////////////////////////////////////////////////
 
   function Column(row, colNumber, val) {
-    var value = typeof val === 'undefined' ? '' : val,
+    var value = typeof val === 'undefined' ? null : val,
       col = highed.dom.cr('td'),
       colVal = highed.dom.cr('div', 'highed-dtable-col-val', value),
       input = highed.dom.cr('input'),
@@ -1783,6 +1783,7 @@ highed.DataTable = function(parent, attributes) {
         rows.forEach(function(row) {
           if (row.isChecked()) {
             row.destroy();
+            emitChanged();
           }
         });
       }
