@@ -24,6 +24,159 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 // @format
+
+function parseCSV(inData, delimiter) {
+  var isStr = highed.isStr,
+    isArr = highed.isArray,
+    isNum = highed.isNum,
+    csv = inData || '',
+    result = [],
+    options = {
+      delimiter: delimiter
+    },
+    potentialDelimiters = {
+      ',': true,
+      ';': true,
+      '\t': true
+    },
+    delimiterCounts = {
+      ',': 0,
+      ';': 0,
+      '\t': 0
+    };
+  //The only thing CSV formats have in common..
+  rows = (csv || '').replace(/\r\n/g, '\n').split('\n');
+
+  // If there's no delimiter, look at the first few rows to guess it.
+
+  if (!options.delimiter) {
+    rows.some(function(row, i) {
+      if (i > 10) return true;
+
+      var inStr = false,
+        c,
+        cn,
+        cl,
+        token = '';
+
+      for (var j = 0; j < row.length; j++) {
+        c = row[j];
+        cn = row[j + 1];
+        cl = row[j - 1];
+
+        if (c === '"') {
+          if (inStr) {
+            if (cl !== '"' && cn !== '"') {
+              // The next non-blank character is likely the delimiter.
+
+              while (cn === ' ') {
+                cn = row[++j];
+              }
+
+              if (potentialDelimiters[cn]) {
+                delimiterCounts[cn]++;
+                return true;
+              }
+
+              inStr = false;
+            }
+          } else {
+            inStr = true;
+          }
+        } else if (potentialDelimiters[c]) {
+          if (!isNaN(Date.parse(token))) {
+            // Yup, likely the right delimiter
+            token = '';
+            delimiterCounts[c]++;
+          } else if (!isNum(token) && token.length) {
+            token = '';
+            delimiterCounts[c]++;
+          }
+        } else {
+          token += c;
+        }
+      }
+    });
+
+    options.delimiter = ';';
+
+    if (
+      delimiterCounts[','] > delimiterCounts[';'] &&
+      delimiterCounts[','] > delimiterCounts['\t']
+    ) {
+      options.delimiter = ',';
+    }
+
+    if (
+      delimiterCounts['\t'] >= delimiterCounts[';'] &&
+      delimiterCounts['\t'] >= delimiterCounts[',']
+    ) {
+      options.delimiter = '\t';
+    }
+  }
+
+  rows.forEach(function(row, rowNumber) {
+    var cols = [],
+      inStr = false,
+      i = 0,
+      j,
+      token = '',
+      guessedDel,
+      c,
+      cp,
+      cn;
+
+    function pushToken() {
+      token = (token || '').replace(/\,/g, '');
+      if (!token.length) {
+        token = null;
+        // return;
+      }
+
+      if (isNum(token)) {
+        token = parseFloat(token);
+      }
+
+      cols.push(token);
+      token = '';
+    }
+
+    for (i = 0; i < row.length; i++) {
+      c = row[i];
+      cn = row[i + 1];
+      cp = row[i - 1];
+
+      if (c === '"') {
+        if (inStr) {
+          pushToken();
+        } else {
+          inStr = false;
+        }
+
+        //Everything is allowed inside quotes
+      } else if (inStr) {
+        token += c;
+        //Check if we're done reading a token
+      } else if (c === options.delimiter) {
+        pushToken();
+
+        //Append to token
+      } else {
+        token += c;
+      }
+
+      // Push if this was the last character
+      if (i === row.length - 1) {
+        pushToken();
+      }
+    }
+
+    result.push(cols);
+  });
+
+  return result;
+}
+
 /** Data table
  *  @constructor
  *  @param {domnode} parent - the node to attach to
@@ -32,7 +185,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.DataTable = function(parent, attributes) {
   var properties = highed.merge(
       {
-        checkable: true
+        checkable: true,
+        importer: {}
       },
       attributes
     ),
@@ -53,6 +207,26 @@ highed.DataTable = function(parent, attributes) {
     topLeftPanel = highed.dom.cr('div', 'highed-dtable-top-left-panel'),
     checkAll = highed.dom.cr('input'),
     mainInput = highed.dom.cr('textarea', 'highed-dtable-input'),
+    weirdDataModal = highed.OverlayModal(false, {
+      // zIndex: 20000,
+      showOnInit: false,
+      width: 300,
+      height: 350
+    }),
+    weirdDataContainer = highed.dom.cr(
+      'div',
+      'highed-dtable-weird-data highed-box-size highed-errobar-body'
+    ),
+    weirdDataIgnore = highed.dom.cr(
+      'button',
+      'highed-ok-button',
+      'No, this looks right'
+    ),
+    weirdDataFix = highed.dom.cr(
+      'button',
+      'highed-ok-button',
+      'Yeah, this looks wrong'
+    ),
     loadIndicator = highed.dom.cr(
       'div',
       'highed-dtable-load-indicator',
@@ -144,7 +318,7 @@ highed.DataTable = function(parent, attributes) {
       minWidth: 600,
       minHeight: 600
     }),
-    importer = highed.DataImporter(importModal.body),
+    importer = highed.DataImporter(importModal.body, properties.importer),
     rows = [],
     gcolumns = [],
     changeTimeout = false,
@@ -184,18 +358,21 @@ highed.DataTable = function(parent, attributes) {
         icon: '',
         click: function() {
           addRow();
+          highed.emit('UIAction', 'AddRowAtEnd');
         }
       },
       {
         title: 'After highlighted',
         click: function() {
           addRowAfter(selectedRowIndex);
+          highed.emit('UIAction', 'AddRowAfterHighlight');
         }
       },
       {
         title: 'Before highlighted',
         click: function() {
           addRowBefore(selectedRowIndex);
+          highed.emit('UIAction', 'AddRowBeforeHighlight');
         }
       }
     ]);
@@ -253,6 +430,18 @@ highed.DataTable = function(parent, attributes) {
   };
 
   ////////////////////////////////////////////////////////////////////////////
+
+  function showDataImportError() {
+    highed.dom.style(weirdDataContainer, {
+      display: 'block'
+    });
+  }
+
+  function hideDataImportError() {
+    highed.dom.style(weirdDataContainer, {
+      display: 'none'
+    });
+  }
 
   function emitChanged(noDelay) {
     window.clearTimeout(changeTimeout);
@@ -317,6 +506,7 @@ highed.DataTable = function(parent, attributes) {
               'You are about to load CSV data. This will overwrite your current data. Continue?'
             )
           ) {
+            rawCSV = mainInput.value;
             return loadRows(ps);
           }
           return;
@@ -333,7 +523,7 @@ highed.DataTable = function(parent, attributes) {
   ////////////////////////////////////////////////////////////////////////////
 
   function Column(row, colNumber, val) {
-    var value = typeof val === 'undefined' ? '' : val,
+    var value = typeof val === 'undefined' ? null : val,
       col = highed.dom.cr('td'),
       colVal = highed.dom.cr('div', 'highed-dtable-col-val', value),
       input = highed.dom.cr('input'),
@@ -419,14 +609,17 @@ highed.DataTable = function(parent, attributes) {
     }
 
     function focus() {
+      function checkNull(value) {
+        return value === null || value === '';
+      }
       mainInput.className = 'highed-dtable-input';
       makeEditable(
         col,
         value,
         function(val) {
           var changed = value !== val;
-          value = val;
-          colVal.innerHTML = val;
+          value = checkNull(val) ? null : val;
+          colVal.innerHTML = value;
           if (changed) {
             emitChanged();
           }
@@ -619,6 +812,8 @@ highed.DataTable = function(parent, attributes) {
   function init() {
     clear();
 
+    surpressChangeEvents = true;
+
     for (var i = 0; i < 1; i++) {
       var r = Row();
     }
@@ -629,6 +824,8 @@ highed.DataTable = function(parent, attributes) {
 
     highed.dom.ap(colgroup, highed.dom.cr('col'));
     resize();
+
+    surpressChangeEvents = false;
   }
 
   function updateColumns() {
@@ -852,11 +1049,11 @@ highed.DataTable = function(parent, attributes) {
   // PUBLIC FUNCTIONS FOLLOW
 
   /** Sort rows
-      * @memberof highed.DataTable
-      * @param column {number} - the column to sort on
-      * @param direction {string} - the direction: `asc` or `desc`
-      * @param asMonths {boolean} - if true, sort by month
-      */
+   * @memberof highed.DataTable
+   * @param column {number} - the column to sort on
+   * @param direction {string} - the direction: `asc` or `desc`
+   * @param asMonths {boolean} - if true, sort by month
+   */
   function sortRows(column, direction, asMonths) {
     tbody.innerHTML = '';
 
@@ -892,8 +1089,8 @@ highed.DataTable = function(parent, attributes) {
   }
 
   /** Clear the table
-      * @memberof highed.DataTable
-      */
+   * @memberof highed.DataTable
+   */
   function clear(noWait) {
     rows = rows.filter(function(row) {
       row.destroy();
@@ -921,8 +1118,8 @@ highed.DataTable = function(parent, attributes) {
   }
 
   /** Add a new row
-      * @memberof highed.DataTable
-      */
+   * @memberof highed.DataTable
+   */
   function addRow(supressChange, skipAdd) {
     var r = Row(skipAdd);
 
@@ -942,9 +1139,9 @@ highed.DataTable = function(parent, attributes) {
   }
 
   /** Insert a new column
-      * @memberof highed.DataTable
-      * @param {number} where - is the position where to add it
-      */
+   * @memberof highed.DataTable
+   * @param {number} where - is the position where to add it
+   */
   function insertCol(where) {
     if (!where) gcolumns.length;
     if (where < 0) where = 0;
@@ -957,9 +1154,9 @@ highed.DataTable = function(parent, attributes) {
   }
 
   /** Delete a column
-      * @memberof highed.DataTable
-      * @param {number} which - the index of the column to delete
-      */
+   * @memberof highed.DataTable
+   * @param {number} which - the index of the column to delete
+   */
   function delCol(which) {
     if (which >= 0 && which < gcolumns.length) {
       rows.forEach(function(row) {
@@ -974,8 +1171,8 @@ highed.DataTable = function(parent, attributes) {
   }
 
   /** Resize the table based on the container size
-     *  @memberof highed.DataTable
-     */
+   *  @memberof highed.DataTable
+   */
   function resize() {
     var ps = highed.dom.size(parent),
       hs = highed.dom.size(topBar),
@@ -992,9 +1189,9 @@ highed.DataTable = function(parent, attributes) {
   }
 
   /** Returns the header titles as an array
-     *  @memberof highed.DataTable
-     *  @returns {array<string>} - the headers
-     */
+   *  @memberof highed.DataTable
+   *  @returns {array<string>} - the headers
+   */
   function getHeaderTextArr(quoteStrings) {
     return gcolumns.map(function(item) {
       var title = item.headerTitle.innerHTML.length
@@ -1010,11 +1207,11 @@ highed.DataTable = function(parent, attributes) {
   }
 
   /** Get the table contents as an array of arrays
-     *  @memberof highed.DataTable
-     *  @param {boolean} quoteStrings - if true, strings are wrapped in double quotes
-     *  @param {boolean} includeHeaders - if true, the header texts will be included as the first row
-     *  @returns {array<array<string>>}
-     */
+   *  @memberof highed.DataTable
+   *  @param {boolean} quoteStrings - if true, strings are wrapped in double quotes
+   *  @param {boolean} includeHeaders - if true, the header texts will be included as the first row
+   *  @returns {array<array<string>>}
+   */
   function toData(quoteStrings, includeHeaders) {
     var data = [];
 
@@ -1058,8 +1255,8 @@ highed.DataTable = function(parent, attributes) {
   }
 
   /** Get the table contents as series
-     *  @memberof highed.DataTable
-     */
+   *  @memberof highed.DataTable
+   */
   function toDataSeries(ignoreFirst) {
     var res = {
       categories: [],
@@ -1108,9 +1305,9 @@ highed.DataTable = function(parent, attributes) {
   }
 
   /** Get the table contents as standard CSV
-     *  @memberof highed.DataTable
-     *  @param delimiter {string} - the delimiter to use. Defaults to `,`.
-     */
+   *  @memberof highed.DataTable
+   *  @param delimiter {string} - the delimiter to use. Defaults to `,`.
+   */
   function toCSV(delimiter, quoteStrings) {
     delimiter = delimiter || ',';
     return toData(quoteStrings, true)
@@ -1120,11 +1317,32 @@ highed.DataTable = function(parent, attributes) {
       .join('\n');
   }
 
-  function loadRows(rows) {
+  function loadRows(rows, done) {
+    var sanityCounts = {};
+
     clear();
 
     if (rows.length > 1) {
       hideDropzone();
+    }
+
+    // Do a sanity check on rows.
+    // If the column count varries between rows, there may be something wrong.
+    // In those cases we should pop up a dialog allow to specify what the
+    // delimiter should be manually.
+
+    rows.some(function(row, i) {
+      var count = row.length;
+      sanityCounts[count] =
+        typeof sanityCounts[count] === 'undefined' ? 0 : sanityCounts[count];
+      ++sanityCounts[count];
+      return i > 20;
+    });
+
+    if (Object.keys(sanityCounts).length > 4) {
+      // Four or more rows have varrying amounts of columns.
+      // Something is wrong.
+      showDataImportError();
     }
 
     highed.dom.style(loadIndicator, {
@@ -1150,12 +1368,16 @@ highed.DataTable = function(parent, attributes) {
 
       highed.dom.ap(colgroup, highed.dom.cr('col'));
 
-      highed.snackBar(highed.L('dgDataImported'));
+      // highed.snackBar(highed.L('dgDataImported'));
       resize();
 
       highed.dom.style(loadIndicator, {
         opacity: 0
       });
+
+      if (highed.isFn(done)) {
+        done();
+      }
     }, 10);
   }
 
@@ -1205,23 +1427,26 @@ highed.DataTable = function(parent, attributes) {
       });
     }
 
-    highed.snackBar(highed.L('dgDataImporting'));
+    // highed.snackBar(highed.L('dgDataImporting'));
     importModal.hide();
 
-    if (!surpressChangeEvents) {
-      surpressChangeEvents = true;
-    }
+    surpressChangeEvents = true;
 
     rawCSV = data.csv;
 
     if (data && data.csv) {
-      rows = highed.parseCSV(data.csv);
-      loadRows(rows);
+      rows = parseCSV(data.csv, data.delimiter);
+      loadRows(rows, function() {});
+    } else {
+      // surpressChangeEvents = false;
+      // if (!surpressEvents) {
+      //   emitChanged(true);
+      // }
     }
-
     surpressChangeEvents = false;
-
-    emitChanged(true);
+    if (!surpressEvents) {
+      emitChanged(true);
+    }
   }
 
   function initGSheet(
@@ -1441,6 +1666,79 @@ highed.DataTable = function(parent, attributes) {
     });
   });
 
+  highed.dom.on(weirdDataIgnore, 'click', hideDataImportError);
+
+  highed.dom.on(weirdDataFix, 'click', function() {
+    // Pop open a modal with the option of supplying a delimiter manually.
+    var dropdownParent = highed.dom.cr('div'),
+      dropdown = highed.DropDown(dropdownParent),
+      okBtn = highed.dom.cr('button', 'highed-ok-button', 'Rerun Import'),
+      nevermindBtn = highed.dom.cr('button', 'highed-ok-button', 'Nevermind'),
+      selectedDelimiter = undefined;
+
+    weirdDataModal.body.innerHTML = '';
+    weirdDataModal.show();
+
+    dropdown.addItems([
+      {
+        title: 'Tab',
+        id: 'tab',
+        select: function() {
+          selectedDelimiter = '\t';
+        }
+      },
+      {
+        title: 'Comma',
+        id: 'comma',
+        select: function() {
+          selectedDelimiter = ',';
+        }
+      },
+      {
+        title: 'Semicolon',
+        id: 'semicolon',
+        select: function() {
+          selectedDelimiter = ';';
+        }
+      }
+    ]);
+
+    dropdown.selectByIndex(0);
+
+    highed.dom.ap(
+      weirdDataModal.body,
+      highed.dom.cr('h3', '', 'Data Import Fixer'),
+      highed.dom.cr(
+        'div',
+        'highed-dtable-weird-data-body',
+        [
+          'We could not properly determine how your columns are separated.',
+          '<br/><br/>',
+          'Usually this is caused by commas as thousand separators,',
+          'or something similar. Please choose which delimiter you want to use,',
+          'and click the Rerun button.<br/><br/>'
+        ].join(' ')
+      ),
+      dropdownParent,
+      highed.dom.style(okBtn, {
+        marginRight: '5px'
+      }),
+      nevermindBtn
+    );
+
+    highed.dom.on(nevermindBtn, 'click', weirdDataModal.hide);
+
+    highed.dom.on(okBtn, 'click', function() {
+      weirdDataModal.hide();
+      hideDataImportError();
+
+      loadCSV({
+        csv: rawCSV,
+        delimiter: selectedDelimiter
+      });
+    });
+  });
+
   ////////////////////////////////////////////////////////////////////////////
 
   dropZone.innerHTML =
@@ -1472,6 +1770,22 @@ highed.DataTable = function(parent, attributes) {
       topBar,
       highed.dom.ap(topLeftPanel, checkAll)
     ),
+    highed.dom.ap(
+      weirdDataContainer,
+      highed.dom.cr(
+        'div',
+        'highed-dtable-weird-data-body',
+        [
+          'Uh-oh! It looks like our data importer may have had some issues',
+          'processing your data.',
+          'Usually this means that we were unable to deduce how the columns',
+          'are separated.'
+        ].join(' ')
+      ),
+      weirdDataIgnore,
+      weirdDataFix
+    ),
+
     loadIndicator
   );
 
@@ -1647,6 +1961,7 @@ highed.DataTable = function(parent, attributes) {
     tooltip: 'Add row',
     title: highed.L('dgAddRow'),
     click: function(e) {
+      highed.emit('UIAction', 'BtnAddRow');
       addRowCtx.show(e.clientX, e.clientY);
     }
   });
@@ -1656,7 +1971,9 @@ highed.DataTable = function(parent, attributes) {
     tooltip: 'Reset',
     title: highed.L('dgNewBtn'),
     click: function() {
+      highed.emit('UIAction', 'BtnFlushData');
       if (confirm('Start from scratch?')) {
+        highed.emit('UIAction', 'FlushDataConfirm');
         init();
         emitChanged();
       }
@@ -1666,7 +1983,10 @@ highed.DataTable = function(parent, attributes) {
   toolbar.addButton({
     tooltip: 'Import Google Spreadsheet',
     title: 'Google Sheet',
-    click: showGSheet
+    click: function() {
+      highed.emit('UIAction', 'BtnGoogleSheet');
+      showGSheet();
+    }
   });
 
   toolbar.addButton({
@@ -1674,6 +1994,7 @@ highed.DataTable = function(parent, attributes) {
     title: highed.L('dgExportBtn'),
     tooltip: 'Download data',
     click: function(e) {
+      highed.emit('UIAction', 'BtnExportData');
       saveCtx.show(e.clientX, e.clientY);
     }
   });
@@ -1681,6 +2002,7 @@ highed.DataTable = function(parent, attributes) {
   toolbar.addButton({
     title: highed.L('dgImportBtn'),
     click: function() {
+      highed.emit('UIAction', 'BtnImport');
       importModal.show();
       importer.resize();
     }
@@ -1706,13 +2028,18 @@ highed.DataTable = function(parent, attributes) {
       css: 'fa-trash',
       title: 'Delete row(s)',
       click: function() {
+        highed.emit('UIAction', 'BtnDeleteRow');
+
         if (!confirm(highed.L('dgDeleteRow'))) {
           return;
         }
 
+        highed.emit('UIAction', 'DeleteRowConfirm');
+
         rows.forEach(function(row) {
           if (row.isChecked()) {
             row.destroy();
+            emitChanged();
           }
         });
       }
@@ -1741,6 +2068,7 @@ highed.DataTable = function(parent, attributes) {
   ////////////////////////////////////////////////////////////////////////////
 
   return {
+    toolbar: toolbar,
     sortRows: sortRows,
     clear: clear,
     addRow: addRow,

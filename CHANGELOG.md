@@ -1,3 +1,29 @@
+# Latest (Master)
+  * Added data import failure detection for when it's not possible to deduce the CSV delimiter
+  * Added special case for handling the dataLabels type
+  * Added support for the `series-label` module
+  * Google Spreadsheet support now extracts the correct ID from a URL
+
+# 0.2.1-rc2
+  * Fixed issue causing propagation of importer properties to fail
+  * Fixed issue with hiding the advanced/custom code/preview tabs in customizer
+  * Fixed issue with HTML entities in CSV columns
+  * Fixed issue causing custom code to revert to default value when containing invalid code
+  * Fixed issue with script loading
+  * Fixed issue with `assignTheme` and null values
+  * Fixed issue with setting global options to `0`/`false`/etc.
+  * Chart title (if set) is now used when saving projects
+  * Added auto code formatting on commit
+  * Load project now emits the proper `LoadProject` event when there's data in the project
+  * Now loading series properly when using Google Spreadsheets
+  * Rows can now be added before/after the selected row in the data grid
+  * Added controls to preview the chart with different sizes
+  * Improved error feedback on misconfigurations
+  * Customizer `availableSettings` option now support dot-separated options (e.g. `series.title`)
+  * Added `autoIncludeDependencies` option
+  * Updated Advanced Meta to use Highcharts 6.0.7
+  * Misc minor bug fixes and enhancements
+
 # 0.2.0-rc1
   * Added `complete` target to build script which bakes in all modules and advanced mode into one source file
   * Re-implemented advanced view: now has a smaller footprint, and bugs regarding arrays are fixed
@@ -29,7 +55,7 @@
   *There's also changes to the way Highstock/Highcharts is loaded*
   If you need support for Highstock, Highcharts, and/or Highmaps, this now has to be explicitly included using the modules `highcharts-editor.module.highstock|highcharts.js`.
   Alternatively, build with the `complete` target which bundles all available modules as well as advanced mode into one source script.
-  
+
 # 0.1.3-beta, January 24th 2017
   * Fixed an issue with font sizes in font widget
   * Fixed an issue with embedding charts in Wordpress
@@ -38,7 +64,6 @@
   * Fixed an issue with localization options in exported (html) charts
 
 # 0.1.2-beta, January 3rd 2017
-
   * Fixed general IE issues
   * Fixed IE issues for exported charts
   * Fixed issue with save/load project

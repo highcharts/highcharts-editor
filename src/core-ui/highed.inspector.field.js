@@ -441,7 +441,10 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
           var parsing = false;
 
           try {
-            args = v.substr(argStart + 1, argEnd - 1).trim().split(',');
+            args = v
+              .substr(argStart + 1, argEnd - 1)
+              .trim()
+              .split(',');
 
             args = args.filter(function(b) {
               return b && b.length > 0 && b.indexOf('/*') === -1;
@@ -520,7 +523,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
           }
         }
 
-        if (!highed.isArr(value) && !highed.isBasic(value)) {
+        if (value && !highed.isArr(value) && !highed.isBasic(value)) {
           // This is an object.
           value = Object.keys(value).map(function(e) {
             return value[e];

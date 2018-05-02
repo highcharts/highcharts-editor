@@ -591,6 +591,29 @@ highed.meta.optionsExtended = {
             ],
             subTypeDefaults: {}
           }
+
+          // {
+          //   id: 'series-label--enabled',
+          //   pid: 'series.label.enabled',
+          //   defaults: 'true',
+          //   dataType: 'boolean',
+          //   subType: [
+          //     'line',
+          //     'spline',
+          //     'area',
+          //     'arearange',
+          //     'areaspline',
+          //     'waterfall',
+          //     'areasplinerange'
+          //   ],
+          //   subTypeDefaults: {}
+          // }
+
+          // {
+          // id: 'series-label--style',
+          // pid: 'series.label.style',
+          // dataType: 'font'
+          // }
         ]
       }
     ],

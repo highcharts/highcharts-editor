@@ -25,6 +25,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // @format
 
+/* global window */
+
 highed.DrawerEditor = function(parent, options) {
   var events = highed.events(),
     // Main properties
@@ -40,10 +42,29 @@ highed.DrawerEditor = function(parent, options) {
           'advanced',
           'export'
         ],
+        importer: {},
+        dataGrid: {},
+        customizer: {},
         toolbarIcons: []
       },
       options
     ),
+    errorBar = highed.dom.cr(
+      'div',
+      'highed-errorbar highed-box-size highed-transition'
+    ),
+    errorBarHeadline = highed.dom.cr(
+      'div',
+      'highed-errorbar-headline',
+      'This is an error!'
+    ),
+    errorBarBody = highed.dom.cr(
+      'div',
+      'highed-errorbar-body highed-scrollbar',
+      'Oh noes! something is very wrong!'
+    ),
+    lastSetWidth = false,
+    fixedSize = false,
     splitter = highed.VSplitter(parent, {
       topHeight: properties.useHeader ? '60px' : '0px',
       noOverflow: true
@@ -52,11 +73,19 @@ highed.DrawerEditor = function(parent, options) {
     toolbox = highed.Toolbox(splitter.bottom),
     // Data table
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
-    dataTable = highed.DataTable(dataTableContainer),
+    dataTable = highed.DataTable(
+      dataTableContainer,
+      highed.merge(
+        {
+          importer: properties.importer
+        },
+        properties.dataGrid
+      )
+    ),
     // Chart preview
     chartFrame = highed.dom.cr(
       'div',
-      'highed-transition highed-box-size highed-chart-frame'
+      'highed-transition highed-box-size highed-chart-frame highed-scrollbar'
     ),
     chartContainer = highed.dom.cr(
       'div',
@@ -65,6 +94,12 @@ highed.DrawerEditor = function(parent, options) {
     chartPreview = highed.ChartPreview(chartContainer, {
       defaultChartOptions: properties.defaultChartOptions
     }),
+    // Res preview bar
+    resPreviewBar = highed.dom.cr('div', 'highed-res-preview'),
+    resQuickSelContainer = highed.dom.cr('div', 'highed-res-quicksel'),
+    resQuickSel = highed.DropDown(resQuickSelContainer),
+    resWidth = highed.dom.cr('input', 'highed-res-number'),
+    resHeight = highed.dom.cr('input', 'highed-res-number'),
     // Exporter
     exporterContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
     exporter = highed.Exporter(exporterContainer),
@@ -73,7 +108,11 @@ highed.DrawerEditor = function(parent, options) {
     templates = highed.ChartTemplateSelector(templatesContainer, chartPreview),
     // Customizer
     customizerContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
-    customizer = highed.ChartCustomizer(customizerContainer, {}, chartPreview),
+    customizer = highed.ChartCustomizer(
+      customizerContainer,
+      properties.customizer,
+      chartPreview
+    ),
     // Toolbar buttons
     toolbarButtons = [
       {
@@ -89,7 +128,15 @@ highed.DrawerEditor = function(parent, options) {
         title: highed.L('saveProject'),
         css: 'fa-floppy-o',
         click: function() {
-          highed.download('chart.json', chartPreview.toProjectStr());
+          var name;
+
+          if (chartPreview.options.full.title) {
+            name = chartPreview.options.full.title.text;
+          }
+
+          name = (name || 'chart').replace(/\s/g, '_');
+
+          highed.download(name + '.json', chartPreview.toProjectStr());
         }
       },
       {
@@ -261,7 +308,33 @@ highed.DrawerEditor = function(parent, options) {
         }
       }
     },
-    toolboxEntries;
+    toolboxEntries,
+    resolutions = {
+      'Stretch to fit': [false, false],
+      'iPhone X': [375, 812],
+      'iPhone 8 Plus': [414, 736],
+      'iPhone 8': [375, 667],
+      'iPhone 7 Plus': [414, 736],
+      'iPhone 7': [375, 667],
+      'iPhone 6 Plus': [414, 736],
+      'iPhone 6/6S': [375, 667],
+      'iPhone 5': [320, 568],
+      'iPad Pro': [1024, 1366],
+      iPad: [768, 1024],
+      'Nexus 6P': [411, 731],
+      'Nexus 5X': [411, 731],
+      'Google Pixel': [411, 731],
+      'Google Pixel XL': [411, 731],
+      'Google Pixel 2': [411, 731],
+      'Google Pixel 2 XL': [411, 731],
+      'Samsung Galaxy Note 5': [480, 853],
+      'LG G5': [480, 853],
+      'One Plus 3': [480, 853],
+      'Samsung Galaxy S8': [360, 740],
+      'Samsung Galaxy S8+': [360, 740],
+      'Samsung Galaxy S7': [360, 640],
+      'Samsung Galaxy S7 Edge': [360, 640]
+    };
 
   if (!properties.useHeader) {
     highed.dom.style(splitter.top.parentNode, {
@@ -345,11 +418,21 @@ highed.DrawerEditor = function(parent, options) {
   function resizeChart(newWidth) {
     var psize = highed.dom.size(splitter.bottom);
 
+    lastSetWidth = newWidth;
+
     highed.dom.style(chartFrame, {
       left: newWidth + 'px',
       width: psize.w - newWidth + 'px',
       height: psize.h + 'px'
     });
+
+    if (fixedSize) {
+      // Update size after the animation is done
+      setTimeout(function() {
+        sizeChart(fixedSize.w, fixedSize.h);
+      }, 400);
+      return;
+    }
 
     highed.dom.style(chartContainer, {
       width: psize.w - newWidth - 100 + 'px',
@@ -357,6 +440,37 @@ highed.DrawerEditor = function(parent, options) {
     });
 
     chartPreview.resize();
+  }
+
+  function sizeChart(w, h) {
+    if ((!w || w.length === 0) && (!h || h.length === 0)) {
+      fixedSize = false;
+      resHeight.value = '';
+      resWidth.value = '';
+      resizeChart(lastSetWidth);
+    } else {
+      var s = highed.dom.size(chartFrame);
+
+      // highed.dom.style(chartFrame, {
+      //   paddingLeft: (s.w / 2) - (w / 2) + 'px',
+      //   paddingTop: (s.h / 2) - (h / 2) + 'px'
+      // });
+
+      fixedSize = {
+        w: w,
+        h: h
+      };
+
+      w = w || s.w - 100;
+      h = h || s.h - 100;
+
+      highed.dom.style(chartContainer, {
+        width: w + 'px',
+        height: h + 'px'
+      });
+
+      chartPreview.resize();
+    }
   }
 
   /**
@@ -392,6 +506,23 @@ highed.DrawerEditor = function(parent, options) {
   function hideImportModal() {
     dataTable.hideImportModal();
   }
+  function showError(title, message) {
+    highed.dom.style(errorBar, {
+      opacity: 1,
+      'pointer-events': 'auto'
+    });
+
+    errorBarHeadline.innerHTML = title;
+    errorBarBody.innerHTML = message;
+  }
+
+  function hideError() {
+    highed.dom.style(errorBar, {
+      opacity: 0,
+      'pointer-events': 'none'
+    });
+  }
+
   //////////////////////////////////////////////////////////////////////////////
   // Event attachments
 
@@ -447,6 +578,13 @@ highed.DrawerEditor = function(parent, options) {
     chartPreview.data.liveURL(p);
   });
 */
+  chartPreview.on('LoadProject', function () {
+    setTimeout(function () {
+    resQuickSel.selectByIndex(0);
+    setToActualSize();
+    }, 2000);
+  });
+
   dataTable.on('LoadGSheet', function(settings) {
     chartPreview.data.gsheet(settings);
   });
@@ -493,6 +631,33 @@ highed.DrawerEditor = function(parent, options) {
     dataTable.loadLiveDataPanel(p);
   });
 
+  chartPreview.on('Error', function(e) {
+    if (e.indexOf('Highcharts error') >= 0) {
+      var i1 = e.indexOf('#'),
+        i = e.substr(i1).indexOf(':'),
+        id = parseInt(e.substr(i1 + 1, i), 10),
+        item = highed.highchartsErrors[id],
+        urlStart = e.indexOf('www.'),
+        url = '';
+
+      if (urlStart >= 0) {
+        url =
+          '<div class="highed-errorbar-more"><a href="https://' +
+          e.substr(urlStart) +
+          '" target="_blank">Click here for more information</a></div>';
+      }
+
+      return showError(
+        (item.title || "There's a problem with your chart") + '!',
+        (item.text || e) + url
+      );
+    }
+
+    showError("There's a problem with your chart!", e);
+  });
+
+  chartPreview.on('ChartRecreated', hideError);
+
   if (!highed.onPhone()) {
     highed.dom.on(window, 'resize', resize);
   }
@@ -517,13 +682,96 @@ highed.DrawerEditor = function(parent, options) {
     })
   );
 
-  highed.dom.ap(splitter.bottom, highed.dom.ap(chartFrame, chartContainer));
+  highed.dom.ap(
+    splitter.bottom,
+    highed.dom.ap(
+      chartFrame,
+
+      highed.dom.ap(
+        resPreviewBar,
+        highed.dom.cr('div', 'highed-res-headline', 'Size Preview:'),
+        resQuickSelContainer,
+        highed.dom.ap(
+          highed.dom.cr('div', 'highed-res-quicksel'),
+          resWidth,
+          highed.dom.cr('span', '', 'x'),
+          resHeight
+        )
+      ),
+
+      chartContainer,
+      highed.dom.ap(errorBar, errorBarHeadline, errorBarBody)
+    )
+  );
+
+  highed.dom.on([resWidth, resHeight], 'change', function() {
+    sizeChart(parseInt(resWidth.value, 10), parseInt(resHeight.value, 10));
+  });
 
   // Create the features
   createFeatures();
   createToolbar();
 
   resize();
+
+  function setToActualSize() {
+    resWidth.disabled = resHeight.disabled = 'disabled';
+    chartPreview.getHighchartsInstance(function(chart) {
+      var w, h;
+
+      if (!chart || !chart.options || !chart.options.chart) {
+        h = 400;
+      } else {
+        w = chart.options.chart.width;
+        h = chart.options.chart.height || 400;
+      }
+
+      resWidth.value = w;
+      resHeight.value = h;
+
+      sizeChart(w, h);
+    });
+
+    highed.dom.style(chartFrame, {
+      'overflow-x': 'auto'
+    });
+  }
+
+  resQuickSel.addItem({
+    id: 'actual',
+    title: 'Actual Size',
+    select: function() {
+      setToActualSize();
+    }
+  });
+
+  chartPreview.on('AttrChange', function(option) {
+    if (option.id === 'chart.height' || option.id === 'chart.width') {
+      resQuickSel.selectByIndex(0);
+      // setToActualSize();
+    }
+  });
+
+  Object.keys(resolutions).forEach(function(devName) {
+    resQuickSel.addItem({
+      id: devName,
+      title: devName,
+      select: function() {
+        resWidth.disabled = resHeight.disabled = undefined;
+
+        resWidth.value = resolutions[devName][0];
+        resHeight.value = resolutions[devName][1];
+
+        sizeChart(resolutions[devName][0], resolutions[devName][1]);
+
+        highed.dom.style(chartFrame, {
+          'overflow-x': ''
+        });
+      }
+    });
+  });
+
+  resQuickSel.selectByIndex(0);
 
   return {
     on: events.on,
@@ -545,6 +793,8 @@ highed.DrawerEditor = function(parent, options) {
       on: dataTable.on,
       showLiveStatus: toolbox.showLiveStatus,
       hideLiveStatus: toolbox.hideLiveStatus
-    }
+    },
+    dataTable: dataTable,
+    toolbar: toolbar
   };
 };

@@ -1,82 +1,110 @@
-
 .highed-container {
-
-	font-family: @font-main;
-	color: @text-main;
-	background: @background-main;
-	border: @border-main;
-	height:100%;
-	width: 100%;
-	.highed-box-size;
+  font-family: @font-main;
+  color: @text-main;
+  background: @background-main;
+  border: @border-main;
+  height: 100%;
+  width: 100%;
+  .highed-box-size;
 }
 
 .highed-chart-container {
-	position: relative;
-	margin: 0;
+  position: relative;
+  margin: 0;
 }
 
 .highed-chart-container-icon {
-	float:left;
-	width:40px;
-	height:40px;
-	background-repeat: no-repeat;
-	background-position: center;
-	//background-size: 300%;
+  float: left;
+  width: 40px;
+  height: 40px;
+  background-repeat: no-repeat;
+  background-position: center;
+  //background-size: 300%;
 
-	background-color: @bright-background;
-	padding:4px;
-	.highed-box-size;
-	//transform:scale();
+  background-color: @bright-background;
+  padding: 4px;
+  .highed-box-size;
+  //transform:scale();
 }
 
 @media (max-width: 700px) {
-	.highed-hsplitter .panel.highed-chart-preview-bar {
-		display:none !important;
-	}
+  .highed-hsplitter .panel.highed-chart-preview-bar {
+    display: none !important;
+  }
 }
 
-@media (min-width: 700px) {	
-	.highed-hsplitter .panel.highed-chart-preview-bar {
-		background:@background-preview;
-		border-left: 1px solid @panel-divider;
-		padding: 10px;
-	}
+@media (min-width: 700px) {
+  .highed-hsplitter .panel.highed-chart-preview-bar {
+    background: @background-preview;
+    border-left: 1px solid @panel-divider;
+    padding: 10px;
+  }
 }
 
 .highed-container .titlebar {
-	color: @text-main;
-	background: @background-main;
-	height: 48px;
-	width: 100%;
-	font-weight: 100;
-	position: relative;
-	padding:5px;
-	line-height: 40px;
-	.highed-box-size;
-	.highed-nosel;
+  color: @text-main;
+  background: @background-main;
+  height: 48px;
+  width: 100%;
+  font-weight: 100;
+  position: relative;
+  padding: 5px;
+  line-height: 40px;
+  .highed-box-size;
+  .highed-nosel;
 }
 
 .highed-container .titlebar .settings {
-	
-	
-
-}	
-
-.highed-container .icons {
-	position: absolute;
-	right:10px;
-	top:5px;
-	height:100%;
 }
 
+.highed-container .icons {
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  height: 100%;
+}
 
 .highed-expand-container {
-	position: absolute;
-	z-index: 2;
-	width:0%;
-	height: 100%;
-	top:0px;
-	right:0px;
-	display:none;
-	background-color: #FFF;
+  position: absolute;
+  z-index: 2;
+  width: 0%;
+  height: 100%;
+  top: 0px;
+  right: 0px;
+  display: none;
+  background-color: #fff;
+}
+
+.highed-errorbar {
+  opacity: 0;
+  pointer-events: none;
+  width: 100%;
+  height: 140px;
+  background: @background-error;
+  color: @color-error;
+  position: absolute;
+  z-index: 10;
+  bottom: 0px;
+  left: 0px;
+}
+
+.highed-errorbar-headline {
+  font-size: 28px;
+  text-align: center;
+  padding-bottom: 5px;
+}
+
+.highed-errorbar-body {
+  overflow-y: auto;
+  height: 90px;
+  padding: 5px;
+  background: lighten(@background-error, 5);
+}
+
+.highed-errorbar a {
+  color: @color-error !important;
+}
+
+.highed-errorbar-more {
+  margin-top: 10px;
 }

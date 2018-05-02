@@ -28,8 +28,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /** UI For customizing a chart
  *  @todo there be dragons here.
  *  @example
- *  var chart = highed.ChartCustomizer(document.body);
- *  console.log(chart.export.html());
+ *  var chart = highed.ChartCustomizer(document.body, {}, chartPreview);
  *
  *  @constructor
  *
@@ -40,14 +39,18 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  @param parent {domnode} - the node to attach the editor to
  *  @param attributes {object} - the attributes
- *    > noAdvanced {bool} - set to false to force disable the advance view
+ *    > noAdvanced {bool} - set to true to force disable the advance view
+ *    > noCustomCode {bool} - set to true to disable custom code view
+ *    > noPreview {bool} - set to true to disable option preview view
  *    > availableSettings {string|array} - whitelist of exposed settings
+ *  @param chartPreview {ChartPreview} - the chart preview instance
  */
 highed.ChartCustomizer = function(parent, attributes, chartPreview) {
   var properties = highed.merge(
       {
         noAdvanced: false,
         noCustomCode: false,
+        noPreview: false,
         availableSettings: []
       },
       attributes
@@ -105,6 +108,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
   if (highed.onPhone()) {
     properties.noAdvanced = true;
     properties.noCustomCode = true;
+    properties.noPreview = true;
   }
 
   body.className += ' highed-customizer-body';
@@ -165,6 +169,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
     highed.dom.ap(customCodeSplitter.bottom, customCodeDebug);
 
     function setCustomCode() {
+      highed.emit('UIAction', 'CustomCodeUpdate');
       customCodeDebug.innerHTML = '';
       if (chartPreview) {
         chartPreview.setCustomCode(
@@ -269,7 +274,10 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
             doInclude = true;
           }
         });
-      } else if (properties.availableSettings[group.id]) {
+      } else if (
+        properties.availableSettings[group.id] ||
+        properties.availableSettings[group.pid]
+      ) {
         doInclude = true;
       }
 
@@ -400,7 +408,10 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
       }
 
       if (Object.keys(properties.availableSettings || {}).length > 0) {
-        if (!properties.availableSettings[group.id]) {
+        if (
+          !properties.availableSettings[group.id] &&
+          !properties.availableSettings[group.pid]
+        ) {
           return;
         }
       }
@@ -431,6 +442,12 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
           },
           function(newValue) {
             events.emit('PropertyChange', group.id, newValue, detailIndex);
+            highed.emit(
+              'UIAction',
+              'SimplePropSet',
+              highed.L('option.text.' + group.pid),
+              newValue
+            );
 
             if (group.id === filteredBy) {
               //This is a master for the rest of the childs,
@@ -447,6 +464,10 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
   }
 
   function buildTree() {
+    if (properties.noAdvanced) {
+      return;
+    }
+
     highed.dom.style(advancedLoader, {
       opacity: 1
     });
@@ -469,10 +490,6 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
           opacity: 0
         });
       }, 10);
-    }
-
-    if (properties.noCustomCode) {
-      customCodeTab.hide();
     }
   }
 
@@ -545,6 +562,9 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
     }, 350);
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+  // P U B L I C  F U N S
+
   /** Highlight a field in the customizer
    *  @memberof highed.ChartCustomizer
    *  @param id {string} - is the id of the field to highlight
@@ -591,6 +611,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
       selectGroup(thing);
     });
     highlighted = false;
+    highed.emit('UIAction', 'SimplePropCatChoose', id);
   });
 
   function buildAdvTree(item, selected, instancedData, filter, propFilter) {
@@ -598,6 +619,10 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
       componentCount = 0;
 
     advBody.innerHTML = '';
+
+    if (properties.noAdvanced) {
+      return;
+    }
 
     item.children.forEach(function(entry) {
       if (!entry.meta.leafNode) {
@@ -647,6 +672,12 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
             attributes: entry.attributes || []
           },
           function(newValue) {
+            highed.emit(
+              'UIAction',
+              'AdvancedPropSet',
+              (entry.meta.ns ? entry.meta.ns + '.' : '') + highed.uncamelize(entry.meta.name),
+              newValue
+            );
             instancedData[entry.meta.name] = newValue;
             events.emit('PropertySetChange', advTree.getMasterData());
             if (advTree.isFilterController(entry.meta.ns, entry.meta.name)) {
@@ -693,6 +724,18 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
 
   build();
   initCustomCode();
+
+  if (properties.noCustomCode) {
+    customCodeTab.hide();
+  }
+
+  if (properties.noAdvanced) {
+    advancedTab.hide();
+  }
+
+  if (properties.noPreview) {
+    outputPreviewTab.hide();
+  }
 
   return {
     /* Listen to an event */

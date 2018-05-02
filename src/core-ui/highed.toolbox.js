@@ -175,6 +175,8 @@ highed.Toolbox = function(parent, attr) {
       highed.dom.style(helpIcon, {
         display: props.iconOnly ? 'none' : 'block'
       });
+
+      highed.emit('UIAction', 'ToolboxNavigation', props.title);
     }
 
     function collapse() {
@@ -215,6 +217,7 @@ highed.Toolbox = function(parent, attr) {
     }
 
     function showHelp() {
+      highed.emit('UIAction', 'IconHelp', props.title);
       helpModal.show();
     }
 

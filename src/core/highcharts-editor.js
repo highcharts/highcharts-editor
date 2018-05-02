@@ -44,10 +44,10 @@ var highed = {
   },
 
   /** Trigger file download
-     *  @namespace highed
-     *  @param filename {string} - the filename
-     *  @param data {string} - the contained data
-     */
+   *  @namespace highed
+   *  @param filename {string} - the filename
+   *  @param data {string} - the contained data
+   */
   download: function(filename, data, mime) {
     var l = highed.dom.cr('a');
     mime = mime || 'application/octet-stream';
@@ -59,11 +59,11 @@ var highed = {
   },
 
   /** Clear an object
-      * Deletes all the object attributes.
-      * Useful when needing to clear an object without invalidating references to it
-      * @namespace highed
-      * @param obj {object} - the object to clear
-     */
+   * Deletes all the object attributes.
+   * Useful when needing to clear an object without invalidating references to it
+   * @namespace highed
+   * @param obj {object} - the object to clear
+   */
   clearObj: function(obj) {
     Object.keys(obj).forEach(function(key) {
       delete obj[key];
@@ -71,20 +71,20 @@ var highed = {
   },
 
   /** Preform an AJAX request. Same syntax as jQuery.
-     *  @namespace highed
-     *  @param p {object} - options
-     *    > url {string} - the URL to call
-     *    > type {enum} - the type of request
-     *    > dataType {enum} - the type of data expected
-     *    > success {function} - function to call on success
-     *    > error {function} - function to call on request fail
-     *    > data {object} - the payload
-     *    > autoFire {boolean} - whether or not to fire the request right away
-     *
-     *   @emits Error {string} - when there's an error
-     *   @emits OK {string} - when the request succeeded
-     *   @returns {object} - interface to the request
-     */
+   *  @namespace highed
+   *  @param p {object} - options
+   *    > url {string} - the URL to call
+   *    > type {enum} - the type of request
+   *    > dataType {enum} - the type of data expected
+   *    > success {function} - function to call on success
+   *    > error {function} - function to call on request fail
+   *    > data {object} - the payload
+   *    > autoFire {boolean} - whether or not to fire the request right away
+   *
+   *   @emits Error {string} - when there's an error
+   *   @emits OK {string} - when the request succeeded
+   *   @returns {object} - interface to the request
+   */
   ajax: function(p) {
     var props = highed.merge(
         {
@@ -169,10 +169,10 @@ var highed = {
   },
 
   /** Generate a uuid
-     *  Borrowed from http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-     *  @namespace highed
-     *  @returns {string} - a UUID string
-     */
+   *  Borrowed from http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+   *  @namespace highed
+   *  @returns {string} - a UUID string
+   */
   uuid: function() {
     var d = new Date().getTime(),
       uuid;
@@ -190,10 +190,10 @@ var highed = {
   },
 
   /** Map an array to an object
-     *  @namespace highed
-     *  @param {array} arr - the array to map
-     *  @return {object} - an object with the array contents as keys, and their value set to true
-     */
+   *  @namespace highed
+   *  @param {array} arr - the array to map
+   *  @return {object} - an object with the array contents as keys, and their value set to true
+   */
   arrToObj: function(arr) {
     var obj = {};
 
@@ -213,11 +213,11 @@ var highed = {
   },
 
   /** Make a camel back string pretty
-     *  Transforms e.g. `imACamelBackString` to `Im a camelback string`.
-     *  @namespace highed
-     *  @param str {string} - the input string
-     *  @return {string} - the transformed string
-     */
+   *  Transforms e.g. `imACamelBackString` to `Im a camelback string`.
+   *  @namespace highed
+   *  @param str {string} - the input string
+   *  @return {string} - the transformed string
+   */
   uncamelize: function(str) {
     var s = '';
 
@@ -246,12 +246,12 @@ var highed = {
   },
 
   /** Clamp a number between min/max
-     *  @namespace highed
-     *  @param min {number} - minimum value
-     *  @param max {number} - maximum value
-     *  @param value {number} - the value to clamp
-     *  @returns {number} - the clamped value
-     */
+   *  @namespace highed
+   *  @param min {number} - minimum value
+   *  @param max {number} - maximum value
+   *  @param value {number} - the value to clamp
+   *  @returns {number} - the clamped value
+   */
   clamp: function(min, max, value) {
     if (value < min) return min;
     if (value > max) return max;
@@ -259,14 +259,14 @@ var highed = {
   },
 
   /** Convert a hex value to RGB
-     *
-     *  @namespace highed
-     *  @param {string} hex - the hex string
-     *  @return {object} - an object with rgb components
-     *    > r {number} - red
-     *    > g {number} - green
-     *    > b {number} - blue
-     */
+   *
+   *  @namespace highed
+   *  @param {string} hex - the hex string
+   *  @return {object} - an object with rgb components
+   *    > r {number} - red
+   *    > g {number} - green
+   *    > b {number} - blue
+   */
   hexToRgb: function(hex) {
     if (!hex) {
       return {
@@ -277,7 +277,10 @@ var highed = {
     }
 
     if (hex.indexOf('rgba') === 0) {
-      hex = hex.substr(5).replace(')', '').split(',');
+      hex = hex
+        .substr(5)
+        .replace(')', '')
+        .split(',');
       return {
         r: parseInt(hex[0], 10),
         g: parseInt(hex[1], 10),
@@ -307,10 +310,10 @@ var highed = {
   },
 
   /** Invert a color
-     *  @namespace highed
-     *  @param {string} hex - the color to invert
-     *  @return {string} - new hex color
-     */
+   *  @namespace highed
+   *  @param {string} hex - the color to invert
+   *  @return {string} - new hex color
+   */
   invertHexColor: function(hex) {
     var rgb = highed.hexToRgb(hex),
       res = 0;
@@ -327,10 +330,10 @@ var highed = {
   },
 
   /** Return #FFF or #000 based on the intensity of a color
-     *  @namespace highed
-     *  @param {string} hex - input color
-     *  @return {string} - the new hex color
-     */
+   *  @namespace highed
+   *  @param {string} hex - input color
+   *  @return {string} - the new hex color
+   */
   getContrastedColor: function(hex) {
     var rgb = highed.hexToRgb(hex),
       avarage = (rgb.r + rgb.g + rgb.b) / 3;
@@ -342,21 +345,21 @@ var highed = {
   },
 
   /** Convert a string to a bool
-     *  @namespace highed
-     *  @param {string} what - the string to convert
-     *  @return {bool} - the resulting bool
-     */
+   *  @namespace highed
+   *  @param {string} what - the string to convert
+   *  @return {bool} - the resulting bool
+   */
   toBool: function(what) {
     return what === 'true' || what === true || what === 'on';
   },
 
   /** Set a property based on -- delimited path
-     *  @namespace highed
-     *  @param {object} obj - the object to modify
-     *  @param {string} path - the path to the attribute to change
-     *  @param {anything} value - the value to set
-     *  @param {number} index - if we're accessing an array, this is the index
-     */
+   *  @namespace highed
+   *  @param {object} obj - the object to modify
+   *  @param {string} path - the path to the attribute to change
+   *  @param {anything} value - the value to set
+   *  @param {number} index - if we're accessing an array, this is the index
+   */
   setAttr: function(obj, path, value, index) {
     var current = obj;
 
@@ -369,7 +372,10 @@ var highed = {
       return;
     }
 
-    path = path.replace(/\-\-/g, '.').replace(/\-/g, '.').split('.');
+    path = path
+      .replace(/\-\-/g, '.')
+      .replace(/\-/g, '.')
+      .split('.');
 
     path.forEach(function(p, i) {
       if (i === path.length - 1) {
@@ -396,12 +402,12 @@ var highed = {
   },
 
   /** Get a property based on -- delimited path
-     *  @namespace highed
-     *  @param {object} obj - the object to traverse
-     *  @param {string} path - the path to the attribute to get
-     *  @param {number} index - if we're accessing an array, this is the index
-     *  @returns {anything} - the value or false
-     */
+   *  @namespace highed
+   *  @param {object} obj - the object to traverse
+   *  @param {string} path - the path to the attribute to get
+   *  @param {number} index - if we're accessing an array, this is the index
+   *  @returns {anything} - the value or false
+   */
   getAttr: function(obj, path, index) {
     var current = obj,
       result = undefined;
@@ -415,7 +421,10 @@ var highed = {
       return result;
     }
 
-    path = path.replace(/\-\-/g, '.').replace(/\-/g, '.').split('.');
+    path = path
+      .replace(/\-\-/g, '.')
+      .replace(/\-/g, '.')
+      .split('.');
 
     path.forEach(function(p, i) {
       if (i === path.length - 1) {
@@ -439,14 +448,14 @@ var highed = {
   },
 
   /** Deep merge two objects.
-     * Note: this modifies object `a`!
-     * @namespace highed
-     * @param {object} a - the destination object
-     * @param {object} b - the source object
-     * @param {bool} ignoreEmpty - Ignore empty things
-     * @param {object} excludeMap - Map of properties to exclude from the merge
-     * @return {object} - argument a
-     */
+   * Note: this modifies object `a`!
+   * @namespace highed
+   * @param {object} a - the destination object
+   * @param {object} b - the source object
+   * @param {bool} ignoreEmpty - Ignore empty things
+   * @param {object} excludeMap - Map of properties to exclude from the merge
+   * @return {object} - argument a
+   */
   merge: function(a, b, ignoreEmpty, excludeMap) {
     if (!a || !b) return a || b;
 
@@ -488,46 +497,46 @@ var highed = {
   },
 
   /** Check if something is null or undefined
-     *  @namespace highed
-     *  @param {anything} what - the value to check
-     *  @return {bool} - true if null
-     */
+   *  @namespace highed
+   *  @param {anything} what - the value to check
+   *  @return {bool} - true if null
+   */
   isNull: function(what) {
     return typeof what === 'undefined' || what === null;
   },
 
   /** Check if something is a string
-     *  @namespace highed
-     *  @param {anything} what - the value to check
-     *  @return {bool} - true if string
-     */
+   *  @namespace highed
+   *  @param {anything} what - the value to check
+   *  @return {bool} - true if string
+   */
   isStr: function(what) {
     return typeof what === 'string' || what instanceof String;
   },
 
   /** Check if something is a number
-     * @namespace highed
-     *  @param {anything} what - the value to check
-     *  @return {bool} - true if number
-     */
+   * @namespace highed
+   *  @param {anything} what - the value to check
+   *  @return {bool} - true if number
+   */
   isNum: function(what) {
     return !isNaN(parseFloat(what)) && isFinite(what);
   },
 
   /** Check if a value is a function
-     * @namespace highed
-     * @param {anything} what - the value to check
-     * @return {bool} - true if function
-     */
+   * @namespace highed
+   * @param {anything} what - the value to check
+   * @return {bool} - true if function
+   */
   isFn: function(what) {
     return (what && typeof what === 'function') || what instanceof Function;
   },
 
   /** Check if a value is an array
-     * @namespace highed
-     * @param {anything} what - the value to check
-     * @return {bool} - true if array
-     */
+   * @namespace highed
+   * @param {anything} what - the value to check
+   * @return {bool} - true if array
+   */
   isArr: function(what) {
     return (
       !highed.isNull(what) && what.constructor.toString().indexOf('Array') > -1
@@ -535,20 +544,20 @@ var highed = {
   },
 
   /** Check if a value is a boolean
-     * @namespace highed
-     * @param {anything} what - the value to check
-     * @return {bool} - true if bool
-     */
+   * @namespace highed
+   * @param {anything} what - the value to check
+   * @return {bool} - true if bool
+   */
   isBool: function(what) {
     return what === true || what === false;
   },
 
   /** Check if a value is a basic type
-     * A basic type is either a bool, string, or a number
-     * @namespace highed
-     * @param {anything} what - the value to check
-     * @return {bool} - true if basic
-     */
+   * A basic type is either a bool, string, or a number
+   * @namespace highed
+   * @param {anything} what - the value to check
+   * @return {bool} - true if basic
+   */
   isBasic: function(what) {
     return (
       !highed.isArr(what) &&
@@ -765,18 +774,18 @@ var highed = {
     isOnPhone = false,
     options = {
       codeMirrorTheme: 'neo',
-      helpURL: 'http://www.highcharts.com/products/highcharts-editor',
+      helpURL: 'https://www.highcharts.com/products/highcharts-editor',
       defaultLanguage: 'en',
       includeCDNInExport: true,
       stickyChartProperties: {},
       includeHighcharts: true,
       cloudAPIURL: 'https://cloud-api.highcharts.com/',
       helpImgPath: 'help/',
-      thumbnailURL: 'https://cloud.highcharts.com/static/thumbnails/'
+      thumbnailURL: 'https://cloud.highcharts.com/static/thumbnails/',
+      autoIncludeDependencies: true
     },
     cdnScripts = [
       'https://code.highcharts.com/stock/highstock.js',
-      'http://code.highcharts.com/adapters/standalone-framework.js',
       'https://code.highcharts.com/highcharts-more.js',
       'https://code.highcharts.com/highcharts-3d.js',
       'https://code.highcharts.com/modules/data.js',
@@ -803,21 +812,21 @@ var highed = {
   ///////////////////////////////////////////////////////////////////////////
 
   /**
-     * Whitelist an option in simple view
-     */
+   * Whitelist an option in simple view
+   */
   highed.exposeOption = function(option) {};
 
   /** Set/get an option
-     *  Skip `value` to get the value
-     *  @param option {string} - the option to set
-     *  @param value {anything} - the value to set
-     *  @returns {anything} - the option value
-     */
+   *  Skip `value` to get the value
+   *  @param option {string} - the option to set
+   *  @param value {anything} - the value to set
+   *  @returns {anything} - the option value
+   */
   highed.option = function(option, value) {
     if (!highed.isBasic(option)) {
       highed.merge(options, option);
     } else if (options[option]) {
-      if (value) {
+      if (typeof value !== 'undefined') {
         options[option] = value;
       }
       return options[option];
@@ -826,8 +835,8 @@ var highed = {
   };
 
   /** Set a set of options
-     *  @param options {object} - an object of options to set
-     */
+   *  @param options {object} - an object of options to set
+   */
   highed.options = function(options) {
     Object.keys(options || {}).forEach(function(key) {
       highed.option(key, options[key]);
@@ -835,15 +844,15 @@ var highed = {
   };
 
   /** Serialize the global options
-     *  @returns {object} - a copy of the global options
-     */
+   *  @returns {object} - a copy of the global options
+   */
   highed.serializeEditorOptions = function() {
     return highed.merge({}, options);
   };
 
   /** Add a function to call when the document is ready
-     * @param {function} fn - the function to call
-     */
+   * @param {function} fn - the function to call
+   */
   highed.ready = function(fn) {
     if (highed.isFn(fn)) {
       if (isReady) {
@@ -855,10 +864,10 @@ var highed = {
   };
 
   /** Log something
-     * Accepts a variable amount of arguments after `level` which will be
-     * the log message (similar to `console.log`).
-     * @param {number} level - the log level 1..4
-     */
+   * Accepts a variable amount of arguments after `level` which will be
+   * the log message (similar to `console.log`).
+   * @param {number} level - the log level 1..4
+   */
   highed.log = function(level) {
     var things = Array.prototype.slice.call(arguments);
     things.splice(0, 1);
@@ -869,8 +878,8 @@ var highed = {
   };
 
   /** Set the current log level
-     *  @param level {number} - the current log level
-     */
+   *  @param level {number} - the current log level
+   */
   highed.setLogLevel = function(level) {
     if (level <= logLevels.length) {
       currentLogLevel = level;
@@ -878,11 +887,11 @@ var highed = {
   };
 
   /** Include something
-     *  @namespace highed
-     *  @param what {string} - URL to a css or javascript file
-     *  @param fn {function} - function to call when done including the script
-     *  @param asCSS {boolean} - force including as css
-     */
+   *  @namespace highed
+   *  @param what {string} - URL to a css or javascript file
+   *  @param fn {function} - function to call when done including the script
+   *  @param asCSS {boolean} - force including as css
+   */
   highed.include = function(what, fn, asCSS) {
     var n;
 
@@ -927,9 +936,9 @@ var highed = {
   };
 
   /** Returns true if running on a phone
-     *  @namespace highed
-     *  @returns {boolean} - true if running on a phone
-     */
+   *  @namespace highed
+   *  @returns {boolean} - true if running on a phone
+   */
   highed.onPhone = function() {
     return isOnPhone;
   };
@@ -956,6 +965,10 @@ var highed = {
 
   //Inject dependencies
   highed.ready(function() {
+    if (!options.autoIncludeDependencies) {
+      return false;
+    }
+
     highed.include(
       'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css'
     );

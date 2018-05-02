@@ -10,6 +10,7 @@
     "./src/core/highed.sampleman.js",
     "./src/core/highed.dvalidatorman.js",
     "./src/core/highed.cloud.js",
+    "./src/core/highed.global.events.js",
 
     "./src/core-ui/highed.dimmer.js",
     "./src/core-ui/highed.overlaymodal.js",
@@ -37,6 +38,7 @@
     "./src/meta/highed.meta.options.extended.js",
     "./src/meta/highed.meta.colors.js",
     "./src/meta/highed.meta.fonts.js",
+    "./src/meta/errors.js",
 
     "./gen_src/highed.meta.options.advanced.js",
         

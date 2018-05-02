@@ -225,6 +225,10 @@ function filter(dumpProperties, input, name, pname) {
       node.meta.types.array = 'series';
     }
 
+    if (name === 'dataLabels') {
+      node.meta.types.object = 1;
+    }
+
     if (input.doclet) {
 
         if (input.doclet.products) {
@@ -316,6 +320,10 @@ function filter(dumpProperties, input, name, pname) {
     // Filter children
     Object.keys(input.children || {}).forEach(function (child) {
         if (child === '' || child === '_meta' || child === 'data') return;
+
+        if (child === 'dataLabels' && Object.keys(input.children[child].children).length === 0) {
+          return 0;
+        }
 
         // // We don't include functions, so check that first
         // if (input.children[child].doclet && input.children[child].doclet.type) {

@@ -200,6 +200,8 @@ highed.ChartPreview = function(parent, attributes) {
       return;
     }
 
+    // (pnode || parent).innerHTML = 'Chart not loaded yet';
+
     // options.chart = options.chart || {};
     // options.chart.width = '100%';
     // options.chart.height = '100%';
@@ -234,6 +236,8 @@ highed.ChartPreview = function(parent, attributes) {
         events.emit('RequestResize');
         // highed.dom.ap(pnode || parent, toggleButton);
       });
+
+      events.emit('ChartRecreated');
     } catch (ex) {
       var e = ex.toString();
 
@@ -243,21 +247,27 @@ highed.ChartPreview = function(parent, attributes) {
 
       i = e.indexOf('www.');
 
+      events.emit('Error', e);
+
+      highed.emit('UIAction', 'UnsuccessfulChartGeneration');
+
       if (i > 0) {
-        highed.snackBar(
-          'There is a problem with your chart!',
-          e.substr(i),
-          function() {
-            window.open('http://' + e.substr(i));
-          }
-        );
+        // highed.snackBar(
+        //   'There is a problem with your chart!',
+        //   e.substr(i),
+        //   function() {
+        //     window.open('http://' + e.substr(i));
+        //   }
+        // );
       } else {
         //Our assumption was wrong. The world is ending.
-        highed.snackBar(e);
+        // highed.snackBar(e);
 
-        console.error(e);
+        // console.error(e);
         console.error('exception trace:', ex.stack);
       }
+
+      (pnode || parent).innerHTML = '';
 
       chart = false;
     }
@@ -276,7 +286,12 @@ highed.ChartPreview = function(parent, attributes) {
       }
 
       if (chart && chart.reflow) {
-        chart.reflow();
+        // && chart.options) {
+        try {
+          chart.reflow();
+        } catch (e) {
+          // No idea why this keeps failing
+        }
       }
     });
   }
@@ -291,6 +306,16 @@ highed.ChartPreview = function(parent, attributes) {
       return assignTheme(JSON.parse(theme));
     }
 
+    themeMeta = {};
+
+    if (highed.isBasic(theme) || highed.isArr(theme)) {
+      return false;
+    }
+
+    if (Object.keys(theme).length === 0) {
+      return false;
+    }
+
     if (theme && theme.options && theme.id) {
       // Assume that this uses the new format
       themeMeta = {
@@ -301,7 +326,7 @@ highed.ChartPreview = function(parent, attributes) {
       themeOptions = highed.merge({}, theme.options);
     } else {
       themeMeta = {
-        id: 1,
+        id: highed.uuid(),
         name: 'Untitled Theme'
       };
 
@@ -313,6 +338,8 @@ highed.ChartPreview = function(parent, attributes) {
       init(aggregatedOptions);
       emitChange();
     }
+
+    return true;
   }
 
   function updateAggregated(noCustomCode) {
@@ -510,7 +537,7 @@ highed.ChartPreview = function(parent, attributes) {
    *  @name data.csv
    *  @param data {object} - the data to load
    */
-  function loadCSVData(data) {
+  function loadCSVData(data, emitLoadSignal) {
     var mergedExisting = false,
       seriesClones = [];
     if (!data || !data.csv) {
@@ -595,6 +622,10 @@ highed.ChartPreview = function(parent, attributes) {
         loadSeries();
         emitChange();
       }
+
+      if (emitLoadSignal) {
+        events.emit('LoadProjectData', data.csv);
+      }
     });
 
     // setTimeout(function () {
@@ -622,7 +653,14 @@ highed.ChartPreview = function(parent, attributes) {
    *  @param projectData - the data to load
    */
   function loadProject(projectData) {
-    var hasData = false;
+    var hasData = false,
+      htmlEntities = {
+        '&amp;': '&',
+        '&lt;': '<',
+        '&gt;': '>'
+      };
+
+    highed.emit('UIAction', 'LoadProject');
 
     lastLoadedCSV = false;
     lastLoadedSheet = false;
@@ -663,7 +701,7 @@ highed.ChartPreview = function(parent, attributes) {
         });
       }
 
-      if (projectData.theme) {
+      if (typeof projectData.theme !== 'undefined') {
         assignTheme(projectData.theme, true);
       }
 
@@ -745,11 +783,22 @@ highed.ChartPreview = function(parent, attributes) {
 
           loadLiveData(provider.liveData);
         } else if (projectData.settings.dataProvider.csv) {
-          loadCSVData({
-            csv: projectData.settings.dataProvider.csv
+          // We need to fix potential html-entities as they will mess up separators
+          Object.keys(htmlEntities).forEach(function(ent) {
+            projectData.settings.dataProvider.csv = projectData.settings.dataProvider.csv.replace(
+              new RegExp(ent, 'g'),
+              htmlEntities[ent]
+            );
           });
 
-          events.emit('LoadProjectData', projectData.settings.dataProvider.csv);
+          loadCSVData(
+            {
+              csv: projectData.settings.dataProvider.csv
+            },
+            true
+          );
+
+          // events.emit('LoadProjectData', projectData.settings.dataProvider.csv);
 
           hasData = true;
         }
@@ -766,9 +815,9 @@ highed.ChartPreview = function(parent, attributes) {
         updateAggregated();
         init(aggregatedOptions);
         emitChange();
-
-        events.emit('LoadProject', projectData);
       }
+
+      events.emit('LoadProject', projectData);
     }
   }
 
@@ -793,6 +842,8 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   function loadGSpreadsheet(options) {
+    var key;
+
     lastLoadedCSV = false;
     lastLoadedSheet = options;
 
@@ -800,6 +851,16 @@ highed.ChartPreview = function(parent, attributes) {
       lastLoadedSheet.googleSpreadsheetKey || lastLoadedSheet.id;
     lastLoadedSheet.googleSpreadsheetWorksheet =
       lastLoadedSheet.googleSpreadsheetWorksheet || lastLoadedSheet.worksheet;
+
+    if (options && (options.googleSpreadsheetKey || '').indexOf('http') === 0) {
+      // Parse out the spreadsheet ID
+      // Located between /d/ and the next slash after that
+      key = options.googleSpreadsheetKey;
+      key = key.substr(key.indexOf('/d/') + 3);
+      key = key.substr(0, key.indexOf('/'));
+
+      options.googleSpreadsheetKey = key;
+    }
 
     highed.merge(customizedOptions, {
       data: lastLoadedSheet
@@ -850,7 +911,8 @@ highed.ChartPreview = function(parent, attributes) {
     var loadedCSVRaw = false,
       gsheet = lastLoadedSheet,
       livedata = lastLoadedLiveData,
-      provider = 1;
+      provider = 1,
+      themeData = false;
 
     if (
       chart &&
@@ -888,15 +950,19 @@ highed.ChartPreview = function(parent, attributes) {
         provider = 3;
     }
 
+    if (themeMeta && themeMeta.id && themeOptions) {
+      themeData = {
+        id: themeMeta.id,
+        name: themeMeta.name,
+        options: themeOptions || {}
+      };
+    }
+
     return {
       template: templateOptions,
       options: getCleanOptions(customizedOptions),
       customCode: highed.isFn(customCode) ? customCodeStr : '',
-      theme: {
-        id: themeMeta.id,
-        name: themeMeta.name,
-        options: themeOptions
-      },
+      theme: themeData,
       settings: {
         constructor: constr,
         dataProvider: {
@@ -992,6 +1058,46 @@ highed.ChartPreview = function(parent, attributes) {
    *
    */
   function setChartOptions(options) {
+    function emitWidthChange() {
+      events.emit('AttrChange', {
+        id: 'chart.width'
+      });
+    }
+
+    function emitHeightChange() {
+      events.emit('AttrChange', {
+        id: 'chart.height'
+      });
+    }
+
+    var doEmitHeightChange = false,
+      doEmitWidthChange = false;
+
+    // Temp. hack to deal with actual sizing
+    if (options && options.chart) {
+      if (typeof options.chart.width !== 'undefined') {
+        if (
+          !customizedOptions.chart ||
+          typeof customizedOptions.chart === 'undefined'
+        ) {
+          doEmitWidthChange = true;
+        } else if (customizedOptions.chart.width !== options.chart.width) {
+          doEmitWidthChange = true;
+        }
+      }
+
+      if (typeof options.chart.height !== 'undefined') {
+        if (
+          !customizedOptions.chart ||
+          typeof customizedOptions.chart === 'undefined'
+        ) {
+          doEmitHeightChange = true;
+        } else if (customizedOptions.chart.height !== options.chart.height) {
+          doEmitHeightChange = true;
+        }
+      }
+    }
+
     // console.time('remblanks');
     customizedOptions = highed.transform.remBlanks(
       highed.merge({}, options, false)
@@ -1015,6 +1121,14 @@ highed.ChartPreview = function(parent, attributes) {
     updateAggregated();
     init(aggregatedOptions, false, true);
     emitChange();
+
+    if (doEmitHeightChange) {
+      emitHeightChange();
+    }
+
+    if (doEmitWidthChange) {
+      emitWidthChange();
+    }
   }
 
   /** Load chart settings
@@ -1090,6 +1204,11 @@ highed.ChartPreview = function(parent, attributes) {
     updateAggregated();
     init(aggregatedOptions, false, true);
     emitChange();
+
+    events.emit('AttrChange', {
+      id: id.replace(/\-\-/g, '.').replace(/\-/g, '.'),
+      value: value
+    });
   }
 
   /** Get embeddable JSON
@@ -1177,8 +1296,10 @@ highed.ChartPreview = function(parent, attributes) {
           'https://code.highcharts.com/highcharts-3d.js',
           'https://code.highcharts.com/modules/data.js',
           'https://code.highcharts.com/modules/exporting.js',
-          'http://code.highcharts.com/modules/funnel.js',
-          'http://code.highcharts.com/modules/solid-gauge.js'
+          'https://code.highcharts.com/modules/funnel.js',
+          'https://code.highcharts.com/modules/annotations.js',
+          // 'https://code.highcharts.com/modules/series-label.js'
+          'https://code.highcharts.com/modules/solid-gauge.js'
         ],
         cdnIncludesArr = [],
         title =
@@ -1503,6 +1624,8 @@ highed.ChartPreview = function(parent, attributes) {
     collapse: collapse,
     new: newChart,
     changeParent: changeParent,
+
+    getHighchartsInstance: gc,
 
     loadTemplate: loadTemplate,
     loadSeries: loadSeriesData,
