@@ -236,6 +236,10 @@ highed.DataTable = function(parent, attributes) {
       'div',
       'highed-dtable-drop-zone highed-transition'
     ),
+    liveDataFrame = highed.dom.cr(
+      'div',
+      'highed-box-size highed-dtable-gsheet-frame'
+    ),
     gsheetFrame = highed.dom.cr(
       'div',
       'highed-box-size highed-dtable-gsheet-frame'
@@ -244,11 +248,26 @@ highed.DataTable = function(parent, attributes) {
       'div',
       'highed-box-size highed-prettyscroll highed-dtable-gsheet'
     ),
+    liveDataContainer = highed.dom.cr(
+      'div',
+      'highed-box-size highed-prettyscroll highed-dtable-gsheet'
+    ),
+    liveDataInput = highed.dom.cr('input', 'highed-imp-input-stretch'),
+    liveDataIntervalInput = highed.dom.cr('input', 'highed-imp-input-stretch'),
+    liveDataTypeSelect = highed.DropDown(),
+
+    liveDataTypeContainer = highed.dom.cr('div', 'highed-customize-group'),
+    liveDataTypeMasterNode = highed.dom.cr('div', 'highed-customize-master-dropdown'),
+
     gsheetID = highed.dom.cr(
       'input',
       'highed-box-size highed-dtable-gsheet-id'
     ),
     gsheetWorksheetID = highed.dom.cr(
+      'input',
+      'highed-box-size highed-dtable-gsheet-id'
+    ),
+    gsheetRefreshTime = highed.dom.cr(
       'input',
       'highed-box-size highed-dtable-gsheet-id'
     ),
@@ -278,7 +297,19 @@ highed.DataTable = function(parent, attributes) {
       'highed-ok-button highed-dtable-gsheet-button',
       'Load Spreadsheet'
     ),
+    liveDataLoadButton = highed.dom.cr(
+      'button',
+      'highed-ok-button highed-dtable-gsheet-button',
+      'Load Live Data'
+    ),
+    liveDataCancelButton = highed.dom.cr(
+      'button',
+      'highed-ok-button highed-dtable-gsheet-button',
+      'Cancel'
+    ),
+    detailValue = 0,
     isInGSheetMode = false,
+    isInLiveDataMode = false,
     mainInputCb = [],
     rawCSV = false,
     mainInputCloseCb = false,
@@ -351,6 +382,9 @@ highed.DataTable = function(parent, attributes) {
     return highed.dom.nodefault(e);
   });
 
+  highed.dom.style(liveDataIntervalInput, {
+    padding: '8px'
+  });
   ////////////////////////////////////////////////////////////////////////////
 
   // Handle drag 'n drop of files
@@ -415,6 +449,9 @@ highed.DataTable = function(parent, attributes) {
     if (isInGSheetMode) {
       return;
     }
+    if (isInLiveDataMode) {
+      return;
+    }
 
     if (surpressChangeEvents) {
       return;
@@ -427,7 +464,7 @@ highed.DataTable = function(parent, attributes) {
     //We use an interval to stop a crazy amount of changes to be
     //emitted in succession when e.g. loading sets.
     changeTimeout = window.setTimeout(function() {
-      if (!isInGSheetMode) {
+      if (!isInGSheetMode && !isInLiveDataMode) {
         events.emit('Change', getHeaderTextArr(), toData());
       }
     }, 1000);
@@ -462,7 +499,7 @@ highed.DataTable = function(parent, attributes) {
     mainInputCb.push(
       highed.dom.on(mainInput, 'keyup', function(e) {
         // Super hack to allow pasting CSV into cells
-        var ps = parseCSV(mainInput.value);
+        var ps = highed.parseCSV(mainInput.value);
         if (ps.length > 1) {
           if (
             confirm(
@@ -1344,13 +1381,44 @@ highed.DataTable = function(parent, attributes) {
     }, 10);
   }
 
+  function loadLiveDataPanel(params){
+      //loadRows(params.csv);
+
+      isInLiveDataMode = true;
+      highed.dom.style(gsheetFrame, {
+        display: 'none'
+      });
+      highed.dom.style(container, {
+        display: 'none'
+      });
+      highed.dom.style(liveDataFrame, {
+        display: 'block'
+      });
+
+      liveDataInput.value = params.columnsURL || params.rowsURL || params.csvURL;
+      liveDataIntervalInput.value = params.dataRefreshRate || '';
+      liveDataTypeSelect.selectById((params.columnsURL ? 'columnsURL' : (params.rowsURL ? 'rowsURL': 'csvURL')));
+  }
+
+  function loadLiveDataFromURL(url, interval, type) {
+    isInLiveDataMode = true;
+    events.emit('LoadLiveData', { url: url,
+                                  interval: interval,
+                                  type: type });
+  }
+
   function loadCSV(data, surpressEvents) {
     var rows;
 
     if (isInGSheetMode) {
       isInGSheetMode = false;
+      isInLiveDataMode = false;
 
       highed.dom.style(gsheetFrame, {
+        display: 'none'
+      });
+
+      highed.dom.style(liveDataFrame, {
         display: 'none'
       });
 
@@ -1388,16 +1456,19 @@ highed.DataTable = function(parent, attributes) {
     endRow,
     startColumn,
     endColumn,
-    skipLoad
+    skipLoad,
+    dataRefreshRate
   ) {
     gsheetID.value = id;
     gsheetWorksheetID.value = worksheet || '';
+    gsheetRefreshTime.value = dataRefreshRate || '';
     gsheetStartRow.value = startRow || 0;
     gsheetEndRow.value = endRow || '';
     gsheetStartCol.value = startColumn || 0;
     gsheetEndCol.value = endColumn || 0;
 
     isInGSheetMode = true;
+    isInLiveDataMode = false;
 
     highed.dom.style(gsheetFrame, {
       display: 'block'
@@ -1407,16 +1478,61 @@ highed.DataTable = function(parent, attributes) {
       display: 'none'
     });
 
+    highed.dom.style(liveDataFrame, {
+      display: 'none'
+    });
+
+
     if (!skipLoad) {
       events.emit('LoadGSheet', {
         googleSpreadsheetKey: gsheetID.value,
         googleSpreadsheetWorksheet: gsheetWorksheetID.value || false,
+        dataRefreshRate: gsheetRefreshTime.value || false,
+        enablePolling: (parseInt(gsheetRefreshTime.value) !== 0),
         startRow: gsheetStartRow.value || 0,
         endRow: gsheetEndRow.value || undefined,
         startColumn: gsheetStartCol.value || 0,
         endColumn: gsheetEndCol.value || undefined
       });
     }
+  }
+
+  function addImportTab(tabOptions){
+    importer.addImportTab(tabOptions);
+  }
+
+  function hideImportModal(){
+    importModal.hide();
+  }
+
+  function showLiveData() {
+    if (
+      rows.length <= 1 ||
+      confirm('This will clear your existing data. Continue?')
+    ) {
+      clear(true);
+
+      liveDataInput.value = '';
+      liveDataIntervalInput.value = '';
+      liveDataTypeSelect.selectByIndex(0);
+
+      highed.dom.style(gsheetFrame, {
+        display: 'none'
+      });
+
+      highed.dom.style(container, {
+        display: 'none'
+      });
+
+      highed.dom.style(liveDataFrame, {
+        display: 'block'
+      });
+      importModal.hide();
+
+      isInGSheetMode = false;
+      isInLiveDataMode = true;
+    }
+
   }
 
   function showGSheet() {
@@ -1428,6 +1544,7 @@ highed.DataTable = function(parent, attributes) {
 
       gsheetID.value = '';
       gsheetWorksheetID.value = '';
+      gsheetRefreshTime.value = '';
 
       highed.dom.style(gsheetFrame, {
         display: 'block'
@@ -1437,7 +1554,42 @@ highed.DataTable = function(parent, attributes) {
         display: 'none'
       });
 
+      highed.dom.style(liveDataFrame, {
+        display: 'none'
+      });
+
       isInGSheetMode = true;
+      isInLiveDataMode = false;
+    }
+  }
+
+  function hideLiveData() {
+    if (
+      !liveDataInput.value ||
+      confirm('Are you sure you want to remove your live data?')
+    ) {
+      // Should emit a gsheet clear
+
+      events.emit('LoadLiveData', {
+          url: ''
+      });
+
+      highed.dom.style(gsheetFrame, {
+        display: 'none'
+      });
+
+      highed.dom.style(container, {
+        display: 'block'
+      });
+
+
+      highed.dom.style(liveDataFrame, {
+        display: 'none'
+      });
+
+      isInLiveDataMode = false;
+
+      init();
     }
   }
 
@@ -1460,6 +1612,9 @@ highed.DataTable = function(parent, attributes) {
         display: 'block'
       });
 
+      highed.dom.style(liveDataFrame, {
+        display: 'none'
+      });
       isInGSheetMode = false;
 
       init();
@@ -1472,6 +1627,12 @@ highed.DataTable = function(parent, attributes) {
     loadCSV(data);
   });
 
+  importer.on('ImportLiveData', function(data) {
+    isInLiveDataMode = true;
+    showLiveData();
+    //loadLiveDataFromURL(data.url);
+  });
+
   importer.on('ImportChartSettings', function(settings, format) {
     // Do something with the data here
     events.emit('ImportChartSettings', settings, format);
@@ -1480,12 +1641,24 @@ highed.DataTable = function(parent, attributes) {
 
   highed.dom.on(gsheetCancelButton, 'click', function() {
     hideGSheet();
+    events.emit('CancelDataInput');
+  });
+
+  highed.dom.on(liveDataCancelButton, 'click', function() {
+    hideLiveData();
+    events.emit('CancelDataInput');
+  });
+
+  highed.dom.on(liveDataLoadButton, 'click', function() {
+    loadLiveDataFromURL(liveDataInput.value, liveDataIntervalInput.value, detailValue || 'columnsURL');
   });
 
   highed.dom.on(gsheetLoadButton, 'click', function() {
     events.emit('LoadGSheet', {
       googleSpreadsheetKey: gsheetID.value,
       googleSpreadsheetWorksheet: gsheetWorksheetID.value || false,
+      dataRefreshRate: gsheetRefreshTime.value || false,
+      enablePolling: (parseInt(gsheetRefreshTime.value) !== 0),
       startRow: gsheetStartRow.value || 0,
       endRow: gsheetEndRow.value || Number.MAX_VALUE,
       startColumn: gsheetStartCol.value || 0,
@@ -1584,6 +1757,7 @@ highed.DataTable = function(parent, attributes) {
   highed.dom.ap(
     parent,
     gsheetFrame,
+    liveDataFrame,
     highed.dom.ap(
       container,
       highed.dom.ap(
@@ -1617,6 +1791,7 @@ highed.DataTable = function(parent, attributes) {
 
   gsheetID.placeholder = 'Spreadsheet ID';
   gsheetWorksheetID.placeholder = 'Worksheet (leave blank for first)';
+  gsheetRefreshTime.placeholder = 'Refresh Time (leave blank for no refresh)';
 
   highed.dom.ap(
     gsheetFrame,
@@ -1645,10 +1820,18 @@ highed.DataTable = function(parent, attributes) {
           'Google Spreadsheet ID'
         ),
         highed.dom.ap(highed.dom.cr('div'), gsheetID),
-        highed.dom.cr('div', 'highed-dtable-gsheet-label', 'Worksheet'),
-        highed.dom.ap(highed.dom.cr('div'), gsheetWorksheetID),
         highed.dom.ap(
           highed.dom.cr('table', 'highed-stretch'),
+          highed.dom.ap(
+            highed.dom.cr('tr'),
+            highed.dom.cr('td', 'highed-dtable-gsheet-label', 'Worksheet'),
+            highed.dom.cr('td', 'highed-dtable-gsheet-label', 'Refresh Time (Seconds)')
+          ),
+          highed.dom.ap(
+            highed.dom.cr('tr'),
+            highed.dom.ap(highed.dom.cr('td', '', ''), gsheetWorksheetID),
+            highed.dom.ap(highed.dom.cr('td', '', ''), gsheetRefreshTime)
+          ),
           highed.dom.ap(
             highed.dom.cr('tr'),
             highed.dom.cr('td', 'highed-dtable-gsheet-label', 'Start Row'),
@@ -1686,6 +1869,79 @@ highed.DataTable = function(parent, attributes) {
             '<a target="_blank" href="https://www.highcharts.com/cloud/import-data/how-to-set-up-a-google-spreadsheet-file">the documentation</a>.'
           ].join(' ')
         )
+      )
+    )
+  );
+
+  liveDataTypeSelect.addItems([
+    {id: 'columnsURL', title: "JSON (Column Ordered)"},
+    {id: 'rowsURL', title: "JSON (Row Ordered)"},
+    {id: 'csvURL', title: "CSV"}
+  ]
+  );
+
+  liveDataTypeSelect.on('Change', function(selected) {
+    //detailIndex = selected.index();
+    detailValue = selected.id();
+    //liveDataTypeSelect.selectById(detailValue || 'json');
+  });
+
+  highed.dom.ap(liveDataTypeMasterNode, liveDataTypeSelect.container);
+  highed.dom.style(liveDataTypeMasterNode, {
+    display: 'block'
+  });
+
+  highed.dom.ap(
+    liveDataFrame,
+    highed.dom.ap(
+      liveDataContainer,
+      highed.dom.cr(
+        'div',
+        'highed-dtable-gsheet-heading',
+        'Live Data'
+      ),
+      highed.dom.ap(
+        highed.dom.cr('div', 'highed-dtable-gsheet-inner'),
+        // highed.dom.cr('div', 'highed-dtable-gsheet-centered', 'You have loaded a Google Spreadsheet.'),
+        // highed.dom.cr(
+        //   'div',
+        //   'highed-dtable-gsheet-desc',
+        //   [
+        //     'Google Spreadsheets are referenced, meaning that the data is imported',
+        //     'on the fly. When viewing the chart, the latest version of your sheet',
+        //     'will always be used!<br/><br/>'
+        //   ].join(' ')
+        // ),
+        highed.dom.cr(
+          'div',
+          'highed-dtable-gsheet-label',
+          'URL'
+        ),
+        highed.dom.ap(highed.dom.cr('div'), liveDataInput),
+
+        highed.dom.ap(
+          highed.dom.cr('table', 'highed-stretch'),
+          highed.dom.ap(
+            highed.dom.cr('tr'),
+            highed.dom.cr('td', 'highed-dtable-gsheet-label', 'Chart Refresh Time (Seconds)'),
+            highed.dom.cr('td', 'highed-dtable-gsheet-label', 'Data Type')
+          ),
+          highed.dom.ap(
+            highed.dom.cr('tr'),
+            highed.dom.ap(highed.dom.cr('td', '', ''), liveDataIntervalInput),
+            highed.dom.ap(highed.dom.cr('td', '', ''), liveDataTypeMasterNode)
+          )
+        ),
+
+        highed.dom.ap(
+          highed.dom.cr('div'),
+          liveDataLoadButton,
+          liveDataCancelButton
+        ),
+        highed.dom.cr('div', '', [
+          'Live data needs a url to your JSON data to reference.<br/><br/>',
+          'This means that the published chart always loads the latest version of your data.<br/><br/>'
+        ].join(' '))
       )
     )
   );
@@ -1824,8 +2080,12 @@ highed.DataTable = function(parent, attributes) {
     toCSV: toCSV,
     toDataSeries: toDataSeries,
     getHeaderTextArr: getHeaderTextArr,
+    addImportTab: addImportTab,
+    hideImportModal: hideImportModal,
     initGSheet: initGSheet,
     on: events.on,
-    resize: resize
+    resize: resize,
+    loadLiveDataFromURL: loadLiveDataFromURL,
+    loadLiveDataPanel: loadLiveDataPanel
   };
 };

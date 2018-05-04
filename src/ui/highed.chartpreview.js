@@ -93,6 +93,7 @@ highed.ChartPreview = function(parent, attributes) {
     customCodeStr = '',
     lastLoadedCSV = false,
     lastLoadedSheet = false,
+    lastLoadedLiveData = false,
     throttleTimeout = false,
     chart = false,
     preExpandSize = false,
@@ -539,7 +540,6 @@ highed.ChartPreview = function(parent, attributes) {
   function loadCSVData(data, emitLoadSignal) {
     var mergedExisting = false,
       seriesClones = [];
-
     if (!data || !data.csv) {
       if (highed.isStr(data)) {
         data = {
@@ -554,6 +554,7 @@ highed.ChartPreview = function(parent, attributes) {
 
     lastLoadedCSV = data.csv;
     lastLoadedSheet = false;
+    lastLoadedLiveData = false;
 
     gc(function(chart) {
       var axis;
@@ -597,7 +598,8 @@ highed.ChartPreview = function(parent, attributes) {
           firstRowAsNames: data.firstRowAsNames,
           dateFormat: data.dateFormat,
           decimalPoint: data.decimalPoint,
-          googleSpreadsheetKey: undefined
+          googleSpreadsheetKey: undefined,
+          url: data.url
         }
       });
 
@@ -662,6 +664,7 @@ highed.ChartPreview = function(parent, attributes) {
 
     lastLoadedCSV = false;
     lastLoadedSheet = false;
+    lastLoadedLiveData = false;
 
     if (highed.isStr(projectData)) {
       try {
@@ -759,6 +762,10 @@ highed.ChartPreview = function(parent, attributes) {
               provider.startColumn || customizedOptions.data.startColumn;
             sheet.endColumn =
               provider.endColumn || customizedOptions.data.endColumn;
+            if (provider.dataRefreshRate && provider.dataRefreshRate > 0) {
+              sheet.dataRefreshRate = provider.dataRefreshRate || customizedOptions.data.dataRefreshRate;
+              sheet.enablePolling = true;
+            }
           }
 
           events.emit(
@@ -769,6 +776,12 @@ highed.ChartPreview = function(parent, attributes) {
           loadGSpreadsheet(sheet);
 
           hasData = true;
+        } else if (projectData.settings.dataProvider.liveData){
+
+          var provider = projectData.settings.dataProvider;
+          var live = provider.liveData;
+
+          loadLiveData(provider.liveData);
         } else if (projectData.settings.dataProvider.csv) {
           // We need to fix potential html-entities as they will mess up separators
           Object.keys(htmlEntities).forEach(function(ent) {
@@ -806,6 +819,26 @@ highed.ChartPreview = function(parent, attributes) {
 
       events.emit('LoadProject', projectData);
     }
+  }
+
+  function loadLiveData(settings){
+
+    lastLoadedLiveData = settings;
+
+    lastLoadedCSV = false;
+    lastLoadedSheet = false;
+
+    highed.merge(customizedOptions, {
+      data: lastLoadedLiveData
+    });
+
+    events.emit('ProviderLiveData', settings);
+    updateAggregated();
+    init(aggregatedOptions);
+
+    loadSeries();
+    emitChange();
+
   }
 
   function loadGSpreadsheet(options) {
@@ -877,6 +910,8 @@ highed.ChartPreview = function(parent, attributes) {
   function toProject() {
     var loadedCSVRaw = false,
       gsheet = lastLoadedSheet,
+      livedata = lastLoadedLiveData,
+      provider = 1,
       themeData = false;
 
     if (
@@ -899,6 +934,20 @@ highed.ChartPreview = function(parent, attributes) {
         googleSpreadsheetWorksheet:
           chart.options.data.googleSpreadsheetWorksheet
       };
+      provider = 2;
+    }
+
+    if (chart &&
+        chart.options &&
+        chart.options.data &&
+        chart.options.data.url
+      ) {
+        livedata = {
+          url: chart.options.data.url,
+          interval: chart.options.data.interval,
+          type: chart.options.data.type
+        };
+        provider = 3;
     }
 
     if (themeMeta && themeMeta.id && themeOptions) {
@@ -917,10 +966,12 @@ highed.ChartPreview = function(parent, attributes) {
       settings: {
         constructor: constr,
         dataProvider: {
-          csv: !gsheet ? loadedCSVRaw || lastLoadedCSV : false,
-          googleSpreadsheet: gsheet
+          csv: (!gsheet && !livedata) ? (loadedCSVRaw || lastLoadedCSV) : false,
+          googleSpreadsheet: gsheet,
+          liveData: livedata
         }
-      }
+      },
+      provider: provider
       //editorOptions: highed.serializeEditorOptions()
     };
   }
@@ -928,6 +979,7 @@ highed.ChartPreview = function(parent, attributes) {
   function clearData(skipReinit) {
     lastLoadedCSV = false;
     lastLoadedSheet = false;
+    lastLoadedLiveData = false;
 
     if (customizedOptions && customizedOptions.data) {
       customizedOptions.data = {};
@@ -1192,6 +1244,12 @@ highed.ChartPreview = function(parent, attributes) {
     if (lastLoadedSheet) {
       highed.merge(r, {
         data: lastLoadedSheet
+      });
+    } else if (lastLoadedLiveData) {
+      highed.merge(r, {
+        data: lastLoadedLiveData,
+        googleSpreadsheetKey: false,
+        googleSpreadsheetWorksheet: false
       });
     } else if (lastLoadedCSV) {
       highed.merge(r, {
@@ -1601,7 +1659,8 @@ highed.ChartPreview = function(parent, attributes) {
       settings: loadChartSettings,
       export: exportChart,
       gsheet: loadGSpreadsheet,
-      clear: clearData
+      clear: clearData,
+      live: loadLiveData
     },
 
     export: {

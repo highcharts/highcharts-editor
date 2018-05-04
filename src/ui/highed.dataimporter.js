@@ -116,6 +116,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         'highed-imp-button',
         'Import Pasted Data'
       ),
+      liveDataImportBtn = highed.dom.cr('button', 'highed-imp-button', 'Import Live Data'),
       csvImportFileBtn = highed.dom.cr(
         'button',
         'highed-imp-button',
@@ -137,6 +138,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     jsonPasteArea.value = JSON.stringify({}, undefined, 2);
 
+    setDefaultTabSize(600, 600, [csvTab, jsonTab, webTab, samplesTab]);
     ///////////////////////////////////////////////////////////////////////////
 
     highed.dom.style(samplesTab.body, { overflow: 'hidden' });
@@ -150,6 +152,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         delete properties.plugins[plugin];
       }
     });
+
+    function setDefaultTabSize(w, h, tabs) {
+      tabs.forEach(function (tab) {
+        tab.on('Focus',function() {
+          highed.dom.style(parent, { width: 600 + 'px', height: 600 + 'px' });
+          tab.resize(600 - 10, 600 - 10);
+        });
+      });
+    }
 
     function updateOptions() {
       if (!properties.options.csv) {
@@ -388,6 +399,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       tabs.hide();
     }
 
+    function addImportTab(tabOptions){
+      var newTab = tabs.createTab({ title: tabOptions.name || 'Features' });
+
+      if (highed.isFn(tabOptions.create)) {
+        tabOptions.create(newTab.body);
+      }
+      if (tabOptions.resize) {
+        newTab.on('Focus',function() {
+          highed.dom.style(parent, { width: tabOptions.resize.width + 'px', height: tabOptions.resize.height + 'px' });
+          newTab.resize(tabOptions.resize.width - 10, tabOptions.resize.height - 10);
+        });
+      }
+    }
+
     ///////////////////////////////////////////////////////////////////////////
 
     highed.dom.ap(
@@ -416,7 +441,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       // highed.dom.cr('br'),
 
       csvImportBtn,
-      csvImportFileBtn
+      csvImportFileBtn,
+      liveDataImportBtn
     );
 
     highed.dom.ap(
@@ -433,6 +459,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     highed.dom.on(csvImportBtn, 'click', function() {
       emitCSVImport();
+    });
+
+    highed.dom.on(liveDataImportBtn, 'click', function () {
+      //console.log(liveDataInput);
+      //console.log(liveDataInput.value);
+      events.emit('ImportLiveData', {
+      //  url: liveDataInput.value
+      });
     });
 
     highed.dom.on(csvPasteArea, 'keyup', function(e) {
@@ -489,7 +523,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       loadCSV: loadCSVExternal,
       resize: resize,
       show: show,
-      hide: hide
+      hide: hide,
+      addImportTab: addImportTab
     };
   };
 })();

@@ -226,7 +226,8 @@ highed.DrawerEditor = function(parent, options) {
           Expanded: function(width, height) {
             dataTable.resize(width, height);
           }
-        }
+        },
+        showLiveStatus: true
       },
       templates: {
         icon: 'fa-bar-chart',
@@ -365,7 +366,8 @@ highed.DrawerEditor = function(parent, options) {
         width: option.width,
         iconOnly: option.iconOnly,
         icon: option.icon,
-        help: option.help
+        help: option.help,
+        showLiveStatus: option.showLiveStatus
       });
 
       if (highed.isFn(option.create)) {
@@ -497,6 +499,13 @@ highed.DrawerEditor = function(parent, options) {
 
   function destroy() {}
 
+  function addImportTab(tabOptions) {
+    dataTable.addImportTab(tabOptions);
+  }
+
+  function hideImportModal() {
+    dataTable.hideImportModal();
+  }
   function showError(title, message) {
     highed.dom.style(errorBar, {
       opacity: 1,
@@ -552,6 +561,23 @@ highed.DrawerEditor = function(parent, options) {
     }
   });
 
+  dataTable.on('LoadLiveData', function(settings){
+    //chartPreview.data.live(settings);
+
+    const liveDataSetting = {};
+
+    liveDataSetting[settings.type] = settings.url;
+    if (settings.interval && settings.interval > 0){
+      liveDataSetting.enablePolling = true;
+      liveDataSetting.dataRefreshRate = settings.interval
+    }
+    chartPreview.data.live(liveDataSetting);
+  });
+/*
+  dataTable.on('UpdateLiveData', function(p){
+    chartPreview.data.liveURL(p);
+  });
+*/
   chartPreview.on('LoadProject', function () {
     setTimeout(function () {
     resQuickSel.selectByIndex(0);
@@ -596,8 +622,13 @@ highed.DrawerEditor = function(parent, options) {
       p.endRow,
       p.startColumn,
       p.endColumn,
-      true
+      true,
+      p.dataRefreshRate
     );
+  });
+
+  chartPreview.on('ProviderLiveData', function(p) {
+    dataTable.loadLiveDataPanel(p);
   });
 
   chartPreview.on('Error', function(e) {
@@ -752,10 +783,17 @@ highed.DrawerEditor = function(parent, options) {
     getEmbeddableJSON: chartPreview.export.json,
     /* Get embeddable SVG */
     getEmbeddableSVG: chartPreview.export.svg,
-
+    addImportTab: addImportTab,
+    hideImportModal: hideImportModal,
     setEnabledFeatures: setEnabledFeatures,
     addFeature: addFeature,
     chart: chartPreview,
+    toolbar: toolbar,
+    data: {
+      on: dataTable.on,
+      showLiveStatus: toolbox.showLiveStatus,
+      hideLiveStatus: toolbox.hideLiveStatus
+    },
     dataTable: dataTable,
     toolbar: toolbar
   };
