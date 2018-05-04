@@ -507,6 +507,7 @@ highed.DataTable = function(parent, attributes) {
             )
           ) {
             rawCSV = mainInput.value;
+            highed.emit('UIAction', 'PasteCSVAttempt');
             return loadRows(ps);
           }
           return;
@@ -1618,12 +1619,15 @@ highed.DataTable = function(parent, attributes) {
       isInGSheetMode = false;
 
       init();
+
+      highed.emit('UIAction', 'DetachGoogleSheet');
     }
   }
 
   ////////////////////////////////////////////////////////////////////////////
 
   importer.on('ImportCSV', function(data) {
+    highed.emit('UIAction', 'ImportCSV');
     loadCSV(data);
   });
 
