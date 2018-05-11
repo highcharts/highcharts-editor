@@ -751,6 +751,10 @@ highed.DrawerEditor = function(parent, options) {
       // setToActualSize();
     }
   });
+  
+  chartPreview.on('SetResizeData', function () {
+    setToActualSize();
+  });
 
   Object.keys(resolutions).forEach(function(devName) {
     resQuickSel.addItem({
