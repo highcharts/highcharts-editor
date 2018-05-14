@@ -297,6 +297,24 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   /**
+   * Clear all themes from the chart. 
+   * Used by cloud to reset theme
+   */
+  function clearTheme(theme, skipEmit) {
+    
+    themeOptions = false
+
+    if (!skipEmit) {
+      updateAggregated();
+      init(aggregatedOptions);
+      emitChange();
+      events.emit('SetResizeData');
+    }
+
+    return true;
+  }
+
+  /**
    * Assign a theme to the chart
    * theme can either be a straight-up option set, or a theme object with
    * ID and so on.
@@ -337,6 +355,7 @@ highed.ChartPreview = function(parent, attributes) {
       updateAggregated();
       init(aggregatedOptions);
       emitChange();
+      events.emit('SetResizeData');
     }
 
     return true;
@@ -1617,6 +1636,7 @@ highed.ChartPreview = function(parent, attributes) {
 
   exports = {
     assignTheme: assignTheme,
+    clearTheme: clearTheme,
     getTheme: getTheme,
     getConstructor: getConstructor,
     on: events.on,
