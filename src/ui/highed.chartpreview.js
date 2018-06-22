@@ -1605,8 +1605,9 @@ highed.ChartPreview = function(parent, attributes) {
         [
           'if (options.yAxis && options.yAxis.length === 1) options.yAxis = options.yAxis[0];',
           'if (options.xAxis && options.xAxis.length === 1) options.xAxis = options.xAxis[0];',
-          'if (options.zAxis && options.zAxis.length === 1) options.zAxis = options.zAxis[0];'
-        ].join('') + newCode
+          'if (options.zAxis && options.zAxis.length === 1) options.zAxis = options.zAxis[0];',
+          'if (!options.series || options.series.length === 0) return;'
+        ].join('') + newCode 
       );
       customCodeStr = newCode;
     } catch (e) {
