@@ -43,19 +43,22 @@ highed.AssignDataPanel = function(parent, attr) {
   
   var labels = highed.dom.cr('div', 'highed-assigndatapanel-data-options');
   var label1Input = highed.dom.cr('input', 'highed-assigndatapanel-input');
+  label1Input.value = 'A';
+  var chartInput = highed.dom.cr('select', 'highed-assigndatapanel-select-input');
   var label1 = highed.dom.ap(highed.dom.cr('div', 'highed-assigndatapanel-data-option'), 
                              highed.dom.cr('h6', '', 'Labels'),
                              highed.dom.cr('div', 'highed-assigndatapanel-data-desc', ''),
                              label1Input);
 
   var label2Input = highed.dom.cr('input', 'highed-assigndatapanel-input');
+  label2Input.value = 'B-C';
   var label2 = highed.dom.ap(highed.dom.cr('div', 'highed-assigndatapanel-data-option'), 
                             highed.dom.cr('h6', '', 'Values'),
                             highed.dom.cr('div', 'highed-assigndatapanel-data-desc', ''),
                             label2Input);
 
   highed.dom.ap(body, header);
-  highed.dom.ap(labels, label1, label2);
+  highed.dom.ap(labels, chartInput, label1, label2);
   highed.dom.ap(body, labels);
   highed.dom.ap(parent, highed.dom.ap(container, bar, body));
 

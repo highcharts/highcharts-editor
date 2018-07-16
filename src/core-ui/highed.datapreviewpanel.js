@@ -39,12 +39,12 @@ highed.DataPreviewPanel = function(parent, attr) {
     dataBtn = highed.dom.cr(
       'button',
       'highed-ok-button highed-datapreviewpanel-button ', 
-      'Data'
+      '<i class="fa fa-table"></i>&nbsp;Data'
     ),
     previewBtn = highed.dom.cr(
       'button',
       'highed-ok-button highed-datapreviewpanel-button ', 
-      'Preview'
+      '<i class="fa fa-pie-chart"></i>&nbsp;Preview'
     );
     
     highed.dom.ap(body,dataBtn );

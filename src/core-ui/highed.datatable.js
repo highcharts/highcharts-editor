@@ -1752,8 +1752,8 @@ highed.DataTable = function(parent, attributes) {
   ////////////////////////////////////////////////////////////////////////////
 
   dropZone.innerHTML =
-    'DROP CSV FILES HERE OR ON THE TABLE!<br/>' +
-    '<span class="highed-dtable-drop-zone-small">...you can also paste CSV or Excel data into any cell</span>';
+    'Drop CSV files here or on the table.<br/>' +
+    '<span class="highed-dtable-drop-zone-small">You can also paste CSV or Excel data into any cell</span>';
 
   table.cellPadding = 0;
   table.cellSpacing = 0;
