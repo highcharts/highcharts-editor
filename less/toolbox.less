@@ -5,7 +5,6 @@
 
 .highed-toolbox-bar {
   height: 100%;
-  width: 50px;
   float: left;
   background: @accent-color;
   color: @accent-text;
@@ -17,10 +16,10 @@
   width: 0px;
   float:left;
   opacity: 0;
-  overflow:auto;
-
+  border: 1px solid rgba(14, 14, 14, 0.15);
   color: @text-panel;
-  background: @background-panel;
+  background: @background-panel-inverted;    
+  margin-right: 15px;
 }
 
 .highed-toolbox-inner-body {
@@ -61,22 +60,18 @@
 }
 
 .highed-toolbox-body-title {
-  text-transform:uppercase;
-  white-space: nowrap;
-  text-align:center;
-  font-size:24px;
-  padding-bottom: 5px;
-  padding-top: 10px;
-  margin-bottom:5px;
-  width: 100%;
-  overflow:hidden;
+    width: 100%;
+    overflow: hidden;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    color: #000;
 }
 
 .highed-toolbox-help {
   position: absolute;
   right: 20px;
   top: 0px;
-  font-size: 40px !important;
+  font-size: 25px !important;
   padding-top: 10px;
   display: none;
 }

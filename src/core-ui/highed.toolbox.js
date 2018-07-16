@@ -125,7 +125,7 @@ highed.Toolbox = function(parent, attr) {
 
     function expand() {
       var bsize = highed.dom.size(bar);
-      var newWidth = bsize.w + props.width;
+      var newWidth = props.width;
 
       if (expanded && activeItem === exports) {
         return;
@@ -145,13 +145,13 @@ highed.Toolbox = function(parent, attr) {
       highed.dom.ap(body, contents);
 
       highed.dom.style(body, {
-        width: props.width + 'px',
+        width: 100 + '%',
         height: bsize.h + 'px',
         opacity: 1
       });
 
       highed.dom.style(container, {
-        width: newWidth + 'px'
+        width: newWidth + '%'
       });
 
       events.emit('BeforeResize', newWidth);
@@ -189,7 +189,7 @@ highed.Toolbox = function(parent, attr) {
         });
 
         highed.dom.style(container, {
-          width: newWidth + 'px'
+          width: newWidth + '%'
         });
 
         events.emit('BeforeResize', newWidth);
@@ -223,7 +223,7 @@ highed.Toolbox = function(parent, attr) {
 
     highed.dom.on(helpIcon, 'click', showHelp);
     highed.dom.on(icon, 'click', toggle);
-    highed.dom.ap(bar, icon);
+    //highed.dom.ap(bar, icon);
     highed.dom.ap(contents, (props.showLiveStatus ? highed.dom.ap(title, liveDiv, helpIcon) :  highed.dom.ap(title, helpIcon)), userContents);
 
     function reflowEverything() {
@@ -274,7 +274,7 @@ highed.Toolbox = function(parent, attr) {
     });
   }
 
-  highed.dom.ap(parent, highed.dom.ap(container, bar, body));
+  highed.dom.ap(parent, highed.dom.ap(container,bar,body));
 
   return {
     clear: clear,

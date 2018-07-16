@@ -28,6 +28,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /* global window */
 
 highed.DrawerEditor = function(parent, options) {
+  console.log(highed);
   var events = highed.events(),
     // Main properties
     properties = highed.merge(
@@ -65,6 +66,8 @@ highed.DrawerEditor = function(parent, options) {
     ),
     lastSetWidth = false,
     fixedSize = false,
+    panel = highed.DataPreviewPanel(parent),
+    
     splitter = highed.VSplitter(parent, {
       topHeight: properties.useHeader ? '60px' : '0px',
       noOverflow: true
@@ -188,8 +191,8 @@ highed.DrawerEditor = function(parent, options) {
     builtInOptions = {
       data: {
         icon: 'fa-table',
-        title: 'Chart Data',
-        width: 800,
+        title: 'Data',
+        width: 68,
         help: [
           {
             title: 'Manually Add/Edit Data',
@@ -421,9 +424,9 @@ highed.DrawerEditor = function(parent, options) {
     lastSetWidth = newWidth;
 
     highed.dom.style(chartFrame, {
-      left: newWidth + 'px',
-      width: psize.w - newWidth + 'px',
-      height: psize.h + 'px'
+      /*left: newWidth + 'px',*/
+      width: '30%',
+      height: 250 + 'px'
     });
 
     if (fixedSize) {
@@ -433,11 +436,11 @@ highed.DrawerEditor = function(parent, options) {
       }, 400);
       return;
     }
-
+/*
     highed.dom.style(chartContainer, {
       width: psize.w - newWidth - 100 + 'px',
       height: psize.h - 100 + 'px'
-    });
+    });*/
 
     chartPreview.resize();
   }
@@ -463,12 +466,12 @@ highed.DrawerEditor = function(parent, options) {
 
       w = w || s.w - 100;
       h = h || s.h - 100;
-
+/*
       highed.dom.style(chartContainer, {
         width: w + 'px',
         height: h + 'px'
       });
-
+*/
       chartPreview.resize();
     }
   }
@@ -682,11 +685,14 @@ highed.DrawerEditor = function(parent, options) {
     })
   );
 
+
+  ////////////////////////////////////////////////// UNCOMMENT TO SHOW CHART!!!! ///////////////////////////////////////////
+  
   highed.dom.ap(
     splitter.bottom,
     highed.dom.ap(
       chartFrame,
-
+/*
       highed.dom.ap(
         resPreviewBar,
         highed.dom.cr('div', 'highed-res-headline', 'Size Preview:'),
@@ -697,7 +703,7 @@ highed.DrawerEditor = function(parent, options) {
           highed.dom.cr('span', '', 'x'),
           resHeight
         )
-      ),
+      ),*/
 
       chartContainer,
       highed.dom.ap(errorBar, errorBarHeadline, errorBarBody)
@@ -731,10 +737,10 @@ highed.DrawerEditor = function(parent, options) {
 
       sizeChart(w, h);
     });
-
+/*
     highed.dom.style(chartFrame, {
       'overflow-x': 'auto'
-    });
+    });*/
   }
 
   resQuickSel.addItem({
