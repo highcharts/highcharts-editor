@@ -835,7 +835,6 @@ highed.ChartPreview = function(parent, attributes) {
         init(aggregatedOptions);
         emitChange();
       }
-
       events.emit('LoadProject', projectData);
     }
   }
@@ -930,7 +929,6 @@ highed.ChartPreview = function(parent, attributes) {
     var loadedCSVRaw = false,
       gsheet = lastLoadedSheet,
       livedata = lastLoadedLiveData,
-      provider = 1,
       themeData = false;
 
     if (
@@ -953,7 +951,6 @@ highed.ChartPreview = function(parent, attributes) {
         googleSpreadsheetWorksheet:
           chart.options.data.googleSpreadsheetWorksheet
       };
-      provider = 2;
     }
 
     if (chart &&
@@ -966,7 +963,6 @@ highed.ChartPreview = function(parent, attributes) {
           interval: chart.options.data.interval,
           type: chart.options.data.type
         };
-        provider = 3;
     }
 
     if (themeMeta && themeMeta.id && themeOptions) {
@@ -989,8 +985,7 @@ highed.ChartPreview = function(parent, attributes) {
           googleSpreadsheet: gsheet,
           liveData: livedata
         }
-      },
-      provider: provider
+      }
       //editorOptions: highed.serializeEditorOptions()
     };
   }
