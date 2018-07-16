@@ -152,8 +152,8 @@
 }
 
 .highed-dtable-body tr {
-    height:40px;
-    max-height:40px;
+    height: 35px;
+    max-height: 35px;
 }
 
 .highed-dtable-body col {
@@ -186,8 +186,8 @@
     padding-left:10px;
     padding-right:10px;
     min-width:20px;
-    height:40px;
-    max-height: 40px;
+    height: 35px;
+    max-height: 35px;
     border-right:@border-main;
     border-bottom:@border-main;
     font-size: 12px;
@@ -195,16 +195,16 @@
 }
 
 .highed-dtable-body-selected-row {
-    background:@selected-item-color !important;
-    color:@selected-item-text !important;
+    background:#fff !important;
+    color:#000 !important;
 }
 
 .highed-dtable-col-val {
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
-    line-height: 40px;
-    height:40px;
+    white-space: nowrap;    
+    line-height: 30px;
+    height: 35px;
     max-height:40px;
     .highed-box-size;
 }
@@ -213,16 +213,14 @@
     position: absolute;
     left:0px;
     top:0px;
-    background:lighten(@selected-item-color, 5) !important;
-    color: @selected-item-text;
+    background:#fff !important;
     font-family: @font-secondary;
     font-weight: 100;
     width:100%;
     height:100%;
-    font-size:24px;
-    outline: none;
-    border:none;
+    border: 2px solid #5594F4;
     resize: none;
+
     .highed-box-size;    
 }
 
@@ -299,7 +297,6 @@
     width:10000px;
     left:0px;
     top:0px;
-    border: 1px solid rgba(68, 68, 68, 0.10980392156862745);
     background:@background-panel;
     color:@panel-text;
     // border-bottom: @border-main;

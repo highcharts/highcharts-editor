@@ -960,7 +960,13 @@ highed.DataTable = function(parent, attributes) {
     // highed.dom.showOnHover(header, options);
 
     col.width = 140;
-    highed.dom.style([col, header], {
+    highed.dom.style(col, {
+      width: col.width + 'px'
+    });    
+
+    col.width = 141;
+    
+    highed.dom.style(header, {
       width: col.width + 'px'
     });
 
@@ -1176,11 +1182,11 @@ highed.DataTable = function(parent, attributes) {
    */
   function resize() {
     var ps = highed.dom.size(parent),
-      hs = highed.dom.size(topBar),
-      tb = highed.dom.size(toolbar.container);
+      hs = highed.dom.size(topBar);
+      //tb = highed.dom.size(toolbar.container);
 
     highed.dom.style(frame, {
-      height: ps.h - hs.h - tb.h + 'px',
+      height: ps.h - hs.h /*- tb.h*/ + 'px',
       width: ps.w - hs.h + 'px'
     });
 
@@ -1955,7 +1961,7 @@ highed.DataTable = function(parent, attributes) {
   }
 
   ////////////////////////////////////////////////////////////////////////////
-
+/*
   toolbar = highed.Toolbar(container, {
     additionalCSS: ['highed-dtable-toolbar']
   });
@@ -2050,7 +2056,7 @@ highed.DataTable = function(parent, attributes) {
     },
     'left'
   );
-
+*/
   // toolbar.addIcon(
   //   {
   //     css: 'fa-clone',

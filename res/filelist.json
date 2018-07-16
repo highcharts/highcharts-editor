@@ -34,6 +34,7 @@
     "./src/core-ui/highed.datatable.js",
     "./src/core-ui/highed.toolbox.js",
     "./src/core-ui/highed.datapreviewpanel.js",
+    "./src/core-ui/highed.assigndatapanel.js",
     "./src/core-ui/highed.helpmodal.js",
 
     "./src/meta/highed.meta.options.extended.js",

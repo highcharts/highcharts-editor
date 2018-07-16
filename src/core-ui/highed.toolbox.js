@@ -112,7 +112,7 @@ highed.Toolbox = function(parent, attr) {
         tsize = highed.dom.size(title),
         size = {
           w: bsize.w,
-          h: bsize.h - tsize.h
+          h: bsize.h - tsize.h - 55
         };
 
       highed.dom.style(contents, {
@@ -146,7 +146,7 @@ highed.Toolbox = function(parent, attr) {
 
       highed.dom.style(body, {
         width: 100 + '%',
-        height: bsize.h + 'px',
+        height: (bsize.h - 55) + 'px',
         opacity: 1
       });
 

@@ -74,6 +74,7 @@ highed.DrawerEditor = function(parent, options) {
     }),
     toolbar = highed.Toolbar(splitter.top),
     toolbox = highed.Toolbox(splitter.bottom),
+    assignDataPanel = highed.AssignDataPanel(splitter.bottom),
     // Data table
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
     dataTable = highed.DataTable(
@@ -192,7 +193,7 @@ highed.DrawerEditor = function(parent, options) {
       data: {
         icon: 'fa-table',
         title: 'Data',
-        width: 68,
+        width: 65, //Percent
         help: [
           {
             title: 'Manually Add/Edit Data',
@@ -425,7 +426,7 @@ highed.DrawerEditor = function(parent, options) {
 
     highed.dom.style(chartFrame, {
       /*left: newWidth + 'px',*/
-      width: '30%',
+      width: '28%',
       height: 250 + 'px'
     });
 
