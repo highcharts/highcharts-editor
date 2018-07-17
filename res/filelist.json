@@ -32,6 +32,7 @@
     "./src/core-ui/highed.mover.js",
     "./src/core-ui/highed.slider.js",
     "./src/core-ui/highed.datatable.js",
+    "./src/core-ui/highed.datapage.js",
     "./src/core-ui/highed.toolbox.js",
     "./src/core-ui/highed.datapreviewpanel.js",
     "./src/core-ui/highed.assigndatapanel.js",

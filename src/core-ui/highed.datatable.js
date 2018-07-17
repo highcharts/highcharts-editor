@@ -352,6 +352,8 @@ highed.DataTable = function(parent, attributes) {
       }
     ]),
     selectedRowIndex = 0,
+    keyValue = "A",
+    tempKeyValue = "A",
     addRowCtx = highed.ContextMenu([
       {
         title: 'At the end',
@@ -523,9 +525,9 @@ highed.DataTable = function(parent, attributes) {
 
   ////////////////////////////////////////////////////////////////////////////
 
-  function Column(row, colNumber, val) {
+  function Column(row, colNumber, val, keyVal) {
     var value = typeof val === 'undefined' ? null : val,
-      col = highed.dom.cr('td'),
+      col = highed.dom.cr('td', (keyVal ? 'key-' + keyVal : '')),
       colVal = highed.dom.cr('div', 'highed-dtable-col-val', value),
       input = highed.dom.cr('input'),
       exports = {};
@@ -675,8 +677,8 @@ highed.DataTable = function(parent, attributes) {
 
     checker.type = 'checkbox';
 
-    function addCol(val) {
-      columns.push(Column(exports, columns.length, val));
+    function addCol(val, keyValue) {
+      columns.push(Column(exports, columns.length, val, keyValue));
     }
 
     function insertCol(where) {
@@ -720,7 +722,6 @@ highed.DataTable = function(parent, attributes) {
     function addToDOM(number) {
       didAddHTML = true;
       exports.number = number;
-
       highed.dom.ap(tbody, row);
 
       highed.dom.ap(leftBar, highed.dom.ap(leftItem, checker));
@@ -743,7 +744,6 @@ highed.DataTable = function(parent, attributes) {
     highed.dom.on(checker, 'change', function() {
       checked = checker.checked;
     });
-
     if (rows.length < 500) {
       addToDOM(rows.length);
     } else if (rows.length === 500) {
@@ -812,13 +812,14 @@ highed.DataTable = function(parent, attributes) {
 
   function init() {
     clear();
-
+    keyValue = "A";
     surpressChangeEvents = true;
 
     for (var i = 0; i < 1; i++) {
-      var r = Row();
+      var r = Row(false, keyValue);
     }
 
+    tempKeyValue = "A";
     for (var j = 0; j < 2; j++) {
       addCol('Column ' + (j + 1));
     }
@@ -844,11 +845,27 @@ highed.DataTable = function(parent, attributes) {
     resize();
   }
 
+  function getNextLetter(key) {
+    if (key === 'Z' || key === 'z') {
+      return String.fromCharCode(key.charCodeAt() - 25) + String.fromCharCode(key.charCodeAt() - 25);
+    } else {
+      var lastChar = key.slice(-1);
+      var sub = key.slice(0, -1);
+      if (lastChar === 'Z' || lastChar === 'z') {
+        return getNextLetter(sub) + String.fromCharCode(lastChar.charCodeAt() - 25);
+      } else {
+        return sub + String.fromCharCode(lastChar.charCodeAt() + 1);
+      }
+    }
+    return key;
+  };
+
   function addCol(value, where) {
     //The header columns control the colgroup
     var col = highed.dom.cr('col'),
       colNumber = gcolumns.length,
       header = highed.dom.cr('span', 'highed-dtable-top-bar-col'),
+      letter = highed.dom.cr('span', 'highed-dtable-top-bar-letter'),
       headerTitle = highed.dom.cr('div', '', value),
       moveHandle = highed.dom.cr('div', 'highed-dtable-resize-handle'),
       options = highed.dom.cr(
@@ -933,14 +950,16 @@ highed.DataTable = function(parent, attributes) {
         }
       ]),
       ox;
-
+      
+    letter.innerHTML = keyValue;
+    keyValue = getNextLetter(keyValue);
     ////////////////////////////////////////////////////////////////////////
 
     exports.addToDOM = function() {
       highed.dom.ap(colgroup, col);
       highed.dom.ap(
         topBar,
-        highed.dom.ap(header, headerTitle, options, moveHandle)
+        highed.dom.ap(letter, options, moveHandle)
       );
     };
 
@@ -960,15 +979,9 @@ highed.DataTable = function(parent, attributes) {
     // highed.dom.showOnHover(header, options);
 
     col.width = 140;
-    highed.dom.style(col, {
+    highed.dom.style([col, header, letter], {
       width: col.width + 'px'
     });    
-
-    col.width = 141;
-    
-    highed.dom.style(header, {
-      width: col.width + 'px'
-    });
 
     mover.on('StartMove', function(x) {
       ox = x;
@@ -1027,8 +1040,10 @@ highed.DataTable = function(parent, attributes) {
       if (where) {
         row.insertCol(where);
       } else {
-        row.addCol();
+        row.addCol(null, tempKeyValue);
       }
+
+      tempKeyValue = getNextLetter(tempKeyValue);
     });
 
     if (where) {
@@ -1326,7 +1341,7 @@ highed.DataTable = function(parent, attributes) {
 
   function loadRows(rows, done) {
     var sanityCounts = {};
-
+    keyValue = "A";
     clear();
 
     if (rows.length > 1) {
@@ -1363,13 +1378,14 @@ highed.DataTable = function(parent, attributes) {
         if (i) {
           row = Row();
         }
-
+        tempKeyValue = "A";
         cols.forEach(function(c) {
           if (i === 0) {
             addCol(c);
           } else {
-            row.addCol(c);
+            row.addCol(c, tempKeyValue);
           }
+          tempKeyValue = getNextLetter(tempKeyValue);
         });
       });
 

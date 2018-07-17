@@ -28,7 +28,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /* global window */
 
 highed.DrawerEditor = function(parent, options) {
-  console.log(highed);
   var events = highed.events(),
     // Main properties
     properties = highed.merge(
@@ -73,10 +72,10 @@ highed.DrawerEditor = function(parent, options) {
       noOverflow: true
     }),
     toolbar = highed.Toolbar(splitter.top),
-    toolbox = highed.Toolbox(splitter.bottom),
-    assignDataPanel = highed.AssignDataPanel(splitter.bottom),
+    //toolbox = highed.Toolbox(splitter.bottom),
+    //assignDataPanel = highed.AssignDataPanel(splitter.bottom),
     // Data table
-    dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
+/*
     dataTable = highed.DataTable(
       dataTableContainer,
       highed.merge(
@@ -85,7 +84,7 @@ highed.DrawerEditor = function(parent, options) {
         },
         properties.dataGrid
       )
-    ),
+    ),*/
     // Chart preview
     chartFrame = highed.dom.cr(
       'div',
@@ -98,6 +97,61 @@ highed.DrawerEditor = function(parent, options) {
     chartPreview = highed.ChartPreview(chartContainer, {
       defaultChartOptions: properties.defaultChartOptions
     }),
+    dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
+    dataPage = highed.DataPage(  
+      splitter.bottom,
+      highed.merge(
+        {
+          importer: properties.importer
+        },
+        properties.dataGrid
+      ),
+      chartPreview,
+      chartFrame,
+      {
+        icon: 'fa-table',
+        title: 'Data',
+        width: 65, //Percent
+        help: [
+          {
+            title: 'Manually Add/Edit Data',
+            gif: 'dataImport.gif',
+            description: [
+              'Click a cell to edit its contents.<br/><br/>',
+              'The cells can be navigated using the arrow keys.<br/><br/>',
+              'Pressing Enter creates a new row, or navigates to the row directly below the current row.'
+            ]
+          },
+          {
+            title: 'Setting headings',
+            gif: 'dataImport.gif',
+            description: [
+              'The headings are used as the series titles.<br/><br/>',
+              'They can be edited by left clicking them.<br/><br/>',
+              'Click the arrow symbol in the header to access column properties.'
+            ]
+          },
+          {
+            title: 'Importing Data',
+            gif: 'import.gif',
+            description: [
+              'To import data, simply drag and drop CSV files onto the table, or paste CSV/Excel data into any cell.<br/><br/>',
+              'For more advanced data import, click the IMPORT DATA button.'
+            ]
+          }
+        ],
+        create: function(body) {
+          //highed.dom.ap(body, dataTableContainer);
+          //dataTable.resize();
+        },
+        events: {
+          Expanded: function(width, height) {
+            //dataTable.resize(width, height);
+          }
+        },
+        showLiveStatus: true
+      }
+    ),
     // Res preview bar
     resPreviewBar = highed.dom.cr('div', 'highed-res-preview'),
     resQuickSelContainer = highed.dom.cr('div', 'highed-res-quicksel'),
@@ -223,12 +277,12 @@ highed.DrawerEditor = function(parent, options) {
           }
         ],
         create: function(body) {
-          highed.dom.ap(body, dataTableContainer);
-          dataTable.resize();
+          //highed.dom.ap(body, dataTableContainer);
+          //dataTable.resize();
         },
         events: {
           Expanded: function(width, height) {
-            dataTable.resize(width, height);
+            //dataTable.resize(width, height);
           }
         },
         showLiveStatus: true
@@ -364,7 +418,7 @@ highed.DrawerEditor = function(parent, options) {
       if (!option || !option.icon) {
         return;
       }
-
+/*
       var o = toolbox.addEntry({
         title: option.title,
         width: option.width,
@@ -372,7 +426,7 @@ highed.DrawerEditor = function(parent, options) {
         icon: option.icon,
         help: option.help,
         showLiveStatus: option.showLiveStatus
-      });
+      });*/
 
       if (highed.isFn(option.create)) {
         option.create(o.body);
@@ -385,7 +439,7 @@ highed.DrawerEditor = function(parent, options) {
       addedOptions[id] = o;
     }
 
-    toolbox.clear();
+    //toolbox.clear();
     resize();
 
     properties.features.forEach(function(feature) {
@@ -482,7 +536,7 @@ highed.DrawerEditor = function(parent, options) {
    */
   function resize() {
     splitter.resize();
-    resizeChart(toolbox.width());
+    //resizeChart(toolbox.width());
   }
 
   /**
@@ -490,25 +544,25 @@ highed.DrawerEditor = function(parent, options) {
    */
   function setEnabledFeatures(feats) {
     properties.features = feats;
-    createFeatures();
+    //createFeatures();
   }
 
   /**
    * Add a new feature
    */
   function addFeature(name, feat) {
-    customOptions[name] = feat;
-    createFeatures();
+    //customOptions[name] = feat;
+    //createFeatures();
   }
 
   function destroy() {}
 
   function addImportTab(tabOptions) {
-    dataTable.addImportTab(tabOptions);
+    //dataTable.addImportTab(tabOptions);
   }
 
   function hideImportModal() {
-    dataTable.hideImportModal();
+    //dataTable.hideImportModal();
   }
   function showError(title, message) {
     highed.dom.style(errorBar, {
@@ -530,18 +584,19 @@ highed.DrawerEditor = function(parent, options) {
   //////////////////////////////////////////////////////////////////////////////
   // Event attachments
 
-  toolbox.on('BeforeResize', resizeChart);
+  //toolbox.on('BeforeResize', resizeChart);
 
   customizer.on('PropertyChange', chartPreview.options.set);
   customizer.on('PropertySetChange', chartPreview.options.setAll);
 
   chartPreview.on('LoadProjectData', function(csv) {
+    /*
     dataTable.loadCSV(
       {
         csv: csv
       },
       true
-    );
+    );*/
   });
 
   chartPreview.on('ChartChange', function(newData) {
@@ -564,7 +619,7 @@ highed.DrawerEditor = function(parent, options) {
       chartPreview.options.set('title-text', sample.title);
     }
   });
-
+/*
   dataTable.on('LoadLiveData', function(settings){
     //chartPreview.data.live(settings);
 
@@ -576,7 +631,7 @@ highed.DrawerEditor = function(parent, options) {
       liveDataSetting.dataRefreshRate = settings.interval
     }
     chartPreview.data.live(liveDataSetting);
-  });
+  });*/
 /*
   dataTable.on('UpdateLiveData', function(p){
     chartPreview.data.liveURL(p);
@@ -588,11 +643,11 @@ highed.DrawerEditor = function(parent, options) {
     setToActualSize();
     }, 2000);
   });
-
+/*
   dataTable.on('LoadGSheet', function(settings) {
-    chartPreview.data.gsheet(settings);
+    //chartPreview.data.gsheet(settings);
   });
-
+*/
   chartPreview.on('RequestEdit', function(event, x, y) {
     // Expanded
     if (toolboxEntries.customize.body.offsetWidth) {
@@ -607,18 +662,20 @@ highed.DrawerEditor = function(parent, options) {
       toolboxEntries.customize.expand();
     }
   });
-
+/*
   dataTable.on('Change', function(headers, data) {
+    
     return chartPreview.data.csv({
       csv: dataTable.toCSV(';', true)
     });
-  });
-
+  });*/
+/*
   dataTable.on('ClearData', function() {
     chartPreview.data.clear();
-  });
+  });*/
 
   chartPreview.on('ProviderGSheet', function(p) {
+    /*
     dataTable.initGSheet(
       p.id || p.googleSpreadsheetKey,
       p.worksheet || p.googleSpreadsheetWorksheet,
@@ -628,11 +685,11 @@ highed.DrawerEditor = function(parent, options) {
       p.endColumn,
       true,
       p.dataRefreshRate
-    );
+    );*/
   });
 
   chartPreview.on('ProviderLiveData', function(p) {
-    dataTable.loadLiveDataPanel(p);
+    //dataTable.loadLiveDataPanel(p);
   });
 
   chartPreview.on('Error', function(e) {
@@ -716,8 +773,8 @@ highed.DrawerEditor = function(parent, options) {
   });
 
   // Create the features
-  createFeatures();
-  createToolbar();
+  //createFeatures();
+  //createToolbar();
 
   resize();
 
@@ -801,11 +858,11 @@ highed.DrawerEditor = function(parent, options) {
     chart: chartPreview,
     toolbar: toolbar,
     data: {
-      on: dataTable.on,
-      showLiveStatus: toolbox.showLiveStatus,
-      hideLiveStatus: toolbox.hideLiveStatus
+      on: function() {}, //dataTable.on,
+      showLiveStatus: function() {}, //toolbox.showLiveStatus,
+      hideLiveStatus: function() {} //toolbox.hideLiveStatus
     },
-    dataTable: dataTable,
+    //dataTable: dataTable,
     toolbar: toolbar
   };
 };
