@@ -28,7 +28,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.AssignDataPanel = function(parent, attr) {
 
   function generateColors() {
-    const hue = Math.floor(Math.random() * 360),
+    const hue = Math.floor(Math.random()*(357-202+1)+202), // Want a colour blue/red/purple colour
           saturation =  Math.floor(Math.random() * 100),
           lightness =  60;
 

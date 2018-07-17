@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
+highed.PreviewPage = function(parent, options, chartPreview, chartFrame, props) {
   var events = highed.events(),
     // Main properties
     properties = highed.merge(
@@ -74,18 +74,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     body = highed.dom.cr(
       'div',
       'highed-toolbox-body highed-box-size highed-transition'
-    ),
-    dataTable = highed.DataTable(
-      dataTableContainer,
-      highed.merge(
-        {
-          importer: properties.importer
-        },
-        properties.dataGrid
-      )
     );
-
-    var assignDataPanel = highed.AssignDataPanel(parent);
 
     function showHelp() {
       helpModal.show();
@@ -96,8 +85,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     highed.dom.ap(body, contents);
 
     highed.dom.ap(userContents, dataTableContainer);
-    dataTable.resize();
-    
     highed.dom.ap(parent, highed.dom.ap(container,body));
 
 
@@ -156,7 +143,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       setTimeout(function() {
         var height = resizeBody().h;
 
-        dataTable.resize(newWidth, height - 20);     
         highed.dom.style(body, {
           height: (height + highed.dom.size(title).h) + 'px',
         });
@@ -176,7 +162,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     highed.dom.style(container, {
       display: 'block'
     });
-    assignDataPanel.show();
+
     resizeChart();
     //expand();
     
@@ -185,18 +171,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     highed.dom.style(container, {
       display: 'none'
     });
-    assignDataPanel.hide();
   }
 
   function destroy() {}
 
-  function addImportTab(tabOptions) {
-    dataTable.addImportTab(tabOptions);
-  }
-
-  function hideImportModal() {
-    dataTable.hideImportModal();
-  }
 
   function showError(title, message) {
     highed.dom.style(errorBar, {
@@ -208,16 +186,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     errorBarBody.innerHTML = message;
   }
 
-  //////////////////////////////////////////////////////////////////////////////
-
-  chartPreview.on('LoadProjectData', function(csv) {
-    dataTable.loadCSV(
-      {
-        csv: csv
-      },
-      true
-    );
-  });
 
   chartPreview.on('ChartChange', function(newData) {
     events.emit('ChartChangedLately', newData);
@@ -240,18 +208,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     }
   });*/
 
-  dataTable.on('LoadLiveData', function(settings){
-    //chartPreview.data.live(settings);
-
-    const liveDataSetting = {};
-
-    liveDataSetting[settings.type] = settings.url;
-    if (settings.interval && settings.interval > 0){
-      liveDataSetting.enablePolling = true;
-      liveDataSetting.dataRefreshRate = settings.interval
-    }
-    chartPreview.data.live(liveDataSetting);
-  });
 /*
   dataTable.on('UpdateLiveData', function(p){
     chartPreview.data.liveURL(p);
@@ -264,9 +220,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     }, 2000);
   });
 
-  dataTable.on('LoadGSheet', function(settings) {
-    chartPreview.data.gsheet(settings);
-  });
 
   chartPreview.on('RequestEdit', function(event, x, y) {
     // Expanded
@@ -281,33 +234,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       });
       toolboxEntries.customize.expand();
     }
-  });
-
-  dataTable.on('Change', function(headers, data) {
-    return chartPreview.data.csv({
-      csv: dataTable.toCSV(';', true)
-    });
-  });
-
-  dataTable.on('ClearData', function() {
-    chartPreview.data.clear();
-  });
-
-  chartPreview.on('ProviderGSheet', function(p) {
-    dataTable.initGSheet(
-      p.id || p.googleSpreadsheetKey,
-      p.worksheet || p.googleSpreadsheetWorksheet,
-      p.startRow,
-      p.endRow,
-      p.startColumn,
-      p.endColumn,
-      true,
-      p.dataRefreshRate
-    );
-  });
-
-  chartPreview.on('ProviderLiveData', function(p) {
-    dataTable.loadLiveDataPanel(p);
   });
 
   chartPreview.on('Error', function(e) {
@@ -388,8 +314,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   function resizeChart(newWidth) {
     highed.dom.style(chartFrame, {
       /*left: newWidth + 'px',*/
-      width: '28%',
-      height: 250 + 'px'
+      width: '68%',
+      height: 681 + 'px'
     });
 /*
     highed.dom.style(chartContainer, {
@@ -411,22 +337,18 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     //setToActualSize();
   });
 
-  resizeChart();
+  hide();
 
   return {
     on: events.on,
     destroy: destroy,
-    addImportTab: addImportTab,
-    hideImportModal: hideImportModal,
     chart: chartPreview,
     data: {
-      on: dataTable.on,
       showLiveStatus: function(){}, //toolbox.showLiveStatus,
       hideLiveStatus: function(){}//toolbox.hideLiveStatus
     },
     hide: hide,
-    show: show,
-    dataTable: dataTable//,
+    show: show
     //toolbar: toolbar
   };
 };

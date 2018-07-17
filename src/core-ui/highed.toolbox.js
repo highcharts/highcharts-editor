@@ -143,7 +143,7 @@ highed.Toolbox = function(parent, attr) {
 
       body.innerHTML = '';
       highed.dom.ap(body, contents);
-
+      
       highed.dom.style(body, {
         width: 100 + '%',
         height: (bsize.h - 55) + 'px',

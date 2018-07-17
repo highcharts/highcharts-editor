@@ -70,13 +70,15 @@ highed.DrawerEditor = function(parent, options) {
       text: 'Data',
       onClick: function() {
         dataPage.show();
+        previewPage.hide();
       }
     },
     {      
       icon: 'pie-chart',
-      text: 'Preview',
+      text: 'Customize',
       onClick: function() {
         dataPage.hide();
+        previewPage.show();
       }
     }]),
     
@@ -111,6 +113,43 @@ highed.DrawerEditor = function(parent, options) {
       defaultChartOptions: properties.defaultChartOptions
     }),
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
+    previewPage = highed.PreviewPage(
+      splitter.bottom,
+      highed.merge(
+        {
+          importer: properties.importer
+        },
+        properties.dataGrid
+      ),
+      chartPreview,
+      chartFrame,
+      {
+        icon: 'fa-sliders',
+        title: 'Customize Chart',
+        width: 25,
+        help: [
+          {
+            title: 'Customize',
+            description: [
+              'The customize pane lets you customize your chart.<br/><br/>',
+              'The customizer has three different sections:<br/>',
+              '<li>Simple: A simple customizer with the most used options</li>',
+              '<li>Advanced: All options available in Highcharts/Highstock can be set here</li>',
+              '<li>Custom code: Here, properties can be overridden programatically</li>'
+            ]
+          }
+        ],
+        create: function(body) {
+          highed.dom.ap(body, customizerContainer);
+          customizer.resize();
+        },
+        events: {
+          Expanded: function(width, height) {
+            customizer.resize(width, height);
+          }
+        }
+      }
+    ),
     dataPage = highed.DataPage(  
       splitter.bottom,
       highed.merge(
