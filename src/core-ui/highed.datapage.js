@@ -177,7 +177,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       display: 'block'
     });
     assignDataPanel.show();
-    expand();
+    //expand();
     
   }
   function hide() {
