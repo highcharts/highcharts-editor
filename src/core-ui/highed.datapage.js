@@ -83,8 +83,9 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         },
         properties.dataGrid
       )
-    ),
-    assignDataPanel = highed.AssignDataPanel(parent);
+    );
+
+    var assignDataPanel = highed.AssignDataPanel(parent);
 
     function showHelp() {
       helpModal.show();
@@ -164,16 +165,27 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         });
   
         //entryEvents.emit('Expanded', newWidth, height - 20);
-      }, 300);
-
-
-      
+      }, 300);  
 
       highed.emit('UIAction', 'ToolboxNavigation', props.title);
     }
 
     expand();
 
+  function show() {
+    highed.dom.style(container, {
+      display: 'block'
+    });
+    assignDataPanel.show();
+    expand();
+    
+  }
+  function hide() {
+    highed.dom.style(container, {
+      display: 'none'
+    });
+    assignDataPanel.hide();
+  }
 
   function destroy() {}
 
@@ -246,8 +258,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 */
   chartPreview.on('LoadProject', function () {
     setTimeout(function () {
-    resQuickSel.selectByIndex(0);
-    setToActualSize();
+    //resQuickSel.selectByIndex(0);
+    //setToActualSize();
     }, 2000);
   });
 
@@ -395,7 +407,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
   
   chartPreview.on('SetResizeData', function () {
-    setToActualSize();
+    //setToActualSize();
   });
 
   resizeChart();
@@ -411,6 +423,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       showLiveStatus: function(){}, //toolbox.showLiveStatus,
       hideLiveStatus: function(){}//toolbox.hideLiveStatus
     },
+    hide: hide,
+    show: show,
     dataTable: dataTable//,
     //toolbar: toolbar
   };

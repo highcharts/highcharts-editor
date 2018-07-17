@@ -25,31 +25,33 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // @format
 
-highed.DataPreviewPanel = function(parent, attr) {
+highed.OptionsPanel = function(parent, attr) {
   var events = highed.events(),
     container = highed.dom.cr(
       'div',
-      'highed-transition highed-datapreviewpanel highed-box-size'
+      'highed-transition highed-optionspanel highed-box-size'
     ),
-    bar = highed.dom.cr('div', 'highed-datapreviewpanel-bar highed-box-size'),
+    bar = highed.dom.cr('div', 'highed-optionspanel-bar highed-box-size'),
     body = highed.dom.cr(
       'div',
-      'highed-datapreviewpanel-body highed-box-size highed-transition'
-    ),
-    dataBtn = highed.dom.cr(
-      'button',
-      'highed-ok-button highed-datapreviewpanel-button ', 
-      '<i class="fa fa-table"></i>&nbsp;Data'
-    ),
-    previewBtn = highed.dom.cr(
-      'button',
-      'highed-ok-button highed-datapreviewpanel-button ', 
-      '<i class="fa fa-pie-chart"></i>&nbsp;Preview'
+      'highed-optionspanel-body highed-box-size highed-transition'
     );
-    
-    highed.dom.ap(body,dataBtn );
-    highed.dom.ap(body,previewBtn );
 
+  attr.forEach(function(option) {
+    var btn = highed.dom.cr(
+      'button',
+      'highed-ok-button highed-optionspanel-button ', 
+      '<i class="fa fa-' + option.icon + '"></i>&nbsp;' + option.text
+    );
+      
+    highed.dom.on(btn, 'click', function() {
+      option.onClick();
+    });
+
+    highed.dom.ap(body,btn);
+
+  });
+  
   highed.dom.ap(parent, highed.dom.ap(container, bar, body));
 
   return {

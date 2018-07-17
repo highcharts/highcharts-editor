@@ -65,7 +65,20 @@ highed.DrawerEditor = function(parent, options) {
     ),
     lastSetWidth = false,
     fixedSize = false,
-    panel = highed.DataPreviewPanel(parent),
+    panel = highed.OptionsPanel(parent, [{
+      icon: 'table',
+      text: 'Data',
+      onClick: function() {
+        dataPage.show();
+      }
+    },
+    {      
+      icon: 'pie-chart',
+      text: 'Preview',
+      onClick: function() {
+        dataPage.hide();
+      }
+    }]),
     
     splitter = highed.VSplitter(parent, {
       topHeight: properties.useHeader ? '60px' : '0px',

@@ -58,6 +58,18 @@ highed.AssignDataPanel = function(parent, attr) {
 
 
 
+  function hide() {
+    highed.dom.style(container, {
+      display: 'none'
+    });
+  }
+
+
+  function show() {
+    highed.dom.style(container, {
+      display: 'block'
+    });
+  }
 
 
 
@@ -109,6 +121,8 @@ highed.AssignDataPanel = function(parent, attr) {
   highed.dom.ap(parent, highed.dom.ap(container, bar, body));
 
   return {
-    on: events.on
+    on: events.on,
+    hide: hide,
+    show: show
   };
 };
