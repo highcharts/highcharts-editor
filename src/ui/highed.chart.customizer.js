@@ -80,7 +80,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
     ),
     previewCodeMirror = false,
     splitter = highed.HSplitter(simpleTab.body, {
-      leftWidth: 20,
+      leftWidth: 100,
       responsive: true
     }),
     list = highed.List(splitter.left, true),
@@ -203,7 +203,6 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
    */
   function resize(w, h) {
     var bsize, lsize;
-
     tabs.resize(w, h);
     bsize = tabs.barSize();
 
@@ -309,7 +308,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
 
       container = highed.dom.cr('div', 'highed-customize-group');
       masterNode = highed.dom.cr('div', 'highed-customize-master-dropdown');
-
+/*
       highed.dom.ap(
         body,
         highed.dom.ap(
@@ -322,7 +321,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
           masterNode,
           table
         )
-      );
+      );*/
 
       if (group.filteredBy) {
         filter = highed.getAttr(options, group.filteredBy, detailIndex);

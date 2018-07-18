@@ -1,6 +1,5 @@
 .highed-list {
 	/*background: @background-panel;*/
-	color: @text-panel;
 	.highed-box-size;
 	.highed-nosel;	
     overflow: hidden;
@@ -8,24 +7,24 @@
 
 .highed-list .item {
 	text-align: left !important;
-    color: @bright-text !important;
-    font-size: 14px !important;
+    color: @text-main !important;
+    font-size: 13px !important;
     cursor: pointer;
-    display: block;
+    display: block;    
+    background-color: #f3f3f3;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.0784313725490196);
     /*background-color: @background-panel !important;*/
     background-image: none !important;
     /*border-top: @border-main !important;*/
     /*border-left: @border-main !important;*/
-    border-radius: 3px;
-    padding: 5px;
-    margin: 10px;
+    padding: 10px;
     .highed-box-size;
     .highed-transition;
 }
 
 .highed-list .item:hover {
-	color: @bright-text !important;
-	font-weight: bold;
+    font-weight: bold;
+    text-decoration: none;
 }
 
 .highed-list .item:first-child {
@@ -35,7 +34,6 @@
 .highed-list .item-selected, .highed-list .item-selected:hover {
     /*background-color: @bright-background !important;*/
 	background-color:@selected-item-color !important;
-    color:@selected-item-text !important;
     /*border-left: 3px solid @selected-item-color;*/
     font-weight: bold;
     cursor: default;
@@ -60,4 +58,9 @@
 .highed-list-compact .icon {
       margin-right:30px;
       margin-left:30px;
+}
+
+.item-arrow {
+    float: right;
+    margin-right: 6px;
 }

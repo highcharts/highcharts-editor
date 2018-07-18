@@ -65,14 +65,20 @@ highed.List = function(parent, responsive) {
      */
   function addItem(item) {
     var node = highed.dom.cr('a', 'item', item.title),
+      nodeArrow = highed.dom.cr('span', 'item-arrow', '<i class="fa fa-angle-right" aria-hidden="true"></i>'),
       iexports = {};
 
+    highed.dom.ap(node, nodeArrow);
+
     function select(e) {
+
       if (selectedItem) {
         selectedItem.selected = false;
         selectedItem.node.className = 'item';
+        selectedItem.nodeArrow.innerHTML = '<i class="fa fa-angle-right" aria-hidden="true"></i>';
       }
 
+      nodeArrow.innerHTML = '<i class="fa fa-angle-down" aria-hidden="true"></i>';
       selectedItem = iexports;
       selectedItem.selected = true;
       node.className = 'item item-selected';
@@ -92,6 +98,7 @@ highed.List = function(parent, responsive) {
       id: item.id,
       title: item.title,
       node: node,
+      nodeArrow: nodeArrow,
       select: select,
       selected: false
     };

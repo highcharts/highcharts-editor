@@ -70,93 +70,79 @@ highed.PreviewPage = function(parent, options, chartPreview, chartFrame, props) 
     icon = highed.dom.cr('div', iconClass),
     helpModal = highed.HelpModal(props.help || []),
     // Data table
-    dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
+    customizerContainer = highed.dom.cr('div', 'highed-box-size highed-fill'), 
+    customizer = highed.ChartCustomizer(
+      customizerContainer,
+      properties.customizer,
+      chartPreview
+    ),
     body = highed.dom.cr(
       'div',
       'highed-toolbox-body highed-box-size highed-transition'
     );
 
-    function showHelp() {
-      helpModal.show();
-    }
+  function showHelp() {
+    helpModal.show();
+  }
 
-    highed.dom.on(helpIcon, 'click', showHelp);
-    highed.dom.ap(contents, highed.dom.ap(title, helpIcon),/*(props.showLiveStatus ? highed.dom.ap(title, liveDiv, helpIcon) :  highed.dom.ap(title, helpIcon)),*/ userContents);
-    highed.dom.ap(body, contents);
+  highed.dom.on(helpIcon, 'click', showHelp);
+  highed.dom.ap(contents, highed.dom.ap(title, helpIcon), userContents);
+  highed.dom.ap(body, contents);
 
-    highed.dom.ap(userContents, dataTableContainer);
-    highed.dom.ap(parent, highed.dom.ap(container,body));
+  highed.dom.ap(userContents, customizerContainer);
+  highed.dom.ap(parent, highed.dom.ap(container,body));
 
+  customizer.resize();
 
-    function expand() {
-      //var bsize = highed.dom.size(bar);
-      var newWidth = props.width;
-/*
-      if (expanded && activeItem === exports) {
-        return;
-      }
-*/
-      if (props.iconOnly) {
-        return;
-      }
-/*
-      if (activeItem) {
-        activeItem.disselect();
-      }
-*/
- //     entryEvents.emit('BeforeExpand');
+  function expand() {
+    var newWidth = props.width;
 
-   //   body.innerHTML = '';
-   //   highed.dom.ap(body, contents);
+    highed.dom.style(body, {
+      width: 100 + '%',
+      opacity: 1
+    });
 
-   //console.log(bsize.h);
-      highed.dom.style(body, {
-        width: 100 + '%',
-        //height: //(bsize.h - 55) + 'px',
-        opacity: 1
-      });
+    highed.dom.style(container, {
+      width: newWidth + '%'
+    });
 
-      highed.dom.style(container, {
-        width: newWidth + '%'
-      });
+    events.emit('BeforeResize', newWidth);
 
-      events.emit('BeforeResize', newWidth);
+    // expanded = true;
 
-     // expanded = true;
+    function resizeBody() {
+    var bsize = highed.dom.size(body),
+      tsize = highed.dom.size(title),
+      size = {
+        w: bsize.w,
+        h: bsize.h - tsize.h - 55
+      };
+      
+    highed.dom.style(contents, {
+      width: size.w + 'px',
+      height: size.h + 'px'
+    });
 
-     function resizeBody() {
-      var bsize = highed.dom.size(body),
-        tsize = highed.dom.size(title),
-        size = {
-          w: bsize.w,
-          h: bsize.h - tsize.h - 55
-        };
+    return size;
+  }
 
-      highed.dom.style(contents, {
-        width: size.w + 'px',
-        height: size.h + 'px'
-      });
-
-      return size;
-    }
+  setTimeout(function() {
+    var height = resizeBody().h;
     
-      setTimeout(function() {
-        var height = resizeBody().h;
+    customizer.resize(newWidth, height - 20);   
+    
+    highed.dom.style(body, {
+      height: (height + highed.dom.size(title).h) + 'px',
+    });
+    highed.dom.style(contents, {
+      height: height + 'px',
+    });
 
-        highed.dom.style(body, {
-          height: (height + highed.dom.size(title).h) + 'px',
-        });
-        highed.dom.style(contents, {
-          height: height + 'px',
-        });
-  
-        //entryEvents.emit('Expanded', newWidth, height - 20);
-      }, 300);  
+    //entryEvents.emit('Expanded', newWidth, height - 20);
+  }, 300);  
 
-      highed.emit('UIAction', 'ToolboxNavigation', props.title);
-    }
-
-    expand();
+    highed.emit('UIAction', 'ToolboxNavigation', props.title);
+  }
 
   function show() {
     highed.dom.style(container, {
@@ -164,7 +150,7 @@ highed.PreviewPage = function(parent, options, chartPreview, chartFrame, props) 
     });
 
     resizeChart();
-    //expand();
+    expand();
     
   }
   function hide() {
@@ -174,7 +160,6 @@ highed.PreviewPage = function(parent, options, chartPreview, chartFrame, props) 
   }
 
   function destroy() {}
-
 
   function showError(title, message) {
     highed.dom.style(errorBar, {
@@ -186,6 +171,9 @@ highed.PreviewPage = function(parent, options, chartPreview, chartFrame, props) 
     errorBarBody.innerHTML = message;
   }
 
+
+  customizer.on('PropertyChange', chartPreview.options.set);
+  customizer.on('PropertySetChange', chartPreview.options.setAll);
 
   chartPreview.on('ChartChange', function(newData) {
     events.emit('ChartChangedLately', newData);
@@ -337,6 +325,7 @@ highed.PreviewPage = function(parent, options, chartPreview, chartFrame, props) 
     //setToActualSize();
   });
 
+  expand();
   hide();
 
   return {

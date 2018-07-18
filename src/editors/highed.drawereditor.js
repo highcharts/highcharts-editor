@@ -637,10 +637,12 @@ highed.DrawerEditor = function(parent, options) {
   // Event attachments
 
   //toolbox.on('BeforeResize', resizeChart);
+  /*
 
   customizer.on('PropertyChange', chartPreview.options.set);
   customizer.on('PropertySetChange', chartPreview.options.setAll);
-
+*/
+/*
   chartPreview.on('LoadProjectData', function(csv) {
     /*
     dataTable.loadCSV(
@@ -648,8 +650,8 @@ highed.DrawerEditor = function(parent, options) {
         csv: csv
       },
       true
-    );*/
-  });
+    );
+  });*/
 
   chartPreview.on('ChartChange', function(newData) {
     events.emit('ChartChangedLately', newData);
@@ -701,7 +703,8 @@ highed.DrawerEditor = function(parent, options) {
   });
 */
   chartPreview.on('RequestEdit', function(event, x, y) {
-    // Expanded
+    // Expanded ------------------------
+    /*
     if (toolboxEntries.customize.body.offsetWidth) {
       customizer.focus(event, x, y);
 
@@ -712,7 +715,7 @@ highed.DrawerEditor = function(parent, options) {
         unbind();
       });
       toolboxEntries.customize.expand();
-    }
+    }*/
   });
 /*
   dataTable.on('Change', function(headers, data) {

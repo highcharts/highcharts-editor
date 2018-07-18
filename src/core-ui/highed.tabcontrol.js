@@ -43,7 +43,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 highed.TabControl = function(parent, noOverflow, extraPadding) {
   var container = highed.dom.cr('div', 'highed-tab-control'),
-    paneBar = highed.dom.cr('div', 'tabs'),
+    //paneBar = highed.dom.cr('div', 'tabs'),
     body = highed.dom.cr('div', 'body'),
     indicator = highed.dom.cr('div', 'indicator'),
     more = highed.dom.cr('div', 'highed-tab-control-more fa fa-chevron-right'),
@@ -79,7 +79,7 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
    */
   function resize(w, h) {
     var cs = highed.dom.size(parent),
-      ps = highed.dom.size(paneBar),
+      //ps = highed.dom.size(paneBar),
       width = 0;
 
     highed.dom.style(container, {
@@ -87,7 +87,7 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
     });
 
     highed.dom.style(body, {
-      height: (h || cs.h) - ps.h + 'px'
+      height: (h || cs.h) /*- ps.h*/ + 'px'
     });
 
     //Also re-focus the active tab
@@ -101,7 +101,7 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
     tabs.forEach(function(tab) {
       width += highed.dom.size(tab.node).w || 0;
     });
-
+/*
     if (width > paneBar.scrollWidth) {
       highed.dom.style(more, {
         display: 'block'
@@ -111,6 +111,7 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
         display: 'none'
       });
     }
+    */
   }
 
   /** Select the first tab
@@ -147,7 +148,7 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
     var c = tabs.filter(function(a) {
       return a.visible();
     }).length;
-
+/*
     if (c < 2) {
       highed.dom.style(paneBar, {
         display: 'none'
@@ -156,7 +157,7 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
       highed.dom.style(paneBar, {
         display: ''
       });
-    }
+    }*/
   }
 
   /* Create and return a new tab
@@ -184,7 +185,7 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
       tbody.className += ' tab-body-padded';
     }
 
-    highed.dom.ap(paneBar, tab);
+    //highed.dom.ap(paneBar, tab);
     highed.dom.ap(body, tbody);
 
     function hide() {
@@ -288,7 +289,7 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
     highed.ready(function() {
       highed.dom.ap(
         parent,
-        highed.dom.ap(container, highed.dom.ap(paneBar, more, indicator), body)
+        highed.dom.ap(container, /*highed.dom.ap(paneBar, more, indicator)*/ body)
       );
 
       resize();
@@ -313,7 +314,7 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
      *    > h {number} - the height of the control
      */
     barSize: function() {
-      return highed.dom.size(paneBar);
+      return 0;//highed.dom.size(paneBar);
     }
   };
 };
