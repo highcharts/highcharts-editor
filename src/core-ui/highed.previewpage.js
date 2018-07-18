@@ -153,6 +153,7 @@ highed.PreviewPage = function(parent, options, chartPreview, chartFrame, props) 
     expand();
     
   }
+  
   function hide() {
     highed.dom.style(container, {
       display: 'none'

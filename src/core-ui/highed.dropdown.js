@@ -44,9 +44,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      *
      *  @param parent {domnode} - the node to attach the dropdown to
      */
-  highed.DropDown = function(parent) {
+  highed.DropDown = function(parent, extraClasses) {
     var events = highed.events(),
-      container = highed.dom.cr('div', 'highed-dropdown'),
+      container = highed.dom.cr('div', 'highed-dropdown ' + extraClasses),
       body = highed.dom.cr('div', 'highed-dropdown-body'),
       arrow = highed.dom.cr('div', 'highed-dropdown-arrow fa fa-arrow-down'),
       items = [],

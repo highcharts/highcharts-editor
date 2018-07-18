@@ -184,7 +184,6 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
     if (extraPadding) {
       tbody.className += ' tab-body-padded';
     }
-
     //highed.dom.ap(paneBar, tab);
     highed.dom.ap(body, tbody);
 

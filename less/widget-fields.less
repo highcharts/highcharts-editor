@@ -16,7 +16,7 @@
 }
 
 .highed-field-container {
-  padding-right: 36px;
+  padding-right: 5px;
   width: 100%;
   position: relative;
   .highed-box-size;
@@ -55,13 +55,26 @@
   color: @accent-color;
 }
 
+.highed-field-input,
+.highed-field-colorpicker {
+  display: block;
+  width: 100%;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+}
+
 .highed-field-input {
   width: 100%;
   outline: none;
   border: @input-border;
   color: @text-main !important;
   padding: 7px;
-  font-size: 13px;
   min-height: 30px;
   .highed-box-size;
 }
@@ -115,19 +128,24 @@
 }
 
 .highed-field-array-add {
-  background: @accent-color;
-  color: @accent-text;
-  float: right;
-  width: 30px;
-  height: 30px;
+  background: @background-main;
+  color: @text-main;
+  width: 28px;
+  height: 28px;
   padding: 4px;
   font-size: 14px;
   line-height: 30px !important;
   text-align: center;
   display: inline-block;
+  border: 1px dashed #000;
+  border-radius: 3px;
   cursor: pointer;
-  border: @border-main;
   .highed-transition;
+}
+
+.highed-field-array-add.fa-plus:before {
+  position: relative;
+  top: -4px;
 }
 
 .highed-field-table {

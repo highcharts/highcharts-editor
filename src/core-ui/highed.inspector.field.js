@@ -95,8 +95,8 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
         input.value = val || value;
 
         return highed.dom.ap(
-          highed.dom.cr('div', 'highed-field-container'),
-          reset,
+          highed.dom.cr('div', 'highed-field-container'),/*
+          reset,*/
           input
         );
       },
@@ -122,8 +122,8 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
         input.value = val || value;
 
         return highed.dom.ap(
-          highed.dom.cr('div', 'highed-field-container'),
-          reset,
+          highed.dom.cr('div', 'highed-field-container'),/*
+          reset,*/
           input
         );
       },
@@ -158,8 +158,8 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
         });
 
         return highed.dom.ap(
-          highed.dom.cr('div', 'highed-field-container'),
-          reset,
+          highed.dom.cr('div', 'highed-field-container'),/*
+          reset,*/
           input
         );
       },
@@ -168,6 +168,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
           reset = highed.dom.cr('div', 'highed-field-reset fa fa-undo'),
           resetTo = val || value || properties.defaults;
 
+        
         if (resetTo === 'null') {
           resetTo = null;
         }
@@ -179,7 +180,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
             col !== 'undefined' &&
             typeof col !== 'undefined'
           ) {
-            box.innerHTML = col;
+            //box.innerHTML = col;
           } else {
             box.innerHTML = 'auto';
             col = '#FFFFFF';
@@ -227,8 +228,8 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
 
         return highed.dom.ap(
           highed.dom.cr('div', 'highed-field-container'),
-          box,
-          reset
+          box/*,
+          reset*/
         );
       },
       font: function(val, callback) {
@@ -261,7 +262,8 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
           parent = highed.dom.ap(
             highed.dom.cr('div', 'highed-field-container'),
             textArea,
-            reset,
+            /*
+            reset,*/
             errorBar
           );
 
@@ -322,7 +324,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
 
         return highed.dom.ap(
           highed.dom.cr('div', 'highed-field-container'),
-          reset,
+          /*reset,*/
           picker.container
         );
       },
@@ -353,8 +355,8 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
 
         return highed.dom.ap(
           highed.dom.cr('div', 'highed-field-container'),
-          ddown.container,
-          reset
+          ddown.container/*,
+          reset*/
         );
       },
       object: function(val, callback) {
@@ -532,8 +534,8 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
 
         function addCompositeItem(val, suppressCallback) {
           var item,
-            rem = highed.dom.cr('span', 'highed-icon fa fa-trash'),
-            row = highed.dom.cr('tr'),
+            rem = highed.dom.cr('span', 'highed-icon fa fa-trash highed-trash-button'),
+            row = highed.dom.cr('div', 'color-row'), //tr
             id = ++itemCounter;
 
           function processChange(newVal) {
@@ -574,8 +576,8 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
             itemTable,
             highed.dom.ap(
               row,
-              highed.dom.ap(highed.dom.cr('td'), item),
-              highed.dom.ap(highed.dom.cr('td'), rem)
+              highed.dom.ap(highed.dom.cr('div'), item), //td
+              highed.dom.ap(highed.dom.cr('div'), rem) //td
             )
           );
 
@@ -618,9 +620,9 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
       'span',
       'highed-icon highed-field-help fa fa-question-circle'
     ),
-    helpTD = highed.dom.cr('td', 'highed-customizer-table-help'),
-    widgetTD = highed.dom.cr('td', 'highed-field-table-widget-column'),
-    titleCol = highed.dom.cr('td'),
+    helpTD = highed.dom.cr('div', 'highed-customizer-table-help'), //td
+    widgetTD = highed.dom.cr('div', 'highed-field-table-widget-column'), //td
+    titleCol = highed.dom.cr('div'), //td
     typeIndicator = highed.dom.cr('span', 'highed-customize-type');
 
   function tryCallback(cb, val) {
@@ -759,23 +761,27 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
   }
 
   typeIndicator.className += ' highed-customize-type-' + type;
-
+  const parent = highed.dom.cr('div', 'highed-customizer-table-parent');
+  
+  highed.dom.style(parent,
+  {
+    width: properties.width + '%'
+  });
   return highed.dom.ap(
     highed.dom.ap(
-      highed.dom.cr('tr'),
+      parent, //tr
       highed.dom.ap(
         titleCol,
         highed.dom.cr('span', 'highed-customize-field-label', properties.title),
-        typeIndicator
-      ),
-      highed.dom.ap(widgetTD, fields[type] ? fields[type]() : fields.string()),
-      !nohint
+        !nohint
         ? highed.dom.ap(
             helpTD,
             //highed.dom.cr('span', 'highed-field-tooltip', properties.tooltip)
             help
           )
         : false
+      ),
+      highed.dom.ap(widgetTD, fields[type] ? fields[type]() : fields.string())
     )
   );
 };

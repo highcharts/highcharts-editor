@@ -81,9 +81,10 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
     previewCodeMirror = false,
     splitter = highed.HSplitter(simpleTab.body, {
       leftWidth: 100,
+      rightWidth: 100,
       responsive: true
     }),
-    list = highed.List(splitter.left, true),
+    list = highed.List(splitter.left, true, properties),
     body = splitter.right,
     advSplitter = highed.HSplitter(advancedTab.body, {
       leftWidth: 30
@@ -251,7 +252,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
     body.innerHTML = '';
 
     entry.forEach(function(thing) {
-      selectGroup(thing, false, false, detailIndex, filteredBy, filter);
+      //selectGroup(thing, false, false, detailIndex, filteredBy, filter);
     });
 
     highlighted = false;
@@ -305,10 +306,10 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
       if (!doInclude) {
         return;
       }
-
+      
       container = highed.dom.cr('div', 'highed-customize-group');
       masterNode = highed.dom.cr('div', 'highed-customize-master-dropdown');
-/*
+
       highed.dom.ap(
         body,
         highed.dom.ap(
@@ -321,7 +322,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
           masterNode,
           table
         )
-      );*/
+      );
 
       if (group.filteredBy) {
         filter = highed.getAttr(options, group.filteredBy, detailIndex);
@@ -374,14 +375,14 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
                     detailIndex
                   );
                 }
-                selectGroup(
+                /*selectGroup(
                   sub,
                   table,
                   options,
                   detailIndex,
                   group.filteredBy,
                   filter
-                );
+                );*/
               });
             });
 
@@ -396,7 +397,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
       //highed.dom.ap(body, table);
 
       group.options.forEach(function(sub) {
-        selectGroup(sub, table, options, detailIndex, group.filteredBy, filter);
+        //selectGroup(sub, table, options, detailIndex, group.filteredBy, filter);
       });
     } else if (typeof group.id !== 'undefined') {
       //Check if we should filter out this column
@@ -497,11 +498,12 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
       if (!shouldInclude(highed.meta.optionsExtended.options[key])) {
         return;
       }
-
       list.addItem({
         id: key,
         title: highed.L(key)
-      });
+      }, 
+      highed.meta.optionsExtended.options[key],
+      chartPreview.options.getCustomized());
     });
 
     // buildTree();
@@ -607,7 +609,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
     var entry = highed.meta.optionsExtended.options[id];
     body.innerHTML = '';
     entry.forEach(function(thing) {
-      selectGroup(thing);
+      //selectGroup(thing);
     });
     highlighted = false;
     highed.emit('UIAction', 'SimplePropCatChoose', id);

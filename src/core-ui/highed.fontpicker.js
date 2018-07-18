@@ -56,7 +56,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   highed.FontPicker = function(fn, style) {
     var container = highed.dom.cr('div', 'highed-font-picker'),
       fontFamily = highed.DropDown(), //highed.dom.cr('select', 'font-family'),
-      fontSize = highed.DropDown(), //highed.dom.cr('select', 'font-size'),
+      fontSize = highed.DropDown(null, 'highed-font-size'), //highed.dom.cr('select', 'font-size'),
       boldBtn = highed.PushButton(false, 'bold'),
       italicBtn = highed.PushButton(false, 'italic'),
       color = highed.dom.cr('span', 'font-color', '&nbsp;');

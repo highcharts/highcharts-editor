@@ -41,13 +41,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @param parent {domnode} - the node to attach the list to
  *  @param responsive {boolean} - set to true to get JS-based responsive functionality
  */
-highed.List = function(parent, responsive) {
+highed.List = function(parent, responsive, props) {
   var container = highed.dom.cr('div', 'highed-list'),
     compactIndicator = highed.dom.cr('div', 'highed-list-compact', 'compact'),
     ctx = highed.ContextMenu(),
     selectedItem = false,
     events = highed.events(),
-    items = [];
+    items = [],
+    properties = props;
+
 
   ///////////////////////////////////////////////////////////////////////////
 
@@ -63,12 +65,225 @@ highed.List = function(parent, responsive) {
      *   > node {domnode} - the dom node for the item
      *   > select {function} - selects the item if called
      */
-  function addItem(item) {
+  function addItem(item, children, userOptions) {
     var node = highed.dom.cr('a', 'item', item.title),
       nodeArrow = highed.dom.cr('span', 'item-arrow', '<i class="fa fa-angle-right" aria-hidden="true"></i>'),
+      nodeChildren = highed.dom.cr('span', '', ''),
       iexports = {};
 
+    highed.dom.style(nodeChildren, {
+      display: 'none'
+    });
     highed.dom.ap(node, nodeArrow);
+
+    children.forEach(function(thing) {
+      selectGroup(thing);
+    });
+
+    function shouldInclude(group) {
+      var doInclude = false;
+
+      if (Object.keys(properties.availableSettings || {}).length > 0) {
+        if (highed.isArr(group)) {
+          group.forEach(function(sub) {
+            if (shouldInclude(sub)) {
+              doInclude = true;
+            }
+          });
+        } else if (highed.isArr(group.options)) {
+          group.options.forEach(function(sub) {
+            if (shouldInclude(sub)) {
+              doInclude = true;
+            }
+          });
+        } else if (
+          properties.availableSettings[group.id] ||
+          properties.availableSettings[group.pid]
+        ) {
+          doInclude = true;
+        }
+
+        return doInclude;
+      }
+
+      return true;
+    }
+        //This function has mutated into a proper mess. Needs refactoring.
+    function selectGroup(group, table, options, detailIndex, filteredBy, filter) {
+      var master,
+        vals,
+        doInclude = true,
+        container,
+        masterNode,
+        def;
+
+      options = userOptions;//chartPreview.options.getCustomized();
+
+      if (highed.isArr(group.options)) {
+        table = highed.dom.cr('div', 'highed-customizer-table');
+
+        doInclude = shouldInclude(group);
+
+        if (!doInclude) {
+          return;
+        }
+        
+        container = highed.dom.cr('div', 'highed-customize-group');
+        masterNode = highed.dom.cr('div', 'highed-customize-master-dropdown');
+
+        highed.dom.ap(
+          nodeChildren,
+          highed.dom.ap(
+            container,
+            highed.dom.cr(
+              'div',
+              'highed-customizer-table-heading',
+              highed.L(group.text)
+            ),
+            masterNode,
+            table
+          )
+        );
+
+        if (group.filteredBy) {
+          filter = highed.getAttr(options, group.filteredBy, detailIndex);
+        }
+
+        if (group.controlledBy) {
+          master = highed.DropDown();
+          highed.dom.style(masterNode, {
+            display: 'block'
+          });
+
+          if (highed.isStr(group.controlledBy.options)) {
+            vals = highed.getAttr(
+              options,
+              group.controlledBy.options,
+              detailIndex
+            );
+
+            if (highed.isArr(vals)) {
+              if (vals.length === 0) {
+                highed.dom.ap(
+                  body,
+                  highed.dom.cr('i', '', 'No data to display..')
+                );
+                return;
+              }
+
+              master.addItems(
+                vals.map(function(t, i) {
+                  return (
+                    (group.controlledBy.optionsTitle
+                      ? t[group.controlledBy.optionsTitle]
+                      : '#' + (i + 1)) || '#' + (i + 1)
+                  );
+                })
+              );
+
+              master.selectByIndex(detailIndex || 0);
+
+              master.on('Change', function(selected) {
+                detailIndex = selected.index();
+
+                table.innerHTML = '';
+
+                group.options.forEach(function(sub) {
+                  if (group.filteredBy) {
+                    filter = highed.getAttr(
+                      options,
+                      group.filteredBy,
+                      detailIndex
+                    );
+                  }
+                  selectGroup(
+                    sub,
+                    table,
+                    options,
+                    detailIndex,
+                    group.filteredBy,
+                    filter
+                  );
+                });
+              });
+
+              highed.dom.ap(masterNode, master.container);
+              detailIndex = detailIndex || 0;
+            } else {
+              return;
+            }
+          }
+        }
+
+        //highed.dom.ap(body, table);
+
+        group.options.forEach(function(sub) {
+          selectGroup(sub, table, options, detailIndex, group.filteredBy, filter);
+        });
+      } else if (typeof group.id !== 'undefined') {
+        //Check if we should filter out this column
+        if (filter && group.subType && group.subType.length) {
+          if (!highed.arrToObj(group.subType)[filter]) {
+            return;
+          }
+        }
+
+        if (Object.keys(properties.availableSettings || {}).length > 0) {
+          if (
+            !properties.availableSettings[group.id] &&
+            !properties.availableSettings[group.pid]
+          ) {
+            return;
+          }
+        }
+
+        if (typeof group.dataIndex !== 'undefined') {
+          detailIndex = group.dataIndex;
+        }
+
+        def = highed.getAttr(options, group.id, detailIndex);
+
+        //highed.dom.ap(sub, highed.dom.cr('span', '', referenced[0].returnType));
+        highed.dom.ap(
+          table,
+          highed.InspectorField(
+            group.values ? 'options' : group.dataType,
+            typeof def !== 'undefined'
+              ? def
+              : filter && group.subTypeDefaults[filter]
+                ? group.subTypeDefaults[filter]
+                : group.defaults,
+            {
+              title: highed.L('option.text.' + group.pid),
+              tooltip: highed.L('option.tooltip.' + group.pid),
+              values: group.values,
+              custom: group.custom,
+              defaults: group.defaults,
+              width: group.width || 100,
+              attributes: group.attributes || []
+            },
+            function(newValue) {
+              events.emit('PropertyChange', group.id, newValue, detailIndex);
+              highed.emit(
+                'UIAction',
+                'SimplePropSet',
+                highed.L('option.text.' + group.pid),
+                newValue
+              );
+
+              if (group.id === filteredBy) {
+                //This is a master for the rest of the childs,
+                //which means that we need to rebuild everything
+                //here somehow and check their subType
+                applyFilter(detailIndex, filteredBy, newValue);
+              }
+            },
+            false,
+            group.id
+          )
+        );
+      }
+    }
 
     function select(e) {
 
@@ -76,9 +291,15 @@ highed.List = function(parent, responsive) {
         selectedItem.selected = false;
         selectedItem.node.className = 'item';
         selectedItem.nodeArrow.innerHTML = '<i class="fa fa-angle-right" aria-hidden="true"></i>';
+        highed.dom.style(selectedItem.nodeChildren, {
+          display: "none"
+        });
       }
 
       nodeArrow.innerHTML = '<i class="fa fa-angle-down" aria-hidden="true"></i>';
+      highed.dom.style(nodeChildren, {
+        display: 'block'
+      });
       selectedItem = iexports;
       selectedItem.selected = true;
       node.className = 'item item-selected';
@@ -92,13 +313,14 @@ highed.List = function(parent, responsive) {
     }
 
     highed.dom.on(node, 'click', select);
-    highed.dom.ap(container, node);
+    highed.dom.ap(container, node, nodeChildren);
 
     iexports = {
       id: item.id,
       title: item.title,
       node: node,
       nodeArrow: nodeArrow,
+      nodeChildren: nodeChildren,
       select: select,
       selected: false
     };

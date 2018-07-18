@@ -39,14 +39,16 @@ highed.meta.optionsExtended = {
             dataType: 'string',
             context: 'General',
             defaults: 'Chart title',
-            parent: 'title'
+            parent: 'title',
+            width: 50
           },
           {
             id: 'subtitle--text',
             pid: 'subtitle.text',
             dataType: 'string',
             context: 'General',
-            parent: 'subtitle'
+            parent: 'subtitle',
+            width: 50
           },
           {
             id: 'yAxis-title--text',
@@ -172,7 +174,17 @@ highed.meta.optionsExtended = {
             dataType: 'color',
             context: 'General',
             defaults: '#FFFFFF',
-            parent: 'chart'
+            parent: 'chart',
+            width:50
+          },
+          {
+            id: 'chart--borderColor',
+            pid: 'chart.borderColor',
+            dataType: 'color',
+            context: 'General',
+            defaults: '#335cad',
+            parent: 'chart',
+            width: 50
           },
           {
             id: 'chart--borderWidth',
@@ -183,7 +195,8 @@ highed.meta.optionsExtended = {
             dataType: 'number',
             context: 'General',
             defaults: '0',
-            parent: 'chart'
+            parent: 'chart',
+            width: 50
           },
           {
             id: 'chart--borderRadius',
@@ -194,15 +207,8 @@ highed.meta.optionsExtended = {
             dataType: 'number',
             context: 'General',
             defaults: '0',
-            parent: 'chart'
-          },
-          {
-            id: 'chart--borderColor',
-            pid: 'chart.borderColor',
-            dataType: 'color',
-            context: 'General',
-            defaults: '#335cad',
-            parent: 'chart'
+            parent: 'chart',
+            width: 50
           }
         ]
       },
@@ -214,14 +220,8 @@ highed.meta.optionsExtended = {
             pid: 'chart.plotBackgroundColor',
             dataType: 'color',
             context: 'General',
-            parent: 'chart'
-          },
-          {
-            id: 'chart--plotBackgroundImage',
-            pid: 'chart.plotBackgroundImage',
-            dataType: 'string',
-            context: 'General',
-            parent: 'chart'
+            parent: 'chart',
+            width: 38
           },
           {
             id: 'chart--plotBorderWidth',
@@ -229,7 +229,8 @@ highed.meta.optionsExtended = {
             dataType: 'number',
             context: 'General',
             defaults: '0',
-            parent: 'chart'
+            parent: 'chart',
+            width: 31
           },
           {
             id: 'chart--plotBorderColor',
@@ -237,6 +238,14 @@ highed.meta.optionsExtended = {
             dataType: 'color',
             context: 'General',
             defaults: '#cccccc',
+            parent: 'chart',
+            width: 31
+          },
+          {
+            id: 'chart--plotBackgroundImage',
+            pid: 'chart.plotBackgroundImage',
+            dataType: 'string',
+            context: 'General',
             parent: 'chart'
           }
         ]
@@ -675,15 +684,8 @@ highed.meta.optionsExtended = {
             context: 'General',
             defaults: 'center',
             parent: 'legend',
-            values: '["left", "center", "right"]'
-          },
-          {
-            id: 'legend--x',
-            pid: 'legend.x',
-            dataType: 'number',
-            context: 'General',
-            defaults: '0',
-            parent: 'legend'
+            values: '["left", "center", "right"]',
+            width: 50
           },
           {
             id: 'legend--verticalAlign',
@@ -692,7 +694,17 @@ highed.meta.optionsExtended = {
             context: 'General',
             defaults: 'bottom',
             parent: 'legend',
-            values: '["top", "middle", "bottom"]'
+            values: '["top", "middle", "bottom"]',
+            width: 50
+          },
+          {
+            id: 'legend--x',
+            pid: 'legend.x',
+            dataType: 'number',
+            context: 'General',
+            defaults: '0',
+            parent: 'legend',
+            width: 50
           },
           {
             id: 'legend--y',
@@ -700,7 +712,8 @@ highed.meta.optionsExtended = {
             dataType: 'number',
             context: 'General',
             defaults: '0',
-            parent: 'legend'
+            parent: 'legend',
+            width: 50
           },
           {
             id: 'legend--floating',
@@ -737,23 +750,8 @@ highed.meta.optionsExtended = {
             pid: 'legend.backgroundColor',
             dataType: 'color',
             context: 'General',
-            parent: 'legend'
-          },
-          {
-            id: 'legend--borderWidth',
-            pid: 'legend.borderWidth',
-            dataType: 'number',
-            context: 'General',
-            defaults: '0',
-            parent: 'legend'
-          },
-          {
-            id: 'legend--borderRadius',
-            pid: 'legend.borderRadius',
-            dataType: 'number',
-            context: 'General',
-            defaults: '0',
-            parent: 'legend'
+            parent: 'legend',
+            width: 50
           },
           {
             id: 'legend--borderColor',
@@ -761,7 +759,26 @@ highed.meta.optionsExtended = {
             dataType: 'color',
             context: 'General',
             defaults: '#999999',
-            parent: 'legend'
+            parent: 'legend',
+            width: 50
+          },
+          {
+            id: 'legend--borderWidth',
+            pid: 'legend.borderWidth',
+            dataType: 'number',
+            context: 'General',
+            defaults: '0',
+            parent: 'legend',
+            width: 50
+          },
+          {
+            id: 'legend--borderRadius',
+            pid: 'legend.borderRadius',
+            dataType: 'number',
+            context: 'General',
+            defaults: '0',
+            parent: 'legend',
+            width: 50
           }
         ]
       }
