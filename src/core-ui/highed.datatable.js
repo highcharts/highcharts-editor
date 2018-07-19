@@ -821,19 +821,19 @@ highed.DataTable = function(parent, attributes) {
     keysReference = {};
     headersReference = {};
     surpressChangeEvents = true;
+    
+    setTimeout(function(){ events.emit('InitLoaded'); }, 10);
 
     for (var i = 0; i < 1; i++) {
       var r = Row(false, keyValue);
     }
 
     tempKeyValue = "A";
-    for (var j = 0; j < 2; j++) {
+    for (var j = 0; j < 3; j++) {
       addCol('Column ' + (j + 1));
     }
-
     highed.dom.ap(colgroup, highed.dom.cr('col'));
     resize();
-
     surpressChangeEvents = false;
   }
 
@@ -1142,7 +1142,7 @@ highed.DataTable = function(parent, attributes) {
       display: ''
     });
 
-    events.emit('ClearData');
+    events.emit('ClearData', true);
 
     emitChanged(noWait);
     showDropzone();
@@ -1217,6 +1217,7 @@ highed.DataTable = function(parent, attributes) {
     highed.dom.style(table, {
       width: ps.w - hs.h + 'px'
     });
+
   }
 
   /** Returns the header titles as an array
@@ -2057,6 +2058,9 @@ highed.DataTable = function(parent, attributes) {
 
     var previousValues,
         values;
+
+    console.log("HIGHLIGHTING......");
+    console.log(inputs);
 
     inputs.forEach(function(input) {
       input.value = input.value.toUpperCase();

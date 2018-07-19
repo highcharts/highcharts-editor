@@ -246,6 +246,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     }
   });*/
 
+  dataTable.on('InitLoaded', function() {
+    dataTable.highlightSelectedFields(assignDataPanel.getOptions());
+  });
+
   dataTable.on('LoadLiveData', function(settings){
     //chartPreview.data.live(settings);
 
