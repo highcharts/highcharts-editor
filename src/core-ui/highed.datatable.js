@@ -1994,10 +1994,7 @@ highed.DataTable = function(parent, attributes) {
       while (tempValue <= values[values.length - 1]) {
         highed.dom.style(headersReference[tempValue], {
           "background-color": color.light,
-          "border-top": "1px solid " + color.dark,
-          "border-bottom": "1px solid " + color.dark,
-          "border-right": "1px solid " + color.dark,
-          "border-left": (tempValue === 'A' ? "1px solid " + color.dark : '')
+          "border": "1px double " + color.dark,
         });
         tempValue = getNextLetter(tempValue);
       }
@@ -2008,8 +2005,8 @@ highed.DataTable = function(parent, attributes) {
     values.forEach(function(value, index) {
       keysReference[value].forEach(function(key) {
         highed.dom.style(key, {
-          "border-right": (index === (values.length - 1) ? '1px solid ' + color.dark : ''),
-          "border-left": '1px solid ' + color.dark,
+          "border-right": (index === (values.length - 1) ? '1px double ' + color.dark : ''),
+          "border-left": (index === 0 ? '1px double ' + color.dark : ''),
         });
       });
     });
@@ -2021,10 +2018,7 @@ highed.DataTable = function(parent, attributes) {
       while (tempValue <= previousValues[previousValues.length - 1]) {
         highed.dom.style(headersReference[tempValue], {
           "background-color": '',
-          "border-top": '',
-          "border-bottom": '',
-          "border-right": '',
-          "border-left": ''
+          "border": '',
         });
         tempValue = getNextLetter(tempValue);
       }
@@ -2053,14 +2047,11 @@ highed.DataTable = function(parent, attributes) {
   }
 
   function highlightSelectedFields(inputs) {
-
-    var previousValues,
-        values;
-
     inputs.forEach(function(input) {
       input.value = input.value.toUpperCase();
-      previousValues = [],
-      values = [];
+
+      var previousValues = [],
+          values = [];
       
       if (input.multipleValues) {
         const delimiter = (input.value.indexOf('-') > -1 ? '-' : ',');
@@ -2073,6 +2064,9 @@ highed.DataTable = function(parent, attributes) {
         values = [input.value.charAt(0)];
         if (input.previousValue) previousValues = [input.previousValue];
       }
+
+      input.previousValue = input.value.toUpperCase();
+
       removeCellColoring(previousValues);
       colorFields(values, input.colors);
     });
