@@ -27,6 +27,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 highed.AssignDataPanel = function(parent, attr) {
 
+  var options = [
+    {
+      name: 'Labels',
+      desc: 'A column of names or times',
+      default: 'A',
+      value: 'A'
+    },
+    {
+      name: 'Values',
+      desc: 'One or more columns of numbers',
+      default: 'B-C',
+      value: 'B-C'
+    }
+  ];
+  
   function generateColors() {
     const hue = Math.floor(Math.random()*(357-202+1)+202), // Want a colour blue/red/purple colour
           saturation =  Math.floor(Math.random() * 100),
@@ -56,14 +71,11 @@ highed.AssignDataPanel = function(parent, attr) {
   var labels = highed.dom.cr('div', 'highed-assigndatapanel-data-options');
 
 
-
-
   function hide() {
     highed.dom.style(container, {
       display: 'none'
     });
   }
-
 
   function show() {
     highed.dom.style(container, {
@@ -71,52 +83,39 @@ highed.AssignDataPanel = function(parent, attr) {
     });
   }
 
-
-
-  var label1Input = highed.dom.cr('input', 'highed-assigndatapanel-input');
-
-  var colors1 = generateColors();
-  highed.dom.style(label1Input, {
-    "background": colors1.light,
-    "border-color": colors1.dark
-  });
-  
-  highed.dom.on(label1Input, 'blur', function() {
-    events.emit('AssignDataChanged');
-  });
-
-  label1Input.value = 'A';
+  highed.dom.ap(body, header);
 
   var chartInput = highed.dom.cr('select', 'highed-assigndatapanel-select-input');
-  var label1 = highed.dom.ap(highed.dom.cr('div', 'highed-assigndatapanel-data-option'), 
-                             highed.dom.cr('h6', '', 'Labels'),
-                             highed.dom.cr('div', 'highed-assigndatapanel-data-desc', 'A column of names or times'),
-                             label1Input);
+  highed.dom.ap(labels, chartInput);
 
+  options.forEach(function(option) {
+    var labelInput = highed.dom.cr('input', 'highed-assigndatapanel-input');
 
+    var colors = generateColors();
+    highed.dom.style(labelInput, {
+      "background": colors.light,
+      "border-color": colors.dark
+    });
 
-
-
-  var label2Input = highed.dom.cr('input', 'highed-assigndatapanel-input');
+    option.colors = colors;
+    
+    highed.dom.on(labelInput, 'blur', function() {
+      option.value = labelInput.value;
+      events.emit('AssignDataChanged', option);
+    });
   
-  var colors = generateColors();
-  highed.dom.style(label2Input, {
-    "background": colors.light,
-    "border-color": colors.dark
+    labelInput.value = option.default;
+  
+    var label = highed.dom.ap(highed.dom.cr('div', 'highed-assigndatapanel-data-option'), 
+                               highed.dom.cr('h6', '', option.name),
+                               highed.dom.cr('div', 'highed-assigndatapanel-data-desc', option.desc),
+                               labelInput);
+  
+    highed.dom.ap(labels, label);
+
   });
 
-  label2Input.value = 'B-C';
-  var label2 = highed.dom.ap(highed.dom.cr('div', 'highed-assigndatapanel-data-option'), 
-                            highed.dom.cr('h6', '', 'Values'),
-                            highed.dom.cr('div', 'highed-assigndatapanel-data-desc', 'One or more columns of numbers'),
-                            label2Input);
 
-
-
-
-
-  highed.dom.ap(body, header);
-  highed.dom.ap(labels, chartInput, label1, label2);
   highed.dom.ap(body, labels);
   highed.dom.ap(parent, highed.dom.ap(container, bar, body));
 

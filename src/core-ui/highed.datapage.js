@@ -222,6 +222,11 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   chartPreview.on('ChartChange', function(newData) {
     events.emit('ChartChangedLately', newData);
   });
+
+  assignDataPanel.on('AssignDataChanged', function(input){
+    //console.log("TEST", input);
+    dataTable.highlightSelectedFields(input);
+  });
 /*
   templates.on('Select', function(template) {
     chartPreview.loadTemplate(template);

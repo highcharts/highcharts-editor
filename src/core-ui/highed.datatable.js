@@ -34,6 +34,8 @@ function parseCSV(inData, delimiter) {
     options = {
       delimiter: delimiter
     },
+    headersReference = {},
+    cellsReference = {},
     potentialDelimiters = {
       ',': true,
       ';': true,
@@ -532,6 +534,9 @@ highed.DataTable = function(parent, attributes) {
       input = highed.dom.cr('input'),
       exports = {};
 
+    if (!keysReference[keyVal]) keysReference[keyVal] = [];
+    keysReference[keyVal].push(col);
+
     function goLeft() {
       if (colNumber >= 1) {
         row.columns[colNumber - 1].focus();
@@ -813,6 +818,8 @@ highed.DataTable = function(parent, attributes) {
   function init() {
     clear();
     keyValue = "A";
+    keysReference = {};
+    headersReference = {};
     surpressChangeEvents = true;
 
     for (var i = 0; i < 1; i++) {
@@ -952,6 +959,8 @@ highed.DataTable = function(parent, attributes) {
       ox;
       
     letter.innerHTML = keyValue;
+    headersReference[keyValue] = letter;
+
     keyValue = getNextLetter(keyValue);
     ////////////////////////////////////////////////////////////////////////
 
@@ -1342,6 +1351,8 @@ highed.DataTable = function(parent, attributes) {
   function loadRows(rows, done) {
     var sanityCounts = {};
     keyValue = "A";
+    keysReference = {};
+    headersReference = {};
     clear();
 
     if (rows.length > 1) {
@@ -1976,6 +1987,38 @@ highed.DataTable = function(parent, attributes) {
     return rawCSV;
   }
 
+  function highlightSelectedFields(input) {
+
+    input.value = input.value.toUpperCase();
+
+    const dashIndex = input.value.indexOf('-'),
+          commaIndex = input.value.indexOf(',');
+    var values;
+
+    if (dashIndex > -1 || commaIndex > -1) { //Multi type field
+      const delimiter = (dashIndex > -1 ? '-' : ',');
+      values = input.value.split(delimiter).sort();
+    } else { // Single Field
+      values = [input.value];
+    }
+
+    values.forEach(function(value) {
+      keysReference[value].forEach(function(key) {
+        highed.dom.style(key, {
+          "border-right": '1px solid ' + input.colors.dark,
+          "border-left": '1px solid ' + input.colors.dark,
+        });
+      });
+
+      highed.dom.style(headersReference[value], {
+        "background-color": input.colors.light,
+        "border": "1px solid " + input.colors.dark,
+      });
+      
+    });
+
+  }
+
   ////////////////////////////////////////////////////////////////////////////
 /*
   toolbar = highed.Toolbar(container, {
@@ -2112,6 +2155,7 @@ highed.DataTable = function(parent, attributes) {
     on: events.on,
     resize: resize,
     loadLiveDataFromURL: loadLiveDataFromURL,
-    loadLiveDataPanel: loadLiveDataPanel
+    loadLiveDataPanel: loadLiveDataPanel,
+    highlightSelectedFields: highlightSelectedFields
   };
 };

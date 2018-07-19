@@ -739,18 +739,21 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
     // properties.tooltip = properties.tooltip.replace(/\n/g, '<br/><br/>');
   }
 
+  
   if (highed.onPhone()) {
     highed.dom.on(help, 'click', function() {
-      highed.Tooltip(0, 0, properties.tooltip || properties.tooltipText, true);
+      var hide = highed.Tooltip(0, 0, properties.tooltip || properties.tooltipText, true);
+      highed.dom.on([help], 'mouseout', hide);
     });
   } else {
     highed.dom.on([help], 'mouseover', function(e) {
-      highed.Tooltip(
+      var hide = highed.Tooltip(
         e.clientX + 20,
         e.clientY,
         properties.tooltip || properties.tooltipText
       );
-
+      
+      highed.dom.on([help], 'mouseout', hide);
       // highed.showDimmer(highed.hideAllTooltips, true, true);
     });
   }
