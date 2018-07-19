@@ -226,6 +226,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   assignDataPanel.on('AssignDataChanged', function(input){
     //console.log("TEST", input);
     dataTable.highlightSelectedFields(input);
+    
   });
 /*
   templates.on('Select', function(template) {
@@ -266,6 +267,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     setTimeout(function () {
     //resQuickSel.selectByIndex(0);
     //setToActualSize();
+    dataTable.highlightSelectedFields(assignDataPanel.getOptions());
     }, 2000);
   });
 

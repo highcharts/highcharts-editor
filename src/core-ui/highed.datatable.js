@@ -1987,34 +1987,98 @@ highed.DataTable = function(parent, attributes) {
     return rawCSV;
   }
 
-  function highlightSelectedFields(input) {
-
-    input.value = input.value.toUpperCase();
-
-    const dashIndex = input.value.indexOf('-'),
-          commaIndex = input.value.indexOf(',');
-    var values;
-
-    if (dashIndex > -1 || commaIndex > -1) { //Multi type field
-      const delimiter = (dashIndex > -1 ? '-' : ',');
-      values = input.value.split(delimiter).sort();
-    } else { // Single Field
-      values = [input.value];
+  function colorHeader(values, color) {
+    var tempValue = values[0];
+    if (values.length > 0) {
+      while (tempValue <= values[values.length - 1]) {
+        highed.dom.style(headersReference[tempValue], {
+          "background-color": color.light,
+          "border-top": "1px solid " + color.dark,
+          "border-bottom": "1px solid " + color.dark,
+          "border-right": "1px solid " + color.dark,
+          "border-left": (tempValue === 'A' ? "1px solid " + color.dark : '')
+        });
+        tempValue = getNextLetter(tempValue);
+      }
     }
+  }
 
+  function outlineCell(values, color) {
+    values.forEach(function(value, index) {
+      keysReference[value].forEach(function(key) {
+        highed.dom.style(key, {
+          "border-right": (index === (values.length - 1) ? '1px solid ' + color.dark : ''),
+          "border-left": '1px solid ' + color.dark,
+        });
+      });
+    });
+  }
+
+  function decolorHeader(previousValues) {
+    var tempValue = previousValues[0];
+    if (previousValues.length > 0) {
+      while (tempValue <= previousValues[previousValues.length - 1]) {
+        highed.dom.style(headersReference[tempValue], {
+          "background-color": '',
+          "border-top": '',
+          "border-bottom": '',
+          "border-right": '',
+          "border-left": ''
+        });
+        tempValue = getNextLetter(tempValue);
+      }
+    }
+  }
+
+  function removeOutlineFromCell(values) {
     values.forEach(function(value) {
       keysReference[value].forEach(function(key) {
         highed.dom.style(key, {
-          "border-right": '1px solid ' + input.colors.dark,
-          "border-left": '1px solid ' + input.colors.dark,
+          "border-right": '',
+          "border-left": '',
         });
       });
+    });
 
-      highed.dom.style(headersReference[value], {
-        "background-color": input.colors.light,
-        "border": "1px solid " + input.colors.dark,
-      });
-      
+  }
+
+  function removeCellColoring(previousValues) {
+    removeOutlineFromCell(previousValues);
+    decolorHeader(previousValues);
+  }
+
+  function colorFields(values, color){
+
+    outlineCell(values, color);
+    colorHeader(values, color);
+  }
+
+  function highlightSelectedFields(inputs) {
+
+    var previousValues,
+        values;
+
+    inputs.forEach(function(input) {
+      input.value = input.value.toUpperCase();
+      const dashIndex = input.value.indexOf('-'),
+            commaIndex = input.value.indexOf(',');
+  
+      if (dashIndex > -1 || commaIndex > -1) { //Multi type field
+        const delimiter = (dashIndex > -1 ? '-' : ','),
+              previousValueDashIndex = input.previousValue.indexOf('-'),
+              previousValueCommaIndex = input.previousValue.indexOf(',');
+
+        if (previousValueDashIndex > -1 || previousValueCommaIndex > -1) {
+          const previousValueDelimiter = (previousValueDashIndex > -1 ? '-' : ',');
+          previousValues = input.previousValue.split(previousValueDelimiter).sort();
+          removeCellColoring(previousValues);
+        }
+        values = input.value.split(delimiter).sort();
+      } else { // Single Field
+        if (input.value === input.previousValue) return;
+        values = [input.value];
+      }
+      colorFields(values, input.colors);
     });
 
   }

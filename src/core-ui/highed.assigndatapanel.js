@@ -32,13 +32,15 @@ highed.AssignDataPanel = function(parent, attr) {
       name: 'Labels',
       desc: 'A column of names or times',
       default: 'A',
-      value: 'A'
+      value: 'A',
+      previousValue: ''
     },
     {
       name: 'Values',
       desc: 'One or more columns of numbers',
       default: 'B-C',
-      value: 'B-C'
+      value: 'B-C',
+      previousValue: ''
     }
   ];
   
@@ -51,6 +53,10 @@ highed.AssignDataPanel = function(parent, attr) {
       "light": "hsl(" + hue + ", " + saturation + "%, " + (lightness + 20) + "%)",
       "dark": "hsl(" + hue + ", " + saturation + "%, " + lightness + "%)",
     };
+  }
+
+  function getOptions() {
+    return options;
   }
 
   var events = highed.events(),
@@ -98,10 +104,12 @@ highed.AssignDataPanel = function(parent, attr) {
     });
 
     option.colors = colors;
-    
+    highed.dom.on(labelInput, 'focus', function() {
+      option.previousValue = labelInput.value;
+    });
     highed.dom.on(labelInput, 'blur', function() {
       option.value = labelInput.value;
-      events.emit('AssignDataChanged', option);
+      events.emit('AssignDataChanged', options);
     });
   
     labelInput.value = option.default;
@@ -115,13 +123,14 @@ highed.AssignDataPanel = function(parent, attr) {
 
   });
 
-
   highed.dom.ap(body, labels);
   highed.dom.ap(parent, highed.dom.ap(container, bar, body));
 
+  events.emit('AssignDataChanged', options);
   return {
     on: events.on,
     hide: hide,
-    show: show
+    show: show,
+    getOptions: getOptions
   };
 };
