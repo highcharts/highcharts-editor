@@ -284,7 +284,18 @@ highed.meta.optionsExtended = {
             pid: 'xAxis.title.text',
             dataType: 'string',
             context: 'General',
-            parent: 'xAxis-title'
+            parent: 'xAxis-title',
+            width: 50
+          },
+          {
+            id: 'xAxis-labels--format',
+            dataIndex: 0,
+            pid: 'xAxis.labels.format',
+            dataType: 'string',
+            context: 'General',
+            defaults: '{value}',
+            parent: 'xAxis-labels',
+            width: 50
           },
           {
             id: 'xAxis--type',
@@ -303,7 +314,8 @@ highed.meta.optionsExtended = {
             dataType: 'boolean',
             context: 'General',
             defaults: 'false',
-            parent: 'xAxis'
+            parent: 'xAxis',
+            width: 50
           },
           {
             id: 'xAxis--reversed',
@@ -312,16 +324,8 @@ highed.meta.optionsExtended = {
             dataType: 'boolean',
             context: 'General',
             defaults: 'false',
-            parent: 'xAxis'
-          },
-          {
-            id: 'xAxis-labels--format',
-            dataIndex: 0,
-            pid: 'xAxis.labels.format',
-            dataType: 'string',
-            context: 'General',
-            defaults: '{value}',
-            parent: 'xAxis-labels'
+            parent: 'xAxis',
+            width: 50
           }
         ]
       },
@@ -346,25 +350,8 @@ highed.meta.optionsExtended = {
             context: 'General',
             defaults: 'linear',
             parent: 'yAxis',
-            values: '["linear", "logarithmic", "datetime", "category"]'
-          },
-          {
-            id: 'yAxis--opposite',
-            dataIndex: 0,
-            pid: 'yAxis.opposite',
-            dataType: 'boolean',
-            context: 'General',
-            defaults: 'false',
-            parent: 'yAxis'
-          },
-          {
-            id: 'yAxis--reversed',
-            dataIndex: 0,
-            pid: 'yAxis.reversed',
-            dataType: 'boolean',
-            context: 'General',
-            defaults: 'false',
-            parent: 'yAxis'
+            values: '["linear", "logarithmic", "datetime", "category"]',
+            width: 50
           },
           {
             id: 'yAxis-labels--format',
@@ -373,7 +360,28 @@ highed.meta.optionsExtended = {
             dataType: 'string',
             context: 'General',
             defaults: '{value}',
-            parent: 'yAxis-labels'
+            parent: 'yAxis-labels',
+            width: 50
+          },
+          {
+            id: 'yAxis--opposite',
+            dataIndex: 0,
+            pid: 'yAxis.opposite',
+            dataType: 'boolean',
+            context: 'General',
+            defaults: 'false',
+            parent: 'yAxis',
+            width: 50
+          },
+          {
+            id: 'yAxis--reversed',
+            dataIndex: 0,
+            pid: 'yAxis.reversed',
+            dataType: 'boolean',
+            context: 'General',
+            defaults: 'false',
+            parent: 'yAxis',
+            width: 50
           }
         ]
       }
@@ -793,7 +801,8 @@ highed.meta.optionsExtended = {
             dataType: 'boolean',
             context: 'General',
             defaults: 'true',
-            parent: 'tooltip'
+            parent: 'tooltip',
+            width: 50
           },
           {
             id: 'tooltip--shared',
@@ -801,7 +810,8 @@ highed.meta.optionsExtended = {
             dataType: 'boolean',
             context: 'General',
             defaults: 'false',
-            parent: 'tooltip'
+            parent: 'tooltip',
+            width: 50
           }
         ]
       },
@@ -814,7 +824,8 @@ highed.meta.optionsExtended = {
             dataType: 'color',
             context: 'General',
             defaults: 'rgba(247,247,247,0.85)',
-            parent: 'tooltip'
+            parent: 'tooltip',
+            width: 50
           },
           {
             id: 'tooltip--borderWidth',
@@ -825,7 +836,8 @@ highed.meta.optionsExtended = {
             dataType: 'number',
             context: 'General',
             defaults: '1',
-            parent: 'tooltip'
+            parent: 'tooltip',
+            width: 50
           },
           {
             id: 'tooltip--borderRadius',
@@ -836,7 +848,8 @@ highed.meta.optionsExtended = {
             dataType: 'number',
             context: 'General',
             defaults: '3',
-            parent: 'tooltip'
+            parent: 'tooltip',
+            width: 50
           },
           {
             id: 'tooltip--borderColor',
@@ -844,7 +857,8 @@ highed.meta.optionsExtended = {
             dataType: 'color',
             context: 'General',
             defaults: 'null',
-            parent: 'tooltip'
+            parent: 'tooltip',
+            width: 50
           }
         ]
       }
@@ -900,7 +914,8 @@ highed.meta.optionsExtended = {
             dataType: 'string',
             context: 'General',
             defaults: '.',
-            parent: 'lang'
+            parent: 'lang',
+            width: 50
           },
           {
             id: 'lang--thousandsSep',
@@ -908,7 +923,8 @@ highed.meta.optionsExtended = {
             dataType: 'string',
             context: 'General',
             defaults: ' ',
-            parent: 'lang'
+            parent: 'lang',
+            width: 50
           }
         ]
       },
@@ -922,7 +938,8 @@ highed.meta.optionsExtended = {
             context: 'General',
             defaults: 'Chart context menu',
             parent: 'lang',
-            values: ''
+            values: '',
+            width: 50
           },
           {
             id: 'lang--printChart',
@@ -931,7 +948,8 @@ highed.meta.optionsExtended = {
             context: 'General',
             defaults: 'Print chart',
             parent: 'lang',
-            values: ''
+            values: '',
+            width: 50
           },
           {
             id: 'lang--downloadPNG',
@@ -939,7 +957,8 @@ highed.meta.optionsExtended = {
             dataType: 'string',
             context: 'General',
             defaults: 'Download PNG image',
-            parent: 'lang'
+            parent: 'lang',
+            width: 50
           },
           {
             id: 'lang--downloadJPEG',
@@ -947,7 +966,8 @@ highed.meta.optionsExtended = {
             dataType: 'string',
             context: 'General',
             defaults: 'Download JPEG image',
-            parent: 'lang'
+            parent: 'lang',
+            width: 50
           },
           {
             id: 'lang--downloadPDF',
@@ -955,7 +975,8 @@ highed.meta.optionsExtended = {
             dataType: 'string',
             context: 'General',
             defaults: 'Download PDF document',
-            parent: 'lang'
+            parent: 'lang',
+            width: 50
           },
           {
             id: 'lang--downloadSVG',
@@ -963,7 +984,8 @@ highed.meta.optionsExtended = {
             dataType: 'string',
             context: 'General',
             defaults: 'Download SVG vector image',
-            parent: 'lang'
+            parent: 'lang',
+            width: 50
           }
         ]
       },

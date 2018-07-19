@@ -767,21 +767,46 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
   {
     width: properties.width + '%'
   });
-  return highed.dom.ap(
-    highed.dom.ap(
-      parent, //tr
+
+  if (type === 'boolean') {
+    titleCol.className = 'highed-customize-field-boolean';
+    return highed.dom.ap(
       highed.dom.ap(
-        titleCol,
-        highed.dom.cr('span', 'highed-customize-field-label', properties.title),
-        !nohint
-        ? highed.dom.ap(
-            helpTD,
-            //highed.dom.cr('span', 'highed-field-tooltip', properties.tooltip)
-            help
-          )
-        : false
-      ),
-      highed.dom.ap(widgetTD, fields[type] ? fields[type]() : fields.string())
-    )
-  );
+        parent, //tr
+        highed.dom.ap(widgetTD, 
+          highed.dom.ap(fields[type] ? fields[type]() : fields.string(),
+          highed.dom.ap(
+            titleCol,
+            highed.dom.cr('span', 'highed-customize-field-label', properties.title),
+            !nohint
+            ? highed.dom.ap(
+                helpTD,
+                //highed.dom.cr('span', 'highed-field-tooltip', properties.tooltip)
+                help
+              )
+            : false
+          ))
+      )
+      )
+    ); 
+  } else {
+    return highed.dom.ap(
+      highed.dom.ap(
+        parent, //tr
+        highed.dom.ap(
+          titleCol,
+          highed.dom.cr('span', 'highed-customize-field-label', properties.title),
+          !nohint
+          ? highed.dom.ap(
+              helpTD,
+              //highed.dom.cr('span', 'highed-field-tooltip', properties.tooltip)
+              help
+            )
+          : false
+        ),
+        highed.dom.ap(widgetTD, fields[type] ? fields[type]() : fields.string())
+      )
+    );
+  }
+
 };
