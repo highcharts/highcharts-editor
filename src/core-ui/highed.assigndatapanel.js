@@ -33,14 +33,13 @@ highed.AssignDataPanel = function(parent, attr) {
       desc: 'A column of names or times',
       default: 'A',
       value: 'A',
-      previousValue: ''
     },
     {
       name: 'Values',
       desc: 'One or more columns of numbers',
       default: 'B-C',
       value: 'B-C',
-      previousValue: ''
+      multipleValues: true
     }
   ];
   
@@ -105,9 +104,10 @@ highed.AssignDataPanel = function(parent, attr) {
 
     option.colors = colors;
     highed.dom.on(labelInput, 'focus', function() {
-      option.previousValue = labelInput.value;
+      option.previousValue = (option.multipleValues ? labelInput.value : labelInput.value.charAt(0)); //labelInput.value;
     });
     highed.dom.on(labelInput, 'blur', function() {
+      
       option.value = labelInput.value;
       events.emit('AssignDataChanged', options);
     });

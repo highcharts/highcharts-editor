@@ -821,7 +821,7 @@ highed.DataTable = function(parent, attributes) {
     keysReference = {};
     headersReference = {};
     surpressChangeEvents = true;
-    
+
     setTimeout(function(){ events.emit('InitLoaded'); }, 10);
 
     for (var i = 0; i < 1; i++) {
@@ -2040,7 +2040,6 @@ highed.DataTable = function(parent, attributes) {
         });
       });
     });
-
   }
 
   function removeCellColoring(previousValues) {
@@ -2049,7 +2048,6 @@ highed.DataTable = function(parent, attributes) {
   }
 
   function colorFields(values, color){
-
     outlineCell(values, color);
     colorHeader(values, color);
   }
@@ -2059,29 +2057,23 @@ highed.DataTable = function(parent, attributes) {
     var previousValues,
         values;
 
-    console.log("HIGHLIGHTING......");
-    console.log(inputs);
-
     inputs.forEach(function(input) {
       input.value = input.value.toUpperCase();
-      const dashIndex = input.value.indexOf('-'),
-            commaIndex = input.value.indexOf(',');
-  
-      if (dashIndex > -1 || commaIndex > -1) { //Multi type field
-        const delimiter = (dashIndex > -1 ? '-' : ','),
-              previousValueDashIndex = input.previousValue.indexOf('-'),
-              previousValueCommaIndex = input.previousValue.indexOf(',');
-
-        if (previousValueDashIndex > -1 || previousValueCommaIndex > -1) {
-          const previousValueDelimiter = (previousValueDashIndex > -1 ? '-' : ',');
-          previousValues = input.previousValue.split(previousValueDelimiter).sort();
-          removeCellColoring(previousValues);
-        }
+      previousValues = [],
+      values = [];
+      
+      if (input.multipleValues) {
+        const delimiter = (input.value.indexOf('-') > -1 ? '-' : ',');
         values = input.value.split(delimiter).sort();
-      } else { // Single Field
-        if (input.value === input.previousValue) return;
-        values = [input.value];
+        if (input.previousValue) {
+          const previousValueDelimiter = (input.previousValue.indexOf('-') > -1 ? '-' : ',');
+          previousValues = input.previousValue.split(previousValueDelimiter).sort();
+        }
+      } else {
+        values = [input.value.charAt(0)];
+        if (input.previousValue) previousValues = [input.previousValue];
       }
+      removeCellColoring(previousValues);
       colorFields(values, input.colors);
     });
 
