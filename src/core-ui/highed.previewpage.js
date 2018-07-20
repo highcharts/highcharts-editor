@@ -81,6 +81,9 @@ highed.PreviewPage = function(parent, options, chartPreview, chartFrame, props) 
       'highed-toolbox-body highed-box-size highed-transition'
     );
 
+  customizer.on('PropertyChange', chartPreview.options.set);
+  customizer.on('PropertySetChange', chartPreview.options.setAll);
+  
   function showHelp() {
     helpModal.show();
   }
@@ -171,10 +174,6 @@ highed.PreviewPage = function(parent, options, chartPreview, chartFrame, props) 
     errorBarHeadline.innerHTML = title;
     errorBarBody.innerHTML = message;
   }
-
-
-  customizer.on('PropertyChange', chartPreview.options.set);
-  customizer.on('PropertySetChange', chartPreview.options.setAll);
 
   chartPreview.on('ChartChange', function(newData) {
     events.emit('ChartChangedLately', newData);

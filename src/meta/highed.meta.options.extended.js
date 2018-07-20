@@ -430,7 +430,43 @@ highed.meta.optionsExtended = {
               'solidgauge',
               'errorbar'
             ],
-            subTypeDefaults: {}
+            subTypeDefaults: {},
+            width: 50
+          },
+
+          {
+            id: 'series--dashStyle',
+            pid: 'series.dashStyle',
+            dataType: 'string',
+            context: 'General',
+            defaults: 'Solid',
+            parent: 'series<areasplinerange>',
+            values:
+              '["Solid", "ShortDash", "ShortDot", "ShortDashDot", "ShortDashDotDot", "Dot", "Dash" ,"LongDash", "DashDot", "LongDashDot", "LongDashDotDot"]',
+            subType: [
+              'areasplinerange',
+              'polygon',
+              'areaspline',
+              'spline',
+              'scatter',
+              'area',
+              'bubble',
+              'arearange',
+              'waterfall',
+              'line'
+            ],
+            subTypeDefaults: {
+              polygon: 'Solid',
+              areaspline: 'Solid',
+              spline: 'Solid',
+              scatter: 'Solid',
+              area: 'Solid',
+              bubble: 'Solid',
+              arearange: 'Solid',
+              waterfall: 'Dot',
+              line: 'Solid'
+            },
+            width: 50
           },
           {
             id: 'series--color',
@@ -463,7 +499,8 @@ highed.meta.optionsExtended = {
               heatmap: 'null',
               treemap: 'null',
               errorbar: '#000000'
-            }
+            },
+            width: 18
           },
           {
             id: 'series--negativeColor',
@@ -502,7 +539,28 @@ highed.meta.optionsExtended = {
               bubble: 'null',
               area: 'null',
               column: 'null'
-            }
+            },
+            width: 33
+          },
+          {
+            id: 'series-marker--symbol',
+            pid: 'series.marker.symbol',
+            dataType: 'string',
+            context: 'General',
+            parent: 'series<bubble>-marker',
+            values:
+              '[null, "circle", "square", "diamond", "triangle", "triangle-down"]',
+            subType: [
+              'bubble',
+              'polygon',
+              'line',
+              'scatter',
+              'spline',
+              'area',
+              'areaspline'
+            ],
+            subTypeDefaults: {},
+            width: 49
           },
           {
             id: 'series--colorByPoint',
@@ -529,40 +587,8 @@ highed.meta.optionsExtended = {
               boxplot: 'false',
               bar: 'false',
               waterfall: 'false'
-            }
-          },
-          {
-            id: 'series--dashStyle',
-            pid: 'series.dashStyle',
-            dataType: 'string',
-            context: 'General',
-            defaults: 'Solid',
-            parent: 'series<areasplinerange>',
-            values:
-              '["Solid", "ShortDash", "ShortDot", "ShortDashDot", "ShortDashDotDot", "Dot", "Dash" ,"LongDash", "DashDot", "LongDashDot", "LongDashDotDot"]',
-            subType: [
-              'areasplinerange',
-              'polygon',
-              'areaspline',
-              'spline',
-              'scatter',
-              'area',
-              'bubble',
-              'arearange',
-              'waterfall',
-              'line'
-            ],
-            subTypeDefaults: {
-              polygon: 'Solid',
-              areaspline: 'Solid',
-              spline: 'Solid',
-              scatter: 'Solid',
-              area: 'Solid',
-              bubble: 'Solid',
-              arearange: 'Solid',
-              waterfall: 'Dot',
-              line: 'Solid'
-            }
+            },
+            width: 50
           },
           {
             id: 'series-marker--enabled',
@@ -587,27 +613,9 @@ highed.meta.optionsExtended = {
               spline: 'null',
               polygon: 'null',
               line: 'null'
-            }
+            },
+            width: 50
           },
-          {
-            id: 'series-marker--symbol',
-            pid: 'series.marker.symbol',
-            dataType: 'string',
-            context: 'General',
-            parent: 'series<bubble>-marker',
-            values:
-              '[null, "circle", "square", "diamond", "triangle", "triangle-down"]',
-            subType: [
-              'bubble',
-              'polygon',
-              'line',
-              'scatter',
-              'spline',
-              'area',
-              'areaspline'
-            ],
-            subTypeDefaults: {}
-          }
 
           // {
           //   id: 'series-label--enabled',

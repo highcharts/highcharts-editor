@@ -65,7 +65,7 @@ highed.List = function(parent, responsive, props) {
      *   > node {domnode} - the dom node for the item
      *   > select {function} - selects the item if called
      */
-  function addItem(item, children, userOptions) {
+  function addItem(item, children, chartPreview) {
     var node = highed.dom.cr('a', 'item', item.title),
       nodeArrow = highed.dom.cr('span', 'item-arrow', '<i class="fa fa-angle-right" aria-hidden="true"></i>'),
       nodeChildren = highed.dom.cr('span', '', ''),
@@ -117,7 +117,7 @@ highed.List = function(parent, responsive, props) {
         masterNode,
         def;
 
-      options = userOptions;//chartPreview.options.getCustomized();
+      options = chartPreview.options.getCustomized(); //userOptions;//chartPreview.options.getCustomized();
 
       if (highed.isArr(group.options)) {
         table = highed.dom.cr('div', 'highed-customizer-table');
@@ -184,6 +184,7 @@ highed.List = function(parent, responsive, props) {
               master.selectByIndex(detailIndex || 0);
 
               master.on('Change', function(selected) {
+
                 detailIndex = selected.index();
 
                 table.innerHTML = '';
@@ -297,9 +298,16 @@ highed.List = function(parent, responsive, props) {
       }
 
       nodeArrow.innerHTML = '<i class="fa fa-angle-down" aria-hidden="true"></i>';
+      nodeChildren.innerHTML = '';
+      var entry = highed.meta.optionsExtended.options[item.id];
+      entry.forEach(function(thing) {
+        selectGroup(thing);
+      });
+
       highed.dom.style(nodeChildren, {
         display: 'block'
       });
+      
       selectedItem = iexports;
       selectedItem.selected = true;
       node.className = 'item item-selected';

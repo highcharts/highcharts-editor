@@ -503,7 +503,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
         title: highed.L(key)
       }, 
       highed.meta.optionsExtended.options[key],
-      chartPreview.options.getCustomized());
+      chartPreview);
     });
 
     // buildTree();
@@ -604,6 +604,10 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
   }
 
   ///////////////////////////////////////////////////////////////////////////
+
+  list.on('PropertyChange', function(groupId, newValue, detailIndex) {
+    events.emit("PropertyChange", groupId, newValue, detailIndex);
+  });
 
   list.on('Select', function(id) {
     var entry = highed.meta.optionsExtended.options[id];
