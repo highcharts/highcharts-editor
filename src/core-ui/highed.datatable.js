@@ -2047,7 +2047,9 @@ highed.DataTable = function(parent, attributes) {
   }
 
   function highlightSelectedFields(inputs) {
-    inputs.forEach(function(input) {
+    
+    Object.keys(inputs).forEach(function(key) {
+      var input = inputs[key];
       input.value = input.value.toUpperCase();
 
       var previousValues = [],

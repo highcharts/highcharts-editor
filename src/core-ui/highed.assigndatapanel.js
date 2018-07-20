@@ -27,7 +27,24 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 highed.AssignDataPanel = function(parent, attr) {
 
-  var options = [
+  var options = {
+    'Labels': {
+      'desc': 'A column of names or times',
+      'default': 'A',
+      'value': 'A',
+      'previousValue': null
+    },
+    'Values': {
+      'desc': 'One or more columns of numbers',
+      'default': 'B-C',
+      'value': 'B-C',
+      'multipleValues': true,
+      'previousValue': null
+    }
+  };
+
+  
+  /*
     {
       name: 'Labels',
       desc: 'A column of names or times',
@@ -43,7 +60,7 @@ highed.AssignDataPanel = function(parent, attr) {
       multipleValues: true,
       previousValue: null
     }
-  ];
+  ];*/
   
   function generateColors() {
     const hue = Math.floor(Math.random()*(357-202+1)+202), // Want a colour blue/red/purple colour
@@ -95,6 +112,36 @@ highed.AssignDataPanel = function(parent, attr) {
   var chartInput = highed.dom.cr('select', 'highed-assigndatapanel-select-input');
   highed.dom.ap(labels, chartInput);
 
+  Object.keys(options).forEach(function(key) {
+    var option = options[key];
+    var labelInput = highed.dom.cr('input', 'highed-assigndatapanel-input');
+
+    var colors = generateColors();
+    highed.dom.style(labelInput, {
+      "background": colors.light,
+      "border-color": colors.dark
+    });
+
+    option.colors = colors;
+    highed.dom.on(labelInput, 'focus', function() {
+      option.previousValue = (option.multipleValues ? labelInput.value : labelInput.value.charAt(0)).toUpperCase(); //labelInput.value;
+    });
+    highed.dom.on(labelInput, 'blur', function() {
+      option.value = labelInput.value.toUpperCase();
+      events.emit('AssignDataChanged', options);
+    });
+  
+    labelInput.value = option.default;
+  
+    var label = highed.dom.ap(highed.dom.cr('div', 'highed-assigndatapanel-data-option'), 
+                               highed.dom.cr('h6', '', key),
+                               highed.dom.cr('div', 'highed-assigndatapanel-data-desc', option.desc),
+                               labelInput);
+  
+    highed.dom.ap(labels, label);
+
+  });
+/*
   options.forEach(function(option) {
     var labelInput = highed.dom.cr('input', 'highed-assigndatapanel-input');
 
@@ -122,7 +169,7 @@ highed.AssignDataPanel = function(parent, attr) {
   
     highed.dom.ap(labels, label);
 
-  });
+  });*/
 
   highed.dom.ap(body, labels);
   highed.dom.ap(parent, highed.dom.ap(container, bar, body));
