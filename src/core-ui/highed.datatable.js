@@ -1240,9 +1240,10 @@ highed.DataTable = function(parent, attributes) {
 
     var columnNames = [];
 
-    if ((section || []).length > 1) {
-      var title = gcolumns[section[0]].headerTitle.innerHTML.length
-      ? gcolumns[section[0]].headerTitle.innerHTML
+
+    function cleanData(data) {
+      var title = data.headerTitle.innerHTML.length
+      ? data.headerTitle.innerHTML
       : null;
   
       if (quoteStrings) {
@@ -1252,20 +1253,17 @@ highed.DataTable = function(parent, attributes) {
       columnNames.push(title);  
     }
 
+    if (section) {
+      //Add in label data first
+      cleanData(gcolumns[section.labelColumn]);
+    }
+
     gcolumns.reduce(function(result, item, index) {
+      
+      if ((section && section.dataColumns) &&
+      (index < section.dataColumns[0] || index > section.dataColumns[section.dataColumns.length - 1])) return;
+      cleanData(item);
 
-      if ((section || []).length > 1) {
-        if (index < section[1] || index > section[section.length - 1]) return;
-      }
-      var title = item.headerTitle.innerHTML.length
-        ? item.headerTitle.innerHTML
-        : null;
-
-      if (quoteStrings) {
-        title = '"' + title + '"';
-      }
-
-      columnNames.push(title);
     }, []);
 
     return columnNames;
@@ -1279,62 +1277,49 @@ highed.DataTable = function(parent, attributes) {
    */
   function toData(quoteStrings, includeHeaders, section) {
     var data = [];
-
     if (includeHeaders) {
       data.push(getHeaderTextArr(quoteStrings, section));
+    }
+
+    function addData(column, arr) {
+
+      if (quoteStrings && !highed.isNum(column) && highed.isStr(column)) {
+        column = '"' + column.replace(/\"/g, '"') + '"';
+      }
+
+      if (highed.isNum(column)) {
+        column = parseFloat(column);
+      }
+
+      if (highed.isStr(column) && Date.parse(column) !== NaN) {
+        //v = (new Date(v)).getTime();
+      }
+
+      arr.push(column);
     }
 
     rows.forEach(function(row) {
       var rarr = [],
         hasData = false;
 
-      
-      if ((section || []).length > 1) {
+      if (section) {
         //Add in label data first
-        var v = row.columns[section[0]].value();
-
-        if (quoteStrings && !highed.isNum(v) && highed.isStr(v)) {
-          v = '"' + v.replace(/\"/g, '"') + '"';
-        }
-
-        if (highed.isNum(v)) {
-          v = parseFloat(v);
-        }
-
-        if (highed.isStr(v) && Date.parse(v) !== NaN) {
-          //v = (new Date(v)).getTime();
-        }
-
-        rarr.push(v);
+        addData(row.columns[section.labelColumn].value(), rarr);
       }
 
       row.columns.forEach(function(col, index) {
 
+        if ((section && section.dataColumns) &&
+            (index < section.dataColumns[0] || index > section.dataColumns[section.dataColumns.length - 1])) return;
 
-        if ((section || []).length > 1) {
-          if (index < section[1] || index > section[section.length - 1]) return;
-        }
-
-        var v = col.value(),
-          d;
+        var v = col.value();
 
         if (v) {
           hasData = true;
         }
+        
+        addData(v, rarr);
 
-        if (quoteStrings && !highed.isNum(v) && highed.isStr(v)) {
-          v = '"' + v.replace(/\"/g, '"') + '"';
-        }
-
-        if (highed.isNum(v)) {
-          v = parseFloat(v);
-        }
-
-        if (highed.isStr(v) && Date.parse(v) !== NaN) {
-          //v = (new Date(v)).getTime();
-        }
-
-        rarr.push(v);
       });
 
       if (hasData) {
@@ -2116,8 +2101,8 @@ highed.DataTable = function(parent, attributes) {
 
 
   function getMergedLabelAndData(inputs) {
-    var arr = [];
-    arr.push(getLetterIndex(inputs['Labels'].value.charAt(0)));
+    var arr = {};
+    arr.labelColumn = getLetterIndex(inputs['Labels'].value.charAt(0));
 
     const data = inputs['Values'];
     const values = data.value.split(data.value.indexOf('-') > -1 ? '-' : ',').sort();
@@ -2126,7 +2111,9 @@ highed.DataTable = function(parent, attributes) {
       values[index] = getLetterIndex(v);
     });
 
-    return arr.concat(values);
+    arr.dataColumns = values;
+
+    return arr; //arr.concat(values);
   }
 
   function highlightSelectedFields(inputs) {

@@ -53,12 +53,13 @@ highed.AssignDataPanel = function(parent, attr) {
 }
 
   function generateColors() {
-    const hue = Math.floor(Math.random()*(357-202+1)+202), // Want a colour blue/red/purple colour
+    const hue = Math.floor(Math.random()*(357-202+1)+202), // Want a blue/red/purple colour
           saturation =  Math.floor(Math.random() * 100),
-          lightness =  60;
+          lightness =  60,
+          alpha = 0.5;
 
     return {
-      "light": "hsl(" + hue + ", " + saturation + "%, " + (lightness + 20) + "%)",
+      "light": "hsl(" + hue + ", " + saturation + "%, " + (lightness + 20) + "%, " + alpha + ")",
       "dark": "hsl(" + hue + ", " + saturation + "%, " + lightness + "%)",
     };
   }
