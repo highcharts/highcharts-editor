@@ -132,7 +132,7 @@
     width:100%;
     height:100%;
     margin-left:40px;
-    margin-top:26px;
+    margin-top:55px;
     overflow: auto;
     .highed-box-size;   
 }
@@ -229,9 +229,10 @@
 }
 
 .highed-dtable-input-header {
-    text-align: center;
     background:@background-panel !important;
-    color:@text-panel !important;
+    color:@text-main !important;
+    text-align: left;
+    font-size: 12px;
 }
 
 .highed-dtable-table td {
@@ -308,11 +309,25 @@
     //color:@color-toolbar;
 }
 
+.highed-dtable-top-bar-col {
+    border-left: @border-main;
+    border-right: @border-main;
+    border-bottom: @border-main;
+    div {
+        font-size: 12px;
+        text-align:left;
+        padding-left: 5px;
+    }
+}
+
+.highed-dtable-top-bar-letter {
+    border: @border-main;
+}
+
 .highed-dtable-top-bar-col,
 .highed-dtable-top-bar-letter,
  {
     position: relative;
-    border: @border-main;
     display:table-cell;
     width:80px;
     min-width: 20px;

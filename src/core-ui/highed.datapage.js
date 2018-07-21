@@ -207,7 +207,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     errorBarHeadline.innerHTML = title;
     errorBarBody.innerHTML = message;
   }
-
+  
   //////////////////////////////////////////////////////////////////////////////
 
   chartPreview.on('LoadProjectData', function(csv) {
@@ -250,7 +250,19 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     dataTable.highlightSelectedFields(assignDataPanel.getOptions());
   });
 
-  dataTable.on('LoadLiveData', function(settings){
+  dataTable.on('AssignDataChanged', function(input, options) {
+    if (input.isData) {
+      return chartPreview.data.csv({
+        csv: dataTable.toCSV(';', true, options)
+      });
+    }
+    /*
+    return chartPreview.data.csv({
+      csv: dataTable.toCSV(';', true)
+    });*/
+  });
+
+  dataTable.on('LoadLiveData', function(settings) {
     //chartPreview.data.live(settings);
 
     const liveDataSetting = {};
@@ -271,6 +283,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     setTimeout(function () {
     //resQuickSel.selectByIndex(0);
     //setToActualSize();
+    assignDataPanel.resetValues();
     dataTable.highlightSelectedFields(assignDataPanel.getOptions());
     }, 2000);
   });

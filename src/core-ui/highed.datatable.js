@@ -34,6 +34,7 @@ function parseCSV(inData, delimiter) {
     options = {
       delimiter: delimiter
     },
+    columnHeadersReference = {},
     headersReference = {},
     cellsReference = {},
     potentialDelimiters = {
@@ -206,6 +207,8 @@ highed.DataTable = function(parent, attributes) {
     colgroup = highed.dom.cr('colgroup'),
     leftBar = highed.dom.cr('div', 'highed-dtable-left-bar'),
     topBar = highed.dom.cr('div', 'highed-dtable-top-bar'),
+    topLetterBar = highed.dom.cr('div', 'highed-dtable-top-letter-bar'),
+    topColumnBar = highed.dom.cr('div', 'highed-dtable-top-column-bar'),
     topLeftPanel = highed.dom.cr('div', 'highed-dtable-top-left-panel'),
     checkAll = highed.dom.cr('input'),
     mainInput = highed.dom.cr('textarea', 'highed-dtable-input'),
@@ -817,9 +820,6 @@ highed.DataTable = function(parent, attributes) {
 
   function init() {
     clear();
-    keyValue = "A";
-    keysReference = {};
-    headersReference = {};
     surpressChangeEvents = true;
 
     setTimeout(function(){ events.emit('InitLoaded'); }, 10);
@@ -839,7 +839,8 @@ highed.DataTable = function(parent, attributes) {
 
   function updateColumns() {
     colgroup.innerHTML = '';
-    topBar.innerHTML = '';
+    topColumnBar.innerHTML = '';
+    topLetterBar.innerHTML = '';
 
     gcolumns.forEach(function(col, i) {
       col.colNumber = i;
@@ -960,21 +961,27 @@ highed.DataTable = function(parent, attributes) {
       
     letter.innerHTML = keyValue;
     headersReference[keyValue] = letter;
+    columnHeadersReference[keyValue] = header;
 
     keyValue = getNextLetter(keyValue);
     ////////////////////////////////////////////////////////////////////////
-
     exports.addToDOM = function() {
       highed.dom.ap(colgroup, col);
       highed.dom.ap(
-        topBar,
+        topLetterBar,
         highed.dom.ap(letter, options, moveHandle)
+      );
+
+      highed.dom.ap(
+        topColumnBar,
+        highed.dom.ap(header, headerTitle)
       );
     };
 
     exports.destroy = function() {
       colgroup.removeChild(col);
-      topBar.removeChild(header);
+      topColumnBar.removeChild(header);
+      topLetterBar.removeChild(letter);
 
       gcolumns = gcolumns.filter(function(b) {
         return b !== exports;
@@ -1135,8 +1142,13 @@ highed.DataTable = function(parent, attributes) {
 
     tbody.innerHTML = '';
     leftBar.innerHTML = '';
-    topBar.innerHTML = '';
+    topColumnBar.innerHTML = '';
+    topLetterBar.innerHTML = '';
     colgroup.innerHTML = '';
+    keyValue = "A";
+    keysReference = {};
+    headersReference = {};
+    columnHeadersReference = {};
 
     highed.dom.style(tableTail, {
       display: ''
@@ -1224,8 +1236,12 @@ highed.DataTable = function(parent, attributes) {
    *  @memberof highed.DataTable
    *  @returns {array<string>} - the headers
    */
-  function getHeaderTextArr(quoteStrings) {
-    return gcolumns.map(function(item) {
+  function getHeaderTextArr(quoteStrings, section) {
+    return gcolumns.map(function(item, index) {
+
+      if ((section || []).length > 0) {
+        if (index < section[0] || index > section[section.length - 1]) return null;
+      }
       var title = item.headerTitle.innerHTML.length
         ? item.headerTitle.innerHTML
         : null;
@@ -1235,6 +1251,8 @@ highed.DataTable = function(parent, attributes) {
       }
 
       return title;
+    }).filter(function(i) {
+      if (i !== null) return i;
     });
   }
 
@@ -1244,18 +1262,23 @@ highed.DataTable = function(parent, attributes) {
    *  @param {boolean} includeHeaders - if true, the header texts will be included as the first row
    *  @returns {array<array<string>>}
    */
-  function toData(quoteStrings, includeHeaders) {
+  function toData(quoteStrings, includeHeaders, section) {
     var data = [];
 
     if (includeHeaders) {
-      data.push(getHeaderTextArr(quoteStrings));
+      data.push(getHeaderTextArr(quoteStrings, section));
     }
 
     rows.forEach(function(row) {
       var rarr = [],
         hasData = false;
 
-      row.columns.forEach(function(col) {
+      row.columns.forEach(function(col, index) {
+
+        if ((section || []).length > 0) {
+          if (index < section[0] || index > section[section.length - 1]) return;
+        }
+
         var v = col.value(),
           d;
 
@@ -1339,10 +1362,11 @@ highed.DataTable = function(parent, attributes) {
   /** Get the table contents as standard CSV
    *  @memberof highed.DataTable
    *  @param delimiter {string} - the delimiter to use. Defaults to `,`.
+   *  @param section {array} - the section of the data table which is the data.
    */
-  function toCSV(delimiter, quoteStrings) {
+  function toCSV(delimiter, quoteStrings, section) {
     delimiter = delimiter || ',';
-    return toData(quoteStrings, true)
+    return toData(quoteStrings, true, section)
       .map(function(cols) {
         return cols.join(delimiter);
       })
@@ -1351,9 +1375,6 @@ highed.DataTable = function(parent, attributes) {
 
   function loadRows(rows, done) {
     var sanityCounts = {};
-    keyValue = "A";
-    keysReference = {};
-    headersReference = {};
     clear();
 
     if (rows.length > 1) {
@@ -1805,7 +1826,7 @@ highed.DataTable = function(parent, attributes) {
         dropZone
       ),
       leftBar,
-      topBar,
+      highed.dom.ap(topBar, topLetterBar, topColumnBar),
       highed.dom.ap(topLeftPanel, checkAll)
     ),
     highed.dom.ap(
@@ -1995,6 +2016,12 @@ highed.DataTable = function(parent, attributes) {
         highed.dom.style(headersReference[tempValue], {
           "background-color": color.light,
           "border": "1px double " + color.dark,
+        });        
+        highed.dom.style(columnHeadersReference[tempValue], {
+          "background-color": color.light,
+          "border-left": "1px double " + color.dark,
+          "border-right": "1px double " + color.dark,
+          "border-bottom": "1px double " + color.dark,
         });
         tempValue = getNextLetter(tempValue);
       }
@@ -2016,7 +2043,7 @@ highed.DataTable = function(parent, attributes) {
     var tempValue = previousValues[0];
     if (previousValues.length > 0) {
       while (tempValue <= previousValues[previousValues.length - 1]) {
-        highed.dom.style(headersReference[tempValue], {
+        highed.dom.style([headersReference[tempValue], columnHeadersReference[tempValue]], {
           "background-color": '',
           "border": '',
         });
@@ -2046,9 +2073,17 @@ highed.DataTable = function(parent, attributes) {
     colorHeader(values, color);
   }
 
+
+  function getLetterIndex(char) {
+    return char.charCodeAt() - 65; 
+  }
+
   function highlightSelectedFields(inputs) {
     
+    var newOptions;
+
     Object.keys(inputs).forEach(function(key) {
+      newOptions = [];
       var input = inputs[key];
       input.value = input.value.toUpperCase();
 
@@ -2062,17 +2097,28 @@ highed.DataTable = function(parent, attributes) {
           const previousValueDelimiter = (input.previousValue.indexOf('-') > -1 ? '-' : ',');
           previousValues = input.previousValue.split(previousValueDelimiter).sort();
         }
+
+        const areEqual = (values.length === previousValues.length && 
+          values.every(function(item) { return previousValues.indexOf(item) > -1 }));
+        if (areEqual) return;
+        
+        values.forEach(function(value){
+          newOptions.push(getLetterIndex(value));
+        });
       } else {
+        if (input.previousValue === input.value) return;
         values = [input.value.charAt(0)];
         if (input.previousValue) previousValues = [input.previousValue];
+        newOptions.push(getLetterIndex(input.value.charAt(0)));
       }
-
+      
       input.previousValue = input.value.toUpperCase();
 
       removeCellColoring(previousValues);
       colorFields(values, input.colors);
-    });
 
+      events.emit('AssignDataChanged', input, newOptions);
+    });
   }
 
   ////////////////////////////////////////////////////////////////////////////

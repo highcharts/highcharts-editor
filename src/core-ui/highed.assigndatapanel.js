@@ -32,36 +32,26 @@ highed.AssignDataPanel = function(parent, attr) {
       'desc': 'A column of names or times',
       'default': 'A',
       'value': 'A',
-      'previousValue': null
+      'previousValue': null,
+      'linkedTo': 'name'
     },
     'Values': {
       'desc': 'One or more columns of numbers',
       'default': 'B-C',
       'value': 'B-C',
       'multipleValues': true,
-      'previousValue': null
+      'previousValue': null,
+      'isData': true
     }
   };
 
-  
-  /*
-    {
-      name: 'Labels',
-      desc: 'A column of names or times',
-      default: 'A',
-      value: 'A',
-      previousValue: null
-    },
-    {
-      name: 'Values',
-      desc: 'One or more columns of numbers',
-      default: 'B-C',
-      value: 'B-C',
-      multipleValues: true,
-      previousValue: null
-    }
-  ];*/
-  
+  function resetValues() {
+    Object.keys(options).forEach(function(key){
+      options[key].previousValue = null;
+      options[key].value = options[key].default;
+    });
+}
+
   function generateColors() {
     const hue = Math.floor(Math.random()*(357-202+1)+202), // Want a colour blue/red/purple colour
           saturation =  Math.floor(Math.random() * 100),
@@ -179,6 +169,7 @@ highed.AssignDataPanel = function(parent, attr) {
     on: events.on,
     hide: hide,
     show: show,
-    getOptions: getOptions
+    getOptions: getOptions,
+    resetValues: resetValues
   };
 };
