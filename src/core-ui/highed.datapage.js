@@ -224,9 +224,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
 
   assignDataPanel.on('AssignDataChanged', function(input){
-    //console.log("TEST", input);
     dataTable.highlightSelectedFields(input);
-    
   });
 /*
   templates.on('Select', function(template) {
@@ -251,11 +249,27 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
 
   dataTable.on('AssignDataChanged', function(input, options) {
-    if (input.isData) {
+
+    console.log(input, options);
+    if (input.isData || input.isLabel) {
       return chartPreview.data.csv({
         csv: dataTable.toCSV(';', true, options)
       });
     }
+
+/*
+    if (input.linkedTo) {
+      var tempOption = {
+        data: {
+          seriesMapping: [{
+          }]
+        }
+      };
+      tempOption.data.seriesMapping[0][input.linkedTo] = options[0];
+      console.log('data--seriesMapping--' + input.linkedTo, options[0]);
+      chartPreview.options.set('data--seriesMapping--' + input.linkedTo, options[0]);
+      //'data--seriesMapping--' + input.linkedTo
+    }(/)
     /*
     return chartPreview.data.csv({
       csv: dataTable.toCSV(';', true)

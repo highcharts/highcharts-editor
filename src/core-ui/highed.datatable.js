@@ -1237,10 +1237,25 @@ highed.DataTable = function(parent, attributes) {
    *  @returns {array<string>} - the headers
    */
   function getHeaderTextArr(quoteStrings, section) {
-    return gcolumns.map(function(item, index) {
 
-      if ((section || []).length > 0) {
-        if (index < section[0] || index > section[section.length - 1]) return null;
+    var columnNames = [];
+
+    if ((section || []).length > 1) {
+      var title = gcolumns[section[0]].headerTitle.innerHTML.length
+      ? gcolumns[section[0]].headerTitle.innerHTML
+      : null;
+  
+      if (quoteStrings) {
+        title = '"' + title + '"';
+      }
+
+      columnNames.push(title);  
+    }
+
+    gcolumns.reduce(function(result, item, index) {
+
+      if ((section || []).length > 1) {
+        if (index < section[1] || index > section[section.length - 1]) return;
       }
       var title = item.headerTitle.innerHTML.length
         ? item.headerTitle.innerHTML
@@ -1250,10 +1265,10 @@ highed.DataTable = function(parent, attributes) {
         title = '"' + title + '"';
       }
 
-      return title;
-    }).filter(function(i) {
-      if (i !== null) return i;
-    });
+      columnNames.push(title);
+    }, []);
+
+    return columnNames;
   }
 
   /** Get the table contents as an array of arrays
@@ -1273,10 +1288,31 @@ highed.DataTable = function(parent, attributes) {
       var rarr = [],
         hasData = false;
 
+      
+      if ((section || []).length > 1) {
+        //Add in label data first
+        var v = row.columns[section[0]].value();
+
+        if (quoteStrings && !highed.isNum(v) && highed.isStr(v)) {
+          v = '"' + v.replace(/\"/g, '"') + '"';
+        }
+
+        if (highed.isNum(v)) {
+          v = parseFloat(v);
+        }
+
+        if (highed.isStr(v) && Date.parse(v) !== NaN) {
+          //v = (new Date(v)).getTime();
+        }
+
+        rarr.push(v);
+      }
+
       row.columns.forEach(function(col, index) {
 
-        if ((section || []).length > 0) {
-          if (index < section[0] || index > section[section.length - 1]) return;
+
+        if ((section || []).length > 1) {
+          if (index < section[1] || index > section[section.length - 1]) return;
         }
 
         var v = col.value(),
@@ -2078,17 +2114,33 @@ highed.DataTable = function(parent, attributes) {
     return char.charCodeAt() - 65; 
   }
 
+
+  function getMergedLabelAndData(inputs) {
+    var arr = [];
+    arr.push(getLetterIndex(inputs['Labels'].value.charAt(0)));
+
+    const data = inputs['Values'];
+    const values = data.value.split(data.value.indexOf('-') > -1 ? '-' : ',').sort();
+    
+    values.forEach(function(v, index) {
+      values[index] = getLetterIndex(v);
+    });
+
+    return arr.concat(values);
+  }
+
   function highlightSelectedFields(inputs) {
     
     var newOptions;
-
     Object.keys(inputs).forEach(function(key) {
-      newOptions = [];
+  
       var input = inputs[key];
       input.value = input.value.toUpperCase();
+      newOptions = [];
 
       var previousValues = [],
           values = [];
+      
       
       if (input.multipleValues) {
         const delimiter = (input.value.indexOf('-') > -1 ? '-' : ',');
@@ -2101,22 +2153,29 @@ highed.DataTable = function(parent, attributes) {
         const areEqual = (values.length === previousValues.length && 
           values.every(function(item) { return previousValues.indexOf(item) > -1 }));
         if (areEqual) return;
-        
-        values.forEach(function(value){
-          newOptions.push(getLetterIndex(value));
-        });
+
+        if (input.isData) { //Get the label data
+            newOptions = getMergedLabelAndData(inputs);
+        } else {
+          values.forEach(function(value) {
+            newOptions.push(getLetterIndex(value));
+          });
+        }
       } else {
         if (input.previousValue === input.value) return;
         values = [input.value.charAt(0)];
         if (input.previousValue) previousValues = [input.previousValue];
-        newOptions.push(getLetterIndex(input.value.charAt(0)));
+
+        if (input.isLabel) {
+          newOptions = getMergedLabelAndData(inputs);
+        }
+        else newOptions.push(getLetterIndex(input.value.charAt(0)));
       }
       
       input.previousValue = input.value.toUpperCase();
 
       removeCellColoring(previousValues);
       colorFields(values, input.colors);
-
       events.emit('AssignDataChanged', input, newOptions);
     });
   }

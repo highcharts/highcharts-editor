@@ -33,7 +33,7 @@ highed.AssignDataPanel = function(parent, attr) {
       'default': 'A',
       'value': 'A',
       'previousValue': null,
-      'linkedTo': 'name'
+      'isLabel': true
     },
     'Values': {
       'desc': 'One or more columns of numbers',
