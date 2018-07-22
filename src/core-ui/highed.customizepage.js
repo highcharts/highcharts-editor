@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
+highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props) {
   var events = highed.events(),
     // Main properties
     properties = highed.merge(
@@ -70,152 +70,90 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     icon = highed.dom.cr('div', iconClass),
     helpModal = highed.HelpModal(props.help || []),
     // Data table
-    dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
+    customizerContainer = highed.dom.cr('div', 'highed-box-size highed-fill'), 
+    customizer = highed.ChartCustomizer(
+      customizerContainer,
+      properties.customizer,
+      chartPreview
+    ),
     body = highed.dom.cr(
       'div',
       'highed-toolbox-body highed-box-size highed-transition'
-    ),
-    dataTable = highed.DataTable(
-      dataTableContainer,
-      highed.merge(
-        {
-          importer: properties.importer
-        },
-        properties.dataGrid
-      )
     );
 
-    var assignDataPanel = highed.AssignDataPanel(parent);
+  customizer.on('PropertyChange', chartPreview.options.set);
+  customizer.on('PropertySetChange', chartPreview.options.setAll);
+  
+  function showHelp() {
+    helpModal.show();
+  }
 
-    function showHelp() {
-      helpModal.show();
-    }
+  highed.dom.on(helpIcon, 'click', showHelp);
+  highed.dom.ap(contents, highed.dom.ap(title, helpIcon), userContents);
+  highed.dom.ap(body, contents);
 
-    highed.dom.on(helpIcon, 'click', showHelp);
-    highed.dom.ap(contents, highed.dom.ap(title, helpIcon),/*(props.showLiveStatus ? highed.dom.ap(title, liveDiv, helpIcon) :  highed.dom.ap(title, helpIcon)),*/ userContents);
-    highed.dom.ap(body, contents);
+  highed.dom.ap(userContents, customizerContainer);
+  highed.dom.ap(parent, highed.dom.ap(container,body));
 
-    highed.dom.ap(userContents, dataTableContainer);
-    dataTable.resize();
-    
-    highed.dom.ap(parent, highed.dom.ap(container,body));
+  customizer.resize();
 
+  function expand() {
+    var newWidth = props.width;
 
-    function expand() {
-      //var bsize = highed.dom.size(bar);
-      var newWidth = props.width;
-/*
-      if (expanded && activeItem === exports) {
-        return;
-      }
-*/
-      if (props.iconOnly) {
-        return;
-      }
-/*
-      if (activeItem) {
-        activeItem.disselect();
-      }
-*/
- //     entryEvents.emit('BeforeExpand');
+    highed.dom.style(body, {
+      width: 100 + '%',
+      opacity: 1
+    });
 
-   //   body.innerHTML = '';
-   //   highed.dom.ap(body, contents);
+    highed.dom.style(container, {
+      width: newWidth + '%'
+    });
 
-   //console.log(bsize.h);
-      highed.dom.style(body, {
-        width: 100 + '%',
-        //height: //(bsize.h - 55) + 'px',
-        opacity: 1
-      });
+    events.emit('BeforeResize', newWidth);
 
-      highed.dom.style(container, {
-        width: newWidth + '%'
-      });
+    // expanded = true;
 
-      events.emit('BeforeResize', newWidth);
-
-     // expanded = true;
-
-     function resizeBody() {
-       /*
+    function resizeBody() {
       var bsize = highed.dom.size(body),
         tsize = highed.dom.size(title),
         size = {
           w: bsize.w,
-          h: bsize.h - tsize.h - 55
+          h: (window.innerHeight
+            || document.documentElement.clientHeight
+            || document.body.clientHeight) - highed.dom.pos(body, true).y
         };
-
-      highed.dom.style(contents, {
-        width: size.w + 'px',
-        height: size.h + 'px'
-      });
-
-      return size;*/
-      var bsize = highed.dom.size(body),
-      tsize = highed.dom.size(title),
-      size = {
-        w: bsize.w,
-        h: (window.innerHeight
-          || document.documentElement.clientHeight
-          || document.body.clientHeight) - highed.dom.pos(body, true).y
-      };
-        
-      highed.dom.style(contents, {
-        width: size.w + 'px',
-        height: ((size.h - 16)) + 'px'
-      });
-
-      dataTable.resize(newWidth, (size.h - 17 - 55) - tsize.h);   
-
-    }
-
-    setTimeout(resizeBody, 300); 
-    /*
-      setTimeout(function() {
-        var height = resizeBody().h;
-
-        dataTable.resize(newWidth, height - 20);     
-        highed.dom.style(body, {
-          height: (height + highed.dom.size(title).h) + 'px',
-        });
+          
         highed.dom.style(contents, {
-          height: height + 'px',
+          width: size.w + 'px',
+          height: ((size.h - 16)) + 'px'
         });
-  
-        //entryEvents.emit('Expanded', newWidth, height - 20);
-      }, 300);  */
 
-      highed.emit('UIAction', 'ToolboxNavigation', props.title);
+      customizer.resize(newWidth, (size.h - 17) - tsize.h);   
+
+      return size;
     }
 
-    expand();
+    setTimeout(resizeBody, 300);  
+    highed.emit('UIAction', 'ToolboxNavigation', props.title);
+  }
 
   function show() {
     highed.dom.style(container, {
       display: 'block'
     });
-    assignDataPanel.show();
+
     resizeChart();
-    //expand();
+    expand();
     
   }
+  
   function hide() {
     highed.dom.style(container, {
       display: 'none'
     });
-    assignDataPanel.hide();
   }
 
   function destroy() {}
-
-  function addImportTab(tabOptions) {
-    dataTable.addImportTab(tabOptions);
-  }
-
-  function hideImportModal() {
-    dataTable.hideImportModal();
-  }
 
   function showError(title, message) {
     highed.dom.style(errorBar, {
@@ -226,24 +164,9 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     errorBarHeadline.innerHTML = title;
     errorBarBody.innerHTML = message;
   }
-  
-  //////////////////////////////////////////////////////////////////////////////
-
-  chartPreview.on('LoadProjectData', function(csv) {
-    dataTable.loadCSV(
-      {
-        csv: csv
-      },
-      true
-    );
-  });
 
   chartPreview.on('ChartChange', function(newData) {
     events.emit('ChartChangedLately', newData);
-  });
-
-  assignDataPanel.on('AssignDataChanged', function(input){
-    dataTable.highlightSelectedFields(input);
   });
 /*
   templates.on('Select', function(template) {
@@ -263,50 +186,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     }
   });*/
 
-  dataTable.on('InitLoaded', function() {
-    dataTable.highlightSelectedFields(assignDataPanel.getOptions());
-  });
-
-  dataTable.on('AssignDataChanged', function(input, options) {
-
-    console.log(input, options);
-    if (input.isData || input.isLabel) {
-      return chartPreview.data.csv({
-        csv: dataTable.toCSV(';', true, options)
-      });
-    }
-
-/*
-    if (input.linkedTo) {
-      var tempOption = {
-        data: {
-          seriesMapping: [{
-          }]
-        }
-      };
-      tempOption.data.seriesMapping[0][input.linkedTo] = options[0];
-      console.log('data--seriesMapping--' + input.linkedTo, options[0]);
-      chartPreview.options.set('data--seriesMapping--' + input.linkedTo, options[0]);
-      //'data--seriesMapping--' + input.linkedTo
-    }(/)
-    /*
-    return chartPreview.data.csv({
-      csv: dataTable.toCSV(';', true)
-    });*/
-  });
-
-  dataTable.on('LoadLiveData', function(settings) {
-    //chartPreview.data.live(settings);
-
-    const liveDataSetting = {};
-
-    liveDataSetting[settings.type] = settings.url;
-    if (settings.interval && settings.interval > 0){
-      liveDataSetting.enablePolling = true;
-      liveDataSetting.dataRefreshRate = settings.interval
-    }
-    chartPreview.data.live(liveDataSetting);
-  });
 /*
   dataTable.on('UpdateLiveData', function(p){
     chartPreview.data.liveURL(p);
@@ -316,14 +195,9 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     setTimeout(function () {
     //resQuickSel.selectByIndex(0);
     //setToActualSize();
-    assignDataPanel.resetValues();
-    dataTable.highlightSelectedFields(assignDataPanel.getOptions());
     }, 2000);
   });
 
-  dataTable.on('LoadGSheet', function(settings) {
-    chartPreview.data.gsheet(settings);
-  });
 
   chartPreview.on('RequestEdit', function(event, x, y) {
     // Expanded
@@ -338,33 +212,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       });
       toolboxEntries.customize.expand();
     }
-  });
-
-  dataTable.on('Change', function(headers, data) {
-    return chartPreview.data.csv({
-      csv: dataTable.toCSV(';', true)
-    });
-  });
-
-  dataTable.on('ClearData', function() {
-    chartPreview.data.clear();
-  });
-
-  chartPreview.on('ProviderGSheet', function(p) {
-    dataTable.initGSheet(
-      p.id || p.googleSpreadsheetKey,
-      p.worksheet || p.googleSpreadsheetWorksheet,
-      p.startRow,
-      p.endRow,
-      p.startColumn,
-      p.endColumn,
-      true,
-      p.dataRefreshRate
-    );
-  });
-
-  chartPreview.on('ProviderLiveData', function(p) {
-    dataTable.loadLiveDataPanel(p);
   });
 
   chartPreview.on('Error', function(e) {
@@ -445,8 +292,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   function resizeChart(newWidth) {
     highed.dom.style(chartFrame, {
       /*left: newWidth + 'px',*/
-      width: '28%',
-      height: 250 + 'px'
+      width: '68%',
+      height: 681 + 'px'
     });
 /*
     highed.dom.style(chartContainer, {
@@ -468,22 +315,19 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     //setToActualSize();
   });
 
-  resizeChart();
+  expand();
+  hide();
 
   return {
     on: events.on,
     destroy: destroy,
-    addImportTab: addImportTab,
-    hideImportModal: hideImportModal,
     chart: chartPreview,
     data: {
-      on: dataTable.on,
       showLiveStatus: function(){}, //toolbox.showLiveStatus,
       hideLiveStatus: function(){}//toolbox.hideLiveStatus
     },
     hide: hide,
-    show: show,
-    dataTable: dataTable//,
+    show: show
     //toolbar: toolbar
   };
 };

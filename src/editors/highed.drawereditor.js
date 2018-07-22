@@ -70,7 +70,7 @@ highed.DrawerEditor = function(parent, options) {
       text: 'Data',
       onClick: function() {
         dataPage.show();
-        previewPage.hide();
+        customizePage.hide();
       }
     },
     {      
@@ -78,7 +78,7 @@ highed.DrawerEditor = function(parent, options) {
       text: 'Customize',
       onClick: function() {
         dataPage.hide();
-        previewPage.show();
+        customizePage.show();
       }
     }]),
     
@@ -113,7 +113,7 @@ highed.DrawerEditor = function(parent, options) {
       defaultChartOptions: properties.defaultChartOptions
     }),
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
-    previewPage = highed.PreviewPage(
+    customizePage = highed.CustomizePage(
       splitter.bottom,
       highed.merge(
         {

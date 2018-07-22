@@ -33,7 +33,7 @@
     "./src/core-ui/highed.slider.js",
     "./src/core-ui/highed.datatable.js",
     "./src/core-ui/highed.datapage.js",
-    "./src/core-ui/highed.previewpage.js",
+    "./src/core-ui/highed.customizepage.js",
     "./src/core-ui/highed.toolbox.js",
     "./src/core-ui/highed.optionspanel.js",
     "./src/core-ui/highed.assigndatapanel.js",

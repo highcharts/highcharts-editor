@@ -1220,14 +1220,19 @@ highed.DataTable = function(parent, attributes) {
     var ps = highed.dom.size(parent),
       hs = highed.dom.size(topBar);
       //tb = highed.dom.size(toolbar.container);
-
+    
     highed.dom.style(frame, {
-      height: ps.h - hs.h /*- tb.h*/ + 'px',
-      width: ps.w - hs.h + 'px'
+      height: ps.h - hs.h - 55 - 17/*- tb.h*/ + 'px', //55 is padding from top for data column and letter
+      width: ps.w + 'px'
+    });
+
+    highed.dom.style(container, {
+      height: ps.h - hs.h - 15 /*- tb.h*/ + 'px',
+      width: ps.w + 'px'
     });
 
     highed.dom.style(table, {
-      width: ps.w - hs.h + 'px'
+      width: ps.w + 'px'
     });
 
   }
@@ -2094,11 +2099,9 @@ highed.DataTable = function(parent, attributes) {
     colorHeader(values, color);
   }
 
-
   function getLetterIndex(char) {
     return char.charCodeAt() - 65; 
   }
-
 
   function getMergedLabelAndData(inputs) {
     var arr = {};
