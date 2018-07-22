@@ -268,8 +268,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
 
   dataTable.on('AssignDataChanged', function(input, options) {
-
-    console.log(input, options);
     if (input.isData || input.isLabel) {
       return chartPreview.data.csv({
         csv: dataTable.toCSV(';', true, options)

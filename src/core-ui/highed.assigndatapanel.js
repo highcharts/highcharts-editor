@@ -33,7 +33,8 @@ highed.AssignDataPanel = function(parent, attr) {
       'default': 'A',
       'value': 'A',
       'previousValue': null,
-      'isLabel': true
+      'isLabel': true,
+      'mandatory': true
     },
     'Values': {
       'desc': 'One or more columns of numbers',
@@ -41,7 +42,8 @@ highed.AssignDataPanel = function(parent, attr) {
       'value': 'B-C',
       'multipleValues': true,
       'previousValue': null,
-      'isData': true
+      'isData': true,
+      'mandatory': true
     }
   };
 
@@ -50,7 +52,7 @@ highed.AssignDataPanel = function(parent, attr) {
       options[key].previousValue = null;
       options[key].value = options[key].default;
     });
-}
+  }
 
   function generateColors() {
     const hue = Math.floor(Math.random()*(357-202+1)+202), // Want a blue/red/purple colour
@@ -81,9 +83,8 @@ highed.AssignDataPanel = function(parent, attr) {
     header = highed.dom.ap(
               highed.dom.cr('div', 'highed-assigndatapanel-header-container'), 
               highed.dom.cr('h3', 'highed-assigndatapanel-header', 'Select columns for this chart'),
-              highed.dom.cr('p', 'highed-assigndatapanel-header-desc', 'Fill in the column id you want to visualise. Add multiple columns with a comma or hyphen (eg. A,B or A-C)'));
-  
-  var labels = highed.dom.cr('div', 'highed-assigndatapanel-data-options');
+              highed.dom.cr('p', 'highed-assigndatapanel-header-desc', 'Fill in the column id you want to visualise. Add multiple columns with a hyphen (eg. A-C)')),
+    labels = highed.dom.cr('div', 'highed-assigndatapanel-data-options');
 
 
   function hide() {
@@ -96,6 +97,41 @@ highed.AssignDataPanel = function(parent, attr) {
     highed.dom.style(container, {
       display: 'block'
     });
+  }
+
+  function getLetterIndex(char) {
+    return char.charCodeAt() - 65; 
+  }
+  
+  function getValues(input){
+    const delimiter = (input.indexOf('-') > -1 ? '-' : ',');
+    const output = input.split(delimiter).sort();
+
+    output.forEach(function(value, index){
+      output[index] = getLetterIndex(value);
+    });
+
+    return output;
+  }
+
+  function valuesMatch(newValue, key) {
+    var found = false,
+        values = [],
+        values2 = [];
+
+    Object.keys(options).forEach(function(key2){
+        if (key === key2) return;
+
+        values = getValues(newValue);
+        values2 = getValues(options[key2].value);
+
+        if (Math.max(values[values.length - 1], values2[values2.length - 1]) - Math.min(values[0], values2[0]) <= (values[values.length - 1] - values[0]) + (values2[values2.length - 1] - values2[0])) {
+          found = true;
+          return false;
+        }
+
+    });
+    return found;
   }
 
   highed.dom.ap(body, header);
@@ -114,53 +150,38 @@ highed.AssignDataPanel = function(parent, attr) {
     });
 
     option.colors = colors;
+
     highed.dom.on(labelInput, 'focus', function() {
       option.previousValue = (option.multipleValues ? labelInput.value : labelInput.value.charAt(0)).toUpperCase(); //labelInput.value;
     });
+
     highed.dom.on(labelInput, 'blur', function() {
-      option.value = labelInput.value.toUpperCase();
+      console.log(key, option);
+      if (labelInput.value === '' && option.mandatory) {
+        option.value = option.previousValue;
+        labelInput.value = option.previousValue;
+      } else if (valuesMatch(labelInput.value.toUpperCase(), key)) {
+        option.value = option.previousValue;
+        labelInput.value = option.previousValue;
+        alert("Error");
+      }
+      else option.value = labelInput.value.toUpperCase();
+
       events.emit('AssignDataChanged', options);
     });
   
     labelInput.value = option.default;
   
     var label = highed.dom.ap(highed.dom.cr('div', 'highed-assigndatapanel-data-option'), 
-                               highed.dom.cr('h6', '', key),
+                               highed.dom.ap(
+                                 highed.dom.cr('h6', '', key),
+                                 highed.dom.cr('span', 'highed-assigndatapanel-data-mandatory ' + (option.mandatory ? 'active' : ''), 'Mandatory')),
                                highed.dom.cr('div', 'highed-assigndatapanel-data-desc', option.desc),
                                labelInput);
   
     highed.dom.ap(labels, label);
 
   });
-/*
-  options.forEach(function(option) {
-    var labelInput = highed.dom.cr('input', 'highed-assigndatapanel-input');
-
-    var colors = generateColors();
-    highed.dom.style(labelInput, {
-      "background": colors.light,
-      "border-color": colors.dark
-    });
-
-    option.colors = colors;
-    highed.dom.on(labelInput, 'focus', function() {
-      option.previousValue = (option.multipleValues ? labelInput.value : labelInput.value.charAt(0)).toUpperCase(); //labelInput.value;
-    });
-    highed.dom.on(labelInput, 'blur', function() {
-      option.value = labelInput.value.toUpperCase();
-      events.emit('AssignDataChanged', options);
-    });
-  
-    labelInput.value = option.default;
-  
-    var label = highed.dom.ap(highed.dom.cr('div', 'highed-assigndatapanel-data-option'), 
-                               highed.dom.cr('h6', '', option.name),
-                               highed.dom.cr('div', 'highed-assigndatapanel-data-desc', option.desc),
-                               labelInput);
-  
-    highed.dom.ap(labels, label);
-
-  });*/
 
   highed.dom.ap(body, labels);
   highed.dom.ap(parent, highed.dom.ap(container, bar, body));
