@@ -1587,6 +1587,11 @@ highed.DataTable = function(parent, attributes) {
     importModal.hide();
   }
 
+  function showImportModal(){
+    importModal.show();
+    importer.resize();
+  }
+
   function showLiveData() {
     if (
       rows.length <= 1 ||
@@ -2302,6 +2307,7 @@ highed.DataTable = function(parent, attributes) {
     getHeaderTextArr: getHeaderTextArr,
     addImportTab: addImportTab,
     hideImportModal: hideImportModal,
+    showImportModal: showImportModal,
     initGSheet: initGSheet,
     on: events.on,
     resize: resize,

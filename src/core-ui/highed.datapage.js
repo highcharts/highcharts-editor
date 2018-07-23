@@ -83,7 +83,15 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         },
         properties.dataGrid
       )
-    );
+    ),
+    dataImportBtn = highed.dom.cr(
+      'button',
+      'highed-import-button highed-ok-button ',
+      '<i class="fa fa-cloud-upload" aria-hidden="true"></i> Import Data');
+    
+    highed.dom.on(dataImportBtn, 'click', function() {
+      dataTable.showImportModal();
+    });
 
     var assignDataPanel = highed.AssignDataPanel(parent);
 
@@ -92,7 +100,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     }
 
     highed.dom.on(helpIcon, 'click', showHelp);
-    highed.dom.ap(contents, highed.dom.ap(title, helpIcon),/*(props.showLiveStatus ? highed.dom.ap(title, liveDiv, helpIcon) :  highed.dom.ap(title, helpIcon)),*/ userContents);
+    highed.dom.ap(contents, highed.dom.ap(title, dataImportBtn, helpIcon),/*(props.showLiveStatus ? highed.dom.ap(title, liveDiv, helpIcon) :  highed.dom.ap(title, helpIcon)),*/ userContents);
     highed.dom.ap(body, contents);
 
     highed.dom.ap(userContents, dataTableContainer);
