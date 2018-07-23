@@ -533,7 +533,7 @@ highed.DrawerEditor = function(parent, options) {
     highed.dom.style(chartFrame, {
       /*left: newWidth + 'px',*/
       width: '28%',
-      height: 250 + 'px'
+      height: '37%'
     });
 
     if (fixedSize) {

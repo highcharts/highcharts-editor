@@ -160,6 +160,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       });
 
       return size;*/
+
       var bsize = highed.dom.size(body),
       tsize = highed.dom.size(title),
       size = {
@@ -175,7 +176,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       });
 
       dataTable.resize(newWidth, (size.h - 17 - 55) - tsize.h);   
-
+      assignDataPanel.resize(newWidth, highed.dom.pos(chartFrame, true).y - highed.dom.pos(body, true).y)
     }
 
     setTimeout(resizeBody, 300); 
@@ -452,7 +453,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     highed.dom.style(chartFrame, {
       /*left: newWidth + 'px',*/
       width: '28%',
-      height: 250 + 'px'
+      height: '37%'
     });
 /*
     highed.dom.style(chartContainer, {

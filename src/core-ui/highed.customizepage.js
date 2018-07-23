@@ -141,9 +141,11 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     highed.dom.style(container, {
       display: 'block'
     });
-
-    resizeChart();
+    
     expand();
+    resizeChart(((window.innerHeight
+      || document.documentElement.clientHeight
+      || document.body.clientHeight) - highed.dom.pos(body, true).y) - 16);
     
   }
   
@@ -289,11 +291,11 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
   /**
    * Resize the chart preview based on a given width
    */
-  function resizeChart(newWidth) {
+  function resizeChart(newHeight) {
     highed.dom.style(chartFrame, {
       /*left: newWidth + 'px',*/
       width: '68%',
-      height: 681 + 'px'
+      height: newHeight + 'px'
     });
 /*
     highed.dom.style(chartContainer, {

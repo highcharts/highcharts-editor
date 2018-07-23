@@ -46,7 +46,7 @@ highed.AssignDataPanel = function(parent, attr) {
       'mandatory': true
     }
   };
-
+  
   function resetValues() {
     Object.keys(options).forEach(function(key){
       options[key].previousValue = null;
@@ -68,6 +68,13 @@ highed.AssignDataPanel = function(parent, attr) {
 
   function getOptions() {
     return options;
+  }
+
+  function resize(w, h) {
+       
+    highed.dom.style(container, {
+      height: (h - 15) + 'px'
+    });
   }
 
   var events = highed.events(),
@@ -192,6 +199,7 @@ highed.AssignDataPanel = function(parent, attr) {
     hide: hide,
     show: show,
     getOptions: getOptions,
-    resetValues: resetValues
+    resetValues: resetValues,
+    resize: resize
   };
 };
