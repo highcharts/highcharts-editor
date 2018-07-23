@@ -41,12 +41,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @param noOverflow {boolean} - set to true to disable scrollbars
  *  @param extraPadding {boolean} - set to true to have extra padding in bodies
  */
-highed.TabControl = function(parent, noOverflow, extraPadding) {
+highed.TabControl = function(parent, noOverflow, extraPadding, skipTabs) {
   var container = highed.dom.cr('div', 'highed-tab-control'),
-    //paneBar = highed.dom.cr('div', 'tabs'),
+    paneBar = highed.dom.cr('div', (!skipTabs ? 'tabs' : '')), //Quck fix for now, will change once design finalised.
     body = highed.dom.cr('div', 'body'),
     indicator = highed.dom.cr('div', 'indicator'),
-    more = highed.dom.cr('div', 'highed-tab-control-more fa fa-chevron-right'),
+    more = highed.dom.cr('div', (!skipTabs ? 'highed-tab-control-more fa fa-chevron-right' : '')),
     events = highed.events(),
     selectedTab = false,
     tabs = [],
@@ -79,8 +79,9 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
    */
   function resize(w, h) {
     var cs = highed.dom.size(parent),
-      //ps = highed.dom.size(paneBar),
-      width = 0;
+    width = 0;
+
+    if (!skipTabs) var ps = highed.dom.size(paneBar);
 
     highed.dom.style(container, {
       height: (h || cs.h) + 'px'
@@ -101,17 +102,20 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
     tabs.forEach(function(tab) {
       width += highed.dom.size(tab.node).w || 0;
     });
-/*
-    if (width > paneBar.scrollWidth) {
-      highed.dom.style(more, {
-        display: 'block'
-      });
-    } else {
-      highed.dom.style(more, {
-        display: 'none'
-      });
+    
+    if (!skipTabs) {
+      if (width > paneBar.scrollWidth) {
+        highed.dom.style(more, {
+          display: 'block'
+        });
+      } else {
+        highed.dom.style(more, {
+          display: 'none'
+        });
+      }
     }
-    */
+
+    
   }
 
   /** Select the first tab
@@ -148,16 +152,18 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
     var c = tabs.filter(function(a) {
       return a.visible();
     }).length;
-/*
-    if (c < 2) {
-      highed.dom.style(paneBar, {
-        display: 'none'
-      });
-    } else {
-      highed.dom.style(paneBar, {
-        display: ''
-      });
-    }*/
+
+    if (!skipTabs){
+      if (c < 2) {
+        highed.dom.style(paneBar, {
+          display: 'none'
+        });
+      } else {
+        highed.dom.style(paneBar, {
+          display: ''
+        });
+      }
+    }
   }
 
   /* Create and return a new tab
@@ -184,7 +190,10 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
     if (extraPadding) {
       tbody.className += ' tab-body-padded';
     }
-    //highed.dom.ap(paneBar, tab);
+    if (!skipTabs) {
+      highed.dom.ap(paneBar, tab);
+    }
+
     highed.dom.ap(body, tbody);
 
     function hide() {
@@ -288,7 +297,7 @@ highed.TabControl = function(parent, noOverflow, extraPadding) {
     highed.ready(function() {
       highed.dom.ap(
         parent,
-        highed.dom.ap(container, /*highed.dom.ap(paneBar, more, indicator)*/ body)
+        highed.dom.ap(container, highed.dom.ap(paneBar, more, indicator), body)
       );
 
       resize();

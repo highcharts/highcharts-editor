@@ -610,7 +610,7 @@ highed.DrawerEditor = function(parent, options) {
   function destroy() {}
 
   function addImportTab(tabOptions) {
-    //dataTable.addImportTab(tabOptions);
+    dataPage.addImportTab(tabOptions);
   }
 
   function hideImportModal() {

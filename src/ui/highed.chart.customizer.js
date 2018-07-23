@@ -61,7 +61,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
       'highed-customizer-adv-loader',
       'Loading...'
     ),
-    tabs = highed.TabControl(parent, true),
+    tabs = highed.TabControl(parent, true, null, true), //Quck fix for now, will change once design finalised.
     simpleTab = tabs.createTab({
       title: highed.getLocalizedStr('customizeSimple')
     }),
