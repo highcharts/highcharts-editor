@@ -392,6 +392,33 @@ highed.DataTable = function(parent, attributes) {
   highed.dom.style(liveDataIntervalInput, {
     padding: '8px'
   });
+
+  var mouseDown = 0;
+  document.body.onmousedown = function() { 
+    ++mouseDown;
+  }
+  document.body.onmouseup = function() {
+    --mouseDown;
+  }
+
+  highed.dom.on(topLetterBar, 'mouseover', function(e){
+    if(mouseDown) {
+      if (e.target.className === 'highed-dtable-top-bar-letter') {
+        selectAllInColumn(e.target.value);
+      }
+    }
+  });
+
+  document.addEventListener('contextmenu', function(e) {
+    if (e.target.className.indexOf('highed-dtable') > -1) {
+      console.log("custom context menu goes here...");
+      //e.preventDefault();
+    }
+  }, false);
+  
+
+
+
   ////////////////////////////////////////////////////////////////////////////
 
   // Handle drag 'n drop of files
@@ -959,7 +986,14 @@ highed.DataTable = function(parent, attributes) {
       ]),
       ox;
       
+
+      
+      highed.dom.on(letter, 'click', function(){
+        selectAllInColumn(letter.value);
+      });
+
     letter.innerHTML = keyValue;
+    letter.value = keyValue;
     headersReference[keyValue] = letter;
     columnHeadersReference[keyValue] = header;
 
@@ -1080,6 +1114,27 @@ highed.DataTable = function(parent, attributes) {
   function hideDropzone() {
     highed.dom.style(dropZone, {
       opacity: 0
+    });
+  }
+
+  function selectAllInColumn(letter) {
+    (keysReference[letter] || []).forEach(function(element, index){
+      highed.dom.style(element, {
+        'border-left': '1px double #5594F4',
+        'border-right': '1px double #5594F4',
+        'background-color': 'rgba(85, 148, 244, 0.14)'
+      });
+
+      if ((keysReference[letter].length - 1) === index ) {
+        highed.dom.style(element, {
+          'border-bottom': '1px double #5594F4',
+        }); 
+      }
+
+    });
+
+    highed.dom.style((columnHeadersReference[letter]), {
+      'border': '1px double #5594F4'
     });
   }
 
@@ -1832,7 +1887,7 @@ highed.DataTable = function(parent, attributes) {
   ////////////////////////////////////////////////////////////////////////////
 
   dropZone.innerHTML =
-    'Drop CSV files here or on the table.<br/>' +
+    'Drop CSV files here.<br/>' +
     '<span class="highed-dtable-drop-zone-small">You can also paste CSV or Excel data into any cell</span>';
 
   table.cellPadding = 0;
@@ -2046,12 +2101,15 @@ highed.DataTable = function(parent, attributes) {
       while (tempValue <= values[values.length - 1]) {
         highed.dom.style(headersReference[tempValue], {
           "background-color": color.light,
-          "border": "1px double " + color.dark,
+          "border-left": "1px double " + color.dark,
+          "border-top": "1px double " + color.dark,
+          "border-bottom": "1px double " + color.dark,
+          "border-right": "1px solid " + color.dark,
         });        
         highed.dom.style(columnHeadersReference[tempValue], {
           "background-color": color.light,
           "border-left": "1px double " + color.dark,
-          "border-right": "1px double " + color.dark,
+          "border-right": "1px solid " + color.dark,
           "border-bottom": "1px double " + color.dark,
         });
         tempValue = getNextLetter(tempValue);
@@ -2063,7 +2121,7 @@ highed.DataTable = function(parent, attributes) {
     values.forEach(function(value, index) {
       keysReference[value].forEach(function(key) {
         highed.dom.style(key, {
-          "border-right": (index === (values.length - 1) ? '1px double ' + color.dark : ''),
+          "border-right": (index === (values.length - 1) ? '1px solid ' + color.dark : ''),
           "border-left": (index === 0 ? '1px double ' + color.dark : ''),
         });
       });
