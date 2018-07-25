@@ -680,27 +680,13 @@ highed.DataTable = function(parent, attributes) {
     function selectCell() {
       if(col.className.indexOf('cell-selected') === -1) {
         col.className += ' cell-selected';
-        allSelectedCells.push({ 
-          col: col,
-          deleteContents: deleteContents,
-          deselectCell: deselectCell
-        });
+        allSelectedCells.push(exports);
       }
     }
     function select() {
-      if (colNumber < selectedCellsCol[0]) {
-        selectedCellsCol[0] =colNumber; //keyVal; 
-      }
-      if (colNumber > selectedCellsCol[1]) {
-        selectedCellsCol[1] =colNumber; //keyVal;
-      }
-      if (row.number < selectedCellsRow[0]) { // Lowest Row
-        selectedCellsRow[0] = row.number; 
-      }
-      if (row.number > selectedCellsRow[1]) { //Highest Row
-        selectedCellsRow[1] = row.number; 
-      }
 
+      selectedCellsCol[1] = colNumber;
+      selectedCellsRow[1] = row.number; 
       selectNewCells(selectedCellsCol, selectedCellsRow);
     }
 
@@ -746,7 +732,10 @@ highed.DataTable = function(parent, attributes) {
       addToDOM: addToDOM,
       selectCell: selectCell,
       deleteContents: deleteContents,
-      element: col
+      deselectCell: deselectCell,
+      element: col,
+      rowNumber: row.number,
+      colNumber: colNumber
     };
 
     return exports;
@@ -756,7 +745,6 @@ highed.DataTable = function(parent, attributes) {
 
     allSelectedCells.forEach(function(cells) {
       cells.deselectCell();
-      //cells.col.classList.remove('cell-selected');
     });      
     
     allSelectedCells = [];
@@ -767,23 +755,40 @@ highed.DataTable = function(parent, attributes) {
   }
 
   function selectNewCells(cellsColArr, cellsRowArr) {
-    
-    const sortedRowArr = cellsRowArr.sort();
-    const sortedColArr = cellsColArr.sort();
-    
-    /*
 
-    allSelectedCells.forEach(function() {
-      if ()
-    });*/
+    allSelectedCells = allSelectedCells.filter(function(cell) {
+      if ((cell.rowNumber > cellsRowArr[1] || cell.colNumber > cellsColArr[1]) || (cell.rowNumber < cellsRowArr[0] || cell.colNumber < cellsColArr[0])) {
+        cell.deselectCell();
+        return false;
+      }
 
-    var tempColValue = sortedColArr[0];
-    while(tempColValue <= sortedColArr[1]) {
-      for(var i = sortedRowArr[0];i<=sortedRowArr[1]; i++) {
+      return cell;
+    });
+
+    var tempColValue,
+        index,
+        lowIndex,
+        highIndex;
+
+    if (cellsColArr[0] <= cellsColArr[1]) {
+      tempColValue = cellsColArr[0];
+      index = 1;
+      lowIndex = (cellsRowArr[0] > cellsRowArr[1] ? 1 : 0);
+      highIndex = (cellsRowArr[0] > cellsRowArr[1] ? 0 : 1);
+    } else if (cellsColArr[0] > cellsColArr[1]) {
+      tempColValue = cellsColArr[1];      
+      index = 0;
+      lowIndex = (cellsRowArr[0] < cellsRowArr[1] ? 0 : 1);
+      highIndex = (cellsRowArr[0] < cellsRowArr[1] ? 1 : 0);
+    }
+
+    while(tempColValue <= cellsColArr[index]) {
+      for(var i = cellsRowArr[lowIndex];i<=cellsRowArr[highIndex]; i++) {
         rows[i].columns[tempColValue].selectCell();
       }
       tempColValue++;
     }
+
   }
 
   ////////////////////////////////////////////////////////////////////////////
