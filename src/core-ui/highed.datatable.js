@@ -404,13 +404,14 @@ highed.DataTable = function(parent, attributes) {
     --mouseDown;
   }
 
-  highed.dom.on(topLetterBar, 'mouseover', function(e){
-    if(mouseDown) {
-      if (e.target.className === 'highed-dtable-top-bar-letter') {
-        selectAllInColumn(e.target.value);
-      }
+
+  document.addEventListener('keydown', function (e) {  
+    if(e.keyCode === 8 || e.keyCode === 46){
+      allSelectedCells.forEach(function(cell){
+        cell.deleteContents();
+      });
     }
-  });
+}, false);
 
   document.addEventListener('contextmenu', function(e) {
     if (e.target.className.indexOf('highed-dtable') > -1) {
@@ -418,27 +419,6 @@ highed.DataTable = function(parent, attributes) {
       //e.preventDefault();
     }
   }, false);
-
-  function selectAllInColumn(letter) {
-    (keysReference[letter] || []).forEach(function(element, index){
-      highed.dom.style(element.col, {
-        'border-left': '1px double #5594F4',
-        'border-right': '1px double #5594F4',
-        'background-color': 'rgba(85, 148, 244, 0.14)'
-      });
-
-      if ((keysReference[letter].length - 1) === index ) {
-        highed.dom.style(element.col, {
-          'border-bottom': '1px double #5594F4',
-        }); 
-      }
-
-    });
-
-    highed.dom.style((columnHeadersReference[letter]), {
-      'border': '1px double #5594F4'
-    });
-  }
 
 
 
@@ -665,6 +645,12 @@ highed.DataTable = function(parent, attributes) {
       input.setSelectionRange(0, input.value.length);
     }
 
+    function deleteContents() {
+      colVal.innerHTML = '';
+      mainInput.value = '';
+      value = null;
+    }
+
     function focus() {
       function checkNull(value) {
         return value === null || value === '';
@@ -687,23 +673,23 @@ highed.DataTable = function(parent, attributes) {
       row.select();
     }
 
-    function selectCell(){
+    function selectCell() {
       if(col.className.indexOf('cell-selected') === -1) {
         col.className += ' cell-selected';
-        allSelectedCells.push(col);
+        allSelectedCells.push({ 
+          col: col,
+          deleteContents: deleteContents
+        });
       }
     }
-    function select(){
-      //if(col.className.indexOf('cell-selected') === -1) {
+    function select() {
 
         if (keyVal < selectedCellsCol[0]) {
           selectedCellsCol[0] = keyVal; 
         }
-
         if (keyVal > selectedCellsCol[1]) {
           selectedCellsCol[1] = keyVal;
         }
-
         if (row.number < selectedCellsRow[0]) { // Lowest Row
           selectedCellsRow[0] = row.number; 
         }
@@ -711,9 +697,7 @@ highed.DataTable = function(parent, attributes) {
           selectedCellsRow[1] = row.number; 
         }
 
-        //deselectOldCells();
         selectNewCells(selectedCellsCol, selectedCellsRow);
-      //}
     }
 
     function destroy() {
@@ -762,7 +746,8 @@ highed.DataTable = function(parent, attributes) {
       value: getVal,
       destroy: destroy,
       addToDOM: addToDOM,
-      selectCell: selectCell
+      selectCell: selectCell,
+      deleteContents: deleteContents
     };
 
     return exports;
@@ -771,7 +756,7 @@ highed.DataTable = function(parent, attributes) {
   function deselectAllCells() {
 
     allSelectedCells.forEach(function(cells) {
-      cells.classList.remove('cell-selected');
+      cells.col.classList.remove('cell-selected');
     });      
     
     allSelectedCells = [];
@@ -1081,18 +1066,41 @@ highed.DataTable = function(parent, attributes) {
         }
       ]),
       ox;
-      
-
-      
-      highed.dom.on(letter, 'click', function(){
-        selectAllInColumn(letter.value);
-      });
 
     letter.innerHTML = keyValue;
     letter.value = keyValue;
     headersReference[keyValue] = letter;
     columnHeadersReference[keyValue] = header;
 
+    highed.dom.on(letter, 'mouseover', function(e){
+
+      if(mouseDown && (e.target !== options && e.target !== moveHandle)) {
+
+        if (e.target.value < selectedCellsCol[0]) {
+          selectedCellsCol[0] = e.target.value; 
+        }
+        if ( e.target.value > selectedCellsCol[1]) {
+          selectedCellsCol[1] =  e.target.value;
+        }
+      
+        selectedCellsRow[0] = 0;
+        selectedCellsRow[1] = keysReference[e.target.value].length - 1;
+        selectNewCells(selectedCellsCol, selectedCellsRow);
+      }
+    });
+
+    highed.dom.on(letter, 'mousedown', function(e) {
+      deselectAllCells();
+      
+      if(e.target !== options && e.target !== moveHandle) {
+        selectedCellsCol[0] = e.target.value; 
+        selectedCellsCol[1] = e.target.value; 
+        selectedCellsRow[0] = 0; 
+        selectedCellsRow[1] = keysReference[e.target.value].length - 1;
+        selectNewCells(selectedCellsCol, selectedCellsRow);
+      }
+    });
+    
     keyValue = getNextLetter(keyValue);
     ////////////////////////////////////////////////////////////////////////
     exports.addToDOM = function() {
