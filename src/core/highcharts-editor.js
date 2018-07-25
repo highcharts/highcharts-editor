@@ -935,6 +935,10 @@ var highed = {
     document.head.appendChild(n);
   };
 
+  highed.getLetterIndex = function (char) {
+    return char.charCodeAt() - 65; 
+  }
+
   /** Returns true if running on a phone
    *  @namespace highed
    *  @returns {boolean} - true if running on a phone

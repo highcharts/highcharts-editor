@@ -34,9 +34,7 @@ function parseCSV(inData, delimiter) {
     options = {
       delimiter: delimiter
     },
-    columnHeadersReference = {},
-    headersReference = {},
-    cellsReference = {},
+    headersReference = [],
     potentialDelimiters = {
       ',': true,
       ';': true,
@@ -690,21 +688,20 @@ highed.DataTable = function(parent, attributes) {
       }
     }
     function select() {
+      if (colNumber < selectedCellsCol[0]) {
+        selectedCellsCol[0] =colNumber; //keyVal; 
+      }
+      if (colNumber > selectedCellsCol[1]) {
+        selectedCellsCol[1] =colNumber; //keyVal;
+      }
+      if (row.number < selectedCellsRow[0]) { // Lowest Row
+        selectedCellsRow[0] = row.number; 
+      }
+      if (row.number > selectedCellsRow[1]) { //Highest Row
+        selectedCellsRow[1] = row.number; 
+      }
 
-        if (keyVal < selectedCellsCol[0]) {
-          selectedCellsCol[0] = keyVal; 
-        }
-        if (keyVal > selectedCellsCol[1]) {
-          selectedCellsCol[1] = keyVal;
-        }
-        if (row.number < selectedCellsRow[0]) { // Lowest Row
-          selectedCellsRow[0] = row.number; 
-        }
-        if (row.number > selectedCellsRow[1]) { //Highest Row
-          selectedCellsRow[1] = row.number; 
-        }
-
-        selectNewCells(selectedCellsCol, selectedCellsRow);
+      selectNewCells(selectedCellsCol, selectedCellsRow);
     }
 
     function destroy() {
@@ -732,8 +729,8 @@ highed.DataTable = function(parent, attributes) {
       deselectAllCells();
       
       focus();
-      selectedCellsCol[0] = keyVal; 
-      selectedCellsCol[1] = keyVal; 
+      selectedCellsCol[0] = colNumber;//keyVal; 
+      selectedCellsCol[1] = colNumber;//keyVal; 
       selectedCellsRow[0] = row.number; 
       selectedCellsRow[1] = row.number; 
     });
@@ -742,19 +739,14 @@ highed.DataTable = function(parent, attributes) {
       addToDOM();
     }
 
-    if (!keysReference[keyVal]) keysReference[keyVal] = [];
-    keysReference[keyVal].push({
-      col: col,
-      selectCell: selectCell
-    });
-
     exports = {
       focus: focus,
       value: getVal,
       destroy: destroy,
       addToDOM: addToDOM,
       selectCell: selectCell,
-      deleteContents: deleteContents
+      deleteContents: deleteContents,
+      element: col
     };
 
     return exports;
@@ -778,13 +770,19 @@ highed.DataTable = function(parent, attributes) {
     
     const sortedRowArr = cellsRowArr.sort();
     const sortedColArr = cellsColArr.sort();
-    var tempColValue = sortedColArr[0];
+    
+    /*
 
+    allSelectedCells.forEach(function() {
+      if ()
+    });*/
+
+    var tempColValue = sortedColArr[0];
     while(tempColValue <= sortedColArr[1]) {
       for(var i = sortedRowArr[0];i<=sortedRowArr[1]; i++) {
-        keysReference[tempColValue][i].selectCell();
+        rows[i].columns[tempColValue].selectCell();
       }
-      tempColValue = getNextLetter(tempColValue);
+      tempColValue++;
     }
   }
 
@@ -1076,11 +1074,10 @@ highed.DataTable = function(parent, attributes) {
       ox;
 
     letter.innerHTML = keyValue;
-    letter.value = keyValue;
-    headersReference[keyValue] = letter;
-    columnHeadersReference[keyValue] = header;
+    letter.value = highed.getLetterIndex(keyValue);
+    headersReference.push(letter);
 
-    highed.dom.on(letter, 'mouseover', function(e){
+    highed.dom.on(letter, 'mouseover', function(e) {
 
       if(mouseDown && (e.target !== options && e.target !== moveHandle)) {
 
@@ -1092,7 +1089,7 @@ highed.DataTable = function(parent, attributes) {
         }
       
         selectedCellsRow[0] = 0;
-        selectedCellsRow[1] = keysReference[e.target.value].length - 1;
+        selectedCellsRow[1] = rows.length - 1; //keysReference[e.target.value].length - 1;
         selectNewCells(selectedCellsCol, selectedCellsRow);
       }
     });
@@ -1104,7 +1101,7 @@ highed.DataTable = function(parent, attributes) {
         selectedCellsCol[0] = e.target.value; 
         selectedCellsCol[1] = e.target.value; 
         selectedCellsRow[0] = 0; 
-        selectedCellsRow[1] = keysReference[e.target.value].length - 1;
+        selectedCellsRow[1] = rows.length - 1; //keysReference[e.target.value].length - 1;
         selectNewCells(selectedCellsCol, selectedCellsRow);
       }
     });
@@ -1197,7 +1194,7 @@ highed.DataTable = function(parent, attributes) {
         }
       );
     });
-
+    
     rows.forEach(function(row) {
       if (where) {
         row.insertCol(where);
@@ -1292,9 +1289,7 @@ highed.DataTable = function(parent, attributes) {
     topLetterBar.innerHTML = '';
     colgroup.innerHTML = '';
     keyValue = "A";
-    keysReference = {};
-    headersReference = {};
-    columnHeadersReference = {};
+    headersReference = [];
 
     highed.dom.style(tableTail, {
       display: ''
@@ -2197,25 +2192,25 @@ highed.DataTable = function(parent, attributes) {
           "border-bottom": "1px double " + color.dark,
           "border-right": "1px solid " + color.dark,
         });        
-        highed.dom.style(columnHeadersReference[tempValue], {
+        highed.dom.style(gcolumns[tempValue].header, {
           "background-color": color.light,
           "border-left": "1px double " + color.dark,
           "border-right": "1px solid " + color.dark,
           "border-bottom": "1px double " + color.dark,
         });
-        tempValue = getNextLetter(tempValue);
+        tempValue++;
       }
     }
   }
 
   function outlineCell(values, color) {
     values.forEach(function(value, index) {
-      keysReference[value].forEach(function(key) {
-        highed.dom.style(key.col, {
+      rows.forEach(function(row){
+        highed.dom.style(row.columns[value].element, {
           "border-right": (index === (values.length - 1) ? '1px solid ' + color.dark : ''),
           "border-left": (index === 0 ? '1px double ' + color.dark : ''),
         });
-      });
+      })
     });
   }
 
@@ -2223,7 +2218,7 @@ highed.DataTable = function(parent, attributes) {
     var tempValue = previousValues[0];
     if (previousValues.length > 0) {
       while (tempValue <= previousValues[previousValues.length - 1]) {
-        highed.dom.style([headersReference[tempValue], columnHeadersReference[tempValue]], {
+        highed.dom.style([headersReference[tempValue], gcolumns[tempValue].header], {
           "background-color": '',
           "border": '',
         });
@@ -2234,8 +2229,8 @@ highed.DataTable = function(parent, attributes) {
 
   function removeOutlineFromCell(values) {
     values.forEach(function(value) {
-      keysReference[value].forEach(function(key) {
-        highed.dom.style(key.col, {
+      rows.forEach(function(row){
+        highed.dom.style(row.columns[value].element, {
           "border-right": '',
           "border-left": '',
         });

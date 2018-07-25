@@ -56,13 +56,13 @@ highed.AssignDataPanel = function(parent, attr) {
 
   function getMergedLabelAndData() {
     var arr = {};
-    arr.labelColumn = getLetterIndex(options['Labels'].value.charAt(0));
+    arr.labelColumn = highed.getLetterIndex(options['Labels'].value.charAt(0));
 
     const data = options['Values'];
     const values = data.value.split(data.value.indexOf('-') > -1 ? '-' : ',').sort();
     
     values.forEach(function(v, index) {
-      values[index] = getLetterIndex(v);
+      values[index] = highed.getLetterIndex(v);
     });
 
     arr.dataColumns = values;
@@ -103,7 +103,7 @@ highed.AssignDataPanel = function(parent, attr) {
             newOptions = getMergedLabelAndData();
         } else {
           values.forEach(function(value) {
-            newOptions.push(getLetterIndex(value));
+            newOptions.push(highed.getLetterIndex(value));
           });
         }
       } else {
@@ -114,11 +114,13 @@ highed.AssignDataPanel = function(parent, attr) {
         if (input.isLabel) {
           newOptions = getMergedLabelAndData();
         }
-        else newOptions.push(getLetterIndex(input.value.charAt(0)));
+        else newOptions.push(highed.getLetterIndex(input.value.charAt(0)));
       }
       
       input.previousValue = input.value.toUpperCase();
-      cb(previousValues, values, input, newOptions);
+      cb(previousValues, values.map(function (x) {
+        return highed.getLetterIndex(x);
+      }), input, newOptions);
 
       //removeCellColoring(previousValues);
       //colorFields(values, input.colors);
@@ -179,10 +181,6 @@ highed.AssignDataPanel = function(parent, attr) {
     highed.dom.style(container, {
       display: 'block'
     });
-  }
-
-  function getLetterIndex(char) {
-    return char.charCodeAt() - 65; 
   }
   
   function getValues(input){
