@@ -410,6 +410,7 @@ highed.DataTable = function(parent, attributes) {
       allSelectedCells.forEach(function(cell){
         cell.deleteContents();
       });
+      //allSelectedCells = [];
     }
 }, false);
 
@@ -649,13 +650,17 @@ highed.DataTable = function(parent, attributes) {
       colVal.innerHTML = '';
       mainInput.value = '';
       value = null;
+      emitChanged();
     }
 
     function focus() {
+      
+      deselectAllCells();
       function checkNull(value) {
         return value === null || value === '';
       }
       mainInput.className = 'highed-dtable-input';
+
       makeEditable(
         col,
         value,
@@ -673,12 +678,17 @@ highed.DataTable = function(parent, attributes) {
       row.select();
     }
 
+    function deselectCell() {
+      col.classList.remove('cell-selected');
+    }
+
     function selectCell() {
       if(col.className.indexOf('cell-selected') === -1) {
         col.className += ' cell-selected';
         allSelectedCells.push({ 
           col: col,
-          deleteContents: deleteContents
+          deleteContents: deleteContents,
+          deselectCell: deselectCell
         });
       }
     }
@@ -724,10 +734,11 @@ highed.DataTable = function(parent, attributes) {
     highed.dom.on(col, 'mousedown', function() {
       deselectAllCells();
       
+      focus();
       selectedCellsCol[0] = keyVal; 
       selectedCellsCol[1] = keyVal; 
-      selectedCellsRow[0] = row.number;; 
-      selectedCellsRow[1] = row.number;; 
+      selectedCellsRow[0] = row.number; 
+      selectedCellsRow[1] = row.number; 
     });
 
     if (rows.length <= 500) {
@@ -737,7 +748,6 @@ highed.DataTable = function(parent, attributes) {
     if (!keysReference[keyVal]) keysReference[keyVal] = [];
     keysReference[keyVal].push({
       col: col,
-      coloring: null,
       selectCell: selectCell
     });
 
@@ -756,7 +766,8 @@ highed.DataTable = function(parent, attributes) {
   function deselectAllCells() {
 
     allSelectedCells.forEach(function(cells) {
-      cells.col.classList.remove('cell-selected');
+      cells.deselectCell();
+      //cells.col.classList.remove('cell-selected');
     });      
     
     allSelectedCells = [];
