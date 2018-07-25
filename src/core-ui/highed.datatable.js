@@ -410,9 +410,8 @@ highed.DataTable = function(parent, attributes) {
       allSelectedCells.forEach(function(cell){
         cell.deleteContents();
       });
-      //allSelectedCells = [];
     }
-}, false);
+  }, false);
 
   document.addEventListener('contextmenu', function(e) {
     if (e.target.className.indexOf('highed-dtable') > -1) {
@@ -420,8 +419,6 @@ highed.DataTable = function(parent, attributes) {
       //e.preventDefault();
     }
   }, false);
-
-
 
   ////////////////////////////////////////////////////////////////////////////
 
@@ -503,7 +500,7 @@ highed.DataTable = function(parent, attributes) {
     //emitted in succession when e.g. loading sets.
     changeTimeout = window.setTimeout(function() {
       if (!isInGSheetMode && !isInLiveDataMode) {
-        events.emit('Change', getHeaderTextArr(), toData());
+        events.emit('Change', getHeaderTextArr());
       }
     }, 1000);
   }
@@ -2256,75 +2253,10 @@ highed.DataTable = function(parent, attributes) {
     colorHeader(values, color);
   }
 
-  function getLetterIndex(char) {
-    return char.charCodeAt() - 65; 
-  }
-
-  function getMergedLabelAndData(inputs) {
-    var arr = {};
-    arr.labelColumn = getLetterIndex(inputs['Labels'].value.charAt(0));
-
-    const data = inputs['Values'];
-    const values = data.value.split(data.value.indexOf('-') > -1 ? '-' : ',').sort();
-    
-    values.forEach(function(v, index) {
-      values[index] = getLetterIndex(v);
-    });
-
-    arr.dataColumns = values;
-
-    return arr; //arr.concat(values);
-  }
-
-  function highlightSelectedFields(inputs) {
-    
-    var newOptions;
-    Object.keys(inputs).forEach(function(key) {
-  
-      var input = inputs[key];
-      input.value = input.value.toUpperCase();
-      newOptions = [];
-
-      var previousValues = [],
-          values = [];
-      
-      
-      if (input.multipleValues) {
-        const delimiter = (input.value.indexOf('-') > -1 ? '-' : ',');
-        values = input.value.split(delimiter).sort();
-        if (input.previousValue) {
-          const previousValueDelimiter = (input.previousValue.indexOf('-') > -1 ? '-' : ',');
-          previousValues = input.previousValue.split(previousValueDelimiter).sort();
-        }
-
-        const areEqual = (values.length === previousValues.length && 
-          values.every(function(item) { return previousValues.indexOf(item) > -1 }));
-        if (areEqual) return;
-
-        if (input.isData) { //Get the label data
-            newOptions = getMergedLabelAndData(inputs);
-        } else {
-          values.forEach(function(value) {
-            newOptions.push(getLetterIndex(value));
-          });
-        }
-      } else {
-        if (input.previousValue === input.value) return;
-        values = [input.value.charAt(0)];
-        if (input.previousValue) previousValues = [input.previousValue];
-
-        if (input.isLabel) {
-          newOptions = getMergedLabelAndData(inputs);
-        }
-        else newOptions.push(getLetterIndex(input.value.charAt(0)));
-      }
-      
-      input.previousValue = input.value.toUpperCase();
-
-      removeCellColoring(previousValues);
-      colorFields(values, input.colors);
-      events.emit('AssignDataChanged', input, newOptions);
-    });
+  function highlightCells(previousValues, values, input, newOptions) {
+    removeCellColoring(previousValues);
+    colorFields(values, input.colors);
+    events.emit('AssignDataChanged', input, newOptions);
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -2465,6 +2397,7 @@ highed.DataTable = function(parent, attributes) {
     resize: resize,
     loadLiveDataFromURL: loadLiveDataFromURL,
     loadLiveDataPanel: loadLiveDataPanel,
-    highlightSelectedFields: highlightSelectedFields
+    //highlightSelectedFields: highlightSelectedFields,
+    highlightCells: highlightCells
   };
 };

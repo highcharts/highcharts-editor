@@ -54,6 +54,81 @@ highed.AssignDataPanel = function(parent, attr) {
     });
   }
 
+  function getMergedLabelAndData() {
+    var arr = {};
+    arr.labelColumn = getLetterIndex(options['Labels'].value.charAt(0));
+
+    const data = options['Values'];
+    const values = data.value.split(data.value.indexOf('-') > -1 ? '-' : ',').sort();
+    
+    values.forEach(function(v, index) {
+      values[index] = getLetterIndex(v);
+    });
+
+    arr.dataColumns = values;
+
+    return arr; //arr.concat(values);
+  }
+
+  function getLetterIndex(char) {
+    return char.charCodeAt() - 65; 
+  }
+
+  function getFieldsToHighlight(cb) {
+    
+    var newOptions;
+    Object.keys(options).forEach(function(key) {
+  
+      var input = options[key];
+      input.value = input.value.toUpperCase();
+      newOptions = [];
+
+      var previousValues = [],
+          values = [];
+      
+      
+      if (input.multipleValues) {
+        const delimiter = (input.value.indexOf('-') > -1 ? '-' : ',');
+        values = input.value.split(delimiter).sort();
+        if (input.previousValue) {
+          const previousValueDelimiter = (input.previousValue.indexOf('-') > -1 ? '-' : ',');
+          previousValues = input.previousValue.split(previousValueDelimiter).sort();
+        }
+
+        const areEqual = (values.length === previousValues.length && 
+          values.every(function(item) { return previousValues.indexOf(item) > -1 }));
+        if (areEqual) return;
+
+        if (input.isData) { //Get the label data
+            newOptions = getMergedLabelAndData();
+        } else {
+          values.forEach(function(value) {
+            newOptions.push(getLetterIndex(value));
+          });
+        }
+      } else {
+        if (input.previousValue === input.value) return;
+        values = [input.value.charAt(0)];
+        if (input.previousValue) previousValues = [input.previousValue];
+
+        if (input.isLabel) {
+          newOptions = getMergedLabelAndData();
+        }
+        else newOptions.push(getLetterIndex(input.value.charAt(0)));
+      }
+      
+      input.previousValue = input.value.toUpperCase();
+      cb(previousValues, values, input, newOptions);
+
+      //removeCellColoring(previousValues);
+      //colorFields(values, input.colors);
+      //events.emit('AssignDataChanged', input, newOptions);
+    });
+  }
+
+
+
+
   function generateColors() {
     const hue = Math.floor(Math.random()*(357-202+1)+202), // Want a blue/red/purple colour
           saturation =  Math.floor(Math.random() * 100),
@@ -163,7 +238,6 @@ highed.AssignDataPanel = function(parent, attr) {
     });
 
     highed.dom.on(labelInput, 'blur', function() {
-      console.log(key, option);
       if (labelInput.value === '' && option.mandatory) {
         option.value = option.previousValue;
         labelInput.value = option.previousValue;
@@ -200,6 +274,8 @@ highed.AssignDataPanel = function(parent, attr) {
     show: show,
     getOptions: getOptions,
     resetValues: resetValues,
-    resize: resize
+    resize: resize,
+    getFieldsToHighlight: getFieldsToHighlight,
+    getMergedLabelAndData: getMergedLabelAndData
   };
 };
