@@ -562,29 +562,29 @@ highed.DataTable = function(parent, attributes) {
   ////////////////////////////////////////////////////////////////////////////
   function highlightLeft(colNumber) {
     columnsToHighlight.forEach(function(highlightedColumn) {
-      highlightedColumn.element.classList.remove('highlight-left');
+      highlightedColumn.element.classList.remove('highlight-right');
     });
     
     rows.forEach(function(row) {
-      if (row.columns[colNumber].element.className.indexOf('highlight-left') === -1) {
-        row.columns[colNumber].element.className += ' highlight-left';
+      if (row.columns[colNumber].element.className.indexOf('highlight-right') === -1) {
+        row.columns[colNumber].element.className += ' highlight-right';
         columnsToHighlight.push(row.columns[colNumber]);
       }
     });
     
 
 
-    if (gcolumns[colNumber].header.className.indexOf('highlight-left') === -1) {
-      gcolumns[colNumber].header.className += ' highlight-left';
+    if (gcolumns[colNumber].header.className.indexOf('highlight-right') === -1) {
+      gcolumns[colNumber].header.className += ' highlight-right';
       columnsToHighlight.push({
         element: gcolumns[colNumber].header
       });
     }
 
-    if (headersReference[colNumber].className.indexOf('highlight-left') === -1) {
-      headersReference[colNumber].className += ' highlight-left';
+    if (headersReference[colNumber].element.className.indexOf('highlight-right') === -1) {
+      headersReference[colNumber].element.className += ' highlight-right';
       columnsToHighlight.push({
-        element: headersReference[colNumber]
+        element: headersReference[colNumber].element
       });
       moveToColumn = colNumber;
     }
@@ -785,7 +785,11 @@ highed.DataTable = function(parent, attributes) {
       deselectCell: deselectCell,
       element: col,
       rowNumber: row.number,
-      colNumber: colNumber
+      colNumber: colNumber,
+      updateColNumber: function(i){
+        colNumber = i;
+        exports.colNumber = i;
+      }
     };
 
     return exports;
@@ -907,6 +911,7 @@ highed.DataTable = function(parent, attributes) {
     function rebuildColumns() {
       row.innerHTML = '';
       columns.forEach(function(col, i) {
+        col.updateColNumber(i);
         col.addToDOM(i);
       });
     }
@@ -1010,10 +1015,12 @@ highed.DataTable = function(parent, attributes) {
     colgroup.innerHTML = '';
     topColumnBar.innerHTML = '';
     topLetterBar.innerHTML = '';
-
+    var resetLetters = 'A';
+    
     gcolumns.forEach(function(col, i) {
-      col.colNumber = i;
       col.addToDOM();
+      headersReference[i].setLetter(resetLetters);
+      resetLetters = getNextLetter(resetLetters);
     });
 
     rebuildColumns();
@@ -1126,11 +1133,21 @@ highed.DataTable = function(parent, attributes) {
           }
         }
       ]),
-      ox;
+      ox,
+      keyCell = highed.dom.cr('span', 'highed-dtable-cell-value', keyValue);
 
-    letter.innerHTML = keyValue;
+    //letter.innerHTML = keyValue;
     letter.value = highed.getLetterIndex(keyValue);
-    headersReference.push(letter);
+
+    setLetter = function (str) {
+      keyCell.innerHTML = str;
+      letter.value = highed.getLetterIndex(str);
+    }
+
+    headersReference.push({
+      setLetter: setLetter,
+      element: letter
+    });
 
     highed.dom.on(letter, 'mouseover', function(e) {
       if(mouseDown && (e.target !== options && e.target !== moveHandle)) {
@@ -1142,7 +1159,6 @@ highed.DataTable = function(parent, attributes) {
               width: 140 * selectedHeaders.length + 'px'
             });
           }
-
           highlightLeft(letter.value);
           
           highed.dom.style(movementBar, {
@@ -1150,16 +1166,17 @@ highed.DataTable = function(parent, attributes) {
           });
         } else {
           if (!selectedHeaders.includes(letter)) selectedHeaders.push(letter);
-        
-          if (e.target.value < selectedCellsCol[0]) {
-            selectedCellsCol[0] = e.target.value; 
+
+          if (letter.value < selectedCellsCol[0]) {
+            selectedCellsCol[0] = letter.value; 
           }
-          if ( e.target.value > selectedCellsCol[1]) {
-            selectedCellsCol[1] =  e.target.value;
+          if (letter.value > selectedCellsCol[1]) {
+            selectedCellsCol[1] = letter.value;
           }
         
           selectedCellsRow[0] = 0;
-          selectedCellsRow[1] = rows.length - 1; //keysReference[e.target.value].length - 1;
+          selectedCellsRow[1] = rows.length - 1;
+
           selectNewCells(selectedCellsCol, selectedCellsRow);
         }
       }
@@ -1173,49 +1190,35 @@ highed.DataTable = function(parent, attributes) {
       } 
     });
 
-
-    Array.prototype.move = function(from, to) {
-      return this.splice(to, 0, this.splice(from, 1)[0]);
+    function shuffleArray(arr, min, max, moveTo){
+      var x = arr.splice(min, max);
+      var args = [moveTo ,0].concat(x);
+      Array.prototype.splice.apply(arr, args);
     }
 
     function moveCells(){ 
       
-
       if (moveToColumn !== null) {
 
         var tempColumns = selectedHeaders.map(function(header){
           return header.value;
         });
-/*
-        
-        tempColumns.forEach(function(where){
-          rows.forEach(function(row) {
-              row.insertCol(where);
-          });  
-        });
-  */
+
+
+        const min = tempColumns[0],
+              max = tempColumns[tempColumns.length - 1] + 1;
+
+        shuffleArray(gcolumns, min, max, moveToColumn);
+        shuffleArray(headersReference, min, max, moveToColumn);
+
         rows.forEach(function(row) {
-          tempColumns.forEach(function(x){
-            row.columns.move(x, moveToColumn);
+          tempColumns.forEach(function(x) {
+            shuffleArray(row.columns, min, max, moveToColumn);
           });
         });
 
-        tempColumns.forEach(function(x) {
-          gcolumns.move(x, moveToColumn);
-        })
         updateColumns();
       }
-
-/*
-        console.log(tempColumns, "MoveTo:", moveToColumn);
-        rows.forEach(function(row) {
-          row.columns.forEach(function(column) {
-            console.log(column);
-          });
-        });
-      }
-*/
-      //rows.splice(moveToColumn, 0, );
     }
 
     highed.dom.on(container, 'mouseup', function(e) {
@@ -1226,7 +1229,7 @@ highed.DataTable = function(parent, attributes) {
         dragHeaderMode = false;
         movementBar.classList.remove('active');
         columnsToHighlight.forEach(function(highlightedColumn) {
-          highlightedColumn.element.classList.remove('highlight-left');
+          highlightedColumn.element.classList.remove('highlight-right');
         });
         columnsToHighlight = [];
         moveToColumn = null;
@@ -1252,8 +1255,8 @@ highed.DataTable = function(parent, attributes) {
         if(e.target !== options && e.target !== moveHandle) {
           if (!selectedHeaders.includes(letter)) selectedHeaders.push(letter);
           
-          selectedCellsCol[0] = e.target.value; 
-          selectedCellsCol[1] = e.target.value; 
+          selectedCellsCol[0] = e.target.value; //e.target.value; 
+          selectedCellsCol[1] = e.target.value;//e.target.value; 
           selectedCellsRow[0] = 0; 
           selectedCellsRow[1] = rows.length - 1; //keysReference[e.target.value].length - 1;
           selectNewCells(selectedCellsCol, selectedCellsRow);
@@ -1268,7 +1271,7 @@ highed.DataTable = function(parent, attributes) {
       highed.dom.ap(colgroup, col);
       highed.dom.ap(
         topLetterBar,
-        highed.dom.ap(letter, options, moveHandle)
+        highed.dom.ap(letter, keyCell, options, moveHandle)
       );
 
       highed.dom.ap(
@@ -2342,7 +2345,7 @@ highed.DataTable = function(parent, attributes) {
     var tempValue = values[0];
     if (values.length > 0) {
       while (tempValue <= values[values.length - 1]) {
-        highed.dom.style(headersReference[tempValue], {
+        highed.dom.style(headersReference[tempValue].element, {
           "background-color": color.light,
           "border-left": "1px double " + color.dark,
           "border-top": "1px double " + color.dark,
@@ -2375,7 +2378,7 @@ highed.DataTable = function(parent, attributes) {
     var tempValue = previousValues[0];
     if (previousValues.length > 0) {
       while (tempValue <= previousValues[previousValues.length - 1]) {
-        highed.dom.style([headersReference[tempValue], gcolumns[tempValue].header], {
+        highed.dom.style([headersReference[tempValue].element, gcolumns[tempValue].header], {
           "background-color": '',
           "border": '',
         });
@@ -2387,7 +2390,6 @@ highed.DataTable = function(parent, attributes) {
   function removeOutlineFromCell(values) {
     values.forEach(function(value) {
       rows.forEach(function(row){
-        console.log(row.columns, value);
         highed.dom.style(row.columns[value].element, {
           "border-right": '',
           "border-left": '',
