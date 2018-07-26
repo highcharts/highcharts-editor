@@ -1190,9 +1190,9 @@ highed.DataTable = function(parent, attributes) {
       } 
     });
 
-    function shuffleArray(arr, min, max, moveTo){
-      var x = arr.splice(min, max);
-      var args = [moveTo ,0].concat(x);
+    function shuffleArray(arr, min, amount, moveTo){
+      var x = arr.splice(min, amount);
+      var args = [moveTo, 0].concat(x);
       Array.prototype.splice.apply(arr, args);
     }
 
@@ -1204,20 +1204,18 @@ highed.DataTable = function(parent, attributes) {
           return header.value;
         });
 
+        const min = tempColumns[(moveToColumn < tempColumns[0] ? tempColumns.length - 1 : 0)],
+              max = tempColumns.length;
 
-        const min = tempColumns[0],
-              max = tempColumns[tempColumns.length - 1] + 1;
-
-        shuffleArray(gcolumns, min, max, moveToColumn);
-        shuffleArray(headersReference, min, max, moveToColumn);
+        shuffleArray(gcolumns, min, max, moveToColumn - (tempColumns.length - 1));
+        shuffleArray(headersReference, min, max, moveToColumn - (tempColumns.length - 1));
 
         rows.forEach(function(row) {
-          tempColumns.forEach(function(x) {
-            shuffleArray(row.columns, min, max, moveToColumn);
-          });
+          shuffleArray(row.columns, min, max, moveToColumn - (tempColumns.length - 1));
         });
 
         updateColumns();
+        events.emit('ColumnMoved');
       }
     }
 
