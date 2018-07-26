@@ -1207,11 +1207,11 @@ highed.DataTable = function(parent, attributes) {
         const min = tempColumns[(moveToColumn < tempColumns[0] ? tempColumns.length - 1 : 0)],
               max = tempColumns.length;
 
-        shuffleArray(gcolumns, min, max, moveToColumn - (tempColumns.length - 1));
-        shuffleArray(headersReference, min, max, moveToColumn - (tempColumns.length - 1));
+        shuffleArray(gcolumns, min, max, (moveToColumn < tempColumns[0] ? moveToColumn + 1 : moveToColumn - (tempColumns.length - 1)));
+        shuffleArray(headersReference, min, max, (moveToColumn < tempColumns[0] ? moveToColumn + 1 : moveToColumn - (tempColumns.length - 1)));
 
         rows.forEach(function(row) {
-          shuffleArray(row.columns, min, max, moveToColumn - (tempColumns.length - 1));
+          shuffleArray(row.columns, min, max, (moveToColumn < tempColumns[0] ? moveToColumn + 1 : moveToColumn - (tempColumns.length - 1)) );
         });
 
         updateColumns();
