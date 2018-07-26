@@ -118,7 +118,9 @@ highed.AssignDataPanel = function(parent, attr) {
       }
       
       input.previousValue = input.value.toUpperCase();
-      cb(previousValues, values.map(function (x) {
+      cb(previousValues.map(function (x) {
+        return highed.getLetterIndex(x);
+      }), values.map(function (x) {
         return highed.getLetterIndex(x);
       }), input, newOptions);
 

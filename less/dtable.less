@@ -401,3 +401,21 @@
 .cell-selected {
     background-color: rgba(85, 148, 244, 0.14);
 }
+
+.highed-dtable-movement-bar {
+    background-color: rgba(148, 148, 148, 0.34);
+    position: absolute;
+    display: none;
+}
+
+.highed-dtable-movement-bar.active {
+    display: block;    
+    height: 100%;
+    width: 100%;
+    top: 0px;
+}
+.highed-dtable-top-bar-col.highlight-left,
+.highed-dtable-top-bar-letter.highlight-left,
+.highed-dtable-cell.highlight-left {
+    border-left: 2px double black !important;
+}
