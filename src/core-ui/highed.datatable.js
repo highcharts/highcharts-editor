@@ -472,7 +472,6 @@ highed.DataTable = function(parent, attributes) {
     --mouseDown;
   }
 
-
   document.addEventListener('keydown', function (e) {  
     if(e.keyCode === 8 || e.keyCode === 46){
       allSelectedCells.forEach(function(cell){
@@ -812,6 +811,7 @@ highed.DataTable = function(parent, attributes) {
       if (selectedCellsCol[0] === selectedCellsCol[1] && 
           selectedCellsRow[0] === selectedCellsRow[1]) { 
             //Have not dragged anywhere else on the grid. So the user has just clicked on a cell.
+            selectedHeaders = [];
             focus();
             globalContextMenu.hide();
           }
@@ -1207,6 +1207,7 @@ highed.DataTable = function(parent, attributes) {
     setLetter = function (str) {
       keyCell.innerHTML = str;
       letter.value = highed.getLetterIndex(str);
+      exports.colNumber = highed.getLetterIndex(str);
     }
 
     headersReference.push({
@@ -1245,7 +1246,7 @@ highed.DataTable = function(parent, attributes) {
       if (selectedHeaders.length > 0 && selectedHeaders.includes(e.target)) {
         //User is trying to drag headers left and right.
         dragHeaderMode = true;
-      } else {      
+      } else {
         //deselectAllCells();
         if(e.target !== options && e.target !== moveHandle) {
           selectedHeaders = [];
@@ -1317,7 +1318,7 @@ highed.DataTable = function(parent, attributes) {
     highed.dom.on(header, 'mouseover', function(e) {
       if(mouseDown) {
         if (dragHeaderMode) {
-          highlightLeft(colNumber);
+          highlightLeft(exports.colNumber);
         }
       }
     });
