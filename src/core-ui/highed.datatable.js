@@ -209,7 +209,7 @@ highed.DataTable = function(parent, attributes) {
     topLetterBar = highed.dom.cr('div', 'highed-dtable-top-letter-bar'),
     topColumnBar = highed.dom.cr('div', 'highed-dtable-top-column-bar'),
     topLeftPanel = highed.dom.cr('div', 'highed-dtable-top-left-panel'),
-    checkAll = highed.dom.cr('input'),
+    //checkAll = highed.dom.cr('input'),
     mainInput = highed.dom.cr('textarea', 'highed-dtable-input'),
     weirdDataModal = highed.OverlayModal(false, {
       // zIndex: 20000,
@@ -382,7 +382,7 @@ highed.DataTable = function(parent, attributes) {
         }
       }
     ]);
-  checkAll.type = 'checkbox',
+  //checkAll.type = 'checkbox',
   selectedCellsCol = [],
   selectedCellsRow = [],
   allSelectedCells = [],
@@ -390,13 +390,58 @@ highed.DataTable = function(parent, attributes) {
   columnsToHighlight = [],
   moveToColumn = null,
   dragHeaderMode = false,
-  globalContextMenu = highed.ContextMenu([{
-    title: highed.L('dgSortAsc'),
-    icon: 'sort-amount-asc',
-    click: function() {
-      sortRows(exports.colNumber, 'asc');
+  globalContextMenu = highed.ContextMenu([
+    {
+      title: "Insert Row Above",
+      icon: 'plus',
+      click: function() {
+        if (confirm(highed.L('dgDelColConfirm'))) {
+        }
+      }
+    },
+    {
+      title: "Insert Row Below",
+      icon: 'plus',
+      click: function() {
+        if (confirm(highed.L('dgDelColConfirm'))) {
+        }
+      }
+    },
+    '-',
+    {
+      title: 'Remove Row',
+      icon: 'trash',
+      click: function() {
+        if (confirm(highed.L('dgDelColConfirm'))) {
+          delCol(exports.colNumber);
+        }
+      }
+    },
+    {
+      title: highed.L('dgDelCol'),
+      icon: 'trash',
+      click: function() {
+        if (confirm(highed.L('dgDelColConfirm'))) {
+          delCol(exports.colNumber);
+        }
+      }
+    },
+    '-',
+    {
+      title: highed.L('dgInsColBefore'),
+      icon: 'plus',
+      click: function() {
+        insertCol(exports.colNumber);
+      }
+    },
+    {
+      title: highed.L('dgInsColAfter'),
+      icon: 'plus',
+      click: function() {
+        insertCol(exports.colNumber + 1);
+      }
     }
-  }]);
+  ]);
 
   highed.dom.on(mainInput, 'click', function(e) {
     return highed.dom.nodefault(e);
@@ -426,7 +471,7 @@ highed.DataTable = function(parent, attributes) {
   document.addEventListener('contextmenu', function(e) {
     if (e.target.className.indexOf('highed-dtable') > -1) {
       console.log("custom context menu goes here...");
-      globalContextMenu.show(e.clientX, e.clientY);
+      globalContextMenu.show(e.clientX, e.clientY, true);
       return highed.dom.nodefault(e);
 
       //ctx.show(e.clientX, e.clientY);
@@ -760,6 +805,7 @@ highed.DataTable = function(parent, attributes) {
           selectedCellsRow[0] === selectedCellsRow[1]) { 
             //Have not dragged anywhere else on the grid. So the user has just clicked on a cell.
             focus(e);
+            globalContextMenu.hide();
           }
     });
 
@@ -863,12 +909,13 @@ highed.DataTable = function(parent, attributes) {
     var columns = [],
       row = highed.dom.cr('tr'),
       leftItem = highed.dom.cr('div', 'highed-dtable-left-bar-row', ''),
-      checker = highed.dom.cr('input', 'highed-dtable-row-select-box'),
+      checker = highed.dom.cr('div', 'highed-dtable-row'),//'input', 'highed-dtable-row-select-box'),
       checked = false,
       didAddHTML = false,
       exports = {};
 
-    checker.type = 'checkbox';
+    //checker.type = 'checkbox';
+    checker.innerHTML = rows.length + 1
 
     function addCol(val, keyValue) {
       columns.push(Column(exports, columns.length, val, keyValue));
@@ -2169,8 +2216,8 @@ highed.DataTable = function(parent, attributes) {
         movementBar
       ),
       leftBar,
-      highed.dom.ap(topBar, topLetterBar, topColumnBar),
-      highed.dom.ap(topLeftPanel, checkAll)
+      highed.dom.ap(topBar, topLetterBar, topColumnBar)
+      //highed.dom.ap(topLeftPanel, checkAll)
     ),
     highed.dom.ap(
       weirdDataContainer,

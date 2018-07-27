@@ -384,17 +384,24 @@
     width:40px;   
     top:0px;
     bottom:0px;
-    padding-top:40px;
+    padding-top: 54px;
     position: absolute;
     background:@background-panel;
     //color:@color-toolbar;
 }
 
-.highed-dtable-left-bar-row {
-    height:41px;
+.highed-dtable-left-bar-row:first-of-type {
+    border-top: 1px solid rgba(14, 14, 14, 0.15);
+    height: 37px;
+}
+
+.highed-dtable-left-bar-row {    
+    height: 36px;
     // border-bottom: @border-main;
-    width:100%;
-    padding:10px;
+    width:100%;    
+    border-bottom: 1px solid rgba(14, 14, 14, 0.15);
+    border-right: 1px solid rgba(14, 14, 14, 0.15);
+    padding: 8px 12px;
     .highed-box-size;
 }
 
