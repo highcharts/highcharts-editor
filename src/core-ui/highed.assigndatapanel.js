@@ -74,7 +74,7 @@ highed.AssignDataPanel = function(parent, attr) {
     return char.charCodeAt() - 65; 
   }
 
-  function getFieldsToHighlight(cb) {
+  function getFieldsToHighlight(cb, overrideCheck) {
     
     var newOptions;
     Object.keys(options).forEach(function(key) {
@@ -95,9 +95,11 @@ highed.AssignDataPanel = function(parent, attr) {
           previousValues = input.previousValue.split(previousValueDelimiter).sort();
         }
 
-        const areEqual = (values.length === previousValues.length && 
-          values.every(function(item) { return previousValues.indexOf(item) > -1 }));
-        if (areEqual) return;
+        if (!overrideCheck) {
+          const areEqual = (values.length === previousValues.length && 
+            values.every(function(item) { return previousValues.indexOf(item) > -1 }));
+          if (areEqual) return;
+        }
 
         if (input.isData) { //Get the label data
             newOptions = getMergedLabelAndData();
@@ -107,7 +109,10 @@ highed.AssignDataPanel = function(parent, attr) {
           });
         }
       } else {
-        if (input.previousValue === input.value) return;
+        if (!overrideCheck) {
+          if (input.previousValue === input.value) return;
+        }
+
         values = [input.value.charAt(0)];
         if (input.previousValue) previousValues = [input.previousValue];
 

@@ -389,7 +389,14 @@ highed.DataTable = function(parent, attributes) {
   selectedHeaders = [],
   columnsToHighlight = [],
   moveToColumn = null,
-  dragHeaderMode = false;
+  dragHeaderMode = false,
+  globalContextMenu = highed.ContextMenu([{
+    title: highed.L('dgSortAsc'),
+    icon: 'sort-amount-asc',
+    click: function() {
+      sortRows(exports.colNumber, 'asc');
+    }
+  }]);
 
   highed.dom.on(mainInput, 'click', function(e) {
     return highed.dom.nodefault(e);
@@ -419,6 +426,11 @@ highed.DataTable = function(parent, attributes) {
   document.addEventListener('contextmenu', function(e) {
     if (e.target.className.indexOf('highed-dtable') > -1) {
       console.log("custom context menu goes here...");
+      globalContextMenu.show(e.clientX, e.clientY);
+      return highed.dom.nodefault(e);
+
+      //ctx.show(e.clientX, e.clientY);
+      //return highed.dom.nodefault(e);
       //e.preventDefault();
     }
   }, false);
@@ -1198,7 +1210,8 @@ highed.DataTable = function(parent, attributes) {
 
     function moveCells(){ 
       
-      if (moveToColumn !== null) {
+      if (moveToColumn !== null) {        
+        events.emit('ColumnMoving');
 
         var tempColumns = selectedHeaders.map(function(header){
           return header.value;
@@ -2412,6 +2425,12 @@ highed.DataTable = function(parent, attributes) {
     events.emit('AssignDataChanged', input, newOptions);
   }
 
+  function removeAllCellsHighlight(previousValues, values, input, newOptions) {
+    removeCellColoring(values);
+    //colorFields(values, input.colors);
+    //events.emit('AssignDataChanged', input, newOptions);
+  }
+
   ////////////////////////////////////////////////////////////////////////////
 /*
   toolbar = highed.Toolbar(container, {
@@ -2551,6 +2570,7 @@ highed.DataTable = function(parent, attributes) {
     loadLiveDataFromURL: loadLiveDataFromURL,
     loadLiveDataPanel: loadLiveDataPanel,
     //highlightSelectedFields: highlightSelectedFields,
-    highlightCells: highlightCells
+    highlightCells: highlightCells,
+    removeAllCellsHighlight: removeAllCellsHighlight
   };
 };

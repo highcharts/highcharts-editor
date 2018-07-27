@@ -179,7 +179,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       assignDataPanel.resize(newWidth, highed.dom.pos(chartFrame, true).y - highed.dom.pos(body, true).y)
     }
 
-    setTimeout(resizeBody, 300); 
+    setTimeout(resizeBody, 300);
     /*
       setTimeout(function() {
         var height = resizeBody().h;
@@ -272,6 +272,15 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       chartPreview.options.set('title-text', sample.title);
     }
   });*/
+  dataTable.on('ColumnMoving', function(){
+    //assignDataPanel.resetValues();
+    assignDataPanel.getFieldsToHighlight(dataTable.removeAllCellsHighlight, true);
+  });
+
+  dataTable.on('ColumnMoved', function(){
+    //assignDataPanel.resetValues();
+    assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+  });
 
   dataTable.on('InitLoaded', function() {
 
