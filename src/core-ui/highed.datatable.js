@@ -921,7 +921,39 @@ highed.DataTable = function(parent, attributes) {
       exports = {};
 
     //checker.type = 'checkbox';
-    checker.innerHTML = rows.length + 1
+    checker.innerHTML = rows.length + 1;
+    checker.value = rows.length;
+
+
+    highed.dom.on(checker, 'mouseover', function(e) {
+      if(mouseDown) {
+          selectedCellsRow[1] = checker.value;
+          selectNewCells(selectedCellsCol, selectedCellsRow);
+      }
+    });    
+    
+    highed.dom.on(checker, 'mousedown', function(e) {
+
+      deselectAllCells();
+
+      //deselectAllCells();
+      //selectedHeaders = [];
+      //if (!selectedHeaders.includes(letter)) selectedHeaders.push(letter);
+      
+      selectedCellsCol[0] = 0
+      selectedCellsCol[1] = rows[0].columns.length - 1;//e.target.value; 
+      selectedCellsRow[0] = e.target.value; 
+      selectedCellsRow[1] = e.target.value; //keysReference[e.target.value].length - 1;
+
+      console.log(selectedCellsCol, selectedCellsRow);
+      selectNewCells(selectedCellsCol, selectedCellsRow);
+    
+      
+    });
+
+
+
+
 
     function addCol(val, keyValue) {
       columns.push(Column(exports, columns.length, val, keyValue));
