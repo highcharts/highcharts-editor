@@ -756,6 +756,7 @@ highed.DataTable = function(parent, attributes) {
         return value === null || value === '';
       }
       mainInput.className = 'highed-dtable-input';
+      mainInput.draggable = false;
 
       makeEditable(
         col,
@@ -1427,7 +1428,6 @@ highed.DataTable = function(parent, attributes) {
     highed.dom.on(header, 'click', function(e) {
       //Ugly.
       mainInput.className = 'highed-dtable-input highed-dtable-input-header';
-
       //Spawn an edit box in the node
       makeEditable(
         header,
