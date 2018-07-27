@@ -395,16 +395,16 @@ highed.DataTable = function(parent, attributes) {
       title: "Insert Row Above",
       icon: 'plus',
       click: function() {
-        if (confirm(highed.L('dgDelColConfirm'))) {
-        }
+        addRowBefore(selectedCellsRow[0]);
+        highed.emit('UIAction', 'AddRowBeforeHighlight'); ///////////////////////////
       }
     },
     {
       title: "Insert Row Below",
       icon: 'plus',
       click: function() {
-        if (confirm(highed.L('dgDelColConfirm'))) {
-        }
+        addRowAfter(selectedCellsRow[selectedCellsRow.length - 1]);
+        highed.emit('UIAction', 'AddRowAfterHighlight'); /////////////////////
       }
     },
     '-',
@@ -412,9 +412,22 @@ highed.DataTable = function(parent, attributes) {
       title: 'Remove Row',
       icon: 'trash',
       click: function() {
-        if (confirm(highed.L('dgDelColConfirm'))) {
-          delCol(exports.colNumber);
+        highed.emit('UIAction', 'BtnDeleteRow');
+
+        if (!confirm(highed.L('dgDeleteRow'))) {
+          return;
         }
+
+        highed.emit('UIAction', 'DeleteRowConfirm');
+
+        rows.forEach(function(row, index) {
+          //if (row.isChecked()) {
+            if(row.number === selectedCellsRow[0]) {
+              row.destroy();
+              emitChanged();
+            }
+          //}
+        });
       }
     },
     {
@@ -422,7 +435,7 @@ highed.DataTable = function(parent, attributes) {
       icon: 'trash',
       click: function() {
         if (confirm(highed.L('dgDelColConfirm'))) {
-          delCol(exports.colNumber);
+          delCol(selectedCellsCol[0]);
         }
       }
     },
@@ -473,10 +486,6 @@ highed.DataTable = function(parent, attributes) {
       console.log("custom context menu goes here...");
       globalContextMenu.show(e.clientX, e.clientY, true);
       return highed.dom.nodefault(e);
-
-      //ctx.show(e.clientX, e.clientY);
-      //return highed.dom.nodefault(e);
-      //e.preventDefault();
     }
   }, false);
 
@@ -777,7 +786,6 @@ highed.DataTable = function(parent, attributes) {
       }
     }
     function select() {
-
       selectedCellsCol[1] = colNumber;
       selectedCellsRow[1] = row.number; 
       selectNewCells(selectedCellsCol, selectedCellsRow);
@@ -804,14 +812,13 @@ highed.DataTable = function(parent, attributes) {
       if (selectedCellsCol[0] === selectedCellsCol[1] && 
           selectedCellsRow[0] === selectedCellsRow[1]) { 
             //Have not dragged anywhere else on the grid. So the user has just clicked on a cell.
-            focus(e);
+            focus();
             globalContextMenu.hide();
           }
     });
 
     highed.dom.on(col, 'mouseover', function(e) {
       if(mouseDown) {
-
         if (dragHeaderMode) {
           highlightLeft(colNumber);
         } else {
@@ -885,14 +892,13 @@ highed.DataTable = function(parent, attributes) {
     if (cellsColArr[0] <= cellsColArr[1]) {
       tempColValue = cellsColArr[0];
       index = 1;
-      lowIndex = (cellsRowArr[0] > cellsRowArr[1] ? 1 : 0);
-      highIndex = (cellsRowArr[0] > cellsRowArr[1] ? 0 : 1);
     } else if (cellsColArr[0] > cellsColArr[1]) {
       tempColValue = cellsColArr[1];      
       index = 0;
-      lowIndex = (cellsRowArr[0] < cellsRowArr[1] ? 0 : 1);
-      highIndex = (cellsRowArr[0] < cellsRowArr[1] ? 1 : 0);
     }
+
+    lowIndex = (cellsRowArr[0] > cellsRowArr[1] ? 1 : 0);
+    highIndex = (cellsRowArr[0] < cellsRowArr[1] ? 1 : 0);
 
     while(tempColValue <= cellsColArr[index]) {
       for(var i = cellsRowArr[lowIndex];i<=cellsRowArr[highIndex]; i++) {
@@ -1208,6 +1214,7 @@ highed.DataTable = function(parent, attributes) {
       element: letter
     });
 
+
     highed.dom.on(letter, 'mouseover', function(e) {
       if(mouseDown && (e.target !== options && e.target !== moveHandle)) {
 
@@ -1226,19 +1233,32 @@ highed.DataTable = function(parent, attributes) {
         } else {
           if (!selectedHeaders.includes(letter)) selectedHeaders.push(letter);
 
-          if (letter.value < selectedCellsCol[0]) {
-            selectedCellsCol[0] = letter.value; 
-          }
-          if (letter.value > selectedCellsCol[1]) {
-            selectedCellsCol[1] = letter.value;
-          }
-        
-          selectedCellsRow[0] = 0;
-          selectedCellsRow[1] = rows.length - 1;
-
+          selectedCellsCol[1] = letter.value;
           selectNewCells(selectedCellsCol, selectedCellsRow);
         }
       }
+    });    
+    
+    highed.dom.on(letter, 'mousedown', function(e) {
+
+      deselectAllCells();
+      if (selectedHeaders.length > 0 && selectedHeaders.includes(e.target)) {
+        //User is trying to drag headers left and right.
+        dragHeaderMode = true;
+      } else {      
+        //deselectAllCells();
+        if(e.target !== options && e.target !== moveHandle) {
+          selectedHeaders = [];
+          if (!selectedHeaders.includes(letter)) selectedHeaders.push(letter);
+          
+          selectedCellsCol[0] = e.target.value; //e.target.value; 
+          selectedCellsCol[1] = e.target.value;//e.target.value; 
+          selectedCellsRow[0] = 0; 
+          selectedCellsRow[1] = rows.length - 1; //keysReference[e.target.value].length - 1;
+          selectNewCells(selectedCellsCol, selectedCellsRow);
+        }
+      }
+      
     });
 
     highed.dom.on(container, 'mouseover', function(e) {
@@ -1302,26 +1322,6 @@ highed.DataTable = function(parent, attributes) {
       }
     });
 
-    highed.dom.on(letter, 'mousedown', function(e) {
-
-      deselectAllCells();
-      if (selectedHeaders.length > 0) {
-        //User is trying to drag headers left and right.
-        dragHeaderMode = true;
-      } else {      
-        //deselectAllCells();
-        if(e.target !== options && e.target !== moveHandle) {
-          if (!selectedHeaders.includes(letter)) selectedHeaders.push(letter);
-          
-          selectedCellsCol[0] = e.target.value; //e.target.value; 
-          selectedCellsCol[1] = e.target.value;//e.target.value; 
-          selectedCellsRow[0] = 0; 
-          selectedCellsRow[1] = rows.length - 1; //keysReference[e.target.value].length - 1;
-          selectNewCells(selectedCellsCol, selectedCellsRow);
-        }
-      }
-      
-    });
     
     keyValue = getNextLetter(keyValue);
     ////////////////////////////////////////////////////////////////////////

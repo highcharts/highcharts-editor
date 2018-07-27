@@ -76,7 +76,7 @@ highed.List = function(parent, responsive, props) {
     });
     highed.dom.ap(node, nodeArrow);
 
-    children.forEach(function(thing) {
+    (children || []).forEach(function(thing) {
       selectGroup(thing);
     });
 
@@ -300,7 +300,7 @@ highed.List = function(parent, responsive, props) {
       nodeArrow.innerHTML = '<i class="fa fa-angle-down" aria-hidden="true"></i>';
       nodeChildren.innerHTML = '';
       var entry = highed.meta.optionsExtended.options[item.id];
-      entry.forEach(function(thing) {
+      (entry || []).forEach(function(thing) {
         selectGroup(thing);
       });
 
