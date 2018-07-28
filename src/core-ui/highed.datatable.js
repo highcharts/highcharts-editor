@@ -34,7 +34,6 @@ function parseCSV(inData, delimiter) {
     options = {
       delimiter: delimiter
     },
-    headersReference = [],
     potentialDelimiters = {
       ',': true,
       ';': true,
@@ -395,16 +394,20 @@ highed.DataTable = function(parent, attributes) {
       title: "Insert Row Above",
       icon: 'plus',
       click: function() {
+        events.emit('ColumnMoving');
         addRowBefore(selectedCellsRow[0]);
-        highed.emit('UIAction', 'AddRowBeforeHighlight'); ///////////////////////////
+        highed.emit('UIAction', 'AddRowBeforeHighlight'); 
+        events.emit('ColumnMoved');
       }
     },
     {
       title: "Insert Row Below",
       icon: 'plus',
       click: function() {
+        events.emit('ColumnMoving');
         addRowAfter(selectedCellsRow[selectedCellsRow.length - 1]);
-        highed.emit('UIAction', 'AddRowAfterHighlight'); /////////////////////
+        highed.emit('UIAction', 'AddRowAfterHighlight'); 
+        events.emit('ColumnMoved');
       }
     },
     '-',
@@ -428,6 +431,7 @@ highed.DataTable = function(parent, attributes) {
             }
           //}
         });
+        rebuildRows();
       }
     },
     {
@@ -435,7 +439,10 @@ highed.DataTable = function(parent, attributes) {
       icon: 'trash',
       click: function() {
         if (confirm(highed.L('dgDelColConfirm'))) {
+          events.emit('ColumnMoving');
           delCol(selectedCellsCol[0]);
+          updateColumns();
+          events.emit('ColumnMoved');
         }
       }
     },
@@ -444,14 +451,18 @@ highed.DataTable = function(parent, attributes) {
       title: highed.L('dgInsColBefore'),
       icon: 'plus',
       click: function() {
-        insertCol(exports.colNumber);
+        events.emit('ColumnMoving');
+        insertCol(selectedCellsCol[0]);
+        events.emit('ColumnMoved');
       }
     },
     {
       title: highed.L('dgInsColAfter'),
       icon: 'plus',
       click: function() {
-        insertCol(exports.colNumber + 1);
+        events.emit('ColumnMoving');
+        insertCol(selectedCellsCol[0] + 1);
+        events.emit('ColumnMoved');
       }
     }
   ]);
@@ -482,7 +493,6 @@ highed.DataTable = function(parent, attributes) {
 
   document.addEventListener('contextmenu', function(e) {
     if (e.target.className.indexOf('highed-dtable') > -1) {
-      console.log("custom context menu goes here...");
       globalContextMenu.show(e.clientX, e.clientY, true);
       return highed.dom.nodefault(e);
     }
@@ -573,7 +583,7 @@ highed.DataTable = function(parent, attributes) {
     }, 1000);
   }
 
-  function makeEditable(target, value, fn, keyup, close) {
+  function makeEditable(target, value, fn, keyup, close, dontFocus) {
     if (mainInputCb.length) {
       mainInputCb = mainInputCb.filter(function(fn) {
         fn();
@@ -621,7 +631,7 @@ highed.DataTable = function(parent, attributes) {
     );
 
     highed.dom.ap(target, mainInput);
-    mainInput.focus();
+    if (!dontFocus) mainInput.focus();
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -646,10 +656,10 @@ highed.DataTable = function(parent, attributes) {
       });
     }
 
-    if (headersReference[colNumber].element.className.indexOf('highlight-right') === -1) {
-      headersReference[colNumber].element.className += ' highlight-right';
+    if (gcolumns[colNumber].letter.className.indexOf('highlight-right') === -1) {
+      gcolumns[colNumber].letter.className += ' highlight-right';
       columnsToHighlight.push({
-        element: headersReference[colNumber].element
+        element: gcolumns[colNumber].letter
       });
       moveToColumn = colNumber;
     }
@@ -749,7 +759,7 @@ highed.DataTable = function(parent, attributes) {
       emitChanged();
     }
 
-    function focus() {
+    function focus(dontFocus) {
       
       deselectAllCells();
       function checkNull(value) {
@@ -769,7 +779,8 @@ highed.DataTable = function(parent, attributes) {
             emitChanged();
           }
         },
-        handleKeyup
+        handleKeyup,
+        dontFocus
       );
 
       row.select();
@@ -907,7 +918,6 @@ highed.DataTable = function(parent, attributes) {
       }
       tempColValue++;
     }
-
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -922,18 +932,19 @@ highed.DataTable = function(parent, attributes) {
       exports = {};
 
     //checker.type = 'checkbox';
-    checker.innerHTML = rows.length + 1;
-    checker.value = rows.length;
+    //checker.innerHTML = rows.length + 1;
+    //checker.value = rows.length;
+    //leftItem.value = checker.value;
 
 
-    highed.dom.on(checker, 'mouseover', function(e) {
+    highed.dom.on(leftItem, 'mouseover', function(e) {
       if(mouseDown) {
           selectedCellsRow[1] = checker.value;
           selectNewCells(selectedCellsCol, selectedCellsRow);
       }
     });    
     
-    highed.dom.on(checker, 'mousedown', function(e) {
+    highed.dom.on(leftItem, 'mousedown', function(e) {
 
       deselectAllCells();
 
@@ -946,7 +957,6 @@ highed.DataTable = function(parent, attributes) {
       selectedCellsRow[0] = e.target.value; 
       selectedCellsRow[1] = e.target.value; //keysReference[e.target.value].length - 1;
 
-      console.log(selectedCellsCol, selectedCellsRow);
       selectNewCells(selectedCellsCol, selectedCellsRow);
     
       
@@ -1001,6 +1011,9 @@ highed.DataTable = function(parent, attributes) {
     function addToDOM(number) {
       didAddHTML = true;
       exports.number = number;
+      checker.innerHTML = number + 1;
+      checker.value = number;
+      leftItem.value = number;
       highed.dom.ap(tbody, row);
 
       highed.dom.ap(leftBar, highed.dom.ap(leftItem, checker));
@@ -1066,7 +1079,6 @@ highed.DataTable = function(parent, attributes) {
       }
       row.rowIndex = i;
     });
-
     emitChanged();
   }
 
@@ -1115,10 +1127,12 @@ highed.DataTable = function(parent, attributes) {
     topLetterBar.innerHTML = '';
     var resetLetters = 'A';
     
-    gcolumns.forEach(function(col, i) {
-      col.addToDOM();
-      headersReference[i].setLetter(resetLetters);
+    gcolumns.forEach(function(col, i) {      
+      col.colNumber = i;
+      col.setLetter(resetLetters);
       resetLetters = getNextLetter(resetLetters);
+      col.addToDOM();
+
     });
 
     rebuildColumns();
@@ -1158,7 +1172,8 @@ highed.DataTable = function(parent, attributes) {
         col: col,
         header: header,
         headerTitle: headerTitle,
-        colNumber: gcolumns.length
+        colNumber: gcolumns.length,
+        letter: letter
       },
       mover = highed.Movable(
         moveHandle,
@@ -1237,21 +1252,15 @@ highed.DataTable = function(parent, attributes) {
     //letter.innerHTML = keyValue;
     letter.value = highed.getLetterIndex(keyValue);
 
-    setLetter = function (str) {
+    exports.setLetter = function (str) {
       keyCell.innerHTML = str;
       letter.value = highed.getLetterIndex(str);
-      exports.colNumber = highed.getLetterIndex(str);
+      //exports.colNumber = highed.getLetterIndex(str);
     }
-
-    headersReference.push({
-      setLetter: setLetter,
-      element: letter
-    });
-
 
     highed.dom.on(letter, 'mouseover', function(e) {
       if(mouseDown && (e.target !== options && e.target !== moveHandle)) {
-
+        
         if (dragHeaderMode) {
           if (movementBar.className.indexOf('active') === -1) {
             movementBar.className += ' active'; 
@@ -1285,14 +1294,13 @@ highed.DataTable = function(parent, attributes) {
           selectedHeaders = [];
           if (!selectedHeaders.includes(letter)) selectedHeaders.push(letter);
           
-          selectedCellsCol[0] = e.target.value; //e.target.value; 
-          selectedCellsCol[1] = e.target.value;//e.target.value; 
+          selectedCellsCol[0] = e.target.value;
+          selectedCellsCol[1] = e.target.value;
           selectedCellsRow[0] = 0; 
-          selectedCellsRow[1] = rows.length - 1; //keysReference[e.target.value].length - 1;
+          selectedCellsRow[1] = rows.length - 1; 
           selectNewCells(selectedCellsCol, selectedCellsRow);
         }
       }
-      
     });
 
     highed.dom.on(container, 'mouseover', function(e) {
@@ -1322,7 +1330,7 @@ highed.DataTable = function(parent, attributes) {
               max = tempColumns.length;
 
         shuffleArray(gcolumns, min, max, (moveToColumn < tempColumns[0] ? moveToColumn + 1 : moveToColumn - (tempColumns.length - 1)));
-        shuffleArray(headersReference, min, max, (moveToColumn < tempColumns[0] ? moveToColumn + 1 : moveToColumn - (tempColumns.length - 1)));
+        //shuffleArray(headersReference, min, max, (moveToColumn < tempColumns[0] ? moveToColumn + 1 : moveToColumn - (tempColumns.length - 1)));
 
         rows.forEach(function(row) {
           shuffleArray(row.columns, min, max, (moveToColumn < tempColumns[0] ? moveToColumn + 1 : moveToColumn - (tempColumns.length - 1)) );
@@ -1360,6 +1368,7 @@ highed.DataTable = function(parent, attributes) {
     keyValue = getNextLetter(keyValue);
     ////////////////////////////////////////////////////////////////////////
     exports.addToDOM = function() {
+
       highed.dom.ap(colgroup, col);
       highed.dom.ap(
         topLetterBar,
@@ -1380,6 +1389,7 @@ highed.DataTable = function(parent, attributes) {
       gcolumns = gcolumns.filter(function(b) {
         return b !== exports;
       });
+
     };
 
     ////////////////////////////////////////////////////////////////////////
@@ -1444,7 +1454,7 @@ highed.DataTable = function(parent, attributes) {
         }
       );
     });
-    
+
     rows.forEach(function(row) {
       if (where) {
         row.insertCol(where);
@@ -1539,7 +1549,6 @@ highed.DataTable = function(parent, attributes) {
     topLetterBar.innerHTML = '';
     colgroup.innerHTML = '';
     keyValue = "A";
-    headersReference = [];
 
     highed.dom.style(tableTail, {
       display: ''
@@ -2436,7 +2445,7 @@ highed.DataTable = function(parent, attributes) {
     var tempValue = values[0];
     if (values.length > 0) {
       while (tempValue <= values[values.length - 1]) {
-        highed.dom.style(headersReference[tempValue].element, {
+        highed.dom.style(gcolumns[tempValue].letter, {
           "background-color": color.light,
           "border-left": "1px double " + color.dark,
           "border-top": "1px double " + color.dark,
@@ -2469,7 +2478,7 @@ highed.DataTable = function(parent, attributes) {
     var tempValue = previousValues[0];
     if (previousValues.length > 0) {
       while (tempValue <= previousValues[previousValues.length - 1]) {
-        highed.dom.style([headersReference[tempValue].element, gcolumns[tempValue].header], {
+        highed.dom.style([gcolumns[tempValue].letter, gcolumns[tempValue].header], {
           "background-color": '',
           "border": '',
         });
