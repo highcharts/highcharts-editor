@@ -475,12 +475,12 @@ highed.DataTable = function(parent, attributes) {
     padding: '8px'
   });
 
-  var mouseDown = 0;
+  var mouseDown = false;
   document.body.onmousedown = function() { 
-    ++mouseDown;
+    mouseDown = true;
   }
   document.body.onmouseup = function() {
-    --mouseDown;
+    mouseDown = false;
   }
 
   document.addEventListener('keydown', function (e) {  
@@ -739,8 +739,10 @@ highed.DataTable = function(parent, attributes) {
         //insert a new row.
         if (row.number === rows.length - 1) {
           // && colNumber === rows.columns.length - 1) {
+          events.emit('ColumnMoving');
           addRow();
           rows[row.number + 1].columns[0].focus();
+          events.emit('ColumnMoved');
         } else {
           goBelow();
         }
@@ -767,7 +769,7 @@ highed.DataTable = function(parent, attributes) {
       }
       mainInput.className = 'highed-dtable-input';
       mainInput.draggable = false;
-      
+
       highed.dom.on(mainInput, 'dragstart', function(e){
         highed.dom.nodefault(e);
         return false;
@@ -1258,7 +1260,6 @@ highed.DataTable = function(parent, attributes) {
 
     highed.dom.on(letter, 'mouseover', function(e) {
       if(mouseDown && (e.target !== options && e.target !== moveHandle)) {
-        
         if (dragHeaderMode) {
           if (movementBar.className.indexOf('active') === -1) {
             movementBar.className += ' active'; 
@@ -1273,7 +1274,7 @@ highed.DataTable = function(parent, attributes) {
             left: (e.clientX - highed.dom.size(movementBar).w / 2) + 'px'
           });
         } else {
-
+          console.log("MAYBE?");
           selectedCellsCol[1] = letter.value;
           selectedHeaders[1] = letter.value;
           selectNewCells(selectedCellsCol, selectedCellsRow);
@@ -1352,6 +1353,7 @@ highed.DataTable = function(parent, attributes) {
         columnsToHighlight = [];
         moveToColumn = null;
       }
+      globalContextMenu.hide();
     })
 
     highed.dom.on(header, 'mouseover', function(e) {
@@ -1412,7 +1414,7 @@ highed.DataTable = function(parent, attributes) {
     mover.on('Moving', function(x) {
       col.width = x;
 
-      highed.dom.style([col, header], {
+      highed.dom.style([col, header, letter], {
         width: x + 'px'
       });
 
@@ -2237,8 +2239,9 @@ highed.DataTable = function(parent, attributes) {
   table.cellSpacing = 0;
 
   highed.dom.on(frame, 'scroll', function(e) {
-    leftBar.style.top = -frame.scrollTop + 'px';
-    topBar.style.left = -frame.scrollLeft + 'px';
+    console.log(-frame.scrollLeft, frame.scrollTop);
+    //leftBar.style.top = -frame.scrollTop + 'px';
+    topBar.style.left = -frame.scrollLeft + 40 + 'px';
   });
 
   parent = highed.dom.get(parent);
