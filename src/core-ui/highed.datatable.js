@@ -767,6 +767,15 @@ highed.DataTable = function(parent, attributes) {
       }
       mainInput.className = 'highed-dtable-input';
       mainInput.draggable = false;
+      
+      highed.dom.on(mainInput, 'dragstart', function(e){
+        highed.dom.nodefault(e);
+        return false;
+      });
+      highed.dom.on(mainInput, 'ondrop', function(e){
+        highed.dom.nodefault(e);
+        return false;
+      });
 
       makeEditable(
         col,
