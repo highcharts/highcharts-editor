@@ -926,16 +926,10 @@ highed.DataTable = function(parent, attributes) {
     var columns = [],
       row = highed.dom.cr('tr'),
       leftItem = highed.dom.cr('div', 'highed-dtable-left-bar-row', ''),
-      checker = highed.dom.cr('div', 'highed-dtable-row'),//'input', 'highed-dtable-row-select-box'),
+      checker = highed.dom.cr('div', 'highed-dtable-row'),
       checked = false,
       didAddHTML = false,
       exports = {};
-
-    //checker.type = 'checkbox';
-    //checker.innerHTML = rows.length + 1;
-    //checker.value = rows.length;
-    //leftItem.value = checker.value;
-
 
     highed.dom.on(leftItem, 'mouseover', function(e) {
       if(mouseDown) {
@@ -947,19 +941,14 @@ highed.DataTable = function(parent, attributes) {
     highed.dom.on(leftItem, 'mousedown', function(e) {
 
       deselectAllCells();
-
-      //deselectAllCells();
-      //selectedHeaders = [];
-      //if (!selectedHeaders.includes(letter)) selectedHeaders.push(letter);
       
       selectedCellsCol[0] = 0
-      selectedCellsCol[1] = rows[0].columns.length - 1;//e.target.value; 
+      selectedCellsCol[1] = rows[0].columns.length - 1;
       selectedCellsRow[0] = e.target.value; 
-      selectedCellsRow[1] = e.target.value; //keysReference[e.target.value].length - 1;
+      selectedCellsRow[1] = e.target.value;
 
       selectNewCells(selectedCellsCol, selectedCellsRow);
     
-      
     });
 
 
@@ -1265,7 +1254,8 @@ highed.DataTable = function(parent, attributes) {
           if (movementBar.className.indexOf('active') === -1) {
             movementBar.className += ' active'; 
             highed.dom.style(movementBar, {
-              width: 140 * selectedHeaders.length + 'px'
+              width: 140 * ((selectedHeaders[0] < selectedHeaders[1] ? selectedHeaders[1] - selectedHeaders[0]  : selectedHeaders[0] - selectedHeaders[1]) +1) + 'px'
+              //width: 140 * selectedHeaders.length + 'px'
             });
           }
           highlightLeft(letter.value);
@@ -1274,9 +1264,9 @@ highed.DataTable = function(parent, attributes) {
             left: (e.clientX - highed.dom.size(movementBar).w / 2) + 'px'
           });
         } else {
-          if (!selectedHeaders.includes(letter)) selectedHeaders.push(letter);
 
           selectedCellsCol[1] = letter.value;
+          selectedHeaders[1] = letter.value;
           selectNewCells(selectedCellsCol, selectedCellsRow);
         }
       }
@@ -1285,15 +1275,18 @@ highed.DataTable = function(parent, attributes) {
     highed.dom.on(letter, 'mousedown', function(e) {
 
       deselectAllCells();
-      if (selectedHeaders.length > 0 && selectedHeaders.includes(e.target)) {
+      
+      if (selectedHeaders.length > 0 && ( e.target.value >= selectedHeaders[0] && e.target.value <= selectedHeaders[1])) {
         //User is trying to drag headers left and right.
         dragHeaderMode = true;
       } else {
         //deselectAllCells();
         if(e.target !== options && e.target !== moveHandle) {
           selectedHeaders = [];
-          if (!selectedHeaders.includes(letter)) selectedHeaders.push(letter);
-          
+
+          selectedHeaders[0] = e.target.value;
+          selectedHeaders[1] = e.target.value;
+
           selectedCellsCol[0] = e.target.value;
           selectedCellsCol[1] = e.target.value;
           selectedCellsRow[0] = 0; 
@@ -1311,7 +1304,7 @@ highed.DataTable = function(parent, attributes) {
       } 
     });
 
-    function shuffleArray(arr, min, amount, moveTo){
+    function shuffleArray(arr, min, amount, moveTo) {
       var x = arr.splice(min, amount);
       var args = [moveTo, 0].concat(x);
       Array.prototype.splice.apply(arr, args);
@@ -1321,19 +1314,15 @@ highed.DataTable = function(parent, attributes) {
       
       if (moveToColumn !== null) {        
         events.emit('ColumnMoving');
+        
+        const min = selectedHeaders[(moveToColumn < selectedHeaders[0] ? 1 : 0)],
+              max = (selectedHeaders[0] < selectedHeaders[1] ? selectedHeaders[1] - selectedHeaders[0]  : selectedHeaders[0] - selectedHeaders[1]) +1,
+              total = (selectedHeaders[0] < selectedHeaders[1] ? selectedHeaders[1] - selectedHeaders[0]  : selectedHeaders[0] - selectedHeaders[1]);
 
-        var tempColumns = selectedHeaders.map(function(header){
-          return header.value;
-        });
-
-        const min = tempColumns[(moveToColumn < tempColumns[0] ? tempColumns.length - 1 : 0)],
-              max = tempColumns.length;
-
-        shuffleArray(gcolumns, min, max, (moveToColumn < tempColumns[0] ? moveToColumn + 1 : moveToColumn - (tempColumns.length - 1)));
-        //shuffleArray(headersReference, min, max, (moveToColumn < tempColumns[0] ? moveToColumn + 1 : moveToColumn - (tempColumns.length - 1)));
+        shuffleArray(gcolumns, min, max, (moveToColumn < selectedHeaders[0] ? moveToColumn + 1 : moveToColumn - total));
 
         rows.forEach(function(row) {
-          shuffleArray(row.columns, min, max, (moveToColumn < tempColumns[0] ? moveToColumn + 1 : moveToColumn - (tempColumns.length - 1)) );
+          shuffleArray(row.columns, min, max, (moveToColumn < selectedHeaders[0] ? moveToColumn + 1 : moveToColumn - total));
         });
 
         updateColumns();
