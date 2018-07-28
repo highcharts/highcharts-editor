@@ -498,6 +498,10 @@ highed.DataTable = function(parent, attributes) {
     }
   }, false);
 
+  highed.dom.on(document.querySelector('body'), 'click', function(){
+    globalContextMenu.hide();
+  });
+
   ////////////////////////////////////////////////////////////////////////////
 
   // Handle drag 'n drop of files
@@ -1108,12 +1112,12 @@ highed.DataTable = function(parent, attributes) {
 
     setTimeout(function(){ events.emit('InitLoaded'); }, 10);
 
-    for (var i = 0; i < 1; i++) {
+    for (var i = 0; i < 12; i++) {
       var r = Row(false, keyValue);
     }
 
     tempKeyValue = "A";
-    for (var j = 0; j < 3; j++) {
+    for (var j = 0; j < 6; j++) {
       addCol('Column ' + (j + 1));
     }
     highed.dom.ap(colgroup, highed.dom.cr('col'));
@@ -1274,7 +1278,6 @@ highed.DataTable = function(parent, attributes) {
             left: (e.clientX - highed.dom.size(movementBar).w / 2) + 'px'
           });
         } else {
-          console.log("MAYBE?");
           selectedCellsCol[1] = letter.value;
           selectedHeaders[1] = letter.value;
           selectNewCells(selectedCellsCol, selectedCellsRow);
@@ -1573,7 +1576,6 @@ highed.DataTable = function(parent, attributes) {
     if (!supressChange) {
       emitChanged();
     }
-
     if (rows.length > 1) {
       hideDropzone();
     }
@@ -2239,7 +2241,6 @@ highed.DataTable = function(parent, attributes) {
   table.cellSpacing = 0;
 
   highed.dom.on(frame, 'scroll', function(e) {
-    console.log(-frame.scrollLeft, frame.scrollTop);
     //leftBar.style.top = -frame.scrollTop + 'px';
     topBar.style.left = -frame.scrollLeft + 40 + 'px';
   });
