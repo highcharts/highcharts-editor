@@ -130,7 +130,10 @@
 
 .highed-dtable-table-frame {
     width:100%;
-    height:100%;
+    height:100%;    
+    position: absolute;
+    top: 0px;
+    left: 0px;
     margin-left:40px;
     margin-top:55px;
     overflow: auto;
@@ -429,6 +432,9 @@
 .cell-selected {
     background-color: rgba(85, 148, 244, 0.14);
 }
+.cell-copy-selected {
+    background-color: rgba(3, 232, 21, 0.12);
+}
 
 .highed-dtable-movement-bar {
     background-color: rgba(148, 148, 148, 0.34);
@@ -446,4 +452,25 @@
 .highed-dtable-top-bar-letter.highlight-right,
 .highed-dtable-cell.highlight-right {
     border-right: 2px double black !important;
+}
+
+.highed-dtable-corner-piece {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: #5594F4;
+    border: 0.19rem solid white;
+    z-index: 100000000;
+    cursor: crosshair;
+    display: none;
+}
+.highed-dtable-hide-cells {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 54px;
+    width: 40px;
+    z-index: 100000000000;
+    border-right: 1px solid rgba(14, 14, 14, 0.15);
+    background-color: #f3f3f3;
 }

@@ -204,12 +204,14 @@ highed.DataTable = function(parent, attributes) {
     ),
     colgroup = highed.dom.cr('colgroup'),
     leftBar = highed.dom.cr('div', 'highed-dtable-left-bar'),
+    hideCellsDiv = highed.dom.cr('div', 'highed-dtable-hide-cells'),
     topBar = highed.dom.cr('div', 'highed-dtable-top-bar'),
     topLetterBar = highed.dom.cr('div', 'highed-dtable-top-letter-bar'),
     topColumnBar = highed.dom.cr('div', 'highed-dtable-top-column-bar'),
     topLeftPanel = highed.dom.cr('div', 'highed-dtable-top-left-panel'),
     //checkAll = highed.dom.cr('input'),
     mainInput = highed.dom.cr('textarea', 'highed-dtable-input'),
+    cornerPiece = highed.dom.cr('div', 'highed-dtable-corner-piece'),
     weirdDataModal = highed.OverlayModal(false, {
       // zIndex: 20000,
       showOnInit: false,
@@ -381,91 +383,96 @@ highed.DataTable = function(parent, attributes) {
         }
       }
     ]);
-  //checkAll.type = 'checkbox',
-  selectedCellsCol = [],
-  selectedCellsRow = [],
-  allSelectedCells = [],
-  selectedHeaders = [],
-  columnsToHighlight = [],
-  moveToColumn = null,
-  dragHeaderMode = false,
-  globalContextMenu = highed.ContextMenu([
-    {
-      title: "Insert Row Above",
-      icon: 'plus',
-      click: function() {
-        events.emit('ColumnMoving');
-        addRowBefore(selectedCellsRow[0]);
-        highed.emit('UIAction', 'AddRowBeforeHighlight'); 
-        events.emit('ColumnMoved');
-      }
-    },
-    {
-      title: "Insert Row Below",
-      icon: 'plus',
-      click: function() {
-        events.emit('ColumnMoving');
-        addRowAfter(selectedCellsRow[selectedCellsRow.length - 1]);
-        highed.emit('UIAction', 'AddRowAfterHighlight'); 
-        events.emit('ColumnMoved');
-      }
-    },
-    '-',
-    {
-      title: 'Remove Row',
-      icon: 'trash',
-      click: function() {
-        highed.emit('UIAction', 'BtnDeleteRow');
+    //checkAll.type = 'checkbox',
+    selectedFirstCell = [],
+    selectedEndCell = [],
+    selectedCopyFirstCell = [],
+    selectedCopyEndCell = [],
 
-        if (!confirm(highed.L('dgDeleteRow'))) {
-          return;
-        }
-
-        highed.emit('UIAction', 'DeleteRowConfirm');
-
-        rows.forEach(function(row, index) {
-          //if (row.isChecked()) {
-            if(row.number === selectedCellsRow[0]) {
-              row.destroy();
-              emitChanged();
-            }
-          //}
-        });
-        rebuildRows();
-      }
-    },
-    {
-      title: highed.L('dgDelCol'),
-      icon: 'trash',
-      click: function() {
-        if (confirm(highed.L('dgDelColConfirm'))) {
+    allSelectedCells = [],
+    allSelectedCopyCells = [],
+    selectedHeaders = [],
+    columnsToHighlight = [],
+    inCopyOverCellMode = false;
+    moveToColumn = null,
+    dragHeaderMode = false,
+    globalContextMenu = highed.ContextMenu([
+      {
+        title: "Insert Row Above",
+        icon: 'plus',
+        click: function() {
           events.emit('ColumnMoving');
-          delCol(selectedCellsCol[0]);
-          updateColumns();
+          addRowBefore(selectedFirstCell[1]);
+          highed.emit('UIAction', 'AddRowBeforeHighlight'); 
+          events.emit('ColumnMoved');
+        }
+      },
+      {
+        title: "Insert Row Below",
+        icon: 'plus',
+        click: function() {
+          events.emit('ColumnMoving');
+          addRowAfter(selectedEndCell[1]);
+          highed.emit('UIAction', 'AddRowAfterHighlight'); 
+          events.emit('ColumnMoved');
+        }
+      },
+      '-',
+      {
+        title: 'Remove Row',
+        icon: 'trash',
+        click: function() {
+          highed.emit('UIAction', 'BtnDeleteRow');
+
+          if (!confirm(highed.L('dgDeleteRow'))) {
+            return;
+          }
+
+          highed.emit('UIAction', 'DeleteRowConfirm');
+
+          rows.forEach(function(row, index) {
+            //if (row.isChecked()) {
+              if(row.number === selectedFirstCell[1]) {
+                row.destroy();
+                emitChanged();
+              }
+            //}
+          });
+          rebuildRows();
+        }
+      },
+      {
+        title: highed.L('dgDelCol'),
+        icon: 'trash',
+        click: function() {
+          if (confirm(highed.L('dgDelColConfirm'))) {
+            events.emit('ColumnMoving');
+            delCol(selectedFirstCell[0]);
+            updateColumns();
+            events.emit('ColumnMoved');
+          }
+        }
+      },
+      '-',
+      {
+        title: highed.L('dgInsColBefore'),
+        icon: 'plus',
+        click: function() {
+          events.emit('ColumnMoving');
+          insertCol(selectedFirstCell[0]);
+          events.emit('ColumnMoved');
+        }
+      },
+      {
+        title: highed.L('dgInsColAfter'),
+        icon: 'plus',
+        click: function() {
+          events.emit('ColumnMoving');
+          insertCol(selectedFirstCell[0] + 1);
           events.emit('ColumnMoved');
         }
       }
-    },
-    '-',
-    {
-      title: highed.L('dgInsColBefore'),
-      icon: 'plus',
-      click: function() {
-        events.emit('ColumnMoving');
-        insertCol(selectedCellsCol[0]);
-        events.emit('ColumnMoved');
-      }
-    },
-    {
-      title: highed.L('dgInsColAfter'),
-      icon: 'plus',
-      click: function() {
-        events.emit('ColumnMoving');
-        insertCol(selectedCellsCol[0] + 1);
-        events.emit('ColumnMoved');
-      }
-    }
-  ]);
+    ]);
 
   highed.dom.on(mainInput, 'click', function(e) {
     return highed.dom.nodefault(e);
@@ -502,6 +509,13 @@ highed.DataTable = function(parent, attributes) {
     globalContextMenu.hide();
   });
 
+  highed.dom.on(cornerPiece, 'mousedown', function(e){
+    inCopyOverCellMode = true;
+    deselectAllCells();
+  });
+
+
+  highed.dom.ap(frame, cornerPiece);
   ////////////////////////////////////////////////////////////////////////////
 
   // Handle drag 'n drop of files
@@ -765,6 +779,13 @@ highed.DataTable = function(parent, attributes) {
       emitChanged();
     }
 
+    function setValue(newValue) {
+      colVal.innerHTML = newValue;
+      mainInput.value = newValue;
+      value = newValue;
+      emitChanged();
+    }
+
     function focus(dontFocus) {
       
       deselectAllCells();
@@ -805,16 +826,29 @@ highed.DataTable = function(parent, attributes) {
       col.classList.remove('cell-selected');
     }
 
+    function deselectCopyCell() {
+      col.classList.remove('cell-copy-selected');
+    }
+
     function selectCell() {
       if(col.className.indexOf('cell-selected') === -1) {
         col.className += ' cell-selected';
-        allSelectedCells.push(exports);
+        if (allSelectedCells.indexOf(exports) === -1) allSelectedCells.push(exports);
       }
     }
+
     function select() {
-      selectedCellsCol[1] = colNumber;
-      selectedCellsRow[1] = row.number; 
-      selectNewCells(selectedCellsCol, selectedCellsRow);
+      selectedEndCell[0] = colNumber;
+      selectedEndCell[1] = row.number; 
+
+      selectNewCells(selectedFirstCell, selectedEndCell);
+    }
+
+    function selectCellToCopy() {
+      if(col.className.indexOf('cell-copy-selected') === -1) {
+        col.className += ' cell-copy-selected';
+        if (allSelectedCopyCells.indexOf(exports) === -1) allSelectedCopyCells.push(exports);
+      }
     }
 
     function destroy() {
@@ -832,24 +866,51 @@ highed.DataTable = function(parent, attributes) {
       highed.dom.ap(row.node, highed.dom.ap(col, colVal));
     }
 
-    //highed.dom.on(col, 'click', focus);
-
     highed.dom.on(col, 'mouseup', function(e) {
-      if (selectedCellsCol[0] === selectedCellsCol[1] && 
-          selectedCellsRow[0] === selectedCellsRow[1]) { 
+      if (inCopyOverCellMode) {
+        inCopyOverCellMode = false;
+        
+        const newValue = rows[selectedCopyFirstCell[1]].columns[selectedCopyFirstCell[0]].value();
+        allSelectedCopyCells.forEach(function(cell) {
+          cell.setValue(newValue);
+          cell.deselectCopyCell();
+        });
+
+        allSelectedCopyCells = [];
+
+      }
+      else if (selectedFirstCell[0] === selectedEndCell[0] && 
+          selectedFirstCell[1] === selectedEndCell[1]) {
             //Have not dragged anywhere else on the grid. So the user has just clicked on a cell.
+            
+            selectedCopyFirstCell[0] = selectedFirstCell[0];
+            selectedCopyFirstCell[1] = selectedFirstCell[1];
+            selectedCopyEndCell[1] = selectedEndCell[1];
+            selectedCopyEndCell[0] = selectedEndCell[0];
             selectedHeaders = [];
             focus();
             globalContextMenu.hide();
           }
     });
 
-    highed.dom.on(col, 'mouseover', function(e) {
+    highed.dom.on([col, colVal], 'mouseover', function(e) {
       if(mouseDown) {
-        if (dragHeaderMode) {
+        if (inCopyOverCellMode) {
+
+          if (colNumber === selectedCopyEndCell[0]) {
+            selectedCopyEndCell[1] = row.number;
+            selectedCopyEndCell[0] = selectedCopyFirstCell[0];
+          } else if (selectedCopyEndCell[1] === row.number) {
+            selectedCopyEndCell[1] = selectedCopyFirstCell[1];
+            selectedCopyEndCell[0] = colNumber;
+          }
+
+          selectCellsToMove(selectedCopyFirstCell, selectedCopyEndCell);
+
+        } else if (dragHeaderMode) {
           highlightLeft(colNumber);
         } else {
-          select();
+          select();      
         }
       }
     });
@@ -857,10 +918,23 @@ highed.DataTable = function(parent, attributes) {
       deselectAllCells();
       
       focus();
-      selectedCellsCol[0] = colNumber;//keyVal; 
-      selectedCellsCol[1] = colNumber;//keyVal; 
-      selectedCellsRow[0] = row.number; 
-      selectedCellsRow[1] = row.number; 
+
+      highed.dom.style(cornerPiece, {
+        top: ((highed.dom.pos(col).y + highed.dom.size(col).h - 3)) + "px",
+        left: ((highed.dom.pos(col).x + highed.dom.size(col).w - 3)) + "px",
+        display: "block"
+      });
+
+      selectedFirstCell[0] = colNumber;//keyVal; 
+      selectedEndCell[0] = colNumber;//keyVal; 
+      selectedFirstCell[1] = row.number; 
+      selectedEndCell[1] = row.number;                   
+      
+      selectedCopyFirstCell[0] = selectedFirstCell[0];
+      selectedCopyFirstCell[1] = selectedFirstCell[1];
+      selectedCopyEndCell[1] = selectedEndCell[1];
+      selectedCopyEndCell[0] = selectedEndCell[0];
+
     });
 
     if (rows.length <= 500) {
@@ -875,9 +949,12 @@ highed.DataTable = function(parent, attributes) {
       selectCell: selectCell,
       deleteContents: deleteContents,
       deselectCell: deselectCell,
+      deselectCopyCell: deselectCopyCell,
       element: col,
+      setValue: setValue,
       rowNumber: row.number,
       colNumber: colNumber,
+      selectCellToCopy: selectCellToCopy,
       updateColNumber: function(i){
         colNumber = i;
         exports.colNumber = i;
@@ -891,19 +968,56 @@ highed.DataTable = function(parent, attributes) {
 
     allSelectedCells.forEach(function(cells) {
       cells.deselectCell();
-    });      
+    });
     
     allSelectedCells = [];
-    selectedCellsCol[0] = null;
-    selectedCellsCol[1] = null;
-    selectedCellsRow[0] = null;
-    selectedCellsRow[1] = null;
+    selectedEndCell[0] = null;
+    selectedEndCell[1] = null;
+    selectedFirstCell[0] = null;
+    selectedFirstCell[1] = null;
   }
 
-  function selectNewCells(cellsColArr, cellsRowArr) {
+  function selectCellsToMove(firstCell, endCell){ // selectedCopyFirstCell, selectedCopyEndCell
 
+    allSelectedCopyCells = allSelectedCopyCells.filter(function(cell) {
+      if ((cell.rowNumber > endCell[1] || cell.colNumber > endCell[0]) || (cell.rowNumber < firstCell[1] || cell.colNumber < firstCell[0])) {
+        cell.deselectCopyCell();
+        return false;
+      }
+
+      return cell;
+    });
+
+    var tempColValue,
+        lowCell,
+        highCell,
+        cell;
+
+    if (firstCell[0] <= endCell[0]) {
+      tempColValue = firstCell[0];
+      cell = endCell;
+    } else if (firstCell[0] > endCell[0]) {
+      tempColValue = endCell[0];      
+      cell = firstCell;
+    }
+
+    lowCell = (firstCell[1] > endCell[1] ? endCell : firstCell);
+    highCell = (firstCell[1] < endCell[1] ? endCell : firstCell);
+    
+
+    while(tempColValue <= cell[0]) {
+      for(var i = lowCell[1];i<= highCell[1]; i++) {
+        if (rows[i]) rows[i].columns[tempColValue].selectCellToCopy();
+      }
+      tempColValue++;
+    }
+
+  }
+
+  function selectNewCells(firstCell, endCell) { //firstCell, endCell
+    
     allSelectedCells = allSelectedCells.filter(function(cell) {
-      if ((cell.rowNumber > cellsRowArr[1] || cell.colNumber > cellsColArr[1]) || (cell.rowNumber < cellsRowArr[0] || cell.colNumber < cellsColArr[0])) {
+      if ((cell.rowNumber > endCell[1] || cell.colNumber > endCell[0]) || (cell.rowNumber < firstCell[1] || cell.colNumber < firstCell[0])) {
         cell.deselectCell();
         return false;
       }
@@ -912,24 +1026,24 @@ highed.DataTable = function(parent, attributes) {
     });
 
     var tempColValue,
-        index,
-        lowIndex,
-        highIndex;
+        lowCell,
+        highCell,
+        cell;
 
-    if (cellsColArr[0] <= cellsColArr[1]) {
-      tempColValue = cellsColArr[0];
-      index = 1;
-    } else if (cellsColArr[0] > cellsColArr[1]) {
-      tempColValue = cellsColArr[1];      
-      index = 0;
+    if (firstCell[0] <= endCell[0]) {
+      tempColValue = firstCell[0];
+      cell = endCell;
+    } else if (firstCell[0] > endCell[0]) {
+      tempColValue = endCell[0];      
+      cell = firstCell;
     }
 
-    lowIndex = (cellsRowArr[0] > cellsRowArr[1] ? 1 : 0);
-    highIndex = (cellsRowArr[0] < cellsRowArr[1] ? 1 : 0);
-
-    while(tempColValue <= cellsColArr[index]) {
-      for(var i = cellsRowArr[lowIndex];i<=cellsRowArr[highIndex]; i++) {
-        rows[i].columns[tempColValue].selectCell();
+    lowCell = (firstCell[1] > endCell[1] ? endCell : firstCell);
+    highCell = (firstCell[1] < endCell[1] ? endCell : firstCell);
+    
+    while(tempColValue <= cell[0]) {
+      for(var i = lowCell[1];i<= highCell[1]; i++) {
+        if (rows[i]) rows[i].columns[tempColValue].selectCell();
       }
       tempColValue++;
     }
@@ -948,8 +1062,8 @@ highed.DataTable = function(parent, attributes) {
 
     highed.dom.on(leftItem, 'mouseover', function(e) {
       if(mouseDown) {
-          selectedCellsRow[1] = checker.value;
-          selectNewCells(selectedCellsCol, selectedCellsRow);
+          selectedEndCell[1] = checker.value;
+          selectNewCells(selectedFirstCell, selectedEndCell);
       }
     });    
     
@@ -957,12 +1071,12 @@ highed.DataTable = function(parent, attributes) {
 
       deselectAllCells();
       
-      selectedCellsCol[0] = 0
-      selectedCellsCol[1] = rows[0].columns.length - 1;
-      selectedCellsRow[0] = e.target.value; 
-      selectedCellsRow[1] = e.target.value;
+      selectedFirstCell[0] = 0
+      selectedEndCell[0] = rows[0].columns.length - 1;
+      selectedFirstCell[1] = e.target.value; 
+      selectedEndCell[1] = e.target.value;
 
-      selectNewCells(selectedCellsCol, selectedCellsRow);
+      selectNewCells(selectedFirstCell, selectedEndCell);
     
     });
 
@@ -1278,9 +1392,9 @@ highed.DataTable = function(parent, attributes) {
             left: (e.clientX - highed.dom.size(movementBar).w / 2) + 'px'
           });
         } else {
-          selectedCellsCol[1] = letter.value;
+          selectedEndCell[0] = letter.value;
           selectedHeaders[1] = letter.value;
-          selectNewCells(selectedCellsCol, selectedCellsRow);
+          selectNewCells(selectedFirstCell, selectedEndCell);
         }
       }
     });    
@@ -1300,11 +1414,11 @@ highed.DataTable = function(parent, attributes) {
           selectedHeaders[0] = e.target.value;
           selectedHeaders[1] = e.target.value;
 
-          selectedCellsCol[0] = e.target.value;
-          selectedCellsCol[1] = e.target.value;
-          selectedCellsRow[0] = 0; 
-          selectedCellsRow[1] = rows.length - 1; 
-          selectNewCells(selectedCellsCol, selectedCellsRow);
+          selectedFirstCell[0] = e.target.value;
+          selectedEndCell[0] = e.target.value;
+          selectedFirstCell[1] = 0; 
+          selectedEndCell[1] = rows.length - 1; 
+          selectNewCells(selectedFirstCell, selectedEndCell);
         }
       }
     });
@@ -2241,7 +2355,7 @@ highed.DataTable = function(parent, attributes) {
   table.cellSpacing = 0;
 
   highed.dom.on(frame, 'scroll', function(e) {
-    //leftBar.style.top = -frame.scrollTop + 'px';
+    leftBar.style.top = -frame.scrollTop + 'px';
     topBar.style.left = -frame.scrollLeft + 40 + 'px';
   });
 
@@ -2259,6 +2373,7 @@ highed.DataTable = function(parent, attributes) {
         dropZone,
         movementBar
       ),
+      hideCellsDiv,
       leftBar,
       highed.dom.ap(topBar, topLetterBar, topColumnBar)
       //highed.dom.ap(topLeftPanel, checkAll)
