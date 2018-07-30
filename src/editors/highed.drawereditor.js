@@ -65,7 +65,11 @@ highed.DrawerEditor = function(parent, options) {
     ),
     lastSetWidth = false,
     fixedSize = false,
-    panel = highed.OptionsPanel(parent, [{
+    splitter = highed.VSplitter(parent, {
+      topHeight: properties.useHeader ? '60px' : '0px',
+      noOverflow: true
+    }),
+    panel = highed.OptionsPanel(splitter.bottom, [{
       icon: 'table',
       text: 'Data',
       onClick: function() {
@@ -82,10 +86,6 @@ highed.DrawerEditor = function(parent, options) {
       }
     }]),
     
-    splitter = highed.VSplitter(parent, {
-      topHeight: properties.useHeader ? '60px' : '0px',
-      noOverflow: true
-    }),
     toolbar = highed.Toolbar(splitter.top),
     //toolbox = highed.Toolbox(splitter.bottom),
     //assignDataPanel = highed.AssignDataPanel(splitter.bottom),

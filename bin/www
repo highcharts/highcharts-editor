@@ -71,7 +71,6 @@ function appendFilesFromProduct(prodName) {
     include('validators');
     include('samples');
     include('templates');
-    include('ui');
 
 }
 

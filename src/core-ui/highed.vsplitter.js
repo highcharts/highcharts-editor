@@ -65,7 +65,7 @@ highed.VSplitter = function(parent, attributes) {
 
     highed.dom.style(container, {
       width: (w || s.w) + 'px',
-      height: ((h || s.h) - 33) + 'px'
+      height: ((h || s.h)) + 'px'
     });
 
     if (properties.topHeight.toString().indexOf('px') > 0) {

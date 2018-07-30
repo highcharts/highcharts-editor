@@ -348,7 +348,9 @@ highed.List = function(parent, responsive, props) {
      */
   function addItems(items) {
     if (highed.isArr(items)) {
-      items.forEach(addItem);
+      items.forEach(function(item) {
+        addItem(item);
+      });
     }
   }
 
