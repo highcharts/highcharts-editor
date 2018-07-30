@@ -25,7 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-highed.templates.add('Scatterandbubble', {
+highed.templates.add('Scatter And Bubble', {
   title: 'Scatter with line, no marker',
   description: '',
   thumbnail: 'uvepiw.svg',
