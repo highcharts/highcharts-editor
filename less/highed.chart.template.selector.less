@@ -2,6 +2,14 @@
     padding:10px;
 }*/
 
+.highed-chart-templates {
+    padding: 10px;
+    .highed-dropdown-body {
+        font-size: 10px;
+        line-height: 15px;
+    }
+}
+
 .highed-step-body .highed-chart-templates .highed-hsplitter .panel.right .highed-hsplitter-body {
     padding-top: 10px;
 }
@@ -12,21 +20,9 @@
 }
 
 .highed-chart-template-title {
-	  //position: absolute;
-	  //display: block;
-    //background-color: rgba(66, 66, 100, 0.8);
-    //bottom: 0px;
-    width: 100%;
-    line-height: 2em;
-    //border-radius: 0;
-    //position: absolute;
-    font-size: 1.2em;
-    //color: #ffffff;
-    //text-align: center;
-    //transition: bottom 0.2s;
-    //z-index: 1;
-    //opacity: 0;
-    //.highed-transition;
+    font-size: 10px;
+    color: black;
+    padding-left: 5px;
 }
 
 .highed-template-choose-text {
@@ -49,31 +45,23 @@
     padding-top:5px;
 }
 
-.highed-chart-template-container {
-    position:relative;
-    cursor: pointer;
-    margin-bottom:10px;
-    padding:5px;
-    background: @secondary-background-panel;
-    color: @secondary-color-panel;
+.highed-chart-template-container {    
+    vertical-align: top;
+    display: inline-block;
+    width: 33%;
+    min-width: 110px;
+    min-height: 113px;
     // box-shadow: 0px 3px 7px @bright-shadow;
     .highed-box-size;
 }
 
 .highed-chart-template-body {
-    padding-left:130px;
-    min-height:100px;
 }
 
 .highed-chart-template-thumbnail {
-  position:absolute;
-  background-repeat:no-repeat;
-  width: 120px;
-  height: 80px;
-  background-size:90% auto;
-  background-position: middle middle;
-  top:50%;
-  transform:translate(0, -50%);
+    width: 102px;    
+    background-size: 100% 100%;
+    height: 74px;
   .highed-box-size;
 }
 
@@ -100,4 +88,7 @@
 
 .highed-chart-template-preview:hover {
 	border: 5px solid rgba(66, 66, 100, 0.4);
+}
+.highed-chart-template-type-container {
+    padding-top: 15px;
 }

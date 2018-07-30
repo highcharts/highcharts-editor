@@ -50,7 +50,6 @@ highed.List = function(parent, responsive, props) {
     items = [],
     properties = props;
 
-
   ///////////////////////////////////////////////////////////////////////////
 
   /** Add an item to the list
@@ -75,7 +74,7 @@ highed.List = function(parent, responsive, props) {
       display: 'none'
     });
     highed.dom.ap(node, nodeArrow);
-
+    
     (children || []).forEach(function(thing) {
       selectGroup(thing);
     });
@@ -348,6 +347,7 @@ highed.List = function(parent, responsive, props) {
      */
   function addItems(items) {
     if (highed.isArr(items)) {
+
       items.forEach(function(item) {
         addItem(item);
       });

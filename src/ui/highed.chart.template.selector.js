@@ -45,14 +45,18 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.ChartTemplateSelector = function(parent, chartPreview) {
   var events = highed.events(),
     container = highed.dom.cr('div', 'highed-chart-templates'),
-    splitter = highed.HSplitter(container, { leftWidth: 30 }),
-    list = highed.List(splitter.left),
-    templates = splitter.right,
+    //splitter = highed.HSplitter(container, { leftWidth: 30 }),
+    //list = highed.List(splitter.left),
+    //templates = splitter.right,
+    templates = highed.dom.cr('div', 'highed-chart-template-type-container'),
     catNode = highed.dom.cr('div', 'highed-chart-template-cat-desc'),
-    selected = false;
+    selected = false,
+    templateTypeSelect = highed.DropDown(container),
+    detailValue;
 
-  highed.dom.ap(parent, container);
-  splitter.right.className += ' highed-chart-template-frame';
+  
+  highed.dom.ap(parent, highed.dom.ap(container, templates));
+  //splitter.right.className += ' highed-chart-template-frame';
 
   ///////////////////////////////////////////////////////////////////////////
 
@@ -98,7 +102,7 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
       });
     }
 
-    highed.dom.ap(catNode, title, desc, samples);
+    highed.dom.ap(title, desc, samples);
   }
 
   function showTemplates(templateList, masterID, catmeta) {
@@ -111,7 +115,7 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
       buildCatMeta(catmeta);
     }
 
-    highed.dom.ap(templates, catNode);
+    highed.dom.ap(templates);
 
     Object.keys(templateList).forEach(function(key) {
       var t = templateList[key],
@@ -222,10 +226,10 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
           preview,
           highed.dom.ap(
             body,
-            titleBar,
-            description,
+            titleBar//,
+            //description,
             // highed.dom.cr('h4', '', 'Sample Data Sets'),
-            samples
+            //samples
           )
         )
       );
@@ -245,14 +249,6 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
         )
       );
     } else {
-      highed.dom.ap(
-        catNode,
-        highed.dom.cr(
-          'h3',
-          'highed-template-choose-text',
-          'Choose a template below by clicking it'
-        )
-      );
     }
   }
 
@@ -260,23 +256,47 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
   function resize(w, h) {
     var lsize;
 
-    splitter.resize(w, h);
-    list.resize();
-
+    //splitter.resize(w, h);
+    //list.resize();
+/*
     lsize = highed.dom.size(list.container);
     highed.dom.style(templates, {
       minHeight: lsize.h + 'px'
-    });
+    });*/
   }
 
   /* Build the UI */
   function build() {
-    list.addItems(highed.templates.getCatArray());
-    list.selectFirst();
+    console.log(highed.templates.getCatArray());
+
+
+    templateTypeSelect.addItems(highed.templates.getCatArray());
+    templateTypeSelect.selectById('Area'); // TODO: Need to change this later
+
+    //highed.dom.ap(container, templateTypeSelect);
+
+    //list.addItems(highed.templates.getCatArray());
+    //list.selectFirst();
   }
 
   ///////////////////////////////////////////////////////////////////////////
 
+  templateTypeSelect.on('Change', function(selected) {
+    detailValue = selected.id();
+
+    var templates = highed.templates.getAllInCat(detailValue);
+
+    highed.emit('UIAction', 'TemplateCatChoose', detailValue);
+
+    console.log(templates);
+
+    if (templates) {
+      showTemplates(templates, detailValue, highed.templates.getCatInfo(detailValue));
+    }
+
+  });
+
+/*
   list.on('Select', function(id) {
     var templates = highed.templates.getAllInCat(id);
 
@@ -286,7 +306,7 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
       showTemplates(templates, id, highed.templates.getCatInfo(id));
     }
   });
-
+*/
   build();
 
   ///////////////////////////////////////////////////////////////////////////

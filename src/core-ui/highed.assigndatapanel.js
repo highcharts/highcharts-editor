@@ -29,6 +29,7 @@ highed.AssignDataPanel = function(parent, attr) {
 
   var options = {
     'Labels': {
+      'name': "Categories",
       'desc': 'A column of names or times',
       'default': 'A',
       'value': 'A',
@@ -37,6 +38,7 @@ highed.AssignDataPanel = function(parent, attr) {
       'mandatory': true
     },
     'Values': {
+      'name': "Values",
       'desc': 'One or more columns of numbers',
       'default': 'B-C',
       'value': 'B-C',
@@ -260,7 +262,7 @@ highed.AssignDataPanel = function(parent, attr) {
   
     var label = highed.dom.ap(highed.dom.cr('div', 'highed-assigndatapanel-data-option'), 
                                highed.dom.ap(
-                                 highed.dom.cr('h6', '', key),
+                                 highed.dom.cr('h6', '', option.name),
                                  highed.dom.cr('span', 'highed-assigndatapanel-data-mandatory ' + (option.mandatory ? 'active' : ''), 'Mandatory')),
                                highed.dom.cr('div', 'highed-assigndatapanel-data-desc', option.desc),
                                labelInput);

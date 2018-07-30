@@ -75,13 +75,22 @@ highed.DrawerEditor = function(parent, options) {
       onClick: function() {
         dataPage.show();
         customizePage.hide();
+        templatePage.hide();
       }
-    },
-    {      
+    }, {
+      icon: 'bar-chart',
+      text: 'Templates',
+      onClick: function() {
+        dataPage.hide();
+        templatePage.show();
+        customizePage.hide();
+      }
+    }, {      
       icon: 'pie-chart',
       text: 'Customize',
       onClick: function() {
         dataPage.hide();
+        templatePage.hide();
         customizePage.show();
       }
     }]),
@@ -202,6 +211,41 @@ highed.DrawerEditor = function(parent, options) {
           }
         },
         showLiveStatus: true
+      }
+    ),
+    templatePage = highed.TemplatePage(      
+      splitter.bottom,
+      highed.merge(
+        {
+          importer: properties.importer
+        },
+        properties.dataGrid
+      ),
+      chartPreview,
+      chartFrame,
+      {
+        icon: 'fa-bar-chart',
+        width: 25,
+        title: 'Templates',
+        help: [
+          {
+            title: 'Templates',
+            description: [
+              'Templates are pre-defined bundles of configuration.<br/><br/>',
+              'Start by choosing the template category in the list to the left,',
+              'then pick a suitable template for your data and use case in the',
+              'template list.'
+            ]
+          }
+        ],
+        create: function(body) {
+          //highed.dom.ap(body, templatesContainer);
+        },
+        events: {
+          Expanded: function(width, height) {
+            //templates.resize(width, height);
+          }
+        }
       }
     ),
     // Res preview bar
