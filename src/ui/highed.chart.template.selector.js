@@ -288,8 +288,6 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
 
     highed.emit('UIAction', 'TemplateCatChoose', detailValue);
 
-    console.log(templates);
-
     if (templates) {
       showTemplates(templates, detailValue, highed.templates.getCatInfo(detailValue));
     }

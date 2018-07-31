@@ -7,6 +7,7 @@
   background-color: white;
   border: 1px solid rgba(14, 14, 14, 0.15);
   color: black;
+  overflow-y: auto;
   font-family: @font-main;
   .highed-box-size;
 }
@@ -128,6 +129,7 @@
   color: #777;
   font-size: 12px;
   font-weight: 100;
+  max-width: 73%;
 }
 
 .highed-assigndatapanel-data-mandatory {
@@ -145,4 +147,15 @@
 }
 .highed-assigndatapanel-data-mandatory.active {
   display: inline-block;
+}
+.highed-assigndatapanel-select-container {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.highed-assigndatapanel-series-dropdown {
+  .highed-dropdown-body {
+    font-size: 13px; 
+    text-transform: capitalize;
+  }
 }

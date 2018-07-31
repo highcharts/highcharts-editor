@@ -331,12 +331,12 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     chartPreview.data.liveURL(p);
   });
 */
-  chartPreview.on('LoadProject', function () {
+  chartPreview.on('LoadProject', function (projectData) {
     setTimeout(function () {
     //resQuickSel.selectByIndex(0);
     //setToActualSize();
     assignDataPanel.resetValues();
-
+    assignDataPanel.setAssignDataFields(projectData);
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells);
     //dataTable.highlightSelectedFields(assignDataPanel.getOptions());
     }, 2000);
