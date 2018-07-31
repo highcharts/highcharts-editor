@@ -26,7 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // @format
 
 highed.meta.charttype = {
-    AreaRange: {
+    arearange: {
         "Low": {
             'name': "Low",
             'desc': 'The low or minimum value for each data point.',
@@ -42,7 +42,7 @@ highed.meta.charttype = {
             'mandatory': true
         }
     },
-    BoxPlot: {
+    boxplot: {
         "Low": {
             'name': "Low",
             'desc': 'The low value for each data point, signifying the lowest value in the sample set. The bottom whisker is drawn here.',
@@ -81,7 +81,7 @@ highed.meta.charttype = {
             'mandatory': true
         }
     },
-    Candlestick: {
+    candlestick: {
         "Close": {
             'name': "Close",
             'desc': 'The closing value of each data point.',

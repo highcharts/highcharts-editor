@@ -697,6 +697,9 @@ highed.DrawerEditor = function(parent, options) {
     );
   });*/
 
+  templatePage.on('TemplateChanged', function(newTemplate){
+    dataPage.changeAssignDataTemplate(newTemplate);
+  })
   chartPreview.on('ChartChange', function(newData) {
     events.emit('ChartChangedLately', newData);
   });

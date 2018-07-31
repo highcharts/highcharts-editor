@@ -46,6 +46,14 @@ highed.AssignDataPanel = function(parent, attr) {
       'previousValue': null,
       'isData': true,
       'mandatory': true
+    },
+    'Names': {
+      'name': "Names",
+      'desc': 'The name of the point as shown in the legend, tooltip, dataLabel etc..',
+      'default': 'D',
+      'value': 'D',
+      'previousValue': null,
+      'mandatory': false
     }
   },
   options = defaultOptions;
@@ -213,7 +221,10 @@ highed.AssignDataPanel = function(parent, attr) {
   function setAssignDataFields(data) {
     if (!data) return;
 
-    var seriesType = (data.template && data.template.chart ? data.template.chart.type || data.theme.options.chart.type || 'line' : 'line');
+    var seriesType;
+
+    if (data.config) seriesType = data.config.chart.type;
+    else seriesType = (data.template && data.template.chart ? data.template.chart.type || data.theme.options.chart.type || 'line' : 'line');
 
     seriesTypeSelect.clear();
 

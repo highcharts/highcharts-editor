@@ -236,6 +236,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     errorBarBody.innerHTML = message;
   }
   
+  function changeAssignDataTemplate(newTemplate) {
+    assignDataPanel.setAssignDataFields(newTemplate);
+  }
+
   //////////////////////////////////////////////////////////////////////////////
 
   chartPreview.on('LoadProjectData', function(csv) {
@@ -504,7 +508,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     },
     hide: hide,
     show: show,
-    dataTable: dataTable//,
+    dataTable: dataTable,
+    changeAssignDataTemplate: changeAssignDataTemplate//,
     //toolbar: toolbar
   };
 };

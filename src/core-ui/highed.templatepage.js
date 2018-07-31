@@ -87,6 +87,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
   
   templates.on('Select', function(template) {
     chartPreview.loadTemplate(template);
+    events.emit('TemplateChanged', template);
   });
 
   templates.on('LoadDataSet', function(sample) {
@@ -101,7 +102,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
       chartPreview.options.set('title-text', sample.title);
     }
   });
-  
+
   function showHelp() {
     helpModal.show();
   }
