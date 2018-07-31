@@ -335,8 +335,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     setTimeout(function () {
     //resQuickSel.selectByIndex(0);
     //setToActualSize();
-    assignDataPanel.resetValues();
     assignDataPanel.setAssignDataFields(projectData);
+    assignDataPanel.resetValues();
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells);
     //dataTable.highlightSelectedFields(assignDataPanel.getOptions());
     }, 2000);

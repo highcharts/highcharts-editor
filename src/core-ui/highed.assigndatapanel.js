@@ -212,8 +212,8 @@ highed.AssignDataPanel = function(parent, attr) {
 
   function setAssignDataFields(data) {
     if (!data) return;
-    
-    var seriesType = data.template.chart.type || data.theme.options.chart.type || 'line';
+
+    var seriesType = (data.template && data.template.chart ? data.template.chart.type || data.theme.options.chart.type || 'line' : 'line');
 
     seriesTypeSelect.clear();
 
