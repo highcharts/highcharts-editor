@@ -81,16 +81,31 @@ highed.AssignDataPanel = function(parent, attr) {
 
     const data = options.data.values;
     if (data) {
-      const values = data.value.split(data.value.indexOf('-') > -1 ? '-' : ',').sort();
-    
-      values.forEach(function(v, index) {
-        values[index] = highed.getLetterIndex(v);
-      });
-  
+      const userValues = data.value.split(data.value.indexOf('-') > -1 ? '-' : ',').sort();
+      var tempValue = highed.getLetterIndex(userValues[0]),
+          values = [];  
+      
+      while(tempValue <= highed.getLetterIndex(userValues[1])) {
+        values.push(tempValue);
+        tempValue++;
+      }
+      
       arr.dataColumns = values;
     } else {
-      arr.dataColumns = [];
+      // Has more than one data value, need to loop through them and get their positions
+      const data = options.data;
+      var values = [];
+      
+      Object.keys(data).forEach(function(key){
+        const option = data[key];
+        if (option.value !== '') {
+          values.push(highed.getLetterIndex(option.value));
+        }
+      });
+      values = values.sort();
+      arr.dataColumns = values;
     }
+
     return arr; //arr.concat(values);
   }
 
@@ -130,7 +145,7 @@ highed.AssignDataPanel = function(parent, attr) {
       //}
     } else {
       if (!overrideCheck) {
-        if (input.previousValue === input.value) return;
+        if (input.previousValue === input.value || (input.value === '' && input.previousValue === null)) return;
       }
 
       values = [input.value.charAt(0)];

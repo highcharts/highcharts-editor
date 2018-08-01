@@ -237,7 +237,11 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   }
   
   function changeAssignDataTemplate(newTemplate) {
-    dataTable.removeAllCellsHighlight();
+    
+    const oldValues = assignDataPanel.getMergedLabelAndData();
+    
+    dataTable.removeAllCellsHighlight(null, [oldValues.labelColumn].concat(oldValues.dataColumns).sort());
+    
     assignDataPanel.setAssignDataFields(newTemplate);
     assignDataPanel.resetValues();
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells);
@@ -273,6 +277,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       }
     };
 
+    chartPreview.options.setAll(tempOption);
+    
     Object.keys(allOptions).forEach(function(key) {
       const option = allOptions[key];
       if (key === 'data') {
@@ -288,10 +294,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       }
     });
 
-    console.log(tempOption);
-    //if (tempOption.data.seriesMapping)
     chartPreview.options.setAll(tempOption);
-    console.log(chartPreview.toProject());
   });
 /*
   templates.on('Select', function(template) {
@@ -333,7 +336,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     //}
 
-      console.log(input);
     if (input.linkedTo) {
       var tempOption = {
         data: {

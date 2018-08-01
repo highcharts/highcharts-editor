@@ -1782,7 +1782,7 @@ highed.DataTable = function(parent, attributes) {
     gcolumns.reduce(function(result, item, index) {
       
       if ((section && section.dataColumns) &&
-      (index < section.dataColumns[0] || index > section.dataColumns[section.dataColumns.length - 1])) return;
+          (!section.dataColumns.includes(index))) return;
       
       cleanData(item);
 
@@ -1832,7 +1832,7 @@ highed.DataTable = function(parent, attributes) {
       row.columns.forEach(function(col, index) {
 
         if ((section && section.dataColumns) &&
-            (index < section.dataColumns[0] || index > section.dataColumns[section.dataColumns.length - 1])) return;
+            (!section.dataColumns.includes(index))) return;
 
         var v = col.value();
 
@@ -1909,6 +1909,7 @@ highed.DataTable = function(parent, attributes) {
    */
   function toCSV(delimiter, quoteStrings, section) {
     delimiter = delimiter || ',';
+
     return toData(quoteStrings, true, section)
       .map(function(cols) {
         return cols.join(delimiter);
