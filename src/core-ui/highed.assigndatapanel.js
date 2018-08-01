@@ -139,7 +139,7 @@ highed.AssignDataPanel = function(parent, attr) {
       if (!input.mandatory && input.value === '') {
         values = [];
       }
-      
+
       newOptions = getMergedLabelAndData();
       //else newOptions.push(highed.getLetterIndex(input.value.charAt(0)));
     }
@@ -269,6 +269,7 @@ highed.AssignDataPanel = function(parent, attr) {
     highed.merge(options, highed.meta.charttype[seriesType]);
 
     resetDOM();
+    events.emit('ChangeData', options);
   }
 /*
   function checkValues(newValue, otherValue) {

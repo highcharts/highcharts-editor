@@ -262,6 +262,37 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells);
     //dataTable.highlightSelectedFields(input);
   });
+
+  assignDataPanel.on('ChangeData', function(allOptions) {
+    //Series map all of the "linkedTo" options
+
+    var tempOption = {
+      data: {
+        seriesMapping: [{
+        }]
+      }
+    };
+
+    Object.keys(allOptions).forEach(function(key) {
+      const option = allOptions[key];
+      if (key === 'data') {
+        Object.keys(option).forEach(function(dataKey){
+          if (option[dataKey].linkedTo && option[dataKey].value !== '') {
+            tempOption.data.seriesMapping[0][option[dataKey].linkedTo] = highed.getLetterIndex(option[dataKey].value)
+          }
+        });
+      } else {
+        if (option.linkedTo && option.value !== '') {
+          tempOption.data.seriesMapping[0][option.linkedTo] = highed.getLetterIndex(option.value)
+        }
+      }
+    });
+
+    console.log(tempOption);
+    //if (tempOption.data.seriesMapping)
+    chartPreview.options.setAll(tempOption);
+    console.log(chartPreview.toProject());
+  });
 /*
   templates.on('Select', function(template) {
     chartPreview.loadTemplate(template);
@@ -302,7 +333,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     //}
 
-/*
+      console.log(input);
     if (input.linkedTo) {
       var tempOption = {
         data: {
@@ -310,11 +341,12 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
           }]
         }
       };
+      /*
       tempOption.data.seriesMapping[0][input.linkedTo] = options[0];
       console.log('data--seriesMapping--' + input.linkedTo, options[0]);
-      chartPreview.options.set('data--seriesMapping--' + input.linkedTo, options[0]);
+      chartPreview.options.set('data--seriesMapping--' + input.linkedTo, options[0]);*/
       //'data--seriesMapping--' + input.linkedTo
-    }(/)
+    }
     /*
     return chartPreview.data.csv({
       csv: dataTable.toCSV(';', true)
