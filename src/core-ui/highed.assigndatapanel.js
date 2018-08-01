@@ -28,7 +28,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.AssignDataPanel = function(parent, attr) {
 
   var defaultOptions = {
-    'Labels': {
+    'labels': {
       'name': "Categories",
       'desc': 'A column of names or times',
       'default': 'A',
@@ -37,47 +37,60 @@ highed.AssignDataPanel = function(parent, attr) {
       'isLabel': true,
       'mandatory': true
     },
-    'Values': {
-      'name': "Values",
-      'desc': 'One or more columns of numbers',
-      'default': 'B-C',
-      'value': 'B-C',
-      'multipleValues': true,
-      'previousValue': null,
-      'isData': true,
-      'mandatory': true
+    "data": {
+      'values': {
+        'name': "Values",
+        'desc': 'One or more columns of numbers',
+        'default': 'B-C',
+        'value': 'B-C',
+        'multipleValues': true,
+        'previousValue': null,
+        'mandatory': true
+      }
     },
-    'Names': {
+    'names': {
       'name': "Names",
       'desc': 'The name of the point as shown in the legend, tooltip, dataLabel etc..',
-      'default': 'D',
-      'value': 'D',
+      'default': '',
+      'value': '',
       'previousValue': null,
       'mandatory': false
     }
   },
-  options = defaultOptions;
+  options = {};
+
+  Object.assign(options, defaultOptions);
   
   function resetValues() {
     Object.keys(options).forEach(function(key){
-      options[key].previousValue = null;
-      options[key].value = options[key].default;
+      if (key === 'data') {
+        Object.keys(options[key]).forEach(function(dataKey) {
+          options[key][dataKey].previousValue = null;
+          options[key][dataKey].value = options[key][dataKey].default;
+        });
+      } else {
+        options[key].previousValue = null;
+        options[key].value = options[key].default;
+      }
     });
   }
 
   function getMergedLabelAndData() {
     var arr = {};
-    arr.labelColumn = highed.getLetterIndex(options['Labels'].value.charAt(0));
+    arr.labelColumn = highed.getLetterIndex(options['labels'].value.charAt(0));
 
-    const data = options['Values'];
-    const values = data.value.split(data.value.indexOf('-') > -1 ? '-' : ',').sort();
+    const data = options.data.values;
+    if (data) {
+      const values = data.value.split(data.value.indexOf('-') > -1 ? '-' : ',').sort();
     
-    values.forEach(function(v, index) {
-      values[index] = highed.getLetterIndex(v);
-    });
-
-    arr.dataColumns = values;
-
+      values.forEach(function(v, index) {
+        values[index] = highed.getLetterIndex(v);
+      });
+  
+      arr.dataColumns = values;
+    } else {
+      arr.dataColumns = [];
+    }
     return arr; //arr.concat(values);
   }
 
@@ -85,64 +98,74 @@ highed.AssignDataPanel = function(parent, attr) {
     return char.charCodeAt() - 65; 
   }
 
-  function getFieldsToHighlight(cb, overrideCheck) {
+  function processField(input, overrideCheck, cb) {
+
+    input.value = input.value.toUpperCase();
+    var newOptions = [];
+
+    var previousValues = [],
+        values = [];
     
-    var newOptions;
-    Object.keys(options).forEach(function(key) {
-  
-      var input = options[key];
-      input.value = input.value.toUpperCase();
-      newOptions = [];
+    
+    if (input.multipleValues) {
+      const delimiter = (input.value.indexOf('-') > -1 ? '-' : ',');
+      values = input.value.split(delimiter).sort();
+      if (input.previousValue) {
+        const previousValueDelimiter = (input.previousValue.indexOf('-') > -1 ? '-' : ',');
+        previousValues = input.previousValue.split(previousValueDelimiter).sort();
+      }
 
-      var previousValues = [],
-          values = [];
+      if (!overrideCheck) {
+        const areEqual = (values.length === previousValues.length && 
+          values.every(function(item) { return previousValues.indexOf(item) > -1 }));
+        if (areEqual) return;
+      }
+      //if (key === 'Data') { //Get the label data
       
+      newOptions = getMergedLabelAndData();
+      //} else {
+      /*values.forEach(function(value) {
+        newOptions.push(highed.getLetterIndex(value));
+      });*/
+      //}
+    } else {
+      if (!overrideCheck) {
+        if (input.previousValue === input.value) return;
+      }
+
+      values = [input.value.charAt(0)];
+      if (input.previousValue) previousValues = [input.previousValue];
       
-      if (input.multipleValues) {
-        const delimiter = (input.value.indexOf('-') > -1 ? '-' : ',');
-        values = input.value.split(delimiter).sort();
-        if (input.previousValue) {
-          const previousValueDelimiter = (input.previousValue.indexOf('-') > -1 ? '-' : ',');
-          previousValues = input.previousValue.split(previousValueDelimiter).sort();
-        }
-
-        if (!overrideCheck) {
-          const areEqual = (values.length === previousValues.length && 
-            values.every(function(item) { return previousValues.indexOf(item) > -1 }));
-          if (areEqual) return;
-        }
-
-        if (input.isData) { //Get the label data
-            newOptions = getMergedLabelAndData();
-        } else {
-          values.forEach(function(value) {
-            newOptions.push(highed.getLetterIndex(value));
-          });
-        }
-      } else {
-        if (!overrideCheck) {
-          if (input.previousValue === input.value) return;
-        }
-
-        values = [input.value.charAt(0)];
-        if (input.previousValue) previousValues = [input.previousValue];
-
-        if (input.isLabel) {
-          newOptions = getMergedLabelAndData();
-        }
-        else newOptions.push(highed.getLetterIndex(input.value.charAt(0)));
+      if (!input.mandatory && input.value === '') {
+        values = [];
       }
       
-      input.previousValue = input.value.toUpperCase();
-      cb(previousValues.map(function (x) {
-        return highed.getLetterIndex(x);
-      }), values.map(function (x) {
-        return highed.getLetterIndex(x);
-      }), input, newOptions);
+      newOptions = getMergedLabelAndData();
+      //else newOptions.push(highed.getLetterIndex(input.value.charAt(0)));
+    }
+    
+    input.previousValue = input.value.toUpperCase();
+    
+    cb(previousValues.map(function (x) {
+      return highed.getLetterIndex(x);
+    }), values.map(function (x) {
+      return highed.getLetterIndex(x);
+    }), input, newOptions);
 
-      //removeCellColoring(previousValues);
-      //colorFields(values, input.colors);
-      //events.emit('AssignDataChanged', input, newOptions);
+  }
+
+  function getFieldsToHighlight(cb, overrideCheck) {
+    Object.keys(options).forEach(function(key) {
+
+      var input = options[key];
+
+      if (key === 'data') {
+        Object.keys(input).forEach(function(dataKey) {
+          processField(input[dataKey], overrideCheck, cb);
+        });
+      } else {
+        processField(input, overrideCheck, cb);
+      }
     });
   }
 
@@ -188,12 +211,12 @@ highed.AssignDataPanel = function(parent, attr) {
     inputContainer = highed.dom.cr('div', 'highed-assigndatapanel-inputs-container'),
     seriesTypeSelect = highed.DropDown(selectContainer, ' highed-assigndatapanel-series-dropdown');
 
-    seriesTypeSelect.addItems([{
-      id: 'line',
-      title: 'Line'
-    }]);
-    
-    seriesTypeSelect.selectById('line');
+  seriesTypeSelect.addItems([{
+    id: 'line',
+    title: 'Line'
+  }]);
+  
+  seriesTypeSelect.selectById('line');
 
   function hide() {
     highed.dom.style(container, {
@@ -232,30 +255,61 @@ highed.AssignDataPanel = function(parent, attr) {
       id: seriesType,
       title: seriesType
     }]);
-    
     seriesTypeSelect.selectById(seriesType);
 
-    options = defaultOptions;
+    options = {};
+    options = Object.assign(options, defaultOptions);
+
+    //options = defaultOptions;
+    chartTypeOptions = highed.meta.charttype[seriesType];
+    if (chartTypeOptions && chartTypeOptions.data) {
+      options.data = null;
+    }
+
     highed.merge(options, highed.meta.charttype[seriesType]);
 
     resetDOM();
   }
+/*
+  function checkValues(newValue, otherValue) {
+    const values = getValues(newValue);
+    const values2 = getValues(otherValue);        
 
+    if (Math.max(values[values.length - 1], values2[values2.length - 1]) - Math.min(values[0], values2[0]) <= (values[values.length - 1] - values[0]) + (values2[values2.length - 1] - values2[0])) {
+      found = true;
+      return false;
+    }
+  }
+*/
   function valuesMatch(newValue, key) {
     var found = false,
         values = [],
         values2 = [];
 
-    Object.keys(options).forEach(function(key2){
+    Object.keys(options).forEach(function(key2) {
         if (key === key2) return;
+/*
+        if (key === 'data') {
+          Object.keys(options[key2]).forEach(function(key3) {
 
+            if (key === key3) return;
+            values = getValues(newValue);
+            values2 = getValues(options[key2][key3].value);        
+            if (Math.max(values[values.length - 1], values2[values2.length - 1]) - Math.min(values[0], values2[0]) <= (values[values.length - 1] - values[0]) + (values2[values2.length - 1] - values2[0])) {
+              found = true;
+              return false;
+            }
+            
+          });
+        }*/
+/*
         values = getValues(newValue);
         values2 = getValues(options[key2].value);
 
         if (Math.max(values[values.length - 1], values2[values2.length - 1]) - Math.min(values[0], values2[0]) <= (values[values.length - 1] - values[0]) + (values2[values2.length - 1] - values2[0])) {
           found = true;
           return false;
-        }
+        }*/
     });
     return found;
   }
@@ -263,51 +317,61 @@ highed.AssignDataPanel = function(parent, attr) {
   highed.dom.ap(body, header);
   highed.dom.ap(labels, selectContainer, inputContainer);
 
+  function generateInputs(option, key) {
+
+    var labelInput = highed.dom.cr('input', 'highed-assigndatapanel-input');
+    var colors = generateColors();
+    highed.dom.style(labelInput, {
+      "background": colors.light,
+      "border-color": colors.dark
+    });
+
+    option.colors = colors;
+
+    highed.dom.on(labelInput, 'focus', function() {
+      option.previousValue = (option.multipleValues ? labelInput.value : labelInput.value.charAt(0)).toUpperCase(); //labelInput.value;
+    });
+
+    highed.dom.on(labelInput, 'blur', function() {
+      if (labelInput.value === '' && option.mandatory) {
+        option.value = option.previousValue;
+        labelInput.value = option.previousValue;
+      } else if (valuesMatch(labelInput.value.toUpperCase(), key)) {
+        option.value = option.previousValue;
+        labelInput.value = option.previousValue;
+        alert("Error");
+      }
+      else option.value = labelInput.value.toUpperCase();
+
+      events.emit('AssignDataChanged', options);
+    });
+  
+    labelInput.value = option.default;
+  
+    var label = highed.dom.ap(highed.dom.cr('div', 'highed-assigndatapanel-data-option'), 
+                               highed.dom.ap(
+                                 highed.dom.cr('h6', '', option.name),
+                                 highed.dom.cr('span', 'highed-assigndatapanel-data-mandatory ' + (option.mandatory ? 'active' : ''), 'Mandatory')),
+                               highed.dom.cr('div', 'highed-assigndatapanel-data-desc', option.desc),
+                               labelInput);
+  
+    highed.dom.ap(inputContainer, label);
+  }
+
   function resetDOM() {
     
     inputContainer.innerHTML = '';
 
     Object.keys(options).forEach(function(key) {
       var option = options[key];
-      var labelInput = highed.dom.cr('input', 'highed-assigndatapanel-input');
   
-      var colors = generateColors();
-      highed.dom.style(labelInput, {
-        "background": colors.light,
-        "border-color": colors.dark
-      });
-  
-      option.colors = colors;
-  
-      highed.dom.on(labelInput, 'focus', function() {
-        option.previousValue = (option.multipleValues ? labelInput.value : labelInput.value.charAt(0)).toUpperCase(); //labelInput.value;
-      });
-  
-      highed.dom.on(labelInput, 'blur', function() {
-        if (labelInput.value === '' && option.mandatory) {
-          option.value = option.previousValue;
-          labelInput.value = option.previousValue;
-        } else if (valuesMatch(labelInput.value.toUpperCase(), key)) {
-          option.value = option.previousValue;
-          labelInput.value = option.previousValue;
-          alert("Error");
-        }
-        else option.value = labelInput.value.toUpperCase();
-  
-        events.emit('AssignDataChanged', options);
-      });
-    
-      labelInput.value = option.default;
-    
-      var label = highed.dom.ap(highed.dom.cr('div', 'highed-assigndatapanel-data-option'), 
-                                 highed.dom.ap(
-                                   highed.dom.cr('h6', '', option.name),
-                                   highed.dom.cr('span', 'highed-assigndatapanel-data-mandatory ' + (option.mandatory ? 'active' : ''), 'Mandatory')),
-                                 highed.dom.cr('div', 'highed-assigndatapanel-data-desc', option.desc),
-                                 labelInput);
-    
-      highed.dom.ap(inputContainer, label);
-  
+      if (key === 'data') {
+        Object.keys(option).forEach(function(dataKey) {
+          generateInputs(option[dataKey], dataKey);
+        })
+      } else {
+        generateInputs(option, key);
+      }
     });  
   }
 

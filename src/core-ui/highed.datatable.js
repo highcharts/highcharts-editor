@@ -1783,6 +1783,7 @@ highed.DataTable = function(parent, attributes) {
       
       if ((section && section.dataColumns) &&
       (index < section.dataColumns[0] || index > section.dataColumns[section.dataColumns.length - 1])) return;
+      
       cleanData(item);
 
     }, []);
@@ -2592,21 +2593,23 @@ highed.DataTable = function(parent, attributes) {
   }
 
   function decolorHeader(previousValues) {
-    var tempValue = previousValues[0];
-    if (previousValues.length > 0) {
-      while (tempValue <= previousValues[previousValues.length - 1]) {
-        highed.dom.style([gcolumns[tempValue].letter, gcolumns[tempValue].header], {
-          "background-color": '',
-          "border": '',
-        });
-        tempValue++; //= getNextLetter(tempValue);
+    if (previousValues && previousValues.length > 0){
+      var tempValue = previousValues[0];
+      if (previousValues.length > 0) {
+        while (tempValue <= previousValues[previousValues.length - 1]) {
+          highed.dom.style([gcolumns[tempValue].letter, gcolumns[tempValue].header], {
+            "background-color": '',
+            "border": '',
+          });
+          tempValue++; //= getNextLetter(tempValue);
+        }
       }
     }
   }
 
   function removeOutlineFromCell(values) {
-    values.forEach(function(value) {
-      rows.forEach(function(row){
+    (values || []).forEach(function(value) {
+      (rows || []).forEach(function(row){
         highed.dom.style(row.columns[value].element, {
           "border-right": '',
           "border-left": '',

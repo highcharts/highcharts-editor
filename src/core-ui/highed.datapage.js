@@ -237,7 +237,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   }
   
   function changeAssignDataTemplate(newTemplate) {
+    dataTable.removeAllCellsHighlight();
     assignDataPanel.setAssignDataFields(newTemplate);
+    assignDataPanel.resetValues();
+    assignDataPanel.getFieldsToHighlight(dataTable.highlightCells);
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -276,12 +279,12 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       chartPreview.options.set('title-text', sample.title);
     }
   });*/
-  dataTable.on('ColumnMoving', function(){
+  dataTable.on('ColumnMoving', function() {
     //assignDataPanel.resetValues();
     assignDataPanel.getFieldsToHighlight(dataTable.removeAllCellsHighlight, true);
   });
 
-  dataTable.on('ColumnMoved', function(){
+  dataTable.on('ColumnMoved', function() {
     //assignDataPanel.resetValues();
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
   });
@@ -293,11 +296,11 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
 
   dataTable.on('AssignDataChanged', function(input, options) {
-    if (input.isData || input.isLabel) {
       return chartPreview.data.csv({
         csv: dataTable.toCSV(';', true, options)
       });
-    }
+
+    //}
 
 /*
     if (input.linkedTo) {
