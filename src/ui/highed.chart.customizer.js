@@ -59,7 +59,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
     advancedLoader = highed.dom.cr(
       'div',
       'highed-customizer-adv-loader',
-      'Loading...'
+      '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i> Loading'
     ),
     tabs = highed.TabControl(parent, true, null, true), //Quck fix for now, will change once design finalised.
     simpleTab = tabs.createTab({
@@ -87,7 +87,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
     list = highed.List(splitter.left, true, properties),
     body = splitter.right,
     advSplitter = highed.HSplitter(advancedTab.body, {
-      leftWidth: 30
+      leftWidth: 100
     }),
     advBody = advSplitter.right,
     advTree = highed.Tree(advSplitter.left),
@@ -503,6 +503,14 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
       }, 
       highed.meta.optionsExtended.options[key],
       chartPreview);
+    });
+
+    list.addItem({
+      id: "Advanced",
+      title: "Advanced",
+      onClick: function() {
+        advancedTab.focus();
+      }
     });
 
     // buildTree();

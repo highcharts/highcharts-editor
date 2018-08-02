@@ -122,6 +122,12 @@ highed.DrawerEditor = function(parent, options) {
       defaultChartOptions: properties.defaultChartOptions
     }),
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
+
+
+
+
+
+
     customizePage = highed.CustomizePage(
       splitter.bottom,
       highed.merge(
@@ -248,6 +254,10 @@ highed.DrawerEditor = function(parent, options) {
         }
       }
     ),
+
+
+
+
     // Res preview bar
     resPreviewBar = highed.dom.cr('div', 'highed-res-preview'),
     resQuickSelContainer = highed.dom.cr('div', 'highed-res-quicksel'),
@@ -876,7 +886,7 @@ highed.DrawerEditor = function(parent, options) {
 
   // Create the features
   //createFeatures();
-  //createToolbar();
+  createToolbar();
 
   resize();
 

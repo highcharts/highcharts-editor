@@ -319,7 +319,7 @@ highed.List = function(parent, responsive, props) {
       }
     }
 
-    highed.dom.on(node, 'click', select);
+    highed.dom.on(node, 'click', item.onClick || select);
     highed.dom.ap(container, node, nodeChildren);
 
     iexports = {
