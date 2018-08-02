@@ -639,7 +639,9 @@ highed.DataTable = function(parent, attributes) {
           ) {
             rawCSV = mainInput.value;
             highed.emit('UIAction', 'PasteCSVAttempt');
-            return loadRows(ps);
+            return loadRows(ps, function() {
+              events.emit('InitLoaded');
+            });
           }
           return;
         }
@@ -1781,8 +1783,11 @@ highed.DataTable = function(parent, attributes) {
 
     gcolumns.reduce(function(result, item, index) {
       
-      if ((section && section.dataColumns) &&
-          (!section.dataColumns.includes(index))) return;
+      if ( section && section.dataColumns &&
+          !section.dataColumns.includes(index) && 
+          !section.extraColumns.includes(index)) {
+            return;
+          }
       
       cleanData(item);
 
@@ -1831,8 +1836,9 @@ highed.DataTable = function(parent, attributes) {
 
       row.columns.forEach(function(col, index) {
 
-        if ((section && section.dataColumns) &&
-            (!section.dataColumns.includes(index))) return;
+        if (section && section.dataColumns &&
+            !section.dataColumns.includes(index) && 
+            !section.extraColumns.includes(index)) return;
 
         var v = col.value();
 
@@ -2624,7 +2630,7 @@ highed.DataTable = function(parent, attributes) {
     decolorHeader(previousValues);
   }
 
-  function colorFields(values, color){
+  function colorFields(values, color) {
     outlineCell(values, color);
     colorHeader(values, color);
   }

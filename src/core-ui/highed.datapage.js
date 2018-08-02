@@ -237,14 +237,12 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   }
   
   function changeAssignDataTemplate(newTemplate) {
-    
     const oldValues = assignDataPanel.getMergedLabelAndData();
-    
     dataTable.removeAllCellsHighlight(null, [oldValues.labelColumn].concat(oldValues.dataColumns).sort());
     
     assignDataPanel.setAssignDataFields(newTemplate);
     assignDataPanel.resetValues();
-    assignDataPanel.getFieldsToHighlight(dataTable.highlightCells);
+    assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -270,31 +268,31 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   assignDataPanel.on('ChangeData', function(allOptions) {
     //Series map all of the "linkedTo" options
 
-    var tempOption = {
-      data: {
-        seriesMapping: [{
-        }]
-      }
-    };
+    var tempOption = [{}],
+        chartOptions = chartPreview.toProject().options;
 
-    chartPreview.options.setAll(tempOption);
-    
     Object.keys(allOptions).forEach(function(key) {
       const option = allOptions[key];
       if (key === 'data') {
         Object.keys(option).forEach(function(dataKey){
           if (option[dataKey].linkedTo && option[dataKey].value !== '') {
-            tempOption.data.seriesMapping[0][option[dataKey].linkedTo] = highed.getLetterIndex(option[dataKey].value)
+            tempOption[0][option[dataKey].linkedTo] = highed.getLetterIndex(option[dataKey].value)
           }
         });
       } else {
         if (option.linkedTo && option.value !== '') {
-          tempOption.data.seriesMapping[0][option.linkedTo] = highed.getLetterIndex(option.value)
+          tempOption[0][option.linkedTo] = highed.getLetterIndex(option.value);
         }
       }
     });
 
-    chartPreview.options.setAll(tempOption);
+    if (Object.keys(tempOption[0]).length > 0) {
+
+      chartOptions.data.seriesMapping = tempOption;
+      chartOptions.series = null;
+
+      chartPreview.options.setAll(chartOptions);
+    }
   });
 /*
   templates.on('Select', function(template) {
@@ -324,35 +322,14 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
 
   dataTable.on('InitLoaded', function() {
-
-    assignDataPanel.getFieldsToHighlight(dataTable.highlightCells);
+    assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
     //dataTable.highlightSelectedFields(assignDataPanel.getOptions());
   });
 
   dataTable.on('AssignDataChanged', function(input, options) {
-      return chartPreview.data.csv({
-        csv: dataTable.toCSV(';', true, options)
-      });
-
-    //}
-
-    if (input.linkedTo) {
-      var tempOption = {
-        data: {
-          seriesMapping: [{
-          }]
-        }
-      };
-      /*
-      tempOption.data.seriesMapping[0][input.linkedTo] = options[0];
-      console.log('data--seriesMapping--' + input.linkedTo, options[0]);
-      chartPreview.options.set('data--seriesMapping--' + input.linkedTo, options[0]);*/
-      //'data--seriesMapping--' + input.linkedTo
-    }
-    /*
     return chartPreview.data.csv({
-      csv: dataTable.toCSV(';', true)
-    });*/
+      csv: dataTable.toCSV(';', true, options)
+    });
   });
 
   dataTable.on('LoadLiveData', function(settings) {

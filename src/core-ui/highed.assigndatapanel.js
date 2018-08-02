@@ -54,7 +54,8 @@ highed.AssignDataPanel = function(parent, attr) {
       'default': '',
       'value': '',
       'previousValue': null,
-      'mandatory': false
+      'mandatory': false,
+      'linkedTo': 'label'
     }
   },
   options = {};
@@ -76,35 +77,49 @@ highed.AssignDataPanel = function(parent, attr) {
   }
 
   function getMergedLabelAndData() {
-    var arr = {};
-    arr.labelColumn = highed.getLetterIndex(options['labels'].value.charAt(0));
+    var arr = {},
+        extraColumns = [];
 
-    const data = options.data.values;
-    if (data) {
-      const userValues = data.value.split(data.value.indexOf('-') > -1 ? '-' : ',').sort();
-      var tempValue = highed.getLetterIndex(userValues[0]),
-          values = [];  
-      
-      while(tempValue <= highed.getLetterIndex(userValues[1])) {
-        values.push(tempValue);
-        tempValue++;
-      }
-      
-      arr.dataColumns = values;
-    } else {
-      // Has more than one data value, need to loop through them and get their positions
-      const data = options.data;
-      var values = [];
-      
-      Object.keys(data).forEach(function(key){
-        const option = data[key];
-        if (option.value !== '') {
-          values.push(highed.getLetterIndex(option.value));
+    Object.keys(options).forEach(function(optionKeys){
+      if (optionKeys === 'labels') {
+        arr.labelColumn = highed.getLetterIndex(options[optionKeys].value.charAt(0));
+      } else if (optionKeys === 'data') {
+
+        const data = options.data.values;
+        if (data) {
+          const userValues = data.value.split(data.value.indexOf('-') > -1 ? '-' : ',').sort();
+          var tempValue = highed.getLetterIndex(userValues[0]),
+              values = [];  
+          while(tempValue <= highed.getLetterIndex(userValues[userValues.length - 1])) {
+            values.push(tempValue);
+            tempValue++;
+          }
+          
+          arr.dataColumns = values;
+        } else {
+          // Has more than one data value, need to loop through them and get their positions
+          const data = options.data;
+          var values = [];
+          
+          Object.keys(data).forEach(function(key){
+            const option = data[key];
+            if (option.value !== '') {
+              values.push(highed.getLetterIndex(option.value));
+            }
+          });
+          values = values.sort();
+          arr.dataColumns = values;
         }
-      });
-      values = values.sort();
-      arr.dataColumns = values;
-    }
+      } else {
+        // Check for any extra fields, eg. Name
+        const extraValue = options[optionKeys];
+        if (extraValue.value !== '') {
+          extraColumns.push(highed.getLetterIndex(extraValue.value));
+        }
+      }
+    });
+
+    arr.extraColumns = extraColumns.sort();
 
     return arr; //arr.concat(values);
   }
@@ -132,7 +147,7 @@ highed.AssignDataPanel = function(parent, attr) {
 
       if (!overrideCheck) {
         const areEqual = (values.length === previousValues.length && 
-          values.every(function(item) { return previousValues.indexOf(item) > -1 }));
+          previousValues.every(function(item) { return values.indexOf(item) > -1 }));
         if (areEqual) return;
       }
       //if (key === 'Data') { //Get the label data
@@ -182,6 +197,7 @@ highed.AssignDataPanel = function(parent, attr) {
         processField(input, overrideCheck, cb);
       }
     });
+    events.emit("ChangeData", options);
   }
 
   function generateColors() {
