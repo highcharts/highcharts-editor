@@ -92,8 +92,20 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     
     highed.dom.on(dataImportBtn, 'click', function() {
       dataTable.showImportModal();
-    });
+    }),
+    isVisible = true;
 
+
+    function resize(){
+      if (isVisible) {
+        resizeChart();
+        expand();
+      }
+    }
+
+    if (!highed.onPhone()) {
+      highed.dom.on(window, 'resize', resize);
+    }
 
     function showHelp() {
       helpModal.show();
@@ -145,6 +157,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
      // expanded = true;
 
+
+
      function resizeBody() {
        /*
       var bsize = highed.dom.size(body),
@@ -177,7 +191,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
       dataTable.resize(newWidth, (size.h - 17 - 55) - tsize.h);   
       assignDataPanel.resize(newWidth, highed.dom.pos(chartFrame, true).y - highed.dom.pos(body, true).y)
-    }
+     }
 
     setTimeout(resizeBody, 300);
     /*
@@ -205,6 +219,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       display: 'block'
     });
     assignDataPanel.show();
+    isVisible = true;
     resizeChart();
     //expand();
     
@@ -214,6 +229,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       display: 'none'
     });
     assignDataPanel.hide();
+    isVisible = false;
   }
 
   function destroy() {}
@@ -270,9 +286,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     var tempOption = [{}],
         chartOptions = chartPreview.toProject().options;
-    
-    chartOptions.data.seriesMapping = null;
-    chartPreview.options.setAll(chartOptions);
 
     Object.keys(allOptions).forEach(function(key) {
       const option = allOptions[key];
@@ -336,7 +349,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       // Causes an issue when a user has added a assigndata input with seriesmapping, so just clear and it will add it in again later
       chartOptions.data.seriesMapping = null;
       chartPreview.options.setAll(chartOptions);  
-    }   
+    }
 
     return chartPreview.data.csv({
       csv: dataTable.toCSV(';', true, options)
@@ -444,10 +457,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   //chartPreview.on('ChartRecreated', hideError);
 
-  if (!highed.onPhone()) {
-    //highed.dom.on(window, 'resize', resize);
-  }
-
   //////////////////////////////////////////////////////////////////////////////
 /*
   highed.dom.ap(
@@ -480,7 +489,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       highed.dom.ap(errorBar, errorBarHeadline, errorBarBody)
     )
   );
-  
+
   highed.dom.on([resWidth, resHeight], 'change', function() {
     sizeChart(parseInt(resWidth.value, 10), parseInt(resHeight.value, 10));
   });
@@ -493,6 +502,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   /**
    * Resize the chart preview based on a given width
    */
+
   function resizeChart(newWidth) {
     highed.dom.style(chartFrame, {
       /*left: newWidth + 'px',*/
