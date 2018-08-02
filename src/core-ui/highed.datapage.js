@@ -88,11 +88,12 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     dataImportBtn = highed.dom.cr(
       'button',
       'highed-import-button highed-ok-button ',
-      '<i class="fa fa-cloud-upload" aria-hidden="true"></i> Import Data');
+      '<i class="fa fa-cloud-upload" aria-hidden="true"></i> Import/Export');
     
     highed.dom.on(dataImportBtn, 'click', function() {
       dataTable.showImportModal();
     }),
+    iconsContainer = highed.dom.cr('div', 'highed-toolbox-icons'),
     isVisible = true;
 
 
@@ -112,7 +113,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     }
 
     highed.dom.on(helpIcon, 'click', showHelp);
-    highed.dom.ap(contents, highed.dom.ap(title, dataImportBtn, helpIcon),/*(props.showLiveStatus ? highed.dom.ap(title, liveDiv, helpIcon) :  highed.dom.ap(title, helpIcon)),*/ userContents);
+    highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(iconsContainer, dataImportBtn, helpIcon)),/*(props.showLiveStatus ? highed.dom.ap(title, liveDiv, helpIcon) :  highed.dom.ap(title, helpIcon)),*/ userContents);
     highed.dom.ap(body, contents);
 
     highed.dom.ap(userContents, dataTableContainer);

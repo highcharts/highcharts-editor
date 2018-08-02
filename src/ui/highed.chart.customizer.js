@@ -94,8 +94,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
     flatOptions = {},
     chartOptions = {},
     customCodeSplitter = highed.VSplitter(customCodeTab.body, {
-      topHeight: 90,
-      noOverflow: true
+      topHeight: 90
     }),
     customCodeDebug = highed.dom.cr('pre', 'highed-custom-debug'),
     codeMirrorBox = false,
@@ -103,7 +102,8 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
       'textarea',
       'highed-custom-code highed-box-size highed-stretch'
     ),
-    highlighted = false;
+    highlighted = false,
+    isShowingCustomCode = false;
 
   //If we're on mobile, completely disable the advanced view
   if (highed.onPhone()) {
@@ -166,7 +166,6 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
   function initCustomCode() {
     // Build the custom code tab
     highed.dom.ap(customCodeSplitter.top, customCodeBox);
-
     highed.dom.ap(customCodeSplitter.bottom, customCodeDebug);
 
     function setCustomCode() {
@@ -742,6 +741,20 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
     outputPreviewTab.hide();
   }
 
+  function showCustomCode() {
+    isShowingCustomCode = true;
+    customCodeTab.focus();
+  }
+
+  function showSimpleEditor() {
+    isShowingCustomCode = false;
+    simpleTab.focus();
+  }
+
+  function customCodeIsVisible() {
+    return isShowingCustomCode;
+  }
+
   return {
     /* Listen to an event */
     on: events.on,
@@ -749,6 +762,9 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
     init: init,
     focus: focus,
     reselect: list.reselect,
-    highlightField: highlightField
+    highlightField: highlightField,
+    showCustomCode: showCustomCode,
+    showSimpleEditor: showSimpleEditor,
+    customCodeIsVisible: customCodeIsVisible
   };
 };

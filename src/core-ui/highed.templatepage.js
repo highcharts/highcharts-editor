@@ -81,6 +81,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
       'div',
       'highed-toolbox-body highed-box-size highed-transition'
     ), 
+    iconsContainer = highed.dom.cr('div', 'highed-toolbox-icons'),
     isVisible = false;
 
   //customizer.on('PropertyChange', chartPreview.options.set);
@@ -94,7 +95,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
       expand();
     }
   }
-  
+
   if (!highed.onPhone()) {
     highed.dom.on(window, 'resize', resize);
   }
@@ -122,7 +123,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
   }
 
   highed.dom.on(helpIcon, 'click', showHelp);
-  highed.dom.ap(contents, highed.dom.ap(title, helpIcon), userContents);
+  highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(iconsContainer, helpIcon)), userContents);
   highed.dom.ap(body, contents);
 
   highed.dom.ap(userContents, templatesContainer);

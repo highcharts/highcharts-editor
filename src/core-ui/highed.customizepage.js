@@ -80,6 +80,8 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       'div',
       'highed-toolbox-body highed-box-size highed-transition'
     ),
+    iconsContainer = highed.dom.cr('div', 'highed-toolbox-icons'),
+    customCodeToggle = highed.dom.cr('span', 'highed-toolbox-custom-code-icon', '<i class="fa fa-code" aria-hidden="true"></i>'),
     isVisible = false;
 
   customizer.on('PropertyChange', chartPreview.options.set);
@@ -103,8 +105,20 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     helpModal.show();
   }
 
+  highed.dom.on(customCodeToggle, 'click', function() {
+    if (customizer.customCodeIsVisible()) {
+      customCodeToggle.innerHTML = '<i class="fa fa-code" aria-hidden="true"></i>';
+      customizer.showSimpleEditor();
+    } else {
+      //Change the icon to a pie chart for customizer
+      customCodeToggle.innerHTML = '<i class="fa fa-pie-chart" aria-hidden="true"></i>';
+      customizer.showCustomCode();
+    }
+
+  });
+
   highed.dom.on(helpIcon, 'click', showHelp);
-  highed.dom.ap(contents, highed.dom.ap(title, helpIcon), userContents);
+  highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(iconsContainer, customCodeToggle, helpIcon)), userContents);
   highed.dom.ap(body, contents);
 
   highed.dom.ap(userContents, customizerContainer);
