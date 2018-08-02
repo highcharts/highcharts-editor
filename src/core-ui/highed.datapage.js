@@ -270,6 +270,9 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     var tempOption = [{}],
         chartOptions = chartPreview.toProject().options;
+    
+    chartOptions.data.seriesMapping = null;
+    chartPreview.options.setAll(chartOptions);
 
     Object.keys(allOptions).forEach(function(key) {
       const option = allOptions[key];
@@ -327,6 +330,14 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
 
   dataTable.on('AssignDataChanged', function(input, options) {
+
+    chartOptions = chartPreview.toProject().options;
+    if (chartOptions.data && chartOptions.data.seriesMapping) { 
+      // Causes an issue when a user has added a assigndata input with seriesmapping, so just clear and it will add it in again later
+      chartOptions.data.seriesMapping = null;
+      chartPreview.options.setAll(chartOptions);  
+    }   
+
     return chartPreview.data.csv({
       csv: dataTable.toCSV(';', true, options)
     });
@@ -459,7 +470,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
 
   ////////////////////////////////////////////////// UNCOMMENT TO SHOW CHART!!!! ///////////////////////////////////////////
-  /*
+ 
+/*
   highed.dom.ap(
     splitter.bottom,
     highed.dom.ap(
@@ -468,7 +480,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       highed.dom.ap(errorBar, errorBarHeadline, errorBarBody)
     )
   );
-
+  
   highed.dom.on([resWidth, resHeight], 'change', function() {
     sizeChart(parseInt(resWidth.value, 10), parseInt(resHeight.value, 10));
   });

@@ -352,7 +352,8 @@ highed.AssignDataPanel = function(parent, attr) {
   function generateInputs(option, key) {
 
     var labelInput = highed.dom.cr('input', 'highed-assigndatapanel-input');
-    var colors = generateColors();
+
+    var colors = option.colors || generateColors();
     highed.dom.style(labelInput, {
       "background": colors.light,
       "border-color": colors.dark
