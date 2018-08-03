@@ -87,7 +87,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
     list = highed.List(splitter.left, true, properties),
     body = splitter.right,
     advSplitter = highed.HSplitter(advancedTab.body, {
-      leftWidth: 100
+      leftWidth: 30
     }),
     advBody = advSplitter.right,
     advTree = highed.Tree(advSplitter.left),
@@ -509,6 +509,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
       id: "Advanced",
       title: "Advanced",
       onClick: function() {
+        events.emit("AdvanceClicked");
         advancedTab.focus();
       }
     });

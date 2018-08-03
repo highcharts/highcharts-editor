@@ -66,6 +66,8 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       'div',
       'highed-toolbox-help highed-icon fa fa-question-circle'
     ),
+    width = props.width,
+    chartWidth = '68%',
     iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + props.icon,
     icon = highed.dom.cr('div', iconClass),
     helpModal = highed.HelpModal(props.help || []),
@@ -125,9 +127,18 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
   highed.dom.ap(parent, highed.dom.ap(container,body));
 
   customizer.resize();
+  
+  customizer.on('AdvanceClicked', function(){
+    width = 65;
+    chartWidth = '28%';
 
+    expand();
+    resizeChart();
+  });
+  
   function expand() {
-    var newWidth = props.width;
+    
+    var newWidth = width; //props.width;
 
     highed.dom.style(body, {
       width: 100 + '%',
@@ -151,7 +162,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
             || document.documentElement.clientHeight
             || document.body.clientHeight) - highed.dom.pos(body, true).y
         };
-          
+
         highed.dom.style(contents, {
           width: size.w + 'px',
           height: ((size.h - 16)) + 'px'
@@ -321,7 +332,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
   function resizeChart(newHeight) {
     highed.dom.style(chartFrame, {
       /*left: newWidth + 'px',*/
-      width: '68%',
+      width: chartWidth, //'68%',
       height: newHeight + 'px'
     });
 /*
