@@ -61,7 +61,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
       'highed-customizer-adv-loader',
       '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i> Loading'
     ),
-    tabs = highed.TabControl(parent, true, null, true), //Quck fix for now, will change once design finalised.
+    tabs = highed.TabControl(parent, false, null, true), //Quck fix for now, will change once design finalised.
     simpleTab = tabs.createTab({
       title: highed.getLocalizedStr('customizeSimple')
     }),
@@ -79,13 +79,16 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
       'highed-custom-code highed-box-size highed-stretch'
     ),
     previewCodeMirror = false,
+    splitter = highed.dom.cr('div', 'highed-box-simple-container'),
+/*
     splitter = highed.HSplitter(simpleTab.body, {
       leftWidth: 100,
       rightWidth: 100,
       responsive: true
     }),
-    list = highed.List(splitter.left, true, properties),
-    body = splitter.right,
+    */
+    list = highed.List(splitter, true, properties),
+    body = highed.dom.cr('div'),//splitter.right,
     advSplitter = highed.HSplitter(advancedTab.body, {
       leftWidth: 30
     }),
@@ -115,7 +118,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
   body.className += ' highed-customizer-body';
 
   properties.availableSettings = highed.arrToObj(properties.availableSettings);
-
+  highed.dom.ap(simpleTab.body, splitter);
   highed.dom.ap(parent, advancedLoader);
   highed.dom.ap(outputPreviewTab.body, previewEditor);
 
@@ -207,7 +210,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
     bsize = tabs.barSize();
 
     list.resize(w, h - bsize.h);
-    splitter.resize(w, h - bsize.h - 10);
+    //splitter.resize(w, h - bsize.h - 10);
 
     //The customize body needs to have a min-height of the list height
     lsize = highed.dom.size(list.container);

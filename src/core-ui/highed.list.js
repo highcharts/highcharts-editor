@@ -67,7 +67,7 @@ highed.List = function(parent, responsive, props) {
   function addItem(item, children, chartPreview) {
     var node = highed.dom.cr('a', 'item', item.title),
       nodeArrow = highed.dom.cr('span', 'item-arrow', '<i class="fa fa-angle-right" aria-hidden="true"></i>'),
-      nodeChildren = highed.dom.cr('span', '', ''),
+      nodeChildren = highed.dom.cr('span', 'highed-list-suboptions', ''),
       iexports = {};
 
     highed.dom.style(nodeChildren, {
