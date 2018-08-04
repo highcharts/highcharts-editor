@@ -94,6 +94,8 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     resWidth = highed.dom.cr('input', 'highed-res-number'),
     resHeight = highed.dom.cr('input', 'highed-res-number');
     
+    resWidth.placeholder = 'W';
+    resHeight.placeholder = 'H';
 
   customizer.on('PropertyChange', chartPreview.options.set);
   customizer.on('PropertySetChange', chartPreview.options.setAll);
