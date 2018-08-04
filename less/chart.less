@@ -1,13 +1,26 @@
-.highed-chart-frame {
+.highed-chart-container {
   position: absolute;
   right: 35px;
   bottom: 15px;
   margin-right: 14px;
+  overflow: auto;
+}
+
+.highed-chart-frame {
+  width: 100%;
+  height: 100%;
 }
 
 .highed-chart-frame-body {
   background: #FFF;
+  border: 1px solid rgba(14, 14, 14, 0.15);    
   width: 100%;
   height: 100%;
-  border: 1px solid rgba(14, 14, 14, 0.15);
+}
+
+.highcharts-container {
+  width: 100% !important;
+  height: 100% !important;
+  .highed-box-size;
+  // box-shadow: 0 5px 10px @border-main-color;
 }

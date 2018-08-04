@@ -73,6 +73,10 @@ highed.DrawerEditor = function(parent, options) {
       icon: 'table',
       text: 'Data',
       onClick: function() {
+        highed.dom.style([highedChartContainer, chartContainer, chartFrame], {
+          width: '100%',
+          height: '100%',
+        });
         dataPage.show();
         customizePage.hide();
         templatePage.hide();
@@ -110,6 +114,7 @@ highed.DrawerEditor = function(parent, options) {
       )
     ),*/
     // Chart preview
+    highedChartContainer = highed.dom.cr('div', 'highed-chart-container highed-transition'),
     chartFrame = highed.dom.cr(
       'div',
       'highed-transition highed-box-size highed-chart-frame highed-scrollbar'
@@ -122,12 +127,6 @@ highed.DrawerEditor = function(parent, options) {
       defaultChartOptions: properties.defaultChartOptions
     }),
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
-
-
-
-
-
-
     customizePage = highed.CustomizePage(
       splitter.bottom,
       highed.merge(
@@ -137,7 +136,7 @@ highed.DrawerEditor = function(parent, options) {
         properties.dataGrid
       ),
       chartPreview,
-      chartFrame,
+      highedChartContainer,
       {
         icon: 'fa-sliders',
         title: 'Customize Chart',
@@ -163,7 +162,8 @@ highed.DrawerEditor = function(parent, options) {
             customizer.resize(width, height);
           }
         }
-      }
+      },
+      chartFrame
     ),
     dataPage = highed.DataPage(  
       splitter.bottom,
@@ -174,7 +174,7 @@ highed.DrawerEditor = function(parent, options) {
         properties.dataGrid
       ),
       chartPreview,
-      chartFrame,
+      highedChartContainer,
       {
         icon: 'fa-table',
         title: 'Data',
@@ -228,7 +228,7 @@ highed.DrawerEditor = function(parent, options) {
         properties.dataGrid
       ),
       chartPreview,
-      chartFrame,
+      highedChartContainer,
       {
         icon: 'fa-bar-chart',
         width: 25,
@@ -584,7 +584,7 @@ highed.DrawerEditor = function(parent, options) {
 
     lastSetWidth = newWidth;
 
-    highed.dom.style(chartFrame, {
+    highed.dom.style(highedChartContainer, {
       /*left: newWidth + 'px',*/
       width: '28%',
       height: '37%'
@@ -613,7 +613,7 @@ highed.DrawerEditor = function(parent, options) {
       resWidth.value = '';
       resizeChart(lastSetWidth);
     } else {
-      var s = highed.dom.size(chartFrame);
+      var s = highed.dom.size(highedChartContainer);
 
       // highed.dom.style(chartFrame, {
       //   paddingLeft: (s.w / 2) - (w / 2) + 'px',
@@ -854,14 +854,12 @@ highed.DrawerEditor = function(parent, options) {
         '")'
     })
   );
-
-
-  ////////////////////////////////////////////////// UNCOMMENT TO SHOW CHART!!!! ///////////////////////////////////////////
   
   highed.dom.ap(
     splitter.bottom,
     highed.dom.ap(
-      chartFrame,
+      highedChartContainer,
+      highed.dom.ap(chartFrame,
 /*
       highed.dom.ap(
         resPreviewBar,
@@ -876,7 +874,7 @@ highed.DrawerEditor = function(parent, options) {
       ),*/
 
       chartContainer,
-      highed.dom.ap(errorBar, errorBarHeadline, errorBarBody)
+      highed.dom.ap(errorBar, errorBarHeadline, errorBarBody))
     )
   );
 
@@ -944,7 +942,7 @@ highed.DrawerEditor = function(parent, options) {
 
         sizeChart(resolutions[devName][0], resolutions[devName][1]);
 
-        highed.dom.style(chartFrame, {
+        highed.dom.style(highedChartContainer, {
           'overflow-x': ''
         });
       }

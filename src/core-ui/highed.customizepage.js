@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props) {
+highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props, chartContainer) {
   var events = highed.events(),
     // Main properties
     properties = highed.merge(
@@ -84,7 +84,16 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     ),
     iconsContainer = highed.dom.cr('div', 'highed-toolbox-icons'),
     customCodeToggle = highed.dom.cr('span', 'highed-toolbox-custom-code-icon', '<i class="fa fa-code" aria-hidden="true"></i>'),
-    isVisible = false;
+    isVisible = false,
+    //searchAdvancedOptions = highed.SearchAdvancedOptions(parent),
+    resolutionSettings = highed.dom.cr('span', 'highed-resolution-settings'),
+    phoneIcon = highed.dom.cr('span', '', '<i class="fa fa-mobile" aria-hidden="true"></i>');
+    tabletIcon = highed.dom.cr('span', '', '<i class="fa fa-tablet" aria-hidden="true"></i>'),
+    tabletIcon = highed.dom.cr('span', '', '<i class="fa fa-tablet" aria-hidden="true"></i>'),
+    stretchToFitIcon = highed.dom.cr('span', '', '<i class="fa fa-laptop" aria-hidden="true"></i>'),
+    resWidth = highed.dom.cr('input', 'highed-res-number'),
+    resHeight = highed.dom.cr('input', 'highed-res-number');
+    
 
   customizer.on('PropertyChange', chartPreview.options.set);
   customizer.on('PropertySetChange', chartPreview.options.setAll);
@@ -107,6 +116,8 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     helpModal.show();
   }
 
+
+  
   highed.dom.on(customCodeToggle, 'click', function() {
     if (customizer.customCodeIsVisible()) {
       customCodeToggle.innerHTML = '<i class="fa fa-code" aria-hidden="true"></i>';
@@ -119,12 +130,40 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
   });
 
+  
+  highed.dom.on(phoneIcon, 'click', function() {
+    sizeChart(414, 736);
+
+    resWidth.value = 414;
+    resHeight.value = 736;
+  });
+  highed.dom.on(tabletIcon, 'click', function() {
+    sizeChart(1024, 768);
+
+    resWidth.value = 1024;
+    resHeight.value = 768;
+  });
+  highed.dom.on(stretchToFitIcon, 'click', function() {
+    
+    resWidth.value = '';
+    resHeight.value = '';
+    highed.dom.style(chartContainer, {
+      width: '100%',
+      height: '100%',
+    });
+    setTimeout(chartPreview.resize, 300);
+  });
+
+
+
+  highed.dom.ap(resolutionSettings, stretchToFitIcon, tabletIcon, phoneIcon, resWidth, resHeight);
+
   highed.dom.on(helpIcon, 'click', showHelp);
   highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(iconsContainer, customCodeToggle, helpIcon)), userContents);
   highed.dom.ap(body, contents);
 
   highed.dom.ap(userContents, customizerContainer);
-  highed.dom.ap(parent, highed.dom.ap(container,body));
+  highed.dom.ap(parent,resolutionSettings, highed.dom.ap(container,body));
 
   customizer.resize();
   
@@ -133,7 +172,8 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     chartWidth = '28%';
 
     expand();
-    resizeChart();
+    resizeChart(300);
+    //searchAdvancedOptions.show();
   });
   
   function expand() {
@@ -169,6 +209,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
         });
 
       customizer.resize(newWidth, (size.h - 17) - tsize.h);   
+      //searchAdvancedOptions.resize(newWidth, highed.dom.pos(chartFrame, true).y - highed.dom.pos(body, true).y)
 
       return size;
     }
@@ -187,6 +228,9 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       || document.documentElement.clientHeight
       || document.body.clientHeight) - highed.dom.pos(body, true).y) - 16);
     isVisible = true;
+    highed.dom.style(resolutionSettings, {
+      display: 'block'
+    });
   }
   
   function hide() {
@@ -194,6 +238,13 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       display: 'none'
     });
     isVisible = false;
+    //searchAdvancedOptions.hide();
+    highed.dom.style(resolutionSettings, {
+      display: 'none'
+    });
+
+    resHeight.value = '';
+    resWidth.value = '';
   }
 
   function destroy() {}
@@ -206,8 +257,52 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
     errorBarHeadline.innerHTML = title;
     errorBarBody.innerHTML = message;
+  }  
+  
+  function sizeChart(w, h) {
+    if ((!w || w.length === 0) && (!h || h.length === 0)) {
+      fixedSize = false;
+      resHeight.value = '';
+      resWidth.value = '';
+      resizeChart();
+    } else {
+      var s = highed.dom.size(chartFrame);
+
+      // highed.dom.style(chartFrame, {
+      //   paddingLeft: (s.w / 2) - (w / 2) + 'px',
+      //   paddingTop: (s.h / 2) - (h / 2) + 'px'
+      // });
+
+      fixedSize = {
+        w: w,
+        h: h
+      };
+
+      w = (w === 'auto' ?  s.w : w || s.w - 100);
+      h = (h === 'auto' ?  s.h : h || s.h - 100);
+
+      highed.dom.style(chartContainer, {
+        width: w + 'px',
+        height: h + 'px'
+      });
+
+      //chartPreview.chart.setWidth();
+
+      chartPreview.resize(w, h);
+    }
   }
 
+  highed.dom.on([resWidth, resHeight], 'change', function() {
+    sizeChart(parseInt(resWidth.value, 10), parseInt(resHeight.value, 10));
+  });
+/*
+  chartPreview.on('LoadProject', function () {
+    setTimeout(function () {
+    //resQuickSel.selectByIndex(0);
+      setToActualSize();
+    }, 2000);
+  });
+*/
   chartPreview.on('ChartChange', function(newData) {
     events.emit('ChartChangedLately', newData);
   });
@@ -333,7 +428,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     highed.dom.style(chartFrame, {
       /*left: newWidth + 'px',*/
       width: chartWidth, //'68%',
-      height: newHeight + 'px'
+      height: newHeight + 'px' || '100%'
     });
 /*
     highed.dom.style(chartContainer, {

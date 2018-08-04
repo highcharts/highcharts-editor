@@ -508,7 +508,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     highed.dom.style(chartFrame, {
       /*left: newWidth + 'px',*/
       width: '28%',
-      height: '37%'
+      height: '38%'
     });
 /*
     highed.dom.style(chartContainer, {
@@ -516,7 +516,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       height: psize.h - 100 + 'px'
     });*/
 
-    setTimeout(chartPreview.resize, 200);
+    setTimeout(function() { chartPreview.resize(); }, 200);
   }
 
   chartPreview.on('AttrChange', function(option) {

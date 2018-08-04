@@ -281,14 +281,18 @@ highed.ChartPreview = function(parent, attributes) {
    */
   function resize(width, height) {
     gc(function(chart) {
-      if (width && height) {
-        // chart.setSize(width, height);
-      }
 
       if (chart && chart.reflow) {
         // && chart.options) {
         try {
-          chart.reflow();
+          if (width && height) {
+            chart.setSize(width, height, true);
+            chart.options.chart.width = null;
+            chart.options.chart.height = null;
+          } else {
+            chart.setSize(undefined, undefined, false);
+            chart.reflow();
+          }
         } catch (e) {
           // No idea why this keeps failing
         }
