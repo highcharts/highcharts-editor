@@ -1444,7 +1444,7 @@ highed.DataTable = function(parent, attributes) {
       if (moveToColumn !== null) {        
         events.emit('ColumnMoving');
         
-        const min = selectedHeaders[(moveToColumn < selectedHeaders[0] ? 1 : 0)],
+        const min = selectedHeaders[0/*(moveToColumn < selectedHeaders[0] ? 1 : 0)*/],
               max = (selectedHeaders[0] < selectedHeaders[1] ? selectedHeaders[1] - selectedHeaders[0]  : selectedHeaders[0] - selectedHeaders[1]) +1,
               total = (selectedHeaders[0] < selectedHeaders[1] ? selectedHeaders[1] - selectedHeaders[0]  : selectedHeaders[0] - selectedHeaders[1]);
 
