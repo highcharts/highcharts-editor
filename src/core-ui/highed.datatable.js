@@ -1018,6 +1018,10 @@ highed.DataTable = function(parent, attributes) {
 
   function selectNewCells(firstCell, endCell) { //firstCell, endCell
     
+    if (firstCell.length === 0 || endCell.length === 0 ||   // Weird bug when opening the console and hovering over cells
+      (firstCell[0] === null || firstCell[1] === null)
+    ) return;
+
     allSelectedCells = allSelectedCells.filter(function(cell) {
       if ((cell.rowNumber > endCell[1] || cell.colNumber > endCell[0]) || (cell.rowNumber < firstCell[1] || cell.colNumber < firstCell[0])) {
         cell.deselectCell();

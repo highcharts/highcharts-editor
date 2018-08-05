@@ -388,7 +388,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   dataTable.on('LoadGSheet', function(settings) {
     chartPreview.data.gsheet(settings);
   });
-
+/*
   chartPreview.on('RequestEdit', function(event, x, y) {
     // Expanded
     if (toolboxEntries.customize.body.offsetWidth) {
@@ -403,7 +403,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       toolboxEntries.customize.expand();
     }
   });
-
+*/
   dataTable.on('Change', function(headers, data) {
     return chartPreview.data.csv({
       csv: dataTable.toCSV(';', true, assignDataPanel.getMergedLabelAndData())

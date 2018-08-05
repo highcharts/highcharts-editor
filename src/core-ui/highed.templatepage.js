@@ -233,7 +233,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     //setToActualSize();
     }, 2000);
   });
-
+/*
 
   chartPreview.on('RequestEdit', function(event, x, y) {
     // Expanded
@@ -249,7 +249,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
       toolboxEntries.customize.expand();
     }
   });
-
+*/
   chartPreview.on('Error', function(e) {
     if (e.indexOf('Highcharts error') >= 0) {
       var i1 = e.indexOf('#'),
