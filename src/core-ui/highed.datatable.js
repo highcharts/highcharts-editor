@@ -763,6 +763,7 @@ highed.DataTable = function(parent, attributes) {
           addRow();
           rows[row.number + 1].columns[0].focus();
           events.emit('ColumnMoved');
+    
         } else {
           goBelow();
         }
@@ -821,6 +822,12 @@ highed.DataTable = function(parent, attributes) {
         dontFocus
       );
 
+      highed.dom.style(cornerPiece, {
+        top: ((highed.dom.pos(col).y + highed.dom.size(col).h - 3)) + "px",
+        left: ((highed.dom.pos(col).x + highed.dom.size(col).w - 3)) + "px",
+        display: "block"
+      });
+      
       row.select();
     }
 
@@ -920,13 +927,13 @@ highed.DataTable = function(parent, attributes) {
       deselectAllCells();
       
       focus();
-
+/*
       highed.dom.style(cornerPiece, {
         top: ((highed.dom.pos(col).y + highed.dom.size(col).h - 3)) + "px",
         left: ((highed.dom.pos(col).x + highed.dom.size(col).w - 3)) + "px",
         display: "block"
       });
-
+*/
       selectedFirstCell[0] = colNumber;//keyVal; 
       selectedEndCell[0] = colNumber;//keyVal; 
       selectedFirstCell[1] = row.number; 
@@ -1562,6 +1569,12 @@ highed.DataTable = function(parent, attributes) {
       //Ugly.
       mainInput.className = 'highed-dtable-input highed-dtable-input-header';
       //Spawn an edit box in the node
+
+      highed.dom.style(cornerPiece, {
+        display: "none"
+      });
+      deselectAllCells();
+
       makeEditable(
         header,
         value,
