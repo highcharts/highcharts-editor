@@ -353,21 +353,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       htmlTab.body,
       // highed.dom.cr('div', 'highed-imp-headline', 'Export HTML'),
       highed.dom.ap(highed.dom.cr('div', 'highed-imp-spacer'), htmlValue),
-      highed.dom.ap(highed.dom.cr('button', 'highed-imp-button'), exportHTML)
+      highed.dom.ap(highed.dom.cr('button', 'highed-imp-button highed-imp-pasted-button'), exportHTML)
     );
 
     highed.dom.ap(
       jsonTab.body,
       // highed.dom.cr('div', 'highed-imp-headline', 'Export JSON'),
       highed.dom.ap(highed.dom.cr('div', 'highed-imp-spacer'), jsonValue),
-      highed.dom.ap(highed.dom.cr('button', 'highed-imp-button'), exportJSON)
+      highed.dom.ap(highed.dom.cr('button', 'highed-imp-button highed-imp-pasted-button'), exportJSON)
     );
 
     highed.dom.ap(
       svgTab.body,
       // highed.dom.cr('div', 'highed-imp-headline', 'Export JSON'),
       highed.dom.ap(highed.dom.cr('div', 'highed-imp-spacer'), svgValue),
-      highed.dom.ap(highed.dom.cr('button', 'highed-imp-button'), exportSVG)
+      highed.dom.ap(highed.dom.cr('button', 'highed-imp-button highed-imp-pasted-button'), exportSVG)
     );
 
     resize();

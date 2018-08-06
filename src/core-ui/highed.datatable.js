@@ -473,7 +473,7 @@ highed.DataTable = function(parent, attributes) {
         }
       }
     ]);
-
+    
   highed.dom.on(mainInput, 'click', function(e) {
     return highed.dom.nodefault(e);
   });
@@ -2117,6 +2117,7 @@ highed.DataTable = function(parent, attributes) {
 
   function showImportModal() {
     importModal.show();
+    events.emit('initExporter', importer.exporter);
     importer.resize();
   }
 
@@ -2239,6 +2240,17 @@ highed.DataTable = function(parent, attributes) {
   }
 
   ////////////////////////////////////////////////////////////////////////////
+  importer.on('ExportComma', function(data) {
+    highed.emit('UIAction', 'ExportComma');
+    highed.download('data.csv', toCSV(','), 'application/csv');
+    importModal.hide();
+  });
+
+  importer.on('ExportSemiColon', function(data) {
+    highed.emit('UIAction', 'ExportSemiColon');
+    highed.download('data.csv', toCSV(';'), 'application/csv');
+    importModal.hide();
+  });
 
   importer.on('ImportCSV', function(data) {
     highed.emit('UIAction', 'ImportCSV');

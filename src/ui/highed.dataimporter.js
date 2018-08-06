@@ -405,7 +405,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       webSplitter.resize(w || ps.w, (h || ps.h) - bsize.h - 20);
       webList.resize(w || ps.w, (h || ps.h) - bsize.h);
 
-      exporter.resize();
+      exporter.resize(null, 300);
     }
 
     /** Show the importer
@@ -445,7 +445,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       highed.dom.cr('hr', 'highed-imp-hr')
     );
 
+
     var exporter = highed.Exporter(exportTab.body);
+    exporter.resize(null, 300);
 
     highed.dom.ap(
       csvTab.body,
@@ -491,8 +493,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       jsonImportBtn
     );
 */
+    highed.dom.on(commaDelimitedBtn, 'click', function(){
+      events.emit('ExportComma');
+    });
+
+    highed.dom.on(semicolonDelimitedBtn, 'click', function(){
+      events.emit('ExportSemiColon');
+    });
+
     highed.dom.on(spreadsheetImportBtn, 'click', function(){
-      events.emit('ImportGoogleSpreadsheet', {});
+      events.emit('ImportGoogleSpreadsheet');
     });
 
     highed.dom.on(csvImportBtn, 'click', function() {
@@ -562,7 +572,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       resize: resize,
       show: show,
       hide: hide,
-      addImportTab: addImportTab
+      addImportTab: addImportTab,
+      exporter: exporter
     };
   };
 })();

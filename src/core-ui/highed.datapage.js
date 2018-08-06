@@ -343,6 +343,15 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     //dataTable.highlightSelectedFields(assignDataPanel.getOptions());
   });
 
+  dataTable.on('initExporter', function(exporter){
+    exporter.init(
+      chartPreview.export.json(),
+      chartPreview.export.html(),
+      chartPreview.export.svg(),
+      chartPreview
+    );
+  });
+
   dataTable.on('AssignDataChanged', function(input, options) {
 
     chartOptions = chartPreview.toProject().options;
