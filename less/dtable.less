@@ -1,11 +1,13 @@
 
 .highed-dtable-gsheet-frame {
   display: none;
-  background: @secondary-background-panel;
-  color: @secondary-color-panel;
+  background: @background-panel;
+  color: @panel-text;
   width: 100%;
   height: 100%;
   overflow:auto;
+  font-weight: 100;
+  font-family: 'Roboto',sans-serif;
 }
 
 .highed-dtable-gsheet {
@@ -17,10 +19,15 @@
   // transform: translate(-50%, -50%);
   padding: 50px;
   // background: @secondary-background-panel;
-  color: @color-header;
+  color: @panel-text;
   border-radius: 30px;
   overflow-y: auto;
   // border: 8px dashed @border-main-color;
+  table {
+    td{
+        padding-right: 5px;
+    }
+  }
 }
 
 .highed-dtable-weird-data {
@@ -47,7 +54,7 @@
 
 .highed-dtable-gsheet-heading {
   text-align: center;
-  font-size: 42px;
+  font-size: 34px;
   margin-bottom: 20px;
 }
 
@@ -56,8 +63,8 @@
   font-size: 22px;
 }
 
-.highed-dtable-gsheet-label {
-  font-size: 22px;
+.highed-dtable-gsheet-label {    
+  font-size: 16px;
   margin-bottom: 5px;
 }
 
@@ -477,6 +484,11 @@
     background-color: #f3f3f3;
 }
 
+
+.highed-export-btn {
+    width: 45% !important;
+  }
+  
 @media only screen and (max-width: 600px) {
     .highed-dtable-table-frame,
     .highed-dtable-container{

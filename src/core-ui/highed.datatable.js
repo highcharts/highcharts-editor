@@ -2115,7 +2115,7 @@ highed.DataTable = function(parent, attributes) {
     importModal.hide();
   }
 
-  function showImportModal(){
+  function showImportModal() {
     importModal.show();
     importer.resize();
   }
@@ -2147,7 +2147,6 @@ highed.DataTable = function(parent, attributes) {
       isInGSheetMode = false;
       isInLiveDataMode = true;
     }
-
   }
 
   function showGSheet() {
@@ -2173,6 +2172,7 @@ highed.DataTable = function(parent, attributes) {
         display: 'none'
       });
 
+      importModal.hide();
       isInGSheetMode = true;
       isInLiveDataMode = false;
     }
@@ -2243,6 +2243,11 @@ highed.DataTable = function(parent, attributes) {
   importer.on('ImportCSV', function(data) {
     highed.emit('UIAction', 'ImportCSV');
     loadCSV(data);
+  });
+
+  importer.on('ImportGoogleSpreadsheet', function() {
+    highed.emit('UIAction', 'BtnGoogleSheet');
+    showGSheet();
   });
 
   importer.on('ImportLiveData', function(data) {

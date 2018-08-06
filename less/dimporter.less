@@ -50,16 +50,19 @@
   padding-left: 15px;
   padding-right: 15px;
   border: none;
-  background: @wiz-bar-background;
-  color: @wiz-bar-color;
+  background: @default-button-background;
+  color: @default-button-color;
   font-size: 12px;
   font-family: @font-main;
-  margin: 10px 15px 10px 0;
+  margin: 0px 15px 10px 0;
+  width: 30%;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
-  height: 30px;
+  height: 51px;
   outline: none;
+  font-weight: 100;
+  vertical-align: top;
   cursor: pointer;
   .highed-transition;
 }
@@ -95,8 +98,8 @@
 }
 
 .highed-imp-button:hover {
-  background: @accent-color;
-  color: @accent-text;
+  background: @default-button-background-hover;
+  color: @default-button-color;
 }
 
 .highed-imp-label {
@@ -107,4 +110,11 @@
 .highed-imp-label {
   width: 150px;
   display: inline-block;
+}
+.highed-imp-hr {
+  border-top: 1px solid #d2d2d2;
+}
+.highed-imp-pasted-button {
+  width: 100%;
+  margin-top: 5px;
 }

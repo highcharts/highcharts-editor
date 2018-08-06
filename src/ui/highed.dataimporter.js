@@ -100,20 +100,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     var events = highed.events(),
       properties = highed.merge(
         {
-          options: ['csv', 'plugins', 'samples'],
+          options: ['csv', 'plugins', 'samples', 'export'],
           plugins: ['CSV', 'JSON', 'Difi', 'Socrata', 'Google Spreadsheets']
         },
         attributes
       ),
       tabs = highed.TabControl(parent, false, true),
-      csvTab = tabs.createTab({ title: 'CSV' }),
-      jsonTab = tabs.createTab({ title: 'JSON' }),
+      csvTab = tabs.createTab({ title: 'Import' }),
+      exportTab = tabs.createTab({ title: 'Export' }),
+      //jsonTab = tabs.createTab({ title: 'JSON' }),
       webTab = tabs.createTab({ title: 'Plugins' }),
       samplesTab = tabs.createTab({ title: 'Sample Data' }),
       csvPasteArea = highed.dom.cr('textarea', 'highed-imp-pastearea'),
       csvImportBtn = highed.dom.cr(
         'button',
-        'highed-imp-button',
+        'highed-imp-button highed-imp-pasted-button',
         'Import Pasted Data'
       ),
       liveDataImportBtn = highed.dom.cr('button', 'highed-imp-button', 'Import Live Data'),
@@ -132,13 +133,28 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         'button',
         'highed-imp-button',
         'Upload & Import File'
+      ),      
+      spreadsheetImportBtn = highed.dom.cr(
+        'button',
+        'highed-imp-button',
+        'Import Google Spreadsheet'
+      ),
+      commaDelimitedBtn = highed.dom.cr(
+        'button',
+        'highed-imp-button highed-export-btn',
+        'Export comma delimited'
+      ),
+      semicolonDelimitedBtn = highed.dom.cr(
+        'button',
+        'highed-imp-button highed-export-btn',
+        'Export semi-colon delimited'
       ),
       webSplitter = highed.HSplitter(webTab.body, { leftWidth: 30 }),
       webList = highed.List(webSplitter.left);
 
     jsonPasteArea.value = JSON.stringify({}, undefined, 2);
 
-    setDefaultTabSize(600, 600, [csvTab, jsonTab, webTab, samplesTab]);
+    setDefaultTabSize(600, 600, [csvTab, exportTab, /*jsonTab, webTab,*/ samplesTab]);
     ///////////////////////////////////////////////////////////////////////////
 
     highed.dom.style(samplesTab.body, { overflow: 'hidden' });
@@ -167,10 +183,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         csvTab.hide();
       }
 
+      if (!properties.options.export) {
+        exportTab.hide();
+      }
+
       //Always disable json options..
+      /*
       if (1 === 1 || !properties.options.json) {
         jsonTab.hide();
-      }
+      }*/
 
       if (
         Object.keys(properties.plugins).length === 0 ||
@@ -383,6 +404,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
       webSplitter.resize(w || ps.w, (h || ps.h) - bsize.h - 20);
       webList.resize(w || ps.w, (h || ps.h) - bsize.h);
+
+      exporter.resize();
     }
 
     /** Show the importer
@@ -416,7 +439,20 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     ///////////////////////////////////////////////////////////////////////////
 
     highed.dom.ap(
+      exportTab.body,
+      commaDelimitedBtn,
+      semicolonDelimitedBtn,
+      highed.dom.cr('hr', 'highed-imp-hr')
+    );
+
+    var exporter = highed.Exporter(exportTab.body);
+
+    highed.dom.ap(
       csvTab.body,
+      spreadsheetImportBtn,
+      liveDataImportBtn,
+      csvImportFileBtn,
+      highed.dom.cr('hr', 'highed-imp-hr'),
       highed.dom.cr(
         'div',
         'highed-imp-help',
@@ -440,11 +476,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       // firstAsNames,
       // highed.dom.cr('br'),
 
-      csvImportBtn,
-      csvImportFileBtn,
-      liveDataImportBtn
+      csvImportBtn
     );
-
+/*
     highed.dom.ap(
       jsonTab.body,
       highed.dom.cr(
@@ -456,6 +490,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       jsonImportFileBtn,
       jsonImportBtn
     );
+*/
+    highed.dom.on(spreadsheetImportBtn, 'click', function(){
+      events.emit('ImportGoogleSpreadsheet', {});
+    });
 
     highed.dom.on(csvImportBtn, 'click', function() {
       emitCSVImport();
