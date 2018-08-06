@@ -1769,10 +1769,10 @@ highed.DataTable = function(parent, attributes) {
 
 
     function cleanData(data) {
-      var title = data.headerTitle.innerHTML.length
+      var title = data && data.headerTitle.innerHTML.length
       ? data.headerTitle.innerHTML
       : null;
-  
+      
       if (quoteStrings) {
         title = '"' + title + '"';
       }
@@ -2160,7 +2160,6 @@ highed.DataTable = function(parent, attributes) {
       gsheetID.value = '';
       gsheetWorksheetID.value = '';
       gsheetRefreshTime.value = '';
-
       highed.dom.style(gsheetFrame, {
         display: 'block'
       });
