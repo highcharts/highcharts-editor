@@ -80,7 +80,7 @@ highed.AssignDataPanel = function(parent, attr) {
     var arr = {},
         extraColumns = [];
 
-    Object.keys(options).forEach(function(optionKeys){
+    Object.keys(options).forEach(function(optionKeys) {
       if (optionKeys === 'labels') {
         arr.labelColumn = highed.getLetterIndex(options[optionKeys].value.charAt(0));
       } else if (optionKeys === 'data') {
@@ -126,6 +126,10 @@ highed.AssignDataPanel = function(parent, attr) {
 
   function getLetterIndex(char) {
     return char.charCodeAt() - 65; 
+  }
+
+  function getLetterFromIndex(num) {
+    return String.fromCharCode(num + 65);
   }
 
   function processField(input, overrideCheck, cb) {
@@ -272,7 +276,7 @@ highed.AssignDataPanel = function(parent, attr) {
     return output;
   }
 
-  function setAssignDataFields(data) {
+  function setAssignDataFields(data, maxColumns) {
     if (!data) return;
 
     var seriesType;
@@ -299,6 +303,14 @@ highed.AssignDataPanel = function(parent, attr) {
 
     highed.merge(options, highed.meta.charttype[seriesType]);
 
+    if (data.settings.AssignDataFields) {
+
+    } else {
+      // Probably a legacy chart, change values to equal rest of chart
+      if (options.data.values) {
+        options.data.values.value = 'B-' + getLetterFromIndex(maxColumns - 1);
+      }
+    }
     resetDOM();
     events.emit('ChangeData', options);
   }
@@ -379,7 +391,7 @@ highed.AssignDataPanel = function(parent, attr) {
       events.emit('AssignDataChanged', options);
     });
   
-    labelInput.value = option.default;
+    labelInput.value = option.value;
   
     var label = highed.dom.ap(highed.dom.cr('div', 'highed-assigndatapanel-data-option'), 
                                highed.dom.ap(

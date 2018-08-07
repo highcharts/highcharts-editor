@@ -287,7 +287,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     var tempOption = [{}],
         chartOptions = chartPreview.toProject().options;
-
+        
     Object.keys(allOptions).forEach(function(key) {
       const option = allOptions[key];
       if (key === 'data') {
@@ -387,11 +387,12 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     setTimeout(function () {
     //resQuickSel.selectByIndex(0);
     //setToActualSize();
-    assignDataPanel.setAssignDataFields(projectData);
-    assignDataPanel.resetValues();
-    assignDataPanel.getFieldsToHighlight(dataTable.highlightCells);
+
+    assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength());
+    //assignDataPanel.resetValues();
+    assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
     //dataTable.highlightSelectedFields(assignDataPanel.getOptions());
-    }, 2000);
+    }, 1000);
   });
 
   dataTable.on('LoadGSheet', function(settings) {

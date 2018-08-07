@@ -2695,6 +2695,9 @@ highed.DataTable = function(parent, attributes) {
     //events.emit('AssignDataChanged', input, newOptions);
   }
 
+  function getColumnLength(){
+    return rows[0].columns.length;
+  }
   ////////////////////////////////////////////////////////////////////////////
 /*
   toolbar = highed.Toolbar(container, {
@@ -2835,6 +2838,7 @@ highed.DataTable = function(parent, attributes) {
     loadLiveDataPanel: loadLiveDataPanel,
     //highlightSelectedFields: highlightSelectedFields,
     highlightCells: highlightCells,
-    removeAllCellsHighlight: removeAllCellsHighlight
+    removeAllCellsHighlight: removeAllCellsHighlight,
+    getColumnLength: getColumnLength
   };
 };
