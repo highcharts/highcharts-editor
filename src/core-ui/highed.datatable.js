@@ -472,8 +472,26 @@ highed.DataTable = function(parent, attributes) {
           events.emit('ColumnMoved');
         }
       }
-    ]);
+    ]),
+    addRowInput = highed.dom.cr('input', 'highed-field-input highed-add-row-input'),
+    addRowBtn = highed.dom.cr('button', 'highed-import-button highed-ok-button highed-add-row-btn', 'Add Row(s)'),
+    addRowDiv = highed.dom.ap(highed.dom.cr('div', 'highed-dtable-extra-options'),
+                highed.dom.ap(highed.dom.cr('div', 'highed-add-row-container'),                 
+                  addRowInput,
+                  addRowBtn
+                )
+              );
+
+    addRowInput.value = 1;
+    highed.dom.on(addRowBtn, 'click', function(e) {
+      events.emit('ColumnMoving');
+      for(var i=0;i<addRowInput.value; i++) {
+        addRow();
+      }
+      events.emit('ColumnMoved');
+    });
     
+
   highed.dom.on(mainInput, 'click', function(e) {
     return highed.dom.nodefault(e);
   });
@@ -827,7 +845,7 @@ highed.DataTable = function(parent, attributes) {
         left: ((highed.dom.pos(col).x + highed.dom.size(col).w - 3)) + "px",
         display: "block"
       });
-      
+
       row.select();
     }
 
@@ -1081,21 +1099,17 @@ highed.DataTable = function(parent, attributes) {
     });    
     
     highed.dom.on(leftItem, 'mousedown', function(e) {
-
+      //if (e.button === 2 && selectedFirstCell.length > 0 && selectedEndCell.length > 0 && selectedFirstCell[0] === 0 && selectedEndCell[0] === (rows[0].columns.length - 1)) {
       deselectAllCells();
-      
+    
       selectedFirstCell[0] = 0
       selectedEndCell[0] = rows[0].columns.length - 1;
       selectedFirstCell[1] = e.target.value; 
       selectedEndCell[1] = e.target.value;
 
       selectNewCells(selectedFirstCell, selectedEndCell);
-    
+
     });
-
-
-
-
 
     function addCol(val, keyValue) {
       columns.push(Column(exports, columns.length, val, keyValue));
@@ -1762,7 +1776,7 @@ highed.DataTable = function(parent, attributes) {
     });
 
     highed.dom.style(container, {
-      height: ps.h - hs.h - 15 /*- tb.h*/ + 'px',
+      height: ps.h - hs.h - 22 /*- tb.h*/ + 'px',
       width: ps.w + 'px'
     });
 
@@ -2419,6 +2433,7 @@ highed.DataTable = function(parent, attributes) {
       highed.dom.ap(topBar, topLetterBar, topColumnBar)
       //highed.dom.ap(topLeftPanel, checkAll)
     ),
+    addRowDiv,
     highed.dom.ap(
       weirdDataContainer,
       highed.dom.cr(
