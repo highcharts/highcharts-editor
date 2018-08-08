@@ -99,7 +99,6 @@ highed.AssignDataPanel = function(parent, attr) {
   function getMergedLabelAndData() {
     var arr = {},
         extraColumns = [];
-
     Object.keys(options).forEach(function(optionKeys) {
       if (optionKeys === 'labels') {
         arr.labelColumn = highed.getLetterIndex(options[optionKeys].value.charAt(0));
@@ -140,7 +139,7 @@ highed.AssignDataPanel = function(parent, attr) {
     });
 
     arr.extraColumns = extraColumns.sort();
-
+    
     return arr; //arr.concat(values);
   }
 
@@ -199,7 +198,6 @@ highed.AssignDataPanel = function(parent, attr) {
     }
     
     input.previousValue = input.value.toUpperCase();
-    
     cb(previousValues.map(function (x) {
       return highed.getLetterIndex(x);
     }), values.map(function (x) {
@@ -337,7 +335,7 @@ highed.AssignDataPanel = function(parent, attr) {
     } else {
       // Probably a legacy chart, change values to equal rest of chart
       if (options.data.values) {
-        options.data.values.value = 'B-' + getLetterFromIndex(maxColumns - 1);
+        options.data.values.value = 'B' + (getLetterFromIndex(maxColumns - 1) !== 'B' ? '-' + getLetterFromIndex(maxColumns - 1) : '');
       }
     }
     resetDOM();

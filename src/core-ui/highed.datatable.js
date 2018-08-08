@@ -2652,10 +2652,12 @@ highed.DataTable = function(parent, attributes) {
       var tempValue = previousValues[0];
       if (previousValues.length > 0) {
         while (tempValue <= previousValues[previousValues.length - 1]) {
-          highed.dom.style([gcolumns[tempValue].letter, gcolumns[tempValue].header], {
-            "background-color": '',
-            "border": '',
-          });
+          if (gcolumns[tempValue]) {
+            highed.dom.style([gcolumns[tempValue].letter, gcolumns[tempValue].header], {
+              "background-color": '',
+              "border": '',
+            });
+          }
           tempValue++; //= getNextLetter(tempValue);
         }
       }
@@ -2665,10 +2667,12 @@ highed.DataTable = function(parent, attributes) {
   function removeOutlineFromCell(values) {
     (values || []).forEach(function(value) {
       (rows || []).forEach(function(row){
-        highed.dom.style(row.columns[value].element, {
-          "border-right": '',
-          "border-left": '',
-        });
+        if (row.columns[value]) { //May have been deleted on startup
+          highed.dom.style(row.columns[value].element, {
+            "border-right": '',
+            "border-left": '',
+          });
+        }
       });
     });
   }
