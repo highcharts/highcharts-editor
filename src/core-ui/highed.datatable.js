@@ -2700,7 +2700,7 @@ highed.DataTable = function(parent, attributes) {
   }
 
   function getColumnLength(){
-    return rows[0].columns.length;
+    return (rows[0] && rows[0].columns ? rows[0].columns.length : 2);
   }
   ////////////////////////////////////////////////////////////////////////////
 /*
