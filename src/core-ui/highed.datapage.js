@@ -279,6 +279,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   assignDataPanel.on('AssignDataChanged', function() {
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells);
+    chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
     //dataTable.highlightSelectedFields(input);
   });
 
@@ -361,6 +362,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       chartPreview.options.setAll(chartOptions);  
     }
 
+    chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
     return chartPreview.data.csv({
       csv: dataTable.toCSV(';', true, options)
     });
@@ -385,14 +387,11 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 */
   chartPreview.on('LoadProject', function (projectData) {
     setTimeout(function () {
-    //resQuickSel.selectByIndex(0);
-    //setToActualSize();
-
     assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength());
-    //assignDataPanel.resetValues();
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
-    //dataTable.highlightSelectedFields(assignDataPanel.getOptions());
     }, 1000);
+    chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true));
+    chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
   });
 
   dataTable.on('LoadGSheet', function(settings) {
@@ -415,6 +414,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
 */
   dataTable.on('Change', function(headers, data) {
+    chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true));
     return chartPreview.data.csv({
       csv: dataTable.toCSV(';', true, assignDataPanel.getMergedLabelAndData())
     });

@@ -97,6 +97,8 @@ highed.ChartPreview = function(parent, attributes) {
     throttleTimeout = false,
     chart = false,
     preExpandSize = false,
+    dataTableCSV = null,
+    assignDataFields = null,
     toggleButton = highed.dom.cr(
       'div',
       'highed-icon highed-chart-preview-expand fa fa-external-link-square'
@@ -843,7 +845,7 @@ highed.ChartPreview = function(parent, attributes) {
     }
   }
 
-  function loadLiveData(settings){
+  function loadLiveData(settings) {
 
     lastLoadedLiveData = settings;
 
@@ -936,12 +938,13 @@ highed.ChartPreview = function(parent, attributes) {
       themeData = false;
 
     if (
-      chart &&
+      (chart &&
       chart.options &&
       chart.options.data &&
-      chart.options.data.csv
+      chart.options.data.csv) || 
+      dataTableCSV !== null
     ) {
-      loadedCSVRaw = chart.options.data.csv;
+      loadedCSVRaw = dataTableCSV || chart.options.data.csv;
     }
 
     if (
@@ -987,7 +990,8 @@ highed.ChartPreview = function(parent, attributes) {
         dataProvider: {
           csv: (!gsheet && !livedata) ? (loadedCSVRaw || lastLoadedCSV) : false,
           googleSpreadsheet: gsheet,
-          liveData: livedata
+          liveData: livedata,
+          assignDataFields: assignDataFields
         }
       }
       //editorOptions: highed.serializeEditorOptions()
@@ -1065,6 +1069,22 @@ highed.ChartPreview = function(parent, attributes) {
         emitChange();
       }
     });
+  }
+
+  /**
+   * Set Data table CSV as user could have unused columns that need saving too.
+   */
+
+  function setDataTableCSV(csv) {
+    dataTableCSV = csv;
+  }
+
+  /**
+   * Set Assign Data fields from datatable
+   */
+
+  function setAssignDataFields(fields) {
+    assignDataFields = fields;
   }
 
   /**
@@ -1681,7 +1701,9 @@ highed.ChartPreview = function(parent, attributes) {
       export: exportChart,
       gsheet: loadGSpreadsheet,
       clear: clearData,
-      live: loadLiveData
+      live: loadLiveData,
+      setDataTableCSV: setDataTableCSV,
+      setAssignDataFields: setAssignDataFields
     },
 
     export: {

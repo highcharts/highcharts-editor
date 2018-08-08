@@ -76,6 +76,26 @@ highed.AssignDataPanel = function(parent, attr) {
     });
   }
 
+  function getAssignDataFields() {
+    
+    var arr = {
+      data: {}
+    };
+
+    Object.keys(options).forEach(function(key){
+      if (key === 'data') {
+        Object.keys(options[key]).forEach(function(dataKey) {
+          arr[key][dataKey] = options[key][dataKey].value;
+        });
+      } else {
+        if (options[key].value === '' || options[key].value === null) return;
+        arr[key] = options[key].value;
+      }
+    });
+
+    return arr;
+  }
+
   function getMergedLabelAndData() {
     var arr = {},
         extraColumns = [];
@@ -302,9 +322,18 @@ highed.AssignDataPanel = function(parent, attr) {
     }
 
     highed.merge(options, highed.meta.charttype[seriesType]);
-
-    if (data.settings.AssignDataFields) {
-
+    
+    if (data.settings.dataProvider.assignDataFields) {
+      const dataFields = data.settings.dataProvider.assignDataFields;
+      Object.keys(dataFields).forEach(function(key){
+        if (key === 'data') {
+          Object.keys(dataFields[key]).forEach(function(dataKey) {
+            if (options[key][dataKey]) options[key][dataKey].value = dataFields[key][dataKey];
+          });
+        } else {
+          if (options[key]) options[key].value = dataFields[key];
+        }
+      });
     } else {
       // Probably a legacy chart, change values to equal rest of chart
       if (options.data.values) {
@@ -433,6 +462,7 @@ highed.AssignDataPanel = function(parent, attr) {
     resize: resize,
     getFieldsToHighlight: getFieldsToHighlight,
     getMergedLabelAndData: getMergedLabelAndData,
-    setAssignDataFields: setAssignDataFields
+    setAssignDataFields: setAssignDataFields,
+    getAssignDataFields: getAssignDataFields
   };
 };
