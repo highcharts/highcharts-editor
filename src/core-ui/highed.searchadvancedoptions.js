@@ -50,12 +50,49 @@ highed.SearchAdvancedOptions = function(parent, attr) {
               highed.dom.cr('h3', 'highed-searchadvancedoptions-header', 'Search'),
               highed.dom.cr('p', 'highed-searchadvancedoptions-header-desc')),
     labels = highed.dom.cr('div', 'highed-searchadvancedoptions-data-options'),
+    searchResultContainer = highed.dom.cr('div', 'highed-searchadvancedoptions-results'),
     inputContainer = highed.dom.cr('div', 'highed-searchadvancedoptions-inputs-container'),
     searchInput = highed.dom.cr('input', 'highed-searchadvancedoptions-search highed-field-input');
 
+  var searchResults = [];
+
+  function search(node, str) {
+
+    if (highed.isArr(node)) {
+      node.forEach(function(child) {
+        search(child, str);
+      });
+    } else {
+      if (highed.uncamelize(node.meta.name).toLowerCase().indexOf(str) > -1 ) {
+        if (Object.keys(node.meta.types)[0] === 'function' || (
+          node.meta.products &&
+          Object.keys(node.meta.products) > 0)) {
+          return;
+        } else {
+          searchResults.push({
+            name: highed.uncamelize(node.meta.name),
+            parents: (node.meta.ns.split('.')).map(function(e){ return highed.uncamelize(e); })
+          }); 
+        }
+      }
+      if (node.children && node.children.length > 0) {
+        search(node.children, str);
+      }
+    }
+  }
 
   highed.dom.on(searchInput, 'keyup', function(e) {
-    console.log(highed.meta.optionsAdvanced);
+    const optionsAdvanced = highed.meta.optionsAdvanced.children,
+          searchString = searchInput.value.toLowerCase();
+    
+    searchResults = [];
+    if(searchString.length > 1) {
+      optionsAdvanced.forEach(function(child) {
+        search(child, searchString);
+      });
+    }
+
+    resetDOM();
   });
 
   function hide() {
@@ -73,14 +110,20 @@ highed.SearchAdvancedOptions = function(parent, attr) {
   highed.dom.ap(body, header);
 
   function resetDOM() {
-    
-    inputContainer.innerHTML = '';
-    highed.dom.ap(inputContainer, searchInput);
+    searchResultContainer.innerHTML = '';
+    searchResults.forEach(function(result) {
+      const resultContainer = highed.dom.cr('div', 'highed-searchadvancedoptions-result-container'),
+            resultTitle = highed.dom.cr('div', 'highed-searchadvancedoptions-result-title', result.name),
+            resultParents = highed.dom.cr('div', 'highed-searchadvancedoptions-result-parents', result.parents.join(' -> '));
+      
+      highed.dom.ap(resultContainer, resultTitle, resultParents);
+      highed.dom.ap(searchResultContainer, resultContainer);
+    });
 
   }
 
-  highed.dom.ap(body, labels, inputContainer);
-  resetDOM();
+  highed.dom.ap(inputContainer, searchInput);
+  highed.dom.ap(body, labels, inputContainer, searchResultContainer);
   highed.dom.ap(parent, highed.dom.ap(container, bar, body));
 
   return {
