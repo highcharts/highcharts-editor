@@ -114,7 +114,7 @@ highed.SearchAdvancedOptions = function(parent, attr) {
     searchResults.forEach(function(result) {
       const resultContainer = highed.dom.cr('div', 'highed-searchadvancedoptions-result-container'),
             resultTitle = highed.dom.cr('div', 'highed-searchadvancedoptions-result-title', result.name),
-            resultParents = highed.dom.cr('div', 'highed-searchadvancedoptions-result-parents', result.parents.join(' -> '));
+            resultParents = highed.dom.cr('div', 'highed-searchadvancedoptions-result-parents', result.parents.join(' <i class="fa fa-circle highed-parent-splitter" aria-hidden="true"></i> '));
       
       highed.dom.ap(resultContainer, resultTitle, resultParents);
       highed.dom.ap(searchResultContainer, resultContainer);
