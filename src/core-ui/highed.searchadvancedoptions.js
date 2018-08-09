@@ -61,7 +61,7 @@ highed.SearchAdvancedOptions = function(parent, attr) {
   function compareValues(str, queryArr) {
     var foundCount = 0;
 
-    queryArr.forEach(function(q, index) {
+    queryArr.forEach(function(q) {
       if (str.indexOf(q) > - 1) {
         foundCount ++;
       }
@@ -76,23 +76,12 @@ highed.SearchAdvancedOptions = function(parent, attr) {
         search(child, str);
       });
     } else {
-      function checker(value) {
-        var prohibited = ['banana', 'apple'];
-      
-        for (var i = 0; i < prohibited.length; i++) {
-          if (value.indexOf(prohibited[i]) > -1) {
-            return false;
-          }
-        }
-        return true;
-      }
       //console.log(node.meta);
       var foundCount = compareValues(highed.uncamelize(node.meta.name).toLowerCase(), str);
       foundCount += compareValues(highed.uncamelize(node.meta.ns).toLowerCase(), str);
       if (node.meta.description) foundCount += compareValues(highed.uncamelize(node.meta.description).toLowerCase(), str);
 
       if (foundCount > 0) {
-      //if (highed.uncamelize(node.meta.name).toLowerCase().indexOf(str) > -1 ) {
         if (Object.keys(node.meta.types)[0] === 'function' || (
           node.meta.products &&
           Object.keys(node.meta.products) > 0)) {
