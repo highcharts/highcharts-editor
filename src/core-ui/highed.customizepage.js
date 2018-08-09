@@ -53,7 +53,8 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       'div',
       'highed-transition highed-toolbox highed-box-size'
     ),
-    title = highed.dom.cr('div', 'highed-toolbox-body-title', props.title),
+    title = highed.dom.cr('div', 'highed-toolbox-body-title'),
+    customizeTitle = highed.dom.cr('div', 'highed-customize-title', props.title),
     contents = highed.dom.cr(
       'div',
       'highed-box-size highed-toolbox-inner-body'
@@ -85,7 +86,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     iconsContainer = highed.dom.cr('div', 'highed-toolbox-icons'),
     customCodeToggle = highed.dom.cr('span', 'highed-toolbox-custom-code-icon', '<i class="fa fa-code" aria-hidden="true"></i>'),
     isVisible = false,
-    //searchAdvancedOptions = highed.SearchAdvancedOptions(parent),
+    searchAdvancedOptions = highed.SearchAdvancedOptions(parent),
     resolutionSettings = highed.dom.cr('span', 'highed-resolution-settings'),
     phoneIcon = highed.dom.cr('span', '', '<i class="fa fa-mobile" aria-hidden="true"></i>');
     tabletIcon = highed.dom.cr('span', '', '<i class="fa fa-tablet" aria-hidden="true"></i>'),
@@ -154,28 +155,53 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       height: '100%',
     });
     setTimeout(chartPreview.resize, 300);
+  }),
+  backIcon = highed.dom.cr('div','highed-back-icon', '<i class="fa fa-chevron-circle-left" aria-hidden="true"></i>');
+
+
+  highed.dom.style(backIcon, {
+    display: "none"
   });
-
-
 
   highed.dom.ap(resolutionSettings, stretchToFitIcon, tabletIcon, phoneIcon, resWidth, resHeight);
 
   highed.dom.on(helpIcon, 'click', showHelp);
-  highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(iconsContainer, customCodeToggle, helpIcon)), userContents);
+  highed.dom.ap(contents, highed.dom.ap(title,backIcon, customizeTitle, highed.dom.ap(iconsContainer, customCodeToggle, helpIcon)), userContents);
   highed.dom.ap(body, contents);
 
   highed.dom.ap(userContents, customizerContainer);
   highed.dom.ap(parent,resolutionSettings, highed.dom.ap(container,body));
 
   customizer.resize();
+
+  highed.dom.on(backIcon, 'click', function(){
+    width = 25;
+    chartWidth = "68%";
+    
+    highed.dom.style(backIcon, {
+      display: "none"
+    });
+    searchAdvancedOptions.hide();
+
+    expand();
+    resizeChart(((window.innerHeight
+      || document.documentElement.clientHeight
+      || document.body.clientHeight) - highed.dom.pos(body, true).y) - 16);
+
+    setTimeout(customizer.showSimpleEditor, 200);
+  });
   
   customizer.on('AdvanceClicked', function(){
     width = 65;
     chartWidth = '28%';
 
+    highed.dom.style(backIcon, {
+      display: "inline-block"
+    });
+
     expand();
     resizeChart(300);
-    //searchAdvancedOptions.show();
+    searchAdvancedOptions.show();
   });
   
   function expand() {
@@ -211,7 +237,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
         });
 
       customizer.resize(newWidth, (size.h - 17) - tsize.h);   
-      //searchAdvancedOptions.resize(newWidth, highed.dom.pos(chartFrame, true).y - highed.dom.pos(body, true).y)
+      searchAdvancedOptions.resize(newWidth, highed.dom.pos(chartFrame, true).y - highed.dom.pos(body, true).y)
 
       return size;
     }
@@ -240,7 +266,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       display: 'none'
     });
     isVisible = false;
-    //searchAdvancedOptions.hide();
+    searchAdvancedOptions.hide();
     highed.dom.style(resolutionSettings, {
       display: 'none'
     });
