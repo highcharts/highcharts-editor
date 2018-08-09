@@ -70,13 +70,12 @@ highed.SearchAdvancedOptions = function(parent, attr) {
     return foundCount;
   }
 
-  function search(node, str) {
+  function search(node, parent, str) {
     if (highed.isArr(node)) {
       node.forEach(function(child) {
-        search(child, str);
+        search(child, parent, str);
       });
     } else {
-      //console.log(node.meta);
       var foundCount = compareValues(highed.uncamelize(node.meta.name).toLowerCase(), str);
       foundCount += compareValues(highed.uncamelize(node.meta.ns).toLowerCase(), str);
       if (node.meta.description) foundCount += compareValues(highed.uncamelize(node.meta.description).toLowerCase(), str);
@@ -90,33 +89,31 @@ highed.SearchAdvancedOptions = function(parent, attr) {
           searchResults.push({
             name: highed.uncamelize(node.meta.name),
             parents: (node.meta.ns.split('.')).map(function(e){ return highed.uncamelize(e); }),
+            rawParent: (parent === null ? node.meta.name : parent.meta.ns + parent.meta.name),
             foundCount: foundCount
           }); 
         }
       }
       if (node.children && node.children.length > 0) {
-        search(node.children, str);
+        search(node.children, node, str);
       }
     }
   }
 
   highed.dom.on(searchInput, 'keyup', function(e) {
 
-
     clearTimeout(timeout);
     timeout = setTimeout(function () {
-    const optionsAdvanced = highed.meta.optionsAdvanced.children,
-    searchString = searchInput.value.toLowerCase(),
-    searchArray = searchInput.value.toLowerCase().split(' ');
+      const optionsAdvanced = highed.meta.optionsAdvanced.children,
+      searchArray = searchInput.value.toLowerCase().split(' ');
 
-    searchResults = [];
-    optionsAdvanced.forEach(function(child) {
-      search(child, searchArray);
-    });
+      searchResults = [];
+      optionsAdvanced.forEach(function(child) {
+        search(child, null, searchArray);
+      });
 
-    resetDOM();
+      resetDOM();
     }, 500);
-
   });
 
   function hide() {
@@ -136,13 +133,16 @@ highed.SearchAdvancedOptions = function(parent, attr) {
   function resetDOM() {
     searchResultContainer.innerHTML = '';
     searchResults.sort(function(a,b) {return (a.foundCount < b.foundCount) ? 1 : ((b.foundCount < a.foundCount) ? -1 : 0);} ); 
-    //console.log(searchResults);
     searchResults.forEach(function(result, i) {
       if (i > 50) return;
       const resultContainer = highed.dom.cr('div', 'highed-searchadvancedoptions-result-container'),
             resultTitle = highed.dom.cr('div', 'highed-searchadvancedoptions-result-title', result.name),
             resultParents = highed.dom.cr('div', 'highed-searchadvancedoptions-result-parents', result.parents.join(' <i class="fa fa-circle highed-parent-splitter" aria-hidden="true"></i> '));
       
+      highed.dom.on(resultContainer, 'click', function() {
+        document.getElementById(result.rawParent).click();
+      });
+
       highed.dom.ap(resultContainer, resultTitle, resultParents);
       highed.dom.ap(searchResultContainer, resultContainer);
     });
