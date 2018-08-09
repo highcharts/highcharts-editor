@@ -27,6 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 highed.SearchAdvancedOptions = function(parent, attr) {
 
+  var timeout = null;
 
   function resize(w, h) {
        
@@ -56,14 +57,42 @@ highed.SearchAdvancedOptions = function(parent, attr) {
 
   var searchResults = [];
 
-  function search(node, str) {
 
+  function compareValues(str, queryArr) {
+    var foundCount = 0;
+
+    queryArr.forEach(function(q, index) {
+      if (str.indexOf(q) > - 1) {
+        foundCount ++;
+      }
+    });
+
+    return foundCount;
+  }
+
+  function search(node, str) {
     if (highed.isArr(node)) {
       node.forEach(function(child) {
         search(child, str);
       });
     } else {
-      if (highed.uncamelize(node.meta.name).toLowerCase().indexOf(str) > -1 ) {
+      function checker(value) {
+        var prohibited = ['banana', 'apple'];
+      
+        for (var i = 0; i < prohibited.length; i++) {
+          if (value.indexOf(prohibited[i]) > -1) {
+            return false;
+          }
+        }
+        return true;
+      }
+      //console.log(node.meta);
+      var foundCount = compareValues(highed.uncamelize(node.meta.name).toLowerCase(), str);
+      foundCount += compareValues(highed.uncamelize(node.meta.ns).toLowerCase(), str);
+      if (node.meta.description) foundCount += compareValues(highed.uncamelize(node.meta.description).toLowerCase(), str);
+
+      if (foundCount > 0) {
+      //if (highed.uncamelize(node.meta.name).toLowerCase().indexOf(str) > -1 ) {
         if (Object.keys(node.meta.types)[0] === 'function' || (
           node.meta.products &&
           Object.keys(node.meta.products) > 0)) {
@@ -71,7 +100,8 @@ highed.SearchAdvancedOptions = function(parent, attr) {
         } else {
           searchResults.push({
             name: highed.uncamelize(node.meta.name),
-            parents: (node.meta.ns.split('.')).map(function(e){ return highed.uncamelize(e); })
+            parents: (node.meta.ns.split('.')).map(function(e){ return highed.uncamelize(e); }),
+            foundCount: foundCount
           }); 
         }
       }
@@ -82,17 +112,22 @@ highed.SearchAdvancedOptions = function(parent, attr) {
   }
 
   highed.dom.on(searchInput, 'keyup', function(e) {
+
+
+    clearTimeout(timeout);
+    timeout = setTimeout(function () {
     const optionsAdvanced = highed.meta.optionsAdvanced.children,
-          searchString = searchInput.value.toLowerCase();
-    
+    searchString = searchInput.value.toLowerCase(),
+    searchArray = searchInput.value.toLowerCase().split(' ');
+
     searchResults = [];
-    if(searchString.length > 1) {
-      optionsAdvanced.forEach(function(child) {
-        search(child, searchString);
-      });
-    }
+    optionsAdvanced.forEach(function(child) {
+      search(child, searchArray);
+    });
 
     resetDOM();
+    }, 500);
+
   });
 
   function hide() {
@@ -111,7 +146,10 @@ highed.SearchAdvancedOptions = function(parent, attr) {
 
   function resetDOM() {
     searchResultContainer.innerHTML = '';
-    searchResults.forEach(function(result) {
+    searchResults.sort(function(a,b) {return (a.foundCount < b.foundCount) ? 1 : ((b.foundCount < a.foundCount) ? -1 : 0);} ); 
+    //console.log(searchResults);
+    searchResults.forEach(function(result, i) {
+      if (i > 50) return;
       const resultContainer = highed.dom.cr('div', 'highed-searchadvancedoptions-result-container'),
             resultTitle = highed.dom.cr('div', 'highed-searchadvancedoptions-result-title', result.name),
             resultParents = highed.dom.cr('div', 'highed-searchadvancedoptions-result-parents', result.parents.join(' <i class="fa fa-circle highed-parent-splitter" aria-hidden="true"></i> '));
