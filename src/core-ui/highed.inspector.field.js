@@ -768,7 +768,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
   
   highed.dom.style(parent,
   {
-    width: (properties.width || 33) + '%'
+    width: (properties.width || 100) + '%'
   });
 
   if (type === 'boolean') {
