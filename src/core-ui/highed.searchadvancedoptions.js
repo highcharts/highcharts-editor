@@ -53,8 +53,15 @@ highed.SearchAdvancedOptions = function(parent, attr) {
     labels = highed.dom.cr('div', 'highed-searchadvancedoptions-data-options'),
     searchResultContainer = highed.dom.cr('div', 'highed-searchadvancedoptions-results'),
     inputContainer = highed.dom.cr('div', 'highed-searchadvancedoptions-inputs-container'),
-    searchInput = highed.dom.cr('input', 'highed-searchadvancedoptions-search highed-field-input');
+    searchInput = highed.dom.cr('input', 'highed-searchadvancedoptions-search highed-field-input'),
+    loading = highed.dom.cr(
+      'div',
+      'highed-customizer-adv-loader highed-searchadvancedoptions-loading',
+      '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i> Loading');
 
+    highed.dom.style(loading, {
+      opacity: 0
+    });
   var searchResults = [];
 
 
@@ -101,9 +108,13 @@ highed.SearchAdvancedOptions = function(parent, attr) {
   }
 
   highed.dom.on(searchInput, 'keyup', function(e) {
-
+      highed.dom.style(loading, {
+        opacity: 1
+      });
     clearTimeout(timeout);
     timeout = setTimeout(function () {
+
+
       const optionsAdvanced = highed.meta.optionsAdvanced.children,
       searchArray = searchInput.value.toLowerCase().split(' ');
 
@@ -146,11 +157,18 @@ highed.SearchAdvancedOptions = function(parent, attr) {
       highed.dom.ap(resultContainer, resultTitle, resultParents);
       highed.dom.ap(searchResultContainer, resultContainer);
     });
+    
+    highed.dom.style(loading, {
+      opacity: 0
+    });
 
   }
 
   highed.dom.ap(inputContainer, searchInput);
   highed.dom.ap(body, labels, inputContainer, searchResultContainer);
+  
+  highed.dom.ap(body, loading);
+
   highed.dom.ap(parent, highed.dom.ap(container, bar, body));
 
   return {
