@@ -93,7 +93,19 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     tabletIcon = highed.dom.cr('span', '', '<i class="fa fa-tablet" aria-hidden="true"></i>'),
     stretchToFitIcon = highed.dom.cr('span', '', '<i class="fa fa-laptop" aria-hidden="true"></i>'),
     resWidth = highed.dom.cr('input', 'highed-res-number'),
-    resHeight = highed.dom.cr('input', 'highed-res-number');
+    resHeight = highed.dom.cr('input', 'highed-res-number'),
+    resolutions = [
+      {
+        iconElement: phoneIcon,
+        width: 414,
+        height: 736
+      },
+      {
+        iconElement: tabletIcon,
+        width: 1024,
+        height: 768
+      }
+    ];
     
     resWidth.placeholder = 'W';
     resHeight.placeholder = 'H';
@@ -118,8 +130,6 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
   function showHelp() {
     helpModal.show();
   }
-
-
   
   highed.dom.on(customCodeToggle, 'click', function() {
     if (customizer.customCodeIsVisible()) {
@@ -133,19 +143,15 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
   });
 
-  
-  highed.dom.on(phoneIcon, 'click', function() {
-    sizeChart(414, 736);
+  resolutions.forEach(function(res) {
+    highed.dom.on(res.iconElement, 'click', function(){
+      sizeChart(res.width, res.height);
 
-    resWidth.value = 414;
-    resHeight.value = 736;
+      resWidth.value = res.width;
+      resHeight.value = res.height;
+    });
   });
-  highed.dom.on(tabletIcon, 'click', function() {
-    sizeChart(1024, 768);
 
-    resWidth.value = 1024;
-    resHeight.value = 768;
-  });
   highed.dom.on(stretchToFitIcon, 'click', function() {
     
     resWidth.value = '';
@@ -191,16 +197,32 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     setTimeout(customizer.showSimpleEditor, 200);
   });
   
-  customizer.on('AdvanceClicked', function(){
+  customizer.on('AdvancedBuilt', function() {
+
+    var bsize = highed.dom.size(body),
+    size = {
+      w: bsize.w,
+      h: (window.innerHeight
+        || document.documentElement.clientHeight
+        || document.body.clientHeight) - highed.dom.pos(body, true).y
+    };
+
+    searchAdvancedOptions.resize(width, (size.h - highed.dom.size(chartFrame).h) - 15);
+    
+  });
+
+  customizer.on('AdvanceClicked', function() {
+
     width = 65;
     chartWidth = '28%';
-
     highed.dom.style(backIcon, {
       display: "inline-block"
     });
 
     expand();
     resizeChart(300);
+
+    setTimeout(chartPreview.resize, 1000);
     searchAdvancedOptions.show();
   });
   
@@ -236,8 +258,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
           height: ((size.h - 16)) + 'px'
         });
 
-      customizer.resize(newWidth, (size.h - 17) - tsize.h);   
-      searchAdvancedOptions.resize(newWidth, highed.dom.pos(chartFrame, true).y - highed.dom.pos(body, true).y)
+      customizer.resize(newWidth, (size.h - 17) - tsize.h);
 
       return size;
     }
@@ -262,11 +283,26 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
   }
   
   function hide() {
+
+    customizer.showSimpleEditor();
+    width = 25;
+    chartWidth = "68%";
+    
+    highed.dom.style(backIcon, {
+      display: "none"
+    });
+    searchAdvancedOptions.hide();
+
+    expand();
+
+    customCodeToggle.innerHTML = '<i class="fa fa-code" aria-hidden="true"></i>';
+
     highed.dom.style(container, {
       display: 'none'
     });
     isVisible = false;
     searchAdvancedOptions.hide();
+    
     highed.dom.style(resolutionSettings, {
       display: 'none'
     });
@@ -490,7 +526,10 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       hideLiveStatus: function(){}//toolbox.hideLiveStatus
     },
     hide: hide,
-    show: show
+    show: show,
+    isVisible: function() {
+      return isVisible;
+    }
     //toolbar: toolbar
   };
 };

@@ -162,6 +162,12 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
         });
 
       templates.resize(newWidth, (size.h - 17) - tsize.h);   
+/*
+      setTimeout(function() {
+        console.log("IN EHRE");
+        resizeChart(200);
+      }, 8000);
+*/
 
       return size;
     }
@@ -176,9 +182,11 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     });
     
     expand();
-    resizeChart(((window.innerHeight
-      || document.documentElement.clientHeight
-      || document.body.clientHeight) - highed.dom.pos(body, true).y) - 16);
+    setTimeout(function() {
+      resizeChart(((window.innerHeight
+        || document.documentElement.clientHeight
+        || document.body.clientHeight) - highed.dom.pos(body, true).y) - 16);
+    }, 200);
     isVisible = true;
   }
   
@@ -250,31 +258,6 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     }
   });
 */
-  chartPreview.on('Error', function(e) {
-    if (e.indexOf('Highcharts error') >= 0) {
-      var i1 = e.indexOf('#'),
-        i = e.substr(i1).indexOf(':'),
-        id = parseInt(e.substr(i1 + 1, i), 10),
-        item = highed.highchartsErrors[id],
-        urlStart = e.indexOf('www.'),
-        url = '';
-
-      if (urlStart >= 0) {
-        url =
-          '<div class="highed-errorbar-more"><a href="https://' +
-          e.substr(urlStart) +
-          '" target="_blank">Click here for more information</a></div>';
-      }
-
-      return showError(
-        (item.title || "There's a problem with your chart") + '!',
-        (item.text || e) + url
-      );
-    }
-
-    showError("There's a problem with your chart!", e);
-  });
-
   //chartPreview.on('ChartRecreated', hideError);
 
 
@@ -307,7 +290,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
       chartFrame,
       chartContainer,
       highed.dom.ap(errorBar, errorBarHeadline, errorBarBody)
-    )
+    ) 
   );
 
   highed.dom.on([resWidth, resHeight], 'change', function() {
@@ -360,7 +343,10 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
       hideLiveStatus: function(){}//toolbox.hideLiveStatus
     },
     hide: hide,
-    show: show
+    show: show,
+    isVisible: function() {
+      return isVisible;
+    }
     //toolbar: toolbar
   };
 };

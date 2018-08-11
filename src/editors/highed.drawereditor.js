@@ -73,29 +73,41 @@ highed.DrawerEditor = function(parent, options) {
       icon: 'table',
       text: 'Data',
       onClick: function() {
-        highed.dom.style([highedChartContainer, chartContainer, chartFrame], {
-          width: '100%',
-          height: '100%',
-        });
-        dataPage.show();
-        customizePage.hide();
-        templatePage.hide();
+
+        if (!dataPage.isVisible()) {
+          
+          highed.dom.style([highedChartContainer, chartContainer, chartFrame], {
+            width: '100%',
+            height: '100%',
+          });
+
+          dataPage.show();
+          customizePage.hide();
+          templatePage.hide();
+        }
+
       }
     }, {
       icon: 'bar-chart',
       text: 'Templates',
       onClick: function() {
-        dataPage.hide();
-        templatePage.show();
-        customizePage.hide();
+        if (!templatePage.isVisible()) {
+          dataPage.hide();
+          templatePage.show();
+          customizePage.hide();
+        }
       }
     }, {      
       icon: 'pie-chart',
       text: 'Customize',
       onClick: function() {
-        dataPage.hide();
-        templatePage.hide();
-        customizePage.show();
+
+        if (!customizePage.isVisible()) {
+          dataPage.hide();
+          templatePage.hide();
+          customizePage.show();
+        }
+
       }
     }]),
     

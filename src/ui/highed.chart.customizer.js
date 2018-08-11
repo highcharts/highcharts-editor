@@ -290,6 +290,8 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
   }
 
   function buildTree() {
+    
+    
     if (properties.noAdvanced) {
       return;
     }
@@ -301,20 +303,24 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
     if (properties.noAdvanced || highed.isNull(highed.meta.optionsAdvanced)) {
       advancedTab.hide();
     } else {
+      
       setTimeout(function() {
+        
         highed.meta.optionsAdvanced = highed.transform.advanced(
           highed.meta.optionsAdvanced,
           true
         );
-
+        
         advTree.build(
           highed.meta.optionsAdvanced,
-          highed.merge({}, chartPreview.options.getCustomized())
+          //chartPreview.options.all()
+         highed.merge({}, chartPreview.options.getCustomized())
         );
 
         highed.dom.style(advancedLoader, {
           opacity: 0
         });
+        events.emit("AdvancedBuilt");
       }, 10);
     }
   }
