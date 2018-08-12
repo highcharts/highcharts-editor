@@ -199,16 +199,6 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
 
   function destroy() {}
 
-  function showError(title, message) {
-    highed.dom.style(errorBar, {
-      opacity: 1,
-      'pointer-events': 'auto'
-    });
-
-    errorBarHeadline.innerHTML = title;
-    errorBarBody.innerHTML = message;
-  }
-
   chartPreview.on('ChartChange', function(newData) {
     events.emit('ChartChangedLately', newData);
   });

@@ -871,23 +871,9 @@ highed.DrawerEditor = function(parent, options) {
     splitter.bottom,
     highed.dom.ap(
       highedChartContainer,
-      highed.dom.ap(chartFrame,
-/*
-      highed.dom.ap(
-        resPreviewBar,
-        highed.dom.cr('div', 'highed-res-headline', 'Size Preview:'),
-        resQuickSelContainer,
-        highed.dom.ap(
-          highed.dom.cr('div', 'highed-res-quicksel'),
-          resWidth,
-          highed.dom.cr('span', '', 'x'),
-          resHeight
-        )
-      ),*/
-
-      chartContainer,
-      highed.dom.ap(errorBar, errorBarHeadline, errorBarBody))
-    )
+      highed.dom.ap(chartFrame, chartContainer)
+    ),
+    highed.dom.ap(errorBar, errorBarHeadline, errorBarBody)
   );
 
   highed.dom.on([resWidth, resHeight], 'change', function() {

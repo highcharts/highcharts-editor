@@ -242,16 +242,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   function hideImportModal() {
     dataTable.hideImportModal();
   }
-
-  function showError(title, message) {
-    highed.dom.style(errorBar, {
-      opacity: 1,
-      'pointer-events': 'auto'
-    });
-
-    errorBarHeadline.innerHTML = title;
-    errorBarBody.innerHTML = message;
-  }
   
   function changeAssignDataTemplate(newTemplate) {
     const oldValues = assignDataPanel.getMergedLabelAndData();

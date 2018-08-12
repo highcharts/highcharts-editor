@@ -416,30 +416,6 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     }
   });
 */
-  chartPreview.on('Error', function(e) {
-    if (e.indexOf('Highcharts error') >= 0) {
-      var i1 = e.indexOf('#'),
-        i = e.substr(i1).indexOf(':'),
-        id = parseInt(e.substr(i1 + 1, i), 10),
-        item = highed.highchartsErrors[id],
-        urlStart = e.indexOf('www.'),
-        url = '';
-
-      if (urlStart >= 0) {
-        url =
-          '<div class="highed-errorbar-more"><a href="https://' +
-          e.substr(urlStart) +
-          '" target="_blank">Click here for more information</a></div>';
-      }
-
-      return showError(
-        (item.title || "There's a problem with your chart") + '!',
-        (item.text || e) + url
-      );
-    }
-
-    showError("There's a problem with your chart!", e);
-  });
 
   //chartPreview.on('ChartRecreated', hideError);
 
