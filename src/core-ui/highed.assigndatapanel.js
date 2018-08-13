@@ -62,6 +62,14 @@ highed.AssignDataPanel = function(parent, attr) {
 
   Object.assign(options, defaultOptions);
   
+  function init() {
+
+    highed.dom.ap(body, labels);
+    resetDOM();
+    highed.dom.ap(parent, highed.dom.ap(container, bar, body));
+    events.emit('AssignDataChanged', options);
+  }
+  
   function resetValues() {
     Object.keys(options).forEach(function(key){
       if (key === 'data') {
@@ -447,10 +455,6 @@ highed.AssignDataPanel = function(parent, attr) {
     });  
   }
 
-  highed.dom.ap(body, labels);
-  resetDOM();
-  highed.dom.ap(parent, highed.dom.ap(container, bar, body));
-  events.emit('AssignDataChanged', options);
   return {
     on: events.on,
     hide: hide,
@@ -461,6 +465,7 @@ highed.AssignDataPanel = function(parent, attr) {
     getFieldsToHighlight: getFieldsToHighlight,
     getMergedLabelAndData: getMergedLabelAndData,
     setAssignDataFields: setAssignDataFields,
-    getAssignDataFields: getAssignDataFields
+    getAssignDataFields: getAssignDataFields,
+    init: init
   };
 };

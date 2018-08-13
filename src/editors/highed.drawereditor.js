@@ -68,48 +68,105 @@ highed.DrawerEditor = function(parent, options) {
     splitter = highed.VSplitter(parent, {
       topHeight: properties.useHeader ? '60px' : '0px',
       noOverflow: true
-    }),
-    panel = highed.OptionsPanel(splitter.bottom, [{
-      icon: 'table',
-      text: 'Data',
-      onClick: function() {
-
-        if (!dataPage.isVisible()) {
-          
-          highed.dom.style([highedChartContainer, chartContainer, chartFrame], {
-            width: '100%',
-            height: '100%',
-          });
-
-          dataPage.show();
-          customizePage.hide();
-          templatePage.hide();
-        }
-
-      }
-    }, {
-      icon: 'bar-chart',
-      text: 'Templates',
-      onClick: function() {
-        if (!templatePage.isVisible()) {
-          dataPage.hide();
-          templatePage.show();
-          customizePage.hide();
-        }
-      }
-    }, {      
-      icon: 'pie-chart',
-      text: 'Customize',
-      onClick: function() {
-
-        if (!customizePage.isVisible()) {
-          dataPage.hide();
-          templatePage.hide();
-          customizePage.show();
-        }
-
-      }
-    }]),
+    }),    
+    builtInOptions = {
+      data: {
+        icon: 'fa-table',
+        title: 'Data',
+        width: 65, //Percent
+        nav: {
+          icon: 'table',
+          text: 'Data',
+          onClick: []
+        },
+        help: [
+          {
+            title: 'Manually Add/Edit Data',
+            gif: 'dataImport.gif',
+            description: [
+              'Click a cell to edit its contents.<br/><br/>',
+              'The cells can be navigated using the arrow keys.<br/><br/>',
+              'Pressing Enter creates a new row, or navigates to the row directly below the current row.'
+            ]
+          },
+          {
+            title: 'Setting headings',
+            gif: 'dataImport.gif',
+            description: [
+              'The headings are used as the series titles.<br/><br/>',
+              'They can be edited by left clicking them.<br/><br/>',
+              'Click the arrow symbol in the header to access column properties.'
+            ]
+          },
+          {
+            title: 'Importing Data',
+            gif: 'import.gif',
+            description: [
+              'To import data, simply drag and drop CSV files onto the table, or paste CSV/Excel data into any cell.<br/><br/>',
+              'For more advanced data import, click the IMPORT DATA button.'
+            ]
+          }
+        ],
+        showLiveStatus: true
+      },
+      templates: {
+        icon: 'fa-bar-chart',
+        width: 25,
+        title: 'Templates',
+        nav: {
+          icon: 'bar-chart',
+          text: 'Templates',
+          onClick: []
+        },
+        help: [
+          {
+            title: 'Templates',
+            description: [
+              'Templates are pre-defined bundles of configuration.<br/><br/>',
+              'Start by choosing the template category in the list to the left,',
+              'then pick a suitable template for your data and use case in the',
+              'template list.'
+            ]
+          }
+        ]
+      },/*
+      export: {
+        icon: 'fa-download',
+        title: 'Export',
+        width: 600,
+        help: [
+          {
+            title: 'Export Chart',
+            description: [
+              'The export pane lets you export your chart to HTML, SVG, JSON, or JavaScript.<br/><br/>'
+            ]
+          }
+        ]
+      },*/
+      customize: {
+        icon: 'fa-sliders',
+        title: 'Customize Chart',
+        nav: {
+          icon: 'pie-chart',
+          text: 'Customize',
+          onClick: []
+        },
+        width: 25,
+        help: [
+          {
+            title: 'Customize',
+            description: [
+              'The customize pane lets you customize your chart.<br/><br/>',
+              'The customizer has three different sections:<br/>',
+              '<li>Simple: A simple customizer with the most used options</li>',
+              '<li>Advanced: All options available in Highcharts/Highstock can be set here</li>',
+              '<li>Custom code: Here, properties can be overridden programatically</li>'
+            ]
+          }
+        ]
+      },
+    },
+    panel = highed.OptionsPanel(splitter.bottom),
     
     toolbar = highed.Toolbar(splitter.top),
     //toolbox = highed.Toolbox(splitter.bottom),
@@ -149,23 +206,7 @@ highed.DrawerEditor = function(parent, options) {
       ),
       chartPreview,
       highedChartContainer,
-      {
-        icon: 'fa-sliders',
-        title: 'Customize Chart',
-        width: 25,
-        help: [
-          {
-            title: 'Customize',
-            description: [
-              'The customize pane lets you customize your chart.<br/><br/>',
-              'The customizer has three different sections:<br/>',
-              '<li>Simple: A simple customizer with the most used options</li>',
-              '<li>Advanced: All options available in Highcharts/Highstock can be set here</li>',
-              '<li>Custom code: Here, properties can be overridden programatically</li>'
-            ]
-          }
-        ]
-      },
+      builtInOptions.customize,
       chartFrame
     ),
     dataPage = highed.DataPage(  
@@ -178,40 +219,7 @@ highed.DrawerEditor = function(parent, options) {
       ),
       chartPreview,
       highedChartContainer,
-      {
-        icon: 'fa-table',
-        title: 'Data',
-        width: 65, //Percent
-        help: [
-          {
-            title: 'Manually Add/Edit Data',
-            gif: 'dataImport.gif',
-            description: [
-              'Click a cell to edit its contents.<br/><br/>',
-              'The cells can be navigated using the arrow keys.<br/><br/>',
-              'Pressing Enter creates a new row, or navigates to the row directly below the current row.'
-            ]
-          },
-          {
-            title: 'Setting headings',
-            gif: 'dataImport.gif',
-            description: [
-              'The headings are used as the series titles.<br/><br/>',
-              'They can be edited by left clicking them.<br/><br/>',
-              'Click the arrow symbol in the header to access column properties.'
-            ]
-          },
-          {
-            title: 'Importing Data',
-            gif: 'import.gif',
-            description: [
-              'To import data, simply drag and drop CSV files onto the table, or paste CSV/Excel data into any cell.<br/><br/>',
-              'For more advanced data import, click the IMPORT DATA button.'
-            ]
-          }
-        ],
-        showLiveStatus: true
-      }
+      builtInOptions.data
     ),
     templatePage = highed.TemplatePage(      
       splitter.bottom,
@@ -223,26 +231,8 @@ highed.DrawerEditor = function(parent, options) {
       ),
       chartPreview,
       highedChartContainer,
-      {
-        icon: 'fa-bar-chart',
-        width: 25,
-        title: 'Templates',
-        help: [
-          {
-            title: 'Templates',
-            description: [
-              'Templates are pre-defined bundles of configuration.<br/><br/>',
-              'Start by choosing the template category in the list to the left,',
-              'then pick a suitable template for your data and use case in the',
-              'template list.'
-            ]
-          }
-        ]
-      }
+      builtInOptions.templates
     ),
-
-
-
 
     // Res preview bar
     resPreviewBar = highed.dom.cr('div', 'highed-res-preview'),
@@ -335,129 +325,7 @@ highed.DrawerEditor = function(parent, options) {
     // Custom toolbox options
     customOptions = {},
     // The toolbox options
-    builtInOptions = {
-      data: {
-        icon: 'fa-table',
-        title: 'Data',
-        width: 65, //Percent
-        help: [
-          {
-            title: 'Manually Add/Edit Data',
-            gif: 'dataImport.gif',
-            description: [
-              'Click a cell to edit its contents.<br/><br/>',
-              'The cells can be navigated using the arrow keys.<br/><br/>',
-              'Pressing Enter creates a new row, or navigates to the row directly below the current row.'
-            ]
-          },
-          {
-            title: 'Setting headings',
-            gif: 'dataImport.gif',
-            description: [
-              'The headings are used as the series titles.<br/><br/>',
-              'They can be edited by left clicking them.<br/><br/>',
-              'Click the arrow symbol in the header to access column properties.'
-            ]
-          },
-          {
-            title: 'Importing Data',
-            gif: 'import.gif',
-            description: [
-              'To import data, simply drag and drop CSV files onto the table, or paste CSV/Excel data into any cell.<br/><br/>',
-              'For more advanced data import, click the IMPORT DATA button.'
-            ]
-          }
-        ],
-        create: function(body) {
-          //highed.dom.ap(body, dataTableContainer);
-          //dataTable.resize();
-        },
-        events: {
-          Expanded: function(width, height) {
-            //dataTable.resize(width, height);
-          }
-        },
-        showLiveStatus: true
-      },
-      templates: {
-        icon: 'fa-bar-chart',
-        width: 700,
-        title: 'Templates',
-        help: [
-          {
-            title: 'Templates',
-            description: [
-              'Templates are pre-defined bundles of configuration.<br/><br/>',
-              'Start by choosing the template category in the list to the left,',
-              'then pick a suitable template for your data and use case in the',
-              'template list.'
-            ]
-          }
-        ],
-        create: function(body) {
-          highed.dom.ap(body, templatesContainer);
-        },
-        events: {
-          Expanded: function(width, height) {
-            templates.resize(width, height);
-          }
-        }
-      },
-      export: {
-        icon: 'fa-download',
-        title: 'Export',
-        width: 600,
-        help: [
-          {
-            title: 'Export Chart',
-            description: [
-              'The export pane lets you export your chart to HTML, SVG, JSON, or JavaScript.<br/><br/>'
-            ]
-          }
-        ],
-        create: function(body) {
-          highed.dom.ap(body, exporterContainer);
-          exporter.resize();
-        },
-        events: {
-          Expanded: function(width, height) {
-            exporter.resize(width, height);
-            exporter.init(
-              chartPreview.export.json(),
-              chartPreview.export.html(),
-              chartPreview.export.svg(),
-              chartPreview
-            );
-          }
-        }
-      },
-      customize: {
-        icon: 'fa-sliders',
-        title: 'Customize Chart',
-        width: 800,
-        help: [
-          {
-            title: 'Customize',
-            description: [
-              'The customize pane lets you customize your chart.<br/><br/>',
-              'The customizer has three different sections:<br/>',
-              '<li>Simple: A simple customizer with the most used options</li>',
-              '<li>Advanced: All options available in Highcharts/Highstock can be set here</li>',
-              '<li>Custom code: Here, properties can be overridden programatically</li>'
-            ]
-          }
-        ],
-        create: function(body) {
-          highed.dom.ap(body, customizerContainer);
-          customizer.resize();
-        },
-        events: {
-          Expanded: function(width, height) {
-            customizer.resize(width, height);
-          }
-        }
-      }
-    },
+
     toolboxEntries,
     resolutions = {
       'Stretch to fit': [false, false],
@@ -494,6 +362,7 @@ highed.DrawerEditor = function(parent, options) {
 
   // Alias import to data
   builtInOptions.import = builtInOptions.data;
+  panel.setDefault(dataPage);
 
   /**
    * Creates the features defined in property.features
@@ -501,52 +370,68 @@ highed.DrawerEditor = function(parent, options) {
    */
   function createFeatures() {
     var addedOptions = {};
+    panel.clearOptions();
 
     properties.features = highed.isArr(properties.features)
       ? properties.features
       : properties.features.split(' ');
-
+    
     function addOption(option, id) {
-      if (!option || !option.icon) {
+
+      if (!option || !option.icon || !option.nav) {
         return;
       }
-/*
-      var o = toolbox.addEntry({
-        title: option.title,
-        width: option.width,
-        iconOnly: option.iconOnly,
-        icon: option.icon,
-        help: option.help,
-        showLiveStatus: option.showLiveStatus
-      });*/
 
-      if (highed.isFn(option.create)) {
-        option.create(o.body);
+      if (id === 'data') {
+        option.nav.page = dataPage;
+        dataPage.init();
+        option.nav.onClick.push(
+          function() {
+            highed.dom.style([highedChartContainer, chartContainer, chartFrame], {
+              width: '100%',
+              height: '100%',
+            });
+          }
+        );
+      } else if (id === 'templates') {
+        option.nav.page = templatePage;
+        templatePage.init();
+      } else if (id === 'customize') {
+        option.nav.page = customizePage;
+        customizePage.init();
+      } else {
+        // Create page
       }
+      
+      option.nav.onClick.push(
+        function(prev, newOption) {
+          prev.hide();
+          newOption.page.show();
+          panel.setDefault(newOption.page);
+        }
+      );
 
-      Object.keys(option.events || {}).forEach(function(e) {
-        o.on(e, option.events[e]);
-      });
+      panel.addOption(option.nav);
+      addedOptions[id] = id;
 
-      addedOptions[id] = o;
     }
 
     //toolbox.clear();
     resize();
-
+    
     properties.features.forEach(function(feature) {
       addOption(
         builtInOptions[feature] || customOptions[feature] || false,
         feature
       );
     });
-
-    if (addedOptions.data) {
-      setTimeout(addedOptions.data.expand, 200);
-    }
-
     toolboxEntries = addedOptions;
     // resizeChart(toolbox.width());
+  }
+
+  function addPage(option) {
+    console.log("ADDING...", option);
+    panel.addOption(option.nav);
   }
 
   /**
@@ -644,6 +529,7 @@ highed.DrawerEditor = function(parent, options) {
    */
   function addFeature(name, feat) {
     customOptions[name] = feat;
+    //addPage(feat);
     createFeatures();
   }
 

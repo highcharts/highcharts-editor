@@ -35,26 +35,44 @@ highed.OptionsPanel = function(parent, attr) {
     body = highed.dom.cr(
       'div',
       'highed-optionspanel-body highed-box-size highed-transition'
-    );
+    ),
+    prev;
 
-  attr.forEach(function(option) {
-    var btn = highed.dom.cr(
-      'button',
-      'highed-ok-button highed-optionspanel-button ', 
-      '<i class="fa fa-' + option.icon + '"></i>&nbsp;' + option.text
-    );
-      
-    highed.dom.on(btn, 'click', function() {
-      option.onClick();
-    });
-
-    highed.dom.ap(body,btn);
-
-  });
-  
   highed.dom.ap(parent, highed.dom.ap(container, bar, body));
 
+  function setDefault(option) {
+    prev = option;
+  }
+
+  function addOption(option) {
+
+    //attr.forEach(function(option) {
+      var btn = highed.dom.cr(
+        'button',
+        'highed-ok-button highed-optionspanel-button ', 
+        '<i class="fa fa-' + option.icon + '"></i>&nbsp;' + option.text
+      );
+        
+      (option.onClick || []).forEach(function(click) {
+        highed.dom.on(btn, 'click', function() {
+          click(prev, option);
+        });
+      });
+  
+      highed.dom.ap(body,btn);
+  
+    //});
+  }
+
+  function clearOptions() {
+    body.innerHTML = '';
+
+  }
+
   return {
-    on: events.on
+    on: events.on,
+    addOption: addOption,
+    setDefault: setDefault,
+    clearOptions: clearOptions
   };
 };

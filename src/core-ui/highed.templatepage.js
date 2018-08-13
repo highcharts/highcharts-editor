@@ -53,7 +53,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
       'div',
       'highed-transition highed-toolbox highed-box-size'
     ),
-    title = highed.dom.cr('div', 'highed-toolbox-body-title', props.title),
+    title, // = highed.dom.cr('div', 'highed-toolbox-body-title', props.title),
     contents = highed.dom.cr(
       'div',
       'highed-box-size highed-toolbox-inner-body'
@@ -66,12 +66,12 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
       'div',
       'highed-toolbox-help highed-icon fa fa-question-circle'
     ),
-    iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + props.icon,
+    iconClass,
     icon = highed.dom.cr('div', iconClass),
-    helpModal = highed.HelpModal(props.help || []),
+    helpModal,
     // Data table
     templatesContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
-    templates = highed.ChartTemplateSelector(templatesContainer, chartPreview),
+    templates,
     /*customizer = highed.ChartCustomizer(
       customizerContainer,
       properties.customizer,
@@ -87,6 +87,47 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
   //customizer.on('PropertyChange', chartPreview.options.set);
   //customizer.on('PropertySetChange', chartPreview.options.setAll);
   
+  function init() {
+    title = highed.dom.cr('div', 'highed-toolbox-body-title', props.title);
+    iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + props.icon;
+
+    templatesContainer.innerHTML = '';
+    templates = highed.ChartTemplateSelector(templatesContainer, chartPreview);
+    helpModal = highed.HelpModal(props.help || []);
+
+    templates.on('Select', function(template) {
+      chartPreview.loadTemplate(template);
+      events.emit('TemplateChanged', template);
+    });
+  
+    templates.on('LoadDataSet', function(sample) {
+      if (sample.type === 'csv') {
+        if (highed.isArr(sample.dataset)) {
+          chartPreview.data.csv(sample.dataset.join('\n'));
+        } else {
+          chartPreview.data.csv(sample.dataset);
+        }
+  
+        chartPreview.options.set('subtitle-text', '');
+        chartPreview.options.set('title-text', sample.title);
+      }
+    });
+  
+
+    highed.dom.on(helpIcon, 'click', showHelp);
+
+    contents.innerHTML = '';
+
+    highed.dom.ap(userContents, templatesContainer);
+    highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(iconsContainer, helpIcon)), userContents);
+    highed.dom.ap(body, contents);
+    highed.dom.ap(parent, highed.dom.ap(container,body));
+    templates.resize();
+  
+    expand();
+    hide();
+  }
+
   function resize() {
     if (isVisible){
       resizeChart((((window.innerHeight
@@ -100,35 +141,9 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     highed.dom.on(window, 'resize', resize);
   }
 
-  templates.on('Select', function(template) {
-    chartPreview.loadTemplate(template);
-    events.emit('TemplateChanged', template);
-  });
-
-  templates.on('LoadDataSet', function(sample) {
-    if (sample.type === 'csv') {
-      if (highed.isArr(sample.dataset)) {
-        chartPreview.data.csv(sample.dataset.join('\n'));
-      } else {
-        chartPreview.data.csv(sample.dataset);
-      }
-
-      chartPreview.options.set('subtitle-text', '');
-      chartPreview.options.set('title-text', sample.title);
-    }
-  });
-
   function showHelp() {
     helpModal.show();
   }
-
-  highed.dom.on(helpIcon, 'click', showHelp);
-  highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(iconsContainer, helpIcon)), userContents);
-  highed.dom.ap(body, contents);
-
-  highed.dom.ap(userContents, templatesContainer);
-  highed.dom.ap(parent, highed.dom.ap(container,body));
-  templates.resize();
 
   function expand() {
     var newWidth = props.width;
@@ -321,8 +336,6 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     //setToActualSize();
   });
 
-  expand();
-  hide();
 
   return {
     on: events.on,
@@ -336,7 +349,8 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     show: show,
     isVisible: function() {
       return isVisible;
-    }
+    },
+    init: init
     //toolbar: toolbar
   };
 };

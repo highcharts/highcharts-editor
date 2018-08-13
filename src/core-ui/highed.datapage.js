@@ -96,6 +96,26 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     iconsContainer = highed.dom.cr('div', 'highed-toolbox-icons'),
     isVisible = true;
 
+
+    function init() {
+
+      highed.dom.on(helpIcon, 'click', showHelp);
+      highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(iconsContainer, dataImportBtn, helpIcon)), userContents);
+      highed.dom.ap(body, contents);
+  
+      highed.dom.ap(userContents, dataTableContainer);
+      dataTable.resize();
+      
+      highed.dom.ap(parent, highed.dom.ap(container,body));
+      
+      assignDataPanel.init();
+
+      expand();
+      resizeChart();
+  
+  
+    }
+
     function resize(){
       if (isVisible) {
         resizeChart();
@@ -110,16 +130,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     function showHelp() {
       helpModal.show();
     }
-
-    highed.dom.on(helpIcon, 'click', showHelp);
-    highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(iconsContainer, dataImportBtn, helpIcon)), userContents);
-    highed.dom.ap(body, contents);
-
-    highed.dom.ap(userContents, dataTableContainer);
-    dataTable.resize();
-    
-    highed.dom.ap(parent, highed.dom.ap(container,body));
-
 
     function expand() {
       //var bsize = highed.dom.size(bar);
@@ -211,8 +221,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
       highed.emit('UIAction', 'ToolboxNavigation', props.title);
     }
-
-    expand();
 
   function show() {
     highed.dom.style(container, {
@@ -489,7 +497,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     //setToActualSize();
   });
 
-  resizeChart();
 
   return {
     on: events.on,
@@ -508,6 +515,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     isVisible: function() {
       return isVisible;
     },
+    init: init,
     changeAssignDataTemplate: changeAssignDataTemplate//,
     //toolbar: toolbar
   };

@@ -30,31 +30,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props, chartContainer) {
   var events = highed.events(),
     // Main properties
-    properties = highed.merge(
-      {
-        defaultChartOptions: {},
-        useHeader: true,
-        features: [
-          'data',
-          'templates',
-          'customize',
-          'customcode',
-          'advanced',
-          'export'
-        ],
-        importer: {},
-        dataGrid: {},
-        customizer: {},
-        toolbarIcons: []
-      },
-      options
-    ),
     container = highed.dom.cr(
       'div',
       'highed-transition highed-toolbox highed-box-size'
     ),
     title = highed.dom.cr('div', 'highed-toolbox-body-title'),
-    customizeTitle = highed.dom.cr('div', 'highed-customize-title', props.title),
+    customizeTitle,
     contents = highed.dom.cr(
       'div',
       'highed-box-size highed-toolbox-inner-body'
@@ -67,18 +48,14 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       'div',
       'highed-toolbox-help highed-icon fa fa-question-circle'
     ),
-    width = props.width,
+    width,
     chartWidth = '68%',
-    iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + props.icon,
+    iconClass,
     icon = highed.dom.cr('div', iconClass),
-    helpModal = highed.HelpModal(props.help || []),
+    helpModal,
     // Data table
     customizerContainer = highed.dom.cr('div', 'highed-box-size highed-fill'), 
-    customizer = highed.ChartCustomizer(
-      customizerContainer,
-      properties.customizer,
-      chartPreview
-    ),
+    customizer,
     body = highed.dom.cr(
       'div',
       'highed-toolbox-body highed-box-size highed-transition'
@@ -109,11 +86,75 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     
     resWidth.placeholder = 'W';
     resHeight.placeholder = 'H';
-
-  customizer.on('PropertyChange', chartPreview.options.set);
-  customizer.on('PropertySetChange', chartPreview.options.setAll);
   
     
+  function init() {
+
+
+    width = props.width,
+    customizeTitle = highed.dom.cr('div', 'highed-customize-title', props.title),
+    iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + props.icon;
+
+    customizerContainer.innerHTML = '';
+
+    customizer = highed.ChartCustomizer(
+      customizerContainer,
+      options,
+      chartPreview
+    ),
+
+    helpModal = highed.HelpModal(props.help || []);
+
+    customizer.on('PropertyChange', chartPreview.options.set);
+    customizer.on('PropertySetChange', chartPreview.options.setAll);
+  
+    customizer.on('AdvancedBuilt', function() {
+
+      var bsize = highed.dom.size(body),
+      size = {
+        w: bsize.w,
+        h: (window.innerHeight
+          || document.documentElement.clientHeight
+          || document.body.clientHeight) - highed.dom.pos(body, true).y
+      };
+  
+      searchAdvancedOptions.resize(width, (size.h - highed.dom.size(chartFrame).h) - 15);
+      
+    });
+  
+    customizer.on('AdvanceClicked', function() {
+  
+      width = 65;
+      chartWidth = '28%';
+      highed.dom.style(backIcon, {
+        display: "inline-block"
+      });
+  
+      expand();
+      resizeChart(300);
+  
+      setTimeout(chartPreview.resize, 1000);
+      searchAdvancedOptions.show();
+    });
+    
+
+    highed.dom.ap(resolutionSettings, stretchToFitIcon, tabletIcon, phoneIcon, resWidth, resHeight);
+    
+    title.innerHTML = '';
+    highed.dom.on(helpIcon, 'click', showHelp);
+    highed.dom.ap(contents, highed.dom.ap(title,backIcon, customizeTitle, highed.dom.ap(iconsContainer, customCodeToggle, helpIcon)), userContents);
+    highed.dom.ap(body, contents);
+  
+    highed.dom.ap(userContents, customizerContainer);
+    highed.dom.ap(parent,resolutionSettings, highed.dom.ap(container,body));
+  
+    customizer.resize();
+
+
+    expand();
+    hide();
+  }
+
   function resize() {
     if (isVisible){
       resizeChart((((window.innerHeight
@@ -169,16 +210,6 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     display: "none"
   });
 
-  highed.dom.ap(resolutionSettings, stretchToFitIcon, tabletIcon, phoneIcon, resWidth, resHeight);
-
-  highed.dom.on(helpIcon, 'click', showHelp);
-  highed.dom.ap(contents, highed.dom.ap(title,backIcon, customizeTitle, highed.dom.ap(iconsContainer, customCodeToggle, helpIcon)), userContents);
-  highed.dom.ap(body, contents);
-
-  highed.dom.ap(userContents, customizerContainer);
-  highed.dom.ap(parent,resolutionSettings, highed.dom.ap(container,body));
-
-  customizer.resize();
 
   highed.dom.on(backIcon, 'click', function(){
     width = 25;
@@ -196,36 +227,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
     setTimeout(customizer.showSimpleEditor, 200);
   });
-  
-  customizer.on('AdvancedBuilt', function() {
 
-    var bsize = highed.dom.size(body),
-    size = {
-      w: bsize.w,
-      h: (window.innerHeight
-        || document.documentElement.clientHeight
-        || document.body.clientHeight) - highed.dom.pos(body, true).y
-    };
-
-    searchAdvancedOptions.resize(width, (size.h - highed.dom.size(chartFrame).h) - 15);
-    
-  });
-
-  customizer.on('AdvanceClicked', function() {
-
-    width = 65;
-    chartWidth = '28%';
-    highed.dom.style(backIcon, {
-      display: "inline-block"
-    });
-
-    expand();
-    resizeChart(300);
-
-    setTimeout(chartPreview.resize, 1000);
-    searchAdvancedOptions.show();
-  });
-  
   function expand() {
     
     var newWidth = width; //props.width;
@@ -490,9 +492,6 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     //setToActualSize();
   });
 
-  expand();
-  hide();
-
   return {
     on: events.on,
     destroy: destroy,
@@ -505,7 +504,8 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     show: show,
     isVisible: function() {
       return isVisible;
-    }
+    },
+    init: init
     //toolbar: toolbar
   };
 };
