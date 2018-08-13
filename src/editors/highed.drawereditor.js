@@ -401,6 +401,9 @@ highed.DrawerEditor = function(parent, options) {
         customizePage.init();
       } else {
         // Create page
+        const defaultPage = highed.DefaultPage(splitter.bottom, option, chartPreview, highedChartContainer);
+        defaultPage.init();
+        option.nav.page = defaultPage;
       }
       
       option.nav.onClick.push(
@@ -427,11 +430,6 @@ highed.DrawerEditor = function(parent, options) {
     });
     toolboxEntries = addedOptions;
     // resizeChart(toolbox.width());
-  }
-
-  function addPage(option) {
-    console.log("ADDING...", option);
-    panel.addOption(option.nav);
   }
 
   /**

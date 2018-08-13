@@ -38,6 +38,7 @@
     "./src/core-ui/highed.toolbox.js",
     "./src/core-ui/highed.optionspanel.js",
     "./src/core-ui/highed.assigndatapanel.js",
+    "./src/core-ui/highed.defaultpage.js",
     "./src/core-ui/highed.searchadvancedoptions.js",
     "./src/core-ui/highed.helpmodal.js",
 

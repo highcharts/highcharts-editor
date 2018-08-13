@@ -27,78 +27,83 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.PreviewPage = function(parent, options, chartPreview, chartFrame, props) {
+highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
   var events = highed.events(),
     // Main properties
-    properties = highed.merge(
-      {
-        defaultChartOptions: {},
-        useHeader: true,
-        features: [
-          'data',
-          'templates',
-          'customize',
-          'customcode',
-          'advanced',
-          'export'
-        ],
-        importer: {},
-        dataGrid: {},
-        customizer: {},
-        toolbarIcons: []
-      },
-      options
-    ),
     container = highed.dom.cr(
       'div',
       'highed-transition highed-toolbox highed-box-size'
     ),
-    title = highed.dom.cr('div', 'highed-toolbox-body-title', props.title),
+    title,
     contents = highed.dom.cr(
       'div',
       'highed-box-size highed-toolbox-inner-body'
     ),
     userContents = highed.dom.cr(
       'div',
-      'highed-box-size highed-toolbox-user-contents'
+      'highed-box-size highed-toolbox-user-contents test'
     ),
     helpIcon = highed.dom.cr(
       'div',
       'highed-toolbox-help highed-icon fa fa-question-circle'
     ),
-    iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + props.icon,
+    width,
+    chartWidth = '68%',
+    iconClass,
     icon = highed.dom.cr('div', iconClass),
-    helpModal = highed.HelpModal(props.help || []),
+    helpModal,
     // Data table
-    customizerContainer = highed.dom.cr('div', 'highed-box-size highed-fill'), 
-    customizer = highed.ChartCustomizer(
-      customizerContainer,
-      properties.customizer,
-      chartPreview
-    ),
+    pageContainer = highed.dom.cr('div', 'highed-box-size highed-fill'), 
     body = highed.dom.cr(
       'div',
       'highed-toolbox-body highed-box-size highed-transition'
-    );
+    ),
+    isVisible = false;
+    
+  function init() {
 
-  customizer.on('PropertyChange', chartPreview.options.set);
-  customizer.on('PropertySetChange', chartPreview.options.setAll);
+    width = options.width,
+    title = highed.dom.cr('div', 'highed-toolbox-body-title', options.title),
+    iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + options.icon;
+
+    pageContainer.innerHTML = '';
+
+    helpModal = highed.HelpModal(options.help || []);
+    
+    highed.dom.on(helpIcon, 'click', showHelp);
+    highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(iconsContainer, helpIcon)), userContents);
+    highed.dom.ap(body, contents);
   
+    highed.dom.ap(userContents, pageContainer);
+    highed.dom.ap(parent, highed.dom.ap(container,body));
+
+    if (options.create && highed.isFn(options.create)) options.create(userContents, chartPreview);
+
+    expand();
+    hide();
+  }
+
+  function resize() {
+    if (isVisible){
+      resizeChart((((window.innerHeight
+        || document.documentElement.clientHeight
+        || document.body.clientHeight) - highed.dom.pos(body, true).y) - 16));
+      expand();
+    }
+  }
+  
+  if (!highed.onPhone()) {
+    highed.dom.on(window, 'resize', resize);
+  }
+
   function showHelp() {
     helpModal.show();
   }
-
-  highed.dom.on(helpIcon, 'click', showHelp);
-  highed.dom.ap(contents, highed.dom.ap(title, helpIcon), userContents);
-  highed.dom.ap(body, contents);
-
-  highed.dom.ap(userContents, customizerContainer);
-  highed.dom.ap(parent, highed.dom.ap(container,body));
-
-  customizer.resize();
+  
 
   function expand() {
-    var newWidth = props.width;
+    
+    var newWidth = width; //props.width;
 
     highed.dom.style(body, {
       width: 100 + '%',
@@ -114,66 +119,62 @@ highed.PreviewPage = function(parent, options, chartPreview, chartFrame, props) 
     // expanded = true;
 
     function resizeBody() {
-    var bsize = highed.dom.size(body),
-      tsize = highed.dom.size(title),
-      size = {
-        w: bsize.w,
-        h: bsize.h - tsize.h - 55
-      };
-      
-    highed.dom.style(contents, {
-      width: size.w + 'px',
-      height: size.h + 'px'
-    });
+      var bsize = highed.dom.size(body),
+        tsize = highed.dom.size(title),
+        size = {
+          w: bsize.w,
+          h: (window.innerHeight
+            || document.documentElement.clientHeight
+            || document.body.clientHeight) - highed.dom.pos(body, true).y
+        };
 
-    return size;
-  }
+        highed.dom.style(contents, {
+          width: size.w + 'px',
+          height: ((size.h - 16)) + 'px'
+        });
 
-  setTimeout(function() {
-    var height = resizeBody().h;
-    
-    customizer.resize(newWidth, height - 20);   
-    
-    highed.dom.style(body, {
-      height: (height + highed.dom.size(title).h) + 'px',
-    });
-    highed.dom.style(contents, {
-      height: height + 'px',
-    });
+      //customizer.resize(newWidth, (size.h - 17) - tsize.h);
 
-    //entryEvents.emit('Expanded', newWidth, height - 20);
-  }, 300);  
+      return size;
+    }
 
-    highed.emit('UIAction', 'ToolboxNavigation', props.title);
+    setTimeout(resizeBody, 300);  
+    highed.emit('UIAction', 'ToolboxNavigation', options.title);
   }
 
   function show() {
     highed.dom.style(container, {
       display: 'block'
     });
-
-    resizeChart();
-    expand();
     
+    expand();
+    resizeChart(((window.innerHeight
+      || document.documentElement.clientHeight
+      || document.body.clientHeight) - highed.dom.pos(body, true).y) - 16);
+    isVisible = true;
   }
   
   function hide() {
+
+    //customizer.showSimpleEditor();
+    width = 25;
+    chartWidth = "68%";
+    
+    highed.dom.style(backIcon, {
+      display: "none"
+    });
+    //searchAdvancedOptions.hide();
+
+    expand();
+
     highed.dom.style(container, {
       display: 'none'
     });
+
+    isVisible = false;
   }
 
   function destroy() {}
-
-  function showError(title, message) {
-    highed.dom.style(errorBar, {
-      opacity: 1,
-      'pointer-events': 'auto'
-    });
-
-    errorBarHeadline.innerHTML = title;
-    errorBarBody.innerHTML = message;
-  }
 
   chartPreview.on('ChartChange', function(newData) {
     events.emit('ChartChangedLately', newData);
@@ -207,7 +208,7 @@ highed.PreviewPage = function(parent, options, chartPreview, chartFrame, props) 
     //setToActualSize();
     }, 2000);
   });
-
+/*
 
   chartPreview.on('RequestEdit', function(event, x, y) {
     // Expanded
@@ -223,37 +224,10 @@ highed.PreviewPage = function(parent, options, chartPreview, chartFrame, props) 
       toolboxEntries.customize.expand();
     }
   });
-
-  chartPreview.on('Error', function(e) {
-    if (e.indexOf('Highcharts error') >= 0) {
-      var i1 = e.indexOf('#'),
-        i = e.substr(i1).indexOf(':'),
-        id = parseInt(e.substr(i1 + 1, i), 10),
-        item = highed.highchartsErrors[id],
-        urlStart = e.indexOf('www.'),
-        url = '';
-
-      if (urlStart >= 0) {
-        url =
-          '<div class="highed-errorbar-more"><a href="https://' +
-          e.substr(urlStart) +
-          '" target="_blank">Click here for more information</a></div>';
-      }
-
-      return showError(
-        (item.title || "There's a problem with your chart") + '!',
-        (item.text || e) + url
-      );
-    }
-
-    showError("There's a problem with your chart!", e);
-  });
+*/
 
   //chartPreview.on('ChartRecreated', hideError);
 
-  if (!highed.onPhone()) {
-    //highed.dom.on(window, 'resize', resize);
-  }
 
   //////////////////////////////////////////////////////////////////////////////
 /*
@@ -299,11 +273,11 @@ highed.PreviewPage = function(parent, options, chartPreview, chartFrame, props) 
   /**
    * Resize the chart preview based on a given width
    */
-  function resizeChart(newWidth) {
+  function resizeChart(newHeight) {
     highed.dom.style(chartFrame, {
       /*left: newWidth + 'px',*/
-      width: '68%',
-      height: 681 + 'px'
+      width: chartWidth, //'68%',
+      height: newHeight + 'px' || '100%'
     });
 /*
     highed.dom.style(chartContainer, {
@@ -325,19 +299,16 @@ highed.PreviewPage = function(parent, options, chartPreview, chartFrame, props) 
     //setToActualSize();
   });
 
-  expand();
-  hide();
-
   return {
     on: events.on,
     destroy: destroy,
     chart: chartPreview,
-    data: {
-      showLiveStatus: function(){}, //toolbox.showLiveStatus,
-      hideLiveStatus: function(){}//toolbox.hideLiveStatus
-    },
     hide: hide,
-    show: show
+    show: show,
+    isVisible: function() {
+      return isVisible;
+    },
+    init: init
     //toolbar: toolbar
   };
 };
