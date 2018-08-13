@@ -34,7 +34,8 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
       'div',
       'highed-transition highed-toolbox highed-box-size'
     ),
-    title,
+    title = highed.dom.cr('div', 'highed-toolbox-body-title'),
+    customizeTitle,
     contents = highed.dom.cr(
       'div',
       'highed-box-size highed-toolbox-inner-body'
@@ -43,10 +44,7 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
       'div',
       'highed-box-size highed-toolbox-user-contents test'
     ),
-    helpIcon = highed.dom.cr(
-      'div',
-      'highed-toolbox-help highed-icon fa fa-question-circle'
-    ),
+    helpIcon,
     width,
     chartWidth = '68%',
     iconClass,
@@ -54,6 +52,7 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
     helpModal,
     // Data table
     pageContainer = highed.dom.cr('div', 'highed-box-size highed-fill'), 
+    iconsContainer = highed.dom.cr('div', 'highed-toolbox-icons'),
     body = highed.dom.cr(
       'div',
       'highed-toolbox-body highed-box-size highed-transition'
@@ -63,21 +62,29 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
   function init() {
 
     width = options.width,
-    title = highed.dom.cr('div', 'highed-toolbox-body-title', options.title),
+    customizeTitle = highed.dom.cr('div', 'highed-customize-title', options.title),
     iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + options.icon;
 
     pageContainer.innerHTML = '';
+    title.innerHTML = '';
 
-    helpModal = highed.HelpModal(options.help || []);
-    
-    highed.dom.on(helpIcon, 'click', showHelp);
-    highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(iconsContainer, helpIcon)), userContents);
+    if (options.create && highed.isFn(options.create)) options.create(userContents, chartPreview, iconsContainer);
+
+    if (options.help && options.help.length > 0) {
+      helpIcon = highed.dom.cr(
+        'div',
+        'highed-toolbox-help highed-icon fa fa-question-circle'
+      ),
+      helpModal = highed.HelpModal(options.help || []),
+      highed.dom.on(helpIcon, 'click', showHelp);
+    }
+
+    highed.dom.ap(contents, highed.dom.ap(title,backIcon, customizeTitle, highed.dom.ap(iconsContainer,/* customCodeToggle, */helpIcon)), userContents);
     highed.dom.ap(body, contents);
   
     highed.dom.ap(userContents, pageContainer);
     highed.dom.ap(parent, highed.dom.ap(container,body));
 
-    if (options.create && highed.isFn(options.create)) options.create(userContents, chartPreview);
 
     expand();
     hide();
