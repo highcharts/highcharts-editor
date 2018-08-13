@@ -96,7 +96,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     iconsContainer = highed.dom.cr('div', 'highed-toolbox-icons'),
     isVisible = true;
 
-
     function resize(){
       if (isVisible) {
         resizeChart();
@@ -113,7 +112,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     }
 
     highed.dom.on(helpIcon, 'click', showHelp);
-    highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(iconsContainer, dataImportBtn, helpIcon)),/*(props.showLiveStatus ? highed.dom.ap(title, liveDiv, helpIcon) :  highed.dom.ap(title, helpIcon)),*/ userContents);
+    highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(iconsContainer, dataImportBtn, helpIcon)), userContents);
     highed.dom.ap(body, contents);
 
     highed.dom.ap(userContents, dataTableContainer);
@@ -387,22 +386,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   dataTable.on('LoadGSheet', function(settings) {
     chartPreview.data.gsheet(settings);
   });
-/*
-  chartPreview.on('RequestEdit', function(event, x, y) {
-    // Expanded
-    if (toolboxEntries.customize.body.offsetWidth) {
-      customizer.focus(event, x, y);
-
-      // Collapsed
-    } else {
-      var unbind = toolboxEntries.customize.on('Expanded', function() {
-        customizer.focus(event, x, y);
-        unbind();
-      });
-      toolboxEntries.customize.expand();
-    }
-  });
-*/
+  
   dataTable.on('Change', function(headers, data) {
     chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true));
     return chartPreview.data.csv({

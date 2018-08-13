@@ -1691,7 +1691,10 @@ highed.ChartPreview = function(parent, attributes) {
       full: aggregatedOptions,
       flat: flatOptions,
       chart: chartOptions,
-      getPreview: getCodePreview
+      getPreview: getCodePreview,
+      all: function(){
+        return chart;
+      }
     },
 
     data: {

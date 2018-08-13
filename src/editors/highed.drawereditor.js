@@ -164,16 +164,7 @@ highed.DrawerEditor = function(parent, options) {
               '<li>Custom code: Here, properties can be overridden programatically</li>'
             ]
           }
-        ],
-        create: function(body) {
-          highed.dom.ap(body, customizerContainer);
-          customizer.resize();
-        },
-        events: {
-          Expanded: function(width, height) {
-            customizer.resize(width, height);
-          }
-        }
+        ]
       },
       chartFrame
     ),
@@ -219,15 +210,6 @@ highed.DrawerEditor = function(parent, options) {
             ]
           }
         ],
-        create: function(body) {
-          //highed.dom.ap(body, dataTableContainer);
-          //dataTable.resize();
-        },
-        events: {
-          Expanded: function(width, height) {
-            //dataTable.resize(width, height);
-          }
-        },
         showLiveStatus: true
       }
     ),
@@ -255,15 +237,7 @@ highed.DrawerEditor = function(parent, options) {
               'template list.'
             ]
           }
-        ],
-        create: function(body) {
-          //highed.dom.ap(body, templatesContainer);
-        },
-        events: {
-          Expanded: function(width, height) {
-            //templates.resize(width, height);
-          }
-        }
+        ]
       }
     ),
 
@@ -662,15 +636,15 @@ highed.DrawerEditor = function(parent, options) {
    */
   function setEnabledFeatures(feats) {
     properties.features = feats;
-    //createFeatures();
+    createFeatures();
   }
 
   /**
    * Add a new feature
    */
   function addFeature(name, feat) {
-    //customOptions[name] = feat;
-    //createFeatures();
+    customOptions[name] = feat;
+    createFeatures();
   }
 
   function destroy() {}
@@ -881,7 +855,7 @@ highed.DrawerEditor = function(parent, options) {
   });
 
   // Create the features
-  //createFeatures();
+  createFeatures();
   createToolbar();
 
   resize();

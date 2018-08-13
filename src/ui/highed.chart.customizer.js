@@ -310,17 +310,27 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
           highed.meta.optionsAdvanced,
           true
         );
-        
-        advTree.build(
-          highed.meta.optionsAdvanced,
-          //chartPreview.options.all()
-         highed.merge({}, chartPreview.options.getCustomized())
-        );
 
-        highed.dom.style(advancedLoader, {
-          opacity: 0
-        });
-        events.emit("AdvancedBuilt");
+        const series = chartPreview.options.all().series;
+        const allOptions = highed.merge({}, chartPreview.options.getCustomized());
+
+        if (series) {
+          series.forEach(function(serie, i) {
+            highed.merge(allOptions.series[i], {
+              type: serie.type || 'line'
+            });
+          });
+           advTree.build(
+             highed.meta.optionsAdvanced,
+             allOptions
+           );
+   
+           highed.dom.style(advancedLoader, {
+             opacity: 0
+           });
+           events.emit("AdvancedBuilt");
+        }
+
       }, 10);
     }
   }
