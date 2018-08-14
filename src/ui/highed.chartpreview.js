@@ -64,6 +64,7 @@ highed.ChartPreview = function(parent, attributes) {
     templateOptions = {},
     chartOptions = {},
     themeOptions = {},
+    themeCustomCode = '',
     themeMeta = {},
     exports = {},
     customCodeDefault = [
@@ -329,7 +330,6 @@ highed.ChartPreview = function(parent, attributes) {
     if (highed.isStr(theme)) {
       return assignTheme(JSON.parse(theme));
     }
-
     themeMeta = {};
 
     if (highed.isBasic(theme) || highed.isArr(theme)) {
@@ -348,6 +348,7 @@ highed.ChartPreview = function(parent, attributes) {
       };
 
       themeOptions = highed.merge({}, theme.options);
+      themeCustomCode = theme.customCode || '';
     } else {
       themeMeta = {
         id: highed.uuid(),
@@ -358,6 +359,7 @@ highed.ChartPreview = function(parent, attributes) {
     }
 
     if (!skipEmit) {
+      events.emit('UpdateCustomCode');
       updateAggregated();
       init(aggregatedOptions);
       emitChange();
@@ -976,7 +978,8 @@ highed.ChartPreview = function(parent, attributes) {
       themeData = {
         id: themeMeta.id,
         name: themeMeta.name,
-        options: themeOptions || {}
+        options: themeOptions || {},
+        customCode: themeCustomCode || ''
       };
     }
 
@@ -1611,7 +1614,7 @@ highed.ChartPreview = function(parent, attributes) {
 
   function setCustomCode(newCode, errFn, skipEmit) {
     var fn;
-
+    
     if (!newCode) {
       customCode = false;
       customCodeStr = '';
@@ -1626,7 +1629,8 @@ highed.ChartPreview = function(parent, attributes) {
           'if (options.xAxis && options.xAxis.length === 1) options.xAxis = options.xAxis[0];',
           'if (options.zAxis && options.zAxis.length === 1) options.zAxis = options.zAxis[0];',
           'if (!options.series || options.series.length === 0) return;',
-          'var encodedUrl = "";'
+          'var encodedUrl = "";',
+           themeCustomCode
         ].join('') + newCode 
       );
       customCodeStr = newCode;
