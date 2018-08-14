@@ -42,7 +42,7 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
     ),
     userContents = highed.dom.cr(
       'div',
-      'highed-box-size highed-toolbox-user-contents test'
+      'highed-box-size highed-toolbox-user-contents highed-toolbox-defaultpage'
     ),
     helpIcon,
     width,
@@ -138,6 +138,11 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
         highed.dom.style(contents, {
           width: size.w + 'px',
           height: ((size.h - 16)) + 'px'
+        });
+
+        highed.dom.style(userContents, {
+          width: size.w + 'px',
+          height: ((size.h - 16) - 47) + 'px'
         });
 
       //customizer.resize(newWidth, (size.h - 17) - tsize.h);
