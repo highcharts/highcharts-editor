@@ -73,7 +73,11 @@ highed.DrawerEditor = function(parent, options) {
       data: {
         icon: 'fa-table',
         title: 'Data',
-        width: 65, //Percent
+        widths: {
+          desktop: 65,
+          tablet: 64,
+          phone: 100
+        },
         nav: {
           icon: 'table',
           text: 'Data',
@@ -111,7 +115,11 @@ highed.DrawerEditor = function(parent, options) {
       },
       templates: {
         icon: 'fa-bar-chart',
-        width: 25,
+        widths: {
+          desktop: 25,
+          tablet: 24,
+          phone: 100
+        },
         title: 'Templates',
         nav: {
           icon: 'bar-chart',
@@ -151,7 +159,11 @@ highed.DrawerEditor = function(parent, options) {
           text: 'Customize',
           onClick: []
         },
-        width: 25,
+        widths: {
+          desktop: 25,
+          tablet: 24,
+          phone: 100
+        },
         help: [
           {
             title: 'Customize',

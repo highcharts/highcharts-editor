@@ -57,6 +57,15 @@
   font-weight: 500;
   margin-top: 14px;
   text-align: center;
+
+  .highed-assigndatapanel-toggle {
+    font-size: 12px;
+    position: absolute;
+    top: 19px;
+    right: 14px;
+    display: none;
+    cursor: pointer;
+  }
 }
 .highed-assigndatapanel-header-desc {
   margin: 20px 30px;
@@ -162,11 +171,20 @@
 }
 
 @media only screen and (max-width: 600px) {
+
+  
+  .highed-assigndatapanel-header {
+    .highed-assigndatapanel-toggle {
+      display: block;
+    }
+  }
+
   .highed-assigndatapanel {
+    height: 48px;
     margin-right: inherit;
-    height: initial;
-    position: relative;
-    width: inherit;
+    position: absolute;
+    z-index: 10000;
+    width: 100%;
     right: inherit;
     background-color: white;
     border: 1px solid rgba(14, 14, 14, 0.15);

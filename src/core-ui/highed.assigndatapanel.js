@@ -58,7 +58,8 @@ highed.AssignDataPanel = function(parent, attr) {
       'linkedTo': 'label'
     }
   },
-  options = {};
+  options = {},
+  toggled = false;
 
   Object.assign(options, defaultOptions);
   
@@ -263,14 +264,29 @@ highed.AssignDataPanel = function(parent, attr) {
       'div',
       'highed-assigndatapanel-body highed-box-size highed-transition'
     ),
+    headerToggle = highed.dom.cr('span', '', '<i class="fa fa-chevron-down highed-assigndatapanel-toggle" aria-hidden="true"></i>'),
     header = highed.dom.ap(
               highed.dom.cr('div', 'highed-assigndatapanel-header-container'), 
-              highed.dom.cr('h3', 'highed-assigndatapanel-header', 'Select columns for this chart'),
+              highed.dom.ap(highed.dom.cr('h3', 'highed-assigndatapanel-header', 'Select columns for this chart'), headerToggle),
               highed.dom.cr('p', 'highed-assigndatapanel-header-desc', 'Fill in the column id you want to visualise. Add multiple columns with a hyphen (eg. A-C)')),
     labels = highed.dom.cr('div', 'highed-assigndatapanel-data-options'),
     selectContainer = highed.dom.cr('div', 'highed-assigndatapanel-select-container'),
     inputContainer = highed.dom.cr('div', 'highed-assigndatapanel-inputs-container'),
     seriesTypeSelect = highed.DropDown(selectContainer, ' highed-assigndatapanel-series-dropdown');
+
+
+  highed.dom.on(headerToggle, 'click', function() {
+
+    const height = (toggled ? '48px' : 'initial');
+    const overflow = (toggled ? 'hidden' : 'auto');
+    
+    highed.dom.style(container, {
+      height: height,
+      overflow: overflow
+    });
+
+    toggled = !toggled;
+  });
 
   seriesTypeSelect.addItems([{
     id: 'line',

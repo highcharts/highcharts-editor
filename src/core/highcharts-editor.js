@@ -772,6 +772,7 @@ var highed = {
     isReady = false,
     includedScripts = {},
     isOnPhone = false,
+    isOnTablet = false,
     options = {
       codeMirrorTheme: 'neo',
       helpURL: 'https://www.highcharts.com/products/highcharts-editor',
@@ -947,6 +948,14 @@ var highed = {
     return isOnPhone;
   };
 
+  /** Returns true if running on a screen size is within tablets range and checks user agent
+   *  @namespace highed
+   *  @returns {boolean} - true if running on a tablet
+   */
+  highed.onTablet = function() {
+    return isOnTablet;
+  };
+
   function checkIfPhone() {
     var check = false;
     (function(a) {
@@ -963,8 +972,13 @@ var highed = {
     return check;
   }
 
-  isOnPhone = checkIfPhone();
+  function checkIfTabletDimensions() {
+    return ((navigator.userAgent || navigator.vendor || window.opera).match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i)) && window.outerWidth <= 1024 && window.outerWidth >= 768;
+  }
 
+  isOnPhone = checkIfPhone();
+  isOnTablet = checkIfTabletDimensions();
+  
   ///////////////////////////////////////////////////////////////////////////
 
   //Inject dependencies

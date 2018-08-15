@@ -125,6 +125,8 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     customizer.on('AdvanceClicked', function() {
   
       width = 65;
+      if (highed.onTablet()) width = 64;
+
       chartWidth = '28%';
       highed.dom.style(backIcon, {
         display: "inline-block"
@@ -212,7 +214,11 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
 
   highed.dom.on(backIcon, 'click', function(){
-    width = 25;
+    
+    width = props.widths.desktop;
+    if (highed.onTablet() && props.widths.tablet) width = props.widths.tablet;
+    else if (highed.onPhone() && props.widths.phone) width = props.widths.phone;
+    
     chartWidth = "68%";
     
     highed.dom.style(backIcon, {
@@ -287,7 +293,13 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
   function hide() {
 
     customizer.showSimpleEditor();
-    width = 25;
+    
+
+      
+    width = props.widths.desktop;
+    if (highed.onTablet() && props.widths.tablet) width = props.widths.tablet;
+    else if (highed.onPhone() && props.widths.phone) width = props.widths.phone;
+
     chartWidth = "68%";
     
     highed.dom.style(backIcon, {

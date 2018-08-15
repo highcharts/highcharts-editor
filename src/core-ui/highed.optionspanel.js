@@ -48,7 +48,7 @@ highed.OptionsPanel = function(parent, attr) {
 
     //attr.forEach(function(option) {
       var btn = highed.dom.cr(
-        'button',
+        'a',
         'highed-ok-button highed-optionspanel-button ', 
         '<i class="fa fa-' + option.icon + '"></i>&nbsp;' + option.text
       );

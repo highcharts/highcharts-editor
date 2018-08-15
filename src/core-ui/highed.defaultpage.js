@@ -51,7 +51,6 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
     icon = highed.dom.cr('div', iconClass),
     helpModal,
     // Data table
-    pageContainer = highed.dom.cr('div', 'highed-box-size highed-fill'), 
     iconsContainer = highed.dom.cr('div', 'highed-toolbox-icons'),
     body = highed.dom.cr(
       'div',
@@ -60,12 +59,14 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
     isVisible = false;
     
   function init() {
+      
+    width = options.widths.desktop;
+    if (highed.onTablet() && options.widths.tablet) width = options.widths.tablet;
+    else if (highed.onPhone() && options.widths.phone) width = options.widths.phone;
 
-    width = options.width,
     customizeTitle = highed.dom.cr('div', 'highed-customize-title', options.title),
     iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + options.icon;
 
-    pageContainer.innerHTML = '';
     title.innerHTML = '';
 
     if (options.create && highed.isFn(options.create)) options.create(userContents, chartPreview, iconsContainer);
@@ -82,7 +83,6 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
     highed.dom.ap(contents, highed.dom.ap(title,backIcon, customizeTitle, highed.dom.ap(iconsContainer,/* customCodeToggle, */helpIcon)), userContents);
     highed.dom.ap(body, contents);
   
-    highed.dom.ap(userContents, pageContainer);
     highed.dom.ap(parent, highed.dom.ap(container,body));
 
 
@@ -169,7 +169,10 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
   function hide() {
 
     //customizer.showSimpleEditor();
-    width = 25;
+    
+    width = options.widths.desktop;
+    if (highed.onTablet() && options.widths.tablet) width = options.widths.tablet;
+    else if (highed.onPhone() && options.widths.phone) width = options.widths.phone;
     chartWidth = "68%";
     
     highed.dom.style(backIcon, {

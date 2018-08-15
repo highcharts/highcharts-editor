@@ -60,7 +60,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     ),
     userContents = highed.dom.cr(
       'div',
-      'highed-box-size highed-toolbox-user-contents test'
+      'highed-box-size highed-toolbox-user-contents highed-toolbox-defaultpage'
     ),
     helpIcon = highed.dom.cr(
       'div',
@@ -146,7 +146,10 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
   }
 
   function expand() {
-    var newWidth = props.width;
+      
+    var newWidth = props.widths.desktop;
+    if (highed.onTablet() && props.widths.tablet) newWidth = props.widths.tablet;
+    else if (highed.onPhone() && props.widths.phone) newWidth = props.widths.phone;
 
     highed.dom.style(body, {
       width: 100 + '%',
@@ -176,6 +179,11 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
           height: ((size.h - 16)) + 'px'
         });
 
+        highed.dom.style(userContents, {
+          width: size.w + 'px',
+          height: ((size.h - 16) - 47) + 'px'
+        });
+        
       templates.resize(newWidth, (size.h - 17) - tsize.h);   
 /*
       setTimeout(function() {

@@ -96,7 +96,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     iconsContainer = highed.dom.cr('div', 'highed-toolbox-icons'),
     isVisible = true;
 
-
     function init() {
 
       highed.dom.on(helpIcon, 'click', showHelp);
@@ -105,6 +104,13 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   
       highed.dom.ap(userContents, dataTableContainer);
       dataTable.resize();
+
+      if (highed.onPhone()){
+        highed.dom.style(body, {
+          top: '47px',
+          position: 'relative'
+        });
+      }
       
       highed.dom.ap(parent, highed.dom.ap(container,body));
       
@@ -133,7 +139,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     function expand() {
       //var bsize = highed.dom.size(bar);
-      var newWidth = props.width;
+
+      var newWidth = props.widths.desktop;
+      if (highed.onTablet() && props.widths.tablet) newWidth = props.widths.tablet;
+      else if (highed.onPhone() && props.widths.phone) newWidth = props.widths.phone;
 /*
       if (expanded && activeItem === exports) {
         return;
@@ -200,7 +209,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       });
 
       dataTable.resize(newWidth, (size.h - 17 - 55) - tsize.h);   
-      assignDataPanel.resize(newWidth, highed.dom.pos(chartFrame, true).y - highed.dom.pos(body, true).y)
+      if(!highed.onPhone()) assignDataPanel.resize(newWidth, highed.dom.pos(chartFrame, true).y - highed.dom.pos(body, true).y)
      }
 
     setTimeout(resizeBody, 300);
