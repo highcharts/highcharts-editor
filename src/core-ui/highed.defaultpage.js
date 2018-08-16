@@ -64,7 +64,7 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
     if (highed.onTablet() && options.widths.tablet) width = options.widths.tablet;
     else if (highed.onPhone() && options.widths.phone) width = options.widths.phone;
 
-    customizeTitle = highed.dom.cr('div', 'highed-customize-title', options.title),
+    customizeTitle = highed.dom.cr('div', 'highed-customize-title'/*, options.title*/),
     iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + options.icon;
 
     title.innerHTML = '';

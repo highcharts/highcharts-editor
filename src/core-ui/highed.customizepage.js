@@ -92,7 +92,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
 
     width = props.width,
-    customizeTitle = highed.dom.cr('div', 'highed-customize-title', props.title),
+    customizeTitle = highed.dom.cr('div', 'highed-customize-title'/*, props.title*/),
     iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + props.icon;
 
     customizerContainer.innerHTML = '';

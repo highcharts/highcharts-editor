@@ -54,7 +54,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       'highed-transition highed-toolbox highed-box-size'
     ),
     title = highed.dom.cr('div', 'highed-toolbox-body-title'),
-    titleContainer = highed.dom.cr('div', 'highed-page-title', '<h3> ' + props.title + ' </h3>'),
+    chartTitle = highed.dom.cr('div', 'highed-toolbox-body-chart-title'),
     contents = highed.dom.cr(
       'div',
       'highed-box-size highed-toolbox-inner-body'
@@ -100,7 +100,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     function init() {
 
       highed.dom.on(helpIcon, 'click', showHelp);
-      highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(iconsContainer, dataImportBtn, helpIcon)), userContents);
+      highed.dom.ap(contents, highed.dom.ap(title, chartTitle, highed.dom.ap(iconsContainer, dataImportBtn, helpIcon)), userContents);
       highed.dom.ap(body, contents);
   
       highed.dom.ap(userContents, dataTableContainer);
@@ -113,7 +113,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         });
       }
       
-      highed.dom.ap(parent, highed.dom.ap(container,titleContainer, body));
+      highed.dom.ap(parent, highed.dom.ap(container, body));
       
       assignDataPanel.init();
 
@@ -264,6 +264,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     assignDataPanel.setAssignDataFields(newTemplate);
     assignDataPanel.resetValues();
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+  }
+
+  function setChartTitle(title) {
+    chartTitle.innerHTML = title;
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -523,6 +527,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       return isVisible;
     },
     init: init,
+    setChartTitle: setChartTitle,
     changeAssignDataTemplate: changeAssignDataTemplate//,
     //toolbar: toolbar
   };

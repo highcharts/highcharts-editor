@@ -88,7 +88,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
   //customizer.on('PropertySetChange', chartPreview.options.setAll);
   
   function init() {
-    title = highed.dom.cr('div', 'highed-toolbox-body-title', props.title);
+    title = highed.dom.cr('div', 'highed-toolbox-body-title'/*, props.title*/);
     iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + props.icon;
 
     templatesContainer.innerHTML = '';

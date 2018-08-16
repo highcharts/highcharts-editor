@@ -179,7 +179,6 @@ highed.DrawerEditor = function(parent, options) {
       },
     },
     panel = highed.OptionsPanel(splitter.bottom),
-    
     toolbar = highed.Toolbar(splitter.top),
     //toolbox = highed.Toolbox(splitter.bottom),
     //assignDataPanel = highed.AssignDataPanel(splitter.bottom),
@@ -364,8 +363,11 @@ highed.DrawerEditor = function(parent, options) {
       'Samsung Galaxy S8+': [360, 740],
       'Samsung Galaxy S7': [360, 640],
       'Samsung Galaxy S7 Edge': [360, 640]
-    };
+    },
+    titleHeader = highed.dom.cr('h3', '', 'Data'),
+    titleContainer = highed.dom.ap(highed.dom.cr('div', 'highed-page-title'), titleHeader);
 
+  highed.dom.ap(splitter.bottom, titleContainer);
   if (!properties.useHeader) {
     highed.dom.style(splitter.top.parentNode, {
       display: 'none'
@@ -423,6 +425,7 @@ highed.DrawerEditor = function(parent, options) {
           prev.hide();
           newOption.page.show();
           panel.setDefault(newOption.page);
+          titleHeader.innerHTML = newOption.text;
         }
       );
 
@@ -544,6 +547,10 @@ highed.DrawerEditor = function(parent, options) {
   }
 
   function destroy() {}
+
+  function setChartTitle(title) {
+    dataPage.setChartTitle(title);
+  }
 
   function addImportTab(tabOptions) {
     dataPage.addImportTab(tabOptions);
@@ -834,6 +841,7 @@ highed.DrawerEditor = function(parent, options) {
     addFeature: addFeature,
     chart: chartPreview,
     toolbar: toolbar,
+    setChartTitle: setChartTitle,
     data: {
       on: function() {}, //dataTable.on,
       showLiveStatus: function() {}, //toolbox.showLiveStatus,

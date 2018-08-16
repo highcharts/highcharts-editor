@@ -40,7 +40,7 @@ highed.AssignDataPanel = function(parent, attr) {
     "data": {
       'values': {
         'name': "Values",
-        'desc': 'One or more columns of numbers',
+        'desc': 'Enter columns with the values you want to chart. You can enter a range using a hyphen.',
         'default': 'B-C',
         'value': 'B-C',
         'multipleValues': true,
@@ -50,7 +50,7 @@ highed.AssignDataPanel = function(parent, attr) {
     },
     'names': {
       'name': "Names",
-      'desc': 'The name of the point as shown in the legend, tooltip, dataLabel etc..',
+      'desc': 'The name of the point as shown in the legend, tooltip, data label etc.',
       'default': '',
       'value': '',
       'previousValue': null,
@@ -267,8 +267,7 @@ highed.AssignDataPanel = function(parent, attr) {
     headerToggle = highed.dom.cr('span', '', '<i class="fa fa-chevron-down highed-assigndatapanel-toggle" aria-hidden="true"></i>'),
     header = highed.dom.ap(
               highed.dom.cr('div', 'highed-assigndatapanel-header-container'), 
-              highed.dom.ap(highed.dom.cr('h3', 'highed-assigndatapanel-header', 'Select columns for this chart'), headerToggle),
-              highed.dom.cr('p', 'highed-assigndatapanel-header-desc', '')),
+              highed.dom.ap(highed.dom.cr('h3', 'highed-assigndatapanel-header', 'Select columns for this chart'), headerToggle)),
     labels = highed.dom.cr('div', 'highed-assigndatapanel-data-options'),
     selectContainer = highed.dom.cr('div', 'highed-assigndatapanel-select-container'),
     inputContainer = highed.dom.cr('div', 'highed-assigndatapanel-inputs-container'),
@@ -420,10 +419,6 @@ highed.AssignDataPanel = function(parent, attr) {
     var labelInput = highed.dom.cr('input', 'highed-assigndatapanel-input');
 
     var colors = option.colors || generateColors();
-    highed.dom.style(labelInput, {
-      "background": colors.light,
-      "border-color": colors.dark
-    });
 
     option.colors = colors;
 
@@ -446,13 +441,19 @@ highed.AssignDataPanel = function(parent, attr) {
     });
   
     labelInput.value = option.value;
-  
+    const colorDiv = highed.dom.cr('div', 'highed-assigndatapanel-color');
+    
+    highed.dom.style(colorDiv, {
+      "background-color": option.colors.light,
+      "border": '1px solid ' + option.colors.dark,
+    });
+
     var label = highed.dom.ap(highed.dom.cr('div', 'highed-assigndatapanel-data-option'), 
-                               highed.dom.ap(
-                                 highed.dom.cr('h6', '', option.name),
-                                 highed.dom.cr('span', 'highed-assigndatapanel-data-mandatory ' + (option.mandatory ? 'active' : ''), 'Mandatory')),
-                               highed.dom.cr('div', 'highed-assigndatapanel-data-desc', option.desc),
-                               labelInput);
+                               colorDiv,
+                               highed.dom.ap(highed.dom.cr('p', '', option.name + ':'),
+                                             highed.dom.cr('span', 'highed-assigndatapanel-data-mandatory ' + (option.mandatory ? 'active' : ''), 'Mandatory')),
+                                             labelInput,
+                               highed.dom.cr('div', 'highed-assigndatapanel-data-desc', option.desc));
   
     highed.dom.ap(inputContainer, label);
   }
