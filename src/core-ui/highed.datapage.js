@@ -53,14 +53,15 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       'div',
       'highed-transition highed-toolbox highed-box-size'
     ),
-    title = highed.dom.cr('div', 'highed-toolbox-body-title', props.title),
+    title = highed.dom.cr('div', 'highed-toolbox-body-title'),
+    titleContainer = highed.dom.cr('div', 'highed-page-title', '<h3> ' + props.title + ' </h3>'),
     contents = highed.dom.cr(
       'div',
       'highed-box-size highed-toolbox-inner-body'
     ),
     userContents = highed.dom.cr(
       'div',
-      'highed-box-size highed-toolbox-user-contents test'
+      'highed-box-size highed-toolbox-user-contents highed-toolbox-dtable'
     ),
     helpIcon = highed.dom.cr(
       'div',
@@ -112,17 +113,15 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         });
       }
       
-      highed.dom.ap(parent, highed.dom.ap(container,body));
+      highed.dom.ap(parent, highed.dom.ap(container,titleContainer, body));
       
       assignDataPanel.init();
 
       expand();
       resizeChart();
-  
-  
     }
 
-    function resize(){
+    function resize() {
       if (isVisible) {
         resizeChart();
         expand();

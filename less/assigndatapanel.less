@@ -4,9 +4,10 @@
   position: absolute;
   width: 28%;
   right: 35px;
-  background-color: white;
-  border: 1px solid rgba(14, 14, 14, 0.15);
-  color: black;
+  background-color: @background-panel;
+  border: 1px solid rgb(232, 232, 232);
+  border-radius: 4px;
+  color: rgb(54, 79, 148);
   overflow-y: auto;
   font-family: @font-main;
   .highed-box-size;
@@ -48,16 +49,12 @@
   color: @bright-background !important;
 }
 
-.highed-assigndatapanel-header-container {
-  margin-bottom: 11px;
-  border-bottom: 1px solid rgba(68, 68, 68, 0.109804);
-}
 
 .highed-assigndatapanel-header {
   font-size: 22px;
   font-weight: 500;
   margin-top: 14px;
-  text-align: center;
+  padding-left: 10px;
 
   .highed-assigndatapanel-toggle {
     font-size: 12px;

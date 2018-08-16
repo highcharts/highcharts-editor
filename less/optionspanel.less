@@ -4,10 +4,23 @@
   width: 100%;
   background-color: @background-main;
   line-height: 100%;
-  font-family: @font-secondary;
+  font-family: @font-main;
   text-align: center;
   margin-bottom: 15px;
   .highed-box-size;
+}
+
+.highed-optionspanel-body{
+  max-width: 26%;
+  height: 28px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 5px;
+  top: 14px;
+  position: relative;
+  background-color: @background-panel;
+  border-radius: 4px;
+  border: 1px solid @border-main-color;
 }
 
 .highed-optionspanel-center {
@@ -36,6 +49,13 @@
   color: @text-panel;
 }
 
+.highed-optionspanel-header {    
+  display: inline;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 0px 5px;
+}
+
 .highed-optionspanel .separator {
   border: 1px solid @text-panel;
   margin-left: 10px;
@@ -47,23 +67,18 @@
 }
 
 .highed-optionspanel-button:hover {
-  color: #fff !important;
+  color: rgb(54, 79, 148) !important;
   text-decoration: none !important;
 }
 
-.highed-optionspanel-button {
+.highed-optionspanel-button {    
   margin-top: 11px;
+  color: rgb(154, 163, 181) !important;
   background-color: transparent;
-  color: #000 !important;
+  padding: 7px 4px;
   cursor: pointer !important;
-  padding: 5px 8px;
   text-transform: inherit;
-  font-weight: 100;
-  font-size: 11px;
+  font-weight: 500;
+  font-size: 10px;
   border-radius: 0px;
-  top: 15px;
-  position: relative;
-}
-.highed-optionspanel-button:not(:last-child) {
-  border-right: 1px solid black;
 }

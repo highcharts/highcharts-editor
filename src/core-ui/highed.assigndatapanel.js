@@ -268,12 +268,15 @@ highed.AssignDataPanel = function(parent, attr) {
     header = highed.dom.ap(
               highed.dom.cr('div', 'highed-assigndatapanel-header-container'), 
               highed.dom.ap(highed.dom.cr('h3', 'highed-assigndatapanel-header', 'Select columns for this chart'), headerToggle),
-              highed.dom.cr('p', 'highed-assigndatapanel-header-desc', 'Fill in the column id you want to visualise. Add multiple columns with a hyphen (eg. A-C)')),
+              highed.dom.cr('p', 'highed-assigndatapanel-header-desc', '')),
     labels = highed.dom.cr('div', 'highed-assigndatapanel-data-options'),
     selectContainer = highed.dom.cr('div', 'highed-assigndatapanel-select-container'),
     inputContainer = highed.dom.cr('div', 'highed-assigndatapanel-inputs-container'),
     seriesTypeSelect = highed.DropDown(selectContainer, ' highed-assigndatapanel-series-dropdown');
-
+  
+  highed.dom.style(selectContainer, {
+    display: "none"
+  });
 
   highed.dom.on(headerToggle, 'click', function() {
 

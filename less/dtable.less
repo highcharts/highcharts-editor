@@ -331,7 +331,6 @@
     left:40px;
     top:0px;
     font-size: 11px;
-    background:@background-panel;
     color:@panel-text;
     // border-bottom: @border-main;
 
@@ -357,6 +356,7 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    background:@letter-cell-background-color;
     cursor: pointer;
 }
 
@@ -427,8 +427,10 @@
     width:100%;    
     border-bottom: 1px solid rgba(14, 14, 14, 0.15);
     border-right: 1px solid rgba(14, 14, 14, 0.15);    
+    border-left: 1px solid rgba(14, 14, 14, 0.15);    
     text-align: center;
     padding-top: 9px;
+    background:@letter-cell-background-color;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -481,6 +483,8 @@
     width: 40px;
     z-index: 1001;
     border-right: 1px solid rgba(14, 14, 14, 0.15);
+    border-left: 1px solid rgba(14, 14, 14, 0.15);
+    border-top: 1px solid rgba(14, 14, 14, 0.15);
     background-color: #f3f3f3;
 }
 
@@ -494,11 +498,9 @@
     bottom: 0px;
     width: 100%;
     min-height: 30px;
-    background-color: @background-panel;
-    border-top: 1px solid rgba(128, 128, 128, 0.25098039215686274);
     .highed-add-row-container {
         position: absolute;
-        right: 0px;
+        right: 15px;
         .highed-add-row-input {
             display: inline-block;
             width: 35px;
