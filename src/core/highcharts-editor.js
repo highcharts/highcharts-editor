@@ -973,12 +973,13 @@ var highed = {
   }
 
   function checkIfTabletDimensions() {
-    return ((navigator.userAgent || navigator.vendor || window.opera).match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i)) && window.outerWidth <= 1024 && window.outerWidth >= 768;
+    var userAgent = navigator.userAgent.toLowerCase();
+    return /(ipad|tablet|(android(?!.*mobile))|(windows(?!.*phone)(.*touch))|kindle|playbook|silk|(puffin(?!.*(IP|AP|WP))))/.test(userAgent);
   }
 
   isOnPhone = checkIfPhone();
   isOnTablet = checkIfTabletDimensions();
-  
+  console.log(isOnPhone, isOnTablet);
   ///////////////////////////////////////////////////////////////////////////
 
   //Inject dependencies

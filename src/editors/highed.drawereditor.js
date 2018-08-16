@@ -713,9 +713,8 @@ highed.DrawerEditor = function(parent, options) {
 
   chartPreview.on('ChartRecreated', hideError);
 
-  if (!highed.onPhone()) {
-    highed.dom.on(window, 'resize', resize);
-  }
+  highed.dom.on(window, 'resize', resize);
+  
 
   //////////////////////////////////////////////////////////////////////////////
 

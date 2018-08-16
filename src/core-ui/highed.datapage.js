@@ -129,9 +129,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       }
     }
 
-    if (!highed.onPhone()) {
-      highed.dom.on(window, 'resize', resize);
-    }
+    highed.dom.on(window, 'resize', resize);
+    
 
     function showHelp() {
       helpModal.show();

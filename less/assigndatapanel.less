@@ -52,6 +52,7 @@
   margin-bottom: 11px;
   border-bottom: 1px solid rgba(68, 68, 68, 0.109804);
 }
+
 .highed-assigndatapanel-header {
   font-size: 22px;
   font-weight: 500;
@@ -170,10 +171,27 @@
   }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (min-device-width: 320px) and (max-device-height: 480px) and (-webkit-device-pixel-ratio: 1),
+only screen and (min-device-width: 320px) and (max-device-height: 480px) and (-webkit-device-pixel-ratio: 2),
+only screen and (min-device-width: 320px) and (max-device-height: 568px) and (-webkit-device-pixel-ratio: 2),
+only screen and (min-device-width: 375px) and (max-device-height: 667px) and (-webkit-device-pixel-ratio: 2),
+only screen and (min-device-width: 414px) and (max-device-height: 736px) and (-webkit-device-pixel-ratio: 3),
+only screen and (min-device-width: 375px) and (max-device-height: 812px) and (-webkit-device-pixel-ratio: 3),
+(min-width: 768px) and (max-width: 1150px) {
+  .highed-assigndatapanel {
+    margin-right: 0px;
+  }
+}
 
-  
+@media only screen and (min-device-width: 320px) and (max-device-height: 480px) and (-webkit-device-pixel-ratio: 1),
+only screen and (min-device-width: 320px) and (max-device-height: 480px) and (-webkit-device-pixel-ratio: 2),
+only screen and (min-device-width: 320px) and (max-device-height: 568px) and (-webkit-device-pixel-ratio: 2),
+only screen and (min-device-width: 375px) and (max-device-height: 667px) and (-webkit-device-pixel-ratio: 2),
+only screen and (min-device-width: 414px) and (max-device-height: 736px) and (-webkit-device-pixel-ratio: 3),
+only screen and (min-device-width: 375px) and (max-device-height: 812px) and (-webkit-device-pixel-ratio: 3),
+only screen and (max-width: 600px) {
   .highed-assigndatapanel-header {
+    font-size: 14px;
     .highed-assigndatapanel-toggle {
       display: block;
     }
