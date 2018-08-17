@@ -2661,6 +2661,24 @@ highed.DataTable = function(parent, attributes) {
     });
   }
 
+  function decolorCells(previousValues) {
+    if (previousValues && previousValues.length > 0) {
+      
+      rows.forEach(function(row) {
+        var tempValue = previousValues[0];
+        if (previousValues.length > 0) {
+          while (tempValue <= previousValues[previousValues.length - 1]) {
+
+            highed.dom.style(row.columns[tempValue].element, {
+              "background-color": ''
+            });
+            tempValue++; //= getNextLetter(tempValue);
+          }
+        }
+      });
+    }
+  }
+
   function decolorHeader(previousValues) {
     if (previousValues && previousValues.length > 0){
       var tempValue = previousValues[0];
@@ -2694,6 +2712,7 @@ highed.DataTable = function(parent, attributes) {
   function removeCellColoring(previousValues) {
     removeOutlineFromCell(previousValues);
     decolorHeader(previousValues);
+    decolorCells(previousValues);
   }
 
   function colorFields(values, color) {

@@ -48,9 +48,10 @@
 .highed-chart-template-container {    
     vertical-align: top;
     display: inline-block;
-    width: 33%;
-    min-width: 110px;
-    min-height: 113px;
+    min-width: 100px;
+    min-height: 86px;
+    margin: 1px;
+    border: 1px solid rgba(128, 128, 128, 0.23137254901);
     // box-shadow: 0px 3px 7px @bright-shadow;
     .highed-box-size;
 }
@@ -91,4 +92,37 @@
 }
 .highed-chart-template-type-container {
     padding-top: 15px;
+}
+
+.highed-template-tooltip {
+    position: relative;
+    display: inline-block;
+}
+.highed-template-tooltip .highed-tooltip-text {
+    visibility: hidden;
+    width: 120px;
+    background-color: rgb(37, 56, 111);
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    font-size: 11px;
+    top: 100%;
+    left: 50%; 
+    margin-left: -60px;
+}
+.highed-template-tooltip .highed-tooltip-text::after {
+    content: " ";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent rgb(37, 56, 111) transparent;
+}
+.highed-template-tooltip:hover .highed-tooltip-text {
+    visibility: visible;
 }

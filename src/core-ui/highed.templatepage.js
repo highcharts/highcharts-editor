@@ -60,7 +60,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     ),
     userContents = highed.dom.cr(
       'div',
-      'highed-box-size highed-toolbox-user-contents highed-toolbox-defaultpage'
+      'highed-box-size highed-toolbox-user-contents highed-toolbox-defaultpage highed-toolbox-templatepage'
     ),
     helpIcon = highed.dom.cr(
       'div',
@@ -124,7 +124,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     expand();
     hide();
   }
-  
+
   function getIcons() {
     return null;
   }

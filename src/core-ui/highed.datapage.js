@@ -114,7 +114,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       
       highed.dom.ap(parent, highed.dom.ap(container, body));
       
-      assignDataPanel.init();
+      assignDataPanel.init(dataTable.getColumnLength());
 
       expand();
       resizeChart();

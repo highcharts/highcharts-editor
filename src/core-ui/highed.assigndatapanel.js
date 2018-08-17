@@ -71,12 +71,14 @@ highed.AssignDataPanel = function(parent, attr) {
     }
   },
   options = {},
-  toggled = false;
+  toggled = false,
+  columnLength = 0;
 
   Object.assign(options, defaultOptions);
   
-  function init() {
-
+  function init(colLength) {
+    columnLength = colLength;
+    
     highed.dom.ap(body, labels);
     resetDOM();
     highed.dom.ap(parent, highed.dom.ap(container, bar, body));
@@ -301,14 +303,14 @@ highed.AssignDataPanel = function(parent, attr) {
 
     toggled = !toggled;
   });
-
+/*
   seriesTypeSelect.addItems([{
     id: 'line',
     title: 'Line'
   }]);
   
   seriesTypeSelect.selectById('line');
-
+*/
   function hide() {
     highed.dom.style(container, {
       display: 'none'
@@ -335,11 +337,12 @@ highed.AssignDataPanel = function(parent, attr) {
   function setAssignDataFields(data, maxColumns) {
     if (!data) return;
 
+    columnLength = maxColumns;
     var seriesType;
 
     if (data.config) seriesType = data.config.chart.type;
     else seriesType = (data.template && data.template.chart ? data.template.chart.type || data.theme.options.chart.type || 'line' : 'line');
-
+/*
     seriesTypeSelect.clear();
 
     seriesTypeSelect.addItems([{
@@ -347,6 +350,7 @@ highed.AssignDataPanel = function(parent, attr) {
       title: seriesType
     }]);
     seriesTypeSelect.selectById(seriesType);
+*/
 
     options = {};
     options = Object.assign(options, defaultOptions);
@@ -428,29 +432,61 @@ highed.AssignDataPanel = function(parent, attr) {
 
   function generateInputs(option, key) {
 
-    var labelInput = highed.dom.cr('input', 'highed-assigndatapanel-input');
+    var labelInput,
+        valueContainer = highed.dom.cr('div', 'highed-assigndatapanel-input-container');
 
+    if (option.multipleValues) {
+      labelInput = highed.dom.cr('input', 'highed-assigndatapanel-input');
+      highed.dom.ap(valueContainer, labelInput);
+
+      highed.dom.on(labelInput, 'focus', function() {
+        option.previousValue = (option.multipleValues ? labelInput.value : labelInput.value.charAt(0)).toUpperCase(); //labelInput.value;
+      });
+
+      highed.dom.on(labelInput, 'blur', function() {
+        if (labelInput.value === '' && option.mandatory) {
+          option.value = option.previousValue;
+          labelInput.value = option.previousValue;
+        } else if (valuesMatch(labelInput.value.toUpperCase(), key)) {
+          option.value = option.previousValue;
+          labelInput.value = option.previousValue;
+          alert("Error");
+        }
+        else option.value = labelInput.value.toUpperCase();
+
+        events.emit('AssignDataChanged', options);
+      });
+    }
+    else {
+      labelInput = highed.DropDown(valueContainer, 'highed-assigndata-dropdown');
+
+      for(var i = 0; i < columnLength; i++) {
+        labelInput.addItem({
+          id: getLetterFromIndex(i),
+          title: getLetterFromIndex(i),
+        });
+      }
+      
+      labelInput.selectById(option.value);
+
+      labelInput.on('Change', function(selected) {
+        //detailIndex = selected.index();
+        detailValue = selected.id();
+        if (valuesMatch(detailValue, key)) {
+          option.value = option.previousValue;
+          labelInput.value = option.previousValue;
+          alert("Error");
+        }
+        else option.value = detailValue;
+
+        events.emit('AssignDataChanged', options);
+        //liveDataTypeSelect.selectById(detailValue || 'json');
+      });
+    }
     var colors = option.colors || generateColors();
 
     option.colors = colors;
 
-    highed.dom.on(labelInput, 'focus', function() {
-      option.previousValue = (option.multipleValues ? labelInput.value : labelInput.value.charAt(0)).toUpperCase(); //labelInput.value;
-    });
-
-    highed.dom.on(labelInput, 'blur', function() {
-      if (labelInput.value === '' && option.mandatory) {
-        option.value = option.previousValue;
-        labelInput.value = option.previousValue;
-      } else if (valuesMatch(labelInput.value.toUpperCase(), key)) {
-        option.value = option.previousValue;
-        labelInput.value = option.previousValue;
-        alert("Error");
-      }
-      else option.value = labelInput.value.toUpperCase();
-
-      events.emit('AssignDataChanged', options);
-    });
   
     labelInput.value = option.value;
     const colorDiv = highed.dom.cr('div', 'highed-assigndatapanel-color');
@@ -463,8 +499,8 @@ highed.AssignDataPanel = function(parent, attr) {
     var label = highed.dom.ap(highed.dom.cr('div', 'highed-assigndatapanel-data-option'), 
                                colorDiv,
                                highed.dom.ap(highed.dom.cr('p', '', option.name + ':'),
-                                             highed.dom.cr('span', 'highed-assigndatapanel-data-mandatory ' + (option.mandatory ? 'active' : ''), 'Mandatory')),
-                                             labelInput,
+                                             highed.dom.cr('span', 'highed-assigndatapanel-data-mandatory', option.mandatory ? '*' : '')),
+                                             valueContainer,
                                highed.dom.cr('div', 'highed-assigndatapanel-data-desc', option.desc));
   
     highed.dom.ap(inputContainer, label);

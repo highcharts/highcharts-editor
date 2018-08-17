@@ -119,10 +119,10 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
 
     Object.keys(templateList).forEach(function(key) {
       var t = templateList[key],
-        node = highed.dom.cr('div', 'highed-chart-template-container'),
+        node = highed.dom.cr('div', 'highed-chart-template-container highed-template-tooltip'),
         body = highed.dom.cr('div', 'highed-chart-template-body'),
         preview = highed.dom.cr('div', 'highed-chart-template-thumbnail'),
-        titleBar = highed.dom.cr('div', 'highed-chart-template-title', t.title),
+        titleBar = highed.dom.cr('div', 'highed-tooltip-text', t.title),
         description = highed.dom.cr('div', 'highed-chart-template-description'),
         samples = highed.dom.cr('div', 'highed-chart-template-samples');
 
@@ -171,11 +171,11 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
 
       highed.dom.on(node, 'click', function() {
         if (selected) {
-          selected.node.className = 'highed-chart-template-container';
+          selected.node.className = 'highed-chart-template-container highed-template-tooltip';
         }
 
         node.className =
-          'highed-chart-template-container highed-chart-template-preview-selected';
+          'highed-chart-template-container highed-chart-template-preview-selected highed-template-tooltip';
 
         selected = {
           id: masterID + key + t.title,
@@ -219,20 +219,23 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
         highed.emit('UIAction', 'TemplateChoose', t.title);
       });
 
+      console.log();
       highed.dom.ap(
         templates,
         highed.dom.ap(
           node,
           preview,
+          titleBar/*,
           highed.dom.ap(
             body,
             titleBar//,
             //description,
             // highed.dom.cr('h4', '', 'Sample Data Sets'),
             //samples
-          )
+          )*/
         )
       );
+      
     });
 
     if (compatible === 0) {
