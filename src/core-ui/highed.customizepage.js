@@ -122,7 +122,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
   
     customizer.on('AdvanceClicked', function() {
   
-      width = 65;
+      width = 66;
       if (highed.onTablet()) width = 64;
 
       chartWidth = '28%';

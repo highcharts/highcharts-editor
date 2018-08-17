@@ -74,7 +74,7 @@ highed.DrawerEditor = function(parent, options) {
         icon: 'fa-table',
         title: 'Data',
         widths: {
-          desktop: 65,
+          desktop: 66,
           tablet: 64,
           phone: 100
         },
@@ -116,7 +116,7 @@ highed.DrawerEditor = function(parent, options) {
       templates: {
         icon: 'fa-bar-chart',
         widths: {
-          desktop: 25,
+          desktop: 26,
           tablet: 24,
           phone: 100
         },
@@ -160,7 +160,7 @@ highed.DrawerEditor = function(parent, options) {
           onClick: []
         },
         widths: {
-          desktop: 25,
+          desktop: 26,
           tablet: 24,
           phone: 100
         },

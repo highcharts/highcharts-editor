@@ -129,7 +129,7 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
 
         highed.dom.style(userContents, {
           width: size.w + 'px',
-          height: ((size.h - 16) - 47) + 'px'
+          height: ((size.h - 16)) + 'px'
         });
 
       //customizer.resize(newWidth, (size.h - 17) - tsize.h);

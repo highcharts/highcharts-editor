@@ -264,7 +264,7 @@ highed.AssignDataPanel = function(parent, attr) {
   function resize(w, h) {
        
     highed.dom.style(container, {
-      height: (h - 15) + 'px'
+      height: (h - 5) + 'px'
     });
   }
 
