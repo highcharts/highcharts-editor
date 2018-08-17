@@ -364,8 +364,16 @@ highed.DrawerEditor = function(parent, options) {
       'Samsung Galaxy S7': [360, 640],
       'Samsung Galaxy S7 Edge': [360, 640]
     },
+    helpIcon = highed.dom.cr(
+      'div',
+      'highed-toolbox-help highed-icon fa fa-question-circle'
+    ),
     titleHeader = highed.dom.cr('h3', '', 'Data'),
-    titleContainer = highed.dom.ap(highed.dom.cr('div', 'highed-page-title'), titleHeader);
+    titleContainer = highed.dom.ap(highed.dom.cr('div', 'highed-page-title'), titleHeader, helpIcon),
+    helpModal = highed.HelpModal(builtInOptions.data.help || []);
+
+  highed.dom.on(helpIcon, 'click', showHelp);
+
 
   highed.dom.ap(splitter.bottom, titleContainer);
   if (!properties.useHeader) {
@@ -426,6 +434,11 @@ highed.DrawerEditor = function(parent, options) {
           newOption.page.show();
           panel.setDefault(newOption.page);
           titleHeader.innerHTML = newOption.text;
+          helpModal = (option.help ? highed.HelpModal(option.help  || []) : null);
+          
+          highed.dom.style(helpIcon, {
+            display: (helpModal ? 'inline' : 'none')
+          });
         }
       );
 
@@ -445,6 +458,10 @@ highed.DrawerEditor = function(parent, options) {
     });
     toolboxEntries = addedOptions;
     // resizeChart(toolbox.width());
+  }
+
+  function showHelp() {
+    helpModal.show();
   }
 
   /**

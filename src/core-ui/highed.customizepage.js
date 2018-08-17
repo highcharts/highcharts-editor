@@ -90,7 +90,6 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     
   function init() {
 
-
     width = props.width,
     customizeTitle = highed.dom.cr('div', 'highed-customize-title'/*, props.title*/),
     iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + props.icon;
@@ -117,7 +116,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
           || document.documentElement.clientHeight
           || document.body.clientHeight) - highed.dom.pos(body, true).y
       };
-  
+
       searchAdvancedOptions.resize(width, (size.h - highed.dom.size(chartFrame).h) - 15);
       
     });
@@ -143,8 +142,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     highed.dom.ap(resolutionSettings, stretchToFitIcon, tabletIcon, phoneIcon, resWidth, resHeight);
     
     title.innerHTML = '';
-    highed.dom.on(helpIcon, 'click', showHelp);
-    highed.dom.ap(contents, highed.dom.ap(title,backIcon, customizeTitle, highed.dom.ap(iconsContainer, customCodeToggle, helpIcon)), userContents);
+    highed.dom.ap(contents, /*highed.dom.ap(title,backIcon, customizeTitle, highed.dom.ap(iconsContainer, customCodeToggle, helpIcon)),*/ userContents);
     highed.dom.ap(body, contents);
   
     highed.dom.ap(userContents, customizerContainer);
@@ -168,10 +166,6 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
   
   if (!highed.onPhone()) {
     highed.dom.on(window, 'resize', resize);
-  }
-
-  function showHelp() {
-    helpModal.show();
   }
   
   highed.dom.on(customCodeToggle, 'click', function() {

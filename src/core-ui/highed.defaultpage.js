@@ -71,16 +71,7 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
 
     if (options.create && highed.isFn(options.create)) options.create(userContents, chartPreview, iconsContainer);
 
-    if (options.help && options.help.length > 0) {
-      helpIcon = highed.dom.cr(
-        'div',
-        'highed-toolbox-help highed-icon fa fa-question-circle'
-      ),
-      helpModal = highed.HelpModal(options.help || []),
-      highed.dom.on(helpIcon, 'click', showHelp);
-    }
-
-    highed.dom.ap(contents, highed.dom.ap(title,backIcon, customizeTitle, highed.dom.ap(iconsContainer,/* customCodeToggle, */helpIcon)), userContents);
+    highed.dom.ap(contents, /*highed.dom.ap(title,backIcon, customizeTitle, highed.dom.ap(iconsContainer,helpIcon)),*/ userContents);
     highed.dom.ap(body, contents);
   
     highed.dom.ap(parent, highed.dom.ap(container,body));
@@ -102,11 +93,6 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
   if (!highed.onPhone()) {
     highed.dom.on(window, 'resize', resize);
   }
-
-  function showHelp() {
-    helpModal.show();
-  }
-  
 
   function expand() {
     

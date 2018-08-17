@@ -113,13 +113,10 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
       }
     });
   
-
-    highed.dom.on(helpIcon, 'click', showHelp);
-
     contents.innerHTML = '';
 
     highed.dom.ap(userContents, templatesContainer);
-    highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(iconsContainer, helpIcon)), userContents);
+    highed.dom.ap(contents, /*highed.dom.ap(title, highed.dom.ap(iconsContainer, helpIcon)),*/ userContents);
     highed.dom.ap(body, contents);
     highed.dom.ap(parent, highed.dom.ap(container,body));
     templates.resize();
@@ -139,10 +136,6 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
 
   if (!highed.onPhone()) {
     highed.dom.on(window, 'resize', resize);
-  }
-
-  function showHelp() {
-    helpModal.show();
   }
 
   function expand() {
