@@ -369,7 +369,8 @@ highed.DrawerEditor = function(parent, options) {
       'highed-toolbox-help highed-icon fa fa-question-circle'
     ),
     titleHeader = highed.dom.cr('h3', '', 'Data'),
-    titleContainer = highed.dom.ap(highed.dom.cr('div', 'highed-page-title'), titleHeader, helpIcon),
+    iconContainer = highed.dom.cr('div', ''),
+    titleContainer = highed.dom.ap(highed.dom.cr('div', 'highed-page-title'), titleHeader, helpIcon, iconContainer),
     helpModal = highed.HelpModal(builtInOptions.data.help || []);
 
   highed.dom.on(helpIcon, 'click', showHelp);
@@ -439,6 +440,16 @@ highed.DrawerEditor = function(parent, options) {
           highed.dom.style(helpIcon, {
             display: (helpModal ? 'inline' : 'none')
           });
+
+          iconContainer.innerHTML = '';
+          if (newOption.page.getIcons()) {
+            highed.dom.ap(iconContainer, newOption.page.getIcons());
+          }
+          
+          highed.dom.style(iconContainer, {
+            display: (newOption.page.getIcons() ? 'inline' : 'none')
+          });
+
         }
       );
 

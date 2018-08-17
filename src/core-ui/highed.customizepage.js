@@ -60,7 +60,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       'div',
       'highed-toolbox-body highed-box-size highed-transition'
     ),
-    iconsContainer = highed.dom.cr('div', 'highed-toolbox-icons'),
+    iconsContainer = highed.dom.cr('div', 'highed-icons-container'),
     customCodeToggle = highed.dom.cr('span', 'highed-toolbox-custom-code-icon', '<i class="fa fa-code" aria-hidden="true"></i>'),
     isVisible = false,
     searchAdvancedOptions = highed.SearchAdvancedOptions(parent),
@@ -87,7 +87,6 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     resWidth.placeholder = 'W';
     resHeight.placeholder = 'H';
   
-    
   function init() {
 
     width = props.width,
@@ -142,6 +141,9 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     highed.dom.ap(resolutionSettings, stretchToFitIcon, tabletIcon, phoneIcon, resWidth, resHeight);
     
     title.innerHTML = '';
+    
+    highed.dom.ap(iconsContainer, customCodeToggle);
+
     highed.dom.ap(contents, /*highed.dom.ap(title,backIcon, customizeTitle, highed.dom.ap(iconsContainer, customCodeToggle, helpIcon)),*/ userContents);
     highed.dom.ap(body, contents);
   
@@ -472,6 +474,11 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
   /**
    * Resize the chart preview based on a given width
    */
+
+  function getIcons(){
+    return iconsContainer;
+  }
+
   function resizeChart(newHeight) {
     highed.dom.style(chartFrame, {
       /*left: newWidth + 'px',*/
@@ -501,17 +508,13 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
   return {
     on: events.on,
     destroy: destroy,
-    chart: chartPreview,
-    data: {
-      showLiveStatus: function(){}, //toolbox.showLiveStatus,
-      hideLiveStatus: function(){}//toolbox.hideLiveStatus
-    },
     hide: hide,
     show: show,
     isVisible: function() {
       return isVisible;
     },
-    init: init
+    init: init,
+    getIcons: getIcons
     //toolbar: toolbar
   };
 };

@@ -266,6 +266,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
   }
 
+  function getIcons() {
+    return null;
+  }
+  
   function setChartTitle(title) {
     chartTitle.innerHTML = title;
   }
@@ -528,6 +532,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     },
     init: init,
     setChartTitle: setChartTitle,
+    getIcons: getIcons,
     changeAssignDataTemplate: changeAssignDataTemplate//,
     //toolbar: toolbar
   };

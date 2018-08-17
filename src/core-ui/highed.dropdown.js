@@ -48,7 +48,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     var events = highed.events(),
       container = highed.dom.cr('div', 'highed-dropdown ' + extraClasses),
       body = highed.dom.cr('div', 'highed-dropdown-body'),
-      arrow = highed.dom.cr('div', 'highed-dropdown-arrow fa fa-arrow-down'),
+      arrow = highed.dom.cr('div', 'highed-dropdown-arrow fa fa-caret-down'),
       items = [],
       selectedItem = false,
       expanded = false,

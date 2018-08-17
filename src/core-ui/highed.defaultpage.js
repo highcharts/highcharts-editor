@@ -76,7 +76,6 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
   
     highed.dom.ap(parent, highed.dom.ap(container,body));
 
-
     expand();
     hide();
   }
@@ -94,6 +93,10 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
     highed.dom.on(window, 'resize', resize);
   }
 
+  function getIcons() {
+    return null;
+  }
+  
   function expand() {
     
     var newWidth = width; //props.width;
@@ -309,7 +312,8 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
     isVisible: function() {
       return isVisible;
     },
-    init: init
+    init: init,
+    getIcons: getIcons
     //toolbar: toolbar
   };
 };

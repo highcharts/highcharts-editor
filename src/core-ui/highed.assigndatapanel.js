@@ -267,7 +267,7 @@ highed.AssignDataPanel = function(parent, attr) {
     headerToggle = highed.dom.cr('span', '', '<i class="fa fa-chevron-down highed-assigndatapanel-toggle" aria-hidden="true"></i>'),
     header = highed.dom.ap(
               highed.dom.cr('div', 'highed-assigndatapanel-header-container'), 
-              highed.dom.ap(highed.dom.cr('h3', 'highed-assigndatapanel-header', 'Select columns for this chart'), headerToggle)),
+              highed.dom.ap(highed.dom.cr('h3', 'highed-assigndatapanel-header', 'Assign columns for this chart'), headerToggle)),
     labels = highed.dom.cr('div', 'highed-assigndatapanel-data-options'),
     selectContainer = highed.dom.cr('div', 'highed-assigndatapanel-select-container'),
     inputContainer = highed.dom.cr('div', 'highed-assigndatapanel-inputs-container'),

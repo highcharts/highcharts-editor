@@ -124,6 +124,10 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     expand();
     hide();
   }
+  
+  function getIcons() {
+    return null;
+  }
 
   function resize() {
     if (isVisible){
@@ -342,10 +346,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     on: events.on,
     destroy: destroy,
     chart: chartPreview,
-    data: {
-      showLiveStatus: function(){}, //toolbox.showLiveStatus,
-      hideLiveStatus: function(){}//toolbox.hideLiveStatus
-    },
+    getIcons: getIcons,
     hide: hide,
     show: show,
     isVisible: function() {
