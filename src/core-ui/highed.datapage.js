@@ -99,8 +99,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     function init() {
 
-      highed.dom.on(helpIcon, 'click', showHelp);
-      highed.dom.ap(contents, highed.dom.ap(title, chartTitle, highed.dom.ap(iconsContainer, dataImportBtn, helpIcon)), userContents);
+      highed.dom.ap(contents, highed.dom.ap(title, chartTitle, highed.dom.ap(iconsContainer, dataImportBtn)), userContents);
       highed.dom.ap(body, contents);
   
       highed.dom.ap(userContents, dataTableContainer);
@@ -269,7 +268,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   function getIcons() {
     return null;
   }
-  
+
   function setChartTitle(title) {
     chartTitle.innerHTML = title;
   }

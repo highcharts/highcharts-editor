@@ -35,7 +35,11 @@ highed.AssignDataPanel = function(parent, attr) {
       'value': 'A',
       'previousValue': null,
       'isLabel': true,
-      'mandatory': true
+      'mandatory': true,
+      'colors': {
+        'light': 'rgba(66, 200, 192, 0.2)',
+        'dark': 'rgb(66, 200, 192)',
+      }
     },
     "data": {
       'values': {
@@ -45,7 +49,11 @@ highed.AssignDataPanel = function(parent, attr) {
         'value': 'B-C',
         'multipleValues': true,
         'previousValue': null,
-        'mandatory': true
+        'mandatory': true,
+        'colors': {
+          'light': 'rgba(145, 151, 229, 0.2)',
+          'dark': 'rgb(145, 151, 229)',
+        }
       }
     },
     'names': {
@@ -55,7 +63,11 @@ highed.AssignDataPanel = function(parent, attr) {
       'value': '',
       'previousValue': null,
       'mandatory': false,
-      'linkedTo': 'label'
+      'linkedTo': 'label',        
+      'colors': {
+        'light': 'rgba(229, 145, 145, 0.2)',
+        'dark': 'rgb(229, 145, 145)',
+      }
     }
   },
   options = {},

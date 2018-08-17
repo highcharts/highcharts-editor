@@ -4,7 +4,7 @@
     display: block;
     padding-top: 0px;
     color: #495057;
-    border: 1px solid #ced4da;
+    border: 1px solid rgb(204, 204, 204);
     border-radius: .25rem;
 }
 .highed-dropdown {
@@ -22,11 +22,7 @@
     height:32px;
 
     background:@bright-background;
-
-    border-top:@border-strong;
-    border-bottom:@border-strong;
-    border-left:@border-strong;
-    border-right:@border-strong;
+    border: 1px solid rgb(204, 204, 204);
 }
 
 .highed-dropdown-body {
@@ -61,13 +57,13 @@
     overflow: hidden;
     white-space: nowrap;    
     text-overflow: ellipsis;    
-    border-bottom: 1px solid rgba(128, 128, 128, 0.09019607843137255);
     .highed-nosel;
 }
 
 .highed-dropdown-item:hover {
     background:@selected-item-color;
-    color:@selected-item-text;
+    color:@selected-item-text; 
+    transition-delay: 0.1s;
 }
 
 .highed-dropdown-arrow {
@@ -107,10 +103,9 @@
 }
 
 .highed-dropdown-items {
-    border:@border-strong;
     background:@bright-background;
     color:@bright-matched-text;
-
+    border: 1px solid rgb(204, 204, 204);
     left: -20000px;
     opacity:0;
     pointer-events: none;
@@ -119,6 +114,7 @@
     overflow-x: hidden;
     position: fixed;
     z-index: 20000;
+    border-radius: 5px;
     .highed-transition-opacity;
 }
 .highed-font-size {

@@ -116,7 +116,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         opacity: 1,
         'pointer-events': 'auto',
         left: pos.x + 'px',
-        top: pos.y + s.h + 'px',
+        top: pos.y + s.h + 4 + 'px',
         width: s.w - 1 + 'px',
         'min-height': s.h + 'px'
       });

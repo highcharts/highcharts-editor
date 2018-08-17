@@ -2636,14 +2636,28 @@ highed.DataTable = function(parent, attributes) {
     }
   }
 
+  function colorCells(values, color) {
+    if (values.length > 0) {
+      rows.forEach(function(row) {
+        var tempValue = values[0];
+        while (tempValue <= values[values.length - 1]) {
+          highed.dom.style(row.columns[tempValue].element, {
+            "background-color": color.light 
+          });        
+          tempValue++;
+        }
+      });
+    }
+  }
+
   function outlineCell(values, color) {
     values.forEach(function(value, index) {
-      rows.forEach(function(row){
+      rows.forEach(function(row) {
         highed.dom.style(row.columns[value].element, {
           "border-right": (index === (values.length - 1) ? '1px double ' + color.dark : ''),
           "border-left": (index === 0 ? '1px double ' + color.dark : ''),
         });
-      })
+      });
     });
   }
 
@@ -2684,6 +2698,7 @@ highed.DataTable = function(parent, attributes) {
 
   function colorFields(values, color) {
     outlineCell(values, color);
+    colorCells(values, color);
     colorHeader(values, color);
   }
 
