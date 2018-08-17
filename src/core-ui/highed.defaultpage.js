@@ -44,14 +44,12 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
       'div',
       'highed-box-size highed-toolbox-user-contents highed-toolbox-defaultpage'
     ),
-    helpIcon,
     width,
     chartWidth = '68%',
     iconClass,
     icon = highed.dom.cr('div', iconClass),
-    helpModal,
     // Data table
-    iconsContainer = highed.dom.cr('div', 'highed-toolbox-icons'),
+    iconsContainer = highed.dom.cr('div', 'highed-icons-container'),
     body = highed.dom.cr(
       'div',
       'highed-toolbox-body highed-box-size highed-transition'
@@ -94,9 +92,9 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
   }
 
   function getIcons() {
-    return null;
+    return iconsContainer;
   }
-  
+
   function expand() {
     
     var newWidth = width; //props.width;
