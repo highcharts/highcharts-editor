@@ -334,7 +334,7 @@ highed.AssignDataPanel = function(parent, attr) {
     return output;
   }
 
-  function setAssignDataFields(data, maxColumns) {
+  function setAssignDataFields(data, maxColumns, init) {
     if (!data) return;
 
     columnLength = maxColumns;
@@ -363,7 +363,7 @@ highed.AssignDataPanel = function(parent, attr) {
 
     highed.merge(options, highed.meta.charttype[seriesType]);
     
-    if (data.settings.dataProvider.assignDataFields) {
+    if (data.settings && data.settings.dataProvider && data.settings.dataProvider.assignDataFields) {
       const dataFields = data.settings.dataProvider.assignDataFields;
       Object.keys(dataFields).forEach(function(key){
         if (key === 'data') {
@@ -376,10 +376,11 @@ highed.AssignDataPanel = function(parent, attr) {
       });
     } else {
       // Probably a legacy chart, change values to equal rest of chart
-      if (options.data.values) {
+      if (options.data.values && init) {
         options.data.values.value = 'B' + (getLetterFromIndex(maxColumns - 1) !== 'B' ? '-' + getLetterFromIndex(maxColumns - 1) : '');
       }
     }
+
     resetDOM();
     events.emit('ChangeData', options);
   }

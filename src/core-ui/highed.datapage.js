@@ -260,7 +260,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     const oldValues = assignDataPanel.getMergedLabelAndData();
     dataTable.removeAllCellsHighlight(null, [oldValues.labelColumn].concat(oldValues.dataColumns).sort());
     
-    assignDataPanel.setAssignDataFields(newTemplate);
+    assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength());
     assignDataPanel.resetValues();
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
   }
@@ -398,7 +398,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 */
   chartPreview.on('LoadProject', function (projectData) {
     setTimeout(function () {
-    assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength());
+    assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true);
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
     }, 1000);
     chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true));
