@@ -63,7 +63,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       items.forEach(function(item) {
         highed.dom.ap(dropdownItems, item.node);
         //IE fix
-        item.node.innerHTML = item.title();
+        item.node.innerHTML = ''; //item.title();
+        
+        const icon = highed.dom.cr('span', 'highed-icon-container', (item.icon() ? '<i class="fa fa-' + item.icon() + '" />' : ''));
+        highed.dom.style(icon, {
+          "margin-right": "5px",
+          "color": "rgb(66, 200, 192)"
+        });
+        highed.dom.ap(item.node, icon, highed.dom.cr('span', '', item.title() || ''));
       });
     }
 
@@ -183,6 +190,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             return id;
           },
 
+          icon: function() {
+            return item.icon;
+          },
+
           //Get the title
           title: function() {
             return highed.isStr(item) ? item : item.title || '';
@@ -223,7 +234,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         node.innerHTML = item;
         id = item;
       } else {
-        node.innerHTML = item.title || '';
+        
+        const icon = highed.dom.cr('span', 'highed-icon-container', (item.icon ? '<i class="fa fa-' + item.icon + '" />' : ''));
+
+        highed.dom.style(icon, {
+          "margin-right": "5px",
+          "color": "rgb(66, 200, 192)"
+        });
+        
+        highed.dom.ap(node, icon, highed.dom.cr('span', '', item.title || ''));
         id = item.id; // || id;
 
         if (item.selected) {

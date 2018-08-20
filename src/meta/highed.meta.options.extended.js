@@ -60,6 +60,45 @@ highed.meta.optionsExtended = {
             parent: 'yAxis-title'
           }
         ]
+      },
+      {
+        text: 'option.cat.dimension',
+        dropdown: true,
+        options: [{
+          id: 'title--text',
+          pid: 'title.text',
+          dataType: 'string',
+          context: 'General',
+          defaults: 'Chart title',
+          parent: 'title',
+          width: 50
+        }]
+      },
+      {
+        text: 'option.cat.dimension',
+        dropdown: true,
+        options: [{
+          id: 'title--text',
+          pid: 'title.text',
+          dataType: 'string',
+          context: 'General',
+          defaults: 'Chart title',
+          parent: 'title',
+          width: 50
+        }]
+      },
+      {
+        text: 'option.cat.dimension',
+        dropdown: true,
+        options: [{
+          id: 'title--text',
+          pid: 'title.text',
+          dataType: 'string',
+          context: 'General',
+          defaults: 'Chart title',
+          parent: 'title',
+          width: 50
+        }]
       }
     ],
     'option.cat.general': [

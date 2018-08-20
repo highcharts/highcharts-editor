@@ -55,6 +55,7 @@ highed.installLanguage({
     customizeCustomCode: 'CUSTOM CODE',
     customizePreview: 'PREVIEW OPTIONS',
     'option.cat.title': 'Titles',
+    'option.cat.dimension': 'Dimensions',
     'option.subcat.titles': 'Main titles',
     'option.cat.general': 'General',
     'option.subcat.size': 'Chart size',

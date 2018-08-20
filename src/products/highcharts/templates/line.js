@@ -33,6 +33,7 @@ highed.templates.add('Line', {
   ],
   constructor: 'Chart',
   thumbnail: 'abywon.svg',
+  icon: 'pencil',
   sampleSets: [],
   validator: 'line',
   config: {

@@ -48,6 +48,7 @@ highed.List = function(parent, responsive, props) {
     selectedItem = false,
     events = highed.events(),
     items = [],
+    dropdowns = [],
     properties = props;
 
   ///////////////////////////////////////////////////////////////////////////
@@ -127,8 +128,26 @@ highed.List = function(parent, responsive, props) {
           return;
         }
         
-        container = highed.dom.cr('div', 'highed-customize-group');
+        container = highed.dom.cr('div', 'highed-customize-group' + (group.dropdown ? ' highed-list-general-drop-down' : ''));
         masterNode = highed.dom.cr('div', 'highed-customize-master-dropdown');
+
+        if (group.dropdown) {
+          dropdowns.push(container);
+
+          highed.dom.on(container, 'click', function() {
+
+            dropdowns.forEach(function(d) {
+              if (d !== container) d.classList.remove('active');
+            });
+
+            if (container.classList.contains('active')) {
+              container.classList.remove('active');
+            } else {
+              container.className += ' active';
+            }
+          });
+        }
+
 
         highed.dom.ap(
           nodeChildren,
@@ -136,7 +155,7 @@ highed.List = function(parent, responsive, props) {
             container,
             highed.dom.cr(
               'div',
-              'highed-customizer-table-heading',
+              'highed-customizer-table-heading' + (group.dropdown ? ' highed-list-general-drop-down-header' : ''),
               highed.L(group.text)
             ),
             masterNode,
@@ -295,6 +314,7 @@ highed.List = function(parent, responsive, props) {
           display: "none"
         });
       }
+      dropdowns = [];
 
       nodeArrow.innerHTML = '<i class="fa fa-angle-down" aria-hidden="true"></i>';
       nodeChildren.innerHTML = '';

@@ -55,6 +55,7 @@ highed.templates = {};
         description: '',
         constructor: '',
         thumbnail: '',
+        icon: '',
         sampleSets: [],
         validator: false,
         config: {}
@@ -68,11 +69,14 @@ highed.templates = {};
 
     templates[type] = templates[type] || {
       description: '',
+      icon: '',
       sampleData: [],
       templates: {}
     };
 
     if (properties.title.length) {
+      
+      if (properties.icon) templates[type].icon = properties.icon;
       templates[type].templates[properties.title] = properties;
       highed.log(4, '[templateman] - added template', properties.title);
       return true;
@@ -134,7 +138,8 @@ highed.templates = {};
     return Object.keys(templates).map(function(cat) {
       return {
         id: cat,
-        title: cat
+        title: cat,
+        icon: templates[cat].icon
       };
     });
   };

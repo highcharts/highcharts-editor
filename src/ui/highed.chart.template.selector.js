@@ -270,9 +270,6 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
 
   /* Build the UI */
   function build() {
-    console.log(highed.templates.getCatArray());
-
-
     templateTypeSelect.addItems(highed.templates.getCatArray());
     templateTypeSelect.selectById('Area'); // TODO: Need to change this later
 
