@@ -55,6 +55,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     ),
     title = highed.dom.cr('div', 'highed-toolbox-body-title'),
     chartTitle = highed.dom.cr('div', 'highed-toolbox-body-chart-title'),
+    chartTitleInput = highed.dom.cr('input', 'highed-toolbox-chart-title-input'),
     contents = highed.dom.cr(
       'div',
       'highed-box-size highed-toolbox-inner-body'
@@ -99,7 +100,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     function init() {
 
-      highed.dom.ap(contents, highed.dom.ap(title, chartTitle, highed.dom.ap(iconsContainer, dataImportBtn)), userContents);
+      highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(chartTitle, chartTitleInput), highed.dom.ap(iconsContainer, dataImportBtn)), userContents);
       highed.dom.ap(body, contents);
   
       highed.dom.ap(userContents, dataTableContainer);
@@ -270,7 +271,11 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   }
 
   function setChartTitle(title) {
-    chartTitle.innerHTML = title;
+    chartTitleInput.value = title;
+  }
+
+  function getChartTitle() {
+    return chartTitleInput.value;
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -531,6 +536,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     },
     init: init,
     setChartTitle: setChartTitle,
+    getChartTitle: getChartTitle,
     getIcons: getIcons,
     changeAssignDataTemplate: changeAssignDataTemplate//,
     //toolbar: toolbar

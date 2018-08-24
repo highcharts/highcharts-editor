@@ -1545,7 +1545,7 @@ highed.DataTable = function(parent, attributes) {
     col.width = 140;
     highed.dom.style([col, header, letter], {
       width: col.width + 'px'
-    });    
+    });
 
     mover.on('StartMove', function(x) {
       ox = x;

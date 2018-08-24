@@ -869,6 +869,7 @@ highed.DrawerEditor = function(parent, options) {
     addFeature: addFeature,
     chart: chartPreview,
     toolbar: toolbar,
+    getChartTitle: dataPage.getChartTitle,
     setChartTitle: setChartTitle,
     data: {
       on: function() {}, //dataTable.on,
