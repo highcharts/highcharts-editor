@@ -60,9 +60,9 @@ highed.AssignDataPanel = function(parent, attr) {
         }
       }
     ],
-    'names': {
-      'id': 'names',
-      'name': "Names",
+    'label': {
+      'id': 'label',
+      'name': "Label",
       'desc': 'The name of the point as shown in the legend, tooltip, data label etc.',
       'default': '',
       'value': '',
@@ -398,6 +398,7 @@ highed.AssignDataPanel = function(parent, attr) {
   function checkValues(newValue, prevValue) {
     values = getValues(newValue);
     values2 = getValues(prevValue);
+    console.log(values, values2);
     if (Math.max(values[values.length - 1], values2[values2.length - 1]) - Math.min(values[0], values2[0]) <= (values[values.length - 1] - values[0]) + (values2[values2.length - 1] - values2[0])) {
       return true;
     }
@@ -410,11 +411,13 @@ highed.AssignDataPanel = function(parent, attr) {
         values = [],
         values2 = [];
     Object.keys(options).forEach(function(key) {
-      if (object.name === options[key].name) return;
-
+      if (object.id === options[key].id || found) return;
       if (highed.isArr(options[key])) {
+
         (options[key]).forEach(function(o) {
-          if (object.name === o.name) return;
+          console.log(object.id, o.id)
+          if (object.id === o.id) return;
+          console.log("comparing: ", newValue, o.value);
           found = checkValues(newValue, o.value);
           if (found) return false;
         });
@@ -424,6 +427,7 @@ highed.AssignDataPanel = function(parent, attr) {
       }
 
     });
+    console.log(found);
     return found;
 
   }
@@ -446,10 +450,11 @@ highed.AssignDataPanel = function(parent, attr) {
       });
 
       highed.dom.on(labelInput, 'blur', function() {
+        /*
         if (labelInput.value === '' && option.mandatory) {
           option.value = option.previousValue;
           labelInput.value = option.previousValue;
-        } else if (valuesMatch(labelInput.value.toUpperCase(), option)) {
+        } else*/ if (valuesMatch(labelInput.value.toUpperCase(), option)) {
           option.value = option.previousValue;
           labelInput.value = option.previousValue;
           alert("This column has already been assigned a value. Please select a different column");
@@ -461,7 +466,12 @@ highed.AssignDataPanel = function(parent, attr) {
     }
     else {
       labelInput = highed.DropDown(valueContainer, 'highed-assigndata-dropdown');
-
+      if(!option.mandatory){
+        labelInput.addItem({
+          id: '',
+          title: ''
+        });
+      }
       for(var i = 0; i < columnLength; i++) {
         labelInput.addItem({
           id: getLetterFromIndex(i),
@@ -474,9 +484,11 @@ highed.AssignDataPanel = function(parent, attr) {
       labelInput.on('Change', function(selected) {
         //detailIndex = selected.index();
         detailValue = selected.id();
+        console.log(detailValue, option);
         if (valuesMatch(detailValue, option)) {
           option.value = option.previousValue;
-          labelInput.value = option.previousValue;
+
+          labelInput.selectById(option.previousValue);
           alert("This column has already been assigned a value. Please select a different column");
         }
         else option.value = detailValue;

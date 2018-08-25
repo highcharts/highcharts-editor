@@ -517,7 +517,7 @@ highed.DataTable = function(parent, attributes) {
   }, false);
 
   document.addEventListener('contextmenu', function(e) {
-    if (e.target.className.indexOf('highed-dtable') > -1) {
+    if (e.target.className && e.target.className.indexOf('highed-dtable') > -1) {
       globalContextMenu.show(e.clientX, e.clientY, true);
       return highed.dom.nodefault(e);
     }
@@ -620,6 +620,7 @@ highed.DataTable = function(parent, attributes) {
   }
 
   function makeEditable(target, value, fn, keyup, close, dontFocus) {
+    
     if (mainInputCb.length) {
       mainInputCb = mainInputCb.filter(function(fn) {
         fn();
@@ -667,7 +668,7 @@ highed.DataTable = function(parent, attributes) {
         return highed.isFn(fn) && fn(mainInput.value);
       })
     );
-
+    
     highed.dom.ap(target, mainInput);
     if (!dontFocus) mainInput.focus();
   }
@@ -917,7 +918,7 @@ highed.DataTable = function(parent, attributes) {
             selectedHeaders = [];
             focus();
             globalContextMenu.hide();
-          }
+      }
     });
 
     highed.dom.on([col, colVal], 'mouseover', function(e) {
@@ -942,16 +943,8 @@ highed.DataTable = function(parent, attributes) {
       }
     });
     highed.dom.on(col, 'mousedown', function() {
-      deselectAllCells();
-      
       focus();
-/*
-      highed.dom.style(cornerPiece, {
-        top: ((highed.dom.pos(col).y + highed.dom.size(col).h - 3)) + "px",
-        left: ((highed.dom.pos(col).x + highed.dom.size(col).w - 3)) + "px",
-        display: "block"
-      });
-*/
+
       selectedFirstCell[0] = colNumber;//keyVal; 
       selectedEndCell[0] = colNumber;//keyVal; 
       selectedFirstCell[1] = row.number; 
