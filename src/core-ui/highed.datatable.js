@@ -1537,7 +1537,8 @@ highed.DataTable = function(parent, attributes) {
 
     col.width = 140;
     highed.dom.style([col, header, letter], {
-      width: col.width + 'px'
+      width: col.width + 'px',
+      'max-width': col.width + 'px'
     });
 
     mover.on('StartMove', function(x) {
@@ -1552,7 +1553,8 @@ highed.DataTable = function(parent, attributes) {
       col.width = x;
 
       highed.dom.style([col, header, letter], {
-        width: x + 'px'
+        width: x + 'px',
+        'max-width': x + 'px'
       });
 
       moveHandle.className =
