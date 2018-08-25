@@ -299,32 +299,49 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     //dataTable.highlightSelectedFields(input);
   });
 
+
+////// USE LINKED TO FOR ALL DATA (use Multiple value field with linkedto set to "Y" then we can loop through rawvalue and set the series mapping this way ) AMD EVEM THE CATEGORY STUFF (X). WIll probably need a rewrite. 
+
   assignDataPanel.on('ChangeData', function(allOptions) {
     //Series map all of the "linkedTo" options
-
-    var tempOption = [{}],
+    
+    var tempOption = [],
         chartOptions = chartPreview.toProject().options;
-        
-    Object.keys(allOptions).forEach(function(key) {
-      const option = allOptions[key];
-      if (key === 'data') {
-        Object.keys(option).forEach(function(dataKey){
-          if (option[dataKey].linkedTo && option[dataKey].value !== '') {
-            tempOption[0][option[dataKey].linkedTo] = highed.getLetterIndex(option[dataKey].value)
-          }
-        });
-      } else {
-        if (option.linkedTo && option.value !== '') {
-          tempOption[0][option.linkedTo] = highed.getLetterIndex(option.value);
-        }
+    
+    var dataValues  = allOptions.data,
+        series = 1;
+
+    dataValues.forEach(function(data) {
+      if (data.multipleValues) {
+        series = (data.rawValue[data.rawValue.length - 1] - data.rawValue[0]) + 1;
       }
     });
 
-    if (Object.keys(tempOption[0]).length > 0) {
+    for(var i = 1; i <= series; i++) {
 
+      var serieOption = {};
+      Object.keys(allOptions).forEach(function(key) {
+        const option = allOptions[key];
+        if (option.value !== '') {
+          if (highed.isArr(option)) { // Data assigndata
+            if (series > 1) {
+              serieOption['y'] = i; // TODO: Change this later to be not hardcoded
+            } else {
+              option.forEach(function(data) {
+                serieOption[data.linkedTo] = data.rawValue[0];
+              })
+            }
+          } else {
+            serieOption[option.linkedTo] = option.rawValue[0];
+          }
+        }
+
+      });
+      tempOption.push(serieOption);
+    };
+
+    if (tempOption.length > 0) {
       chartOptions.data.seriesMapping = tempOption;
-      chartOptions.series = null;
-
       chartPreview.options.setAll(chartOptions);
     }
   });

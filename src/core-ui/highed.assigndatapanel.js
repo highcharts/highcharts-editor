@@ -29,24 +29,28 @@ highed.AssignDataPanel = function(parent, attr) {
 
   var defaultOptions = {
     'labels': {
+      'id': 'labels',
       'name': "Categories",
       'desc': 'A column of names or times',
       'default': 'A',
       'value': 'A',
+      'rawValue': [0],
       'previousValue': null,
-      'isLabel': true,
+      'linkedTo': 'x',
       'mandatory': true,
       'colors': {
         'light': 'rgba(66, 200, 192, 0.2)',
         'dark': 'rgb(66, 200, 192)',
       }
     },
-    "data": {
-      'values': {
+    "data": [{
+        'id': 'values',
         'name': "Values",
         'desc': 'Enter columns with the values you want to chart. You can enter a range using a hyphen.',
         'default': 'B-C',
+        'linkedTo': 'y',
         'value': 'B-C',
+        'rawValue': [1, 2],
         'multipleValues': true,
         'previousValue': null,
         'mandatory': true,
@@ -55,12 +59,14 @@ highed.AssignDataPanel = function(parent, attr) {
           'dark': 'rgb(145, 151, 229)',
         }
       }
-    },
+    ],
     'names': {
+      'id': 'names',
       'name': "Names",
       'desc': 'The name of the point as shown in the legend, tooltip, data label etc.',
       'default': '',
       'value': '',
+      'rawValue': null,
       'previousValue': null,
       'mandatory': false,
       'linkedTo': 'label',        
@@ -86,12 +92,16 @@ highed.AssignDataPanel = function(parent, attr) {
   }
   
   function resetValues() {
-    Object.keys(options).forEach(function(key){
-      if (key === 'data') {
-        Object.keys(options[key]).forEach(function(dataKey) {
-          options[key][dataKey].previousValue = null;
-          options[key][dataKey].value = options[key][dataKey].default;
+    Object.keys(options).forEach(function(key) {
+      if (highed.isArr(options[key])) {
+        options[key].forEach(function(object) {
+          object.previousValue = null;
+          object.value = object.default;
         });
+        //Object.keys(options[key]).forEach(function(dataKey) {
+         // options[key][dataKey].previousValue = null;
+         // options[key][dataKey].value = options[key][dataKey].default;
+        //});
       } else {
         options[key].previousValue = null;
         options[key].value = options[key].default;
@@ -106,9 +116,10 @@ highed.AssignDataPanel = function(parent, attr) {
     };
 
     Object.keys(options).forEach(function(key){
-      if (key === 'data') {
-        Object.keys(options[key]).forEach(function(dataKey) {
-          arr[key][dataKey] = options[key][dataKey].value;
+      if (highed.isArr(options[key])) {
+        
+        options[key].forEach(function(object) {
+          arr[key][object.id] = object.value;
         });
       } else {
         if (options[key].value === '' || options[key].value === null) return;
@@ -125,33 +136,26 @@ highed.AssignDataPanel = function(parent, attr) {
     Object.keys(options).forEach(function(optionKeys) {
       if (optionKeys === 'labels') {
         arr.labelColumn = highed.getLetterIndex(options[optionKeys].value.charAt(0));
-      } else if (optionKeys === 'data') {
+      } else if (highed.isArr(options[optionKeys])) {
 
-        const data = options.data.values;
-        if (data) {
-          const userValues = data.value.split(data.value.indexOf('-') > -1 ? '-' : ',').sort();
-          var tempValue = highed.getLetterIndex(userValues[0]),
-              values = [];  
-          while(tempValue <= highed.getLetterIndex(userValues[userValues.length - 1])) {
-            values.push(tempValue);
-            tempValue++;
-          }
-          
-          arr.dataColumns = values;
-        } else {
-          // Has more than one data value, need to loop through them and get their positions
-          const data = options.data;
-          var values = [];
-          
-          Object.keys(data).forEach(function(key){
-            const option = data[key];
-            if (option.value !== '') {
-              values.push(highed.getLetterIndex(option.value));
+        const allData = options[optionKeys];
+        var values = [];
+        allData.forEach(function(data) {
+          if (data.multipleValues) {
+            const userValues = data.value.split(data.value.indexOf('-') > -1 ? '-' : ',').sort();
+            var tempValue = highed.getLetterIndex(userValues[0]);
+            values = [];  
+            while(tempValue <= highed.getLetterIndex(userValues[userValues.length - 1])) {
+              values.push(tempValue);
+              tempValue++;
             }
-          });
-          values = values.sort();
-          arr.dataColumns = values;
-        }
+            arr.dataColumns = values;
+          } else {
+            values.push(data.rawValue[0]);
+            arr.dataColumns = values;
+          }
+        });
+        arr.dataColumns.sort();
       } else {
         // Check for any extra fields, eg. Name
         const extraValue = options[optionKeys];
@@ -221,11 +225,13 @@ highed.AssignDataPanel = function(parent, attr) {
     }
     
     input.previousValue = input.value.toUpperCase();
+    input.rawValue = values.map(function (x) {
+      return highed.getLetterIndex(x);
+    });
+
     cb(previousValues.map(function (x) {
       return highed.getLetterIndex(x);
-    }), values.map(function (x) {
-      return highed.getLetterIndex(x);
-    }), input, newOptions);
+    }), input.rawValue, input, newOptions);
 
   }
 
@@ -234,10 +240,14 @@ highed.AssignDataPanel = function(parent, attr) {
 
       var input = options[key];
 
-      if (key === 'data') {
+      if (highed.isArr(input)) {
+        /*
         Object.keys(input).forEach(function(dataKey) {
           processField(input[dataKey], overrideCheck, cb);
-        });
+        });*/
+        input.forEach(function(object) {
+          processField(object, overrideCheck, cb);
+        })
       } else {
         processField(input, overrideCheck, cb);
       }
@@ -366,9 +376,9 @@ highed.AssignDataPanel = function(parent, attr) {
     if (data.settings && data.settings.dataProvider && data.settings.dataProvider.assignDataFields) {
       const dataFields = data.settings.dataProvider.assignDataFields;
       Object.keys(dataFields).forEach(function(key){
-        if (key === 'data') {
-          Object.keys(dataFields[key]).forEach(function(dataKey) {
-            if (options[key][dataKey]) options[key][dataKey].value = dataFields[key][dataKey];
+        if (highed.isArr(dataFields[key])) {
+          dataFields[key].forEach(function(object, i) {
+            if (object) object.value = dataFields[key][object.id];
           });
         } else {
           if (options[key]) options[key].value = dataFields[key];
@@ -384,50 +394,41 @@ highed.AssignDataPanel = function(parent, attr) {
     resetDOM();
     events.emit('ChangeData', options);
   }
-/*
-  function checkValues(newValue, otherValue) {
-    const values = getValues(newValue);
-    const values2 = getValues(otherValue);        
 
+  function checkValues(newValue, prevValue) {
+    values = getValues(newValue);
+    values2 = getValues(prevValue);
     if (Math.max(values[values.length - 1], values2[values2.length - 1]) - Math.min(values[0], values2[0]) <= (values[values.length - 1] - values[0]) + (values2[values2.length - 1] - values2[0])) {
-      found = true;
-      return false;
+      return true;
     }
+    return false;
   }
-*/
-  function valuesMatch(newValue, key) {
-    var found = false,
+
+  function valuesMatch(newValue, object) {
+
+    var found = false
         values = [],
         values2 = [];
+    Object.keys(options).forEach(function(key) {
+      if (object.name === options[key].name) return;
 
-    Object.keys(options).forEach(function(key2) {
-        if (key === key2) return;
-/*
-        if (key === 'data') {
-          Object.keys(options[key2]).forEach(function(key3) {
+      if (highed.isArr(options[key])) {
+        (options[key]).forEach(function(o) {
+          if (object.name === o.name) return;
+          found = checkValues(newValue, o.value);
+          if (found) return false;
+        });
+      } else {
+        found = checkValues(newValue, options[key].value);
+        if (found) return false;
+      }
 
-            if (key === key3) return;
-            values = getValues(newValue);
-            values2 = getValues(options[key2][key3].value);        
-            if (Math.max(values[values.length - 1], values2[values2.length - 1]) - Math.min(values[0], values2[0]) <= (values[values.length - 1] - values[0]) + (values2[values2.length - 1] - values2[0])) {
-              found = true;
-              return false;
-            }
-            
-          });
-        }*/
-/*
-        values = getValues(newValue);
-        values2 = getValues(options[key2].value);
-
-        if (Math.max(values[values.length - 1], values2[values2.length - 1]) - Math.min(values[0], values2[0]) <= (values[values.length - 1] - values[0]) + (values2[values2.length - 1] - values2[0])) {
-          found = true;
-          return false;
-        }*/
     });
     return found;
+
   }
 
+  
   highed.dom.ap(body, header);
   highed.dom.ap(labels, selectContainer, inputContainer);
 
@@ -448,10 +449,10 @@ highed.AssignDataPanel = function(parent, attr) {
         if (labelInput.value === '' && option.mandatory) {
           option.value = option.previousValue;
           labelInput.value = option.previousValue;
-        } else if (valuesMatch(labelInput.value.toUpperCase(), key)) {
+        } else if (valuesMatch(labelInput.value.toUpperCase(), option)) {
           option.value = option.previousValue;
           labelInput.value = option.previousValue;
-          alert("Error");
+          alert("This column has already been assigned a value. Please select a different column");
         }
         else option.value = labelInput.value.toUpperCase();
 
@@ -473,10 +474,10 @@ highed.AssignDataPanel = function(parent, attr) {
       labelInput.on('Change', function(selected) {
         //detailIndex = selected.index();
         detailValue = selected.id();
-        if (valuesMatch(detailValue, key)) {
+        if (valuesMatch(detailValue, option)) {
           option.value = option.previousValue;
           labelInput.value = option.previousValue;
-          alert("Error");
+          alert("This column has already been assigned a value. Please select a different column");
         }
         else option.value = detailValue;
 
@@ -514,10 +515,17 @@ highed.AssignDataPanel = function(parent, attr) {
     Object.keys(options).forEach(function(key) {
       var option = options[key];
   
-      if (key === 'data') {
+      if (highed.isArr(option)) {
+        
+        
+        (option).forEach(function(object) {
+          generateInputs(object, key);
+        })
+        /*
         Object.keys(option).forEach(function(dataKey) {
           generateInputs(option[dataKey], dataKey);
-        })
+        })*/
+
       } else {
         generateInputs(option, key);
       }
