@@ -29,81 +29,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 highed.meta.optionsExtended = {
   options: {
-    'option.cat.title': [
+    'option.cat.chart': [
       {
-        text: 'option.subcat.titles',
-        options: [
-          {
-            id: 'title--text',
-            pid: 'title.text',
-            dataType: 'string',
-            context: 'General',
-            defaults: 'Chart title',
-            parent: 'title',
-            width: 50
-          },
-          {
-            id: 'subtitle--text',
-            pid: 'subtitle.text',
-            dataType: 'string',
-            context: 'General',
-            parent: 'subtitle',
-            width: 50
-          },
-          {
-            id: 'yAxis-title--text',
-            dataIndex: 0,
-            pid: 'yAxis.title.text',
-            dataType: 'string',
-            context: 'General',
-            defaults: 'Values',
-            parent: 'yAxis-title'
-          }
-        ]
-      },
-      {
-        text: 'option.cat.dimension',
+        text: 'option.subcat.dimension',
         dropdown: true,
-        options: [{
-          id: 'title--text',
-          pid: 'title.text',
-          dataType: 'string',
-          context: 'General',
-          defaults: 'Chart title',
-          parent: 'title',
-          width: 50
-        }]
-      },
-      {
-        text: 'option.cat.dimension',
-        dropdown: true,
-        options: [{
-          id: 'title--text',
-          pid: 'title.text',
-          dataType: 'string',
-          context: 'General',
-          defaults: 'Chart title',
-          parent: 'title',
-          width: 50
-        }]
-      },
-      {
-        text: 'option.cat.dimension',
-        dropdown: true,
-        options: [{
-          id: 'title--text',
-          pid: 'title.text',
-          dataType: 'string',
-          context: 'General',
-          defaults: 'Chart title',
-          parent: 'title',
-          width: 50
-        }]
-      }
-    ],
-    'option.cat.general': [
-      {
-        text: 'option.subcat.size',
+        group: 1,
         options: [
           {
             id: 'chart--width',
@@ -134,78 +64,32 @@ highed.meta.optionsExtended = {
         ]
       },
       {
-        text: 'option.subcat.interaction',
+        text: 'option.subcat.title',
+        dropdown: true,
+        group: 1,
         options: [
           {
-            id: 'chart--zoomType',
-            pid: 'chart.zoomType',
+            id: 'title--text',
+            pid: 'title.text',
             dataType: 'string',
             context: 'General',
-            parent: 'chart',
-            values: '[null, "x", "y", "xy"]'
+            defaults: 'Chart title',
+            parent: 'title',
+            width: 50
           },
           {
-            id: 'chart--polar',
-            pid: 'chart.polar',
-            dataType: 'boolean',
+            id: 'subtitle--text',
+            pid: 'subtitle.text',
+            dataType: 'string',
             context: 'General',
-            defaults: 'false',
-            parent: 'chart'
-          }
-        ]
-      }
-    ],
-    'option.cat.appearance': [
-      {
-        text: 'option.subcat.fonts',
-        options: [
-          {
-            id: 'chart--style',
-            dataType: 'font',
-            pid: 'chart.style',
-            context: 'General',
-            defaults:
-              '{"fontFamily":"\\"Lucida Grande\\", \\"Lucida Sans Unicode\\", Verdana, Arial, Helvetica, sans-serif","fontSize":"12px"}',
-            parent: 'chart'
-          }
-        ]
-      },
-      {
-        text: 'option.subcat.titlestyle',
-        options: [
-          {
-            id: 'title--style',
-            dataType: 'font',
-            pid: 'title.style',
-            context: 'General',
-            defaults: '{ "color": "#333333", "fontSize": "18px" }',
-            parent: 'title'
+            parent: 'subtitle',
+            width: 50
           },
-          {
-            id: 'subtitle--style',
-            dataType: 'font',
-            pid: 'subtitle.style',
-            context: 'General',
-            defaults: '{ "color": "#666666" }',
-            parent: 'subtitle'
-          }
         ]
       },
       {
-        text: 'option.subcat.seriescolors',
-        options: [
-          {
-            id: 'colors',
-            pid: 'colors',
-            dataType: 'array<color>',
-            context: 'General',
-            defaults:
-              '[ "#7cb5ec" , "#434348" , "#90ed7d" , "#f7a35c" , "#8085e9" , "#f15c80" , "#e4d354" , "#2b908f" , "#f45b5b" , "#91e8e1"]'
-          }
-        ]
-      },
-      {
-        text: 'option.subcat.chartarea',
+        text: 'option.subcat.appearance',
+        dropdown: true,
         options: [
           {
             id: 'chart--backgroundColor',
@@ -248,12 +132,7 @@ highed.meta.optionsExtended = {
             defaults: '0',
             parent: 'chart',
             width: 50
-          }
-        ]
-      },
-      {
-        text: 'option.subcat.plotarea',
-        options: [
+          },
           {
             id: 'chart--plotBackgroundColor',
             pid: 'chart.plotBackgroundColor',
@@ -288,90 +167,174 @@ highed.meta.optionsExtended = {
             parent: 'chart'
           }
         ]
+      },
+      {
+        text: 'option.subcat.tooltip',
+        dropdown: true,
+        options: [          
+          {
+            id: 'tooltip--enabled',
+            pid: 'tooltip.enabled',
+            dataType: 'boolean',
+            context: 'General',
+            defaults: 'true',
+            parent: 'tooltip',
+            width: 50
+          },
+          {
+            id: 'tooltip--shared',
+            pid: 'tooltip.shared',
+            dataType: 'boolean',
+            context: 'General',
+            defaults: 'false',
+            parent: 'tooltip',
+            width: 50
+          },          
+          {
+            id: 'tooltip--backgroundColor',
+            pid: 'tooltip.backgroundColor',
+            dataType: 'color',
+            context: 'General',
+            defaults: 'rgba(247,247,247,0.85)',
+            parent: 'tooltip',
+            width: 50
+          },
+          {
+            id: 'tooltip--borderWidth',
+            custom: {
+              minValue: 0
+            },
+            pid: 'tooltip.borderWidth',
+            dataType: 'number',
+            context: 'General',
+            defaults: '1',
+            parent: 'tooltip',
+            width: 50
+          },
+          {
+            id: 'tooltip--borderRadius',
+            custom: {
+              minValue: 0
+            },
+            pid: 'tooltip.borderRadius',
+            dataType: 'number',
+            context: 'General',
+            defaults: '3',
+            parent: 'tooltip',
+            width: 50
+          },
+          {
+            id: 'tooltip--borderColor',
+            pid: 'tooltip.borderColor',
+            dataType: 'color',
+            context: 'General',
+            defaults: 'null',
+            parent: 'tooltip',
+            width: 50
+          }
+        ]
+      },
+      {
+        text: 'option.subcat.credit',
+        dropdown: true,
+        options: [
+          {
+            id: 'credits--enabled',
+            pid: 'credits.enabled',
+            dataType: 'boolean',
+            context: 'General',
+            defaults: 'true',
+            parent: 'credits'
+          },
+          {
+            id: 'credits--text',
+            pid: 'credits.text',
+            dataType: 'string',
+            context: 'General',
+            defaults: 'Highcharts.com',
+            parent: 'credits'
+          },
+          {
+            id: 'credits--href',
+            pid: 'credits.href',
+            dataType: 'string',
+            context: 'General',
+            defaults: 'http://www.highcharts.com',
+            parent: 'credits'
+          }
+        ]
       }
     ],
     'option.cat.axes': [
       {
-        text: 'option.subcat.axessetup',
-        options: [
-          {
-            id: 'chart--inverted',
-            pid: 'chart.inverted',
-            dataType: 'boolean',
-            context: 'General',
-            defaults: 'false',
-            parent: 'chart'
-          }
-        ]
-      },
-      {
-        id: 'xAxis',
         text: 'option.subcat.xaxis',
-        options: [
-          {
-            id: 'xAxis-title--style',
-            dataType: 'font',
-            dataIndex: 0,
-            pid: 'xAxis.title.style',
-            context: 'General',
-            defaults: '{ "color": "#666666" }',
-            parent: 'xAxis-title'
-          },
-          {
-            id: 'xAxis-title--text',
-            dataIndex: 0,
-            pid: 'xAxis.title.text',
-            dataType: 'string',
-            context: 'General',
-            parent: 'xAxis-title',
-            width: 50
-          },
-          {
-            id: 'xAxis-labels--format',
-            dataIndex: 0,
-            pid: 'xAxis.labels.format',
-            dataType: 'string',
-            context: 'General',
-            defaults: '{value}',
-            parent: 'xAxis-labels',
-            width: 50
-          },
-          {
-            id: 'xAxis--type',
-            dataIndex: 0,
-            pid: 'xAxis.type',
-            dataType: 'string',
-            context: 'General',
-            defaults: 'linear',
-            parent: 'xAxis',
-            values: '["linear", "logarithmic", "datetime", "category"]'
-          },
-          {
-            id: 'xAxis--opposite',
-            dataIndex: 0,
-            pid: 'xAxis.opposite',
-            dataType: 'boolean',
-            context: 'General',
-            defaults: 'false',
-            parent: 'xAxis',
-            width: 50
-          },
-          {
-            id: 'xAxis--reversed',
-            dataIndex: 0,
-            pid: 'xAxis.reversed',
-            dataType: 'boolean',
-            context: 'General',
-            defaults: 'false',
-            parent: 'xAxis',
-            width: 50
-          }
+        dropdown: true,
+        options: [          
+        {
+          id: 'xAxis-title--style',
+          dataType: 'font',
+          dataIndex: 0,
+          pid: 'xAxis.title.style',
+          context: 'General',
+          defaults: '{ "color": "#666666" }',
+          parent: 'xAxis-title'
+        },
+        {
+          id: 'xAxis-title--text',
+          dataIndex: 0,
+          pid: 'xAxis.title.text',
+          dataType: 'string',
+          context: 'General',
+          parent: 'xAxis-title',
+          width: 50
+        },
+        {
+          id: 'xAxis-labels--format',
+          dataIndex: 0,
+          pid: 'xAxis.labels.format',
+          dataType: 'string',
+          context: 'General',
+          defaults: '{value}',
+          parent: 'xAxis-labels',
+          width: 50
+        },
+        {
+          id: 'xAxis--type',
+          dataIndex: 0,
+          pid: 'xAxis.type',
+          dataType: 'string',
+          context: 'General',
+          defaults: 'linear',
+          parent: 'xAxis',
+          values: '["linear", "logarithmic", "datetime", "category"]'
+        },
+        {
+          id: 'xAxis--opposite',
+          dataIndex: 0,
+          pid: 'xAxis.opposite',
+          dataType: 'boolean',
+          context: 'General',
+          defaults: 'false',
+          parent: 'xAxis',
+          width: 50
+        },
+        {
+          id: 'xAxis--reversed',
+          dataIndex: 0,
+          pid: 'xAxis.reversed',
+          dataType: 'boolean',
+          context: 'General',
+          defaults: 'false',
+          parent: 'xAxis',
+          width: 50
+        }
+
         ]
       },
       {
-        id: 'yAxis',
         text: 'option.subcat.yaxis',
-        options: [
+        dropdown: true,
+        options: [          
           {
             id: 'yAxis-title--style',
             dataType: 'font',
@@ -681,27 +644,44 @@ highed.meta.optionsExtended = {
         ]
       }
     ],
-    'option.cat.labels': [
+    'option.cat.export': [
       {
-        id: 'data-labels',
-        text: 'option.subcat.labels',
+        text: 'option.cat.exporting',
+        dropdown: true,
         options: [
           {
-            id: 'plotOptions-series-dataLabels--enabled',
-            pid: 'plotOptions.series.dataLabels.enabled',
+            id: 'exporting--enabled',
+            pid: 'exporting.enabled',
             dataType: 'boolean',
             context: 'General',
-            defaults: 'false',
-            parent: 'plotOptions-series-dataLabels'
+            defaults: 'true',
+            parent: 'exporting'
           },
           {
-            id: 'plotOptions-series-dataLabels--style',
-            pid: 'plotOptions.series.dataLabels.style',
-            dataType: 'cssobject',
+            id: 'exporting--sourceWidth',
+            custom: {
+              minValue: 10,
+              maxValue: 2000,
+              step: 10
+            },
+            pid: 'exporting.sourceWidth',
+            dataType: 'number',
             context: 'General',
-            defaults:
-              '{"color": "contrast", "fontSize": "11px", "fontWeight": "bold", "textOutline": "1px 1px contrast" }',
-            parent: 'plotOptions-series-dataLabels'
+            parent: 'exporting',
+            values: ''
+          },
+          {
+            id: 'exporting--scale',
+            custom: {
+              minValue: 1,
+              maxValue: 4
+            },
+            pid: 'exporting.scale',
+            dataType: 'number',
+            context: 'General',
+            defaults: '2',
+            parent: 'exporting',
+            values: ''
           }
         ]
       }
@@ -709,6 +689,8 @@ highed.meta.optionsExtended = {
     'option.cat.legend': [
       {
         text: 'option.subcat.general',
+        dropdown: true,
+        group: 1,
         options: [
           {
             id: 'legend--enabled',
@@ -731,6 +713,8 @@ highed.meta.optionsExtended = {
       },
       {
         text: 'option.subcat.placement',
+        dropdown: true,
+        group: 1,
         options: [
           {
             id: 'legend--align',
@@ -782,6 +766,7 @@ highed.meta.optionsExtended = {
       },
       {
         text: 'option.subcat.legendappearance',
+        dropdown: true,
         options: [
           {
             id: 'legend--itemStyle',
@@ -838,122 +823,11 @@ highed.meta.optionsExtended = {
         ]
       }
     ],
-    'option.cat.tooltip': [
-      {
-        text: 'option.subcat.general',
-        options: [
-          {
-            id: 'tooltip--enabled',
-            pid: 'tooltip.enabled',
-            dataType: 'boolean',
-            context: 'General',
-            defaults: 'true',
-            parent: 'tooltip',
-            width: 50
-          },
-          {
-            id: 'tooltip--shared',
-            pid: 'tooltip.shared',
-            dataType: 'boolean',
-            context: 'General',
-            defaults: 'false',
-            parent: 'tooltip',
-            width: 50
-          }
-        ]
-      },
-      {
-        text: 'option.subcat.colorborder',
-        options: [
-          {
-            id: 'tooltip--backgroundColor',
-            pid: 'tooltip.backgroundColor',
-            dataType: 'color',
-            context: 'General',
-            defaults: 'rgba(247,247,247,0.85)',
-            parent: 'tooltip',
-            width: 50
-          },
-          {
-            id: 'tooltip--borderWidth',
-            custom: {
-              minValue: 0
-            },
-            pid: 'tooltip.borderWidth',
-            dataType: 'number',
-            context: 'General',
-            defaults: '1',
-            parent: 'tooltip',
-            width: 50
-          },
-          {
-            id: 'tooltip--borderRadius',
-            custom: {
-              minValue: 0
-            },
-            pid: 'tooltip.borderRadius',
-            dataType: 'number',
-            context: 'General',
-            defaults: '3',
-            parent: 'tooltip',
-            width: 50
-          },
-          {
-            id: 'tooltip--borderColor',
-            pid: 'tooltip.borderColor',
-            dataType: 'color',
-            context: 'General',
-            defaults: 'null',
-            parent: 'tooltip',
-            width: 50
-          }
-        ]
-      }
-    ],
-    'option.cat.exporting': [
-      {
-        text: 'option.cat.exporting',
-        options: [
-          {
-            id: 'exporting--enabled',
-            pid: 'exporting.enabled',
-            dataType: 'boolean',
-            context: 'General',
-            defaults: 'true',
-            parent: 'exporting'
-          },
-          {
-            id: 'exporting--sourceWidth',
-            custom: {
-              minValue: 10,
-              maxValue: 2000,
-              step: 10
-            },
-            pid: 'exporting.sourceWidth',
-            dataType: 'number',
-            context: 'General',
-            parent: 'exporting',
-            values: ''
-          },
-          {
-            id: 'exporting--scale',
-            custom: {
-              minValue: 1,
-              maxValue: 4
-            },
-            pid: 'exporting.scale',
-            dataType: 'number',
-            context: 'General',
-            defaults: '2',
-            parent: 'exporting',
-            values: ''
-          }
-        ]
-      }
-    ],
     'option.cat.localization': [
       {
         text: 'option.subcat.numberformat',
+        dropdown: true,
+        group: 1,
         options: [
           {
             id: 'lang--decimalPoint',
@@ -974,9 +848,25 @@ highed.meta.optionsExtended = {
             width: 50
           }
         ]
+      },      
+      {
+        text: 'option.subcat.zoombutton',
+        dropdown: true,
+        group: 1,
+        options: [
+          {
+            id: 'lang--resetZoom',
+            pid: 'lang.resetZoom',
+            dataType: 'string',
+            context: 'General',
+            defaults: 'Reset zoom',
+            parent: 'lang'
+          }
+        ]
       },
       {
         text: 'option.subcat.exportbutton',
+        dropdown: true,
         options: [
           {
             id: 'lang--contextButtonTitle',
@@ -1035,51 +925,7 @@ highed.meta.optionsExtended = {
             width: 50
           }
         ]
-      },
-      {
-        text: 'option.subcat.zoombutton',
-        options: [
-          {
-            id: 'lang--resetZoom',
-            pid: 'lang.resetZoom',
-            dataType: 'string',
-            context: 'General',
-            defaults: 'Reset zoom',
-            parent: 'lang'
-          }
-        ]
       }
     ],
-    'option.cat.credits': [
-      {
-        text: 'option.cat.credits',
-        options: [
-          {
-            id: 'credits--enabled',
-            pid: 'credits.enabled',
-            dataType: 'boolean',
-            context: 'General',
-            defaults: 'true',
-            parent: 'credits'
-          },
-          {
-            id: 'credits--text',
-            pid: 'credits.text',
-            dataType: 'string',
-            context: 'General',
-            defaults: 'Highcharts.com',
-            parent: 'credits'
-          },
-          {
-            id: 'credits--href',
-            pid: 'credits.href',
-            dataType: 'string',
-            context: 'General',
-            defaults: 'http://www.highcharts.com',
-            parent: 'credits'
-          }
-        ]
-      }
-    ]
   }
 };
