@@ -90,7 +90,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     dataImportBtn = highed.dom.cr(
       'button',
       'highed-import-button highed-ok-button ',
-      '<i class="fa fa-cloud-upload" aria-hidden="true"></i> Import/Export');
+      'Import/Export');
     
     highed.dom.on(dataImportBtn, 'click', function() {
       dataTable.showImportModal();
@@ -299,12 +299,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     //dataTable.highlightSelectedFields(input);
   });
 
-
-////// USE LINKED TO FOR ALL DATA (use Multiple value field with linkedto set to "Y" then we can loop through rawvalue and set the series mapping this way ) AMD EVEM THE CATEGORY STUFF (X). WIll probably need a rewrite. 
-
   assignDataPanel.on('ChangeData', function(allOptions) {
     //Series map all of the "linkedTo" options
-    
     var tempOption = [],
         chartOptions = chartPreview.toProject().options;
     
@@ -325,7 +321,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         if (option.value !== '') {
           if (highed.isArr(option)) { // Data assigndata
             if (series > 1) {
-              serieOption['y'] = i; // TODO: Change this later to be not hardcoded
+              serieOption['y'] = (option[0].rawValue[0] + i) - 1; // TODO: Change this later to be not hardcoded
             } else {
               option.forEach(function(data) {
                 serieOption[data.linkedTo] = data.rawValue[0];
@@ -422,8 +418,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     setTimeout(function () {
     assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true);
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
-    }, 1000);
     chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true));
+    }, 1000);
     chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
   });
 

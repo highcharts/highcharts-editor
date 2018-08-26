@@ -1543,6 +1543,11 @@ highed.DataTable = function(parent, attributes) {
 
     mover.on('StartMove', function(x) {
       ox = x;
+      
+      if (rows.length > 0) rows[0].columns[0].focus();
+      highed.dom.style(cornerPiece, {
+        display: 'none'
+      })
 
       highed.dom.style(document.body, {
         cursor: 'ew-resize'
@@ -1551,6 +1556,10 @@ highed.DataTable = function(parent, attributes) {
 
     mover.on('Moving', function(x) {
       col.width = x;
+
+      highed.dom.style(cornerPiece, {
+        display: 'none'
+      })
 
       highed.dom.style([col, header, letter], {
         width: x + 'px',
@@ -1567,6 +1576,7 @@ highed.DataTable = function(parent, attributes) {
       });
 
       moveHandle.className = 'highed-dtable-resize-handle';
+      if (rows.length > 0) rows[0].columns[0].focus();
     });
 
     highed.dom.on(options, 'click', function(e) {
@@ -1941,7 +1951,7 @@ highed.DataTable = function(parent, attributes) {
    */
   function toCSV(delimiter, quoteStrings, section) {
     delimiter = delimiter || ',';
-
+    
     return toData(quoteStrings, true, section)
       .map(function(cols) {
         return cols.join(delimiter);

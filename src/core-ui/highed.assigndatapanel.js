@@ -367,30 +367,42 @@ highed.AssignDataPanel = function(parent, attr) {
 
     //options = defaultOptions;
     chartTypeOptions = highed.meta.charttype[seriesType];
+
     if (chartTypeOptions && chartTypeOptions.data) {
       options.data = null;
     }
 
     highed.merge(options, highed.meta.charttype[seriesType]);
-    
     if (data.settings && data.settings.dataProvider && data.settings.dataProvider.assignDataFields) {
       const dataFields = data.settings.dataProvider.assignDataFields;
-      Object.keys(dataFields).forEach(function(key){
-        if (highed.isArr(dataFields[key])) {
-          dataFields[key].forEach(function(object, i) {
-            if (object) object.value = dataFields[key][object.id];
+      Object.keys(dataFields).forEach(function(key) {
+
+        if (highed.isArr(options[key])) {
+          options[key].forEach(function(object) {
+            if (dataFields[key] && dataFields[key][object.id]) {
+              if (object.multipleValues) {
+                object.rawValue = [];
+                object.value = dataFields[key][object.id];
+                (dataFields[key][object.id].split('-')).forEach(function(o){
+                  object.rawValue.push(getLetterIndex(o));
+                });
+              } else object.rawValue = getLetterIndex(dataFields[key][object.id]);
+            }
           });
         } else {
-          if (options[key]) options[key].value = dataFields[key];
+          if (options[key]) {
+            options[key].value = dataFields[key];
+            options[key].rawValue = [getLetterIndex(dataFields[key])];
+          }
         }
       });
     } else {
       // Probably a legacy chart, change values to equal rest of chart
       if (options.data.values && init) {
         options.data.values.value = 'B' + (getLetterFromIndex(maxColumns - 1) !== 'B' ? '-' + getLetterFromIndex(maxColumns - 1) : '');
+        options.data.values.rawValue = [1, maxColumns - 1];
       }
     }
-
     resetDOM();
     events.emit('ChangeData', options);
   }
@@ -398,7 +410,6 @@ highed.AssignDataPanel = function(parent, attr) {
   function checkValues(newValue, prevValue) {
     values = getValues(newValue);
     values2 = getValues(prevValue);
-    console.log(values, values2);
     if (Math.max(values[values.length - 1], values2[values2.length - 1]) - Math.min(values[0], values2[0]) <= (values[values.length - 1] - values[0]) + (values2[values2.length - 1] - values2[0])) {
       return true;
     }
@@ -410,14 +421,12 @@ highed.AssignDataPanel = function(parent, attr) {
     var found = false
         values = [],
         values2 = [];
-    Object.keys(options).forEach(function(key) {
+    Object.keys(options).some(function(key) {
       if (object.id === options[key].id || found) return;
       if (highed.isArr(options[key])) {
 
-        (options[key]).forEach(function(o) {
-          console.log(object.id, o.id)
-          if (object.id === o.id) return;
-          console.log("comparing: ", newValue, o.value);
+        (options[key]).some(function(o) {
+          if (object.id === o.id || found) return;
           found = checkValues(newValue, o.value);
           if (found) return false;
         });
@@ -427,7 +436,6 @@ highed.AssignDataPanel = function(parent, attr) {
       }
 
     });
-    console.log(found);
     return found;
 
   }
@@ -484,7 +492,6 @@ highed.AssignDataPanel = function(parent, attr) {
       labelInput.on('Change', function(selected) {
         //detailIndex = selected.index();
         detailValue = selected.id();
-        console.log(detailValue, option);
         if (valuesMatch(detailValue, option)) {
           option.value = option.previousValue;
 
