@@ -91,7 +91,12 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       'button',
       'highed-import-button highed-ok-button ',
       'Import/Export');
+    dataClearBtn = highed.dom.cr(
+      'button',
+      'highed-import-button highed-ok-button ',
+       highed.L('dgNewBtn'));
     
+
     highed.dom.on(dataImportBtn, 'click', function() {
       dataTable.showImportModal();
     }),
@@ -100,7 +105,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     function init() {
 
-      highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(chartTitle, chartTitleInput), highed.dom.ap(iconsContainer, dataImportBtn)), userContents);
+      highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(chartTitle, chartTitleInput), highed.dom.ap(iconsContainer, dataClearBtn, dataImportBtn)), userContents);
       highed.dom.ap(body, contents);
   
       highed.dom.ap(userContents, dataTableContainer);

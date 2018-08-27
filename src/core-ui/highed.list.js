@@ -108,6 +108,23 @@ highed.List = function(parent, responsive, props) {
 
       return true;
     }
+
+
+    function applyFilter(detailIndex, filteredBy, filter) {
+      var selected = selectedItem, //list.selected(),
+        id = selected.id,
+        entry = highed.meta.optionsExtended.options[id];
+
+      if (!selected) return false;
+
+      //body.innerHTML = '';
+
+      entry.forEach(function(thing) {
+        selectGroup(thing, false, false, detailIndex, filteredBy, filter);
+      });
+
+      highlighted = false;
+    }
         //This function has mutated into a proper mess. Needs refactoring.
     function selectGroup(group, table, options, detailIndex, filteredBy, filter) {
       var master,
@@ -130,21 +147,29 @@ highed.List = function(parent, responsive, props) {
         
         container = highed.dom.cr('div', 'highed-customize-group' + (group.dropdown ? ' highed-list-general-drop-down' : ''));
         masterNode = highed.dom.cr('div', 'highed-customize-master-dropdown');
+        nodeHeading = highed.dom.cr(
+          'div',
+          'highed-customizer-table-heading' + (group.dropdown ? ' highed-list-general-drop-down-header' : ''),
+          highed.L(group.text)
+        );
 
         if (group.dropdown) {
           dropdowns.push(container);
 
-          highed.dom.on(container, 'click', function() {
+          highed.dom.on(nodeHeading, 'click', function(e) {
+            
+            if (e.target !== this) {
+              dropdowns.forEach(function(d) {
+                if (d !== container) d.classList.remove('active');
+              });
 
-            dropdowns.forEach(function(d) {
-              if (d !== container) d.classList.remove('active');
-            });
-
-            if (container.classList.contains('active')) {
-              container.classList.remove('active');
-            } else {
-              container.className += ' active';
+              if (container.classList.contains('active')) {
+                container.classList.remove('active');
+              } else {
+                container.className += ' active';
+              }
             }
+
           });
         }
 
@@ -153,11 +178,7 @@ highed.List = function(parent, responsive, props) {
           nodeChildren,
           highed.dom.ap(
             container,
-            highed.dom.cr(
-              'div',
-              'highed-customizer-table-heading' + (group.dropdown ? ' highed-list-general-drop-down-header' : ''),
-              highed.L(group.text)
-            ),
+            nodeHeading,
             masterNode,
             table
           )
@@ -294,6 +315,7 @@ highed.List = function(parent, responsive, props) {
                 //This is a master for the rest of the childs,
                 //which means that we need to rebuild everything
                 //here somehow and check their subType
+                nodeChildren.innerHTML = '';
                 applyFilter(detailIndex, filteredBy, newValue);
               }
             },

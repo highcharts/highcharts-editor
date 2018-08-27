@@ -737,24 +737,6 @@ highed.meta.optionsExtended = {
             width: 50
           },
           {
-            id: 'legend--x',
-            pid: 'legend.x',
-            dataType: 'number',
-            context: 'General',
-            defaults: '0',
-            parent: 'legend',
-            width: 50
-          },
-          {
-            id: 'legend--y',
-            pid: 'legend.y',
-            dataType: 'number',
-            context: 'General',
-            defaults: '0',
-            parent: 'legend',
-            width: 50
-          },
-          {
             id: 'legend--floating',
             pid: 'legend.floating',
             dataType: 'boolean',
@@ -775,14 +757,6 @@ highed.meta.optionsExtended = {
             context: 'General',
             defaults:
               '{ "color": "#333333", "cursor": "pointer", "fontSize": "12px", "fontWeight": "bold" }',
-            parent: 'legend'
-          },
-          {
-            id: 'legend--itemHiddenStyle',
-            dataType: 'font',
-            pid: 'legend.itemHiddenStyle',
-            context: 'General',
-            defaults: '{ "color": "#cccccc" }',
             parent: 'legend'
           },
           {

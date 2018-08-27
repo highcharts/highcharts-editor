@@ -162,15 +162,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     highed.dom.ap(
       container,
       fontFamily.container,
-      highed.dom.ap(
-        highed.dom.cr('div', 'highed-font-picker-button-container'),
         fontSize.container,
         highed.dom.ap(
           highed.dom.cr('div', 'highed-font-picker-buttons'),
-          boldBtn.button,
-          italicBtn.button,
+          highed.dom.ap (
+            highed.dom.cr('div', 'highed-font-style'),
+            boldBtn.button,
+            italicBtn.button
+          ),
           color
-        )
       )
     );
 

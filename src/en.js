@@ -37,7 +37,7 @@ highed.installLanguage({
     dgWithSelected: 'With Selection:',
     dgImportBtn: 'IMPORT',
     dgExportBtn: 'EXPORT DATA',
-    dgNewBtn: 'CLEAR DATA',
+    dgNewBtn: 'Clear Data',
     dgAddRow: 'ADD ROW',
     dgDataImported: 'Data imported',
     dgDataImporting: 'Importing data',
