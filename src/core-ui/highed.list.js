@@ -48,7 +48,7 @@ highed.List = function(parent, responsive, props) {
     selectedItem = false,
     events = highed.events(),
     items = [],
-    dropdowns = [],
+    dropdowns = {},
     properties = props;
 
   ///////////////////////////////////////////////////////////////////////////
@@ -154,13 +154,12 @@ highed.List = function(parent, responsive, props) {
         );
 
         if (group.dropdown) {
-          dropdowns.push(container);
-
+          dropdowns[highed.L(group.text)] = container;
           highed.dom.on(nodeHeading, 'click', function(e) {
             
             if (e.target !== this) {
-              dropdowns.forEach(function(d) {
-                if (d !== container) d.classList.remove('active');
+              Object.keys(dropdowns).forEach(function(d) {
+                if (dropdowns[d] !== container) dropdowns[d].classList.remove('active');
               });
 
               if (container.classList.contains('active')) {
@@ -336,7 +335,7 @@ highed.List = function(parent, responsive, props) {
           display: "none"
         });
       }
-      dropdowns = [];
+      dropdowns = {};
 
       nodeArrow.innerHTML = '<i class="fa fa-angle-down" aria-hidden="true"></i>';
       nodeChildren.innerHTML = '';
@@ -466,6 +465,18 @@ highed.List = function(parent, responsive, props) {
     });
   }
 
+  function selectDropdown(dropdownKey) {
+
+    Object.keys(dropdowns).forEach(function(d) {
+      if (dropdowns[d] !== dropdowns[dropdownKey]) dropdowns[d].classList.remove('active');
+    });
+
+    if (!dropdowns[dropdownKey].classList.contains('active')) {
+      dropdowns[dropdownKey].className += ' active';
+    }
+
+  }
+
   /** Reselect the current item
      *  @memberof highed.List
      */
@@ -519,6 +530,7 @@ highed.List = function(parent, responsive, props) {
     hide: hide,
     selectFirst: selectFirst,
     select: select,
+    selectDropdown: selectDropdown,
     reselect: reselect,
     selected: selected,
     count: countItems,

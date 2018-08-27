@@ -107,25 +107,28 @@ highed.ChartPreview = function(parent, attributes) {
     expanded = false,
     constr = 'Chart',
     wysiwyg = {
-      'g.highcharts-legend': { tab: 'Legend', id: 'legend--enabled' },
-      'text.highcharts-title': { tab: 'Titles', id: 'title--text' },
-      'text.highcharts-subtitle': { tab: 'Titles', id: 'subtitle--text' },
-      '.highcharts-yaxis-labels': { tab: 'Axes', id: 'yAxis-labels--format' },
-      '.highcharts-xaxis-labels': { tab: 'Axes', id: 'xAxis-labels--format' },
+      'g.highcharts-legend': { tab: 'Legend', dropdown: 'General', id: 'legend--enabled' },
+      'text.highcharts-title': { tab: 'Chart',  dropdown: 'Title', id: 'title--text' },
+      'text.highcharts-subtitle': { tab: 'Chart', dropdown: 'Title',id: 'subtitle--text' },
+      '.highcharts-yaxis-labels': { tab: 'Axes', dropdown: 'Y Axis', id: 'yAxis-labels--format' },
+      '.highcharts-xaxis-labels': { tab: 'Axes', dropdown: 'X Axis', id: 'xAxis-labels--format' },
       '.highcharts-xaxis .highcharts-axis-title': {
-        tab: 'Axes',
+        tab: 'Axes', 
+        dropdown: 'X Axis',
         id: 'xAxis-title--text'
       },
       '.highcharts-yaxis .highcharts-axis-title': {
-        tab: 'Titles',
+        tab: 'Axes',
+        dropdown: 'Y Axis',
         id: 'yAxis-title--text'
       },
       'rect.highcharts-background': {
-        tab: 'Appearance',
+        tab: 'Chart',
+        dropdown: 'Appearance',
         id: 'chart--backgroundColor'
       },
       '.highcharts-series': { tab: 'Data series', id: 'series' },
-      'g.highcharts-tooltip': { tab: 'Tooltip', id: 'tooltip--enabled' }
+      'g.highcharts-tooltip': { tab: 'Chart', dropdown: 'Tooltip', id: 'tooltip--enabled' }
     };
 
   ///////////////////////////////////////////////////////////////////////////

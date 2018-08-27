@@ -439,7 +439,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
         '#' + id.substr(0, id.indexOf('-'))
       );
 
-      highlightNode(body.querySelector('#' + id), x, y);
+      highlightNode(simpleTab.body.querySelector('#' + id), x, y);
       highlightNode(advSplitter.right.querySelector('#' + id));
 
       if (n) {
@@ -458,8 +458,8 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
    */
   function focus(thing, x, y) {
     var n;
-
     list.select(thing.tab);
+    list.selectDropdown(thing.dropdown);
     advTree.expandTo(thing.id);
     highlightField(thing.id, x, y);
   }

@@ -409,71 +409,22 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     //setToActualSize();
     }, 2000);
   });
-/*
+
 
   chartPreview.on('RequestEdit', function(event, x, y) {
+    console.log(event);
     // Expanded
-    if (toolboxEntries.customize.body.offsetWidth) {
+    //if (toolboxEntries.customize.body.offsetWidth) {
       customizer.focus(event, x, y);
-
       // Collapsed
-    } else {
+    /*} else {
       var unbind = toolboxEntries.customize.on('Expanded', function() {
         customizer.focus(event, x, y);
         unbind();
       });
       toolboxEntries.customize.expand();
-    }
+    }*/
   });
-*/
-
-  //chartPreview.on('ChartRecreated', hideError);
-
-
-  //////////////////////////////////////////////////////////////////////////////
-/*
-  highed.dom.ap(
-    toolbar.left,
-    highed.dom.style(highed.dom.cr('span'), {
-      'margin-left': '2px',
-      width: '200px',
-      height: '60px',
-      float: 'left',
-      display: 'inline-block',
-      'background-position': 'left middle',
-      'background-size': 'auto 100%',
-      'background-repeat': 'no-repeat',
-      'background-image':
-        'url("data:image/svg+xml;utf8,' +
-        encodeURIComponent(highed.resources.logo) +
-        '")'
-    })
-  );*/
-
-
-  ////////////////////////////////////////////////// UNCOMMENT TO SHOW CHART!!!! ///////////////////////////////////////////
-  /*
-  highed.dom.ap(
-    splitter.bottom,
-    highed.dom.ap(
-      chartFrame,
-      chartContainer,
-      highed.dom.ap(errorBar, errorBarHeadline, errorBarBody)
-    )
-  );
-
-  highed.dom.on([resWidth, resHeight], 'change', function() {
-    sizeChart(parseInt(resWidth.value, 10), parseInt(resHeight.value, 10));
-  });
-*/
-  // Create the features
- // createFeatures();
- // createToolbar();
-
- // resize();
-  /**
-   * Resize the chart preview based on a given width
-   */
 
   function getIcons(){
     return iconsContainer;
