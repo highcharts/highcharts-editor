@@ -513,6 +513,25 @@ highed.ChartPreview = function(parent, attributes) {
     }
   }
 
+  function loadTemplateForSerie(template, serie) {
+
+    if (customizedOptions.series[serie]) {
+      customizedOptions.series[serie].type = template.config.chart.type;
+    } else {
+      customizedOptions.series[serie] = {
+        type: template.config.chart.type,
+        turboThreshold: 0,
+        _colorIndex: customizedOptions.series.length,
+        _symbolIndex: 0,
+        compare: undefined
+      };
+    }
+    updateAggregated();
+    init(aggregatedOptions);
+    loadSeries();
+    emitChange();
+  }
+
   /** Load a template from the meta
    *  @memberof highed.ChartPreview
    *  @param template - the template object
@@ -1660,6 +1679,23 @@ highed.ChartPreview = function(parent, attributes) {
     return expanded ? collapse() : expand();
   });
 
+  function addBlankSeries() {
+    /*
+    var chartOptions =  getCleanOptions(customizedOptions);
+    chartOptions.series.push({
+      type: 'line',
+      data:[],
+      turboThreshold: 0,
+      _colorIndex: chartOptions.series.length,
+      _symbolIndex: 0,
+      compare: undefined
+    });
+
+    //Init the initial chart
+    updateAggregated();
+    init();*/
+  }
+
   ///////////////////////////////////////////////////////////////////////////
 
   exports = {
@@ -1676,6 +1712,7 @@ highed.ChartPreview = function(parent, attributes) {
     getHighchartsInstance: gc,
 
     loadTemplate: loadTemplate,
+    loadTemplateForSerie: loadTemplateForSerie,
     loadSeries: loadSeriesData,
     resize: resize,
 
@@ -1687,6 +1724,7 @@ highed.ChartPreview = function(parent, attributes) {
     loadProject: loadProject,
 
     toString: toString,
+
 
     options: {
       set: set,
@@ -1701,7 +1739,8 @@ highed.ChartPreview = function(parent, attributes) {
       getPreview: getCodePreview,
       all: function(){
         return chart;
-      }
+      },
+      addBlankSeries: addBlankSeries
     },
 
     data: {

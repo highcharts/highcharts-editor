@@ -46,18 +46,19 @@ highed.AssignDataPanel = function(parent, attr) {
     "data": [{
         'id': 'values',
         'name': "Values",
-        'desc': 'Enter columns with the values you want to chart. You can enter a range using a hyphen.',
-        'default': 'B-C',
+        'desc': 'Enter column with the values you want to chart.',
+        'default': 'B',
         'linkedTo': 'y',
-        'value': 'B-C',
-        'rawValue': [1, 2],
-        'multipleValues': true,
+        'value': 'B',
+        'rawValue': [1],
+        'multipleValues': false,
         'previousValue': null,
         'mandatory': true,
         'colors': {
           'light': 'rgba(145, 151, 229, 0.2)',
           'dark': 'rgb(145, 151, 229)',
-        }
+        },
+        'incrementOnNewSeries': true
       }
     ],
     'label': {
@@ -76,11 +77,22 @@ highed.AssignDataPanel = function(parent, attr) {
       }
     }
   },
-  options = {},
+  options = [],
   toggled = false,
-  columnLength = 0;
+  columnLength = 0,
+  index = 0;
 
-  Object.assign(options, defaultOptions);
+  options.push(highed.merge({}, defaultOptions));
+  Object.keys(defaultOptions).forEach(function(key){
+    if (highed.isArr(defaultOptions[key])) {
+      defaultOptions[key].forEach(function(o) {
+        o.colors = null;
+      });
+    } else {
+      defaultOptions[key].colors = null;
+    }
+  });
+  //Object.assign(options[0], defaultOptions);
   
   function init(colLength) {
     columnLength = colLength;
@@ -88,13 +100,13 @@ highed.AssignDataPanel = function(parent, attr) {
     highed.dom.ap(body, labels);
     resetDOM();
     highed.dom.ap(parent, highed.dom.ap(container, bar, body));
-    events.emit('AssignDataChanged', options);
+    events.emit('AssignDataChanged', options[index]);
   }
   
   function resetValues() {
-    Object.keys(options).forEach(function(key) {
-      if (highed.isArr(options[key])) {
-        options[key].forEach(function(object) {
+    Object.keys(options[index]).forEach(function(key) {
+      if (highed.isArr(options[index][key])) {
+        options[index][key].forEach(function(object) {
           object.previousValue = null;
           object.value = object.default;
         });
@@ -103,8 +115,8 @@ highed.AssignDataPanel = function(parent, attr) {
          // options[key][dataKey].value = options[key][dataKey].default;
         //});
       } else {
-        options[key].previousValue = null;
-        options[key].value = options[key].default;
+        options[index][key].previousValue = null;
+        options[index][key].value = options[index][key].default;
       }
     });
   }
@@ -115,30 +127,31 @@ highed.AssignDataPanel = function(parent, attr) {
       data: {}
     };
 
-    Object.keys(options).forEach(function(key){
-      if (highed.isArr(options[key])) {
+    Object.keys(options[index]).forEach(function(key){
+      if (highed.isArr(options[index][key])) {
         
-        options[key].forEach(function(object) {
+        options[index][key].forEach(function(object) {
           arr[key][object.id] = object.value;
         });
       } else {
-        if (options[key].value === '' || options[key].value === null) return;
-        arr[key] = options[key].value;
+        if (options[index][key].value === '' || options[index][key].value === null) return;
+        arr[key] = options[index][key].value;
       }
     });
 
     return arr;
   }
 
+
   function getMergedLabelAndData() {
     var arr = {},
         extraColumns = [];
-    Object.keys(options).forEach(function(optionKeys) {
+    Object.keys(options[index]).forEach(function(optionKeys) {
       if (optionKeys === 'labels') {
-        arr.labelColumn = highed.getLetterIndex(options[optionKeys].value.charAt(0));
-      } else if (highed.isArr(options[optionKeys])) {
+        arr.labelColumn = highed.getLetterIndex(options[index][optionKeys].value.charAt(0));
+      } else if (highed.isArr(options[index][optionKeys])) {
 
-        const allData = options[optionKeys];
+        const allData = options[index][optionKeys];
         var values = [];
         allData.forEach(function(data) {
           if (data.multipleValues) {
@@ -158,7 +171,7 @@ highed.AssignDataPanel = function(parent, attr) {
         arr.dataColumns.sort();
       } else {
         // Check for any extra fields, eg. Name
-        const extraValue = options[optionKeys];
+        const extraValue = options[index][optionKeys];
         if (extraValue.value !== '') {
           extraColumns.push(highed.getLetterIndex(extraValue.value));
         }
@@ -170,12 +183,62 @@ highed.AssignDataPanel = function(parent, attr) {
     return arr; //arr.concat(values);
   }
 
+
+  function getAllMergedLabelAndData() {
+
+    var seriesValues = [];
+    options.forEach(function(serie, i) {
+    
+      var arr = {},
+      extraColumns = [];
+      Object.keys(serie).forEach(function(optionKeys) {
+          if (optionKeys === 'labels') {
+            arr.labelColumn = highed.getLetterIndex(options[i][optionKeys].value.charAt(0));
+          } else if (highed.isArr(options[i][optionKeys])) {
+
+            const allData = options[i][optionKeys];
+            var values = [];
+            allData.forEach(function(data) {
+              if (data.multipleValues) {
+                const userValues = data.value.split(data.value.indexOf('-') > -1 ? '-' : ',').sort();
+                var tempValue = highed.getLetterIndex(userValues[0]);
+                values = [];  
+                while(tempValue <= highed.getLetterIndex(userValues[userValues.length - 1])) {
+                  values.push(tempValue);
+                  tempValue++;
+                }
+                arr.dataColumns = values;
+              } else {
+                values.push(data.rawValue[0]);
+                arr.dataColumns = values;
+              }
+            });
+            arr.dataColumns.sort();
+          } else {
+            // Check for any extra fields, eg. Name
+            const extraValue = options[i][optionKeys];
+            if (extraValue.value !== '') {
+              extraColumns.push(highed.getLetterIndex(extraValue.value));
+            }
+          }
+      });
+      arr.extraColumns = extraColumns.sort();
+      seriesValues.push(highed.merge({}, arr));
+    });
+    return seriesValues;
+
+  }
+
   function getLetterIndex(char) {
     return char.charCodeAt() - 65; 
   }
 
   function getLetterFromIndex(num) {
     return String.fromCharCode(num + 65);
+  }
+
+  function getActiveSerie() {
+    return index;
   }
 
   function processField(input, overrideCheck, cb) {
@@ -200,14 +263,8 @@ highed.AssignDataPanel = function(parent, attr) {
           previousValues.every(function(item) { return values.indexOf(item) > -1 }));
         if (areEqual) return;
       }
-      //if (key === 'Data') { //Get the label data
       
       newOptions = getMergedLabelAndData();
-      //} else {
-      /*values.forEach(function(value) {
-        newOptions.push(highed.getLetterIndex(value));
-      });*/
-      //}
     } else {
       if (!overrideCheck) {
         if (input.previousValue === input.value || (input.value === '' && input.previousValue === null)) return;
@@ -228,7 +285,7 @@ highed.AssignDataPanel = function(parent, attr) {
     input.rawValue = values.map(function (x) {
       return highed.getLetterIndex(x);
     });
-
+    
     cb(previousValues.map(function (x) {
       return highed.getLetterIndex(x);
     }), input.rawValue, input, newOptions);
@@ -236,9 +293,9 @@ highed.AssignDataPanel = function(parent, attr) {
   }
 
   function getFieldsToHighlight(cb, overrideCheck) {
-    Object.keys(options).forEach(function(key) {
+    Object.keys(options[index]).forEach(function(key) {
 
-      var input = options[key];
+      var input = options[index][key];
 
       if (highed.isArr(input)) {
         /*
@@ -268,6 +325,10 @@ highed.AssignDataPanel = function(parent, attr) {
   }
 
   function getOptions() {
+    return options[index];
+  }
+
+  function getAllOptions() {
     return options;
   }
 
@@ -295,12 +356,35 @@ highed.AssignDataPanel = function(parent, attr) {
     labels = highed.dom.cr('div', 'highed-assigndatapanel-data-options'),
     selectContainer = highed.dom.cr('div', 'highed-assigndatapanel-select-container'),
     inputContainer = highed.dom.cr('div', 'highed-assigndatapanel-inputs-container'),
+    addNewSeriesBtn = highed.dom.cr('button', 'highed-assigndatapanel-add-series', '<i class="fa fa-plus"/>'),
+    deleteSeriesBtn = highed.dom.cr('button', 'highed-assigndatapanel-add-series', '<i class="fa fa-trash"/>'),
     seriesTypeSelect = highed.DropDown(selectContainer, ' highed-assigndatapanel-series-dropdown');
-  
-  highed.dom.style(selectContainer, {
-    display: "none"
-  });
+      
+  highed.dom.ap(selectContainer, addNewSeriesBtn, deleteSeriesBtn);
 
+  highed.dom.on(addNewSeriesBtn, 'click', function() {
+    events.emit('AddNewSeries');
+    seriesTypeSelect.addItems([{
+      id: options.length,
+      title: 'Series ' + (options.length + 1) + ' - Line',
+      value: 'Line'
+    }]);
+
+    //Check previous values data value for incrementer property. If is there, then increment and 
+    options.push(highed.merge({}, defaultOptions));
+
+
+    seriesTypeSelect.selectById(options.length - 1);
+    resetDOM();
+    events.emit('RedrawGrid');
+  });
+  
+  seriesTypeSelect.on('Change', function(selected) {
+    index = selected.id();
+    resetDOM();
+    events.emit('RedrawGrid', true);
+  });
+  
   highed.dom.on(headerToggle, 'click', function() {
 
     const height = (toggled ? '48px' : 'initial');
@@ -313,14 +397,15 @@ highed.AssignDataPanel = function(parent, attr) {
 
     toggled = !toggled;
   });
-/*
+
   seriesTypeSelect.addItems([{
-    id: 'line',
-    title: 'Line'
+    id: 0,
+    title: 'Series ' + (options.length) + ' - Line',
+    value: 'Line'
   }]);
   
-  seriesTypeSelect.selectById('line');
-*/
+  seriesTypeSelect.selectById(0);
+
   function hide() {
     highed.dom.style(container, {
       display: 'none'
@@ -343,8 +428,13 @@ highed.AssignDataPanel = function(parent, attr) {
 
     return output;
   }
+  
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
 
   function setAssignDataFields(data, maxColumns, init) {
+
     if (!data) return;
 
     columnLength = maxColumns;
@@ -352,33 +442,39 @@ highed.AssignDataPanel = function(parent, attr) {
 
     if (data.config) seriesType = data.config.chart.type;
     else seriesType = (data.template && data.template.chart ? data.template.chart.type || data.theme.options.chart.type || 'line' : 'line');
-/*
-    seriesTypeSelect.clear();
 
-    seriesTypeSelect.addItems([{
-      id: seriesType,
-      title: seriesType
-    }]);
-    seriesTypeSelect.selectById(seriesType);
-*/
+    if (init) {
+      seriesTypeSelect.clear();
+      seriesTypeSelect.addItems([{
+        id: seriesType,
+        title: seriesType
+      }]);
+      seriesTypeSelect.selectById(seriesType);
+      options.push(highed.merge({}, defaultOptions));
+    } else {
+      seriesTypeSelect.updateByIndex(index, {
+        title: 'Series ' + (index + 1) + ' - ' + capitalizeFirstLetter(seriesType),
+        value: seriesType
+      });
+      seriesTypeSelect.selectByIndex(index);
+    }
 
-    options = {};
-    options = Object.assign(options, defaultOptions);
+    //options = Object.assign(options, defaultOptions);
 
     //options = defaultOptions;
     chartTypeOptions = highed.meta.charttype[seriesType];
 
     if (chartTypeOptions && chartTypeOptions.data) {
-      options.data = null;
+      options[index].data = null;
     }
 
-    highed.merge(options, highed.meta.charttype[seriesType]);
+    highed.merge(options[index], highed.meta.charttype[seriesType]);
     if (data.settings && data.settings.dataProvider && data.settings.dataProvider.assignDataFields) {
       const dataFields = data.settings.dataProvider.assignDataFields;
       Object.keys(dataFields).forEach(function(key) {
 
-        if (highed.isArr(options[key])) {
-          options[key].forEach(function(object) {
+        if (highed.isArr(options[index][key])) {
+          options[index][key].forEach(function(object) {
             if (dataFields[key] && dataFields[key][object.id]) {
               if (object.multipleValues) {
                 object.rawValue = [];
@@ -390,17 +486,17 @@ highed.AssignDataPanel = function(parent, attr) {
             }
           });
         } else {
-          if (options[key]) {
-            options[key].value = dataFields[key];
-            options[key].rawValue = [getLetterIndex(dataFields[key])];
+          if (options[index][key]) {
+            options[index][key].value = dataFields[key];
+            options[index][key].rawValue = [getLetterIndex(dataFields[key])];
           }
         }
       });
     } else {
       // Probably a legacy chart, change values to equal rest of chart
-      if (options.data.values && init) {
-        options.data.values.value = 'B' + (getLetterFromIndex(maxColumns - 1) !== 'B' ? '-' + getLetterFromIndex(maxColumns - 1) : '');
-        options.data.values.rawValue = [1, maxColumns - 1];
+      if (options[index].data.values && init) {
+        options[index].data.values.value = 'B' + (getLetterFromIndex(maxColumns - 1) !== 'B' ? '-' + getLetterFromIndex(maxColumns - 1) : '');
+        options[index].data.values.rawValue = [1, maxColumns - 1];
       }
     }
     resetDOM();
@@ -421,17 +517,17 @@ highed.AssignDataPanel = function(parent, attr) {
     var found = false
         values = [],
         values2 = [];
-    Object.keys(options).some(function(key) {
-      if (object.id === options[key].id || found) return;
-      if (highed.isArr(options[key])) {
+    Object.keys(options[index]).some(function(key) {
+      if (object.id === options[index][key].id || found) return;
+      if (highed.isArr(options[index][key])) {
 
-        (options[key]).some(function(o) {
+        (options[index][key]).some(function(o) {
           if (object.id === o.id || found) return;
           found = checkValues(newValue, o.value);
           if (found) return false;
         });
       } else {
-        found = checkValues(newValue, options[key].value);
+        found = checkValues(newValue, options[index][key].value);
         if (found) return false;
       }
 
@@ -440,7 +536,6 @@ highed.AssignDataPanel = function(parent, attr) {
 
   }
 
-  
   highed.dom.ap(body, header);
   highed.dom.ap(labels, selectContainer, inputContainer);
 
@@ -467,7 +562,9 @@ highed.AssignDataPanel = function(parent, attr) {
           labelInput.value = option.previousValue;
           alert("This column has already been assigned a value. Please select a different column");
         }
-        else option.value = labelInput.value.toUpperCase();
+        else {
+          option.value = labelInput.value.toUpperCase();
+        }
 
         events.emit('AssignDataChanged', options);
       });
@@ -498,9 +595,12 @@ highed.AssignDataPanel = function(parent, attr) {
           labelInput.selectById(option.previousValue);
           alert("This column has already been assigned a value. Please select a different column");
         }
-        else option.value = detailValue;
+        else {
+          option.value = detailValue;
+          option.rawValue = [getLetterIndex(option.value.toUpperCase())];
+        }
 
-        events.emit('AssignDataChanged', options);
+        events.emit('AssignDataChanged', options[index]);
         //liveDataTypeSelect.selectById(detailValue || 'json');
       });
     }
@@ -531,11 +631,10 @@ highed.AssignDataPanel = function(parent, attr) {
     
     inputContainer.innerHTML = '';
 
-    Object.keys(options).forEach(function(key) {
-      var option = options[key];
+    Object.keys(options[index]).forEach(function(key) {
+      var option = options[index][key];
   
       if (highed.isArr(option)) {
-        
         
         (option).forEach(function(object) {
           generateInputs(object, key);
@@ -560,8 +659,11 @@ highed.AssignDataPanel = function(parent, attr) {
     resize: resize,
     getFieldsToHighlight: getFieldsToHighlight,
     getMergedLabelAndData: getMergedLabelAndData,
+    getAllMergedLabelAndData: getAllMergedLabelAndData,
     setAssignDataFields: setAssignDataFields,
     getAssignDataFields: getAssignDataFields,
+    getAllOptions: getAllOptions,
+    getActiveSerie: getActiveSerie,
     init: init
   };
 };

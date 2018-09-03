@@ -223,6 +223,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             }
 
             collapse();
+          }, 
+
+          updateOptions: function(updatedItem) {
+            item = updatedItem;
           }
         };
 
@@ -295,6 +299,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       });
     }
 
+    function updateByIndex(index, details) {
+      items[index].updateOptions(details);
+    }
+
     /** Set the current selection by index
          *  @memberof highed.DropDown
          *  @param index {number} - the index to select in range [0..item.length]
@@ -320,6 +328,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       container: container,
       selectById: selectById,
       selectByIndex: selectByIndex,
+      updateByIndex: updateByIndex,
       addItems: addItems,
       addItem: addItem,
       clear: clear,

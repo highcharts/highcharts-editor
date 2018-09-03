@@ -412,7 +412,6 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
 
   chartPreview.on('RequestEdit', function(event, x, y) {
-    console.log(event);
     // Expanded
     //if (toolboxEntries.customize.body.offsetWidth) {
       customizer.focus(event, x, y);

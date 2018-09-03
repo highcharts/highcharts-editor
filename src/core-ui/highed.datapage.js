@@ -263,12 +263,27 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   }
   
   function changeAssignDataTemplate(newTemplate) {
-    const oldValues = assignDataPanel.getMergedLabelAndData();
+    /*
+    const oldValues = assignDataPanel.getAllMergedLabelAndData();
     dataTable.removeAllCellsHighlight(null, [oldValues.labelColumn].concat(oldValues.dataColumns).sort());
-    
+    */
+
+
     assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength());
+    const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
+
+    setSeriesMapping(assignDataPanel.getAllOptions());
+    setTimeout(function() {
+
+      chartPreview.data.csv({
+        csv: data
+      });
+      chartPreview.loadTemplateForSerie(newTemplate, assignDataPanel.getActiveSerie());
+    }, 1000);
+
     assignDataPanel.resetValues();
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+
   }
 
   function getIcons() {
@@ -281,6 +296,57 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   function getChartTitle() {
     return chartTitleInput.value;
+  }
+
+  function setSeriesMapping(allOptions) {
+
+    var tempOption = [],
+        chartOptions = chartPreview.toProject().options,
+        dataTableFields = dataTable.getDataFieldsUsed();
+    
+    var dataValues  = allOptions.data,
+        series = allOptions.length;
+/*
+    dataValues.forEach(function(data) {
+      if (data.multipleValues) {
+        series = (data.rawValue[data.rawValue.length - 1] - data.rawValue[0]) + 1;
+      }
+    });
+*/
+    for(var i = 0; i < series; i++) {
+
+      var serieOption = {};
+      Object.keys(allOptions[i]).forEach(function(key) {
+        const option = allOptions[i][key];
+        if (option.value !== '') {
+          if (highed.isArr(option)) { // Data assigndata
+            //serieOption['y'] = dataTableFields.indexOf(option[0].rawValue[0]);
+            option.forEach(function(data) {
+              serieOption[data.linkedTo] = dataTableFields.indexOf(data.rawValue[0]); //data.rawValue[0];
+            });
+            /*
+            if (series > 1) {
+              serieOption['y'] = option[0].rawValue[0]  //(option[0].rawValue[0] + i); // TODO: Change this later to be not hardcoded
+            } else {
+              option.forEach(function(data) {
+                serieOption[data.linkedTo] = data.rawValue[0];
+              })
+            }*/
+          } else {
+            serieOption[option.linkedTo] = option.rawValue[0];
+          }
+        }
+
+      });
+      tempOption.push(serieOption);
+    };
+
+    if (tempOption.length > 0) {
+      if (chartOptions.data) { 
+        chartOptions.data.seriesMapping = tempOption;
+        chartPreview.options.setAll(chartOptions);
+      }
+    }
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -298,53 +364,36 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     events.emit('ChartChangedLately', newData);
   });
 
-  assignDataPanel.on('AssignDataChanged', function() {
+  assignDataPanel.on('AssignDataChanged', function() {    
+    chartPreview.data.csv({
+      csv: dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData())
+    });
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells);
     chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
     //dataTable.highlightSelectedFields(input);
   });
 
+  assignDataPanel.on('RedrawGrid', function(clearGridFirst) {
+
+    if (clearGridFirst) {
+      var columns = [];
+      for(var i = 0; i < dataTable.getColumnLength(); i++) {
+        columns.push(i);
+      }
+      dataTable.removeAllCellsHighlight(null, columns);
+    }
+    assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+    chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
+  });
+
+  assignDataPanel.on('AddNewSeries', function() {
+    chartPreview.options.addBlankSeries();
+  });
+
   assignDataPanel.on('ChangeData', function(allOptions) {
     //Series map all of the "linkedTo" options
-    var tempOption = [],
-        chartOptions = chartPreview.toProject().options;
-    
-    var dataValues  = allOptions.data,
-        series = 1;
 
-    dataValues.forEach(function(data) {
-      if (data.multipleValues) {
-        series = (data.rawValue[data.rawValue.length - 1] - data.rawValue[0]) + 1;
-      }
-    });
-
-    for(var i = 1; i <= series; i++) {
-
-      var serieOption = {};
-      Object.keys(allOptions).forEach(function(key) {
-        const option = allOptions[key];
-        if (option.value !== '') {
-          if (highed.isArr(option)) { // Data assigndata
-            if (series > 1) {
-              serieOption['y'] = (option[0].rawValue[0] + i) - 1; // TODO: Change this later to be not hardcoded
-            } else {
-              option.forEach(function(data) {
-                serieOption[data.linkedTo] = data.rawValue[0];
-              })
-            }
-          } else {
-            serieOption[option.linkedTo] = option.rawValue[0];
-          }
-        }
-
-      });
-      tempOption.push(serieOption);
-    };
-
-    if (tempOption.length > 0) {
-      chartOptions.data.seriesMapping = tempOption;
-      chartPreview.options.setAll(chartOptions);
-    }
+    setSeriesMapping(allOptions);
   });
 /*
   templates.on('Select', function(template) {
@@ -434,9 +483,12 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   
   dataTable.on('Change', function(headers, data) {
     chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true));
-    return chartPreview.data.csv({
-      csv: dataTable.toCSV(';', true, assignDataPanel.getMergedLabelAndData())
+
+    chartPreview.data.csv({
+      csv: dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData())
     });
+
+    setSeriesMapping(assignDataPanel.getAllOptions()); // Not the most efficient way to do this but errors if a user just assigns a column with no data in.
   });
 
   dataTable.on('ClearData', function() {

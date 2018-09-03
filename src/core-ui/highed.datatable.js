@@ -393,6 +393,7 @@ highed.DataTable = function(parent, attributes) {
     allSelectedCopyCells = [],
     selectedHeaders = [],
     columnsToHighlight = [],
+    dataFieldsUsed = [],
     inCopyOverCellMode = false;
     moveToColumn = null,
     dragHeaderMode = false,
@@ -1814,14 +1815,12 @@ highed.DataTable = function(parent, attributes) {
 
     if (section) {
       //Add in label data first
-      cleanData(gcolumns[section.labelColumn]);
+      //cleanData(gcolumns[section.labelColumn]);
     }
 
     gcolumns.reduce(function(result, item, index) {
       
-      if ( section && section.dataColumns &&
-          !section.dataColumns.includes(index) && 
-          !section.extraColumns.includes(index)) {
+      if ( section && !checkSections(section, index)) {
             return;
           }
       
@@ -1830,6 +1829,12 @@ highed.DataTable = function(parent, attributes) {
     }, []);
 
     return columnNames;
+  }
+
+  function checkSections(sections, index) {
+    return (sections || []).some(function(section) {
+      return section.dataColumns.includes(index) || section.extraColumns.includes(index) || section.labelColumn === index;
+    });
   }
 
   /** Get the table contents as an array of arrays
@@ -1843,6 +1848,7 @@ highed.DataTable = function(parent, attributes) {
     if (includeHeaders) {
       data.push(getHeaderTextArr(quoteStrings, section));
     }
+    dataFieldsUsed = [];
 
     function addData(column, arr) {
 
@@ -1867,21 +1873,26 @@ highed.DataTable = function(parent, attributes) {
 
       if (section) {
         //Add in label data first
-        addData(row.columns[section.labelColumn].value(), rarr);
+        //addData(row.columns[section[0].labelColumn].value(), rarr);
       }
 
       row.columns.forEach(function(col, index) {
-
-        if (section && section.dataColumns &&
-            !section.dataColumns.includes(index) && 
-            !section.extraColumns.includes(index)) return;
+        if (!checkSections(section, index)) return;
 
         var v = col.value();
 
         if (v) {
           hasData = true;
         }
-        
+
+        if (!dataFieldsUsed.includes(index)) {
+          dataFieldsUsed.push(index);
+          if (!v) {
+            hasData = true;
+            v = 0;
+          }
+        }
+
         addData(v, rarr);
 
       });
@@ -1890,7 +1901,6 @@ highed.DataTable = function(parent, attributes) {
         data.push(rarr);
       }
     });
-
     return data;
   }
 
@@ -2729,17 +2739,18 @@ highed.DataTable = function(parent, attributes) {
   function highlightCells(previousValues, values, input, newOptions) {
     removeCellColoring(previousValues);
     colorFields(values, input.colors);
-    events.emit('AssignDataChanged', input, newOptions);
+    //events.emit('AssignDataChanged', input, newOptions);
   }
 
   function removeAllCellsHighlight(previousValues, values, input, newOptions) {
     removeCellColoring(values);
-    //colorFields(values, input.colors);
-    //events.emit('AssignDataChanged', input, newOptions);
   }
-
+  
   function getColumnLength(){
     return (rows[0] && rows[0].columns ? rows[0].columns.length : 2);
+  }
+  function getDataFieldsUsed() {
+    return dataFieldsUsed;
   }
   ////////////////////////////////////////////////////////////////////////////
 /*
@@ -2882,6 +2893,7 @@ highed.DataTable = function(parent, attributes) {
     //highlightSelectedFields: highlightSelectedFields,
     highlightCells: highlightCells,
     removeAllCellsHighlight: removeAllCellsHighlight,
-    getColumnLength: getColumnLength
+    getColumnLength: getColumnLength,
+    getDataFieldsUsed: getDataFieldsUsed
   };
 };
