@@ -519,7 +519,11 @@ highed.ChartPreview = function(parent, attributes) {
       customizedOptions.series[serie].type = template.config.chart.type;
     } else {
       customizedOptions.series[serie] = {
-        type: template.config.chart.type
+        type: template.config.chart.type,
+        turboThreshold: 0,
+        _colorIndex: chartOptions.series.length,
+        _symbolIndex: 0,
+        compare: undefined
       };
     }
     updateAggregated();

@@ -267,7 +267,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     const oldValues = assignDataPanel.getAllMergedLabelAndData();
     dataTable.removeAllCellsHighlight(null, [oldValues.labelColumn].concat(oldValues.dataColumns).sort());
     */
-
+   RedrawGrid(true);
 
     assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength());
     const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
@@ -280,9 +280,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       chartPreview.loadTemplateForSerie(newTemplate, assignDataPanel.getActiveSerie());
     }, 1000);
 
-    assignDataPanel.resetValues();
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
-
   }
 
   function getIcons() {
@@ -348,6 +346,18 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     }
   }
 
+  function RedrawGrid(clearGridFirst) {
+    if (clearGridFirst) {
+      var columns = [];
+      for(var i = 0; i < dataTable.getColumnLength(); i++) {
+        columns.push(i);
+      }
+      dataTable.removeAllCellsHighlight(null, columns);
+    }
+    assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+    chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
+  }
+
   //////////////////////////////////////////////////////////////////////////////
 
   chartPreview.on('LoadProjectData', function(csv) {
@@ -378,16 +388,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
 
   assignDataPanel.on('RedrawGrid', function(clearGridFirst) {
-
-    if (clearGridFirst) {
-      var columns = [];
-      for(var i = 0; i < dataTable.getColumnLength(); i++) {
-        columns.push(i);
-      }
-      dataTable.removeAllCellsHighlight(null, columns);
-    }
-    assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
-    chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
+    RedrawGrid(clearGridFirst);
   });
 
   assignDataPanel.on('ChangeData', function(allOptions) {
