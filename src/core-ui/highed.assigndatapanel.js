@@ -57,8 +57,7 @@ highed.AssignDataPanel = function(parent, attr) {
         'colors': {
           'light': 'rgba(145, 151, 229, 0.2)',
           'dark': 'rgb(145, 151, 229)',
-        },
-        'incrementOnNewSeries': true
+        }
       }
     ],
     'label': {
@@ -80,10 +79,11 @@ highed.AssignDataPanel = function(parent, attr) {
   options = [],
   toggled = false,
   columnLength = 0,
-  index = 0;
+  index = 0,
+  maxColumnLength = 1;
 
   options.push(highed.merge({}, defaultOptions));
-  Object.keys(defaultOptions).forEach(function(key){
+  Object.keys(defaultOptions).forEach(function(key) {
     if (highed.isArr(defaultOptions[key])) {
       defaultOptions[key].forEach(function(o) {
         o.colors = null;
@@ -122,7 +122,6 @@ highed.AssignDataPanel = function(parent, attr) {
   }
 
   function getAssignDataFields() {
-    
     var arr = {
       data: {}
     };
@@ -141,7 +140,6 @@ highed.AssignDataPanel = function(parent, attr) {
 
     return arr;
   }
-
 
   function getMergedLabelAndData() {
     var arr = {},
@@ -185,10 +183,8 @@ highed.AssignDataPanel = function(parent, attr) {
 
 
   function getAllMergedLabelAndData() {
-
     var seriesValues = [];
     options.forEach(function(serie, i) {
-    
       var arr = {},
       extraColumns = [];
       Object.keys(serie).forEach(function(optionKeys) {
@@ -226,7 +222,6 @@ highed.AssignDataPanel = function(parent, attr) {
       seriesValues.push(highed.merge({}, arr));
     });
     return seriesValues;
-
   }
 
   function getLetterIndex(char) {
@@ -294,9 +289,7 @@ highed.AssignDataPanel = function(parent, attr) {
 
   function getFieldsToHighlight(cb, overrideCheck) {
     Object.keys(options[index]).forEach(function(key) {
-
       var input = options[index][key];
-
       if (highed.isArr(input)) {
         /*
         Object.keys(input).forEach(function(dataKey) {
@@ -363,20 +356,27 @@ highed.AssignDataPanel = function(parent, attr) {
   highed.dom.ap(selectContainer, addNewSeriesBtn, deleteSeriesBtn);
 
   highed.dom.on(addNewSeriesBtn, 'click', function() {
-    events.emit('AddNewSeries');
+
     seriesTypeSelect.addItems([{
       id: options.length,
       title: 'Series ' + (options.length + 1) + ' - Line',
       value: 'Line'
     }]);
 
-    //Check previous values data value for incrementer property. If is there, then increment and 
-    options.push(highed.merge({}, defaultOptions));
+    const newOptions = highed.merge({}, defaultOptions);
+    
+    newOptions.data[0].rawValue = [maxColumnLength + 1];
+    newOptions.data[0].value = getLetterFromIndex(maxColumnLength + 1);
+    maxColumnLength++;
 
+    options.push(highed.merge({}, newOptions));
 
     seriesTypeSelect.selectById(options.length - 1);
     resetDOM();
+    /*
     events.emit('RedrawGrid');
+    events.emit('AssignDataChanged', options[index]);
+    */
   });
   
   seriesTypeSelect.on('Change', function(selected) {
@@ -598,6 +598,9 @@ highed.AssignDataPanel = function(parent, attr) {
         else {
           option.value = detailValue;
           option.rawValue = [getLetterIndex(option.value.toUpperCase())];
+          if (getLetterIndex(option.value.toUpperCase()) > maxColumnLength) {
+            maxColumnLength = getLetterIndex(option.value.toUpperCase());
+          }
         }
 
         events.emit('AssignDataChanged', options[index]);

@@ -519,11 +519,7 @@ highed.ChartPreview = function(parent, attributes) {
       customizedOptions.series[serie].type = template.config.chart.type;
     } else {
       customizedOptions.series[serie] = {
-        type: template.config.chart.type,
-        turboThreshold: 0,
-        _colorIndex: customizedOptions.series.length,
-        _symbolIndex: 0,
-        compare: undefined
+        type: template.config.chart.type
       };
     }
     updateAggregated();
@@ -586,7 +582,7 @@ highed.ChartPreview = function(parent, attributes) {
    *  @name data.csv
    *  @param data {object} - the data to load
    */
-  function loadCSVData(data, emitLoadSignal) {
+  function loadCSVData(data, emitLoadSignal, bypassClearSeries) {
     var mergedExisting = false,
       seriesClones = [];
     if (!data || !data.csv) {
@@ -633,7 +629,7 @@ highed.ChartPreview = function(parent, attributes) {
         });
       }
 
-      customizedOptions.series = [];
+      if (!bypassClearSeries) customizedOptions.series = [];
 
       highed.merge(customizedOptions, {
         plotOptions: {

@@ -274,7 +274,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     setSeriesMapping(assignDataPanel.getAllOptions());
     setTimeout(function() {
-
       chartPreview.data.csv({
         csv: data
       });
@@ -322,7 +321,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
           if (highed.isArr(option)) { // Data assigndata
             //serieOption['y'] = dataTableFields.indexOf(option[0].rawValue[0]);
             option.forEach(function(data) {
-              serieOption[data.linkedTo] = dataTableFields.indexOf(data.rawValue[0]); //data.rawValue[0];
+              if (dataTableFields.indexOf(data.rawValue[0]) > -1) serieOption[data.linkedTo] = dataTableFields.indexOf(data.rawValue[0]); //data.rawValue[0];
             });
             /*
             if (series > 1) {
@@ -364,10 +363,15 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     events.emit('ChartChangedLately', newData);
   });
 
-  assignDataPanel.on('AssignDataChanged', function() {    
+  assignDataPanel.on('AssignDataChanged', function() {
+
+    const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
+
+    setSeriesMapping(assignDataPanel.getAllOptions());
     chartPreview.data.csv({
-      csv: dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData())
-    });
+      csv: data
+    }, null, true);
+
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells);
     chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
     //dataTable.highlightSelectedFields(input);
@@ -384,10 +388,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     }
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
     chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
-  });
-
-  assignDataPanel.on('AddNewSeries', function() {
-    chartPreview.options.addBlankSeries();
   });
 
   assignDataPanel.on('ChangeData', function(allOptions) {
@@ -486,7 +486,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     chartPreview.data.csv({
       csv: dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData())
-    });
+    }, null, true);
 
     setSeriesMapping(assignDataPanel.getAllOptions()); // Not the most efficient way to do this but errors if a user just assigns a column with no data in.
   });
