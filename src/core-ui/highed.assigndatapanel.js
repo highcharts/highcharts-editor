@@ -355,12 +355,41 @@ highed.AssignDataPanel = function(parent, attr) {
       
   highed.dom.ap(selectContainer, addNewSeriesBtn, deleteSeriesBtn);
 
+  highed.dom.on(deleteSeriesBtn, 'click', function() {
+    
+    if (index === 0) {
+      highed.snackBar("Cannot delete this series");
+      return;
+    }
+
+    if (confirm("Are you sure you want to delete this series?")) {
+      options.splice(index, 1);
+      seriesTypeSelect.deleteByIndex(index);
+      const allSeries = seriesTypeSelect.selectAll();
+
+      events.emit('DeleteSeries', index);
+      setTimeout(function() {
+
+        events.emit('AssignDataChanged');
+      }, 1000);
+  
+      for(var i=index; i < options.length; i++) {
+        seriesTypeSelect.updateByIndex(i, {
+          title: 'Series ' + (i + 1) + ' -' + allSeries[i].title().split('-')[1]
+        }, i);
+      }
+  
+      seriesTypeSelect.selectByIndex(index - 1);
+      highed.snackBar("Series " + (index + 2) + " Deleted");
+    }
+
+  });
+
   highed.dom.on(addNewSeriesBtn, 'click', function() {
 
     seriesTypeSelect.addItems([{
       id: options.length,
-      title: 'Series ' + (options.length + 1) + ' - Line',
-      value: 'Line'
+      title: 'Series ' + (options.length + 1) + ' - Line'
     }]);
 
     const newOptions = highed.merge({}, defaultOptions);
@@ -400,8 +429,7 @@ highed.AssignDataPanel = function(parent, attr) {
 
   seriesTypeSelect.addItems([{
     id: 0,
-    title: 'Series ' + (options.length) + ' - Line',
-    value: 'Line'
+    title: 'Series ' + (options.length) + ' - Line'
   }]);
   
   seriesTypeSelect.selectById(0);
@@ -453,8 +481,7 @@ highed.AssignDataPanel = function(parent, attr) {
       options.push(highed.merge({}, defaultOptions));
     } else {
       seriesTypeSelect.updateByIndex(index, {
-        title: 'Series ' + (index + 1) + ' - ' + capitalizeFirstLetter(seriesType),
-        value: seriesType
+        title: 'Series ' + (index + 1) + ' - ' + capitalizeFirstLetter(seriesType)
       });
       seriesTypeSelect.selectByIndex(index);
     }

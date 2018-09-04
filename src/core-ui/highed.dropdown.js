@@ -227,6 +227,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
           updateOptions: function(updatedItem) {
             item = updatedItem;
+          },
+
+          setId: function(newId) {
+            id = newId;
           }
         };
 
@@ -299,8 +303,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       });
     }
 
-    function updateByIndex(index, details) {
+    function updateByIndex(index, details, newId) {
       items[index].updateOptions(details);
+      if (newId) items[index].setId(newId);
     }
 
     /** Set the current selection by index
@@ -311,6 +316,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       if (index >= 0 && index < items.length) {
         items[index].select();
       }
+    }
+
+    function selectAll() {
+      return items;
+    }
+
+    function deleteByIndex(index) {
+      items.splice(index, 1);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -328,7 +341,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       container: container,
       selectById: selectById,
       selectByIndex: selectByIndex,
+      selectAll: selectAll,
       updateByIndex: updateByIndex,
+      deleteByIndex: deleteByIndex,
       addItems: addItems,
       addItem: addItem,
       clear: clear,

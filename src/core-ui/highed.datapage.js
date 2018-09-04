@@ -348,13 +348,11 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   }
 
   function redrawGrid(clearGridFirst) {
-    console.log("CLEARING GRID...", clearGridFirst);
     if (clearGridFirst) {
       var columns = [];
       for(var i = 0; i < dataTable.getColumnLength(); i++) {
         columns.push(i);
       }
-      console.log(columns);
       dataTable.removeAllCellsHighlight(null, columns);
     }
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
@@ -374,6 +372,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   chartPreview.on('ChartChange', function(newData) {
     events.emit('ChartChangedLately', newData);
+  });
+
+  assignDataPanel.on('DeleteSeries', function(index) {
+    chartPreview.data.deleteSeries(index);
   });
 
   assignDataPanel.on('AssignDataChanged', function() {
