@@ -392,20 +392,18 @@ highed.AssignDataPanel = function(parent, attr) {
       title: 'Series ' + (options.length + 1) + ' - Line'
     }]);
 
+    if (maxColumnLength + 1 < columnLength) {
+      maxColumnLength++;
+    }
+
     const newOptions = highed.merge({}, defaultOptions);
     
-    newOptions.data[0].rawValue = [maxColumnLength + 1];
-    newOptions.data[0].value = getLetterFromIndex(maxColumnLength + 1);
-    maxColumnLength++;
-
+    newOptions.data[0].rawValue = [maxColumnLength];
+    newOptions.data[0].value = getLetterFromIndex(maxColumnLength);
     options.push(highed.merge({}, newOptions));
 
     seriesTypeSelect.selectById(options.length - 1);
     resetDOM();
-    /*
-    events.emit('RedrawGrid');
-    events.emit('AssignDataChanged', options[index]);
-    */
   });
   
   seriesTypeSelect.on('Change', function(selected) {

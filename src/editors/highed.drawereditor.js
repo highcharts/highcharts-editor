@@ -244,6 +244,21 @@ highed.DrawerEditor = function(parent, options) {
       highedChartContainer,
       builtInOptions.templates
     ),
+    createChartPage = highed.CreateChartPage(
+      splitter.bottom,
+      highed.merge(
+        {
+          importer: properties.importer
+        },
+        properties.dataGrid
+      ),
+      {
+        title: 'Create Chart',
+        widths: {
+          desktop: 95
+        }
+      }
+    ),
 
     // Res preview bar
     resPreviewBar = highed.dom.cr('div', 'highed-res-preview'),
@@ -386,7 +401,8 @@ highed.DrawerEditor = function(parent, options) {
   // Alias import to data
   builtInOptions.import = builtInOptions.data;
   panel.setDefault(dataPage);
-
+  createChartPage.init(dataPage, templatePage, customizePage);
+  createChartPage.hide();
   /**
    * Creates the features defined in property.features
    * Call this after changing properties.features to update the options.
@@ -485,6 +501,14 @@ highed.DrawerEditor = function(parent, options) {
       } else {
         toolbar.addIcon(b);
       }
+    });
+  }
+
+  function showCreateChartPage() {
+    panel.getPrev().hide();
+    createChartPage.show();
+    highed.dom.style(chartFrame, {
+      display: 'none'
     });
   }
 
@@ -871,6 +895,7 @@ highed.DrawerEditor = function(parent, options) {
     toolbar: toolbar,
     getChartTitle: dataPage.getChartTitle,
     setChartTitle: setChartTitle,
+    showCreateChartPage: showCreateChartPage,
     data: {
       on: function() {}, //dataTable.on,
       showLiveStatus: function() {}, //toolbox.showLiveStatus,

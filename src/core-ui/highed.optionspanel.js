@@ -68,10 +68,15 @@ highed.OptionsPanel = function(parent, attr) {
     highed.dom.ap(body, highed.dom.cr('div', 'highed-optionspanel-header', 'Workspace View:'));
   }
 
+  function getPrev() {
+    return prev;
+  }
+
   return {
     on: events.on,
     addOption: addOption,
     setDefault: setDefault,
+    getPrev: getPrev,
     clearOptions: clearOptions
   };
 };
