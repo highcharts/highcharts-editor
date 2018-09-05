@@ -30,10 +30,34 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.CreateChartPage = function(parent, options, props) {
   var events = highed.events(),
     builtInOptions = [
-      'Title Your Chart',
-      'Import Data',
-      'Choose Template',
-      'Customize'
+      {
+        id: 1,
+        title: 'Title Your Chart',
+        create: function(body) {
+          highed.dom.ap(body, titleContainer);
+        }
+      },
+      {
+        id: 2,
+        title: 'Import Data',
+        create: function(body) {
+          highed.dom.ap(body, templateContainer);
+        }
+      },
+      {
+        id: 3,
+        title: 'Choose Template',
+        create: function(body) {
+          highed.dom.ap(body, dataTableContainer);
+        }
+      },
+      {
+        id: 4,
+        title: 'Customize',
+        create: function(body) {
+          highed.dom.ap(body, customizerContainer);
+        }
+      }
     ],
     container = highed.dom.cr(
       'div',
@@ -46,29 +70,101 @@ highed.CreateChartPage = function(parent, options, props) {
     ),
     userContents = highed.dom.cr(
       'div',
-      'highed-box-size highed-toolbox-user-contents highed-toolbox-dtable'
+      'highed-box-size highed-toolbox-user-contents test-test'
     ),
     body = highed.dom.cr(
       'div',
       'highed-toolbox-body highed-box-size highed-transition'
     ),
     listContainer = highed.dom.cr('div', 'highed-toolbox-createchart-list'),
-    isVisible = false;
+    isVisible = false,
+    customizerContainer = highed.dom.cr('div', 'highed-toolbox-customise'),
+    titleContainer = highed.dom.cr('div', 'highed-toolbox-customise'),
+    templateContainer = highed.dom.cr('div', 'highed-toolbox-template'),
+    dataTableContainer = highed.dom.cr('div', 'highed-toolbox-data'),
+    toolbox = highed.Toolbox(userContents),
+    options = [];
 
     function init(dataPage, customizePage, templatePage) {
 
+      toolbox = highed.Toolbox(userContents);
       builtInOptions.forEach(function(option, index) {
-        highed.dom.ap(listContainer, highed.dom.ap(highed.dom.cr('div', 'highed-toolbox-list-item-container'), highed.dom.cr('div', 'highed-toolbox-list-circle', index + 1), highed.dom.cr('div', 'highed-toolbox-list-title', option)));
+        //highed.dom.ap(listContainer, highed.dom.ap(highed.dom.cr('div', 'highed-toolbox-list-item-container'), highed.dom.cr('div', 'highed-toolbox-list-circle', index + 1), highed.dom.cr('div', 'highed-toolbox-list-title', option)));
+        var o = toolbox.addEntry({
+          title: option.title,
+          number: option.id
+        });
+
+        if (highed.isFn(option.create)) {
+          option.create(o.body);
+        }
+
+        options.push(o);
+
       });
+      options[0].expand();
+
+      createTitleSection();
 
       highed.dom.ap(contents, userContents);
       highed.dom.ap(body, contents);
   
-      highed.dom.ap(userContents, listContainer);
+      //highed.dom.ap(userContents, listContainer);
       
       highed.dom.ap(parent, highed.dom.ap(container, body));
 
       expand();
+    }
+
+
+    function createTitleSection() {
+
+      var titleInput = highed.dom.cr('input', 'highed-imp-input'),
+          subtitleInput = highed.dom.cr('input', 'highed-imp-input'),
+          nextButton = highed.dom.cr(
+            'button',
+            'highed-ok-button highed-import-button negative',
+            'Next'
+          );
+
+      titleInput.value = 'My Chart';
+      subtitleInput.value = 'My Untitled Chart';
+      
+      highed.dom.on(nextButton, 'click', function() {
+        options[1].expand();
+      });
+
+      highed.dom.ap(titleContainer,  
+        highed.dom.cr(
+          'table'
+        ),
+        highed.dom.ap(
+          highed.dom.cr('tr', 'highed-toolbox-input-container'),
+          highed.dom.cr(
+            'td',
+            'highed-toolbox-label',
+            'Chart Title'
+          ), 
+          highed.dom.ap(highed.dom.cr('td'), titleInput)
+        ),
+        highed.dom.ap(
+          highed.dom.cr('tr', 'highed-toolbox-input-container'),
+          highed.dom.cr(
+            'td',
+            'highed-toolbox-label',
+            'Subtitle'
+          ), 
+          highed.dom.ap(highed.dom.cr('td'), subtitleInput)
+        ),
+        highed.dom.ap(
+          highed.dom.cr('tr'),
+          highed.dom.cr('td'),
+          highed.dom.ap(
+            highed.dom.cr('td','highed-toolbox-button-container'),
+            nextButton
+          )
+        )
+      );   
     }
 
     function resize() {

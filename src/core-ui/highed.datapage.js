@@ -53,7 +53,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       'div',
       'highed-transition highed-toolbox highed-box-size'
     ),
-    title = highed.dom.cr('div', 'highed-toolbox-body-title'),
+    title = highed.dom.cr('div', 'highed-dtable-title'),
     chartTitle = highed.dom.cr('div', 'highed-toolbox-body-chart-title'),
     chartTitleInput = highed.dom.cr('input', 'highed-toolbox-chart-title-input'),
     contents = highed.dom.cr(
@@ -76,7 +76,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
     body = highed.dom.cr(
       'div',
-      'highed-toolbox-body highed-box-size highed-transition'
+      'highed-toolbox-body highed-datapage-body highed-box-size highed-transition'
     ),
     dataTable = highed.DataTable(
       dataTableContainer,

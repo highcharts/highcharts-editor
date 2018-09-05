@@ -5,21 +5,25 @@
 }
 
 .highed-toolbox-bar {
-  float: left;
-  background: @accent-color;
   color: @accent-text;
+  display: inline-block;
+  width: 20%;
   // border-right:1px solid @panel-divider;
 }
 
 .highed-toolbox-body {
-  width: 0px;
-  float:left;
+  width: 78%;
+  display: inline-block;
   opacity: 0;
   border: 1px solid @border-main-color;
   color: @text-panel;
   background: @background-panel-inverted;    
   margin-right: 15px;
   border-radius: 4px;
+  vertical-align: top;
+}
+.highed-toolbox-body-no-border {
+  border: 0px;
 }
 
 .highed-toolbox-inner-body {
@@ -69,17 +73,41 @@
   padding-right: 15px;
 }
 
-.highed-toolbox-body-title {
+.highed-toolbox-input-container {
+  div {
+    display: inline-block;
+  }
+  .highed-toolbox-label {
+    color: #25386f;
+    font-size: 12px;
+    font-weight: 500;
+    padding-right: 5px;
+    text-align: right;
+  }
+  input {    
+    min-width: 300px;
+    min-height: 32px;
+    color: #000000;
+    font-weight: 100;
+    font-size: 12px;
+    -webkit-font-smoothing: antialiased;
+    border: 1px solid #D1D1D1;
+  }
+}
+.highed-toolbox-button-container {
+  text-align: right;
+  padding-top: 20px;
+}
+.highed-toolbox-body-title {    
   width: 100%;
   min-height: 20px;
   overflow: hidden;
   padding-left: 10px;
-  padding-bottom: 25px;
-  color: #000;
-  font-weight: 100;
-  font-size: 18px;
-  padding-top: 17px;
+  font-weight: 700;
+  color: #25386f;
+  font-size: 21px;
   max-height: 62px;
+  margin: 20px;
 }
 
 .highed-toolbox-icons {
@@ -124,6 +152,48 @@
 
 .highed-toolbox-templatepage {
   overflow-x: hidden;
+}
+
+.highed-toolbox-list-item-container.active{
+  .highed-toolbox-list-title {
+    color: rgb(66, 200, 192);
+  }
+  .highed-toolbox-list-circle {
+    color: rgb(66, 200, 192);
+    border: 2px solid rgb(66, 200, 192);
+  }
+}
+.highed-toolbox-list-item-container.completed{
+  .highed-toolbox-list-title {
+    color: #25386f;
+  }
+  .highed-toolbox-list-circle {
+    color: #25386f;;
+    border: 2px solid #25386f;;
+  }
+}
+
+.highed-toolbox-list-item-container {
+  .highed-toolbox-list-title {
+    display: inline-block;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  
+  .highed-toolbox-list-circle {
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    border: 2px solid #d1d1d1;
+    color: #d1d1d1;
+    text-align: center;
+    padding-top: 4px;
+    font-size: 18px;
+    font-weight: 600;
+    display: inline-block;
+    margin: 8px;
+  }
+  
 }
 
 @media only screen and (max-width: 600px) {
