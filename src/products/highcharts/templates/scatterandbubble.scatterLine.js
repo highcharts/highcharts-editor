@@ -30,6 +30,7 @@ highed.templates.add('Scatter And Bubble', {
   description: '',
   thumbnail: 'ydaqok.svg',
   dataValidator: false,
+  popular: true,
   sampleSets: [],
   config: {
     chart: {

@@ -401,8 +401,6 @@ highed.DrawerEditor = function(parent, options) {
   // Alias import to data
   builtInOptions.import = builtInOptions.data;
   panel.setDefault(dataPage);
-  createChartPage.init(dataPage, templatePage, customizePage);
-  createChartPage.hide();
   /**
    * Creates the features defined in property.features
    * Call this after changing properties.features to update the options.
@@ -505,10 +503,21 @@ highed.DrawerEditor = function(parent, options) {
   }
 
   function showCreateChartPage() {
+
+    createChartPage.init(dataPage, templatePage, customizePage);
     panel.getPrev().hide();
     createChartPage.show();
-    highed.dom.style(chartFrame, {
-      display: 'none'
+    highed.dom.style([chartFrame, titleContainer], {
+      opacity: '0'
+    });
+
+    createChartPage.on('SimpleCreateChartDone', function() {
+      createChartPage.hide();
+      highed.dom.style([chartFrame, titleContainer], {
+        opacity: '1'
+      });
+      dataPage.show();
+      dataPage.resize();
     });
   }
 

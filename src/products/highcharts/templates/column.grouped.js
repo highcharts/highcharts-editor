@@ -30,6 +30,7 @@ highed.templates.add('Column', {
   description: '',
   thumbnail: 'ovobiq.svg',
   dataValidator: false,
+  popular: true,
   sampleSets: [],
   config: {
     chart: {

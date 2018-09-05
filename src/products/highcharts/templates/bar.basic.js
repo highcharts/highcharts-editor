@@ -30,6 +30,7 @@ highed.templates.add('Bar', {
   description: '',
   thumbnail: 'ovuvul.svg',
   dataValidator: false,
+  popular: true,
   sampleSets: [],
   config: {
     chart: {

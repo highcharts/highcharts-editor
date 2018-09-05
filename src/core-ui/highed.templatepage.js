@@ -96,7 +96,6 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     helpModal = highed.HelpModal(props.help || []);
 
     templates.on('Select', function(template) {
-      console.log('Changing template to: ' ,template);
       //chartPreview.loadTemplate(template);
       events.emit('TemplateChanged', template);
     });
@@ -124,6 +123,41 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
   
     expand();
     hide();
+  }
+
+  function createMostPopularTemplates() {
+    const mostPopular = highed.templates.getMostPopular();
+    const container = highed.dom.cr('div', 'highed-toolbox-templates-container');
+    
+    Object.keys(mostPopular).forEach(function(key) {
+      const preview = highed.dom.cr('div', 'highed-chart-template-thumbnail'),
+            titleBar = highed.dom.cr('div', 'highed-tooltip-text', key),
+            option = highed.dom.cr('div', 'highed-chart-template-container highed-template-tooltip');
+
+      const t = mostPopular[key];
+
+      if (highed.meta.images && highed.meta.images[t.thumbnail]) {
+        highed.dom.style(preview, {
+          'background-image':
+            'url("data:image/svg+xml;utf8,' +
+            highed.meta.images[t.thumbnail] +
+            '")'
+        });
+      } else {
+        highed.dom.style(preview, {
+          'background-image':
+            'url(' + highed.option('thumbnailURL') + t.thumbnail + ')'
+        });
+      }
+
+      highed.dom.on(option, 'click', function() {
+        //Do something here.
+      });
+
+      highed.dom.ap(container, highed.dom.ap(option, preview, titleBar));
+    });
+
+    return container;
   }
 
   function getIcons() {
@@ -183,12 +217,6 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
         });
         
       templates.resize(newWidth, (size.h - 17) - tsize.h);   
-/*
-      setTimeout(function() {
-        console.log("IN EHRE");
-        resizeChart(200);
-      }, 8000);
-*/
 
       return size;
     }
@@ -350,6 +378,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     getIcons: getIcons,
     hide: hide,
     show: show,
+    createMostPopularTemplates: createMostPopularTemplates,
     isVisible: function() {
       return isVisible;
     },

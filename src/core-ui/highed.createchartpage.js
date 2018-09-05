@@ -54,6 +54,7 @@ highed.CreateChartPage = function(parent, options, props) {
       {
         id: 4,
         title: 'Customize',
+        hideTitle: true,
         create: function(body) {
           highed.dom.ap(body, customizerContainer);
         }
@@ -79,19 +80,20 @@ highed.CreateChartPage = function(parent, options, props) {
     listContainer = highed.dom.cr('div', 'highed-toolbox-createchart-list'),
     isVisible = false,
     customizerContainer = highed.dom.cr('div', 'highed-toolbox-customise'),
-    titleContainer = highed.dom.cr('div', 'highed-toolbox-customise'),
+    titleContainer = highed.dom.cr('div', 'highed-toolbox-title'),
     templateContainer = highed.dom.cr('div', 'highed-toolbox-template'),
     dataTableContainer = highed.dom.cr('div', 'highed-toolbox-data'),
     toolbox = highed.Toolbox(userContents),
     options = [];
 
-    function init(dataPage, customizePage, templatePage) {
+    function init(dataPage,templatePage, customizePage) {
 
       toolbox = highed.Toolbox(userContents);
       builtInOptions.forEach(function(option, index) {
         var o = toolbox.addEntry({
           title: option.title,
-          number: option.id
+          number: option.id,
+          hideTitle: option.hideTitle
         });
 
         if (highed.isFn(option.create)) {
@@ -105,6 +107,8 @@ highed.CreateChartPage = function(parent, options, props) {
 
       createTitleSection();
       createImportDataSection(dataPage);
+      createTemplateSection(templatePage);
+      createCustomizeSection();
 
       highed.dom.ap(contents, userContents);
       highed.dom.ap(body, contents);
@@ -169,17 +173,12 @@ highed.CreateChartPage = function(parent, options, props) {
 
     function createImportDataSection(dataPage) {
 
-      var titleInput = highed.dom.cr('input', 'highed-imp-input'),
-          subtitleInput = highed.dom.cr('input', 'highed-imp-input'),
-          nextButton = highed.dom.cr(
+      var nextButton = highed.dom.cr(
             'button',
             'highed-ok-button highed-import-button negative',
             'No thanks, I will enter my data manually'
           ),
           dataTableDropzoneContainer = dataPage.createSimpleDataTable();
-
-      titleInput.value = 'My Chart';
-      subtitleInput.value = 'My Untitled Chart';
       
       highed.dom.on(nextButton, 'click', function() {
         options[2].expand();
@@ -190,6 +189,54 @@ highed.CreateChartPage = function(parent, options, props) {
             highed.dom.cr('div','highed-toolbox-button-container'),
             nextButton
           )
+        )
+      );
+    }
+
+    function createTemplateSection(templatePage) {
+
+      var nextButton = highed.dom.cr(
+            'button',
+            'highed-ok-button highed-import-button negative',
+            'Choose A Template Later'
+      ),
+      templatesContainer = templatePage.createMostPopularTemplates();
+      
+      highed.dom.on(nextButton, 'click', function() {
+        options[3].expand();
+      });
+
+      highed.dom.ap(templateContainer, 
+        highed.dom.cr('div', 'highed-toolbox-template-text', 'Pick a basic starter template. You can change it later.'),
+        highed.dom.cr('div', 'highed-toolbox-template-text', "If you're not sure, just hit Choose A Template Later."),
+        templatesContainer,
+        highed.dom.ap(
+          highed.dom.cr('div','highed-toolbox-button-container'),
+          nextButton
+        )
+      );
+    }
+
+    function createCustomizeSection() {
+
+      var nextButton = highed.dom.cr(
+            'button',
+            'highed-ok-button highed-import-button negative',
+            'Customize Your Chart'
+          );//,
+         // dataTableDropzoneContainer = dataPage.createSimpleDataTable();
+
+      highed.dom.on(nextButton, 'click', function() {
+
+        events.emit("SimpleCreateChartDone");
+        
+      });
+
+      highed.dom.ap(customizerContainer, 
+        highed.dom.cr('div', 'highed-toolbox-customize-header', "You're Done!"),
+        highed.dom.ap(
+          highed.dom.cr('div','highed-toolbox-button-container'),
+          nextButton
         )
       );
     }

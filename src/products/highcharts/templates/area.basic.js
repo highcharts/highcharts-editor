@@ -31,6 +31,7 @@ highed.templates.add('Area', {
   thumbnail: 'ecexev.svg',
   dataValidator: false,
   sampleSets: [],
+  popular: true,
   config: {
     chart: {
       type: 'area',

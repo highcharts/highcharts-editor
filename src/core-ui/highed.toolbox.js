@@ -55,7 +55,7 @@ highed.Toolbox = function(parent, attr) {
         def
       ),
       entryEvents = highed.events(),
-      title = highed.dom.cr('div', 'highed-toolbox-body-title', props.title),
+      title = highed.dom.cr('div', 'highed-toolbox-body-title', props.hideTitle ? '' : props.title),
       contents = highed.dom.cr(
         'div',
         'highed-box-size highed-toolbox-inner-body'

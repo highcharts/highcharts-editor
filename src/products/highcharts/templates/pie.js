@@ -29,6 +29,7 @@ highed.templates.add('Pie', {
   title: 'Pie',
   description: ['Good starting point for custom pie series.'],
   constructor: 'Chart',
+  popular: true,
   thumbnail: 'yqoxob.svg',
   sampleSets: [
     // 'pie-series-simple'

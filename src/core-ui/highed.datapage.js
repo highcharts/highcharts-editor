@@ -207,7 +207,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       };
         
       highed.dom.style(contents, {
-        width: size.w + 'px',
+        width: '100%',
         height: ((size.h - 16)) + 'px'
       });
 
@@ -570,7 +570,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   function createSimpleDataTable() {
     return dataTable.createSimpleDataTable();
   } 
-  
+
   function resizeChart(newWidth) {
     highed.dom.style(chartFrame, {
       /*left: newWidth + 'px',*/
@@ -604,6 +604,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     addImportTab: addImportTab,
     hideImportModal: hideImportModal,
     chart: chartPreview,
+    resize: resize,
     data: {
       on: dataTable.on,
       showLiveStatus: function(){}, //toolbox.showLiveStatus,

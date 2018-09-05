@@ -29,7 +29,8 @@ highed.templates = {};
 
 (function() {
   /* Templates */
-  var templates = {};
+  var templates = {},
+      mostPopularTemplates = {};
 
   /** Install a new template
      *
@@ -75,7 +76,10 @@ highed.templates = {};
     };
 
     if (properties.title.length) {
-      
+      if (properties.popular) {
+        mostPopularTemplates[type] = properties;
+      }
+
       if (properties.icon) templates[type].icon = properties.icon;
       templates[type].templates[properties.title] = properties;
       highed.log(4, '[templateman] - added template', properties.title);
@@ -130,6 +134,11 @@ highed.templates = {};
       templates[cat] || {}
     );
   };
+
+
+  highed.templates.getMostPopular = function() {
+    return mostPopularTemplates;
+  }
 
   /**
      * Get a list of id/title pairs for templates

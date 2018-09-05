@@ -1777,13 +1777,11 @@ highed.DataTable = function(parent, attributes) {
       //tb = highed.dom.size(toolbar.container);
     
     highed.dom.style(frame, {
-      height: ps.h - hs.h - 55 - 17 + 'px', //55 is padding from top for data column and letter
-      width: ps.w + 'px'
+      height: ps.h - hs.h - 55 - 17 + 'px' //55 is padding from top for data column and letter
     });
 
     highed.dom.style(container, {
-      height: ps.h - hs.h - 22 /*- tb.h*/ + 'px',
-      width: ps.w + 'px'
+      height: ps.h - hs.h - 22 /*- tb.h*/ + 'px'
     });
 
     highed.dom.style(table, {
