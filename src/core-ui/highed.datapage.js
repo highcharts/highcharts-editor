@@ -566,6 +566,11 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
    * Resize the chart preview based on a given width
    */
 
+
+  function createSimpleDataTable() {
+    return dataTable.createSimpleDataTable();
+  } 
+  
   function resizeChart(newWidth) {
     highed.dom.style(chartFrame, {
       /*left: newWidth + 'px',*/
@@ -614,7 +619,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     setChartTitle: setChartTitle,
     getChartTitle: getChartTitle,
     getIcons: getIcons,
-    changeAssignDataTemplate: changeAssignDataTemplate//,
-    //toolbar: toolbar
+    changeAssignDataTemplate: changeAssignDataTemplate,
+    createSimpleDataTable: createSimpleDataTable
   };
 };

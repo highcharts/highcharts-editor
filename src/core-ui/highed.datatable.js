@@ -2752,6 +2752,39 @@ highed.DataTable = function(parent, attributes) {
   function getDataFieldsUsed() {
     return dataFieldsUsed;
   }
+
+  function createSimpleDataTable() {
+    var container = highed.dom.cr('div', 'highed-table-dropzone-container'),
+        selectFile = highed.dom.cr('button', 'highed-ok-button highed-import-button', 'Select File'),
+        connectGSheet = highed.dom.cr('button', 'highed-ok-button highed-import-button', 'Connect Google Sheet'),
+        importLiveData = highed.dom.cr('button', 'highed-ok-button highed-import-button', 'Import Live Data'),
+        cutAndPaste = highed.dom.cr('button', 'highed-ok-button highed-import-button', 'Cut and Paste Data'),
+        sample = highed.dom.cr('button', 'highed-ok-button highed-import-button', 'Load Sample Data');
+
+    highed.dom.ap(container, 
+      highed.dom.ap(
+        highed.dom.cr('div','highed-table-dropzone'),
+        highed.dom.cr('div', 'highed-table-dropzone-title', 'Drop CSV files here'),
+        highed.dom.cr('div', 'highed-table-dropzone-subtitle', 'or'),
+        highed.dom.ap(
+          highed.dom.cr('div', 'highed-table-dropzone-button'),
+          selectFile
+        ),
+        highed.dom.cr('div', 'highed-table-dropzone-subtitle highed-table-dropzone-message', 'You can also:'),
+        highed.dom.ap(
+          highed.dom.cr('div'),
+          connectGSheet,
+          importLiveData,
+          importLiveData,
+          cutAndPaste,
+          sample
+        )
+      )
+    );
+
+    return container;
+  }
+
   ////////////////////////////////////////////////////////////////////////////
 /*
   toolbar = highed.Toolbar(container, {
@@ -2894,6 +2927,7 @@ highed.DataTable = function(parent, attributes) {
     highlightCells: highlightCells,
     removeAllCellsHighlight: removeAllCellsHighlight,
     getColumnLength: getColumnLength,
-    getDataFieldsUsed: getDataFieldsUsed
+    getDataFieldsUsed: getDataFieldsUsed,
+    createSimpleDataTable: createSimpleDataTable
   };
 };

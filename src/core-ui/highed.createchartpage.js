@@ -41,14 +41,14 @@ highed.CreateChartPage = function(parent, options, props) {
         id: 2,
         title: 'Import Data',
         create: function(body) {
-          highed.dom.ap(body, templateContainer);
+          highed.dom.ap(body, dataTableContainer);
         }
       },
       {
         id: 3,
         title: 'Choose Template',
         create: function(body) {
-          highed.dom.ap(body, dataTableContainer);
+          highed.dom.ap(body, templateContainer);
         }
       },
       {
@@ -89,7 +89,6 @@ highed.CreateChartPage = function(parent, options, props) {
 
       toolbox = highed.Toolbox(userContents);
       builtInOptions.forEach(function(option, index) {
-        //highed.dom.ap(listContainer, highed.dom.ap(highed.dom.cr('div', 'highed-toolbox-list-item-container'), highed.dom.cr('div', 'highed-toolbox-list-circle', index + 1), highed.dom.cr('div', 'highed-toolbox-list-title', option)));
         var o = toolbox.addEntry({
           title: option.title,
           number: option.id
@@ -105,6 +104,7 @@ highed.CreateChartPage = function(parent, options, props) {
       options[0].expand();
 
       createTitleSection();
+      createImportDataSection(dataPage);
 
       highed.dom.ap(contents, userContents);
       highed.dom.ap(body, contents);
@@ -165,6 +165,33 @@ highed.CreateChartPage = function(parent, options, props) {
           )
         )
       );   
+    }
+
+    function createImportDataSection(dataPage) {
+
+      var titleInput = highed.dom.cr('input', 'highed-imp-input'),
+          subtitleInput = highed.dom.cr('input', 'highed-imp-input'),
+          nextButton = highed.dom.cr(
+            'button',
+            'highed-ok-button highed-import-button negative',
+            'No thanks, I will enter my data manually'
+          ),
+          dataTableDropzoneContainer = dataPage.createSimpleDataTable();
+
+      titleInput.value = 'My Chart';
+      subtitleInput.value = 'My Untitled Chart';
+      
+      highed.dom.on(nextButton, 'click', function() {
+        options[2].expand();
+      });
+      highed.dom.ap(dataTableContainer, 
+        highed.dom.ap(dataTableDropzoneContainer,
+          highed.dom.ap(
+            highed.dom.cr('div','highed-toolbox-button-container'),
+            nextButton
+          )
+        )
+      );
     }
 
     function resize() {
