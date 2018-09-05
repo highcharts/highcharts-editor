@@ -48,7 +48,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     highed.dom.ap(document.body, dimmer);
 
     highed.dom.style(dimmer, {
-      opacity: 0.7,
+      opacity: 0.4,
       'pointer-events': 'auto',
       'z-index': 9999 + (zIndex || 0)
     });

@@ -37,7 +37,7 @@ highed.HelpModal = function(items) {
 
   items.forEach(function(item, i) {
     var container = highed.dom.cr('div'),
-      heading = highed.dom.cr('div', 'highed-toolbox-body-title highed-help-toolbar', item.title),
+      heading = highed.dom.cr('div', 'highed-modal-title highed-help-toolbar', item.title),
       gif = highed.dom.cr('div', 'highed-help-gif'),
       desc = highed.dom.cr('div', 'highed-scrollbar highed-help-desc'),
       activate = highed.dom.cr('span', 'highed-icon fa fa-circle-o');

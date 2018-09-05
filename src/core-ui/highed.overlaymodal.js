@@ -56,7 +56,9 @@ highed.OverlayModal = function(contents, attributes) {
         minWidth: 10,
         minHeight: 10,
         showOnInit: true,
-        zIndex: 10000
+        zIndex: 10000,
+        showCloseIcon: false,
+        cancelButton: false
       },
       attributes
     ),
@@ -92,6 +94,14 @@ highed.OverlayModal = function(contents, attributes) {
       'overflow-x': 'hidden',
       'overflow-y': 'hidden'
     });
+
+    if (properties.showCloseIcon) {
+      const icon = highed.dom.cr('span', 'highed-overlaymodal-close', '<i class="fa fa-times" aria-hidden="true"></i>');
+      highed.dom.on(icon, 'click', function() {
+        hide();
+      });
+      highed.dom.ap(container, icon);
+    }
 
     hideDimmer = highed.showDimmer(
       hide,

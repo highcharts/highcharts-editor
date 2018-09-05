@@ -2751,13 +2751,116 @@ highed.DataTable = function(parent, attributes) {
     return dataFieldsUsed;
   }
 
+
+  function createGSheetContainer() {
+    const container = highed.dom.cr('div', 'highed-gsheet-modal-container');
+    inputs = [
+      { label: 'Google Spreadsheet ID', placeholder: 'Spreadsheet ID', colspan: 4},
+      { label: 'Worksheet', placeholder: 'Worksheet (leave blank for first)', colspan: 4},
+      { label: 'Refresh Time In Seconds', placeholder: 'Refresh time  (leave blank for no refresh)', colspan: 4},
+      { label: 'Start Row', colspan: 2},
+      { label: 'End Row', colspan: 2},
+      { label: 'Start Column', colspan: 2},
+      { label: 'End Column', colspan: 2}
+    ],
+    table = highed.dom.cr('table'),
+    maxColSpan = 4,
+    currentColSpan = 4,
+    connectSheet = highed.dom.cr('button', 'highed-ok-button highed-import-button negative', 'Connect Sheet');
+    cancel = highed.dom.cr('button', 'highed-ok-button highed-import-button grey', 'Cancel');
+    var tr;
+
+    inputs.forEach(function(input) {
+      
+      if (currentColSpan >= maxColSpan) {
+        tr = highed.dom.cr('tr');
+        highed.dom.ap(table, tr);
+        currentColSpan = 0;
+      }
+
+      currentColSpan += input.colspan;
+      input.element = {};
+      input.element.input = highed.dom.cr('input','highed-imp-input-stretch');
+      if (input.placeholder) input.element.input.placeholder = input.placeholder
+      input.element.label = highed.dom.cr('span', '', input.label);
+      
+      const tdLabel = highed.dom.ap(highed.dom.cr('td', 'highed-gsheet-modal-label'), input.element.label),
+            tdInput = highed.dom.ap(highed.dom.cr('td', ''), input.element.input);
+      
+      tdLabel.colSpan = 1;
+      tdInput.colSpan = input.colspan - 1;
+
+      highed.dom.ap(tr, tdLabel, tdInput);
+    });
+
+    highed.dom.ap(container, 
+                  highed.dom.cr('div', 'highed-modal-title highed-help-toolbar', 'Connect Google Sheet'),
+                  highed.dom.ap(highed.dom.cr('div'), 
+                    highed.dom.cr('div', 'highed-gsheet-modal-text', 'When using Google Spreadsheet, Highcharts references the sheet directly.'),
+                    highed.dom.cr('div', 'highed-gsheet-modal-text', 'This means that the published chart always loads the latest version of the sheet.'),
+                    highed.dom.cr('div', 'highed-gsheet-modal-text', 'For more information on how to set up your spreadsheet, visit the documentation.')),
+                  highed.dom.ap(highed.dom.cr('div', 'highed-gsheet-table-container'), table),
+                highed.dom.ap(highed.dom.cr('div', 'highed-gsheet-button-container'), connectSheet, cancel));
+
+    return container;
+  }
+
   function createSimpleDataTable() {
     var container = highed.dom.cr('div', 'highed-table-dropzone-container'),
         selectFile = highed.dom.cr('button', 'highed-ok-button highed-import-button', 'Select File'),
         connectGSheet = highed.dom.cr('button', 'highed-ok-button highed-import-button', 'Connect Google Sheet'),
         importLiveData = highed.dom.cr('button', 'highed-ok-button highed-import-button', 'Import Live Data'),
         cutAndPaste = highed.dom.cr('button', 'highed-ok-button highed-import-button', 'Cut and Paste Data'),
-        sample = highed.dom.cr('button', 'highed-ok-button highed-import-button', 'Load Sample Data');
+        sample = highed.dom.cr('button', 'highed-ok-button highed-import-button', 'Load Sample Data'),
+        modalContainer = highed.dom.cr('div', 'highed-table-modal'),
+        gSheetContainer = createGSheetContainer();
+
+
+    highed.dom.on(selectFile, 'click', function(){
+      highed.readLocalFile({
+        type: 'text',
+        accept: '.json',
+        success: function(info) {
+          //processJSONImport(info.data);
+        }
+      });
+    })
+    
+    var dataModal = highed.OverlayModal(false, {
+      minWidth: 530,
+      minHeight: 530,
+      showCloseIcon: true
+    });
+
+    highed.dom.ap(dataModal.body, modalContainer);
+
+    highed.dom.on(connectGSheet, 'click', function() {
+      modalContainer.innerHTML = '';
+      highed.dom.ap(modalContainer, gSheetContainer);
+      dataModal.show();
+    })
+
+    container.ondrop = function(e) {
+      e.preventDefault();
+
+      var d = e.dataTransfer;
+      var f;
+      var i;
+
+      if (d.items) {
+        for (i = 0; i < d.items.length; i++) {
+          f = d.items[i];
+          if (f.kind === 'file') {
+            handleFileUpload(f.getAsFile());
+          }
+        }
+      } else {
+        for (i = 0; i < d.files.length; i++) {
+          f = d.files[i];
+          handleFileUpload(f);
+        }
+      }
+    };
 
     highed.dom.ap(container, 
       highed.dom.ap(

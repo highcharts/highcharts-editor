@@ -4,7 +4,7 @@
 
   overflow: hidden;
 
-  border-radius: 10px;
+  border-radius: 4px;
 
   font-family: @font-main;
   color: @text-panel;
@@ -17,7 +17,47 @@
   left: -20000px;
   transform: translate(-50%, -50%);
   opacity: 0;
+  border: 1px solid rgb(102, 102, 102);
   pointer-events: none;
 
   .highed-transition;
+}
+
+.highed-overlaymodal-close {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  color: black;
+  cursor: pointer;
+}
+
+.highed-gsheet-modal-container {
+  div {
+    margin-left: 10px;
+  }
+  .highed-gsheet-modal-text {
+    margin-top: 7px;
+    margin-bottom: 7px;
+    color: black;
+  }
+  .highed-gsheet-modal-label {
+    text-align: right;
+    padding-right: 5px;
+    padding-left: 5px;  
+  }
+  .highed-gsheet-table-container {
+    margin-top: 30px;
+    color: black;
+    font-size: 11px;
+    font-weight: 600;
+    margin-right: 30px;
+    margin-left: 0px;
+    .highed-imp-input-stretch {
+      height: 33px;
+    }
+  }
+  .highed-gsheet-button-container {
+    text-align: center;
+    margin-top: 30px;
+  }
 }
