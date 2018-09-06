@@ -511,15 +511,21 @@ highed.DrawerEditor = function(parent, options) {
       opacity: '0'
     });
 
-    createChartPage.on('SimpleCreateChartDone', function() {
+    createChartPage.on('SimpleCreateChartDone', function(goToDataPage) {
       createChartPage.hide();
       highed.dom.style([chartFrame, titleContainer], {
         opacity: '1'
       });
-      titleHeader.innerHTML = builtInOptions.customize.title;
-      customizePage.show();
-      panel.setDefault(customizePage);
-      //dataPage.resize();
+
+      if (goToDataPage) {
+        dataPage.show();
+        panel.setDefault(dataPage);
+        dataPage.resize();
+      } else {
+        titleHeader.innerHTML = builtInOptions.customize.title;
+        customizePage.show();
+        panel.setDefault(customizePage);
+      }
     });
 
     createChartPage.on('SimpleCreateChangeTitle', function(options) {

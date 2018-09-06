@@ -129,7 +129,8 @@ highed.CreateChartPage = function(parent, options, props) {
             'button',
             'highed-ok-button highed-import-button negative',
             'Next'
-          );
+          ),
+          skipAll = highed.dom.cr('span', 'highed-toolbox-skip-all', 'Skip All');
 
       titleInput.value = 'My Chart';
       subtitleInput.value = 'My Untitled Chart';
@@ -140,6 +141,10 @@ highed.CreateChartPage = function(parent, options, props) {
           title: titleInput.value,
           subtitle: subtitleInput.value
         });
+      });
+
+      highed.dom.on(skipAll, 'click', function() {
+        events.emit("SimpleCreateChartDone", true);
       });
 
       highed.dom.ap(titleContainer,  
@@ -169,6 +174,7 @@ highed.CreateChartPage = function(parent, options, props) {
           highed.dom.cr('td'),
           highed.dom.ap(
             highed.dom.cr('td','highed-toolbox-button-container'),
+            skipAll,
             nextButton
           )
         )
@@ -206,7 +212,11 @@ highed.CreateChartPage = function(parent, options, props) {
             'highed-ok-button highed-import-button negative',
             'Choose A Template Later'
       ),
-      templatesContainer = templatePage.createMostPopularTemplates();
+      templatesContainer = templatePage.createMostPopularTemplates(function() {
+        setTimeout(function() {
+          options[3].expand();
+        },200);
+      });
       
       highed.dom.on(nextButton, 'click', function() {
         options[3].expand();

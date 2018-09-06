@@ -125,7 +125,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     hide();
   }
 
-  function createMostPopularTemplates() {
+  function createMostPopularTemplates(toNextPage) {
     const mostPopular = highed.templates.getMostPopular();
     const container = highed.dom.cr('div', 'highed-toolbox-templates-container');
     
@@ -151,7 +151,8 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
       }
 
       highed.dom.on(option, 'click', function() {
-        //Do something here.
+        events.emit('TemplateChanged', t);
+        toNextPage();
       });
 
       highed.dom.ap(container, highed.dom.ap(option, preview, titleBar));
