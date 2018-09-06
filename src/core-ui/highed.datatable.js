@@ -2752,28 +2752,17 @@ highed.DataTable = function(parent, attributes) {
   }
 
 
-  function createGSheetContainer() {
-    const container = highed.dom.cr('div', 'highed-gsheet-modal-container');
-    inputs = [
-      { label: 'Google Spreadsheet ID', placeholder: 'Spreadsheet ID', colspan: 4},
-      { label: 'Worksheet', placeholder: 'Worksheet (leave blank for first)', colspan: 4},
-      { label: 'Refresh Time In Seconds', placeholder: 'Refresh time  (leave blank for no refresh)', colspan: 4},
-      { label: 'Start Row', colspan: 2},
-      { label: 'End Row', colspan: 2},
-      { label: 'Start Column', colspan: 2},
-      { label: 'End Column', colspan: 2}
-    ],
-    table = highed.dom.cr('table'),
-    maxColSpan = 4,
-    currentColSpan = 4,
-    connectSheet = highed.dom.cr('button', 'highed-ok-button highed-import-button negative', 'Connect Sheet');
-    cancel = highed.dom.cr('button', 'highed-ok-button highed-import-button grey', 'Cancel');
-    var tr;
+  function createTableInputs(inputs, maxColSpan, extraClass) {
+
+    var table = highed.dom.cr('table'),
+    maxColSpan = maxColSpan,
+    currentColSpan = maxColSpan,
+    tr;
 
     inputs.forEach(function(input) {
       
       if (currentColSpan >= maxColSpan) {
-        tr = highed.dom.cr('tr');
+        tr = highed.dom.cr('tr', extraClass);
         highed.dom.ap(table, tr);
         currentColSpan = 0;
       }
@@ -2784,7 +2773,7 @@ highed.DataTable = function(parent, attributes) {
       if (input.placeholder) input.element.input.placeholder = input.placeholder
       input.element.label = highed.dom.cr('span', '', input.label);
       
-      const tdLabel = highed.dom.ap(highed.dom.cr('td', 'highed-gsheet-modal-label'), input.element.label),
+      const tdLabel = highed.dom.ap(highed.dom.cr('td', 'highed-modal-label'), input.element.label),
             tdInput = highed.dom.ap(highed.dom.cr('td', ''), input.element.input);
       
       tdLabel.colSpan = 1;
@@ -2792,15 +2781,51 @@ highed.DataTable = function(parent, attributes) {
 
       highed.dom.ap(tr, tdLabel, tdInput);
     });
+    return table;
+  }
 
+  function createLiveDataContainer() {
+    const container = highed.dom.cr('div', 'highed-modal-container'),
+    inputs = [
+      { label: 'URL', placeholder: 'Spreadsheet ID', colspan: 2},
+      { label: 'Refresh Time in Seconds', placeholder: 'Refresh time  (leave blank for no refresh)', colspan: 2}],
+    table = createTableInputs(inputs, 2, 'highed-live-data'),
+    connectSheet = highed.dom.cr('button', 'highed-ok-button highed-import-button negative', 'Connect Sheet'),
+    cancel = highed.dom.cr('button', 'highed-ok-button highed-import-button grey', 'Cancel');
+
+    highed.dom.ap(container, 
+      highed.dom.cr('div', 'highed-modal-title highed-help-toolbar', 'Import Live Data'),
+      highed.dom.ap(highed.dom.cr('div'), 
+        highed.dom.cr('div', 'highed-modal-text', 'Live data needs a url to your JSON data to reference.'),
+        highed.dom.cr('div', 'highed-modal-text', 'This means that the published chart always loads the latest version of your data.')),
+      highed.dom.ap(highed.dom.cr('div', 'highed-table-container'), table),
+      highed.dom.ap(highed.dom.cr('div', 'highed-button-container'), connectSheet, cancel));
+    
+    return container;
+  }
+
+  function createGSheetContainer() {
+    const container = highed.dom.cr('div', 'highed-modal-container');
+    inputs = [
+      { label: 'Google Spreadsheet ID', placeholder: 'Spreadsheet ID', colspan: 4},
+      { label: 'Worksheet', placeholder: 'Worksheet (leave blank for first)', colspan: 4},
+      { label: 'Refresh Time in Seconds', placeholder: 'Refresh time  (leave blank for no refresh)', colspan: 4},
+      { label: 'Start Row', colspan: 2},
+      { label: 'End Row', colspan: 2},
+      { label: 'Start Column', colspan: 2},
+      { label: 'End Column', colspan: 2}],
+    table = createTableInputs(inputs, 4),
+    connectSheet = highed.dom.cr('button', 'highed-ok-button highed-import-button negative', 'Connect Sheet');
+    cancel = highed.dom.cr('button', 'highed-ok-button highed-import-button grey', 'Cancel');
+    
     highed.dom.ap(container, 
                   highed.dom.cr('div', 'highed-modal-title highed-help-toolbar', 'Connect Google Sheet'),
                   highed.dom.ap(highed.dom.cr('div'), 
-                    highed.dom.cr('div', 'highed-gsheet-modal-text', 'When using Google Spreadsheet, Highcharts references the sheet directly.'),
-                    highed.dom.cr('div', 'highed-gsheet-modal-text', 'This means that the published chart always loads the latest version of the sheet.'),
-                    highed.dom.cr('div', 'highed-gsheet-modal-text', 'For more information on how to set up your spreadsheet, visit the documentation.')),
-                  highed.dom.ap(highed.dom.cr('div', 'highed-gsheet-table-container'), table),
-                highed.dom.ap(highed.dom.cr('div', 'highed-gsheet-button-container'), connectSheet, cancel));
+                    highed.dom.cr('div', 'highed-modal-text', 'When using Google Spreadsheet, Highcharts references the sheet directly.'),
+                    highed.dom.cr('div', 'highed-modal-text', 'This means that the published chart always loads the latest version of the sheet.'),
+                    highed.dom.cr('div', 'highed-modal-text', 'For more information on how to set up your spreadsheet, visit the documentation.')),
+                  highed.dom.ap(highed.dom.cr('div', 'highed-table-container'), table),
+                  highed.dom.ap(highed.dom.cr('div', 'highed-button-container'), connectSheet, cancel));
 
     return container;
   }
@@ -2813,8 +2838,8 @@ highed.DataTable = function(parent, attributes) {
         cutAndPaste = highed.dom.cr('button', 'highed-ok-button highed-import-button', 'Cut and Paste Data'),
         sample = highed.dom.cr('button', 'highed-ok-button highed-import-button', 'Load Sample Data'),
         modalContainer = highed.dom.cr('div', 'highed-table-modal'),
-        gSheetContainer = createGSheetContainer();
-
+        gSheetContainer = createGSheetContainer(),
+        liveContainer = createLiveDataContainer();
 
     highed.dom.on(selectFile, 'click', function(){
       highed.readLocalFile({
@@ -2835,8 +2860,17 @@ highed.DataTable = function(parent, attributes) {
     highed.dom.ap(dataModal.body, modalContainer);
 
     highed.dom.on(connectGSheet, 'click', function() {
+      dataModal.resize(530, 530);
       modalContainer.innerHTML = '';
       highed.dom.ap(modalContainer, gSheetContainer);
+      dataModal.show();
+    })
+
+    highed.dom.on(importLiveData, 'click', function() {
+      modalContainer.innerHTML = '';
+      console.log(liveContainer);
+      dataModal.resize(530, 321);
+      highed.dom.ap(modalContainer, liveContainer);
       dataModal.show();
     })
 

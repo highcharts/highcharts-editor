@@ -67,12 +67,20 @@ highed.OverlayModal = function(contents, attributes) {
 
   ///////////////////////////////////////////////////////////////////////////
 
+
+  /** resize the modal
+     *  @memberof highed.OverlayModal
+     */
+
+  function resize(width, height) {
+    properties.minWidth = width;
+    properties.minHeight = height;
+  }
   /** Show the modal
      *  @memberof highed.OverlayModal
      */
   function show() {
     if (visible) return;
-
     highed.dom.style(container, {
       width:
         properties.width +
@@ -172,6 +180,7 @@ highed.OverlayModal = function(contents, attributes) {
     on: events.on,
     show: show,
     hide: hide,
+    resize: resize,
     /** The container DOM node
          *  @memberof highed.OverlayModal
          */
