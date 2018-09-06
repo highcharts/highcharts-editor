@@ -573,7 +573,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       show: show,
       hide: hide,
       addImportTab: addImportTab,
-      exporter: exporter
+      exporter: exporter,
+      emitCSVImport: emitCSVImport
     };
   };
 })();

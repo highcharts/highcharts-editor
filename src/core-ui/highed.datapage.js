@@ -484,6 +484,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
 
   dataTable.on('LoadGSheet', function(settings) {
+    console.log(1234564321);
     chartPreview.data.gsheet(settings);
   });
   
@@ -567,8 +568,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
    */
 
 
-  function createSimpleDataTable() {
-    return dataTable.createSimpleDataTable();
+  function createSimpleDataTable(toNextPage) {
+    return dataTable.createSimpleDataTable(toNextPage);
   } 
 
   function resizeChart(newWidth) {

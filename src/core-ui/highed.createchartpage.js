@@ -178,7 +178,9 @@ highed.CreateChartPage = function(parent, options, props) {
             'highed-ok-button highed-import-button negative',
             'No thanks, I will enter my data manually'
           ),
-          dataTableDropzoneContainer = dataPage.createSimpleDataTable();
+          dataTableDropzoneContainer = dataPage.createSimpleDataTable(function() {
+            options[2].expand();
+          });
       
       highed.dom.on(nextButton, 'click', function() {
         options[2].expand();

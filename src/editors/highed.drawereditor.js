@@ -516,8 +516,10 @@ highed.DrawerEditor = function(parent, options) {
       highed.dom.style([chartFrame, titleContainer], {
         opacity: '1'
       });
-      dataPage.show();
-      dataPage.resize();
+      titleHeader.innerHTML = builtInOptions.customize.title;
+      customizePage.show();
+      panel.setDefault(customizePage);
+      //dataPage.resize();
     });
   }
 
