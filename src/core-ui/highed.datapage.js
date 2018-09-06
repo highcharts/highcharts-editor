@@ -241,8 +241,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     assignDataPanel.show();
     isVisible = true;
     resizeChart();
-    //expand();
-    
+    resize(); 
   }
   function hide() {
     highed.dom.style(container, {

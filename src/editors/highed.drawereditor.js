@@ -467,7 +467,7 @@ highed.DrawerEditor = function(parent, options) {
         }
       );
 
-      panel.addOption(option.nav);
+      panel.addOption(option.nav, id);
       addedOptions[id] = id;
 
     }
@@ -522,9 +522,14 @@ highed.DrawerEditor = function(parent, options) {
         panel.setDefault(dataPage);
         dataPage.resize();
       } else {
+
+        const customize = panel.getOptions().customize;
+
+        if (customize) customize.click();
+/*
         titleHeader.innerHTML = builtInOptions.customize.title;
         customizePage.show();
-        panel.setDefault(customizePage);
+        panel.setDefault(customizePage);*/
       }
     });
 

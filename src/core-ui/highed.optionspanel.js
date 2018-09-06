@@ -35,7 +35,8 @@ highed.OptionsPanel = function(parent, attr) {
       'div',
       'highed-optionspanel-body highed-box-size highed-transition'
     ),
-    prev;
+    prev,
+    options = {};
 
   highed.dom.ap(parent, highed.dom.ap(container, highed.dom.ap(body, highed.dom.cr('div', '', 'Workspace View:'))));
 
@@ -43,24 +44,23 @@ highed.OptionsPanel = function(parent, attr) {
     prev = option;
   }
 
-  function addOption(option) {
-
-    //attr.forEach(function(option) {
-      var btn = highed.dom.cr(
-        'a',
-        'highed-optionspanel-button ', 
-        option.text + '&nbsp;<i class="fa fa-' + option.icon + '"></i>'
-      );
-        
-      (option.onClick || []).forEach(function(click) {
-        highed.dom.on(btn, 'click', function() {
-          click(prev, option);
-        });
+  function addOption(option, id) {
+      
+    var btn = highed.dom.cr(
+      'a',
+      'highed-optionspanel-button ', 
+      option.text + '&nbsp;<i class="fa fa-' + option.icon + '"></i>'
+    );
+      
+    (option.onClick || []).forEach(function(click) {
+      highed.dom.on(btn, 'click', function() {
+        click(prev, option);
       });
-  
-      highed.dom.ap(body,btn);
-  
-    //});
+    });
+
+    options[id] = btn;
+    
+    highed.dom.ap(body,btn);
   }
 
   function clearOptions() {
@@ -72,11 +72,16 @@ highed.OptionsPanel = function(parent, attr) {
     return prev;
   }
 
+  function getOptions() {
+    return options;
+  }
+
   return {
     on: events.on,
     addOption: addOption,
     setDefault: setDefault,
     getPrev: getPrev,
-    clearOptions: clearOptions
+    clearOptions: clearOptions,
+    getOptions: getOptions
   };
 };
