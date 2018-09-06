@@ -523,18 +523,31 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   function loadTemplateForSerie(template, serie) {
+    const type = template.config.chart.type;
+    delete template.config.chart.type;
 
     if (customizedOptions.series[serie]) {
-      customizedOptions.series[serie].type = template.config.chart.type;
+      customizedOptions.series[serie].type = type; //template.config.chart.type;
     } else {
       customizedOptions.series[serie] = {
-        type: template.config.chart.type,
+        type: type, //template.config.chart.type,
         turboThreshold: 0,
         _colorIndex: chartOptions.series.length,
         _symbolIndex: 0,
         compare: undefined
       };
     }
+    
+    templateOptions = highed.merge({}, template.config || {});
+
+    if (customizedOptions.xAxis) {
+      delete customizedOptions.xAxis;
+    }
+
+    if (customizedOptions.yAxis) {
+      delete customizedOptions.yAxis;
+    }
+    
     updateAggregated();
     init(aggregatedOptions);
     loadSeries();
