@@ -521,6 +521,12 @@ highed.DrawerEditor = function(parent, options) {
       panel.setDefault(customizePage);
       //dataPage.resize();
     });
+
+    createChartPage.on('SimpleCreateChangeTitle', function(options) {
+      chartPreview.options.set('title--text', options.title);
+      chartPreview.options.set('subtitle--text', options.subtitle);
+      setChartTitle(options.title);
+    });
   }
 
   /**

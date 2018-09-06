@@ -484,7 +484,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
 
   dataTable.on('LoadGSheet', function(settings) {
-    console.log(1234564321);
     chartPreview.data.gsheet(settings);
   });
   

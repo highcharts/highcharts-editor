@@ -136,6 +136,10 @@ highed.CreateChartPage = function(parent, options, props) {
       
       highed.dom.on(nextButton, 'click', function() {
         options[1].expand();
+        events.emit("SimpleCreateChangeTitle", {
+          title: titleInput.value,
+          subtitle: subtitleInput.value
+        });
       });
 
       highed.dom.ap(titleContainer,  
@@ -229,9 +233,7 @@ highed.CreateChartPage = function(parent, options, props) {
          // dataTableDropzoneContainer = dataPage.createSimpleDataTable();
 
       highed.dom.on(nextButton, 'click', function() {
-
         events.emit("SimpleCreateChartDone");
-        
       });
 
       highed.dom.ap(customizerContainer, 
@@ -270,8 +272,7 @@ highed.CreateChartPage = function(parent, options, props) {
 
       events.emit('BeforeResize', newWidth);
 
-     function resizeBody() {
-
+    function resizeBody() {
       var bsize = highed.dom.size(body),
       tsize = highed.dom.size(title),
       size = {
@@ -285,11 +286,11 @@ highed.CreateChartPage = function(parent, options, props) {
         width: size.w + 'px',
         height: ((size.h - 16)) + 'px'
       });
-      
-     }
+    }
 
     setTimeout(resizeBody, 300);
-      highed.emit('UIAction', 'ToolboxNavigation', props.title);
+    highed.emit('UIAction', 'ToolboxNavigation', props.title);
+
     }
 
   function show() {
