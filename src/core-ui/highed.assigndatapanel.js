@@ -83,6 +83,8 @@ highed.AssignDataPanel = function(parent, attr) {
   maxColumnLength = 1;
 
   options.push(highed.merge({}, defaultOptions));
+  
+
   Object.keys(defaultOptions).forEach(function(key) {
     if (highed.isArr(defaultOptions[key])) {
       defaultOptions[key].forEach(function(o) {
@@ -180,7 +182,6 @@ highed.AssignDataPanel = function(parent, attr) {
     
     return arr; //arr.concat(values);
   }
-
 
   function getAllMergedLabelAndData() {
     var seriesValues = [];
@@ -317,6 +318,14 @@ highed.AssignDataPanel = function(parent, attr) {
     };
   }
 
+  function addSeries(length) {
+    for(var i=0; i<length; i++) {
+      addSerie();
+    }
+    seriesTypeSelect.selectByIndex(0);
+  }
+
+
   function getOptions() {
     return options[index];
   }
@@ -386,24 +395,7 @@ highed.AssignDataPanel = function(parent, attr) {
   });
 
   highed.dom.on(addNewSeriesBtn, 'click', function() {
-
-    seriesTypeSelect.addItems([{
-      id: options.length,
-      title: 'Series ' + (options.length + 1) + ' - Line'
-    }]);
-
-    if (maxColumnLength + 1 < columnLength) {
-      maxColumnLength++;
-    }
-
-    const newOptions = highed.merge({}, defaultOptions);
-    
-    newOptions.data[0].rawValue = [maxColumnLength];
-    newOptions.data[0].value = getLetterFromIndex(maxColumnLength);
-    options.push(highed.merge({}, newOptions));
-
-    seriesTypeSelect.selectById(options.length - 1);
-    resetDOM();
+    addSerie(true);
   });
   
   seriesTypeSelect.on('Change', function(selected) {
@@ -431,6 +423,26 @@ highed.AssignDataPanel = function(parent, attr) {
   }]);
   
   seriesTypeSelect.selectById(0);
+
+  function addSerie(redrawDOM) {
+    seriesTypeSelect.addItems([{
+      id: options.length,
+      title: 'Series ' + (options.length + 1) + ' - Line'
+    }]);
+
+    if (maxColumnLength + 1 < columnLength) {
+      maxColumnLength++;
+    }
+
+    const newOptions = highed.merge({}, defaultOptions);
+    
+    newOptions.data[0].rawValue = [maxColumnLength];
+    newOptions.data[0].value = getLetterFromIndex(maxColumnLength);
+    options.push(highed.merge({}, newOptions));
+
+    seriesTypeSelect.selectById(options.length - 1);
+    if (redrawDOM) resetDOM();
+  }
 
   function hide() {
     highed.dom.style(container, {
@@ -692,6 +704,7 @@ highed.AssignDataPanel = function(parent, attr) {
     getAssignDataFields: getAssignDataFields,
     getAllOptions: getAllOptions,
     getActiveSerie: getActiveSerie,
+    addSeries: addSeries,
     init: init
   };
 };

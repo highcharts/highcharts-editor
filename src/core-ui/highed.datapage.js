@@ -441,6 +441,14 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     );
   });
 
+  dataTable.on('AssignDataForFileUpload', function() {
+    setTimeout(function() {
+      const length = dataTable.getColumnLength() - 2; //Remove first column for the categories, and second as its already added
+      assignDataPanel.addSeries(length);
+    }, 1000);
+    
+  }); 
+
   dataTable.on('AssignDataChanged', function(input, options) {
 
     chartOptions = chartPreview.toProject().options;

@@ -548,6 +548,7 @@ highed.DataTable = function(parent, attributes) {
     var reader = new FileReader();
 
     reader.onload = function(e) {
+      
       loadCSV({ csv: e.target.result });
     };
 
@@ -2331,7 +2332,6 @@ highed.DataTable = function(parent, attributes) {
   });
 
   highed.dom.on(gsheetLoadButton, 'click', function() {
-    console.log("IN HERE....", gsheetID.value);
     events.emit('LoadGSheet', {
       googleSpreadsheetKey: gsheetID.value,
       googleSpreadsheetWorksheet: gsheetWorksheetID.value || false,
@@ -2658,9 +2658,11 @@ highed.DataTable = function(parent, attributes) {
       rows.forEach(function(row) {
         var tempValue = values[0];
         while (tempValue <= values[values.length - 1]) {
-          highed.dom.style(row.columns[tempValue].element, {
-            "background-color": color.light 
-          });        
+          if (row.columns[tempValue]) {
+            highed.dom.style(row.columns[tempValue].element, {
+              "background-color": color.light 
+            });      
+          }  
           tempValue++;
         }
       });
@@ -2670,10 +2672,12 @@ highed.DataTable = function(parent, attributes) {
   function outlineCell(values, color) {
     values.forEach(function(value, index) {
       rows.forEach(function(row) {
-        highed.dom.style(row.columns[value].element, {
-          "border-right": (index === (values.length - 1) ? '1px double ' + color.dark : ''),
-          "border-left": (index === 0 ? '1px double ' + color.dark : ''),
-        });
+        if (row.columns[value]) {
+          highed.dom.style(row.columns[value].element, {
+            "border-right": (index === (values.length - 1) ? '1px double ' + color.dark : ''),
+            "border-left": (index === 0 ? '1px double ' + color.dark : ''),
+          });
+        }
       });
     });
   }
@@ -2685,10 +2689,11 @@ highed.DataTable = function(parent, attributes) {
         var tempValue = previousValues[0];
         if (previousValues.length > 0) {
           while (tempValue <= previousValues[previousValues.length - 1]) {
-
-            highed.dom.style(row.columns[tempValue].element, {
-              "background-color": ''
-            });
+            if (row.columns[tempValue]) {
+              highed.dom.style(row.columns[tempValue].element, {
+                "background-color": ''
+              });
+            }
             tempValue++; //= getNextLetter(tempValue);
           }
         }
@@ -2917,6 +2922,7 @@ highed.DataTable = function(parent, attributes) {
         success: function(info) {
           highed.snackBar('File uploaded');
           importer.emitCSVImport(info.data);
+          events.emit("AssignDataForFileUpload", info.data);
           toNextPage();
         }
       });
@@ -2929,6 +2935,10 @@ highed.DataTable = function(parent, attributes) {
     });
 
     highed.dom.ap(dataModal.body, modalContainer);
+
+    container.ondragover = function(e) {
+      e.preventDefault();
+    };
 
     container.ondrop = function(e) {
       e.preventDefault();
@@ -2950,6 +2960,10 @@ highed.DataTable = function(parent, attributes) {
           handleFileUpload(f);
         }
       }
+
+      highed.snackBar('File uploaded');
+      events.emit('AssignDataForFileUpload');
+      toNextPage();
     };
 
     highed.dom.ap(container, 
