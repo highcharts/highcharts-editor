@@ -1877,7 +1877,7 @@ highed.DataTable = function(parent, attributes) {
       }
 
       row.columns.forEach(function(col, index) {
-        if (!checkSections(section, index)) return;
+        if (section && !checkSections(section, index)) return;
 
         var v = col.value();
 

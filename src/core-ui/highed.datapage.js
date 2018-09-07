@@ -316,19 +316,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       Object.keys(allOptions[i]).forEach(function(key) {
         const option = allOptions[i][key];
         if (option.value !== '') {
-          if (highed.isArr(option)) { // Data assigndata
-            //serieOption['y'] = dataTableFields.indexOf(option[0].rawValue[0]);
-            option.forEach(function(data) {
-              if (dataTableFields.indexOf(data.rawValue[0]) > -1) serieOption[data.linkedTo] = dataTableFields.indexOf(data.rawValue[0]); //data.rawValue[0];
-            });
-            /*
-            if (series > 1) {
-              serieOption['y'] = option[0].rawValue[0]  //(option[0].rawValue[0] + i); // TODO: Change this later to be not hardcoded
-            } else {
-              option.forEach(function(data) {
-                serieOption[data.linkedTo] = data.rawValue[0];
-              })
-            }*/
+          if (option.isData) { //(highed.isArr(option)) { // Data assigndata
+            if (dataTableFields.indexOf(option.rawValue[0]) > -1) serieOption[option.linkedTo] = dataTableFields.indexOf(option.rawValue[0]);
           } else {
             serieOption[option.linkedTo] = option.rawValue[0];
           }
@@ -337,7 +326,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       });
       tempOption.push(serieOption);
     };
-
     if (tempOption.length > 0) {
       if (chartOptions.data) { 
         chartOptions.data.seriesMapping = tempOption;
@@ -483,10 +471,14 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 */
   chartPreview.on('LoadProject', function (projectData) {
     setTimeout(function () {
-    assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true);
-    assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
-    chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true));
+      assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true);
+      assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+      chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
+
     }, 1000);
+    dataTable.loadCSV({
+      csv: projectData.settings.dataProvider.csv
+    });
     chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
   });
 

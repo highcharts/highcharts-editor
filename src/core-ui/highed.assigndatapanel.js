@@ -29,7 +29,6 @@ highed.AssignDataPanel = function(parent, attr) {
 
   var defaultOptions = {
     'labels': {
-      'id': 'labels',
       'name': "Categories",
       'desc': 'A column of names or times',
       'default': 'A',
@@ -43,25 +42,22 @@ highed.AssignDataPanel = function(parent, attr) {
         'dark': 'rgb(66, 200, 192)',
       }
     },
-    "data": [{
-        'id': 'values',
-        'name': "Values",
-        'desc': 'Enter column with the values you want to chart.',
-        'default': 'B',
-        'linkedTo': 'y',
-        'value': 'B',
-        'rawValue': [1],
-        'multipleValues': false,
-        'previousValue': null,
-        'mandatory': true,
-        'colors': {
-          'light': 'rgba(145, 151, 229, 0.2)',
-          'dark': 'rgb(145, 151, 229)',
-        }
+    'values': {
+      'name': "Values",
+      'desc': 'Enter column with the values you want to chart.',
+      'default': 'B',
+      'linkedTo': 'y',
+      'isData': true,
+      'value': 'B',
+      'rawValue': [1],
+      'previousValue': null,
+      'mandatory': true,
+      'colors': {
+        'light': 'rgba(145, 151, 229, 0.2)',
+        'dark': 'rgb(145, 151, 229)',
       }
-    ],
+    },
     'label': {
-      'id': 'label',
       'name': "Label",
       'desc': 'The name of the point as shown in the legend, tooltip, data label etc.',
       'default': '',
@@ -84,15 +80,8 @@ highed.AssignDataPanel = function(parent, attr) {
 
   options.push(highed.merge({}, defaultOptions));
   
-
   Object.keys(defaultOptions).forEach(function(key) {
-    if (highed.isArr(defaultOptions[key])) {
-      defaultOptions[key].forEach(function(o) {
-        o.colors = null;
-      });
-    } else {
-      defaultOptions[key].colors = null;
-    }
+    defaultOptions[key].colors = null;
   });
   //Object.assign(options[0], defaultOptions);
   
@@ -107,67 +96,40 @@ highed.AssignDataPanel = function(parent, attr) {
   
   function resetValues() {
     Object.keys(options[index]).forEach(function(key) {
-      if (highed.isArr(options[index][key])) {
-        options[index][key].forEach(function(object) {
-          object.previousValue = null;
-          object.value = object.default;
-        });
-        //Object.keys(options[key]).forEach(function(dataKey) {
-         // options[key][dataKey].previousValue = null;
-         // options[key][dataKey].value = options[key][dataKey].default;
-        //});
-      } else {
-        options[index][key].previousValue = null;
-        options[index][key].value = options[index][key].default;
-      }
+      options[index][key].previousValue = null;
+      options[index][key].value = options[index][key].default;
     });
   }
 
   function getAssignDataFields() {
-    var arr = {
-      data: {}
-    };
 
-    Object.keys(options[index]).forEach(function(key){
-      if (highed.isArr(options[index][key])) {
-        
-        options[index][key].forEach(function(object) {
-          arr[key][object.id] = object.value;
-        });
-      } else {
-        if (options[index][key].value === '' || options[index][key].value === null) return;
-        arr[key] = options[index][key].value;
-      }
+    var all = [];
+
+    options.forEach(function(option) {
+      var arr = {};
+      Object.keys(option).forEach(function(key) {
+        if (option[key].value === '' || option[key].value === null) return;
+        arr[key] = option[key].value;
+      });
+      all.push(highed.merge({}, arr));
     });
 
-    return arr;
+    return all;
   }
 
   function getMergedLabelAndData() {
     var arr = {},
-        extraColumns = [];
+        extraColumns = [],
+        values = [];
+
     Object.keys(options[index]).forEach(function(optionKeys) {
       if (optionKeys === 'labels') {
         arr.labelColumn = highed.getLetterIndex(options[index][optionKeys].value.charAt(0));
-      } else if (highed.isArr(options[index][optionKeys])) {
+      } else if (options[index][optionKeys].isData) { //(highed.isArr(options[index][optionKeys])) {
 
         const allData = options[index][optionKeys];
-        var values = [];
-        allData.forEach(function(data) {
-          if (data.multipleValues) {
-            const userValues = data.value.split(data.value.indexOf('-') > -1 ? '-' : ',').sort();
-            var tempValue = highed.getLetterIndex(userValues[0]);
-            values = [];  
-            while(tempValue <= highed.getLetterIndex(userValues[userValues.length - 1])) {
-              values.push(tempValue);
-              tempValue++;
-            }
-            arr.dataColumns = values;
-          } else {
-            values.push(data.rawValue[0]);
-            arr.dataColumns = values;
-          }
-        });
+        values.push(allData.rawValue[0]);
+        arr.dataColumns = values;
         arr.dataColumns.sort();
       } else {
         // Check for any extra fields, eg. Name
@@ -187,29 +149,20 @@ highed.AssignDataPanel = function(parent, attr) {
     var seriesValues = [];
     options.forEach(function(serie, i) {
       var arr = {},
-      extraColumns = [];
+      extraColumns = [],
+      values = [];
       Object.keys(serie).forEach(function(optionKeys) {
           if (optionKeys === 'labels') {
             arr.labelColumn = highed.getLetterIndex(options[i][optionKeys].value.charAt(0));
-          } else if (highed.isArr(options[i][optionKeys])) {
-
+          } else if (options[i][optionKeys].isData) { //(highed.isArr(options[i][optionKeys])) {
             const allData = options[i][optionKeys];
-            var values = [];
+            /*
             allData.forEach(function(data) {
-              if (data.multipleValues) {
-                const userValues = data.value.split(data.value.indexOf('-') > -1 ? '-' : ',').sort();
-                var tempValue = highed.getLetterIndex(userValues[0]);
-                values = [];  
-                while(tempValue <= highed.getLetterIndex(userValues[userValues.length - 1])) {
-                  values.push(tempValue);
-                  tempValue++;
-                }
-                arr.dataColumns = values;
-              } else {
-                values.push(data.rawValue[0]);
-                arr.dataColumns = values;
-              }
-            });
+              values.push(data.rawValue[0]);
+              arr.dataColumns = values;
+            });*/
+            values.push(allData.rawValue[0]);
+            arr.dataColumns = values;
             arr.dataColumns.sort();
           } else {
             // Check for any extra fields, eg. Name
@@ -244,39 +197,21 @@ highed.AssignDataPanel = function(parent, attr) {
 
     var previousValues = [],
         values = [];
-    
-    
-    if (input.multipleValues) {
-      const delimiter = (input.value.indexOf('-') > -1 ? '-' : ',');
-      values = input.value.split(delimiter).sort();
-      if (input.previousValue) {
-        const previousValueDelimiter = (input.previousValue.indexOf('-') > -1 ? '-' : ',');
-        previousValues = input.previousValue.split(previousValueDelimiter).sort();
-      }
-
-      if (!overrideCheck) {
-        const areEqual = (values.length === previousValues.length && 
-          previousValues.every(function(item) { return values.indexOf(item) > -1 }));
-        if (areEqual) return;
-      }
-      
-      newOptions = getMergedLabelAndData();
-    } else {
-      if (!overrideCheck) {
-        if (input.previousValue === input.value || (input.value === '' && input.previousValue === null)) return;
-      }
-
-      values = [input.value.charAt(0)];
-      if (input.previousValue) previousValues = [input.previousValue];
-      
-      if (!input.mandatory && input.value === '') {
-        values = [];
-      }
-
-      newOptions = getMergedLabelAndData();
-      //else newOptions.push(highed.getLetterIndex(input.value.charAt(0)));
+  
+    if (!overrideCheck) {
+      if (input.previousValue === input.value || (input.value === '' && input.previousValue === null)) return;
     }
+
+    values = [input.value.charAt(0)];
+    if (input.previousValue) previousValues = [input.previousValue];
     
+    if (!input.mandatory && input.value === '') {
+      values = [];
+    }
+
+    newOptions = getMergedLabelAndData();
+    //else newOptions.push(highed.getLetterIndex(input.value.charAt(0)));
+  
     input.previousValue = input.value.toUpperCase();
     input.rawValue = values.map(function (x) {
       return highed.getLetterIndex(x);
@@ -291,17 +226,7 @@ highed.AssignDataPanel = function(parent, attr) {
   function getFieldsToHighlight(cb, overrideCheck) {
     Object.keys(options[index]).forEach(function(key) {
       var input = options[index][key];
-      if (highed.isArr(input)) {
-        /*
-        Object.keys(input).forEach(function(dataKey) {
-          processField(input[dataKey], overrideCheck, cb);
-        });*/
-        input.forEach(function(object) {
-          processField(object, overrideCheck, cb);
-        })
-      } else {
-        processField(input, overrideCheck, cb);
-      }
+      processField(input, overrideCheck, cb);
     });
     events.emit("ChangeData", options);
   }
@@ -325,7 +250,6 @@ highed.AssignDataPanel = function(parent, attr) {
     seriesTypeSelect.selectByIndex(0);
   }
 
-
   function getOptions() {
     return options[index];
   }
@@ -340,6 +264,239 @@ highed.AssignDataPanel = function(parent, attr) {
       height: (h - 5) + 'px'
     });
   }
+
+  function addSerie(redrawDOM) {
+    seriesTypeSelect.addItems([{
+      id: options.length,
+      title: 'Series ' + (options.length + 1) + ' - Line'
+    }]);
+
+    if (maxColumnLength + 1 < columnLength) {
+      maxColumnLength++;
+    }
+
+    const newOptions = highed.merge({}, defaultOptions);
+    
+    newOptions.values.rawValue = [maxColumnLength]; //TODO: Change later
+    newOptions.values.value = getLetterFromIndex(maxColumnLength);
+    options.push(highed.merge({}, newOptions));
+
+    seriesTypeSelect.selectById(options.length - 1);
+    if (redrawDOM) resetDOM();
+  }
+
+  function hide() {
+    highed.dom.style(container, {
+      display: 'none'
+    });
+  }
+
+  function show() {
+    highed.dom.style(container, {
+      display: 'block'
+    });
+  }
+  
+  function getValues(input) {
+    const delimiter = (input.indexOf('-') > -1 ? '-' : ',');
+    const output = input.split(delimiter).sort();
+
+    output.forEach(function(value, index){
+      output[index] = getLetterIndex(value);
+    });
+
+    return output;
+  }
+  
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  function setAssignDataFields(data, maxColumns, init) {
+
+    if (!data) return;
+
+    columnLength = maxColumns;
+    var seriesType;
+
+    if (data.config) seriesType = data.config.chart.type;
+    else seriesType = (data.template && data.template.chart ? data.template.chart.type || data.theme.options.chart.type || 'line' : 'line');
+
+    if (init) {
+    } else {
+      seriesTypeSelect.updateByIndex(index, {
+        title: 'Series ' + (index + 1) + ' - ' + capitalizeFirstLetter(seriesType)
+      });
+      seriesTypeSelect.selectByIndex(index);
+    }
+
+    //options = Object.assign(options, defaultOptions);
+
+    //options = defaultOptions;
+    chartTypeOptions = highed.meta.charttype[seriesType];
+
+    if (chartTypeOptions && chartTypeOptions.data) {
+      options[index].data = null;
+    }
+
+    highed.merge(options[index], highed.meta.charttype[seriesType]);
+    if (data.settings && data.settings.dataProvider && data.settings.dataProvider.assignDataFields) {
+      const dataFields = data.settings.dataProvider.assignDataFields;
+
+      dataFields.forEach(function(option, index) {
+        if(!options[index]) {
+          addSerie();
+        }
+        Object.keys(option).forEach(function(key) {
+          if (options[index][key]) {
+            options[index][key].value = option[key];
+            options[index][key].rawValue = [getLetterIndex(option[key])];
+          }
+        })
+      });
+      /*
+      Object.keys(dataFields).forEach(function(key) {
+        if (highed.isArr(options[index][key])) {
+          options[index][key].forEach(function(object) {
+            if (dataFields[key] && dataFields[key][object.id]) {
+              if (object.multipleValues) {
+                object.rawValue = [];
+                object.value = dataFields[key][object.id];
+                (dataFields[key][object.id].split('-')).forEach(function(o){
+                  object.rawValue.push(getLetterIndex(o));
+                });
+              } else object.rawValue = getLetterIndex(dataFields[key][object.id]);
+            }
+          });
+        } else {
+          if (options[index][key]) {
+            options[index][key].value = dataFields[key];
+            options[index][key].rawValue = [getLetterIndex(dataFields[key])];
+          }
+        }
+      });*/
+    } else {
+      // Probably a legacy chart, change values to equal rest of chart
+      if (options[index].data.values && init) {
+        options[index].data.values.value = 'B' + (getLetterFromIndex(maxColumns - 1) !== 'B' ? '-' + getLetterFromIndex(maxColumns - 1) : '');
+        options[index].data.values.rawValue = [1, maxColumns - 1];
+      }
+    }
+    resetDOM();
+    events.emit('ChangeData', options);
+  }
+
+  function checkValues(newValue, prevValue) {
+    values = getValues(newValue);
+    values2 = getValues(prevValue);
+    if (Math.max(values[values.length - 1], values2[values2.length - 1]) - Math.min(values[0], values2[0]) <= (values[values.length - 1] - values[0]) + (values2[values2.length - 1] - values2[0])) {
+      return true;
+    }
+    return false;
+  }
+
+  function valuesMatch(newValue, objectKey) {
+
+    var found = false
+        values = [],
+        values2 = [];
+    Object.keys(options[index]).some(function(key) {
+      if (objectKey === key || found) return;
+      /*
+      if (highed.isArr(options[index][key])) {
+
+        (options[index][key]).some(function(o) {
+          if (object.id === o.id || found) return;
+          found = checkValues(newValue, o.value);
+          if (found) return false;
+        });
+      } else {*/
+        found = checkValues(newValue, options[index][key].value);
+        if (found) return false;
+      //}
+
+    });
+    return found;
+
+  }
+
+  function generateInputs(option, key) {
+
+    var labelInput,
+        valueContainer = highed.dom.cr('div', 'highed-assigndatapanel-input-container');
+
+    labelInput = highed.DropDown(valueContainer, 'highed-assigndata-dropdown');
+    if(!option.mandatory){
+      labelInput.addItem({
+        id: '',
+        title: ''
+      });
+    }
+    for(var i = 0; i < columnLength; i++) {
+      labelInput.addItem({
+        id: getLetterFromIndex(i),
+        title: getLetterFromIndex(i),
+      });
+    }
+    
+    labelInput.selectById(option.value);
+
+    labelInput.on('Change', function(selected) {
+      //detailIndex = selected.index();
+      detailValue = selected.id();
+      if (valuesMatch(detailValue, key)) {
+        option.value = option.previousValue;
+
+        labelInput.selectById(option.previousValue);
+        alert("This column has already been assigned a value. Please select a different column");
+      }
+      else {
+        option.value = detailValue;
+        option.rawValue = [getLetterIndex(option.value.toUpperCase())];
+        if (getLetterIndex(option.value.toUpperCase()) > maxColumnLength) {
+          maxColumnLength = getLetterIndex(option.value.toUpperCase());
+        }
+      }
+
+      events.emit('AssignDataChanged', options[index]);
+      //liveDataTypeSelect.selectById(detailValue || 'json');
+    });
+    
+    var colors = option.colors || generateColors();
+
+    option.colors = colors;
+
+  
+    labelInput.value = option.value;
+    const colorDiv = highed.dom.cr('div', 'highed-assigndatapanel-color');
+    
+    highed.dom.style(colorDiv, {
+      "background-color": option.colors.light,
+      "border": '1px solid ' + option.colors.dark,
+    });
+
+    var label = highed.dom.ap(highed.dom.cr('div', 'highed-assigndatapanel-data-option'), 
+                               colorDiv,
+                               highed.dom.ap(highed.dom.cr('p', '', option.name + ':'),
+                                             highed.dom.cr('span', 'highed-assigndatapanel-data-mandatory', option.mandatory ? '*' : '')),
+                                             valueContainer,
+                               highed.dom.cr('div', 'highed-assigndatapanel-data-desc', option.desc));
+  
+    highed.dom.ap(inputContainer, label);
+  }
+
+  function resetDOM() {
+    
+    inputContainer.innerHTML = '';
+    
+    Object.keys(options[index]).forEach(function(key) {
+      var option = options[index][key];
+      generateInputs(option, key);
+    });  
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////
+
 
   var events = highed.events(),
     container = highed.dom.cr(
@@ -378,7 +535,6 @@ highed.AssignDataPanel = function(parent, attr) {
 
       events.emit('DeleteSeries', index);
       setTimeout(function() {
-
         events.emit('AssignDataChanged');
       }, 1000);
   
@@ -424,271 +580,8 @@ highed.AssignDataPanel = function(parent, attr) {
   
   seriesTypeSelect.selectById(0);
 
-  function addSerie(redrawDOM) {
-    seriesTypeSelect.addItems([{
-      id: options.length,
-      title: 'Series ' + (options.length + 1) + ' - Line'
-    }]);
-
-    if (maxColumnLength + 1 < columnLength) {
-      maxColumnLength++;
-    }
-
-    const newOptions = highed.merge({}, defaultOptions);
-    
-    newOptions.data[0].rawValue = [maxColumnLength];
-    newOptions.data[0].value = getLetterFromIndex(maxColumnLength);
-    options.push(highed.merge({}, newOptions));
-
-    seriesTypeSelect.selectById(options.length - 1);
-    if (redrawDOM) resetDOM();
-  }
-
-  function hide() {
-    highed.dom.style(container, {
-      display: 'none'
-    });
-  }
-
-  function show() {
-    highed.dom.style(container, {
-      display: 'block'
-    });
-  }
-  
-  function getValues(input) {
-    const delimiter = (input.indexOf('-') > -1 ? '-' : ',');
-    const output = input.split(delimiter).sort();
-
-    output.forEach(function(value, index){
-      output[index] = getLetterIndex(value);
-    });
-
-    return output;
-  }
-  
-  function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-
-  function setAssignDataFields(data, maxColumns, init) {
-
-    if (!data) return;
-
-    columnLength = maxColumns;
-    var seriesType;
-
-    if (data.config) seriesType = data.config.chart.type;
-    else seriesType = (data.template && data.template.chart ? data.template.chart.type || data.theme.options.chart.type || 'line' : 'line');
-
-    if (init) {
-      seriesTypeSelect.clear();
-      seriesTypeSelect.addItems([{
-        id: seriesType,
-        title: seriesType
-      }]);
-      seriesTypeSelect.selectById(seriesType);
-      options.push(highed.merge({}, defaultOptions));
-    } else {
-      seriesTypeSelect.updateByIndex(index, {
-        title: 'Series ' + (index + 1) + ' - ' + capitalizeFirstLetter(seriesType)
-      });
-      seriesTypeSelect.selectByIndex(index);
-    }
-
-    //options = Object.assign(options, defaultOptions);
-
-    //options = defaultOptions;
-    chartTypeOptions = highed.meta.charttype[seriesType];
-
-    if (chartTypeOptions && chartTypeOptions.data) {
-      options[index].data = null;
-    }
-
-    highed.merge(options[index], highed.meta.charttype[seriesType]);
-    if (data.settings && data.settings.dataProvider && data.settings.dataProvider.assignDataFields) {
-      const dataFields = data.settings.dataProvider.assignDataFields;
-      Object.keys(dataFields).forEach(function(key) {
-
-        if (highed.isArr(options[index][key])) {
-          options[index][key].forEach(function(object) {
-            if (dataFields[key] && dataFields[key][object.id]) {
-              if (object.multipleValues) {
-                object.rawValue = [];
-                object.value = dataFields[key][object.id];
-                (dataFields[key][object.id].split('-')).forEach(function(o){
-                  object.rawValue.push(getLetterIndex(o));
-                });
-              } else object.rawValue = getLetterIndex(dataFields[key][object.id]);
-            }
-          });
-        } else {
-          if (options[index][key]) {
-            options[index][key].value = dataFields[key];
-            options[index][key].rawValue = [getLetterIndex(dataFields[key])];
-          }
-        }
-      });
-    } else {
-      // Probably a legacy chart, change values to equal rest of chart
-      if (options[index].data.values && init) {
-        options[index].data.values.value = 'B' + (getLetterFromIndex(maxColumns - 1) !== 'B' ? '-' + getLetterFromIndex(maxColumns - 1) : '');
-        options[index].data.values.rawValue = [1, maxColumns - 1];
-      }
-    }
-    resetDOM();
-    events.emit('ChangeData', options);
-  }
-
-  function checkValues(newValue, prevValue) {
-    values = getValues(newValue);
-    values2 = getValues(prevValue);
-    if (Math.max(values[values.length - 1], values2[values2.length - 1]) - Math.min(values[0], values2[0]) <= (values[values.length - 1] - values[0]) + (values2[values2.length - 1] - values2[0])) {
-      return true;
-    }
-    return false;
-  }
-
-  function valuesMatch(newValue, object) {
-
-    var found = false
-        values = [],
-        values2 = [];
-    Object.keys(options[index]).some(function(key) {
-      if (object.id === options[index][key].id || found) return;
-      if (highed.isArr(options[index][key])) {
-
-        (options[index][key]).some(function(o) {
-          if (object.id === o.id || found) return;
-          found = checkValues(newValue, o.value);
-          if (found) return false;
-        });
-      } else {
-        found = checkValues(newValue, options[index][key].value);
-        if (found) return false;
-      }
-
-    });
-    return found;
-
-  }
-
   highed.dom.ap(body, header);
   highed.dom.ap(labels, selectContainer, inputContainer);
-
-  function generateInputs(option, key) {
-
-    var labelInput,
-        valueContainer = highed.dom.cr('div', 'highed-assigndatapanel-input-container');
-
-    if (option.multipleValues) {
-      labelInput = highed.dom.cr('input', 'highed-assigndatapanel-input');
-      highed.dom.ap(valueContainer, labelInput);
-
-      highed.dom.on(labelInput, 'focus', function() {
-        option.previousValue = (option.multipleValues ? labelInput.value : labelInput.value.charAt(0)).toUpperCase(); //labelInput.value;
-      });
-
-      highed.dom.on(labelInput, 'blur', function() {
-        /*
-        if (labelInput.value === '' && option.mandatory) {
-          option.value = option.previousValue;
-          labelInput.value = option.previousValue;
-        } else*/ if (valuesMatch(labelInput.value.toUpperCase(), option)) {
-          option.value = option.previousValue;
-          labelInput.value = option.previousValue;
-          alert("This column has already been assigned a value. Please select a different column");
-        }
-        else {
-          option.value = labelInput.value.toUpperCase();
-        }
-
-        events.emit('AssignDataChanged', options);
-      });
-    }
-    else {
-      labelInput = highed.DropDown(valueContainer, 'highed-assigndata-dropdown');
-      if(!option.mandatory){
-        labelInput.addItem({
-          id: '',
-          title: ''
-        });
-      }
-      for(var i = 0; i < columnLength; i++) {
-        labelInput.addItem({
-          id: getLetterFromIndex(i),
-          title: getLetterFromIndex(i),
-        });
-      }
-      
-      labelInput.selectById(option.value);
-
-      labelInput.on('Change', function(selected) {
-        //detailIndex = selected.index();
-        detailValue = selected.id();
-        if (valuesMatch(detailValue, option)) {
-          option.value = option.previousValue;
-
-          labelInput.selectById(option.previousValue);
-          alert("This column has already been assigned a value. Please select a different column");
-        }
-        else {
-          option.value = detailValue;
-          option.rawValue = [getLetterIndex(option.value.toUpperCase())];
-          if (getLetterIndex(option.value.toUpperCase()) > maxColumnLength) {
-            maxColumnLength = getLetterIndex(option.value.toUpperCase());
-          }
-        }
-
-        events.emit('AssignDataChanged', options[index]);
-        //liveDataTypeSelect.selectById(detailValue || 'json');
-      });
-    }
-    var colors = option.colors || generateColors();
-
-    option.colors = colors;
-
-  
-    labelInput.value = option.value;
-    const colorDiv = highed.dom.cr('div', 'highed-assigndatapanel-color');
-    
-    highed.dom.style(colorDiv, {
-      "background-color": option.colors.light,
-      "border": '1px solid ' + option.colors.dark,
-    });
-
-    var label = highed.dom.ap(highed.dom.cr('div', 'highed-assigndatapanel-data-option'), 
-                               colorDiv,
-                               highed.dom.ap(highed.dom.cr('p', '', option.name + ':'),
-                                             highed.dom.cr('span', 'highed-assigndatapanel-data-mandatory', option.mandatory ? '*' : '')),
-                                             valueContainer,
-                               highed.dom.cr('div', 'highed-assigndatapanel-data-desc', option.desc));
-  
-    highed.dom.ap(inputContainer, label);
-  }
-
-  function resetDOM() {
-    
-    inputContainer.innerHTML = '';
-
-    Object.keys(options[index]).forEach(function(key) {
-      var option = options[index][key];
-  
-      if (highed.isArr(option)) {
-        
-        (option).forEach(function(object) {
-          generateInputs(object, key);
-        })
-        /*
-        Object.keys(option).forEach(function(dataKey) {
-          generateInputs(option[dataKey], dataKey);
-        })*/
-
-      } else {
-        generateInputs(option, key);
-      }
-    });  
-  }
 
   return {
     on: events.on,

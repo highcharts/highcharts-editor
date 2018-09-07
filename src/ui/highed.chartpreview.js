@@ -861,13 +861,13 @@ highed.ChartPreview = function(parent, attributes) {
               htmlEntities[ent]
             );
           });
-
+/*
           loadCSVData(
             {
               csv: projectData.settings.dataProvider.csv
             },
             true
-          );
+          );*/
 
           // events.emit('LoadProjectData', projectData.settings.dataProvider.csv);
 
@@ -982,7 +982,6 @@ highed.ChartPreview = function(parent, attributes) {
       gsheet = lastLoadedSheet,
       livedata = lastLoadedLiveData,
       themeData = false;
-
     if (
       (chart &&
       chart.options &&
