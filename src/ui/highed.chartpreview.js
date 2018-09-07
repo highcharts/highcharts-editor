@@ -989,7 +989,7 @@ highed.ChartPreview = function(parent, attributes) {
       chart.options.data.csv) || 
       dataTableCSV !== null
     ) {
-      loadedCSVRaw = dataTableCSV || chart.options.data.csv;
+      loadedCSVRaw = dataTableCSV || (chart.options.data ? chart.options.data.csv : '');
     }
 
     if (

@@ -83,7 +83,6 @@ highed.AssignDataPanel = function(parent, attr) {
   Object.keys(defaultOptions).forEach(function(key) {
     defaultOptions[key].colors = null;
   });
-  //Object.assign(options[0], defaultOptions);
   
   function init(colLength) {
     columnLength = colLength;
@@ -340,6 +339,7 @@ highed.AssignDataPanel = function(parent, attr) {
     }
 
     highed.merge(options[index], highed.meta.charttype[seriesType]);
+
     if (data.settings && data.settings.dataProvider && data.settings.dataProvider.assignDataFields) {
       const dataFields = data.settings.dataProvider.assignDataFields;
 
@@ -354,34 +354,22 @@ highed.AssignDataPanel = function(parent, attr) {
           }
         })
       });
-      /*
-      Object.keys(dataFields).forEach(function(key) {
-        if (highed.isArr(options[index][key])) {
-          options[index][key].forEach(function(object) {
-            if (dataFields[key] && dataFields[key][object.id]) {
-              if (object.multipleValues) {
-                object.rawValue = [];
-                object.value = dataFields[key][object.id];
-                (dataFields[key][object.id].split('-')).forEach(function(o){
-                  object.rawValue.push(getLetterIndex(o));
-                });
-              } else object.rawValue = getLetterIndex(dataFields[key][object.id]);
-            }
-          });
-        } else {
-          if (options[index][key]) {
-            options[index][key].value = dataFields[key];
-            options[index][key].rawValue = [getLetterIndex(dataFields[key])];
-          }
-        }
-      });*/
     } else {
       // Probably a legacy chart, change values to equal rest of chart
-      if (options[index].data.values && init) {
-        options[index].data.values.value = 'B' + (getLetterFromIndex(maxColumns - 1) !== 'B' ? '-' + getLetterFromIndex(maxColumns - 1) : '');
-        options[index].data.values.rawValue = [1, maxColumns - 1];
+
+      const length = maxColumns - 1;
+      for(var i=1; i<length; i++) {
+        if(!options[i]) {
+          addSerie();
+        }
+
+        options[i].labels.rawValue = [0];
+        options[i].labels.value = "A";
+        options[i].values.rawValue[0] = i + 1;
+        options[i].values.value = getLetterFromIndex(i + 1);
       }
     }
+    seriesTypeSelect.selectByIndex(0);
     resetDOM();
     events.emit('ChangeData', options);
   }
