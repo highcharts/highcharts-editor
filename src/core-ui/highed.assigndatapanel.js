@@ -310,6 +310,12 @@ highed.AssignDataPanel = function(parent, attr) {
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
+  
+  function clean(obj) {
+    Object.keys(obj).forEach(function(key) {
+      if (highed.isNull(obj[key])) delete obj[key];
+    });
+  }
 
   function setAssignDataFields(data, maxColumns, init) {
 
@@ -332,44 +338,48 @@ highed.AssignDataPanel = function(parent, attr) {
     //options = Object.assign(options, defaultOptions);
 
     //options = defaultOptions;
-    chartTypeOptions = highed.meta.charttype[seriesType];
+    chartTypeOptions = highed.meta.charttype[seriesType.toLowerCase()];
 
     if (chartTypeOptions && chartTypeOptions.data) {
       options[index].data = null;
     }
 
     highed.merge(options[index], highed.meta.charttype[seriesType]);
-
-    if (data.settings && data.settings.dataProvider && data.settings.dataProvider.assignDataFields) {
-      const dataFields = data.settings.dataProvider.assignDataFields;
-
-      dataFields.forEach(function(option, index) {
-        if(!options[index]) {
-          addSerie();
-        }
-        Object.keys(option).forEach(function(key) {
-          if (options[index][key]) {
-            options[index][key].value = option[key];
-            options[index][key].rawValue = [getLetterIndex(option[key])];
+    clean(options[index]);
+    
+    if (init) {
+      if (data.settings && data.settings.dataProvider && data.settings.dataProvider.assignDataFields) {
+        const dataFields = data.settings.dataProvider.assignDataFields;
+  
+        dataFields.forEach(function(option, index) {
+          if(!options[index]) {
+            addSerie();
           }
-        })
-      });
-    } else {
-      // Probably a legacy chart, change values to equal rest of chart
-
-      const length = maxColumns - 1;
-      for(var i=1; i<length; i++) {
-        if(!options[i]) {
-          addSerie();
+          Object.keys(option).forEach(function(key) {
+            if (options[index][key]) {
+              options[index][key].value = option[key];
+              options[index][key].rawValue = [getLetterIndex(option[key])];
+            }
+          })
+        });
+      } else {
+        // Probably a legacy chart, change values to equal rest of chart
+  
+        const length = maxColumns - 1;
+        for(var i=1; i<length; i++) {
+          if(!options[i]) {
+            addSerie();
+          }
+  
+          options[i].labels.rawValue = [0];
+          options[i].labels.value = "A";
+          options[i].values.rawValue[0] = i + 1;
+          options[i].values.value = getLetterFromIndex(i + 1);
         }
-
-        options[i].labels.rawValue = [0];
-        options[i].labels.value = "A";
-        options[i].values.rawValue[0] = i + 1;
-        options[i].values.value = getLetterFromIndex(i + 1);
       }
+      seriesTypeSelect.selectByIndex(0);
     }
-    seriesTypeSelect.selectByIndex(0);
+
     resetDOM();
     events.emit('ChangeData', options);
   }
@@ -540,6 +550,7 @@ highed.AssignDataPanel = function(parent, attr) {
 
   highed.dom.on(addNewSeriesBtn, 'click', function() {
     addSerie(true);
+    events.emit('AssignDataChanged');
   });
   
   seriesTypeSelect.on('Change', function(selected) {

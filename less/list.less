@@ -67,14 +67,16 @@
 }
 
 .highed-list-suboptions {
-    padding-bottom: 10px;
+    border: 1px solid rgba(140, 140, 140, 0.29);
+    border-radius: 4px;    
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 .highed-list-general-drop-down {
     max-height: 28px;
     transition: max-height 0.15s ease-out;
     overflow: hidden;
-    margin-bottom: 4px !important;
     .highed-list-general-drop-down-header {
         background-color: rgb(239, 242, 251);
         color: #364f94;
@@ -92,4 +94,8 @@
   .highed-list-general-drop-down.active {
     max-height: 500px;
     transition: max-height 0.25s ease-in;
+  }
+
+  .highed-list-general-drop-down:first-of-type {
+    border-radius: 4px;
   }
