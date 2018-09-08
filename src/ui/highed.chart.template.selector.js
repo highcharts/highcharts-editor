@@ -151,7 +151,7 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
 
       if (selected && selected.id === masterID + key + t.title) {
         node.className =
-          'highed-chart-template-container highed-chart-template-preview-selected';
+          'highed-chart-template-container highed-chart-template-preview-selected highed-template-tooltip';
         selected.node = node;
       }
 
@@ -213,13 +213,13 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
             }
           });
         } else {
+          t.header =  templateTypeSelect.getSelectedItem().title();
           events.emit('Select', t);
         }
 
         highed.emit('UIAction', 'TemplateChoose', t.title);
       });
 
-      console.log();
       highed.dom.ap(
         templates,
         highed.dom.ap(
@@ -271,12 +271,39 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
   /* Build the UI */
   function build() {
     templateTypeSelect.addItems(highed.templates.getCatArray());
-    templateTypeSelect.selectById('Area'); // TODO: Need to change this later
+    templateTypeSelect.selectByIndex(0); // TODO: Need to change this later
 
     //highed.dom.ap(container, templateTypeSelect);
 
     //list.addItems(highed.templates.getCatArray());
     //list.selectFirst();
+  }
+
+  function selectSeriesTemplate(index, projectData) {
+    const settings = projectData.settings && projectData.settings.template;
+    var templateHeader, templateTitle;
+
+    if (settings && !settings[index]) {
+      templateHeader = 'Line';
+      templateTitle = 'Line chart';
+    }
+    else if (settings && settings[index]) {
+      //Select this template
+      templateHeader = settings[index].templateHeader;
+      templateTitle = settings[index].templateTitle;
+    } 
+    else return ;
+      
+    templateTypeSelect.selectById(templateHeader);
+    
+    var templates = highed.templates.getAllInCat(templateHeader);
+    selected = {
+      id:  templateHeader + templateTitle + templateTitle
+    };
+    if (templates) {
+      showTemplates(templates, templateHeader, highed.templates.getCatInfo(templateHeader));
+    }
+    
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -312,6 +339,7 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
   return {
     on: events.on,
     resize: resize,
-    rebuild: build
+    rebuild: build,
+    selectSeriesTemplate: selectSeriesTemplate
   };
 };

@@ -99,7 +99,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
       //chartPreview.loadTemplate(template);
       events.emit('TemplateChanged', template);
     });
-  
+
     templates.on('LoadDataSet', function(sample) {
       if (sample.type === 'csv') {
         if (highed.isArr(sample.dataset)) {
@@ -123,6 +123,10 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
   
     expand();
     hide();
+  }
+
+  function selectSeriesTemplate(index, projectData) {
+    templates.selectSeriesTemplate(index, projectData);
   }
 
   function createMostPopularTemplates(toNextPage) {
@@ -383,7 +387,8 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     isVisible: function() {
       return isVisible;
     },
-    init: init
+    init: init,
+    selectSeriesTemplate: selectSeriesTemplate
     //toolbar: toolbar
   };
 };

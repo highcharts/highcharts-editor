@@ -372,6 +372,19 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
   }
 
+  function loadProject(projectData) {
+    setTimeout(function () {
+      assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true);
+      assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+      chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
+
+    }, 1000);
+    dataTable.loadCSV({
+      csv: projectData.settings.dataProvider.csv
+    });
+    chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
+  }
+
   //////////////////////////////////////////////////////////////////////////////
 
   chartPreview.on('LoadProjectData', function(csv) {
@@ -389,6 +402,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   assignDataPanel.on('DeleteSeries', function(index) {
     chartPreview.data.deleteSeries(index);
+  });
+
+  assignDataPanel.on('SeriesChanged', function(index) {
+    events.emit('SeriesChanged', index);
   });
 
   assignDataPanel.on('AssignDataChanged', function() {
@@ -495,18 +512,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     chartPreview.data.liveURL(p);
   });
 */
-  chartPreview.on('LoadProject', function (projectData) {
-    setTimeout(function () {
-      assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true);
-      assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
-      chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
-
-    }, 1000);
-    dataTable.loadCSV({
-      csv: projectData.settings.dataProvider.csv
-    });
-    chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
-  });
 
   dataTable.on('LoadGSheet', function(settings) {
     chartPreview.data.gsheet(settings);
@@ -646,6 +651,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     getChartTitle: getChartTitle,
     getIcons: getIcons,
     changeAssignDataTemplate: changeAssignDataTemplate,
-    createSimpleDataTable: createSimpleDataTable
+    createSimpleDataTable: createSimpleDataTable,
+    loadProject: loadProject
   };
 };

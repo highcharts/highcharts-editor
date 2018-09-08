@@ -575,6 +575,7 @@ highed.AssignDataPanel = function(parent, attr) {
     index = selected.id();
     resetDOM();
     events.emit('RedrawGrid', true);
+    events.emit('SeriesChanged', index);
   });
   
   highed.dom.on(headerToggle, 'click', function() {

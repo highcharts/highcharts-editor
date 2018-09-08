@@ -676,6 +676,15 @@ highed.DrawerEditor = function(parent, options) {
     );
   });*/
 
+  dataPage.on('SeriesChanged', function(index) {
+    templatePage.selectSeriesTemplate(index, chartPreview.toProject());
+  });
+
+  chartPreview.on('LoadProject', function (projectData) {
+    dataPage.loadProject(projectData);
+    templatePage.selectSeriesTemplate(0, projectData);
+  });
+
   templatePage.on('TemplateChanged', function(newTemplate, loadTemplateForEachSerie){
     dataPage.changeAssignDataTemplate(newTemplate, loadTemplateForEachSerie);
   })

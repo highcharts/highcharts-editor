@@ -100,6 +100,7 @@ highed.ChartPreview = function(parent, attributes) {
     preExpandSize = false,
     dataTableCSV = null,
     assignDataFields = null,
+    templateSettings = {},
     toggleButton = highed.dom.cr(
       'div',
       'highed-icon highed-chart-preview-expand fa fa-external-link-square'
@@ -516,6 +517,7 @@ highed.ChartPreview = function(parent, attributes) {
   function deleteSeries(index) {
     if (customizedOptions.series && customizedOptions.series[index]) {
       customizedOptions.series.splice(index, 1);
+      delete templateSettings[index];
     }
 
     updateAggregated();
@@ -525,8 +527,13 @@ highed.ChartPreview = function(parent, attributes) {
   function loadTemplateForSerie(template, seriesIndex) {
     const type = template.config.chart.type;
     delete template.config.chart.type;
-
     seriesIndex.forEach(function(index) {
+
+      if (!templateSettings[index]) templateSettings[index] = {};
+
+      templateSettings[index].templateTitle = template.title;
+      templateSettings[index].templateHeader = template.header;
+      
       if (customizedOptions.series[index]) {
         customizedOptions.series[index].type = type; //template.config.chart.type;
       } else {
@@ -541,7 +548,7 @@ highed.ChartPreview = function(parent, attributes) {
     });
     
     templateOptions = highed.merge({}, template.config || {});
-
+    
     if (customizedOptions.xAxis) {
       delete customizedOptions.xAxis;
     }
@@ -807,6 +814,10 @@ highed.ChartPreview = function(parent, attributes) {
         }
       }
 
+      if (projectData.settings && projectData.settings.template) {
+        templateSettings = projectData.settings.template;
+      }
+
       if (
         projectData.settings &&
         highed.isStr(projectData.settings.constructor)
@@ -1035,6 +1046,7 @@ highed.ChartPreview = function(parent, attributes) {
       theme: themeData,
       settings: {
         constructor: constr,
+        template: templateSettings,
         dataProvider: {
           csv: (!gsheet && !livedata) ? (loadedCSVRaw || lastLoadedCSV) : false,
           googleSpreadsheet: gsheet,

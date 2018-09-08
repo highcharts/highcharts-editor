@@ -326,6 +326,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       items.splice(index, 1);
     }
 
+    function getSelectedItem() {
+      return selectedItem;
+    }
+
     ///////////////////////////////////////////////////////////////////////////
 
     if (parent) {
@@ -345,6 +349,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       updateByIndex: updateByIndex,
       deleteByIndex: deleteByIndex,
       addItems: addItems,
+      getSelectedItem: getSelectedItem,
       addItem: addItem,
       clear: clear,
       on: events.on
