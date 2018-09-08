@@ -492,8 +492,10 @@ highed.DataTable = function(parent, attributes) {
       }
       events.emit('ColumnMoved');
     });
-    
 
+  const DEFAULT_COLUMN = 6,
+        DEFAULT_ROW = 13;
+    
   highed.dom.on(mainInput, 'click', function(e) {
     return highed.dom.nodefault(e);
   });
@@ -517,14 +519,14 @@ highed.DataTable = function(parent, attributes) {
       });
     }
   }, false);
-
+/*
   document.addEventListener('contextmenu', function(e) {
     if (e.target.className && e.target.className.indexOf('highed-dtable') > -1) {
       globalContextMenu.show(e.clientX, e.clientY, true);
       return highed.dom.nodefault(e);
     }
   }, false);
-
+*/
   highed.dom.on(document.querySelector('body'), 'click', function(){
     globalContextMenu.hide();
   });
@@ -714,7 +716,6 @@ highed.DataTable = function(parent, attributes) {
       colVal = highed.dom.cr('div', 'highed-dtable-col-val', value),
       input = highed.dom.cr('input'),
       exports = {};
-
     function goLeft() {
       if (colNumber >= 1) {
         row.columns[colNumber - 1].focus();
@@ -2088,6 +2089,25 @@ highed.DataTable = function(parent, attributes) {
 
     if (data && data.csv) {
       rows = parseCSV(data.csv, data.delimiter);
+
+      if(rows[0] && rows.length < DEFAULT_ROW) {
+        var counter = DEFAULT_ROW - rows.length,
+            length = (rows[0].length > DEFAULT_COLUMN ? rows[0].length : DEFAULT_COLUMN);
+
+        rows.forEach(function(row) {
+          if (row.length < DEFAULT_COLUMN) {
+            const len = DEFAULT_COLUMN - row.length;
+            for(var i=0;i<len;i++) {
+              row.push(null);
+            }
+          }
+        });
+
+        for(var i =0;i<counter; i++) {
+          rows.push(Array(length).fill(null, 0));
+        }
+      }
+      
       loadRows(rows, function() {});
     } else {
       // surpressChangeEvents = false;
@@ -2751,6 +2771,10 @@ highed.DataTable = function(parent, attributes) {
 
   function removeAllCellsHighlight(previousValues, values, input, newOptions) {
     removeCellColoring(values);
+  }
+
+  function hideUnwantedCells(previousValues, values, input, newOptions) {
+
   }
   
   function getColumnLength(){

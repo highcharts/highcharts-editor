@@ -385,8 +385,9 @@ highed.AssignDataPanel = function(parent, attr) {
   
         const length = maxColumns - 1;
         for(var i=1; i<length; i++) {
+          const seriesType = getSeriesType(data, i);
           if(!options[i]) {
-            addSerie();
+            addSerie(seriesType);
           }
   
           options[i].labels.rawValue = [0];

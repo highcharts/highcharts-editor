@@ -181,97 +181,10 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
   chartPreview.on('ChartChange', function(newData) {
     events.emit('ChartChangedLately', newData);
   });
-/*
-  templates.on('Select', function(template) {
-    chartPreview.loadTemplate(template);
-  });
-
-  templates.on('LoadDataSet', function(sample) {
-    if (sample.type === 'csv') {
-      if (highed.isArr(sample.dataset)) {
-        chartPreview.data.csv(sample.dataset.join('\n'));
-      } else {
-        chartPreview.data.csv(sample.dataset);
-      }
-
-      chartPreview.options.set('subtitle-text', '');
-      chartPreview.options.set('title-text', sample.title);
-    }
-  });*/
-
-/*
-  dataTable.on('UpdateLiveData', function(p){
-    chartPreview.data.liveURL(p);
-  });
-*/
-  chartPreview.on('LoadProject', function () {
-    setTimeout(function () {
-    //resQuickSel.selectByIndex(0);
-    //setToActualSize();
-    }, 2000);
-  });
-/*
-
-  chartPreview.on('RequestEdit', function(event, x, y) {
-    // Expanded
-    if (toolboxEntries.customize.body.offsetWidth) {
-      customizer.focus(event, x, y);
-
-      // Collapsed
-    } else {
-      var unbind = toolboxEntries.customize.on('Expanded', function() {
-        customizer.focus(event, x, y);
-        unbind();
-      });
-      toolboxEntries.customize.expand();
-    }
-  });
-*/
-
-  //chartPreview.on('ChartRecreated', hideError);
 
 
   //////////////////////////////////////////////////////////////////////////////
-/*
-  highed.dom.ap(
-    toolbar.left,
-    highed.dom.style(highed.dom.cr('span'), {
-      'margin-left': '2px',
-      width: '200px',
-      height: '60px',
-      float: 'left',
-      display: 'inline-block',
-      'background-position': 'left middle',
-      'background-size': 'auto 100%',
-      'background-repeat': 'no-repeat',
-      'background-image':
-        'url("data:image/svg+xml;utf8,' +
-        encodeURIComponent(highed.resources.logo) +
-        '")'
-    })
-  );*/
 
-
-  ////////////////////////////////////////////////// UNCOMMENT TO SHOW CHART!!!! ///////////////////////////////////////////
-  /*
-  highed.dom.ap(
-    splitter.bottom,
-    highed.dom.ap(
-      chartFrame,
-      chartContainer,
-      highed.dom.ap(errorBar, errorBarHeadline, errorBarBody)
-    )
-  );
-
-  highed.dom.on([resWidth, resHeight], 'change', function() {
-    sizeChart(parseInt(resWidth.value, 10), parseInt(resHeight.value, 10));
-  });
-*/
-  // Create the features
- // createFeatures();
- // createToolbar();
-
- // resize();
   /**
    * Resize the chart preview based on a given width
    */
@@ -289,17 +202,6 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
 
     setTimeout(chartPreview.resize, 200);
   }
-
-  chartPreview.on('AttrChange', function(option) {
-    if (option.id === 'chart.height' || option.id === 'chart.width') {
-      resQuickSel.selectByIndex(0);
-      // setToActualSize();
-    }
-  });
-  
-  chartPreview.on('SetResizeData', function () {
-    //setToActualSize();
-  });
 
   return {
     on: events.on,

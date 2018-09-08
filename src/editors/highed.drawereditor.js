@@ -262,8 +262,8 @@ highed.DrawerEditor = function(parent, options) {
 
     // Res preview bar
     resPreviewBar = highed.dom.cr('div', 'highed-res-preview'),
-    resQuickSelContainer = highed.dom.cr('div', 'highed-res-quicksel'),
-    resQuickSel = highed.DropDown(resQuickSelContainer),
+   // resQuickSelContainer = highed.dom.cr('div', 'highed-res-quicksel'),
+  //  resQuickSel = highed.DropDown(resQuickSelContainer),
     resWidth = highed.dom.cr('input', 'highed-res-number'),
     resHeight = highed.dom.cr('input', 'highed-res-number'),
     // Exporter
@@ -728,7 +728,7 @@ highed.DrawerEditor = function(parent, options) {
 */
   chartPreview.on('LoadProject', function () {
     setTimeout(function () {
-    resQuickSel.selectByIndex(0);
+ //   resQuickSel.selectByIndex(0);
     setToActualSize();
     }, 2000);
   });
@@ -873,18 +873,18 @@ highed.DrawerEditor = function(parent, options) {
       'overflow-x': 'auto'
     });*/
   }
-
+/*
   resQuickSel.addItem({
     id: 'actual',
     title: 'Actual Size',
     select: function() {
       setToActualSize();
     }
-  });
+  });*/
 
   chartPreview.on('AttrChange', function(option) {
     if (option.id === 'chart.height' || option.id === 'chart.width') {
-      resQuickSel.selectByIndex(0);
+     //resQuickSel.selectByIndex(0);
       // setToActualSize();
     }
   });
@@ -892,7 +892,7 @@ highed.DrawerEditor = function(parent, options) {
   chartPreview.on('SetResizeData', function () {
     setToActualSize();
   });
-
+/*
   Object.keys(resolutions).forEach(function(devName) {
     resQuickSel.addItem({
       id: devName,
@@ -913,7 +913,7 @@ highed.DrawerEditor = function(parent, options) {
   });
 
   resQuickSel.selectByIndex(0);
-
+*/
   return {
     on: events.on,
     resize: resize,

@@ -607,6 +607,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       width: '28%',
       height: '38%'
     });
+    chartPreview.resize();
 /*
     highed.dom.style(chartContainer, {
       width: psize.w - newWidth - 100 + 'px',
@@ -615,14 +616,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     setTimeout(function() { chartPreview.resize(); }, 200);
   }
-
-  chartPreview.on('AttrChange', function(option) {
-    if (option.id === 'chart.height' || option.id === 'chart.width') {
-      resQuickSel.selectByIndex(0);
-      // setToActualSize();
-    }
-  });
-  
   chartPreview.on('SetResizeData', function () {
     //setToActualSize();
   });
