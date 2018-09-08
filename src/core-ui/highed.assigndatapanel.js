@@ -264,20 +264,29 @@ highed.AssignDataPanel = function(parent, attr) {
     });
   }
 
-  function addSerie(redrawDOM) {
+  function addSerie(seriesType, redrawDOM) {
+    if (!seriesType) seriesType = 'line';
+
     seriesTypeSelect.addItems([{
       id: options.length,
-      title: 'Series ' + (options.length + 1) + ' - Line'
+      title: 'Series ' + (options.length + 1) + ' - ' + capitalizeFirstLetter(seriesType)
     }]);
+
 
     if (maxColumnLength + 1 < columnLength) {
       maxColumnLength++;
     }
 
     const newOptions = highed.merge({}, defaultOptions);
+
+    highed.merge(newOptions, highed.meta.charttype[seriesType]);
+    clean(newOptions);
     
-    newOptions.values.rawValue = [maxColumnLength]; //TODO: Change later
-    newOptions.values.value = getLetterFromIndex(maxColumnLength);
+    if (newOptions.values) {
+      newOptions.values.rawValue = [maxColumnLength]; //TODO: Change later
+      newOptions.values.value = getLetterFromIndex(maxColumnLength);
+    }
+
     options.push(highed.merge({}, newOptions));
 
     seriesTypeSelect.selectById(options.length - 1);
@@ -317,26 +326,35 @@ highed.AssignDataPanel = function(parent, attr) {
     });
   }
 
+  function getSeriesType(data, index) {
+    if (data.config) return data.config.chart.type;
+    else {
+      if (data.options && data.options.series && data.options.series[index] && data.options.series[index].type) return data.options.series[index].type;
+      if (data.template && data.template.chart && data.template.chart.type) return data.template.chart.type;
+      else if (data.theme && data.theme.options.chart && data.theme.options.chart.type) return data.theme.options.chart.type;
+      else return 'line';
+    }
+  }
+
   function setAssignDataFields(data, maxColumns, init, seriesIndex) {
 
     if (!data) return;
-
     columnLength = maxColumns;
-    var seriesType;
-
+    var seriesType = getSeriesType(data, 0);
+/*
     if (data.config) seriesType = data.config.chart.type;
-    else seriesType = (data.template && data.template.chart ? data.template.chart.type || data.theme.options.chart.type || 'line' : 'line');
+    else {
+      if (data.template && data.template.chart && data.template.chart.type) seriesType = data.template.chart.type;
+      else if (data.theme && data.theme.options.chart && data.theme.options.chart.type)seriesType = data.theme.options.chart.type;
+      else seriesType = 'line';
+    }*/
 
-    if (!init) {
-      seriesTypeSelect.updateByIndex(seriesIndex || index, {
-        title: 'Series ' + ((seriesIndex || index) + 1) + ' - ' + capitalizeFirstLetter(seriesType)
-      });
-      seriesTypeSelect.selectByIndex(index);
-    }
+    seriesTypeSelect.updateByIndex(seriesIndex || index, {
+      title: 'Series ' + ((seriesIndex || index) + 1) + ' - ' + capitalizeFirstLetter(seriesType)
+    });
+    seriesTypeSelect.selectByIndex(index);
+    
 
-    //options = Object.assign(options, defaultOptions);
-
-    //options = defaultOptions;
     chartTypeOptions = highed.meta.charttype[seriesType.toLowerCase()];
 
     if (chartTypeOptions && chartTypeOptions.data) {
@@ -345,14 +363,15 @@ highed.AssignDataPanel = function(parent, attr) {
 
     highed.merge(options[seriesIndex || index], highed.meta.charttype[seriesType]);
     clean(options[seriesIndex || index]);
-    
     if (init) {
+
       if (data.settings && data.settings.dataProvider && data.settings.dataProvider.assignDataFields) {
         const dataFields = data.settings.dataProvider.assignDataFields;
   
         dataFields.forEach(function(option, index) {
+          const seriesType = getSeriesType(data, index);
           if(!options[index]) {
-            addSerie();
+            addSerie(seriesType);
           }
           Object.keys(option).forEach(function(key) {
             if (options[index][key]) {
@@ -548,7 +567,7 @@ highed.AssignDataPanel = function(parent, attr) {
   });
 
   highed.dom.on(addNewSeriesBtn, 'click', function() {
-    addSerie(true);
+    addSerie(null, true);
     events.emit('AssignDataChanged');
   });
   
