@@ -261,12 +261,11 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     dataTable.hideImportModal();
   }
   
-  function changeAssignDataTemplate(newTemplate) {
+  function changeAssignDataTemplate(newTemplate, loadTemplateForEachSeries) {
     /*
     const oldValues = assignDataPanel.getAllMergedLabelAndData();
     dataTable.removeAllCellsHighlight(null, [oldValues.labelColumn].concat(oldValues.dataColumns).sort());
     */
-
     assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength());
     const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
 
@@ -275,7 +274,20 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       chartPreview.data.csv({
         csv: data
       });
-      chartPreview.loadTemplateForSerie(newTemplate, assignDataPanel.getActiveSerie());
+
+      var seriesIndex = [];
+
+      if (loadTemplateForEachSeries) {
+        const length = assignDataPanel.getAllOptions().length;
+        
+        for(var i=0;i<length;i++) {
+          seriesIndex.push(i);
+          assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, i);
+        }
+      } else seriesIndex = [assignDataPanel.getActiveSerie()];
+      
+      chartPreview.loadTemplateForSerie(newTemplate, seriesIndex);
+
     }, 500);
 
     redrawGrid(true);
@@ -299,7 +311,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     var tempOption = [],
         chartOptions = chartPreview.toProject().options,
-        dataTableFields = dataTable.getDataFieldsUsed();
+        dataTableFields = dataTable.getDataFieldsUsed(),
+        hasLabels = false;
     
     var dataValues  = allOptions.data,
         series = allOptions.length;
@@ -311,7 +324,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     });
 */
     for(var i = 0; i < series; i++) {
-
       var serieOption = {};
       Object.keys(allOptions[i]).forEach(function(key) {
         const option = allOptions[i][key];
@@ -319,14 +331,28 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
           if (option.isData) { //(highed.isArr(option)) { // Data assigndata
             if (dataTableFields.indexOf(option.rawValue[0]) > -1) serieOption[option.linkedTo] = dataTableFields.indexOf(option.rawValue[0]);
           } else {
+            if (option.linkedTo === 'label') hasLabels = true;
             serieOption[option.linkedTo] = option.rawValue[0];
           }
         }
-
       });
       tempOption.push(serieOption);
     };
+
     if (tempOption.length > 0) {
+
+
+      if (hasLabels) {
+        const seriesPlotOptions = chartOptions.plotOptions.series;
+        highed.merge(seriesPlotOptions, {
+          dataLabels: {
+              enabled: true,
+              format: '{point.label}'
+          }
+        });
+        chartPreview.options.setAll(seriesPlotOptions);
+      }
+
       if (chartOptions.data) { 
         chartOptions.data.seriesMapping = tempOption;
         chartPreview.options.setAll(chartOptions);

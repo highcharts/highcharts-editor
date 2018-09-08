@@ -151,7 +151,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
       }
 
       highed.dom.on(option, 'click', function() {
-        events.emit('TemplateChanged', t);
+        events.emit('TemplateChanged', t, true);
         toNextPage();
       });
 

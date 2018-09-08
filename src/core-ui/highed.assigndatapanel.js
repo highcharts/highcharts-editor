@@ -317,7 +317,7 @@ highed.AssignDataPanel = function(parent, attr) {
     });
   }
 
-  function setAssignDataFields(data, maxColumns, init) {
+  function setAssignDataFields(data, maxColumns, init, seriesIndex) {
 
     if (!data) return;
 
@@ -327,10 +327,9 @@ highed.AssignDataPanel = function(parent, attr) {
     if (data.config) seriesType = data.config.chart.type;
     else seriesType = (data.template && data.template.chart ? data.template.chart.type || data.theme.options.chart.type || 'line' : 'line');
 
-    if (init) {
-    } else {
-      seriesTypeSelect.updateByIndex(index, {
-        title: 'Series ' + (index + 1) + ' - ' + capitalizeFirstLetter(seriesType)
+    if (!init) {
+      seriesTypeSelect.updateByIndex(seriesIndex || index, {
+        title: 'Series ' + ((seriesIndex || index) + 1) + ' - ' + capitalizeFirstLetter(seriesType)
       });
       seriesTypeSelect.selectByIndex(index);
     }
@@ -341,11 +340,11 @@ highed.AssignDataPanel = function(parent, attr) {
     chartTypeOptions = highed.meta.charttype[seriesType.toLowerCase()];
 
     if (chartTypeOptions && chartTypeOptions.data) {
-      options[index].data = null;
+      options[seriesIndex || index].data = null;
     }
 
-    highed.merge(options[index], highed.meta.charttype[seriesType]);
-    clean(options[index]);
+    highed.merge(options[seriesIndex || index], highed.meta.charttype[seriesType]);
+    clean(options[seriesIndex || index]);
     
     if (init) {
       if (data.settings && data.settings.dataProvider && data.settings.dataProvider.assignDataFields) {
