@@ -659,23 +659,6 @@ highed.DrawerEditor = function(parent, options) {
   //////////////////////////////////////////////////////////////////////////////
   // Event attachments
 
-  //toolbox.on('BeforeResize', resizeChart);
-  /*
-
-  customizer.on('PropertyChange', chartPreview.options.set);
-  customizer.on('PropertySetChange', chartPreview.options.setAll);
-*/
-/*
-  chartPreview.on('LoadProjectData', function(csv) {
-    /*
-    dataTable.loadCSV(
-      {
-        csv: csv
-      },
-      true
-    );
-  });*/
-
   dataPage.on('SeriesChanged', function(index) {
     templatePage.selectSeriesTemplate(index, chartPreview.toProject());
   });
@@ -873,14 +856,6 @@ highed.DrawerEditor = function(parent, options) {
       'overflow-x': 'auto'
     });*/
   }
-/*
-  resQuickSel.addItem({
-    id: 'actual',
-    title: 'Actual Size',
-    select: function() {
-      setToActualSize();
-    }
-  });*/
 
   chartPreview.on('AttrChange', function(option) {
     if (option.id === 'chart.height' || option.id === 'chart.width') {
@@ -892,28 +867,6 @@ highed.DrawerEditor = function(parent, options) {
   chartPreview.on('SetResizeData', function () {
     setToActualSize();
   });
-/*
-  Object.keys(resolutions).forEach(function(devName) {
-    resQuickSel.addItem({
-      id: devName,
-      title: devName,
-      select: function() {
-        resWidth.disabled = resHeight.disabled = undefined;
-
-        resWidth.value = resolutions[devName][0];
-        resHeight.value = resolutions[devName][1];
-
-        sizeChart(resolutions[devName][0], resolutions[devName][1]);
-
-        highed.dom.style(highedChartContainer, {
-          'overflow-x': ''
-        });
-      }
-    });
-  });
-
-  resQuickSel.selectByIndex(0);
-*/
   return {
     on: events.on,
     resize: resize,

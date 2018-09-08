@@ -519,14 +519,14 @@ highed.DataTable = function(parent, attributes) {
       });
     }
   }, false);
-/*
+
   document.addEventListener('contextmenu', function(e) {
     if (e.target.className && e.target.className.indexOf('highed-dtable') > -1) {
       globalContextMenu.show(e.clientX, e.clientY, true);
       return highed.dom.nodefault(e);
     }
   }, false);
-*/
+
   highed.dom.on(document.querySelector('body'), 'click', function(){
     globalContextMenu.hide();
   });
@@ -1315,7 +1315,8 @@ highed.DataTable = function(parent, attributes) {
         header: header,
         headerTitle: headerTitle,
         colNumber: gcolumns.length,
-        letter: letter
+        letter: letter,
+        test: true
       },
       mover = highed.Movable(
         moveHandle,
@@ -1398,6 +1399,22 @@ highed.DataTable = function(parent, attributes) {
       keyCell.innerHTML = str;
       letter.value = highed.getLetterIndex(str);
       //exports.colNumber = highed.getLetterIndex(str);
+    }
+
+    exports.hideColumns = function() {
+      if (!col.classList.contains('cell-hide')) {
+        col.classList += ' cell-hide';
+        header.classList += ' cell-hide';
+        letter.classList += ' cell-hide';
+      }
+    }
+
+    exports.showColumns = function() {
+      if (col.classList.contains('cell-hide')) {
+        col.classList.remove('cell-hide');
+        header.classList.remove('cell-hide');
+        letter.classList.remove('cell-hide');
+      }
     }
 
     highed.dom.on(letter, 'mouseover', function(e) {
@@ -1547,7 +1564,13 @@ highed.DataTable = function(parent, attributes) {
 
     mover.on('StartMove', function(x) {
       ox = x;
-      
+
+      if (!header.classList.contains('no-transition')) {
+        header.classList += ' no-transition';
+        letter.classList += ' no-transition';
+        col.classList += ' no-transition';
+      }
+
       if (rows.length > 0) rows[0].columns[0].focus();
       highed.dom.style(cornerPiece, {
         display: 'none'
@@ -1578,6 +1601,12 @@ highed.DataTable = function(parent, attributes) {
       highed.dom.style(document.body, {
         cursor: ''
       });
+
+      if (header.classList.contains('no-transition')) {
+        header.classList.remove('no-transition');
+        letter.classList.remove('no-transition');
+        col.classList.remove('no-transition');
+      }
 
       moveHandle.className = 'highed-dtable-resize-handle';
       if (rows.length > 0) rows[0].columns[0].focus();
@@ -2773,8 +2802,23 @@ highed.DataTable = function(parent, attributes) {
     removeCellColoring(values);
   }
 
-  function hideUnwantedCells(previousValues, values, input, newOptions) {
+  function toggleUnwantedCells(values, toggle) {
+    
+    var found = false;
 
+    gcolumns.forEach(function(col, index) {
+      if (!values.includes(index)) {
+        toggle ? col.hideColumns() : col.showColumns();
+      } else {
+        col.showColumns();
+
+        if (!found && rows[0]) {
+          rows[0].columns[index].focus();
+          found = true;
+        }
+        
+      }
+    });
   }
   
   function getColumnLength(){
@@ -3148,6 +3192,7 @@ highed.DataTable = function(parent, attributes) {
     //highlightSelectedFields: highlightSelectedFields,
     highlightCells: highlightCells,
     removeAllCellsHighlight: removeAllCellsHighlight,
+    toggleUnwantedCells: toggleUnwantedCells,
     getColumnLength: getColumnLength,
     getDataFieldsUsed: getDataFieldsUsed,
     createSimpleDataTable: createSimpleDataTable

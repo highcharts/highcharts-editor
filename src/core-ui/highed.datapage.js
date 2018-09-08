@@ -408,6 +408,17 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     events.emit('SeriesChanged', index);
   });
 
+  assignDataPanel.on('ToggleHideCells', function(options, toggle) {
+    var userActiveCells = Object.keys(options).filter(function(key) {
+      if(options[key].rawValue && options[key].rawValue.length > 0) return true;
+    }).map(function(key) {
+      return options[key].rawValue[0]
+    });
+
+    dataTable.toggleUnwantedCells(userActiveCells, toggle);
+
+  });
+
   assignDataPanel.on('AssignDataChanged', function() {
 
     const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());

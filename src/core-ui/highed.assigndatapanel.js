@@ -76,7 +76,8 @@ highed.AssignDataPanel = function(parent, attr) {
   toggled = false,
   columnLength = 0,
   index = 0,
-  maxColumnLength = 1;
+  maxColumnLength = 1,
+  showCells = false;
 
   options.push(highed.merge({}, defaultOptions));
   
@@ -512,6 +513,17 @@ highed.AssignDataPanel = function(parent, attr) {
     });  
   }
 
+  function toggleCells() {
+    if (showCells) {
+      showCells = false;
+      toggleHideCellsBtn.innerHTML = '<i class="fa fa-eye-slash">';
+    } else {
+      showCells = true;
+      toggleHideCellsBtn.innerHTML = '<i class="fa fa-eye"/>';
+    }
+    events.emit('ToggleHideCells', options[index], showCells);
+  }
+
   ////////////////////////////////////////////////////////////////////////////////
 
 
@@ -534,10 +546,15 @@ highed.AssignDataPanel = function(parent, attr) {
     inputContainer = highed.dom.cr('div', 'highed-assigndatapanel-inputs-container'),
     addNewSeriesBtn = highed.dom.cr('button', 'highed-assigndatapanel-add-series', '<i class="fa fa-plus"/>'),
     deleteSeriesBtn = highed.dom.cr('button', 'highed-assigndatapanel-add-series', '<i class="fa fa-trash"/>'),
+    toggleHideCellsBtn = highed.dom.cr('button', 'highed-assigndatapanel-add-series', '<i class="fa fa-eye-slash"/>'),
     seriesTypeSelect = highed.DropDown(selectContainer, ' highed-assigndatapanel-series-dropdown');
       
-  highed.dom.ap(selectContainer, addNewSeriesBtn, deleteSeriesBtn);
+  highed.dom.ap(selectContainer, addNewSeriesBtn, deleteSeriesBtn, toggleHideCellsBtn);
 
+  highed.dom.on(toggleHideCellsBtn, 'click', function() {
+    toggleCells();
+  });
+  
   highed.dom.on(deleteSeriesBtn, 'click', function() {
     
     if (index === 0) {
@@ -575,7 +592,8 @@ highed.AssignDataPanel = function(parent, attr) {
   seriesTypeSelect.on('Change', function(selected) {
     if (index !== selected.id()) {
       index = selected.id();
-      resetDOM();
+      resetDOM();      
+      if (showCells) events.emit('ToggleHideCells', options[index], showCells);
       events.emit('RedrawGrid', true);
       events.emit('SeriesChanged', index);
     }
