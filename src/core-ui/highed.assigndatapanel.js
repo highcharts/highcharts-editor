@@ -572,10 +572,12 @@ highed.AssignDataPanel = function(parent, attr) {
   });
   
   seriesTypeSelect.on('Change', function(selected) {
-    index = selected.id();
-    resetDOM();
-    events.emit('RedrawGrid', true);
-    events.emit('SeriesChanged', index);
+    if (index !== selected.id()) {
+      index = selected.id();
+      resetDOM();
+      events.emit('RedrawGrid', true);
+      events.emit('SeriesChanged', index);
+    }
   });
   
   highed.dom.on(headerToggle, 'click', function() {
