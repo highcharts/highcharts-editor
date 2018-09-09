@@ -476,6 +476,7 @@ highed.AssignDataPanel = function(parent, attr) {
         }
       }
 
+      if (showCells) events.emit('ToggleHideCells', options[index], showCells);
       events.emit('AssignDataChanged', options[index]);
       //liveDataTypeSelect.selectById(detailValue || 'json');
     });
@@ -522,6 +523,10 @@ highed.AssignDataPanel = function(parent, attr) {
       toggleHideCellsBtn.innerHTML = '<i class="fa fa-eye"/>';
     }
     events.emit('ToggleHideCells', options[index], showCells);
+  }
+
+  function checkToggleCells() {
+    if (showCells) events.emit('ToggleHideCells', options[index], showCells);
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -637,6 +642,7 @@ highed.AssignDataPanel = function(parent, attr) {
     getAllOptions: getAllOptions,
     getActiveSerie: getActiveSerie,
     addSeries: addSeries,
+    checkToggleCells: checkToggleCells,
     init: init
   };
 };

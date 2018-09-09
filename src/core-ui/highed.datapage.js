@@ -269,6 +269,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength());
     const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
 
+
+
     setSeriesMapping(assignDataPanel.getAllOptions());
     setTimeout(function() {
       chartPreview.data.csv({
@@ -368,6 +370,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       }
       dataTable.removeAllCellsHighlight(null, columns);
     }
+    assignDataPanel.checkToggleCells();
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
     chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
   }
