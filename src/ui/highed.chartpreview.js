@@ -218,6 +218,21 @@ highed.ChartPreview = function(parent, attributes) {
     //   delete options.chart.height;
     // }
 
+
+    // Parses for null values
+    if (options.data && options.data.csv) {
+      options.data.parsed = function(columns) {
+        var newColumns = [];
+        Highcharts.each(columns, function(c, j) {
+          newColumns.push([]);
+          Highcharts.each(c, function(p, i) {
+            newColumns[j].push(p === 'null' ? null : p)
+          })
+        })
+        this.columns = newColumns;
+      }
+    }
+
     try {
       chart = new Highcharts[constr](pnode || parent, options);
       //This is super ugly.
@@ -527,6 +542,7 @@ highed.ChartPreview = function(parent, attributes) {
   function loadTemplateForSerie(template, seriesIndex) {
     const type = template.config.chart.type;
     delete template.config.chart.type;
+
     seriesIndex.forEach(function(index) {
 
       if (!templateSettings[index]) templateSettings[index] = {};
@@ -540,7 +556,7 @@ highed.ChartPreview = function(parent, attributes) {
         customizedOptions.series[index] = {
           type: type, //template.config.chart.type,
           turboThreshold: 0,
-          _colorIndex: chartOptions.series.length,
+          _colorIndex: customizedOptions.series.length,
           _symbolIndex: 0,
           compare: undefined
         };
@@ -1714,21 +1730,31 @@ highed.ChartPreview = function(parent, attributes) {
     return expanded ? collapse() : expand();
   });
 
-  function addBlankSeries() {
+  function addBlankSeries(index) {
+    
+    if (!customizedOptions.series[index]) {
+      customizedOptions.series[index] = {
+        type: 'line',
+        data:[],
+        turboThreshold: 0,
+        _colorIndex: index,
+        _symbolIndex: 0,
+        compare: undefined
+      };
+    }
     /*
-    var chartOptions =  getCleanOptions(customizedOptions);
-    chartOptions.series.push({
+    customizedOptions.series.push({
       type: 'line',
       data:[],
       turboThreshold: 0,
       _colorIndex: chartOptions.series.length,
       _symbolIndex: 0,
       compare: undefined
-    });
+    });*/
 
     //Init the initial chart
     updateAggregated();
-    init();*/
+    init();
   }
 
   ///////////////////////////////////////////////////////////////////////////

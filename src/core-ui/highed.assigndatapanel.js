@@ -273,7 +273,6 @@ highed.AssignDataPanel = function(parent, attr) {
       title: 'Series ' + (options.length + 1) + ' - ' + capitalizeFirstLetter(seriesType)
     }]);
 
-
     if (maxColumnLength + 1 < columnLength) {
       maxColumnLength++;
     }
@@ -292,6 +291,8 @@ highed.AssignDataPanel = function(parent, attr) {
 
     seriesTypeSelect.selectById(options.length - 1);
     if (redrawDOM) resetDOM();
+
+    events.emit('AddSeries', options.length - 1);
   }
 
   function hide() {
@@ -462,6 +463,7 @@ highed.AssignDataPanel = function(parent, attr) {
     labelInput.on('Change', function(selected) {
       //detailIndex = selected.index();
       detailValue = selected.id();
+/*
       if (valuesMatch(detailValue, key)) {
         option.value = option.previousValue;
 
@@ -469,12 +471,13 @@ highed.AssignDataPanel = function(parent, attr) {
         alert("This column has already been assigned a value. Please select a different column");
       }
       else {
+        */
         option.value = detailValue;
         option.rawValue = [getLetterIndex(option.value.toUpperCase())];
         if (getLetterIndex(option.value.toUpperCase()) > maxColumnLength) {
           maxColumnLength = getLetterIndex(option.value.toUpperCase());
         }
-      }
+    //  }
 
       if (showCells) events.emit('ToggleHideCells', options[index], showCells);
       events.emit('AssignDataChanged', options[index]);

@@ -318,13 +318,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     
     var dataValues  = allOptions.data,
         series = allOptions.length;
-/*
-    dataValues.forEach(function(data) {
-      if (data.multipleValues) {
-        series = (data.rawValue[data.rawValue.length - 1] - data.rawValue[0]) + 1;
-      }
-    });
-*/
+
     for(var i = 0; i < series; i++) {
       var serieOption = {};
       Object.keys(allOptions[i]).forEach(function(key) {
@@ -340,10 +334,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       });
       tempOption.push(serieOption);
     };
-
+    
     if (tempOption.length > 0) {
-
-
       if (hasLabels) {
         const seriesPlotOptions = chartOptions.plotOptions.series;
         highed.merge(seriesPlotOptions, {
@@ -355,7 +347,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         chartPreview.options.setAll(seriesPlotOptions);
       }
 
-      if (chartOptions.data) { 
+      if (chartOptions.data) {
         chartOptions.data.seriesMapping = tempOption;
         chartPreview.options.setAll(chartOptions);
       }
@@ -403,6 +395,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     events.emit('ChartChangedLately', newData);
   });
 
+  assignDataPanel.on('AddSeries', function(index) {
+    chartPreview.options.addBlankSeries(index);
+  })
+
   assignDataPanel.on('DeleteSeries', function(index) {
     chartPreview.data.deleteSeries(index);
   });
@@ -425,6 +421,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   assignDataPanel.on('AssignDataChanged', function() {
 
     const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
+    
+    chartPreview.data.csv({
+      csv: data
+    }, null, true);
 
     setSeriesMapping(assignDataPanel.getAllOptions());
     chartPreview.data.csv({
@@ -442,7 +442,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   assignDataPanel.on('ChangeData', function(allOptions) {
     //Series map all of the "linkedTo" options
-
     setSeriesMapping(allOptions);
   });
 /*

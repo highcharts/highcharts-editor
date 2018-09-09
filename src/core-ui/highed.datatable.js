@@ -655,7 +655,7 @@ highed.DataTable = function(parent, attributes) {
       highed.dom.on(mainInput, 'keyup', function(e) {
         // Super hack to allow pasting CSV into cells
         var ps = highed.parseCSV(mainInput.value);
-        if (ps.length > 1) {
+        if (ps.length > 1) { //TODO: Need to fix this...
           if (
             confirm(
               'You are about to load CSV data. This will overwrite your current data. Continue?'
@@ -711,7 +711,7 @@ highed.DataTable = function(parent, attributes) {
 
   ////////////////////////////////////////////////////////////////////////////
   function Column(row, colNumber, val, keyVal) {
-    var value = typeof val === 'undefined' ? null : val,
+    var value = typeof val === 'undefined' || 'null' ? null : val,
       col = highed.dom.cr('td', 'highed-dtable-cell'),
       colVal = highed.dom.cr('div', 'highed-dtable-col-val', value),
       input = highed.dom.cr('input'),
@@ -1919,7 +1919,7 @@ highed.DataTable = function(parent, attributes) {
           dataFieldsUsed.push(index);
           if (!v) {
             hasData = true;
-            v = 0;
+            v = 'null';
           }
         }
 
@@ -1990,8 +1990,7 @@ highed.DataTable = function(parent, attributes) {
    *  @param section {array} - the section of the data table which is the data.
    */
   function toCSV(delimiter, quoteStrings, section) {
-    delimiter = delimiter || ',';
-    
+    delimiter = delimiter || ','; 
     return toData(quoteStrings, true, section)
       .map(function(cols) {
         return cols.join(delimiter);
