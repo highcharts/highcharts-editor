@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props, chartContainer) {
+highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props, chartContainer, planCode) {
   var events = highed.events(),
     // Main properties
     container = highed.dom.cr(
@@ -98,7 +98,8 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     customizer = highed.ChartCustomizer(
       customizerContainer,
       options,
-      chartPreview
+      chartPreview,
+      planCode
     ),
 
     helpModal = highed.HelpModal(props.help || []);

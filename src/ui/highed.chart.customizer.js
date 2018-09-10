@@ -45,7 +45,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *    > availableSettings {string|array} - whitelist of exposed settings
  *  @param chartPreview {ChartPreview} - the chart preview instance
  */
-highed.ChartCustomizer = function(parent, attributes, chartPreview) {
+highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
   var properties = highed.merge(
       {
         noAdvanced: false,
@@ -87,7 +87,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
       responsive: true
     }),
     */
-    list = highed.List(splitter, true, properties),
+    list = highed.List(splitter, true, properties, planCode),
     body = highed.dom.cr('div'),//splitter.right,
     advSplitter = highed.HSplitter(advancedTab.body, {
       leftWidth: 30
@@ -175,7 +175,6 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
       highed.emit('UIAction', 'CustomCodeUpdate');
       customCodeDebug.innerHTML = '';
       if (chartPreview) {
-
         chartPreview.on('UpdateCustomCode', function() {
           chartPreview.setCustomCode(
             codeMirrorBox ? codeMirrorBox.getValue() : customCodeBox.value,
@@ -519,7 +518,6 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
       componentCount++;
 
       entry.values = entry.meta.enumValues;
-
       highed.dom.ap(
         table,
         highed.InspectorField(
@@ -551,7 +549,8 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview) {
             }
           },
           false,
-          entry.id
+          entry.id,
+          planCode
         )
       );
     });

@@ -244,7 +244,8 @@ highed.meta.optionsExtended = {
             dataType: 'boolean',
             context: 'General',
             defaults: 'true',
-            parent: 'credits'
+            parent: 'credits',
+            warning: [1]
           },
           {
             id: 'credits--text',

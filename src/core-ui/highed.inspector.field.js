@@ -63,7 +63,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @param fieldID {anything} - the id of the field
  *  @returns {domnode} - a DOM node containing the field + label wrapped in a tr
  */
-highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
+highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, planCode) {
   var createReset = function(resetTo, callback) {
       var node = highed.dom.cr('div', 'highed-field-reset fa fa-undo');
 
@@ -623,7 +623,9 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
     helpTD = highed.dom.cr('div', 'highed-customizer-table-help'), //td
     widgetTD = highed.dom.cr('div', 'highed-field-table-widget-column'), //td
     titleCol = highed.dom.cr('div'), //td
-    typeIndicator = highed.dom.cr('span', 'highed-customize-type');
+    typeIndicator = highed.dom.cr('span', 'highed-customize-type'),
+    warningContainer = highed.dom.cr('div', 'highed-customize-warning-container'),
+    warning = highed.dom.cr('div', 'highed-customize-warning', 'You need to be on a paid plan for this to work in production');
 
   function tryCallback(cb, val) {
     cb = cb || fn;
@@ -770,12 +772,19 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
   {
     width: (properties.width || 100) + '%'
   });
+  
+  if (properties.warning && properties.warning.length > 0 && 
+      planCode && properties.warning.indexOf(planCode) > -1) {
+      highed.dom.ap(warningContainer, warning);
+  }
+
 
   if (type === 'boolean') {
     titleCol.className = 'highed-customize-field-boolean';
     return highed.dom.ap(
       highed.dom.ap(
         parent, //tr
+        warningContainer,
         highed.dom.ap(widgetTD, 
           highed.dom.ap(fields[type] ? fields[type]() : fields.string(),
           highed.dom.ap(
@@ -796,6 +805,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID) {
     return highed.dom.ap(
       highed.dom.ap(
         parent, //tr
+        warningContainer,
         highed.dom.ap(
           titleCol,
           highed.dom.cr('span', 'highed-customize-field-label', properties.title),

@@ -41,7 +41,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @param parent {domnode} - the node to attach the list to
  *  @param responsive {boolean} - set to true to get JS-based responsive functionality
  */
-highed.List = function(parent, responsive, props) {
+highed.List = function(parent, responsive, props, planCode) {
   var container = highed.dom.cr('div', 'highed-list'),
     compactIndicator = highed.dom.cr('div', 'highed-list-compact', 'compact'),
     ctx = highed.ContextMenu(),
@@ -299,7 +299,8 @@ highed.List = function(parent, responsive, props) {
               custom: group.custom,
               defaults: group.defaults,
               width: group.width || 100,
-              attributes: group.attributes || []
+              attributes: group.attributes || [],
+              warning: group.warning || [] 
             },
             function(newValue) {
               events.emit('PropertyChange', group.id, newValue, detailIndex);
@@ -319,7 +320,8 @@ highed.List = function(parent, responsive, props) {
               }
             },
             false,
-            group.id
+            group.id,
+            planCode
           )
         );
       }

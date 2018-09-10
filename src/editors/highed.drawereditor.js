@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.DrawerEditor = function(parent, options) {
+highed.DrawerEditor = function(parent, options, planCode) {
   var events = highed.events(),
     // Main properties
     properties = highed.merge(
@@ -218,7 +218,8 @@ highed.DrawerEditor = function(parent, options) {
       chartPreview,
       highedChartContainer,
       builtInOptions.customize,
-      chartFrame
+      chartFrame,
+      planCode
     ),
     dataPage = highed.DataPage(  
       splitter.bottom,

@@ -289,8 +289,6 @@ highed.AssignDataPanel = function(parent, attr) {
   function addSerie(seriesType, redrawDOM) {
     if (!seriesType) seriesType = 'line';
 
-
-    console.log("GOING TO CAPITILISE2:", seriesType);
     seriesTypeSelect.addItems([{
       id: options.length,
       title: 'Series ' + (options.length + 1) + ' - ' + capitalizeFirstLetter(seriesType)
@@ -342,7 +340,6 @@ highed.AssignDataPanel = function(parent, attr) {
   }
   
   function capitalizeFirstLetter(string) {
-    console.log("CAPITILIZING:", string);
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
   
@@ -375,7 +372,6 @@ highed.AssignDataPanel = function(parent, attr) {
       else seriesType = 'line';
     }*/
 
-    console.log("GOING TO CAPITILISE1:", seriesType);
     seriesTypeSelect.updateByIndex(seriesIndex || index, {
       title: 'Series ' + ((seriesIndex || index) + 1) + ' - ' + capitalizeFirstLetter(seriesType)
     });
