@@ -106,6 +106,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
     customizer.on('PropertyChange', chartPreview.options.set);
     customizer.on('PropertySetChange', chartPreview.options.setAll);
+    customizer.on('TogglePlugins', chartPreview.options.togglePlugins);
   
     customizer.on('AdvancedBuilt', function() {
 

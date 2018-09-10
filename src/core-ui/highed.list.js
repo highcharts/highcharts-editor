@@ -303,7 +303,12 @@ highed.List = function(parent, responsive, props, planCode) {
               warning: group.warning || [] 
             },
             function(newValue) {
-              events.emit('PropertyChange', group.id, newValue, detailIndex);
+              if (group.plugins && group.plugins.length > 0) {
+                events.emit('TogglePlugins', group.id, newValue, group.plugins);
+              }
+
+              if (!group.noChange) events.emit('PropertyChange', group.id, newValue, detailIndex);
+              
               highed.emit(
                 'UIAction',
                 'SimplePropSet',

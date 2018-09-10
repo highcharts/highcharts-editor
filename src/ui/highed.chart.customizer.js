@@ -469,6 +469,10 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
     events.emit("PropertyChange", groupId, newValue, detailIndex);
   });
 
+  list.on('TogglePlugins', function(groupId, newValue, plugins) {
+    events.emit("TogglePlugins", groupId, newValue, plugins);
+  });
+
   list.on('Select', function(id) {
     var entry = highed.meta.optionsExtended.options[id];
     body.innerHTML = '';

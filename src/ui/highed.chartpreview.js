@@ -67,6 +67,7 @@ highed.ChartPreview = function(parent, attributes) {
     themeCustomCode = '',
     themeMeta = {},
     exports = {},
+    chartPlugins = {},
     customCodeDefault = [
       '/*',
       '// Sample of extending options:',
@@ -1066,6 +1067,7 @@ highed.ChartPreview = function(parent, attributes) {
       settings: {
         constructor: constr,
         template: templateSettings,
+        plugins: getPlugins(),
         dataProvider: {
           csv: (!gsheet && !livedata) ? (loadedCSVRaw || lastLoadedCSV) : false,
           googleSpreadsheet: gsheet,
@@ -1164,6 +1166,32 @@ highed.ChartPreview = function(parent, attributes) {
 
   function setAssignDataFields(fields) {
     assignDataFields = fields;
+  }
+
+
+  /**
+   * Add/Remove a module from the charts config
+   */
+
+  function togglePlugins(groupId, newValue, plugins) {
+    if (newValue) {
+      chartPlugins[groupId] = plugins;
+    } else {
+      delete chartPlugins[groupId];
+    }
+  }
+
+
+  function getPlugins() {
+    var arr = [];
+
+    Object.keys(chartPlugins).filter(function(key) {
+      chartPlugins[key].forEach(function(object) {
+        if (arr.indexOf(object) === -1) arr.push(object);
+      });
+    });
+
+    return arr;
   }
 
   /**
@@ -1806,7 +1834,8 @@ highed.ChartPreview = function(parent, attributes) {
       all: function(){
         return chart;
       },
-      addBlankSeries: addBlankSeries
+      addBlankSeries: addBlankSeries,
+      togglePlugins: togglePlugins
     },
 
     data: {

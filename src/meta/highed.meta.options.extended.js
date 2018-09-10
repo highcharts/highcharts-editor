@@ -656,7 +656,21 @@ highed.meta.optionsExtended = {
             dataType: 'boolean',
             context: 'General',
             defaults: 'true',
-            parent: 'exporting'
+            parent: 'exporting',
+            width: 50
+          },      
+          {
+            id: 'exporting--offlineExporting',
+            pid: 'exporting.offlineExporting',
+            dataType: 'boolean',
+            context: 'General',
+            defaults: 'false',
+            parent: 'exporting',
+            width: 50,
+            plugins: [
+              'modules/offline-exporting.js'
+            ],
+            noChange: true
           },
           {
             id: 'exporting--sourceWidth',
