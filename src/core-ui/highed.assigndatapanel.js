@@ -245,6 +245,7 @@ highed.AssignDataPanel = function(parent, attr) {
   }
 
   function getFieldsToHighlight(cb, overrideCheck) {
+    if (!options[index]) return;
     Object.keys(options[index]).forEach(function(key) {
       var input = options[index][key];
       processField(input, overrideCheck, cb);
@@ -390,7 +391,6 @@ highed.AssignDataPanel = function(parent, attr) {
 
       if (data.settings && data.settings.dataProvider && data.settings.dataProvider.assignDataFields) {
         const dataFields = data.settings.dataProvider.assignDataFields;
-  
         dataFields.forEach(function(option, index) {
           const seriesType = getSeriesType(data, index);
           if(!options[index]) {
@@ -531,11 +531,12 @@ highed.AssignDataPanel = function(parent, attr) {
   function resetDOM() {
     
     inputContainer.innerHTML = '';
-    
-    Object.keys(options[index]).forEach(function(key) {
-      var option = options[index][key];
-      generateInputs(option, key);
-    });  
+    if (options[index]){
+      Object.keys(options[index]).forEach(function(key) {
+        var option = options[index][key];
+        generateInputs(option, key);
+      });  
+    }
   }
 
   function toggleCells() {

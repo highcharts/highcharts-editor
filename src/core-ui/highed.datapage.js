@@ -337,14 +337,25 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     
     if (tempOption.length > 0) {
       if (hasLabels) {
-        const seriesPlotOptions = chartOptions.plotOptions.series;
-        highed.merge(seriesPlotOptions, {
+        const dataLabelOptions = {
           dataLabels: {
               enabled: true,
               format: '{point.label}'
           }
-        });
-        chartPreview.options.setAll(seriesPlotOptions);
+        };
+
+        if(chartOptions.plotOptions) {
+          const seriesPlotOptions = chartOptions.plotOptions.series;
+          highed.merge(seriesPlotOptions, dataLabelOptions);
+          chartPreview.options.setAll(chartOptions);
+        } else {
+          const seriesPlotOptions = highed.merge();
+          chartPreview.options.setAll(highed.merge({
+            plotOptions: {
+              series: dataLabelOptions
+            }
+          }, chartOptions));
+        }
       }
 
       if (chartOptions.data) {
@@ -382,6 +393,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   //////////////////////////////////////////////////////////////////////////////
 
+  assignDataPanel.on('AddSeries', function(index) {
+    chartPreview.options.addBlankSeries(index);
+  })
+  
   chartPreview.on('LoadProjectData', function(csv) {
     dataTable.loadCSV(
       {
@@ -394,10 +409,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   chartPreview.on('ChartChange', function(newData) {
     events.emit('ChartChangedLately', newData);
   });
-
-  assignDataPanel.on('AddSeries', function(index) {
-    chartPreview.options.addBlankSeries(index);
-  })
 
   assignDataPanel.on('DeleteSeries', function(index) {
     chartPreview.data.deleteSeries(index);
@@ -489,7 +500,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     setTimeout(function() {
       if (!rowsLength) rowsLength = dataTable.getColumnLength(); //Remove first column for the categories, and second as its already added
       rowsLength -= 2;
-
       assignDataPanel.addSeries(rowsLength);
     }, 1000);
     

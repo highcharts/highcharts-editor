@@ -274,6 +274,9 @@ highed.installLanguage({
     'option.text.exporting.scale': 'Scaling factor',
     'option.tooltip.exporting.scale':
       'The export scale. Note that this is overridden if width is set.',
+    'option.text.exporting.offlineExporting': 'Offline Exporting',
+    'option.tooltip.exporting.offlineExporting':
+      'The offline-exporting module allows for image export of charts without sending data to an external server',
     'option.text.lang.decimalPoint': 'Decimal point',
     'option.tooltip.lang.decimalPoint':
       'The decimal point used for all numbers',

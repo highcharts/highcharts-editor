@@ -201,9 +201,10 @@ highed.List = function(parent, responsive, props, planCode) {
             );
 
             if (highed.isArr(vals)) {
+              
               if (vals.length === 0) {
                 highed.dom.ap(
-                  body,
+                  parent,
                   highed.dom.cr('i', '', 'No data to display..')
                 );
                 return;
