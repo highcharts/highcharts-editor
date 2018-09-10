@@ -575,7 +575,7 @@ highed.ChartPreview = function(parent, attributes) {
     
     updateAggregated();
     init(aggregatedOptions);
-    loadSeries();
+    //loadSeries();
     emitChange();
   }
 
@@ -702,10 +702,13 @@ highed.ChartPreview = function(parent, attributes) {
       updateAggregated();
 
       init(aggregatedOptions);
-      loadSeries();
+      if(!bypassClearSeries) loadSeries();
       emitChange();
 
-      (customizedOptions.series || []).forEach(function(series, i) {
+      ((highed.isArr(customizedOptions.series)
+      ? customizedOptions.series
+      : [customizedOptions.series]
+      ) || []).forEach(function(series, i) {
         if (i < seriesClones.length) {
           mergedExisting = true;
           highed.merge(series, seriesClones[i]);
@@ -715,7 +718,7 @@ highed.ChartPreview = function(parent, attributes) {
       if (mergedExisting) {
         updateAggregated();
         init(aggregatedOptions);
-        loadSeries();
+        //loadSeries();
         emitChange();
       }
 
@@ -1731,6 +1734,8 @@ highed.ChartPreview = function(parent, attributes) {
   });
 
   function addBlankSeries(index) {
+
+    if (!customizedOptions.series) return;
     
     if (!customizedOptions.series[index]) {
       customizedOptions.series[index] = {

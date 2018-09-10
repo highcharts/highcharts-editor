@@ -77,6 +77,7 @@ highed.templates = {};
 
     if (properties.title.length) {
       if (properties.popular) {
+        properties.parent = type;
         mostPopularTemplates[type] = properties;
       }
 

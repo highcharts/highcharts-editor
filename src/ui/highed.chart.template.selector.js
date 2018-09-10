@@ -214,7 +214,7 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
           });
         } else {
           t.header =  templateTypeSelect.getSelectedItem().title();
-          events.emit('Select', t);
+          events.emit('Select', highed.merge({}, t));
         }
 
         highed.emit('UIAction', 'TemplateChoose', t.title);
@@ -282,7 +282,6 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
   function selectSeriesTemplate(index, projectData) {
     const settings = projectData.settings && projectData.settings.template;
     var templateHeader, templateTitle;
-
     if (settings && !settings[index]) {
       templateHeader = 'Line';
       templateTitle = 'Line chart';
@@ -293,13 +292,14 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
       templateTitle = settings[index].templateTitle;
     } 
     else return ;
-      
+
     templateTypeSelect.selectById(templateHeader);
     
     var templates = highed.templates.getAllInCat(templateHeader);
     selected = {
       id:  templateHeader + templateTitle + templateTitle
     };
+    
     if (templates) {
       showTemplates(templates, templateHeader, highed.templates.getCatInfo(templateHeader));
     }

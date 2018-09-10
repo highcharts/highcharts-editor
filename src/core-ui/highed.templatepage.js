@@ -155,7 +155,8 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
       }
 
       highed.dom.on(option, 'click', function() {
-        events.emit('TemplateChanged', t, true);
+        t.header =  t.parent;
+        events.emit('TemplateChanged', highed.merge({}, t), true);
         toNextPage();
       });
 

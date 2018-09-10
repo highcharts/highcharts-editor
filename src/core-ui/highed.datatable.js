@@ -46,7 +46,6 @@ function parseCSV(inData, delimiter) {
     };
   //The only thing CSV formats have in common..
   rows = (csv || '').replace(/\r\n/g, '\n').split('\n');
-
   // If there's no delimiter, look at the first few rows to guess it.
 
   if (!options.delimiter) {
@@ -173,7 +172,6 @@ function parseCSV(inData, delimiter) {
 
     result.push(cols);
   });
-
   return result;
 }
 
@@ -550,8 +548,7 @@ highed.DataTable = function(parent, attributes) {
     var reader = new FileReader();
 
     reader.onload = function(e) {
-      
-      loadCSV({ csv: e.target.result });
+      loadCSV({ csv: e.target.result }, null, true);
     };
 
     reader.readAsText(f);
@@ -711,7 +708,8 @@ highed.DataTable = function(parent, attributes) {
 
   ////////////////////////////////////////////////////////////////////////////
   function Column(row, colNumber, val, keyVal) {
-    var value = typeof val === 'undefined' || 'null' ? null : val,
+    
+    var value = (typeof val === 'undefined') || (val === 'null') ? null : val,
       col = highed.dom.cr('td', 'highed-dtable-cell'),
       colVal = highed.dom.cr('div', 'highed-dtable-col-val', value),
       input = highed.dom.cr('input'),
@@ -1304,7 +1302,7 @@ highed.DataTable = function(parent, attributes) {
       colNumber = gcolumns.length,
       header = highed.dom.cr('span', 'highed-dtable-top-bar-col'),
       letter = highed.dom.cr('span', 'highed-dtable-top-bar-letter'),
-      headerTitle = highed.dom.cr('div', '', value),
+      headerTitle = highed.dom.cr('div', '', (typeof value === 'undefined' || value === 'null' ? null : value)),
       moveHandle = highed.dom.cr('div', 'highed-dtable-resize-handle'),
       options = highed.dom.cr(
         'div',
@@ -2088,7 +2086,7 @@ highed.DataTable = function(parent, attributes) {
                                   type: type });
   }
 
-  function loadCSV(data, surpressEvents) {
+  function loadCSV(data, surpressEvents, updateAssignData) {
     var rows;
 
     if (isInGSheetMode) {
@@ -2117,6 +2115,8 @@ highed.DataTable = function(parent, attributes) {
 
     if (data && data.csv) {
       rows = parseCSV(data.csv, data.delimiter);
+      
+      if (updateAssignData) events.emit('AssignDataForFileUpload', rows[0].length);
 
       if(rows[0] && rows.length < DEFAULT_ROW) {
         var counter = DEFAULT_ROW - rows.length,
@@ -2345,7 +2345,7 @@ highed.DataTable = function(parent, attributes) {
 
   importer.on('ImportCSV', function(data) {
     highed.emit('UIAction', 'ImportCSV');
-    loadCSV(data);
+    loadCSV(data, null, true);
   });
 
   importer.on('ImportGoogleSpreadsheet', function() {
@@ -2461,7 +2461,7 @@ highed.DataTable = function(parent, attributes) {
       loadCSV({
         csv: rawCSV,
         delimiter: selectedDelimiter
-      });
+      }, null, true);
     });
   });
 
@@ -2989,7 +2989,7 @@ highed.DataTable = function(parent, attributes) {
         success: function(info) {
           highed.snackBar('File uploaded');
           importer.emitCSVImport(info.data);
-          events.emit("AssignDataForFileUpload", info.data);
+          //events.emit("AssignDataForFileUpload", info.data); - Does this later in loadCSV
           toNextPage();
         }
       });
@@ -3029,7 +3029,7 @@ highed.DataTable = function(parent, attributes) {
       }
 
       highed.snackBar('File uploaded');
-      events.emit('AssignDataForFileUpload');
+      //events.emit('AssignDataForFileUpload');
       toNextPage();
     };
 

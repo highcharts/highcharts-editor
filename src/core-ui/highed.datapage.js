@@ -485,10 +485,12 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     );
   });
 
-  dataTable.on('AssignDataForFileUpload', function() {
+  dataTable.on('AssignDataForFileUpload', function(rowsLength) {
     setTimeout(function() {
-      const length = dataTable.getColumnLength() - 2; //Remove first column for the categories, and second as its already added
-      assignDataPanel.addSeries(length);
+      if (!rowsLength) rowsLength = dataTable.getColumnLength(); //Remove first column for the categories, and second as its already added
+      rowsLength -= 2;
+
+      assignDataPanel.addSeries(rowsLength);
     }, 1000);
     
   }); 

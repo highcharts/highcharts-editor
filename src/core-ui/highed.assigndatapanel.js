@@ -79,8 +79,29 @@ highed.AssignDataPanel = function(parent, attr) {
   maxColumnLength = 1,
   showCells = false;
 
-  options.push(highed.merge({}, defaultOptions));
-  
+  var events = highed.events(),
+    container = highed.dom.cr(
+      'div',
+      'highed-transition highed-assigndatapanel highed-box-size'
+    ),
+    bar = highed.dom.cr('div', 'highed-assigndatapanel-bar highed-box-size'),
+    body = highed.dom.cr(
+      'div',
+      'highed-assigndatapanel-body highed-box-size highed-transition'
+    ),
+    headerToggle = highed.dom.cr('span', '', '<i class="fa fa-chevron-down highed-assigndatapanel-toggle" aria-hidden="true"></i>'),
+    header = highed.dom.ap(
+              highed.dom.cr('div', 'highed-assigndatapanel-header-container'), 
+              highed.dom.ap(highed.dom.cr('h3', 'highed-assigndatapanel-header', 'Assign columns for this chart'), headerToggle)),
+    labels = highed.dom.cr('div', 'highed-assigndatapanel-data-options'),
+    selectContainer = highed.dom.cr('div', 'highed-assigndatapanel-select-container'),
+    inputContainer = highed.dom.cr('div', 'highed-assigndatapanel-inputs-container'),
+    addNewSeriesBtn = highed.dom.cr('button', 'highed-assigndatapanel-add-series', '<i class="fa fa-plus"/>'),
+    deleteSeriesBtn = highed.dom.cr('button', 'highed-assigndatapanel-add-series', '<i class="fa fa-trash"/>'),
+    toggleHideCellsBtn = highed.dom.cr('button', 'highed-assigndatapanel-add-series', '<i class="fa fa-eye-slash"/>'),
+    seriesTypeSelect = highed.DropDown(selectContainer, ' highed-assigndatapanel-series-dropdown');
+
+  addSerie();
   Object.keys(defaultOptions).forEach(function(key) {
     defaultOptions[key].colors = null;
   });
@@ -268,6 +289,8 @@ highed.AssignDataPanel = function(parent, attr) {
   function addSerie(seriesType, redrawDOM) {
     if (!seriesType) seriesType = 'line';
 
+
+    console.log("GOING TO CAPITILISE2:", seriesType);
     seriesTypeSelect.addItems([{
       id: options.length,
       title: 'Series ' + (options.length + 1) + ' - ' + capitalizeFirstLetter(seriesType)
@@ -319,6 +342,7 @@ highed.AssignDataPanel = function(parent, attr) {
   }
   
   function capitalizeFirstLetter(string) {
+    console.log("CAPITILIZING:", string);
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
   
@@ -351,6 +375,7 @@ highed.AssignDataPanel = function(parent, attr) {
       else seriesType = 'line';
     }*/
 
+    console.log("GOING TO CAPITILISE1:", seriesType);
     seriesTypeSelect.updateByIndex(seriesIndex || index, {
       title: 'Series ' + ((seriesIndex || index) + 1) + ' - ' + capitalizeFirstLetter(seriesType)
     });
@@ -533,29 +558,6 @@ highed.AssignDataPanel = function(parent, attr) {
   }
 
   ////////////////////////////////////////////////////////////////////////////////
-
-
-  var events = highed.events(),
-    container = highed.dom.cr(
-      'div',
-      'highed-transition highed-assigndatapanel highed-box-size'
-    ),
-    bar = highed.dom.cr('div', 'highed-assigndatapanel-bar highed-box-size'),
-    body = highed.dom.cr(
-      'div',
-      'highed-assigndatapanel-body highed-box-size highed-transition'
-    ),
-    headerToggle = highed.dom.cr('span', '', '<i class="fa fa-chevron-down highed-assigndatapanel-toggle" aria-hidden="true"></i>'),
-    header = highed.dom.ap(
-              highed.dom.cr('div', 'highed-assigndatapanel-header-container'), 
-              highed.dom.ap(highed.dom.cr('h3', 'highed-assigndatapanel-header', 'Assign columns for this chart'), headerToggle)),
-    labels = highed.dom.cr('div', 'highed-assigndatapanel-data-options'),
-    selectContainer = highed.dom.cr('div', 'highed-assigndatapanel-select-container'),
-    inputContainer = highed.dom.cr('div', 'highed-assigndatapanel-inputs-container'),
-    addNewSeriesBtn = highed.dom.cr('button', 'highed-assigndatapanel-add-series', '<i class="fa fa-plus"/>'),
-    deleteSeriesBtn = highed.dom.cr('button', 'highed-assigndatapanel-add-series', '<i class="fa fa-trash"/>'),
-    toggleHideCellsBtn = highed.dom.cr('button', 'highed-assigndatapanel-add-series', '<i class="fa fa-eye-slash"/>'),
-    seriesTypeSelect = highed.DropDown(selectContainer, ' highed-assigndatapanel-series-dropdown');
       
   highed.dom.ap(selectContainer, addNewSeriesBtn, deleteSeriesBtn, toggleHideCellsBtn);
 
