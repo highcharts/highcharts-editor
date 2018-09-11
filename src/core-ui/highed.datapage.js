@@ -269,29 +269,24 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength());
     const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
 
-
-
     setSeriesMapping(assignDataPanel.getAllOptions());
-    setTimeout(function() {
-      chartPreview.data.csv({
-        csv: data
-      });
 
-      var seriesIndex = [];
+    chartPreview.data.csv({
+      csv: data
+    });
 
-      if (loadTemplateForEachSeries) {
-        const length = assignDataPanel.getAllOptions().length;
-        
-        for(var i=0;i<length;i++) {
-          seriesIndex.push(i);
-          assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, i);
-        }
-      } else seriesIndex = [assignDataPanel.getActiveSerie()];
+    var seriesIndex = [];
+
+    if (loadTemplateForEachSeries) {
+      const length = assignDataPanel.getAllOptions().length;
       
-      chartPreview.loadTemplateForSerie(newTemplate, seriesIndex);
-
-    }, 500);
-
+      for(var i=0;i<length;i++) {
+        seriesIndex.push(i);
+        assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, i);
+      }
+    } else seriesIndex = [assignDataPanel.getActiveSerie()];
+    
+    chartPreview.loadTemplateForSerie(newTemplate, seriesIndex);
     redrawGrid(true);
 
     //assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
@@ -432,7 +427,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   assignDataPanel.on('AssignDataChanged', function() {
 
     const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
-    
+
     chartPreview.data.csv({
       csv: data
     }, null, true);
@@ -497,12 +492,9 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
 
   dataTable.on('AssignDataForFileUpload', function(rowsLength) {
-    setTimeout(function() {
-      if (!rowsLength) rowsLength = dataTable.getColumnLength(); //Remove first column for the categories, and second as its already added
-      rowsLength -= 2;
-      assignDataPanel.addSeries(rowsLength);
-    }, 1000);
-    
+    if (!rowsLength) rowsLength = dataTable.getColumnLength(); //Remove first column for the categories, and second as its already added
+    rowsLength -= 2;
+    assignDataPanel.addSeries(rowsLength);
   }); 
 
   dataTable.on('AssignDataChanged', function(input, options) {

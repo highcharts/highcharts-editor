@@ -540,7 +540,7 @@ highed.DataTable = function(parent, attributes) {
 
   // Handle drag 'n drop of files
 
-  function handleFileUpload(f) {
+  function handleFileUpload(f, cb) {
     if (f.type !== 'text/csv') {
       return highed.snackBar('The file is not a valid CSV file');
     }
@@ -548,7 +548,7 @@ highed.DataTable = function(parent, attributes) {
     var reader = new FileReader();
 
     reader.onload = function(e) {
-      loadCSV({ csv: e.target.result }, null, true);
+      loadCSV({ csv: e.target.result }, null, true, cb);
     };
 
     reader.readAsText(f);
@@ -2086,7 +2086,7 @@ highed.DataTable = function(parent, attributes) {
                                   type: type });
   }
 
-  function loadCSV(data, surpressEvents, updateAssignData) {
+  function loadCSV(data, surpressEvents, updateAssignData, cb) {
     var rows;
 
     if (isInGSheetMode) {
@@ -2136,7 +2136,9 @@ highed.DataTable = function(parent, attributes) {
         }
       }
       
-      loadRows(rows, function() {});
+      loadRows(rows, function() {
+        if (cb) cb();
+      });
     } else {
       // surpressChangeEvents = false;
       // if (!surpressEvents) {
@@ -3018,19 +3020,24 @@ highed.DataTable = function(parent, attributes) {
         for (i = 0; i < d.items.length; i++) {
           f = d.items[i];
           if (f.kind === 'file') {
-            handleFileUpload(f.getAsFile());
+            handleFileUpload(f.getAsFile(), function() {
+              highed.snackBar('File uploaded');
+              toNextPage();
+            });
           }
         }
       } else {
         for (i = 0; i < d.files.length; i++) {
           f = d.files[i];
-          handleFileUpload(f);
+          handleFileUpload(f, function() {
+            highed.snackBar('File uploaded');
+            toNextPage();
+          });
         }
       }
 
-      highed.snackBar('File uploaded');
       //events.emit('AssignDataForFileUpload');
-      toNextPage();
+      //toNextPage();
     };
 
     highed.dom.ap(container, 
