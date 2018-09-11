@@ -251,24 +251,6 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
     loadCustomCode();
   }
 
-  function buildBody(entry) {}
-
-  function applyFilter(detailIndex, filteredBy, filter) {
-    var selected = list.selected(),
-      id = selected.id,
-      entry = highed.meta.optionsExtended.options[id];
-
-    if (!selected) return false;
-
-    body.innerHTML = '';
-
-    entry.forEach(function(thing) {
-      //selectGroup(thing, false, false, detailIndex, filteredBy, filter);
-    });
-
-    highlighted = false;
-  }
-
   function shouldInclude(group) {
     var doInclude = false;
 
@@ -299,7 +281,6 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
   }
 
   function buildTree() {
-    
     
     if (properties.noAdvanced) {
       return;

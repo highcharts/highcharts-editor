@@ -839,6 +839,10 @@ highed.ChartPreview = function(parent, attributes) {
         templateSettings = projectData.settings.template;
       }
 
+      if(projectData.settings && projectData.settings.plugins) {
+        chartPlugins = projectData.settings.plugins
+      }
+
       if (
         projectData.settings &&
         highed.isStr(projectData.settings.constructor)
@@ -1015,7 +1019,9 @@ highed.ChartPreview = function(parent, attributes) {
     var loadedCSVRaw = false,
       gsheet = lastLoadedSheet,
       livedata = lastLoadedLiveData,
-      themeData = false;
+      themeData = false,
+      seriesMapping = false;
+
     if (
       (chart &&
       chart.options &&
@@ -1024,6 +1030,11 @@ highed.ChartPreview = function(parent, attributes) {
       dataTableCSV !== null
     ) {
       loadedCSVRaw = dataTableCSV || (chart.options.data ? chart.options.data.csv : '');
+
+      if (chart.options.data.seriesMapping) {
+        seriesMapping = chart.options.data.seriesMapping;
+      }
+
     }
 
     if (
@@ -1068,12 +1079,13 @@ highed.ChartPreview = function(parent, attributes) {
       settings: {
         constructor: constr,
         template: templateSettings,
-        plugins: getPlugins(),
+        plugins: chartPlugins,//getPlugins(),
         dataProvider: {
           csv: (!gsheet && !livedata) ? (loadedCSVRaw || lastLoadedCSV) : false,
           googleSpreadsheet: gsheet,
           liveData: livedata,
-          assignDataFields: assignDataFields
+          assignDataFields: assignDataFields,
+          seriesMapping: seriesMapping
         }
       }
       //editorOptions: highed.serializeEditorOptions()
