@@ -378,11 +378,13 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true);
       assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
       chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
-
     }, 1000);
-    dataTable.loadCSV({
-      csv: projectData.settings.dataProvider.csv
-    });
+
+    if (projectData.settings && projectData.settings.dataProvider) {
+      dataTable.loadCSV({
+        csv: projectData.settings.dataProvider.csv
+      });
+    }
     chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
   }
 

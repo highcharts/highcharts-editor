@@ -1031,7 +1031,7 @@ highed.ChartPreview = function(parent, attributes) {
     ) {
       loadedCSVRaw = dataTableCSV || (chart.options.data ? chart.options.data.csv : '');
 
-      if (chart.options.data.seriesMapping) {
+      if (chart.options.data && chart.options.data.seriesMapping) {
         seriesMapping = chart.options.data.seriesMapping;
       }
 
