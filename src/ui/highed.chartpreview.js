@@ -453,8 +453,8 @@ highed.ChartPreview = function(parent, attributes) {
       });
     }
 
-    if (aggregatedOptions.xAxis && templateOptions.xAxis) {
-      aggregatedOptions.xAxis.forEach(function(obj, i) {
+    if (aggregatedOptions.xAxis && templateOptions.xAxis && highed.isArr(aggregatedOptions.xAxis)) {
+      (aggregatedOptions.xAxis).forEach(function(obj, i) {
         if (i < templateOptions.xAxis.length) {
           highed.merge(obj, templateOptions.xAxis[i]);
         }
@@ -466,11 +466,13 @@ highed.ChartPreview = function(parent, attributes) {
         ? themeOptions.xAxis
         : [themeOptions.xAxis];
 
-      aggregatedOptions.xAxis.forEach(function(obj, i) {
-        if (i < themeOptions.xAxis.length) {
-          highed.merge(obj, themeOptions.xAxis[i]);
-        }
-      });
+      if (highed.isArr(aggregatedOptions.xAxis)) {
+        (aggregatedOptions.xAxis).forEach(function(obj, i) {
+          if (i < themeOptions.xAxis.length) {
+            highed.merge(obj, themeOptions.xAxis[i]);
+          }
+        });
+      }
     }
 
     if (themeOptions && themeOptions.yAxis) {
@@ -478,11 +480,13 @@ highed.ChartPreview = function(parent, attributes) {
         ? themeOptions.yAxis
         : [themeOptions.yAxis];
 
-      aggregatedOptions.yAxis.forEach(function(obj, i) {
-        if (i < themeOptions.yAxis.length) {
-          highed.merge(obj, themeOptions.yAxis[i]);
-        }
-      });
+      if (highed.isArr(aggregatedOptions.yAxis)) {
+        aggregatedOptions.yAxis.forEach(function(obj, i) {
+          if (i < themeOptions.yAxis.length) {
+            highed.merge(obj, themeOptions.yAxis[i]);
+          }
+        });
+      }
     }
 
     //Temporary hack
@@ -652,7 +656,6 @@ highed.ChartPreview = function(parent, attributes) {
     lastLoadedCSV = data.csv;
     lastLoadedSheet = false;
     lastLoadedLiveData = false;
-
     gc(function(chart) {
       var axis;
 
@@ -706,12 +709,11 @@ highed.ChartPreview = function(parent, attributes) {
       loadSeries();
       emitChange();
 
-      if (highed.isArr(customizedOptions.series)) {
-        (customizedOptions.series || []).forEach(function(series, i) {
-          if (i < seriesClones.length) {
-            mergedExisting = true;
-            highed.merge(series, seriesClones[i]);
-          }
+      if (highed.isArr(seriesClones)) {
+        (seriesClones || []).forEach(function(series, i) {
+          mergedExisting = true;
+          if (!customizedOptions.series[i]) addBlankSeries(i);
+          highed.merge(customizedOptions.series[i], series);
         });
       }
 
@@ -721,8 +723,6 @@ highed.ChartPreview = function(parent, attributes) {
         loadSeries();
         emitChange();
       }
-
-
 
       if (emitLoadSignal) {
         events.emit('LoadProjectData', data.csv);
