@@ -77,7 +77,8 @@ highed.AssignDataPanel = function(parent, attr) {
   columnLength = 0,
   index = 0,
   maxColumnLength = 1,
-  showCells = false;
+  showCells = false,
+  disabled = false;
 
   var events = highed.events(),
     container = highed.dom.cr(
@@ -99,8 +100,12 @@ highed.AssignDataPanel = function(parent, attr) {
     addNewSeriesBtn = highed.dom.cr('button', 'highed-assigndatapanel-add-series', '<i class="fa fa-plus"/>'),
     deleteSeriesBtn = highed.dom.cr('button', 'highed-assigndatapanel-add-series', '<i class="fa fa-trash"/>'),
     toggleHideCellsBtn = highed.dom.cr('button', 'highed-assigndatapanel-add-series', '<i class="fa fa-eye-slash"/>'),
-    seriesTypeSelect = highed.DropDown(selectContainer, ' highed-assigndatapanel-series-dropdown');
+    seriesTypeSelect = highed.DropDown(selectContainer, ' highed-assigndatapanel-series-dropdown'),
+    hidden = highed.dom.cr('div', 'highed-assigndatapanel-hide');
 
+    highed.dom.style(hidden, {
+      display: 'none'
+    });
   addSerie();
   Object.keys(defaultOptions).forEach(function(key) {
     defaultOptions[key].colors = null;
@@ -112,7 +117,9 @@ highed.AssignDataPanel = function(parent, attr) {
     highed.dom.ap(body, labels);
     resetDOM();
     highed.dom.ap(parent, highed.dom.ap(container, bar, body));
-    events.emit('AssignDataChanged', options[index]);
+    if (!disabled) {
+      events.emit('AssignDataChanged', options[index]);
+    }
   }
   
   function resetValues() {
@@ -250,7 +257,7 @@ highed.AssignDataPanel = function(parent, attr) {
       var input = options[index][key];
       processField(input, overrideCheck, cb);
     });
-    events.emit("ChangeData", options);
+    if (!disabled) events.emit("ChangeData", options);
   }
 
   function generateColors() {
@@ -323,6 +330,21 @@ highed.AssignDataPanel = function(parent, attr) {
     });
   }
 
+
+  function disable() {
+    highed.dom.style(hidden, {
+      display: 'block'
+    });
+    disabled = true;
+  }
+
+  function enable() {
+    highed.dom.style(hidden, {
+      display: 'none'
+    });
+    disabled = false;
+  }
+
   function show() {
     highed.dom.style(container, {
       display: 'block'
@@ -362,7 +384,7 @@ highed.AssignDataPanel = function(parent, attr) {
 
   function setAssignDataFields(data, maxColumns, init, seriesIndex) {
 
-    if (!data) return;
+    if (!data || disabled) return;
     columnLength = maxColumns;
     var seriesType = getSeriesType(data, 0);
 /*
@@ -423,7 +445,7 @@ highed.AssignDataPanel = function(parent, attr) {
     }
 
     resetDOM();
-    events.emit('ChangeData', options);
+    if (!disabled) events.emit('ChangeData', options);
   }
 
   function checkValues(newValue, prevValue) {
@@ -501,7 +523,7 @@ highed.AssignDataPanel = function(parent, attr) {
       }
 
       if (showCells) events.emit('ToggleHideCells', options[index], showCells);
-      events.emit('AssignDataChanged', options[index]);
+      if (!disabled) events.emit('AssignDataChanged', options[index]);
       //liveDataTypeSelect.selectById(detailValue || 'json');
     });
     
@@ -554,6 +576,10 @@ highed.AssignDataPanel = function(parent, attr) {
     if (showCells) events.emit('ToggleHideCells', options[index], showCells);
   }
 
+  function getStatus() {
+    return disabled;
+  }
+
   ////////////////////////////////////////////////////////////////////////////////
       
   highed.dom.ap(selectContainer, addNewSeriesBtn, deleteSeriesBtn, toggleHideCellsBtn);
@@ -601,8 +627,10 @@ highed.AssignDataPanel = function(parent, attr) {
       index = selected.id();
       resetDOM();      
       if (showCells) events.emit('ToggleHideCells', options[index], showCells);
-      events.emit('RedrawGrid', true);
-      events.emit('SeriesChanged', index);
+      if (!disabled) {
+        events.emit('RedrawGrid', true);
+        events.emit('SeriesChanged', index);
+      }
     }
   });
   
@@ -629,6 +657,8 @@ highed.AssignDataPanel = function(parent, attr) {
   highed.dom.ap(body, header);
   highed.dom.ap(labels, selectContainer, inputContainer);
 
+  highed.dom.ap(body, hidden);
+
   return {
     on: events.on,
     hide: hide,
@@ -645,6 +675,9 @@ highed.AssignDataPanel = function(parent, attr) {
     getActiveSerie: getActiveSerie,
     addSeries: addSeries,
     checkToggleCells: checkToggleCells,
-    init: init
+    init: init,
+    enable: enable,
+    disable: disable,
+    getStatus: getStatus
   };
 };

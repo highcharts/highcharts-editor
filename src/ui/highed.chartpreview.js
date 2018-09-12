@@ -1021,7 +1021,6 @@ highed.ChartPreview = function(parent, attributes) {
       livedata = lastLoadedLiveData,
       themeData = false,
       seriesMapping = false;
-
     if (
       (chart &&
       chart.options &&
@@ -1034,7 +1033,6 @@ highed.ChartPreview = function(parent, attributes) {
       if (chart.options.data && chart.options.data.seriesMapping) {
         seriesMapping = chart.options.data.seriesMapping;
       }
-
     }
 
     if (
@@ -1048,6 +1046,7 @@ highed.ChartPreview = function(parent, attributes) {
         googleSpreadsheetWorksheet:
           chart.options.data.googleSpreadsheetWorksheet
       };
+      assignDataFields = false;
     }
 
     if (chart &&
@@ -1060,6 +1059,7 @@ highed.ChartPreview = function(parent, attributes) {
           interval: chart.options.data.interval,
           type: chart.options.data.type
         };
+        assignDataFields = false;
     }
 
     if (themeMeta && themeMeta.id && themeOptions) {
@@ -1070,7 +1070,7 @@ highed.ChartPreview = function(parent, attributes) {
         customCode: themeCustomCode || ''
       };
     }
-
+    
     return {
       template: templateOptions,
       options: getCleanOptions(customizedOptions),
@@ -1106,11 +1106,13 @@ highed.ChartPreview = function(parent, attributes) {
         ? customizedOptions.series
         : [customizedOptions.series];
 
+      customizedOptions.series = [];
+      /*
       customizedOptions.series.forEach(function(series) {
         if (series.data) {
           delete series.data;
         }
-      });
+      });*/
     }
 
     if (!skipReinit) {
@@ -1378,7 +1380,6 @@ highed.ChartPreview = function(parent, attributes) {
    */
   function getEmbeddableJSON(noCustomCode) {
     var r;
-
     updateAggregated(noCustomCode);
     r = getCleanOptions(highed.merge({}, aggregatedOptions));
 

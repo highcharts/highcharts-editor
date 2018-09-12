@@ -519,7 +519,7 @@ highed.DataTable = function(parent, attributes) {
   }, false);
 
   document.addEventListener('contextmenu', function(e) {
-    if (e.target.className && e.target.className.indexOf('highed-dtable') > -1) {
+    if (e.path.indexOf(container) > -1) {
       globalContextMenu.show(e.clientX, e.clientY, true);
       return highed.dom.nodefault(e);
     }
@@ -2184,7 +2184,6 @@ highed.DataTable = function(parent, attributes) {
       display: 'none'
     });
 
-
     if (!skipLoad) {
       events.emit('LoadGSheet', {
         googleSpreadsheetKey: gsheetID.value,
@@ -2336,27 +2335,32 @@ highed.DataTable = function(parent, attributes) {
   importer.on('ExportComma', function(data) {
     highed.emit('UIAction', 'ExportComma');
     highed.download('data.csv', toCSV(','), 'application/csv');
+    events.emit('EnableAssignDataPanel');
     importModal.hide();
   });
 
   importer.on('ExportSemiColon', function(data) {
     highed.emit('UIAction', 'ExportSemiColon');
     highed.download('data.csv', toCSV(';'), 'application/csv');
+    events.emit('EnableAssignDataPanel');
     importModal.hide();
   });
 
   importer.on('ImportCSV', function(data) {
     highed.emit('UIAction', 'ImportCSV');
+    events.emit('EnableAssignDataPanel');
     loadCSV(data, null, true);
   });
 
   importer.on('ImportGoogleSpreadsheet', function() {
     highed.emit('UIAction', 'BtnGoogleSheet');
+    events.emit('DisableAssignDataPanel');
     showGSheet();
   });
 
   importer.on('ImportLiveData', function(data) {
     isInLiveDataMode = true;
+    events.emit('DisableAssignDataPanel');
     showLiveData();
     //loadLiveDataFromURL(data.url);
   });
@@ -2370,11 +2374,13 @@ highed.DataTable = function(parent, attributes) {
   highed.dom.on(gsheetCancelButton, 'click', function() {
     hideGSheet();
     events.emit('CancelDataInput');
+    events.emit('EnableAssignDataPanel');
   });
 
   highed.dom.on(liveDataCancelButton, 'click', function() {
     hideLiveData();
     events.emit('CancelDataInput');
+    events.emit('EnableAssignDataPanel');
   });
 
   highed.dom.on(liveDataLoadButton, 'click', function() {

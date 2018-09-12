@@ -307,7 +307,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   function setSeriesMapping(allOptions) {
 
     var tempOption = [],
-        chartOptions = chartPreview.toProject().options,
+        chartOptions = chartPreview.options.getCustomized(),
         dataTableFields = dataTable.getDataFieldsUsed(),
         hasLabels = false;
     
@@ -374,18 +374,26 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   }
 
   function loadProject(projectData) {
-    setTimeout(function () {
-      assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true);
-      assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
-      chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
-    }, 1000);
 
-    if (projectData.settings && projectData.settings.dataProvider) {
+
+    if (projectData.settings && projectData.settings.dataProvider && projectData.settings.dataProvider.csv) {
+      
+      assignDataPanel.enable();
+      setTimeout(function () {
+        assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true);
+        assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+        chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
+      }, 1000);
+
       dataTable.loadCSV({
         csv: projectData.settings.dataProvider.csv
       });
+
+      chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
+    } else {
+
+
     }
-    chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -430,10 +438,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
 
-    chartPreview.data.csv({
-      csv: data
-    }, null, true);
-
     setSeriesMapping(assignDataPanel.getAllOptions());
     chartPreview.data.csv({
       csv: data
@@ -469,6 +473,15 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       chartPreview.options.set('title-text', sample.title);
     }
   });*/
+
+  dataTable.on('DisableAssignDataPanel', function() {
+    assignDataPanel.disable();
+  });
+
+  dataTable.on('EnableAssignDataPanel', function() {
+    assignDataPanel.enable();
+  });
+
   dataTable.on('ColumnMoving', function() {
     //assignDataPanel.resetValues();
     assignDataPanel.getFieldsToHighlight(dataTable.removeAllCellsHighlight, true);
@@ -500,7 +513,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   }); 
 
   dataTable.on('AssignDataChanged', function(input, options) {
-
     chartOptions = chartPreview.toProject().options;
     if (chartOptions.data && chartOptions.data.seriesMapping) { 
       // Causes an issue when a user has added a assigndata input with seriesmapping, so just clear and it will add it in again later
@@ -533,10 +545,12 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 */
 
   dataTable.on('LoadGSheet', function(settings) {
+    assignDataPanel.disable();
     chartPreview.data.gsheet(settings);
   });
   
   dataTable.on('Change', function(headers, data) {
+
     chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true));
 
     chartPreview.data.csv({
@@ -551,6 +565,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
 
   chartPreview.on('ProviderGSheet', function(p) {
+    assignDataPanel.disable();
     dataTable.initGSheet(
       p.id || p.googleSpreadsheetKey,
       p.worksheet || p.googleSpreadsheetWorksheet,
@@ -564,6 +579,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
 
   chartPreview.on('ProviderLiveData', function(p) {
+    assignDataPanel.disable();
     dataTable.loadLiveDataPanel(p);
   });
 
