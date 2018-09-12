@@ -375,24 +375,17 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   function loadProject(projectData) {
 
-
     if (projectData.settings && projectData.settings.dataProvider && projectData.settings.dataProvider.csv) {
-      
-      assignDataPanel.enable();
-      setTimeout(function () {
+      dataTable.loadCSV({
+        csv: projectData.settings.dataProvider.csv
+      }, null, null, function() {
+        assignDataPanel.enable();
         assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true);
         assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
         chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
-      }, 1000);
-
-      dataTable.loadCSV({
-        csv: projectData.settings.dataProvider.csv
       });
 
       chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
-    } else {
-
-
     }
   }
 
@@ -445,6 +438,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells);
     chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
+
     //dataTable.highlightSelectedFields(input);
   });
 

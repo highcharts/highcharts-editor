@@ -774,7 +774,7 @@ highed.ChartPreview = function(parent, attributes) {
         highed.snackBar('Invalid project');
       }
     }
-
+    
     if (projectData) {
       templateOptions = {};
       if (projectData.template) {
@@ -1106,13 +1106,12 @@ highed.ChartPreview = function(parent, attributes) {
         ? customizedOptions.series
         : [customizedOptions.series];
 
-      customizedOptions.series = [];
-      /*
+      
       customizedOptions.series.forEach(function(series) {
         if (series.data) {
           delete series.data;
         }
-      });*/
+      });
     }
 
     if (!skipReinit) {
@@ -1776,7 +1775,6 @@ highed.ChartPreview = function(parent, attributes) {
   });
 
   function addBlankSeries(index) {
-    
     if (!customizedOptions.series[index]) {
       customizedOptions.series[index] = {
         type: 'line',
