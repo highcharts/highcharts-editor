@@ -517,7 +517,7 @@ highed.ChartPreview = function(parent, attributes) {
     constr = template.constructor || 'Chart';
 
     highed.clearObj(templateOptions);
-
+    
     if (customizedOptions.xAxis) {
       delete customizedOptions.xAxis;
     }
@@ -530,6 +530,11 @@ highed.ChartPreview = function(parent, attributes) {
 
     gc(function(chart) {
       templateOptions = highed.merge({}, template.config || {});
+
+      highed.merge(
+        customizedOptions,
+        highed.merge(templateOptions)
+      );
 
       updateAggregated();
       init(aggregatedOptions);
