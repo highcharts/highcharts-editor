@@ -58,7 +58,7 @@ highed.ChartPreview = function(parent, attributes) {
       attributes
     ),
     events = highed.events(),
-    customizedOptions = highed.merge({}, properties.defaultChartOptions),
+    customizedOptions = {},
     aggregatedOptions = {},
     flatOptions = {},
     templateOptions = {},
@@ -297,12 +297,11 @@ highed.ChartPreview = function(parent, attributes) {
   }
 
   /**
-   * Clear all themes from the chart. 
+   * Clear all themes from the chart.
    * Used by cloud to reset theme
    */
   function clearTheme(theme, skipEmit) {
-    
-    themeOptions = false
+    themeOptions = false;
 
     if (!skipEmit) {
       updateAggregated();
@@ -403,6 +402,8 @@ highed.ChartPreview = function(parent, attributes) {
 
     highed.clearObj(aggregatedOptions);
 
+    highed.merge(aggregatedOptions, properties.defaultChartOptions);
+
     // Apply theme first
     if (themeOptions && Object.keys(themeOptions).length) {
       highed.merge(
@@ -413,7 +414,7 @@ highed.ChartPreview = function(parent, attributes) {
 
     highed.merge(
       aggregatedOptions,
-      highed.merge(highed.merge({}, customizedOptions), templateOptions)
+      highed.merge(highed.merge({}, templateOptions), customizedOptions)
     );
 
     //This needs to be cleaned up
@@ -517,7 +518,7 @@ highed.ChartPreview = function(parent, attributes) {
     constr = template.constructor || 'Chart';
 
     highed.clearObj(templateOptions);
-    
+
     if (customizedOptions.xAxis) {
       delete customizedOptions.xAxis;
     }
@@ -782,7 +783,9 @@ highed.ChartPreview = function(parent, attributes) {
             sheet.endColumn =
               provider.endColumn || customizedOptions.data.endColumn;
             if (provider.dataRefreshRate && provider.dataRefreshRate > 0) {
-              sheet.dataRefreshRate = provider.dataRefreshRate || customizedOptions.data.dataRefreshRate;
+              sheet.dataRefreshRate =
+                provider.dataRefreshRate ||
+                customizedOptions.data.dataRefreshRate;
               sheet.enablePolling = true;
             }
           }
@@ -795,8 +798,7 @@ highed.ChartPreview = function(parent, attributes) {
           loadGSpreadsheet(sheet);
 
           hasData = true;
-        } else if (projectData.settings.dataProvider.liveData){
-
+        } else if (projectData.settings.dataProvider.liveData) {
           var provider = projectData.settings.dataProvider;
           var live = provider.liveData;
 
@@ -839,8 +841,7 @@ highed.ChartPreview = function(parent, attributes) {
     }
   }
 
-  function loadLiveData(settings){
-
+  function loadLiveData(settings) {
     lastLoadedLiveData = settings;
 
     lastLoadedCSV = false;
@@ -856,7 +857,6 @@ highed.ChartPreview = function(parent, attributes) {
 
     loadSeries();
     emitChange();
-
   }
 
   function loadGSpreadsheet(options) {
@@ -953,16 +953,17 @@ highed.ChartPreview = function(parent, attributes) {
       };
     }
 
-    if (chart &&
-        chart.options &&
-        chart.options.data &&
-        chart.options.data.url
-      ) {
-        livedata = {
-          url: chart.options.data.url,
-          interval: chart.options.data.interval,
-          type: chart.options.data.type
-        };
+    if (
+      chart &&
+      chart.options &&
+      chart.options.data &&
+      chart.options.data.url
+    ) {
+      livedata = {
+        url: chart.options.data.url,
+        interval: chart.options.data.interval,
+        type: chart.options.data.type
+      };
     }
 
     if (themeMeta && themeMeta.id && themeOptions) {
@@ -981,7 +982,7 @@ highed.ChartPreview = function(parent, attributes) {
       settings: {
         constructor: constr,
         dataProvider: {
-          csv: (!gsheet && !livedata) ? (loadedCSVRaw || lastLoadedCSV) : false,
+          csv: !gsheet && !livedata ? loadedCSVRaw || lastLoadedCSV : false,
           googleSpreadsheet: gsheet,
           liveData: livedata
         }
@@ -1529,7 +1530,7 @@ highed.ChartPreview = function(parent, attributes) {
 
     customCode = false;
 
-    highed.merge(customizedOptions, properties.defaultChartOptions);
+    // highed.merge(customizedOptions, properties.defaultChartOptions);
 
     updateAggregated();
 
@@ -1603,7 +1604,7 @@ highed.ChartPreview = function(parent, attributes) {
           'if (options.zAxis && options.zAxis.length === 1) options.zAxis = options.zAxis[0];',
           'if (!options.series || options.series.length === 0) return;',
           'var encodedUrl = "";'
-        ].join('') + newCode 
+        ].join('') + newCode
       );
       customCodeStr = newCode;
     } catch (e) {
