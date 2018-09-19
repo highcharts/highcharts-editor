@@ -51,7 +51,17 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
     templates = highed.dom.cr('div', 'highed-chart-template-type-container'),
     catNode = highed.dom.cr('div', 'highed-chart-template-cat-desc'),
     selected = false,
-    templateTypeSelect = highed.DropDown(container),
+    templateTypeSelect = highed.DropDown(container, null, {
+      area: highed.resources.icons.area,
+      line: highed.resources.icons.line,
+      bar: highed.resources.icons.bar,
+      column: highed.resources.icons.column,
+      more: highed.resources.icons.more,
+      pie: highed.resources.icons.pie,
+      polar: highed.resources.icons.polar,
+      stock: highed.resources.icons.stock,
+      'scatter and bubble': highed.resources.icons['scatter and bubble']
+    }),
     detailValue;
 
   

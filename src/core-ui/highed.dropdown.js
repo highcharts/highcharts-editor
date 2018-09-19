@@ -44,7 +44,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      *
      *  @param parent {domnode} - the node to attach the dropdown to
      */
-  highed.DropDown = function(parent, extraClasses) {
+  highed.DropDown = function(parent, extraClasses, icons) {
     var events = highed.events(),
       container = highed.dom.cr('div', 'highed-dropdown ' + extraClasses),
       body = highed.dom.cr('div', 'highed-dropdown-body'),
@@ -65,12 +65,27 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         //IE fix
         item.node.innerHTML = ''; //item.title();
         
-        const icon = highed.dom.cr('span', 'highed-icon-container', (item.icon() ? '<i class="fa fa-' + item.icon() + '" />' : ''));
-        highed.dom.style(icon, {
-          "margin-right": "5px",
-          "color": "rgb(66, 200, 192)"
-        });
-        highed.dom.ap(item.node, icon, highed.dom.cr('span', '', item.title() || ''));
+        const icon = highed.dom.cr('span', 'highed-icon-container');
+        if (icons) {
+            highed.dom.ap(icon, highed.dom.style(highed.dom.cr('span'), {
+              'margin-left': '2px',
+              width: '15px',
+              height: '15px',
+              float: 'left',
+              display: 'inline-block',
+              "margin-right": "5px",
+              "color": "rgb(66, 200, 192)",
+              'background-position': 'left middle',
+              'background-size': 'auto 100%',
+              'background-repeat': 'no-repeat',
+              'background-image':
+                'url("data:image/svg+xml;utf8,' +
+                encodeURIComponent(icons[item.id().toLowerCase()]) +
+                '")'
+            }));
+        }
+
+        highed.dom.ap(item.node, icon, highed.dom.style(highed.dom.cr('span', '', item.title() || ''), { 'position': 'relative', 'top': '3px'}));
       });
     }
 
@@ -83,7 +98,26 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
       //Should update the container
       if (selectedItem) {
-        body.innerHTML = selectedItem.title();
+        body.innerHTML = '';
+        if (icons) {      
+          highed.dom.ap(body, highed.dom.style(highed.dom.cr('span'), {
+            'margin-left': '2px',
+            width: '15px',
+            height: '15px',
+            float: 'left',
+            display: 'inline-block',
+            "margin-right": "5px",
+            "color": "rgb(66, 200, 192)",
+            'background-position': 'left middle',
+            'background-size': 'auto 100%',
+            'background-repeat': 'no-repeat',
+            'background-image':
+              'url("data:image/svg+xml;utf8,' +
+              encodeURIComponent(icons[selectedItem.id().toLowerCase()]) +
+            '")'
+          }));
+        }
+        body.innerHTML += selectedItem.title();
       }
 
       highed.dom.style(dropdownItems, {
