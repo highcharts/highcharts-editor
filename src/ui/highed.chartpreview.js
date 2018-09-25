@@ -221,6 +221,7 @@ highed.ChartPreview = function(parent, attributes) {
 
 
     // Parses for null values
+    /*
     if (options.data && options.data.csv) {
       options.data.parsed = function(columns) {
         var newColumns = [];
@@ -233,7 +234,7 @@ highed.ChartPreview = function(parent, attributes) {
         this.columns = newColumns;
       }
     }
-
+*/
     try {
       chart = new Highcharts[constr](pnode || parent, options);
       //This is super ugly.
@@ -638,7 +639,7 @@ highed.ChartPreview = function(parent, attributes) {
    *  @name data.csv
    *  @param data {object} - the data to load
    */
-  function loadCSVData(data, emitLoadSignal, bypassClearSeries) {
+  function loadCSVData(data, emitLoadSignal, bypassClearSeries, cb) {
     var mergedExisting = false,
       seriesClones = [];
     if (!data || !data.csv) {
@@ -712,7 +713,9 @@ highed.ChartPreview = function(parent, attributes) {
       if (highed.isArr(seriesClones)) {
         (seriesClones || []).forEach(function(series, i) {
           mergedExisting = true;
-          if (!customizedOptions.series[i]) addBlankSeries(i);
+          if (!customizedOptions.series[i]) {
+            addBlankSeries(i);
+          }
           highed.merge(customizedOptions.series[i], series);
         });
       }
@@ -727,6 +730,9 @@ highed.ChartPreview = function(parent, attributes) {
       if (emitLoadSignal) {
         events.emit('LoadProjectData', data.csv);
       }
+
+      if (cb) cb();
+      
     });
 
     // setTimeout(function () {
@@ -1777,7 +1783,6 @@ highed.ChartPreview = function(parent, attributes) {
   function addBlankSeries(index) {
     if (!customizedOptions.series[index]) {
       customizedOptions.series[index] = {
-        type: 'line',
         data:[],
         turboThreshold: 0,
         _colorIndex: index,

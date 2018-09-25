@@ -304,6 +304,16 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     return chartTitleInput.value;
   }
 
+  function clearSeriesMapping() {
+
+    var chartOptions = chartPreview.options.getCustomized();
+    if (chartOptions.data && chartOptions.data.seriesMapping) {
+      // Causes an issue when a user has added a assigndata input with seriesmapping, so just clear and it will add it in again later
+      chartOptions.data.seriesMapping = null;
+      chartPreview.options.setAll(chartOptions);  
+    }
+
+  }
   function setSeriesMapping(allOptions) {
 
     var tempOption = [],
@@ -344,7 +354,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
           highed.merge(seriesPlotOptions, dataLabelOptions);
           chartPreview.options.setAll(chartOptions);
         } else {
-          const seriesPlotOptions = highed.merge();
           chartPreview.options.setAll(highed.merge({
             plotOptions: {
               series: dataLabelOptions
@@ -379,10 +388,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       dataTable.loadCSV({
         csv: projectData.settings.dataProvider.csv
       }, null, null, function() {
-        assignDataPanel.enable();
-        assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true);
-        assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
-        chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
+          assignDataPanel.enable();
+          assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true);
+          assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+          chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
       });
 
       chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
@@ -429,12 +438,14 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   assignDataPanel.on('AssignDataChanged', function() {
 
+    clearSeriesMapping();
     const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
 
-    setSeriesMapping(assignDataPanel.getAllOptions());
     chartPreview.data.csv({
       csv: data
-    }, null, true);
+    }, null, false, function() {
+      setSeriesMapping(assignDataPanel.getAllOptions());
+    });
 
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells);
     chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
@@ -448,7 +459,13 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   assignDataPanel.on('ChangeData', function(allOptions) {
     //Series map all of the "linkedTo" options
-    setSeriesMapping(allOptions);
+    const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
+
+    chartPreview.data.csv({
+      csv: data
+    }, null, false, function() {
+      setSeriesMapping(allOptions);
+    });
   });
 /*
   templates.on('Select', function(template) {
@@ -549,9 +566,9 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     chartPreview.data.csv({
       csv: dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData())
-    }, null, true);
-
-    setSeriesMapping(assignDataPanel.getAllOptions()); // Not the most efficient way to do this but errors if a user just assigns a column with no data in.
+    }, null, true, function() {
+      setSeriesMapping(assignDataPanel.getAllOptions()); // Not the most efficient way to do this but errors if a user just assigns a column with no data in.
+    });
   });
 
   dataTable.on('ClearData', function() {

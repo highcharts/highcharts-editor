@@ -1919,7 +1919,7 @@ highed.DataTable = function(parent, attributes) {
           dataFieldsUsed.push(index);
           if (!v) {
             hasData = true;
-            v = 'null';
+            v = undefined;
           }
         }
 
