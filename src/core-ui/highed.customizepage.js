@@ -121,6 +121,10 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       searchAdvancedOptions.resize(width, (size.h - highed.dom.size(chartFrame).h) - 15);
       
     });
+
+    customizer.on('AnnotationsClicked', function() {
+      chartPreview.options.togglePlugins('annotations', 1);
+    });
   
     customizer.on('AdvanceClicked', function() {
   

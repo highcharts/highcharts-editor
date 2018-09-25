@@ -339,6 +339,14 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
     });
 
     list.addItem({
+      id: "Annotations",
+      title: "Annotations (Experimental)",
+      onClick: function() {
+        events.emit("AnnotationsClicked");
+      }
+    });
+
+    list.addItem({
       id: "Advanced",
       title: "Advanced",
       onClick: function() {
@@ -450,8 +458,8 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
     events.emit("PropertyChange", groupId, newValue, detailIndex);
   });
 
-  list.on('TogglePlugins', function(groupId, newValue, plugins) {
-    events.emit("TogglePlugins", groupId, newValue, plugins);
+  list.on('TogglePlugins', function(groupId, newValue) {
+    events.emit("TogglePlugins", groupId, newValue);
   });
 
   list.on('Select', function(id) {

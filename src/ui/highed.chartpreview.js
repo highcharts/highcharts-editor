@@ -1187,9 +1187,9 @@ highed.ChartPreview = function(parent, attributes) {
    * Add/Remove a module from the charts config
    */
 
-  function togglePlugins(groupId, newValue, plugins) {
+  function togglePlugins(groupId, newValue) {
     if (newValue) {
-      chartPlugins[groupId] = plugins;
+      chartPlugins[groupId] = 1;
     } else {
       delete chartPlugins[groupId];
     }

@@ -305,7 +305,7 @@ highed.List = function(parent, responsive, props, planCode) {
             },
             function(newValue) {
               if (group.plugins && group.plugins.length > 0) {
-                events.emit('TogglePlugins', group.id, newValue, group.plugins);
+                events.emit('TogglePlugins', group.id, newValue);
               }
 
               if (!group.noChange) events.emit('PropertyChange', group.id, newValue, detailIndex);

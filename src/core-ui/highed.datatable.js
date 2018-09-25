@@ -1476,9 +1476,9 @@ highed.DataTable = function(parent, attributes) {
       Array.prototype.splice.apply(arr, args);
     }
 
-    function moveCells(){ 
+    function moveCells() {
       
-      if (moveToColumn !== null) {        
+      if (moveToColumn !== null) {    
         events.emit('ColumnMoving');
         
         const min = selectedHeaders[0/*(moveToColumn < selectedHeaders[0] ? 1 : 0)*/],
@@ -1491,7 +1491,9 @@ highed.DataTable = function(parent, attributes) {
           shuffleArray(row.columns, min, max, (moveToColumn < selectedHeaders[0] ? moveToColumn + 1 : moveToColumn - total));
         });
 
+        if (rows.length > 0) rows[0].columns[0].focus();
         updateColumns();
+        emitChanged();
         events.emit('ColumnMoved');
       }
     }
