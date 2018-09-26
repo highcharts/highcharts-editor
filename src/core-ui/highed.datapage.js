@@ -71,7 +71,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + props.icon,
     icon = highed.dom.cr('div', iconClass),
     helpModal = highed.HelpModal(props.help || []),
-    assignDataPanel = highed.AssignDataPanel(parent),
     // Data table
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
     body = highed.dom.cr(
@@ -87,6 +86,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         properties.dataGrid
       )
     ),
+    assignDataPanel = highed.AssignDataPanel(parent, dataTable),
     dataImportBtn = highed.dom.cr(
       'button',
       'highed-import-button highed-ok-button ',
@@ -437,10 +437,9 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
 
   assignDataPanel.on('AssignDataChanged', function() {
-
+    
     clearSeriesMapping();
     const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
-
     chartPreview.data.csv({
       csv: data
     }, null, false, function() {

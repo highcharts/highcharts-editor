@@ -239,7 +239,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           },
 
           //Select the item
-          select: function() {
+          select: function(dontEmit) {
             if (selectedItem) {
               selectedItem.unselect();
             }
@@ -250,7 +250,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             body.innerHTML = selectedItem.title();
 
-            events.emit('Change', itemInstance);
+            if (!dontEmit) events.emit('Change', itemInstance);
 
             if (item && highed.isFn(item.select)) {
               item.select(itemInstance);
@@ -327,11 +327,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
          *  @memberof highed.DropDown
          *  @param id {anything} - the id to select
          */
-    function selectById(id) {
+    function selectById(id, dontEmit) {
       items.some(function(item) {
         //This is not a typo..
         if (item.id() == id) {
-          item.select();
+          item.select(dontEmit);
           return true;
         }
       });
@@ -346,9 +346,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
          *  @memberof highed.DropDown
          *  @param index {number} - the index to select in range [0..item.length]
          */
-    function selectByIndex(index) {
+    function selectByIndex(index, dontEmit) {
       if (index >= 0 && index < items.length) {
-        items[index].select();
+        items[index].select(dontEmit);
       }
     }
 

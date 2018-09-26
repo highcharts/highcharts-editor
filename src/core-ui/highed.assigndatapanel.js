@@ -25,7 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // @format
 
-highed.AssignDataPanel = function(parent, attr) {
+highed.AssignDataPanel = function(parent, dataTable) {
 
   var defaultOptions = {
     'labels': {
@@ -69,7 +69,8 @@ highed.AssignDataPanel = function(parent, attr) {
       'colors': {
         'light': 'rgba(229, 145, 145, 0.2)',
         'dark': 'rgb(229, 145, 145)',
-      }
+      },
+      'noNulls': true
     }
   },
   options = [],
@@ -509,28 +510,38 @@ highed.AssignDataPanel = function(parent, attr) {
 
       if (valuesMatch(detailValue, key)) {
         option.value = option.previousValue;
-
-        labelInput.selectById(option.previousValue);
+        labelInput.selectById(option.previousValue, true);
         alert("This column has already been assigned a value. Please select a different column");
+        return;
       }
       else {
-        
+        if (option && option.noNulls) {
+          if (dataTable.areColumnsEmpty(getLetterIndex(detailValue))) {
+            option.value = option.previousValue;
+            labelInput.selectById(option.previousValue, true);
+            alert("This column does not have any data. Please select a column with data in it");
+            return;
+          }
+        }
+
         option.value = detailValue;
         option.rawValue = [getLetterIndex(option.value.toUpperCase())];
         if (getLetterIndex(option.value.toUpperCase()) > maxColumnLength) {
           maxColumnLength = getLetterIndex(option.value.toUpperCase());
         }
+        
       }
 
       if (showCells) events.emit('ToggleHideCells', options[index], showCells);
-      if (!disabled) events.emit('AssignDataChanged', options[index]);
+      if (!disabled) {
+        events.emit('AssignDataChanged', options[index], option, getLetterIndex(detailValue.toUpperCase()), key);
+      }
       //liveDataTypeSelect.selectById(detailValue || 'json');
     });
     
     var colors = option.colors || generateColors();
 
     option.colors = colors;
-
   
     labelInput.value = option.value;
     const colorDiv = highed.dom.cr('div', 'highed-assigndatapanel-color');

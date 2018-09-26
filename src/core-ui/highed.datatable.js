@@ -2833,6 +2833,13 @@ highed.DataTable = function(parent, attributes) {
   function getColumnLength(){
     return (rows[0] && rows[0].columns ? rows[0].columns.length : 2);
   }
+
+  function areColumnsEmpty(colNumber) {
+    return !rows.some(function(row){
+      return row.columns[colNumber].value() !== null;
+    });
+  }
+  
   function getDataFieldsUsed() {
     return dataFieldsUsed;
   }
@@ -3209,6 +3216,7 @@ highed.DataTable = function(parent, attributes) {
     toggleUnwantedCells: toggleUnwantedCells,
     getColumnLength: getColumnLength,
     getDataFieldsUsed: getDataFieldsUsed,
-    createSimpleDataTable: createSimpleDataTable
+    createSimpleDataTable: createSimpleDataTable,
+    areColumnsEmpty: areColumnsEmpty
   };
 };
