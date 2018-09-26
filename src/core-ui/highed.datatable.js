@@ -233,7 +233,7 @@ highed.DataTable = function(parent, attributes) {
     loadIndicator = highed.dom.cr(
       'div',
       'highed-dtable-load-indicator',
-      'Loading Data...'
+      '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i> Loading'
     ),
     dropZone = highed.dom.cr(
       'div',
@@ -2839,7 +2839,7 @@ highed.DataTable = function(parent, attributes) {
       return row.columns[colNumber].value() !== null;
     });
   }
-  
+
   function getDataFieldsUsed() {
     return dataFieldsUsed;
   }
