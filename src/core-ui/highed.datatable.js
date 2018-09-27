@@ -637,7 +637,7 @@ highed.DataTable = function(parent, attributes) {
     mainInputCloseCb = close;
 
     mainInput.value = value;
-    mainInput.setSelectionRange(0, mainInput.value.length);
+    //mainInput.setSelectionRange(0, mainInput.value.length);
 
     mainInputCb.push(
       highed.dom.on(mainInput, 'keydown', function(e) {
