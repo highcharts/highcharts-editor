@@ -269,30 +269,34 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     const oldValues = assignDataPanel.getAllMergedLabelAndData();
     dataTable.removeAllCellsHighlight(null, [oldValues.labelColumn].concat(oldValues.dataColumns).sort());
     */
-
-    clearSeriesMapping();
-    const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
-
-    chartPreview.data.csv({
-      csv: data
-    }, null, false, function() {
-      var seriesIndex = [];
-
-      assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, null, true);
-      setSeriesMapping(assignDataPanel.getAllOptions());
+    if (dataTable.isInCSVMode()) {
+      clearSeriesMapping();
+      const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
   
-      if (loadTemplateForEachSeries) {
-        const length = assignDataPanel.getAllOptions().length;
+      chartPreview.data.csv({
+        csv: data
+      }, null, false, function() {
+        var seriesIndex = [];
+  
+        assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, null, true);
+        setSeriesMapping(assignDataPanel.getAllOptions());
+    
+        if (loadTemplateForEachSeries) {
+          const length = assignDataPanel.getAllOptions().length;
+          
+          for(var i=0;i<length;i++) {
+            seriesIndex.push(i);
+            assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, i);
+          }
+        } else seriesIndex = [assignDataPanel.getActiveSerie()];
         
-        for(var i=0;i<length;i++) {
-          seriesIndex.push(i);
-          assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, i);
-        }
-      } else seriesIndex = [assignDataPanel.getActiveSerie()];
-      
-      chartPreview.loadTemplateForSerie(newTemplate, seriesIndex);
-      redrawGrid(true);
-    });
+        chartPreview.loadTemplateForSerie(newTemplate, seriesIndex);
+        redrawGrid(true);
+      });
+    } else {
+      const chartOptions = chartPreview.options.getCustomized();
+      console.log(chartOptions.series);
+    }
 
 
     //assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);

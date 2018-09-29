@@ -2844,6 +2844,10 @@ highed.DataTable = function(parent, attributes) {
     return dataFieldsUsed;
   }
 
+  function isInCSVMode() {
+    return (!isInGSheetMode && !isInLiveDataMode);
+  }
+
   // Getting kinda long, probably need to move this all out of here to createchartpage
   function createTableInputs(inputs, maxColSpan, extraClass) {
 
@@ -3245,6 +3249,7 @@ highed.DataTable = function(parent, attributes) {
     resize: resize,
     loadLiveDataFromURL: loadLiveDataFromURL,
     loadLiveDataPanel: loadLiveDataPanel,
+    isInCSVMode: isInCSVMode,
     //highlightSelectedFields: highlightSelectedFields,
     highlightCells: highlightCells,
     removeAllCellsHighlight: removeAllCellsHighlight,
