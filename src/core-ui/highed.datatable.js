@@ -2973,19 +2973,54 @@ highed.DataTable = function(parent, attributes) {
     return container;
   }
 
+  function createSampleData(toNextPage) {
+    const container = highed.dom.cr('div', 'highed-modal-container'),
+          buttonsContainer = highed.dom.cr('div', 'highed-modal-buttons-container');
+
+    highed.samples.each(function(sample) {
+      var data = sample.dataset.join('\n'),
+        loadBtn = highed.dom.cr(
+          'button',
+          'highed-box-size highed-imp-button',
+          sample.title
+        );
+
+      highed.dom.style(loadBtn, { width: '99%' });
+
+      highed.dom.on(loadBtn, 'click', function() {
+        dataModal.hide();
+        importer.emitCSVImport(data);
+        if (toNextPage) toNextPage();
+      });
+
+      highed.dom.ap(
+        buttonsContainer,
+        //highed.dom.cr('div', '', name),
+        //highed.dom.cr('br'),
+        loadBtn,
+        highed.dom.cr('br')
+      );
+    });
+
+    highed.dom.ap(container, buttonsContainer);
+    
+    return container;
+  }
+
   function createSimpleDataTable(toNextPage) {
     var container = highed.dom.cr('div', 'highed-table-dropzone-container'),
         selectFile = highed.dom.cr('button', 'highed-ok-button highed-import-button', 'Select File'),
         buttonsContainer = highed.dom.cr('div'),
         modalContainer = highed.dom.cr('div', 'highed-table-modal'),
         gSheetContainer = createGSheetContainer(toNextPage),
-        liveContainer = createLiveDataContainer(toNextPage);
+        liveContainer = createLiveDataContainer(toNextPage),
+        sampleDataContainer = createSampleData(toNextPage);
         cutAndPasteContainer = createCutAndPasteContainer(toNextPage);
 
     var buttons = [{ title: 'Connect Google Sheet', linkedTo: gSheetContainer}, 
                    { title: 'Import Live Data', linkedTo: liveContainer, height: 321}, 
                    { title: 'Cut and Paste Data', linkedTo: cutAndPasteContainer, height: 448, width: 518}, 
-                   { title: 'Load Sample Data', linkedTo: liveContainer}];
+                   { title: 'Load Sample Data', linkedTo: sampleDataContainer}];
 
     buttons.forEach(function(buttonProp) {
       const button = highed.dom.cr('button', 'highed-ok-button highed-import-button', buttonProp.title);
