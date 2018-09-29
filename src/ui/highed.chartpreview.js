@@ -131,13 +131,17 @@ highed.ChartPreview = function(parent, attributes) {
       },
       '.highcharts-series': { tab: 'Data series', id: 'series' },
       'g.highcharts-tooltip': { tab: 'Chart', dropdown: 'Tooltip', id: 'tooltip--enabled' }
-    };
+    },
+    isAnnotating = false,
+    annotationType = false;
 
   ///////////////////////////////////////////////////////////////////////////
 
   function attachWYSIWYG() {
+    
     Object.keys(wysiwyg).forEach(function(key) {
       highed.dom.on(parent.querySelector(key), 'click', function(e) {
+        if (isAnnotating) return;
         events.emit('RequestEdit', wysiwyg[key], e.clientX, e.clientY);
         e.cancelBubble = true;
         e.preventDefault();
@@ -237,6 +241,7 @@ highed.ChartPreview = function(parent, attributes) {
 */
     try {
       chart = new Highcharts[constr](pnode || parent, options);
+
       //This is super ugly.
       // customizedOptions.series = customizedOptions.series || [];
       //  customizedOptions.series = chart.options.series || [];
@@ -253,8 +258,55 @@ highed.ChartPreview = function(parent, attributes) {
       if (chart && chart.reflow) {
         //chart.reflow();
       }
+      
+      Highcharts.addEvent(chart, 'click', function (e) {
+        if (isAnnotating) {
+          //events.emit('SetAnnotate', e);
+          function addShape(chart, type, x, y) {
+            var options = {
+                type: type,
+                point: {
+                    x: Number(x),
+                    y: Number(y)
+                },
+                x: 0,
+                y: 0
+            };
+    
+            if (type === 'circle') {
+                options.r = 10;
+            } else if (type === 'square') {
+                options.width = 20;
+                options.height = 20;
+                options.x = -10;
+                options.y = -10;
+            }
+    
+            var annotation = chart.addAnnotation({
+                shapes: [options]
+            });
+            
+            highed.dom.on(annotation.group.element, 'click', function() {
+              if (isAnnotating && annotationType === 'delete') {
+                customizedOptions.annotations[0].shapes.splice(customizedOptions.annotations[0].shapes.indexOf(annotation.options.shapes[0]), 1);
+                annotation.destroy();
+              }
+            });
+            
+            if (!customizedOptions.annotations) customizedOptions.annotations = [{}];
+            if (!customizedOptions.annotations[0].shapes) customizedOptions.annotations[0].shapes = []; 
+            customizedOptions.annotations[0].shapes.push(annotation.options.shapes[0]);
+          }
 
-      // highed.dom.ap(pnode || parent, toggleButton);
+          if (annotationType === 'label') {
+            events.emit('ShowTextDialog', this, e.chartX - this.plotLeft, e.chartY - this.plotTop);
+          } else if (annotationType === 'delete'){
+            
+          } else {
+            addShape(this, annotationType, e.chartX - this.plotLeft, e.chartY - this.plotTop);
+          }
+        }
+      });
 
       Highcharts.addEvent(chart, 'afterPrint', function() {
         events.emit('RequestResize');
@@ -772,7 +824,7 @@ highed.ChartPreview = function(parent, attributes) {
     lastLoadedCSV = false;
     lastLoadedSheet = false;
     lastLoadedLiveData = false;
-
+    
     if (highed.isStr(projectData)) {
       try {
         return loadProject(JSON.parse(projectData));
@@ -1077,6 +1129,10 @@ highed.ChartPreview = function(parent, attributes) {
       };
     }
     
+    if (chart && chart.options && chart.options.annotations) {
+      chartPlugins.annotations = 1;
+    }
+
     return {
       template: templateOptions,
       options: getCleanOptions(customizedOptions),
@@ -1770,6 +1826,45 @@ highed.ChartPreview = function(parent, attributes) {
     }
   }
 
+  function setIsAnnotating(isAnnotate) {
+    isAnnotating = isAnnotate
+  }
+
+  function setAnnotationType(type) {
+    annotationType = type;
+  }
+
+  function addLabel(x, y, text, color, type) {
+    if (chart) {
+      var annotation = chart.addAnnotation({
+        labels: [{
+            text: text,
+            point: { x: x, y: y },
+            backgroundColor: color,
+            shape: type,
+            borderWidth: type !== 'connector' ? 0 : 1,
+            x: 0,
+            y: type === 'circle' ? 0 : -16
+        }]
+      });
+
+      highed.dom.on(annotation.group.element, 'click', function() {
+        if (isAnnotating && annotationType === 'delete') {
+          customizedOptions.annotations[0].labels.splice(customizedOptions.annotations[0].labels.indexOf(annotation.options.labels[0]), 1);
+          annotation.destroy();
+        }
+      });
+
+      if (!customizedOptions.annotations) customizedOptions.annotations = [{}];
+      if (!customizedOptions.annotations[0].labels) customizedOptions.annotations[0].labels = []; 
+      customizedOptions.annotations[0].labels.push(annotation.options.labels[0]);
+    }
+  }
+
+
+  function addAnnotationLabel(x, y, text, color, type) {
+    addLabel(x, y, text, color, type.id());
+  }
   ///////////////////////////////////////////////////////////////////////////
 
   //Init the initial chart
@@ -1824,7 +1919,9 @@ highed.ChartPreview = function(parent, attributes) {
     loadProject: loadProject,
 
     toString: toString,
-
+    setIsAnnotating: setIsAnnotating,
+    setAnnotationType: setAnnotationType,
+    addAnnotationLabel: addAnnotationLabel,
 
     options: {
       set: set,

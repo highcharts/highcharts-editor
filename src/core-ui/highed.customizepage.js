@@ -82,11 +82,92 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
         width: 1024,
         height: 768
       }
-    ];
+    ],
+    overlayAddTextModal = highed.OverlayModal(false, {
+      // zIndex: 20000,
+      showOnInit: false,
+      width: 300,
+      height: 350
+    }),
+    activeColor = 'rgba(0, 0, 0, 0.75)',
+    addTextModalContainer = highed.dom.cr('div', 'highed-add-text-popup'),
+    addTextModalInput = highed.dom.cr('input', 'highed-imp-input-stretch'),
+    colorDropdownParent = highed.dom.cr('div'),
+    typeDropdownParent = highed.dom.cr('div'),
+    addTextModalColorSelect = highed.DropDown(colorDropdownParent),
+    addTextModalTypeSelect = highed.DropDown(typeDropdownParent),
+    addTextModalSubmit = highed.dom.cr('button', 'highed-ok-button highed-dtable-gsheet-button', 'Submit'),
+    addLabelX = null,
+    addLabelY = null;
     
     resWidth.placeholder = 'W';
     resHeight.placeholder = 'H';
-  
+
+    addTextModalColorSelect.addItems([
+      {
+        title: 'Black',
+        id: 'black',
+        select: function() {
+          activeColor = 'rgba(0, 0, 0, 0.75)';
+        }
+      },
+      {
+        title: 'Red',
+        id: 'red',
+        select: function() {
+          activeColor = 'rgba(255, 0, 0, 0.75)';
+        }
+      },
+      {
+        title: 'Blue',
+        id: 'blue',
+        select: function() {
+          activeColor = 'rgba(0, 0, 255, 0.75)';
+        }
+      }
+    ]);
+
+    addTextModalColorSelect.selectByIndex(0);
+
+    addTextModalTypeSelect.addItems([
+      {
+        title: 'Callout',
+        id: 'callout'
+      },
+      {
+        title: 'Connector',
+        id: 'connector'
+      },
+      {
+        title: 'Circle',
+        id: 'circle'
+      }
+    ]);
+
+    addTextModalTypeSelect.selectByIndex(0);
+
+    highed.dom.ap(overlayAddTextModal.body,
+      highed.dom.ap(addTextModalContainer, 
+                    highed.dom.cr('div', 'highed-add-text-label', 'Text:'),
+                    addTextModalInput,
+                    highed.dom.cr('div', 'highed-add-text-label', 'Color:'),
+                    colorDropdownParent,
+                    highed.dom.cr('div', 'highed-add-text-label', 'Type:'),
+                    typeDropdownParent,
+                    addTextModalSubmit
+                  )
+    );
+
+    highed.dom.on(addTextModalSubmit, 'click', function() {
+      overlayAddTextModal.hide();
+      chartPreview.addAnnotationLabel(addLabelX, addLabelY, addTextModalInput.value, activeColor, addTextModalTypeSelect.getSelectedItem());
+
+      addTextModalTypeSelect.selectByIndex(0);
+      addTextModalTypeSelect.selectByIndex(0);
+      addTextModalInput.value = '';
+
+    });
+
   function init() {
 
     width = props.width,
@@ -101,6 +182,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       chartPreview,
       planCode
     ),
+
 
     helpModal = highed.HelpModal(props.help || []);
 
@@ -281,7 +363,6 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     highed.dom.style(container, {
       display: 'block'
     });
-    
     expand();
     resizeChart(((window.innerHeight
       || document.documentElement.clientHeight
@@ -372,6 +453,15 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
   highed.dom.on([resWidth, resHeight], 'change', function() {
     sizeChart(parseInt(resWidth.value, 10), parseInt(resHeight.value, 10));
+  });
+
+
+  chartPreview.on('ShowTextDialog', function(chart, x, y){
+    addLabelX = x;
+    addLabelY = y;
+
+    overlayAddTextModal.show();
+
   });
   
   chartPreview.on('ChartChange', function(newData) {

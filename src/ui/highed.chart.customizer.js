@@ -340,11 +340,12 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
 
     list.addItem({
       id: "Annotations",
+      annotations: true,
       title: "Annotations (Experimental)",
       onClick: function() {
         events.emit("AnnotationsClicked");
       }
-    });
+    }, null, chartPreview);
 
     list.addItem({
       id: "Advanced",

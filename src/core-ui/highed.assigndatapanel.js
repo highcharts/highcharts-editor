@@ -629,6 +629,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
   });
 
   highed.dom.on(addNewSeriesBtn, 'click', function() {
+    
     addSerie(null, true);
     events.emit('AssignDataChanged');
   });
