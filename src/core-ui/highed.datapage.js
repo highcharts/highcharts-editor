@@ -94,7 +94,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     dataClearBtn = highed.dom.cr(
       'button',
       'highed-import-button highed-ok-button ',
-       highed.L('dgNewBtn'));
+       highed.L('dgNewBtn')),
+    blacklist = [
+      'candlestick'
+    ];
     
 
     highed.dom.on(dataImportBtn, 'click', function() {
@@ -266,28 +269,31 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     const oldValues = assignDataPanel.getAllMergedLabelAndData();
     dataTable.removeAllCellsHighlight(null, [oldValues.labelColumn].concat(oldValues.dataColumns).sort());
     */
-    assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength());
-    const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
 
-    setSeriesMapping(assignDataPanel.getAllOptions());
+    clearSeriesMapping();
+    const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
 
     chartPreview.data.csv({
       csv: data
+    }, null, false, function() {
+      var seriesIndex = [];
+
+      assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, null, true);
+      setSeriesMapping(assignDataPanel.getAllOptions());
+  
+      if (loadTemplateForEachSeries) {
+        const length = assignDataPanel.getAllOptions().length;
+        
+        for(var i=0;i<length;i++) {
+          seriesIndex.push(i);
+          assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, i);
+        }
+      } else seriesIndex = [assignDataPanel.getActiveSerie()];
+      
+      chartPreview.loadTemplateForSerie(newTemplate, seriesIndex);
+      redrawGrid(true);
     });
 
-    var seriesIndex = [];
-
-    if (loadTemplateForEachSeries) {
-      const length = assignDataPanel.getAllOptions().length;
-      
-      for(var i=0;i<length;i++) {
-        seriesIndex.push(i);
-        assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, i);
-      }
-    } else seriesIndex = [assignDataPanel.getActiveSerie()];
-    
-    chartPreview.loadTemplateForSerie(newTemplate, seriesIndex);
-    redrawGrid(true);
 
     //assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
   }
@@ -400,8 +406,18 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   //////////////////////////////////////////////////////////////////////////////
 
-  assignDataPanel.on('AddSeries', function(index) {
-    chartPreview.options.addBlankSeries(index);
+  assignDataPanel.on('AddSeries', function(index, type) {
+    chartPreview.options.addBlankSeries(index, type);
+  })
+  
+  assignDataPanel.on('GetLastType', function() {
+    var chartOptions = chartPreview.options.getCustomized();
+    var type = chartOptions.series[chartOptions.series.length - 1].type;
+
+    if (blacklist.includes(type)) type = null;
+
+    assignDataPanel.addNewSerie(type);
+    
   })
   
   chartPreview.on('LoadProjectData', function(csv) {

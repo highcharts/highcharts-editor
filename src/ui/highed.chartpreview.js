@@ -1875,7 +1875,7 @@ highed.ChartPreview = function(parent, attributes) {
     return expanded ? collapse() : expand();
   });
 
-  function addBlankSeries(index) {
+  function addBlankSeries(index, type) {
     if (!customizedOptions.series[index]) {
       customizedOptions.series[index] = {
         data:[],
@@ -1885,6 +1885,8 @@ highed.ChartPreview = function(parent, attributes) {
         compare: undefined
       };
     }
+
+    if(type) customizedOptions.series[index].type = type;
     
     //Init the initial chart
     updateAggregated();

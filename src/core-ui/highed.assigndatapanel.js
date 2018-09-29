@@ -296,11 +296,12 @@ highed.AssignDataPanel = function(parent, dataTable) {
   }
 
   function addSerie(seriesType, redrawDOM) {
-    if (!seriesType) seriesType = 'line';
-
+    var type = seriesType;
+    if (!type) type = 'line';
+    
     seriesTypeSelect.addItems([{
       id: options.length,
-      title: 'Series ' + (options.length + 1) + ' - ' + capitalizeFirstLetter(seriesType)
+      title: 'Series ' + (options.length + 1) + ' - ' + capitalizeFirstLetter(type)
     }]);
 
     if (maxColumnLength + 1 < columnLength) {
@@ -309,7 +310,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
 
     const newOptions = highed.merge({}, defaultOptions);
 
-    highed.merge(newOptions, highed.meta.charttype[seriesType]);
+    highed.merge(newOptions, highed.meta.charttype[type]);
     clean(newOptions);
     
     if (newOptions.values) {
@@ -322,7 +323,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
     seriesTypeSelect.selectById(options.length - 1);
     if (redrawDOM) resetDOM();
 
-    events.emit('AddSeries', options.length - 1);
+    events.emit('AddSeries', options.length - 1, seriesType);
   }
 
   function hide() {
@@ -384,7 +385,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
   }
 
 
-  function setAssignDataFields(data, maxColumns, init, seriesIndex) {
+  function setAssignDataFields(data, maxColumns, init, seriesIndex, skipEmit) {
     if (!data || disabled) return;
     columnLength = maxColumns;
     var seriesType = getSeriesType(data, 0);
@@ -446,7 +447,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
     }
 
     resetDOM();
-    if (!disabled) events.emit('ChangeData', options);
+    if (!disabled && !skipEmit) events.emit('ChangeData', options);
   }
 
   function checkValues(newValue, prevValue) {
@@ -591,6 +592,10 @@ highed.AssignDataPanel = function(parent, dataTable) {
     return disabled;
   }
 
+  function addNewSerie(lastType) {
+    addSerie(lastType, true);
+    events.emit('AssignDataChanged');
+  }
   ////////////////////////////////////////////////////////////////////////////////
       
   highed.dom.ap(selectContainer, addNewSeriesBtn, deleteSeriesBtn, toggleHideCellsBtn);
@@ -629,9 +634,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
   });
 
   highed.dom.on(addNewSeriesBtn, 'click', function() {
-    
-    addSerie(null, true);
-    events.emit('AssignDataChanged');
+    events.emit('GetLastType');
   });
   
   seriesTypeSelect.on('Change', function(selected) {
@@ -685,6 +688,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
     getAssignDataFields: getAssignDataFields,
     getAllOptions: getAllOptions,
     getActiveSerie: getActiveSerie,
+    addNewSerie: addNewSerie,
     addSeries: addSeries,
     checkToggleCells: checkToggleCells,
     init: init,
