@@ -2221,6 +2221,7 @@ highed.DataTable = function(parent, attributes) {
       confirm('This will clear your existing data. Continue?')
     ) {
       clear(true);
+      events.emit('ClearSeries');
 
       liveDataInput.value = '';
       liveDataIntervalInput.value = '';
@@ -2251,7 +2252,8 @@ highed.DataTable = function(parent, attributes) {
       confirm('This will clear your existing data. Continue?')
     ) {
       clear(true);
-
+      events.emit('ClearSeries');
+      
       gsheetID.value = '';
       gsheetWorksheetID.value = '';
       gsheetRefreshTime.value = '';

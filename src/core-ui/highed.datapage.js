@@ -294,10 +294,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         redrawGrid(true);
       });
     } else {
-      const chartOptions = chartPreview.options.getCustomized();
-      console.log(chartOptions.series);
+      chartPreview.loadTemplate(newTemplate);
     }
-
 
     //assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
   }
@@ -592,6 +590,11 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   dataTable.on('ClearData', function() {
     chartPreview.data.clear();
+  });
+
+  dataTable.on('ClearSeries', function() {
+    var options = chartPreview.options.getCustomized();
+    options.series = [];
   });
 
   chartPreview.on('ProviderGSheet', function(p) {
