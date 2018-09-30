@@ -205,7 +205,7 @@ highed.SearchAdvancedOptions = function(parent, attr) {
       highed.dom.on(resultContainer, 'click', function() {
 
         const parents = result.parents,
-              time = 200;
+              time = 500;
         var link = '';
         
         for(var i=0; i<parents.length; i++) {
@@ -221,13 +221,14 @@ highed.SearchAdvancedOptions = function(parent, attr) {
         setTimeout(function(parent) {
           var input = document.getElementById(parent.rawName + '_container');
           if (input){
-            input.scrollIntoView();
+            input.scrollIntoView({
+              block: 'end'
+            });
             highlight(input);
           } else {
             //Probably a menu option
             input = document.getElementById(link + '.' + parent.rawName);
             if (input) {
-              input.scrollIntoView();
               highlight(input);
             }
           }
