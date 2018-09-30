@@ -80,6 +80,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
     ),
     previewCodeMirror = false,
     splitter = highed.dom.cr('div', 'highed-box-simple-container'),
+    allOptions,
 /*
     splitter = highed.HSplitter(simpleTab.body, {
       leftWidth: 100,
@@ -302,7 +303,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
         );
 
         const series = chartPreview.options.all().series;
-        const allOptions = highed.merge({}, chartPreview.options.getCustomized());
+        allOptions = highed.merge({}, chartPreview.options.getCustomized());
 
         if (series) {
           series.forEach(function(serie, i) {
@@ -310,15 +311,15 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
               type: serie.type || 'line'
             });
           });
-           advTree.build(
-             highed.meta.optionsAdvanced,
-             allOptions
-           );
-   
-           highed.dom.style(advancedLoader, {
-             opacity: 0
-           });
-           events.emit("AdvancedBuilt");
+          advTree.build(
+            highed.meta.optionsAdvanced,
+            allOptions
+          );
+  
+          highed.dom.style(advancedLoader, {
+            opacity: 0
+          });
+          events.emit("AdvancedBuilt");
         }
 
       }, 10);
@@ -510,7 +511,6 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
       }
 
       componentCount++;
-
       entry.values = entry.meta.enumValues;
       highed.dom.ap(
         table,
@@ -543,7 +543,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
             }
           },
           false,
-          entry.id,
+          entry.meta.name,
           planCode
         )
       );
@@ -609,7 +609,9 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
   function customCodeIsVisible() {
     return isShowingCustomCode;
   }
-
+  function getAdvancedOptions() {
+    return allOptions;
+  }
   return {
     /* Listen to an event */
     on: events.on,
@@ -620,6 +622,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
     highlightField: highlightField,
     showCustomCode: showCustomCode,
     showSimpleEditor: showSimpleEditor,
-    customCodeIsVisible: customCodeIsVisible
+    customCodeIsVisible: customCodeIsVisible,
+    getAdvancedOptions: getAdvancedOptions
   };
 };

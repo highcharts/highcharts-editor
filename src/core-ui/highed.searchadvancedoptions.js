@@ -27,13 +27,35 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 highed.SearchAdvancedOptions = function(parent, attr) {
 
-  var timeout = null;
+  var timeout = null,
+      advancedOptions = null,
+      filters = {
+        //Filter the series properties based on the series.type property
+        series: {
+          controller: 'type',
+          state: false,
+          default: 'line'
+        },
+        plotOptions: {
+          controller: 'type',
+          state: false,
+          default: 'line'
+        }
+      };;
 
   function resize(w, h) {
        
     highed.dom.style(container, {
       height: (h - 5) + 'px'
     });
+  }
+
+  function setOptions(options) {
+    advancedOptions = options;
+    /*
+    advancedOptions = (options.series || []).map(function(serie) {
+      return serie.type || 'line';
+    });*/
   }
 
   var events = highed.events(),
@@ -78,28 +100,48 @@ highed.SearchAdvancedOptions = function(parent, attr) {
   }
 
   function search(node, parent, str) {
+
+    if (parent && parent.meta.fullname && filters[parent.meta.fullname]) {
+      if (node.meta && node.meta.validFor) {
+
+        var customizedSeriesOption = advancedOptions.series;
+        var found = false;
+        customizedSeriesOption.forEach(function(serieOption) {
+          fstate = serieOption[filters[parent.meta.fullname].controller] || filters[parent.meta.fullname].default;
+          if (node.meta.validFor[fstate]) found = true;
+        });
+
+        if (!found) {
+          return;
+        }
+      }
+    }
+
     if (highed.isArr(node)) {
       node.forEach(function(child) {
         search(child, parent, str);
       });
     } else {
+      
+      if (Object.keys(node.meta.types)[0] === 'function' || (
+        node.meta.products &&
+        Object.keys(node.meta.products) > 0)) {
+        return;
+      }
+      
       var foundCount = compareValues(highed.uncamelize(node.meta.name).toLowerCase(), str);
       foundCount += compareValues(highed.uncamelize(node.meta.ns).toLowerCase(), str);
       if (node.meta.description) foundCount += compareValues(highed.uncamelize(node.meta.description).toLowerCase(), str);
 
       if (foundCount > 0) {
-        if (Object.keys(node.meta.types)[0] === 'function' || (
-          node.meta.products &&
-          Object.keys(node.meta.products) > 0)) {
-          return;
-        } else {
-          searchResults.push({
-            name: highed.uncamelize(node.meta.name),
-            parents: (node.meta.ns.split('.')).map(function(e){ return highed.uncamelize(e); }),
-            rawParent: (parent === null ? node.meta.name : parent.meta.ns + parent.meta.name),
-            foundCount: foundCount
-          }); 
-        }
+        searchResults.push({
+          name: highed.uncamelize(node.meta.name),
+          rawName: node.meta.name,
+          parents: (node.meta.ns.split('.')).map(function(e){ return highed.uncamelize(e); }),
+          rawParent: (parent === null ? node.meta.name : parent.meta.ns + parent.meta.name),
+          foundCount: foundCount,
+          ns: node.meta.ns
+        }); 
       }
       if (node.children && node.children.length > 0) {
         search(node.children, node, str);
@@ -113,8 +155,6 @@ highed.SearchAdvancedOptions = function(parent, attr) {
       });
     clearTimeout(timeout);
     timeout = setTimeout(function () {
-
-
       const optionsAdvanced = highed.meta.optionsAdvanced.children,
       searchArray = searchInput.value.toLowerCase().split(' ');
 
@@ -141,6 +181,18 @@ highed.SearchAdvancedOptions = function(parent, attr) {
 
   highed.dom.ap(body, header);
 
+  function firstToLowerCase( str ) {
+    return str.substr(0, 1).toLowerCase() + str.substr(1);
+  }
+
+
+  function highlight(input) {
+    input.classList += ' active-highlight';
+    setTimeout(function() {
+      if (input) input.classList.remove('active-highlight');
+    }, 2000);
+  }
+
   function resetDOM() {
     searchResultContainer.innerHTML = '';
     searchResults.sort(function(a,b) {return (a.foundCount < b.foundCount) ? 1 : ((b.foundCount < a.foundCount) ? -1 : 0);} ); 
@@ -151,7 +203,35 @@ highed.SearchAdvancedOptions = function(parent, attr) {
             resultParents = highed.dom.cr('div', 'highed-searchadvancedoptions-result-parents', result.parents.join(' <i class="fa fa-circle highed-parent-splitter" aria-hidden="true"></i> '));
       
       highed.dom.on(resultContainer, 'click', function() {
-        document.getElementById(result.rawParent).click();
+
+        const parents = result.parents,
+              time = 200;
+        var link = '';
+        
+        for(var i=0; i<parents.length; i++) {
+          setTimeout(function(parent) {
+            link += (link !== '' ? "." : '') + firstToLowerCase(parent).replace(' ', '');
+            var element = document.getElementById(link);
+            if (element) {
+              element.click();
+            }
+          }, time * i, parents[i]);
+        }
+
+        setTimeout(function(parent) {
+          var input = document.getElementById(parent.rawName + '_container');
+          if (input){
+            input.scrollIntoView();
+            highlight(input);
+          } else {
+            //Probably a menu option
+            input = document.getElementById(link + '.' + parent.rawName);
+            if (input) {
+              input.scrollIntoView();
+              highlight(input);
+            }
+          }
+        }, (time * parents.length) + 100, result);
       });
 
       highed.dom.ap(resultContainer, resultTitle, resultParents);
@@ -175,6 +255,7 @@ highed.SearchAdvancedOptions = function(parent, attr) {
     on: events.on,
     hide: hide,
     show: show,
-    resize: resize
+    resize: resize,
+    setOptions: setOptions
   };
 };

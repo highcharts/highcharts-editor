@@ -60,11 +60,16 @@ highed.Tree = function(parent) {
   ////////////////////////////////////////////////////////////////////////////
 
   function createNode(child, pnode, instancedData, productFilter, myIndex) {
+
+    var id =  (child.meta.ns ? child.meta.ns + '.' : '') +
+    (!isNaN(myIndex) ? '[' + myIndex + '].' : '') +
+    child.meta.name;
+
     var node = highed.dom.cr(
         'div',
         'node',
         '',
-        (child.meta.ns ? child.meta.ns : '') + child.meta.name
+        id
       ),
       title = highed.dom.cr(
         'div',
@@ -78,7 +83,7 @@ highed.Tree = function(parent) {
       addIcon = highed.dom.cr('div', 'highed-icon fa fa-plus-square-o'),
       index =
         (child.meta.ns ? child.meta.ns + '.' : '') +
-        (myIndex ? '[' + myIndex + '].' : '') +
+        (!isNaN(myIndex) ? '[' + myIndex + '].' : '') +
         child.meta.name,
       expanded = true;
 
@@ -304,7 +309,7 @@ highed.Tree = function(parent) {
     ////////////////////////////////////////////////////////////////////////
 
     highed.dom.ap(pnode, highed.dom.ap(node, icon, title), body);
-
+    
     expands[index] = expand;
 
     buildSubtree();
@@ -380,8 +385,8 @@ highed.Tree = function(parent) {
           if (child.meta && child.meta.validFor) {
 
             var customizedSeriesOption = productFilter.series;
-            if (myIndex) customizeSeriesOption = [customizedSeriesOption[myIndex]];
-
+            if (myIndex) customizedSeriesOption = [customizedSeriesOption[myIndex]];
+            
             var found = false;
             customizedSeriesOption.forEach(function(serieOption) {
               fstate = serieOption[filters[tree.meta.fullname].controller] || filters[tree.meta.fullname].default;

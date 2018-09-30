@@ -182,8 +182,6 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       chartPreview,
       planCode
     ),
-
-
     helpModal = highed.HelpModal(props.help || []);
 
     customizer.on('PropertyChange', chartPreview.options.set);
@@ -201,7 +199,8 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       };
 
       searchAdvancedOptions.resize(width, (size.h - highed.dom.size(chartFrame).h) - 15);
-      
+    
+      searchAdvancedOptions.setOptions(customizer.getAdvancedOptions());
     });
 
     customizer.on('AnnotationsClicked', function() {

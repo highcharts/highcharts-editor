@@ -260,7 +260,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
             tryCallback(callback, v);
           }),
           parent = highed.dom.ap(
-            highed.dom.cr('div', 'highed-field-container'),
+            highed.dom.cr('div', 'highed-field-container', '', fieldID + '_container'),
             textArea,
             /*
             reset,*/
@@ -766,7 +766,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
   }
 
   typeIndicator.className += ' highed-customize-type-' + type;
-  const parent = highed.dom.cr('div', 'highed-customizer-table-parent');
+  const parent = highed.dom.cr('div', 'highed-customizer-table-parent', '', fieldID + '_container');
   
   highed.dom.style(parent,
   {
