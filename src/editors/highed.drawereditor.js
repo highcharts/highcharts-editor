@@ -722,19 +722,12 @@ highed.DrawerEditor = function(parent, options, planCode) {
   });
 */
   chartPreview.on('RequestEdit', function(event, x, y) {
-    // Expanded ------------------------
-    /*
-    if (toolboxEntries.customize.body.offsetWidth) {
-      customizer.focus(event, x, y);
 
-      // Collapsed
-    } else {
-      var unbind = toolboxEntries.customize.on('Expanded', function() {
-        customizer.focus(event, x, y);
-        unbind();
-      });
-      toolboxEntries.customize.expand();
-    }*/
+    const customize = panel.getOptions().customize;
+    if (customize) customize.click();
+    setTimeout(function() {
+      customizePage.selectOption(event, x, y);
+    }, 500);
   });
 /*
   dataTable.on('Change', function(headers, data) {

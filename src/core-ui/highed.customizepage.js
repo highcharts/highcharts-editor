@@ -406,6 +406,10 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     resWidth.value = '';
   }
 
+  function selectOption(event, x, y) {
+    customizer.focus(event, x, y);
+  }
+
   function destroy() {}
 
   function showError(title, message) {
@@ -468,20 +472,6 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     events.emit('ChartChangedLately', newData);
   });
 
-  chartPreview.on('RequestEdit', function(event, x, y) {
-    // Expanded
-    //if (toolboxEntries.customize.body.offsetWidth) {
-      customizer.focus(event, x, y);
-      // Collapsed
-    /*} else {
-      var unbind = toolboxEntries.customize.on('Expanded', function() {
-        customizer.focus(event, x, y);
-        unbind();
-      });
-      toolboxEntries.customize.expand();
-    }*/
-  });
-
   function getIcons(){
     return iconsContainer;
   }
@@ -515,7 +505,8 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       return isVisible;
     },
     init: init,
-    getIcons: getIcons
+    getIcons: getIcons,
+    selectOption: selectOption
     //toolbar: toolbar
   };
 };
