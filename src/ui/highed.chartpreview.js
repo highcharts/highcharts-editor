@@ -266,8 +266,10 @@ highed.ChartPreview = function(parent, attributes) {
             var options = {
                 type: type,
                 point: {
-                    x: Number(x),
-                    y: Number(y)
+                    x: x,
+                    y: y,
+                    xAxis: 0,
+                    yAxis: 0
                 },
                 x: 0,
                 y: 0
@@ -299,11 +301,10 @@ highed.ChartPreview = function(parent, attributes) {
           }
 
           if (annotationType === 'label') {
-            events.emit('ShowTextDialog', this, e.chartX - this.plotLeft, e.chartY - this.plotTop);
+            events.emit('ShowTextDialog', this, e.xAxis[0].value, e.yAxis[0].value/*this, e.chartX - this.plotLeft, e.chartY - this.plotTop*/);
           } else if (annotationType === 'delete'){
-            
           } else {
-            addShape(this, annotationType, e.chartX - this.plotLeft, e.chartY - this.plotTop);
+            addShape(this, annotationType, e.xAxis[0].value, e.yAxis[0].value /*e.chartX - this.plotLeft, e.chartY - this.plotTop*/);
           }
         }
       });
@@ -1839,7 +1840,12 @@ highed.ChartPreview = function(parent, attributes) {
       var annotation = chart.addAnnotation({
         labels: [{
             text: text,
-            point: { x: x, y: y },
+            point: { 
+              x: x, 
+              y: y,            
+              xAxis: 0,
+              yAxis: 0 
+            },
             backgroundColor: color,
             shape: type,
             borderWidth: type !== 'connector' ? 0 : 1,
