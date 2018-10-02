@@ -61,7 +61,40 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       'highed-toolbox-body highed-box-size highed-transition'
     ),
     iconsContainer = highed.dom.cr('div', 'highed-icons-container'),
-    customCodeToggle = highed.dom.cr('span', 'highed-toolbox-custom-code-icon', '<i class="fa fa-code" aria-hidden="true"></i>'),
+
+    buttons = [
+      {
+        tooltip: 'Basic',
+        onClick: function() {
+          reduceSize(customizer.showSimpleEditor);
+        },
+        icon: 'cog'
+      },
+      {
+        tooltip: 'Advanced',
+        onClick: function() {
+          customizer.showAdvancedEditor();
+        },
+        icon: 'cogs'
+      },
+      {
+        tooltip: 'Custom Code',
+        onClick: function() {
+          reduceSize(customizer.showCustomCode);
+        },
+        icon: 'code'
+      },
+      {
+        tooltip: 'Preview Options',
+        onClick: function() {
+
+          reduceSize(customizer.showPreviewOptions);
+
+        },
+        icon: 'eye'
+      },
+    ],
+
     isVisible = false,
     searchAdvancedOptions = highed.SearchAdvancedOptions(parent),
     resolutionSettings = highed.dom.cr('span', 'highed-resolution-settings'),
@@ -229,9 +262,21 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     
     title.innerHTML = '';
     
-    highed.dom.ap(iconsContainer, customCodeToggle);
+    iconsContainer.innerHTML = '';
+    buttons.forEach(function(button, i) {
+      button.element = highed.dom.cr('span', 'highed-toolbox-custom-code-icon highed-template-tooltip ' + ( i === 0 ? ' active' : ''), '<i class="fa fa-' + button.icon + '" aria-hidden="true"></i><span class="highed-tooltip-text">' + button.tooltip + '</span>');
+      
+      highed.dom.on(button.element, 'click', function() {
+        buttons.forEach(function(b){
+          b.element.classList.remove('active');
+        });
+        button.element.classList += ' active';
+        button.onClick();
+      });
+      highed.dom.ap(iconsContainer, button.element);
+    });
 
-    highed.dom.ap(contents, /*highed.dom.ap(title,backIcon, customizeTitle, highed.dom.ap(iconsContainer, customCodeToggle, helpIcon)),*/ userContents);
+    highed.dom.ap(contents, userContents);
     highed.dom.ap(body, contents);
   
     highed.dom.ap(userContents, customizerContainer);
@@ -239,9 +284,24 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
   
     customizer.resize();
 
-
     expand();
     hide();
+  }
+
+  function reduceSize(fn) {
+    width = props.widths.desktop;
+    if (highed.onTablet() && props.widths.tablet) width = props.widths.tablet;
+    else if (highed.onPhone() && props.widths.phone) width = props.widths.phone;
+    
+    chartWidth = "68%";
+
+    expand();
+    setTimeout(function() {
+      if (fn) fn();
+      resizeChart(((window.innerHeight
+        || document.documentElement.clientHeight
+        || document.body.clientHeight) - highed.dom.pos(body, true).y) - 16);
+    }, 200);
   }
 
   function resize() {
@@ -256,18 +316,6 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
   if (!highed.onPhone()) {
     highed.dom.on(window, 'resize', resize);
   }
-  
-  highed.dom.on(customCodeToggle, 'click', function() {
-    if (customizer.customCodeIsVisible()) {
-      customCodeToggle.innerHTML = '<i class="fa fa-code" aria-hidden="true"></i>';
-      customizer.showSimpleEditor();
-    } else {
-      //Change the icon to a pie chart for customizer
-      customCodeToggle.innerHTML = '<i class="fa fa-pie-chart" aria-hidden="true"></i>';
-      customizer.showCustomCode();
-    }
-
-  });
 
   resolutions.forEach(function(res) {
     highed.dom.on(res.iconElement, 'click', function(){
@@ -349,7 +397,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
           height: ((size.h - 16)) + 'px'
         });
 
-      customizer.resize(newWidth, (size.h - 17) - tsize.h);
+      customizer.resize(size.w, (size.h - 17) - tsize.h);
 
       return size;
     }
@@ -389,8 +437,6 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
     expand();
 
-    customCodeToggle.innerHTML = '<i class="fa fa-code" aria-hidden="true"></i>';
-
     highed.dom.style(container, {
       display: 'none'
     });
@@ -399,6 +445,11 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     
     highed.dom.style(resolutionSettings, {
       display: 'none'
+    });
+
+    buttons.forEach(function(button, i) {
+        button.element.classList.remove('active');
+        if (i === 0) button.element.classList += ' active';
     });
 
     resHeight.value = '';

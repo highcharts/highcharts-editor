@@ -106,8 +106,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
       'textarea',
       'highed-custom-code highed-box-size highed-stretch'
     ),
-    highlighted = false,
-    isShowingCustomCode = false;
+    highlighted = false;
 
   //If we're on mobile, completely disable the advanced view
   if (highed.onPhone()) {
@@ -228,7 +227,6 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
     highed.dom.style(body, {
       minHeight: lsize.h + 'px'
     });
-
     customCodeSplitter.resize(w, h);
 
     if (codeMirrorBox) {
@@ -347,15 +345,6 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
         events.emit("AnnotationsClicked");
       }
     }, null, chartPreview);
-
-    list.addItem({
-      id: "Advanced",
-      title: "Advanced",
-      onClick: function() {
-        events.emit("AdvanceClicked");
-        advancedTab.focus();
-      }
-    });
 
     // buildTree();
   }
@@ -597,18 +586,22 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
   }
 
   function showCustomCode() {
-    isShowingCustomCode = true;
     customCodeTab.focus();
   }
 
   function showSimpleEditor() {
-    isShowingCustomCode = false;
     simpleTab.focus();
   }
 
-  function customCodeIsVisible() {
-    return isShowingCustomCode;
+  function showPreviewOptions() {
+    outputPreviewTab.focus();
   }
+
+  function showAdvancedEditor() {
+    events.emit("AdvanceClicked");
+    advancedTab.focus();
+  }
+
   function getAdvancedOptions() {
     return allOptions;
   }
@@ -622,7 +615,8 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
     highlightField: highlightField,
     showCustomCode: showCustomCode,
     showSimpleEditor: showSimpleEditor,
-    customCodeIsVisible: customCodeIsVisible,
+    showAdvancedEditor: showAdvancedEditor,
+    showPreviewOptions: showPreviewOptions,
     getAdvancedOptions: getAdvancedOptions
   };
 };
