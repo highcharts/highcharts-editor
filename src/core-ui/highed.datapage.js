@@ -130,6 +130,13 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       dataTable.showImportModal(1);
     }),
     
+    highed.dom.on(dataClearBtn, 'click', function() {
+      if (confirm('Start from scratch?')) {
+        dataTable.clearData();
+        assignDataPanel.init();
+      }
+    }),
+    
     iconsContainer = highed.dom.cr('div', 'highed-toolbox-icons'),
     isVisible = true;
 

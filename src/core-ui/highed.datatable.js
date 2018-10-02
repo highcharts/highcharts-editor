@@ -2677,6 +2677,12 @@ highed.DataTable = function(parent, attributes) {
     return rawCSV;
   }
 
+  function clearData() {
+    highed.emit('UIAction', 'FlushDataConfirm');
+    init();
+    emitChanged();
+    if (rows.length > 0) rows[0].columns[0].focus();
+  }
   function colorHeader(values, color) {
     var tempValue = values[0];
     if (values.length > 0) {
@@ -3245,6 +3251,7 @@ highed.DataTable = function(parent, attributes) {
     getColumnLength: getColumnLength,
     getDataFieldsUsed: getDataFieldsUsed,
     createSimpleDataTable: createSimpleDataTable,
-    areColumnsEmpty: areColumnsEmpty
+    areColumnsEmpty: areColumnsEmpty,
+    clearData: clearData
   };
 };
