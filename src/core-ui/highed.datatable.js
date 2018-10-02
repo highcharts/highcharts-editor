@@ -1230,13 +1230,13 @@ highed.DataTable = function(parent, attributes) {
     surpressChangeEvents = true;
 
     setTimeout(function(){ events.emit('InitLoaded'); }, 10);
-
-    for (var i = 0; i < 12; i++) {
+    
+    for (var i = 0; i < DEFAULT_ROW; i++) {
       var r = Row(false, keyValue);
     }
 
     tempKeyValue = "A";
-    for (var j = 0; j < 6; j++) {
+    for (var j = 0; j < DEFAULT_COLUMN; j++) {
       addCol('Column ' + (j + 1));
     }
     highed.dom.ap(colgroup, highed.dom.cr('col'));

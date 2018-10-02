@@ -142,7 +142,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     function init() {
 
-      highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(chartTitle, chartTitleInput), addRowDiv, highed.dom.ap(iconsContainer, dataClearBtn, dataImportBtn, dataExportBtn)), userContents);
+      highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(chartTitle, chartTitleInput),  highed.dom.ap(iconsContainer, addRowDiv, dataClearBtn, dataImportBtn, dataExportBtn)), userContents);
       highed.dom.ap(body, contents);
   
       highed.dom.ap(userContents, dataTableContainer);

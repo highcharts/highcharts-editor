@@ -510,7 +510,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
   });
 
 
-  chartPreview.on('ShowTextDialog', function(chart, x, y){
+  chartPreview.on('ShowTextDialog', function(chart, x, y) {
     addLabelX = x;
     addLabelY = y;
 
