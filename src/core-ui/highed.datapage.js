@@ -85,12 +85,25 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         },
         properties.dataGrid
       )
-    ),
+    ),    
+    addRowInput = highed.dom.cr('input', 'highed-field-input highed-add-row-input'),
+    addRowBtn = highed.dom.cr('button', 'highed-import-button highed-ok-button highed-add-row-btn small', 'Add'),
+    addRowDiv = highed.dom.ap(highed.dom.cr('div', 'highed-dtable-extra-options'),
+                highed.dom.ap(highed.dom.cr('div', 'highed-add-row-container'),     
+                  highed.dom.cr('span', 'highed-add-row-text', 'Add Rows'),            
+                  addRowInput,
+                  addRowBtn
+                )
+              ),
     assignDataPanel = highed.AssignDataPanel(parent, dataTable),
     dataImportBtn = highed.dom.cr(
       'button',
       'highed-import-button highed-ok-button ',
-      'Import/Export');
+      'Import Data');
+    dataExportBtn = highed.dom.cr(
+      'button',
+      'highed-import-button highed-ok-button ',
+      'Export Data');
     dataClearBtn = highed.dom.cr(
       'button',
       'highed-import-button highed-ok-button ',
@@ -99,16 +112,30 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       'candlestick'
     ];
     
+    addRowInput.value = 1;
+    highed.dom.on(addRowBtn, 'click', function(e) {
+      
+    assignDataPanel.getFieldsToHighlight(dataTable.removeAllCellsHighlight, true);
+      for(var i=0;i<addRowInput.value; i++) {
+        dataTable.addRow();
+      }
+    assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+    });
+
 
     highed.dom.on(dataImportBtn, 'click', function() {
-      dataTable.showImportModal();
+      dataTable.showImportModal(0);
     }),
+    highed.dom.on(dataExportBtn, 'click', function() {
+      dataTable.showImportModal(1);
+    }),
+    
     iconsContainer = highed.dom.cr('div', 'highed-toolbox-icons'),
     isVisible = true;
 
     function init() {
 
-      highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(chartTitle, chartTitleInput), highed.dom.ap(iconsContainer, dataClearBtn, dataImportBtn)), userContents);
+      highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(chartTitle, chartTitleInput), addRowDiv, highed.dom.ap(iconsContainer, dataClearBtn, dataImportBtn, dataExportBtn)), userContents);
       highed.dom.ap(body, contents);
   
       highed.dom.ap(userContents, dataTableContainer);

@@ -130,6 +130,12 @@ highed.TabControl = function(parent, noOverflow, extraPadding, skipTabs) {
     });
   }
 
+  function select(index) {
+    if (tabs[index] && tabs[index].visible()) {
+      tabs[index].focus();
+    }
+  }
+
   /** Hide the tab control
    *  @memberof highed.TabControl
    */
@@ -312,6 +318,7 @@ highed.TabControl = function(parent, noOverflow, extraPadding, skipTabs) {
     on: events.on,
     createTab: Tab,
     resize: resize,
+    select: select,
     selectFirst: selectFirst,
     show: show,
     hide: hide,

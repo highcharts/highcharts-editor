@@ -117,11 +117,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         'highed-imp-button highed-imp-pasted-button',
         'Import Pasted Data'
       ),
-      liveDataImportBtn = highed.dom.cr('button', 'highed-imp-button', 'Import Live Data'),
+      liveDataImportBtn = highed.dom.cr('button', 'highed-imp-button', 'Live Data'),
       csvImportFileBtn = highed.dom.cr(
         'button',
         'highed-imp-button',
-        'Upload & Import File'
+        'Import File'
       ),
       delimiter = highed.dom.cr('input', 'highed-imp-input'),
       dateFormat = highed.dom.cr('input', 'highed-imp-input'),
@@ -137,7 +137,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       spreadsheetImportBtn = highed.dom.cr(
         'button',
         'highed-imp-button',
-        'Import Google Spreadsheet'
+        'Google Spreadsheet'
       ),
       commaDelimitedBtn = highed.dom.cr(
         'button',
@@ -436,6 +436,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       }
     }
 
+    function selectTab(index) {
+      tabs.select(index);
+    }
     ///////////////////////////////////////////////////////////////////////////
 
     highed.dom.ap(
@@ -574,6 +577,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       hide: hide,
       addImportTab: addImportTab,
       exporter: exporter,
+      selectTab: selectTab,
       emitCSVImport: emitCSVImport
     };
   };

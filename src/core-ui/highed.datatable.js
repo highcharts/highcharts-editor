@@ -472,25 +472,8 @@ highed.DataTable = function(parent, attributes) {
           events.emit('ColumnMoved');
         }
       }
-    ]),
-    addRowInput = highed.dom.cr('input', 'highed-field-input highed-add-row-input'),
-    addRowBtn = highed.dom.cr('button', 'highed-import-button highed-ok-button highed-add-row-btn', 'Add Row(s)'),
-    addRowDiv = highed.dom.ap(highed.dom.cr('div', 'highed-dtable-extra-options'),
-                highed.dom.ap(highed.dom.cr('div', 'highed-add-row-container'),                 
-                  addRowInput,
-                  addRowBtn
-                )
-              );
-
-    addRowInput.value = 1;
-    highed.dom.on(addRowBtn, 'click', function(e) {
-      events.emit('ColumnMoving');
-      for(var i=0;i<addRowInput.value; i++) {
-        addRow();
-      }
-      events.emit('ColumnMoved');
-    });
-
+    ]);
+    
   const DEFAULT_COLUMN = 6,
         DEFAULT_ROW = 13;
     
@@ -2208,8 +2191,12 @@ highed.DataTable = function(parent, attributes) {
     importModal.hide();
   }
 
-  function showImportModal() {
+  function showImportModal(index) {
     importModal.show();
+    if (!isNaN(index)) {
+      importer.selectTab(index);
+    }
+
     events.emit('initExporter', importer.exporter);
     importer.resize();
   }
@@ -2510,7 +2497,6 @@ highed.DataTable = function(parent, attributes) {
       highed.dom.ap(topBar, topLetterBar, topColumnBar)
       //highed.dom.ap(topLeftPanel, checkAll)
     ),
-    addRowDiv,
     highed.dom.ap(
       weirdDataContainer,
       highed.dom.cr(
