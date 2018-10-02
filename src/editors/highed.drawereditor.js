@@ -178,7 +178,19 @@ highed.DrawerEditor = function(parent, options, planCode) {
         ]
       },
     },
-    panel = highed.OptionsPanel(splitter.bottom),
+    workspaceBody = highed.dom.cr(
+      'div',
+      'highed-optionspanel-body highed-box-size highed-transition'
+    ),
+    workspaceButtons = highed.dom.cr(
+      'div',
+      'highed-optionspanel-buttons highed-box-size highed-transition'
+    ),
+    workspaceRes = highed.dom.cr(
+      'div',
+      'highed-optionspanel-buttons highed-optionspanel-res highed-box-size highed-transition'
+    ),
+    panel = highed.OptionsPanel(workspaceBody),
     toolbar = highed.Toolbar(splitter.top),
     //toolbox = highed.Toolbox(splitter.bottom),
     //assignDataPanel = highed.AssignDataPanel(splitter.bottom),
@@ -353,33 +365,6 @@ highed.DrawerEditor = function(parent, options, planCode) {
     customOptions = {},
     // The toolbox options
 
-    toolboxEntries,
-    resolutions = {
-      'Stretch to fit': [false, false],
-      'iPhone X': [375, 812],
-      'iPhone 8 Plus': [414, 736],
-      'iPhone 8': [375, 667],
-      'iPhone 7 Plus': [414, 736],
-      'iPhone 7': [375, 667],
-      'iPhone 6 Plus': [414, 736],
-      'iPhone 6/6S': [375, 667],
-      'iPhone 5': [320, 568],
-      'iPad Pro': [1024, 1366],
-      iPad: [768, 1024],
-      'Nexus 6P': [411, 731],
-      'Nexus 5X': [411, 731],
-      'Google Pixel': [411, 731],
-      'Google Pixel XL': [411, 731],
-      'Google Pixel 2': [411, 731],
-      'Google Pixel 2 XL': [411, 731],
-      'Samsung Galaxy Note 5': [480, 853],
-      'LG G5': [480, 853],
-      'One Plus 3': [480, 853],
-      'Samsung Galaxy S8': [360, 740],
-      'Samsung Galaxy S8+': [360, 740],
-      'Samsung Galaxy S7': [360, 640],
-      'Samsung Galaxy S7 Edge': [360, 640]
-    },
     helpIcon = highed.dom.cr(
       'div',
       'highed-toolbox-help highed-icon fa fa-question-circle'
@@ -390,7 +375,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
     helpModal = highed.HelpModal(builtInOptions.data.help || []);
 
   highed.dom.on(helpIcon, 'click', showHelp);
-
+  highed.dom.ap(splitter.bottom, highed.dom.ap(workspaceBody, workspaceRes, workspaceButtons));
 
   highed.dom.ap(splitter.bottom, titleContainer);
   if (!properties.useHeader) {
@@ -437,6 +422,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
       } else if (id === 'customize') {
         option.nav.page = customizePage;
         customizePage.init();
+        highed.dom.ap(workspaceRes, customizePage.getResolutionContainer());
       } else {
         // Create page
         const defaultPage = highed.DefaultPage(splitter.bottom, option, chartPreview, highedChartContainer);
@@ -625,6 +611,14 @@ highed.DrawerEditor = function(parent, options, planCode) {
     customOptions[name] = feat;
     //addPage(feat);
     createFeatures();
+  }
+
+  function addToWorkspace(options) {
+    options.forEach(function(option){
+      const btn = highed.dom.cr('button', 'highed-import-button green', option.text);
+      highed.dom.on(btn, 'click', option.onClick);
+      highed.dom.ap(workspaceButtons, btn);
+    });
   }
 
   function destroy() {}
@@ -880,6 +874,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
     getChartTitle: dataPage.getChartTitle,
     setChartTitle: setChartTitle,
     showCreateChartPage: showCreateChartPage,
+    addToWorkspace: addToWorkspace,
     data: {
       on: function() {}, //dataTable.on,
       showLiveStatus: function() {}, //toolbox.showLiveStatus,

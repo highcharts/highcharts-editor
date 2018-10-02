@@ -33,7 +33,7 @@ highed.OptionsPanel = function(parent, attr) {
     ),
     body = highed.dom.cr(
       'div',
-      'highed-optionspanel-body highed-box-size highed-transition'
+      'highed-box-size highed-transition'
     ),
     prev,
     options = {};

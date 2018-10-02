@@ -102,6 +102,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     tabletIcon = highed.dom.cr('span', '', '<i class="fa fa-tablet" aria-hidden="true"></i>'),
     tabletIcon = highed.dom.cr('span', '', '<i class="fa fa-tablet" aria-hidden="true"></i>'),
     stretchToFitIcon = highed.dom.cr('span', '', '<i class="fa fa-laptop" aria-hidden="true"></i>'),
+    chartSizeText = highed.dom.cr('span', 'text', 'Chart Size:'),
     resWidth = highed.dom.cr('input', 'highed-res-number'),
     resHeight = highed.dom.cr('input', 'highed-res-number'),
     resolutions = [
@@ -257,8 +258,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       searchAdvancedOptions.show();
     });
     
-
-    highed.dom.ap(resolutionSettings, stretchToFitIcon, tabletIcon, phoneIcon, resWidth, resHeight);
+    highed.dom.ap(resolutionSettings, chartSizeText, stretchToFitIcon, tabletIcon, phoneIcon, resWidth, resHeight);
     
     title.innerHTML = '';
     
@@ -280,12 +280,16 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     highed.dom.ap(body, contents);
   
     highed.dom.ap(userContents, customizerContainer);
-    highed.dom.ap(parent,resolutionSettings, highed.dom.ap(container,body));
+    highed.dom.ap(parent, highed.dom.ap(container,body));
   
     customizer.resize();
 
     expand();
     hide();
+  }
+
+  function getResolutionContainer() {
+    return resolutionSettings;
   }
 
   function reduceSize(fn) {
@@ -556,7 +560,8 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     },
     init: init,
     getIcons: getIcons,
-    selectOption: selectOption
+    selectOption: selectOption,
+    getResolutionContainer: getResolutionContainer
     //toolbar: toolbar
   };
 };
