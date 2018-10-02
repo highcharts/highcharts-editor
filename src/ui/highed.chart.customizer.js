@@ -552,7 +552,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
     highed.dom.ap(
       advBody,
       highed.dom.ap(
-        highed.dom.cr('div', 'highed-customize-group'),
+        highed.dom.cr('div', 'highed-customize-group highed-customize-advanced'),
         highed.dom.cr('div', 'highed-customizer-table-heading', selected),
         table
       )
