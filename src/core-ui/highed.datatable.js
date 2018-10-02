@@ -292,22 +292,22 @@ highed.DataTable = function(parent, attributes) {
     ),
     gsheetCancelButton = highed.dom.cr(
       'button',
-      'highed-ok-button highed-dtable-gsheet-button',
+      'highed-import-button green padded',
       'Detach Sheet From Chart'
     ),
     gsheetLoadButton = highed.dom.cr(
       'button',
-      'highed-ok-button highed-dtable-gsheet-button',
+      'highed-import-button green padded',
       'Load Spreadsheet'
     ),
     liveDataLoadButton = highed.dom.cr(
       'button',
-      'highed-ok-button highed-dtable-gsheet-button',
+      'highed-import-button green padded',
       'Load Live Data'
     ),
     liveDataCancelButton = highed.dom.cr(
       'button',
-      'highed-ok-button highed-dtable-gsheet-button',
+      'highed-import-button green padded',
       'Cancel'
     ),
     detailValue = 0,
@@ -2527,7 +2527,7 @@ highed.DataTable = function(parent, attributes) {
       highed.dom.cr(
         'div',
         'highed-dtable-gsheet-heading',
-        'Google Spreadsheet'
+        'Link Google Spreadsheet'
       ),
       highed.dom.ap(
         highed.dom.cr('div', 'highed-dtable-gsheet-inner'),
@@ -2581,13 +2581,13 @@ highed.DataTable = function(parent, attributes) {
           )
         ),
         highed.dom.ap(
-          highed.dom.cr('div'),
+          highed.dom.cr('div', 'highed-gsheet-btn-container'),
           gsheetLoadButton,
           gsheetCancelButton
         ),
         highed.dom.cr(
           'div',
-          '',
+          'highed-gsheet-text',
           [
             'When using Google Spreadsheet, Highcharts references the sheet directly.<br/><br/>',
             'This means that the published chart always loads the latest version of the sheet.<br/><br/>',
@@ -2661,11 +2661,11 @@ highed.DataTable = function(parent, attributes) {
         ),
 
         highed.dom.ap(
-          highed.dom.cr('div'),
+          highed.dom.cr('div', 'highed-gsheet-btn-container'),
           liveDataLoadButton,
           liveDataCancelButton
         ),
-        highed.dom.cr('div', '', [
+        highed.dom.cr('div', 'highed-gsheet-text', [
           'Live data needs a url to your JSON data to reference.<br/><br/>',
           'This means that the published chart always loads the latest version of your data.<br/><br/>'
         ].join(' '))
