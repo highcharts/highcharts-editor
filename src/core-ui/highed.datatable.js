@@ -644,6 +644,7 @@ highed.DataTable = function(parent, attributes) {
             rawCSV = mainInput.value;
             highed.emit('UIAction', 'PasteCSVAttempt');
             return loadRows(ps, function() {
+              if (rows.length > 0) rows[0].columns[0].focus();
               events.emit('InitLoaded');
             });
           }
@@ -2013,6 +2014,25 @@ highed.DataTable = function(parent, attributes) {
     });
 
     setTimeout(function() {
+
+      if(rows[0] && rows.length < DEFAULT_ROW) {
+        var counter = DEFAULT_ROW - rows.length,
+            length = (rows[0].length > DEFAULT_COLUMN ? rows[0].length : DEFAULT_COLUMN);
+
+        rows.forEach(function(row) {
+          if (row.length < DEFAULT_COLUMN) {
+            const len = DEFAULT_COLUMN - row.length;
+            for(var i=0;i<len;i++) {
+              row.push(null);
+            }
+          }
+        });
+
+        for(var i =0;i<counter; i++) {
+          rows.push(Array(length).fill(null, 0));
+        }
+      }
+
       rows.forEach(function(cols, i) {
         var row;
 

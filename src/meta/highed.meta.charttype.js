@@ -83,20 +83,24 @@ highed.meta.charttype = {
         'q1': {
             'name': "Q1",
             'desc': 'The lower quartile for each data point. This is the bottom of the box.',
-            'default': '',
-            'value': '',
+            'default': 'E',
+            'value': 'E',
+            'mandatory': true,
             'multipleValues': false,
             'isData': true,
             'previousValue': null,
             'linkedTo': 'q1',
+            'rawValue': [4]
         }, 
         'q3': {
             'name': "Q3",
             'desc': 'The higher quartile for each data point. This is the top of the box.',
-            'default': '',
-            'value': '',
+            'default': 'F',
+            'value': 'F',
+            'mandatory': true,
             'isData': true,
-            'linkedTo': 'q3'
+            'linkedTo': 'q3',
+            'rawValue': [4]
         }
     },
     candlestick: {

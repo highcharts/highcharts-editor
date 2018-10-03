@@ -389,28 +389,26 @@ highed.AssignDataPanel = function(parent, dataTable) {
     if (!data || disabled) return;
     columnLength = maxColumns;
     var seriesType = getSeriesType(data, 0);
-/*
-    if (data.config) seriesType = data.config.chart.type;
-    else {
-      if (data.template && data.template.chart && data.template.chart.type) seriesType = data.template.chart.type;
-      else if (data.theme && data.theme.options.chart && data.theme.options.chart.type)seriesType = data.theme.options.chart.type;
-      else seriesType = 'line';
-    }*/
-
+    
     seriesTypeSelect.updateByIndex(seriesIndex || index, {
       title: 'Series ' + ((seriesIndex || index) + 1) + ' - ' + capitalizeFirstLetter(seriesType)
     });
     seriesTypeSelect.selectByIndex(index);
     
-
     chartTypeOptions = highed.meta.charttype[seriesType.toLowerCase()];
 
+    options[seriesIndex || index] = null;
+    options[seriesIndex || index] = highed.merge({}, defaultOptions);
+
+    /*
     if (chartTypeOptions && chartTypeOptions.data) {
       options[seriesIndex || index].data = null;
-    }
+    }*/
+
 
     highed.merge(options[seriesIndex || index], highed.meta.charttype[seriesType]);
     clean(options[seriesIndex || index]);
+
     if (init) {
 
       if (data.settings && data.settings.dataProvider && data.settings.dataProvider.assignDataFields) {
