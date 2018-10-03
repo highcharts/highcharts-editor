@@ -143,5 +143,28 @@ highed.meta.charttype = {
             'linkedTo': 'high',
             'rawValue': [4]
         }
-    }
+    },
+    bubble: {
+        'values': null,
+        'y': {
+            'name': "Y",
+            'desc': 'Y Position',
+            'default': 'B',
+            'value': 'B',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'y',
+            'rawValue': [1]
+        },
+        'z': {
+            'name': "Z",
+            'desc': 'Z Position.',
+            'default': 'C',
+            'value': 'C',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'z',
+            'rawValue': [2]
+        }
+    },
 };

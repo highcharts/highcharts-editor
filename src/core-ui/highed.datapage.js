@@ -109,7 +109,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       'highed-import-button highed-ok-button ',
        highed.L('dgNewBtn')),
     blacklist = [
-      'candlestick'
+      'candlestick',
+      'bubble'
     ];
     
     addRowInput.value = 1;
@@ -121,7 +122,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       }
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
     });
-
 
     highed.dom.on(dataImportBtn, 'click', function() {
       dataTable.showImportModal(0);
@@ -304,29 +304,34 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     dataTable.removeAllCellsHighlight(null, [oldValues.labelColumn].concat(oldValues.dataColumns).sort());
     */
     if (dataTable.isInCSVMode()) {
-      clearSeriesMapping();
-      const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
+
+      clearSeriesMapping();        
+      
+      var seriesIndex = [];
   
+      assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, null, true);
+  
+      if (loadTemplateForEachSeries) {
+        const length = assignDataPanel.getAllOptions().length;
+        
+        for(var i=0;i<length;i++) {
+          seriesIndex.push(i);
+          assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, i);
+        }
+      } else seriesIndex = [assignDataPanel.getActiveSerie()];
+      
+      chartPreview.loadTemplateForSerie(newTemplate, seriesIndex);
+
+      const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
+      
       chartPreview.data.csv({
         csv: data
       }, null, false, function() {
-        var seriesIndex = [];
-  
-        assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, null, true);
         setSeriesMapping(assignDataPanel.getAllOptions());
-    
-        if (loadTemplateForEachSeries) {
-          const length = assignDataPanel.getAllOptions().length;
-          
-          for(var i=0;i<length;i++) {
-            seriesIndex.push(i);
-            assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, i);
-          }
-        } else seriesIndex = [assignDataPanel.getActiveSerie()];
-        
-        chartPreview.loadTemplateForSerie(newTemplate, seriesIndex);
         redrawGrid(true);
       });
+
+
     } else {
       chartPreview.loadTemplate(newTemplate);
     }
@@ -372,7 +377,9 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         const option = allOptions[i][key];
         if (option.value !== '') {
           if (option.isData) { //(highed.isArr(option)) { // Data assigndata
-            if (dataTableFields.indexOf(option.rawValue[0]) > -1) serieOption[option.linkedTo] = dataTableFields.indexOf(option.rawValue[0]);
+            if (dataTableFields.indexOf(option.rawValue[0]) > -1) {
+              serieOption[option.linkedTo] = dataTableFields.indexOf(option.rawValue[0]);
+            }
           } else {
             if (option.linkedTo === 'label') hasLabels = true;
             serieOption[option.linkedTo] = option.rawValue[0];
@@ -470,7 +477,16 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
 
   assignDataPanel.on('DeleteSeries', function(index) {
+    clearSeriesMapping();
     chartPreview.data.deleteSeries(index);
+
+    const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
+    chartPreview.data.csv({
+      csv: data
+    }, null, false, function() {
+      setSeriesMapping(assignDataPanel.getAllOptions());
+    });
+
   });
 
   assignDataPanel.on('SeriesChanged', function(index) {

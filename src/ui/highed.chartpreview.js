@@ -673,10 +673,11 @@ highed.ChartPreview = function(parent, attributes) {
     });
   }
 
-  function loadSeries() {
+  function loadSeries() {/*
     if (
       !gc(function(chart) {
         if (chart.options && chart.options.series) {
+          console.log(chart.options.series, chart.options.data.csv, chart.options.data.seriesMapping && chart.options.data.seriesMapping.slice());
           customizedOptions.series = chart.options.series;
         }
         return true;
@@ -684,7 +685,7 @@ highed.ChartPreview = function(parent, attributes) {
     ) {
       customizedOptions.series = [];
     }
-    updateAggregated();
+    updateAggregated();*/
   }
 
   /** Load CSV data

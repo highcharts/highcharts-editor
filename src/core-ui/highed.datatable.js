@@ -474,8 +474,8 @@ highed.DataTable = function(parent, attributes) {
       }
     ]);
     
-  const DEFAULT_COLUMN = 6,
-        DEFAULT_ROW = 13;
+  const DEFAULT_COLUMN = 9,
+        DEFAULT_ROW = 20;
     
   highed.dom.on(mainInput, 'click', function(e) {
     return highed.dom.nodefault(e);
