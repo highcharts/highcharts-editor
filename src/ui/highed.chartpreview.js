@@ -61,7 +61,7 @@ highed.ChartPreview = function(parent, attributes) {
     customizedOptions = highed.merge({}, properties.defaultChartOptions),
     aggregatedOptions = {},
     flatOptions = {},
-    templateOptions = {},
+    templateOptions = [],
     chartOptions = {},
     themeOptions = {},
     themeCustomCode = '',
@@ -464,22 +464,10 @@ highed.ChartPreview = function(parent, attributes) {
       customizedOptions.xAxis = [customizedOptions.xAxis || {}];
     }
 
-    templateOptions = templateOptions || {};
+   // templateOptions = templateOptions || {};
+    templateOptions = templateOptions || [];
+    var aggregatedTemplate = {}; 
 
-    if (templateOptions.yAxis && !highed.isArr(templateOptions.yAxis)) {
-      templateOptions.yAxis = [templateOptions.yAxis];
-    }
-
-    if (templateOptions.xAxis && !highed.isArr(templateOptions.xAxis)) {
-      templateOptions.xAxis = [templateOptions.xAxis];
-    }
-
-    // if (templateOptions.series) {
-    //     templateOptions.series = templateOptions.series.map(function (s) {
-    //         delete s['data'];
-    //         return s;
-    //     });
-    // }
 
     //Merge fest
 
@@ -493,24 +481,38 @@ highed.ChartPreview = function(parent, attributes) {
       );
     }
 
+    templateOptions.forEach(function(arr) {
+      if (arr) {
+        if (arr.yAxis && !highed.isArr(arr.yAxis)) {
+          arr.yAxis = [arr.yAxis];
+        }
+  
+        if (arr.xAxis && !highed.isArr(arr.xAxis)) {
+          arr.xAxis = [arr.xAxis];
+        }
+  
+        aggregatedTemplate = highed.merge(aggregatedTemplate, arr);
+      }
+    });
+
     highed.merge(
       aggregatedOptions,
-      highed.merge(highed.merge({}, templateOptions), customizedOptions)
+      highed.merge(highed.merge({}, aggregatedTemplate), customizedOptions)
     );
 
     //This needs to be cleaned up
-    if (aggregatedOptions.yAxis && templateOptions.yAxis) {
+    if (aggregatedOptions.yAxis && aggregatedTemplate.yAxis) {
       aggregatedOptions.yAxis.forEach(function(obj, i) {
-        if (i < templateOptions.yAxis.length) {
-          highed.merge(obj, templateOptions.yAxis[i]);
+        if (i < aggregatedTemplate.yAxis.length) {
+          highed.merge(obj, aggregatedTemplate.yAxis[i]);
         }
       });
     }
 
-    if (aggregatedOptions.xAxis && templateOptions.xAxis && highed.isArr(aggregatedOptions.xAxis)) {
+    if (aggregatedOptions.xAxis && aggregatedTemplate.xAxis && highed.isArr(aggregatedOptions.xAxis)) {
       (aggregatedOptions.xAxis).forEach(function(obj, i) {
-        if (i < templateOptions.xAxis.length) {
-          highed.merge(obj, templateOptions.xAxis[i]);
+        if (i < aggregatedTemplate.xAxis.length) {
+          highed.merge(obj, aggregatedTemplate.xAxis[i]);
         }
       });
     }
@@ -560,10 +562,10 @@ highed.ChartPreview = function(parent, attributes) {
       });
     }
 
-    if (templateOptions.series) {
+    if (aggregatedTemplate.series) {
       aggregatedOptions.series = aggregatedOptions.series || [];
 
-      templateOptions.series.forEach(function(obj, i) {
+      aggregatedTemplate.series.forEach(function(obj, i) {
         if (i < aggregatedOptions.series.length) {
           highed.merge(aggregatedOptions.series[i], obj);
         } else {
@@ -622,7 +624,8 @@ highed.ChartPreview = function(parent, attributes) {
       }
     });
     
-    templateOptions = highed.merge({}, template.config || {});
+    //templateOptions = highed.merge({}, template.config || {});
+    templateOptions[seriesIndex] = highed.merge({}, template.config || {});
     
     if (customizedOptions.xAxis) {
       delete customizedOptions.xAxis;
@@ -652,7 +655,7 @@ highed.ChartPreview = function(parent, attributes) {
 
     constr = template.constructor || 'Chart';
 
-    highed.clearObj(templateOptions);
+    //highed.clearObj(templateOptions);
 
     if (customizedOptions.xAxis) {
       delete customizedOptions.xAxis;
@@ -665,7 +668,8 @@ highed.ChartPreview = function(parent, attributes) {
     // highed.setAttr(customizedOptions, 'series', []);
 
     gc(function(chart) {
-      templateOptions = highed.merge({}, template.config || {});
+      //templateOptions = highed.merge({}, template.config || {});
+      templateOptions = [template.config];
 
       updateAggregated();
       init(aggregatedOptions);
@@ -677,7 +681,6 @@ highed.ChartPreview = function(parent, attributes) {
     if (
       !gc(function(chart) {
         if (chart.options && chart.options.series) {
-          console.log(chart.options.series, chart.options.data.csv, chart.options.data.seriesMapping && chart.options.data.seriesMapping.slice());
           customizedOptions.series = chart.options.series;
         }
         return true;
@@ -836,9 +839,10 @@ highed.ChartPreview = function(parent, attributes) {
     }
     
     if (projectData) {
-      templateOptions = {};
+      templateOptions = [{}];
       if (projectData.template) {
-        templateOptions = projectData.template;
+        if (highed.isArr(projectData.template)) templateOptions = projectData.template;
+        else templateOptions = [projectData.template];
       }
 
       customizedOptions = {};
@@ -1214,7 +1218,7 @@ highed.ChartPreview = function(parent, attributes) {
       } else if (highed.isBasic(data)) {
         highed.snackBar('the data is not valid json');
       } else {
-        templateOptions = {};
+        templateOptions = [{}];
         highed.clearObj(customizedOptions);
         highed.merge(customizedOptions, highed.merge({}, data));
 
@@ -1731,7 +1735,7 @@ highed.ChartPreview = function(parent, attributes) {
   function newChart() {
     highed.cloud.flush();
 
-    highed.clearObj(templateOptions);
+    templateOptions = [];
     highed.clearObj(customizedOptions);
     highed.clearObj(flatOptions);
 
