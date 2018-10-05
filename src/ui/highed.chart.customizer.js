@@ -280,7 +280,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
   }
 
   function buildTree() {
-    
+
     if (properties.noAdvanced) {
       return;
     }
@@ -301,8 +301,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
         );
 
         const series = chartPreview.options.all().series;
-        allOptions = highed.merge({}, chartPreview.options.getCustomized());
-
+        allOptions = highed.merge({}, chartPreview.options.full);//highed.merge({}, chartPreview.options.getCustomized());
         if (series) {
           series.forEach(function(serie, i) {
             highed.merge(allOptions.series[i], {
@@ -340,7 +339,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
     list.addItem({
       id: "Annotations",
       annotations: true,
-      title: "Annotations (Experimental)",
+      title: "Annotations ",
       onClick: function() {
         events.emit("AnnotationsClicked");
       }
