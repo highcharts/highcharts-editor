@@ -125,7 +125,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     }),
     activeColor = 'rgba(0, 0, 0, 0.75)',
     addTextModalContainer = highed.dom.cr('div', 'highed-add-text-popup'),
-    addTextModalInput = highed.dom.cr('input', 'highed-imp-input-stretch'),
+    addTextModalInput = highed.dom.cr('textarea', 'highed-imp-input-stretch'),
     colorDropdownParent = highed.dom.cr('div'),
     typeDropdownParent = highed.dom.cr('div'),
     addTextModalColorSelect = highed.DropDown(colorDropdownParent),
@@ -194,7 +194,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
     highed.dom.on(addTextModalSubmit, 'click', function() {
       overlayAddTextModal.hide();
-      chartPreview.addAnnotationLabel(addLabelX, addLabelY, addTextModalInput.value, activeColor, addTextModalTypeSelect.getSelectedItem());
+      chartPreview.addAnnotationLabel(addLabelX, addLabelY, addTextModalInput.value.replace('\n', '<br/>'), activeColor, addTextModalTypeSelect.getSelectedItem());
 
       addTextModalTypeSelect.selectByIndex(0);
       addTextModalTypeSelect.selectByIndex(0);

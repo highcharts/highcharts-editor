@@ -258,12 +258,44 @@ highed.ChartPreview = function(parent, attributes) {
       if (chart && chart.reflow) {
         //chart.reflow();
       }
-      
+
+      (function(H) {
+
+        function setupDeleteAnnotation(eventName, type) {
+          H.wrap(H.Annotation.prototype, eventName, function(proceed, shapeOptions) {
+            
+            proceed.apply(this, Array.prototype.slice.call(arguments, 1));
+            var annotation = this[type][this[type].length - 1];
+                
+            (annotation.element).addEventListener('click', function(e) {
+              highed.dom.nodefault(e);
+              if (isAnnotating && annotationType === 'delete') {
+                console.log(length, shapeOptions)
+                var optionIndex = customizedOptions.annotations[0][type].findIndex(function(element) {
+                  return element.id === shapeOptions.id;
+                });
+                customizedOptions.annotations[0][type].splice(optionIndex, 1);
+                annotation.destroy();
+              }
+            });
+          })
+        }
+
+        setupDeleteAnnotation('initLabel', 'labels');
+        setupDeleteAnnotation('initShape', 'shapes');
+
+      })(Highcharts);
+
+
       Highcharts.addEvent(chart, 'click', function (e) {
         if (isAnnotating) {
           //events.emit('SetAnnotate', e);
+
+          if (!customizedOptions.annotations) customizedOptions.annotations = [{}];
+          if (!customizedOptions.annotations[0].shapes) customizedOptions.annotations[0].shapes = []; 
           function addShape(chart, type, x, y) {
             var options = {
+                id: customizedOptions.annotations[0].shapes.length,
                 type: type,
                 point: {
                     x: x,
@@ -287,16 +319,6 @@ highed.ChartPreview = function(parent, attributes) {
             var annotation = chart.addAnnotation({
                 shapes: [options]
             });
-            
-            highed.dom.on(annotation.group.element, 'click', function() {
-              if (isAnnotating && annotationType === 'delete') {
-                customizedOptions.annotations[0].shapes.splice(customizedOptions.annotations[0].shapes.indexOf(annotation.options.shapes[0]), 1);
-                annotation.destroy();
-              }
-            });
-            
-            if (!customizedOptions.annotations) customizedOptions.annotations = [{}];
-            if (!customizedOptions.annotations[0].shapes) customizedOptions.annotations[0].shapes = []; 
             customizedOptions.annotations[0].shapes.push(annotation.options.shapes[0]);
           }
 
@@ -604,6 +626,8 @@ highed.ChartPreview = function(parent, attributes) {
     const type = template.config.chart.type;
     delete template.config.chart.type;
 
+    if (constr !== 'StockChart') constr = template.constructor || 'Chart';
+
     seriesIndex.forEach(function(index) {
 
       if (!templateSettings[index]) templateSettings[index] = {};
@@ -652,7 +676,6 @@ highed.ChartPreview = function(parent, attributes) {
         'chart preview: templates must be an object {config: {...}}'
       );
     }
-
     constr = template.constructor || 'Chart';
 
     //highed.clearObj(templateOptions);
@@ -1842,8 +1865,11 @@ highed.ChartPreview = function(parent, attributes) {
 
   function addLabel(x, y, text, color, type) {
     if (chart) {
+      if (!customizedOptions.annotations) customizedOptions.annotations = [{}];
+      if (!customizedOptions.annotations[0].labels) customizedOptions.annotations[0].labels = []; 
       var annotation = chart.addAnnotation({
         labels: [{
+            id: customizedOptions.annotations[0].labels.length,
             text: text,
             point: { 
               x: x, 
@@ -1859,15 +1885,6 @@ highed.ChartPreview = function(parent, attributes) {
         }]
       });
 
-      highed.dom.on(annotation.group.element, 'click', function() {
-        if (isAnnotating && annotationType === 'delete') {
-          customizedOptions.annotations[0].labels.splice(customizedOptions.annotations[0].labels.indexOf(annotation.options.labels[0]), 1);
-          annotation.destroy();
-        }
-      });
-
-      if (!customizedOptions.annotations) customizedOptions.annotations = [{}];
-      if (!customizedOptions.annotations[0].labels) customizedOptions.annotations[0].labels = []; 
       customizedOptions.annotations[0].labels.push(annotation.options.labels[0]);
     }
   }
