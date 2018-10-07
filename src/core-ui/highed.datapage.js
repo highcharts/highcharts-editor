@@ -142,7 +142,13 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     function init() {
 
-      highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(chartTitle, chartTitleInput),  highed.dom.ap(iconsContainer, addRowDiv, dataClearBtn, dataImportBtn, dataExportBtn)), userContents);
+      if (!highed.onPhone()) {
+        highed.dom.ap(iconsContainer, addRowDiv, dataClearBtn, dataImportBtn, dataExportBtn);
+      } else {
+        highed.dom.ap(iconsContainer, dataImportBtn);
+      }
+
+      highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(chartTitle, chartTitleInput), iconsContainer), userContents);
       highed.dom.ap(body, contents);
   
       highed.dom.ap(userContents, dataTableContainer);

@@ -263,18 +263,21 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     title.innerHTML = '';
     
     iconsContainer.innerHTML = '';
-    buttons.forEach(function(button, i) {
-      button.element = highed.dom.cr('span', 'highed-toolbox-custom-code-icon highed-template-tooltip ' + ( i === 0 ? ' active' : ''), '<i class="fa fa-' + button.icon + '" aria-hidden="true"></i><span class="highed-tooltip-text">' + button.tooltip + '</span>');
-      
-      highed.dom.on(button.element, 'click', function() {
-        buttons.forEach(function(b){
-          b.element.classList.remove('active');
+
+    if (!highed.onPhone()) {
+      buttons.forEach(function(button, i) {
+        button.element = highed.dom.cr('span', 'highed-toolbox-custom-code-icon highed-template-tooltip ' + ( i === 0 ? ' active' : ''), '<i class="fa fa-' + button.icon + '" aria-hidden="true"></i><span class="highed-tooltip-text">' + button.tooltip + '</span>');
+        
+        highed.dom.on(button.element, 'click', function() {
+          buttons.forEach(function(b){
+            b.element.classList.remove('active');
+          });
+          button.element.classList += ' active';
+          button.onClick();
         });
-        button.element.classList += ' active';
-        button.onClick();
+        highed.dom.ap(iconsContainer, button.element);
       });
-      highed.dom.ap(iconsContainer, button.element);
-    });
+    }
 
     highed.dom.ap(contents, userContents);
     highed.dom.ap(body, contents);
@@ -451,10 +454,12 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       display: 'none'
     });
 
-    buttons.forEach(function(button, i) {
+    if (!highed.onPhone()){
+      buttons.forEach(function(button, i) {
         button.element.classList.remove('active');
         if (i === 0) button.element.classList += ' active';
-    });
+      });
+    }
 
     resHeight.value = '';
     resWidth.value = '';

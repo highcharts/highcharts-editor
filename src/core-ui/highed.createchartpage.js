@@ -62,7 +62,7 @@ highed.CreateChartPage = function(parent, options, props) {
     ],
     container = highed.dom.cr(
       'div',
-      'highed-transition highed-toolbox highed-box-size'
+      'highed-transition highed-toolbox wizard highed-box-size'
     ),
     title = highed.dom.cr('div', 'highed-toolbox-body-title'),
     contents = highed.dom.cr(
@@ -85,7 +85,7 @@ highed.CreateChartPage = function(parent, options, props) {
     dataTableContainer = highed.dom.cr('div', 'highed-toolbox-data'),
     toolbox = highed.Toolbox(userContents),
     options = [];
-
+    
     function init(dataPage,templatePage, customizePage) {
 
       toolbox = highed.Toolbox(userContents);

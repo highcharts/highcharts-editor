@@ -29,9 +29,9 @@ highed.Toolbox = function(parent, attr) {
   var events = highed.events(),
     container = highed.dom.cr(
       'div',
-      'highed-transition highed-toolbox highed-box-size'
+      'highed-transition highed-toolbox wizard highed-box-size'
     ),
-    bar = highed.dom.cr('div', 'highed-toolbox-bar highed-box-size'),
+    bar = highed.dom.cr('div', 'highed-toolbox-bar highed-box-size highed-wizard-title-container'),
     body = highed.dom.cr(
       'div',
       'highed-toolbox-body highed-toolbox-body-no-border highed-box-size highed-transition'
@@ -55,7 +55,7 @@ highed.Toolbox = function(parent, attr) {
         def
       ),
       entryEvents = highed.events(),
-      title = highed.dom.cr('div', 'highed-toolbox-body-title', props.hideTitle ? '' : props.title),
+      title = highed.dom.cr('div', 'highed-toolbox-body-title wizard', props.hideTitle ? '' : props.title),
       contents = highed.dom.cr(
         'div',
         'highed-box-size highed-toolbox-inner-body'
@@ -65,7 +65,7 @@ highed.Toolbox = function(parent, attr) {
         'highed-box-size highed-toolbox-user-contents'
       ),
       iconClass = 'highed-toolbox-list-item-container',
-      icon = highed.dom.cr('div', iconClass),      
+      icon = highed.dom.cr('div', iconClass),
       resizeTimeout,
       exports = {};
 

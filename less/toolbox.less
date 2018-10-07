@@ -255,12 +255,44 @@
 
 
 @media only screen and (max-width: 600px) {
+  .highed-wizard-title-container {
+    display: none;
+  }
+  .highed-toolbox-input-container {
+    input {
+      min-width: 237px;
+    }
+  }
   .highed-toolbox {
     margin-left: 0px;
+    margin-top: 0px;
+  }
+  .highed-toolbox.wizard {
+    margin-left: 0px;
+    width: 100% !important;
+    margin-top: 0px;
+    overflow: scroll;
   }
   .highed-toolbox-body {
+    width: 100%;
   }
-  .highed-toolbox-inner-body
-   {
+  .highed-toolbox-inner-body {
+    .highed-table-dropzone-container .highed-table-dropzone {
+      min-height: 230px;
+    }
+    .highed-toolbox-body-title.wizard {
+      margin: 9px 0px;
+    }
+    .highed-table-dropzone-container {
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+    .highed-table-dropzone-container .highed-table-dropzone .highed-table-dropzone-title {
+      margin-top: 15px;
+    }
+    .highed-toolbox-template {
+      margin-left: initial; 
+      width: initial;
+    }
   }
 }
