@@ -97,6 +97,8 @@ highed.AssignDataPanel = function(parent, dataTable) {
               highed.dom.ap(highed.dom.cr('h3', 'highed-assigndatapanel-header', 'Assign columns for this chart'), headerToggle)),
     labels = highed.dom.cr('div', 'highed-assigndatapanel-data-options'),
     selectContainer = highed.dom.cr('div', 'highed-assigndatapanel-select-container'),
+    changeSeriesTypeContainer = highed.dom.cr('div', 'highed-assigndatapanel-change-series-type'),
+    changeSeriesTypeLink = highed.dom.cr('a', 'highed-assigndatapanel-change-series-type-link', 'Click here to change series template type'),
     inputContainer = highed.dom.cr('div', 'highed-assigndatapanel-inputs-container'),
     addNewSeriesBtn = highed.dom.cr('button', 'highed-assigndatapanel-add-series', '<i class="fa fa-plus"/>'),
     deleteSeriesBtn = highed.dom.cr('button', 'highed-assigndatapanel-add-series', '<i class="fa fa-trash"/>'),
@@ -597,6 +599,11 @@ highed.AssignDataPanel = function(parent, dataTable) {
   ////////////////////////////////////////////////////////////////////////////////
       
   highed.dom.ap(selectContainer, addNewSeriesBtn, deleteSeriesBtn, toggleHideCellsBtn);
+  highed.dom.ap(changeSeriesTypeContainer, changeSeriesTypeLink);
+
+  highed.dom.on(changeSeriesTypeLink, 'click', function() {
+    events.emit('GoToTemplatePage');
+  });
 
   highed.dom.on(toggleHideCellsBtn, 'click', function() {
     toggleCells();
@@ -668,7 +675,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
   seriesTypeSelect.selectById(0);
 
   highed.dom.ap(body, header);
-  highed.dom.ap(labels, selectContainer, inputContainer);
+  highed.dom.ap(labels, selectContainer, changeSeriesTypeContainer, inputContainer);
 
   highed.dom.ap(body, hidden);
 

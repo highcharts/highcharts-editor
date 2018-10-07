@@ -654,6 +654,11 @@ highed.DrawerEditor = function(parent, options, planCode) {
   //////////////////////////////////////////////////////////////////////////////
   // Event attachments
 
+  dataPage.on('GoToTemplatePage', function() {
+    const templates = panel.getOptions().templates;
+    if (templates) templates.click();
+  });
+
   dataPage.on('SeriesChanged', function(index) {
     templatePage.selectSeriesTemplate(index, chartPreview.toProject());
   });

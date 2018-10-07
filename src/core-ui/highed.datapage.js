@@ -449,6 +449,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   //////////////////////////////////////////////////////////////////////////////
 
+  assignDataPanel.on('GoToTemplatePage', function() {
+    events.emit("GoToTemplatePage");
+  })
+  
   assignDataPanel.on('AddSeries', function(index, type) {
     chartPreview.options.addBlankSeries(index, type);
   })
