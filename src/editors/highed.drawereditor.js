@@ -225,7 +225,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
         {
           importer: properties.importer
         },
-        properties.dataGrid
+        properties.customizer
       ),
       chartPreview,
       highedChartContainer,
