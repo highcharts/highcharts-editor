@@ -180,7 +180,6 @@ highed.List = function(parent, responsive, props, planCode) {
 
       if (highed.isArr(group.options)) {
         table = highed.dom.cr('div', 'highed-customizer-table');
-
         doInclude = shouldInclude(group);
 
         if (!doInclude) {
@@ -326,6 +325,7 @@ highed.List = function(parent, responsive, props, planCode) {
         def = highed.getAttr(options, group.id, detailIndex);
 
         //highed.dom.ap(sub, highed.dom.cr('span', '', referenced[0].returnType));
+        
         highed.dom.ap(
           table,
           highed.InspectorField(
@@ -343,9 +343,11 @@ highed.List = function(parent, responsive, props, planCode) {
               defaults: group.defaults,
               width: group.width || 100,
               attributes: group.attributes || [],
-              warning: group.warning || [] 
+              warning: group.warning || [],
+              header: highed.L(group.pid)
             },
             function(newValue) {
+              if (group.header) return;
               if (group.plugins && group.plugins.length > 0) {
                 events.emit('TogglePlugins', group.id, newValue);
               }

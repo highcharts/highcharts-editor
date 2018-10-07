@@ -92,6 +92,13 @@ highed.meta.optionsExtended = {
         dropdown: true,
         options: [
           {
+            header: true,
+            pid: 'option.subcat.chartarea',
+            width: 100,
+            id: 'chartarea-header',
+            dataType: 'header',
+          },
+          {
             id: 'chart--backgroundColor',
             pid: 'chart.backgroundColor',
             dataType: 'color',
@@ -132,6 +139,13 @@ highed.meta.optionsExtended = {
             defaults: '0',
             parent: 'chart',
             width: 50
+          }, 
+          {
+            header: true,
+            pid: 'option.subcat.plotarea',
+            width: 100,
+            id: 'plotarea-header',
+            dataType: 'header',
           },
           {
             id: 'chart--plotBackgroundColor',

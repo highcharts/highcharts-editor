@@ -100,6 +100,13 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
           input
         );
       },
+      header: function(val, callback) {
+        return highed.dom.ap(
+          highed.dom.cr('div', 'highed-field-container'),/*
+          reset,*/
+          highed.dom.cr('div', 'highed-field-header', properties.header)
+        );
+      },
       number: function(val, callback) {
         var input = highed.dom.cr('input', 'highed-field-input', '', fieldID),
           reset = createReset(properties.defaults || val || value, function(v) {
@@ -778,8 +785,17 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
       highed.dom.ap(warningContainer, warning);
   }
 
+  if (type === 'header') {   
+    
+    return highed.dom.ap(
+      highed.dom.ap(
+        parent, //tr
+        highed.dom.ap(widgetTD, fields[type] ? fields[type]() : fields.string())
+      )
+    );
 
-  if (type === 'boolean') {
+  }
+  else if (type === 'boolean') {
     titleCol.className = 'highed-customize-field-boolean';
     return highed.dom.ap(
       highed.dom.ap(
