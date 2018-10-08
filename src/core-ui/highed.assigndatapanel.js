@@ -381,6 +381,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
     else {
       if (data.options && data.options.series && data.options.series[index] && data.options.series[index].type) return data.options.series[index].type;
       if (data.template && data.template.chart && data.template.chart.type) return data.template.chart.type;
+      else if (data.options && data.options.chart && data.options.chart.type) return data.options.chart.type;
       else if (data.theme && data.theme.options.chart && data.theme.options.chart.type) return data.theme.options.chart.type;
       else return 'line';
     }
