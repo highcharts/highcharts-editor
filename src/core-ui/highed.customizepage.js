@@ -72,6 +72,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       },
       {
         tooltip: 'Advanced',
+        noPermission: options.noAdvanced,
         onClick: function() {
           customizer.showAdvancedEditor();
         },
@@ -79,6 +80,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       },
       {
         tooltip: 'Custom Code',
+        noPermission: options.noCustomCode,
         onClick: function() {
           reduceSize(customizer.showCustomCode);
         },
@@ -86,6 +88,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       },
       {
         tooltip: 'Preview Options',
+        noPermission: options.noPreview,
         onClick: function() {
 
           reduceSize(customizer.showPreviewOptions);
@@ -266,11 +269,12 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
     if (!highed.onPhone()) {
       buttons.forEach(function(button, i) {
+        if (button.noPermission) return;
         button.element = highed.dom.cr('span', 'highed-toolbox-custom-code-icon highed-template-tooltip ' + ( i === 0 ? ' active' : ''), '<i class="fa fa-' + button.icon + '" aria-hidden="true"></i><span class="highed-tooltip-text">' + button.tooltip + '</span>');
         
         highed.dom.on(button.element, 'click', function() {
           buttons.forEach(function(b){
-            b.element.classList.remove('active');
+            if (!b.noPermission)  b.element.classList.remove('active');
           });
           button.element.classList += ' active';
           button.onClick();
@@ -456,7 +460,11 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
     if (!highed.onPhone()){
       buttons.forEach(function(button, i) {
-        button.element.classList.remove('active');
+
+        if (button.noPermission) return;
+        if (button.element) {
+          button.element.classList.remove('active');
+        }
         if (i === 0) button.element.classList += ' active';
       });
     }
