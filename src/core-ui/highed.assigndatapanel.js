@@ -430,8 +430,12 @@ highed.AssignDataPanel = function(parent, dataTable) {
         });
       } else {
         // Probably a legacy chart, change values to equal rest of chart
-  
-        const length = maxColumns - 1;
+        
+        var length = maxColumns - 1;
+        if (data && data.options && data.options.series) {
+          length = data.options.series.length;
+        }
+
         for(var i=1; i<length; i++) {
           const seriesType = getSeriesType(data, i);
           if(!options[i]) {
