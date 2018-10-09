@@ -767,6 +767,24 @@ highed.ChartPreview = function(parent, attributes) {
       
       customizedOptions.series = [];
 
+      if (customizedOptions.xAxis) {
+        (highed.isArr(customizedOptions.xAxis)
+          ? customizedOptions.xAxis
+          : [customizedOptions.xAxis]
+        ).forEach(function(axis) {
+          if (axis.categories) axis.categories = [];
+        });
+      }
+
+      if (customizedOptions.yAxis) {
+        (highed.isArr(customizedOptions.yAxis)
+          ? customizedOptions.yAxis
+          : [customizedOptions.yAxis]
+        ).forEach(function(axis) {
+          if (axis.categories) axis.categories = [];
+        });
+      }
+
       highed.merge(customizedOptions, {
         plotOptions: {
           series: {
