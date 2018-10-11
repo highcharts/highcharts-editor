@@ -293,7 +293,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
   function resize(w, h) {
        
     highed.dom.style(container, {
-      height: (h - 5) + 'px'
+      height: (h - 3) + 'px'
     });
   }
 
