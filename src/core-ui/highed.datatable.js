@@ -1696,12 +1696,20 @@ highed.DataTable = function(parent, attributes) {
       }
 
       if (direction === 'ASC') {
-        return ad.localeCompare(bd);
+        if (ad) return ad.localeCompare(bd);
       }
-      return bd.localeCompare(ad);
+      
+      if (bd) {
+        return bd.localeCompare(ad);
+      } else {
+        if (ad) return ad.localeCompare(bd);
+      }
+      
     });
 
     rebuildRows();
+
+    if (rows.length > 0) rows[0].columns[column].focus();
     emitChanged();
   }
 
