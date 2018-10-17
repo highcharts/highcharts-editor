@@ -193,6 +193,8 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
       }
     }
 
+    var timeout = null;
+
     if (typeof window['CodeMirror'] !== 'undefined') {
       codeMirrorBox = CodeMirror.fromTextArea(customCodeBox, {
         lineNumbers: true,
@@ -200,10 +202,18 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
         theme: highed.option('codeMirrorTheme')
       });
       codeMirrorBox.setSize('100%', '100%');
-      codeMirrorBox.on('change', setCustomCode);
+      codeMirrorBox.on('keyup', function() {
+        clearTimeout(timeout);
+        timeout = setTimeout(function () {
+          setCustomCode();
+        }, 500);
+      });
     } else {
-      highed.dom.on(customCodeBox, 'change', function() {
-        setCustomCode();
+      highed.dom.on(customCodeBox, 'keyup', function() {
+        clearTimeout(timeout);
+        timeout = setTimeout(function () {
+          setCustomCode();
+        }, 500);
       });
     }
   }
