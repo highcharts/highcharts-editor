@@ -492,6 +492,10 @@ highed.DrawerEditor = function(parent, options, planCode) {
   function showCreateChartPage() {
 
     createChartPage.init(dataPage, templatePage, customizePage);
+
+    highed.dom.style(workspaceBody, {
+      opacity: 0
+    });
     panel.getPrev().hide();
     createChartPage.show();
     highed.dom.style([chartFrame, titleContainer], {
@@ -502,6 +506,9 @@ highed.DrawerEditor = function(parent, options, planCode) {
       createChartPage.hide();
       highed.dom.style([chartFrame, titleContainer], {
         opacity: '1'
+      });
+      highed.dom.style(workspaceBody, {
+        opacity: 1
       });
 
       if (goToDataPage) {
