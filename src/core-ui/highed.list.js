@@ -378,7 +378,6 @@ highed.List = function(parent, responsive, props, planCode) {
     }
 
     function select(e) {
-
       if (selectedItem) {
         selectedItem.selected = false;
         selectedItem.node.className = 'item';
@@ -511,8 +510,10 @@ highed.List = function(parent, responsive, props, planCode) {
      *  @param which {string} - the id of the item to select
      */
   function select(which) {
+
     items.some(function(item) {
       if (which === item.title) {
+        if (item.selected) return true;
         item.select();
         return true;
       }
@@ -520,6 +521,11 @@ highed.List = function(parent, responsive, props, planCode) {
   }
 
   function selectDropdown(dropdownKey) {
+
+
+    if (dropdowns[dropdownKey].classList.contains('active')) {
+      return true;
+    }
 
     Object.keys(dropdowns).forEach(function(d) {
       if (dropdowns[d] !== dropdowns[dropdownKey]) dropdowns[d].classList.remove('active');

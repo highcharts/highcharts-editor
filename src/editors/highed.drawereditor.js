@@ -730,7 +730,10 @@ highed.DrawerEditor = function(parent, options, planCode) {
   chartPreview.on('RequestEdit', function(event, x, y) {
 
     const customize = panel.getOptions().customize;
-    if (customize) customize.click();
+    if (!panel.getCurrentOption() || panel.getCurrentOption().text !== 'Customize') {
+      if (customize) customize.click();
+    }
+
     setTimeout(function() {
       customizePage.selectOption(event, x, y);
     }, 500);

@@ -36,7 +36,8 @@ highed.OptionsPanel = function(parent, attr) {
       'highed-box-size highed-transition'
     ),
     prev,
-    options = {};
+    options = {},
+    currentOption = null;
 
   highed.dom.ap(parent, highed.dom.ap(container, highed.dom.ap(body, highed.dom.cr('div', '', 'Workspace View:'))));
 
@@ -54,6 +55,7 @@ highed.OptionsPanel = function(parent, attr) {
       
     (option.onClick || []).forEach(function(click) {
       highed.dom.on(btn, 'click', function() {
+        currentOption = option;
         click(prev, option);
       });
     });
@@ -76,12 +78,17 @@ highed.OptionsPanel = function(parent, attr) {
     return options;
   }
 
+  function getCurrentOption() {
+    return currentOption;
+  }
+
   return {
     on: events.on,
     addOption: addOption,
     setDefault: setDefault,
     getPrev: getPrev,
     clearOptions: clearOptions,
-    getOptions: getOptions
+    getOptions: getOptions,
+    getCurrentOption: getCurrentOption
   };
 };

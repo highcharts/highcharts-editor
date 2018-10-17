@@ -438,6 +438,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
     var n;
     list.select(thing.tab);
     list.selectDropdown(thing.dropdown);
+  
     advTree.expandTo(thing.id);
     highlightField(thing.id, x, y);
   }
