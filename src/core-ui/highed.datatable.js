@@ -1360,14 +1360,19 @@ highed.DataTable = function(parent, attributes) {
           title: highed.L('dgInsColBefore'),
           icon: 'plus',
           click: function() {
+
+            events.emit('ColumnMoving');
             insertCol(exports.colNumber);
+            events.emit('ColumnMoved')
           }
         },
         {
           title: highed.L('dgInsColAfter'),
           icon: 'plus',
           click: function() {
+            events.emit('ColumnMoving');
             insertCol(exports.colNumber + 1);
+            events.emit('ColumnMoved')
           }
         }
       ]),
@@ -1637,7 +1642,7 @@ highed.DataTable = function(parent, attributes) {
       tempKeyValue = getNextLetter(tempKeyValue);
     });
 
-    if (where) {
+    if (!isNaN(where)) {
       gcolumns.splice(where, 0, exports);
     } else {
       gcolumns.push(exports);
@@ -1671,7 +1676,6 @@ highed.DataTable = function(parent, attributes) {
     tbody.innerHTML = '';
 
     direction = (direction || '').toUpperCase();
-
     rows.sort(function(a, b) {
       var ad = a.columns[column].value(),
         bd = b.columns[column].value();
@@ -1757,10 +1761,9 @@ highed.DataTable = function(parent, attributes) {
    * @param {number} where - is the position where to add it
    */
   function insertCol(where) {
-    if (!where) gcolumns.length;
-    if (where < 0) where = 0;
+    if (where === null) where = gcolumns.length;
+    if (where <= 0) where = 0;
     if (where >= gcolumns.length) where = gcolumns.length;
-
     //Insert into gcolumns and on each row, then call updateColumns()
     addCol(highed.L('dgNewCol'), where);
 
