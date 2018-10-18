@@ -187,6 +187,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
             col !== 'undefined' &&
             typeof col !== 'undefined'
           ) {
+            box.innerHTML = "";
             //box.innerHTML = col;
           } else {
             box.innerHTML = 'auto';
