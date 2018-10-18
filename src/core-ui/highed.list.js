@@ -186,7 +186,7 @@ highed.List = function(parent, responsive, props, planCode) {
           return;
         }
         
-        container = highed.dom.cr('div', 'highed-customize-group' + (group.dropdown ? ' highed-list-general-drop-down' : ''));
+        container = highed.dom.cr('div', 'highed-customize-group' + (group.dropdown ? ' highed-list-general-drop-down' : ' highed-list-normal'));
         masterNode = highed.dom.cr('div', 'highed-customize-master-dropdown');
         nodeHeading = highed.dom.cr(
           'div',

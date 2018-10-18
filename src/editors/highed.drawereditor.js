@@ -474,6 +474,12 @@ highed.DrawerEditor = function(parent, options, planCode) {
       opacity: '0'
     });
 
+    if(highed.onPhone()) {
+      highed.dom.style(titleContainer, {
+        display: 'none'
+      });
+    }
+
     createChartPage.on('SimpleCreateChartDone', function(goToDataPage) {
       createChartPage.hide();
       highed.dom.style([chartFrame, titleContainer], {
@@ -482,6 +488,12 @@ highed.DrawerEditor = function(parent, options, planCode) {
       highed.dom.style(workspaceBody, {
         opacity: 1
       });
+
+      if(highed.onPhone()) {
+        highed.dom.style(titleContainer, {
+          display: 'block'
+        });
+      }
 
       if (goToDataPage) {
         dataPage.show();

@@ -2024,6 +2024,10 @@ highed.DataTable = function(parent, attributes) {
       opacity: 1
     });
 
+    highed.dom.style(hideCellsDiv, {
+      opacity: 0
+    });
+
     setTimeout(function() {
 
       if(rows[0] && rows.length < DEFAULT_ROW) {
@@ -2068,6 +2072,9 @@ highed.DataTable = function(parent, attributes) {
 
       highed.dom.style(loadIndicator, {
         opacity: 0
+      });
+      highed.dom.style(hideCellsDiv, {
+        opacity: 1
       });
 
       if (highed.isFn(done)) {
