@@ -283,6 +283,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     destroy: destroy,
     chart: chartPreview,
     getIcons: getIcons,
+    resize: resize,
     hide: hide,
     show: show,
     createMostPopularTemplates: createMostPopularTemplates,

@@ -568,6 +568,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     destroy: destroy,
     hide: hide,
     show: show,
+    resize: resize,
     isVisible: function() {
       return isVisible;
     },

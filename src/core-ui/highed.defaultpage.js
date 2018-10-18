@@ -209,6 +209,7 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
     chart: chartPreview,
     hide: hide,
     show: show,
+    resize: resize,
     isVisible: function() {
       return isVisible;
     },

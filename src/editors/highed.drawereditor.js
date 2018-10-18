@@ -177,6 +177,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
       'div',
       'highed-optionspanel-buttons highed-optionspanel-res highed-box-size highed-transition'
     ),
+    defaultPage,
     panel = highed.OptionsPanel(workspaceBody),
     toolbar = highed.Toolbar(splitter.top),
     // Chart preview
@@ -397,7 +398,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
         highed.dom.ap(workspaceRes, customizePage.getResolutionContainer());
       } else {
         // Create page
-        const defaultPage = highed.DefaultPage(splitter.bottom, option, chartPreview, highedChartContainer);
+        defaultPage = highed.DefaultPage(splitter.bottom, option, chartPreview, highedChartContainer);
         defaultPage.init();
         option.nav.page = defaultPage;
       }
@@ -517,6 +518,8 @@ highed.DrawerEditor = function(parent, options, planCode) {
       setChartTitle(options.title);
     });
   }
+
+
 
   /**
    * Resize the chart preview based on a given width
@@ -793,7 +796,13 @@ highed.DrawerEditor = function(parent, options, planCode) {
 
   highed.dom.on(window, 'resize', resize);
   
-
+  highed.dom.on(window, 'afterprint', function() {
+    setTimeout(function() {
+      const currentOption = (panel.getCurrentOption() ? panel.getCurrentOption().page : dataPage);
+      setTimeout(currentOption.resize, 10);
+      resize();
+    }, 1100);
+  })
   //////////////////////////////////////////////////////////////////////////////
 
   highed.dom.ap(
