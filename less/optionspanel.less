@@ -25,7 +25,7 @@
 }
 
 .highed-optionspanel-body{            
-  width: 78%;
+  width: 82%;
   max-width: 1050px;
   height: 39px;
   margin-left: auto;
@@ -98,12 +98,54 @@
   border-radius: 0px;
 }
 
-@media screen and (max-width: 1250px) and (min-width: 769px) {
-  .highed-optionspanel-body {
-    width: 57%;
-    max-width: 58%;
+.action-btn {
+  display: none;
+}
+
+
+@media screen and (max-width: 1353px) and (min-width: 769px) {
+  
+  .highed-optionspanel {
+    vertical-align: top;
+  }
+  .highed-optionspanel-cloud {
+    width: 17%;
+    z-index: 1;
+    height: 25px;
+    overflow: hidden;
+    .action-btn {
+      border: 0px solid !important;
+      border-bottom: 1px solid rgba(128, 128, 128, 0.27) !important;
+      display: block;
+    }
+    .highed-import-button {
+      width: 100%;
+      border-radius: 0px;
+      border-bottom: 1px solid rgba(128, 128, 128, 0.27);
+      border-left: 1px solid rgba(128, 128, 128, 0.27);
+      border-right: 1px solid rgba(128, 128, 128, 0.27);
+    }
+    .highed-import-button:hover {
+      background-color: #5bd6cf
+    }
   }
 }
+@media screen and (max-width: 897px) and (min-width: 769px) {
+  .highed-optionspanel-res {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 1123px) and (min-width: 769px) {
+  .highed-optionspanel-body {
+    width: 100%;
+    max-width: 100%;
+  }
+  .highed-optionspanel-res {
+    border: 0px solid;
+  }
+}
+
 
 @media screen and (max-width: 768px) {
   .highed-optionspanel-header {

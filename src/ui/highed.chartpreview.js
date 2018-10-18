@@ -239,6 +239,7 @@ highed.ChartPreview = function(parent, attributes) {
       }
     }
 */
+
     try {
       chart = new Highcharts[constr](pnode || parent, options);
 
@@ -270,7 +271,6 @@ highed.ChartPreview = function(parent, attributes) {
             (annotation.element).addEventListener('click', function(e) {
               highed.dom.nodefault(e);
               if (isAnnotating && annotationType === 'delete') {
-                console.log(length, shapeOptions)
                 var optionIndex = customizedOptions.annotations[0][type].findIndex(function(element) {
                   return element.id === shapeOptions.id;
                 });
