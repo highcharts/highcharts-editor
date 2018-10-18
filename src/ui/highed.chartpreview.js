@@ -107,7 +107,7 @@ highed.ChartPreview = function(parent, attributes) {
       'highed-icon highed-chart-preview-expand fa fa-external-link-square'
     ),
     expanded = false,
-    constr = 'Chart',
+    constr = ['Chart'],
     wysiwyg = {
       'g.highcharts-legend': { tab: 'Legend', dropdown: 'General', id: 'legend--enabled' },
       'text.highcharts-title': { tab: 'Chart',  dropdown: 'Title', id: 'title--text' },
@@ -196,7 +196,10 @@ highed.ChartPreview = function(parent, attributes) {
 
     //We want to work on a copy..
     options = options || aggregatedOptions;
-    constr = constr || 'Chart';
+
+    if (highed.isArr(constr)) constr = constr;
+    else constr = ['Chart'];
+
     // options = highed.merge({}, options || aggregatedOptions);
 
     // if (aggregatedOptions && aggregatedOptions.series) {
@@ -241,7 +244,11 @@ highed.ChartPreview = function(parent, attributes) {
 */
 
     try {
-      chart = new Highcharts[constr](pnode || parent, options);
+      const chartConstr = (constr.some(function(a) {
+        return a === 'StockChart';
+      }) ? 'StockChart' : 'Chart');
+
+      chart = new Highcharts[chartConstr](pnode || parent, options);
 
       //This is super ugly.
       // customizedOptions.series = customizedOptions.series || [];
@@ -626,7 +633,7 @@ highed.ChartPreview = function(parent, attributes) {
     const type = template.config.chart.type;
     delete template.config.chart.type;
 
-    if (constr !== 'StockChart') constr = template.constructor || 'Chart';
+    constr[seriesIndex] = template.constructor || 'Chart';
 
     seriesIndex.forEach(function(index) {
 
@@ -676,7 +683,8 @@ highed.ChartPreview = function(parent, attributes) {
         'chart preview: templates must be an object {config: {...}}'
       );
     }
-    constr = template.constructor || 'Chart';
+    
+    constr = [template.constructor || 'Chart'];
 
     //highed.clearObj(templateOptions);
 
@@ -930,13 +938,13 @@ highed.ChartPreview = function(parent, attributes) {
         },
         true
       );
-
-      constr = 'Chart';
+      
+      constr = ['Chart'];
 
       // Support legacy format
       if (projectData.settings && projectData.settings.templateView) {
         if (projectData.settings.templateView.activeSection === 'stock') {
-          constr = 'StockChart';
+          constr = ['StockChart'];
         }
       }
 
@@ -951,6 +959,13 @@ highed.ChartPreview = function(parent, attributes) {
       if (
         projectData.settings &&
         highed.isStr(projectData.settings.constructor)
+      ) {
+        constr = [projectData.settings.constructor];
+      }
+
+      if (
+        projectData.settings &&
+        highed.isArr(projectData.settings.constructor)
       ) {
         constr = projectData.settings.constructor;
       }
@@ -1179,7 +1194,7 @@ highed.ChartPreview = function(parent, attributes) {
     if (chart && chart.options && chart.options.annotations) {
       chartPlugins.annotations = 1;
     }
-
+    
     return {
       template: templateOptions,
       options: getCleanOptions(customizedOptions),
@@ -1661,6 +1676,10 @@ highed.ChartPreview = function(parent, attributes) {
         ];
       }
 
+      const chartConstr = (constr.some(function(a) {
+        return a === 'StockChart';
+      }) ? 'StockChart' : 'Chart');
+
       return (
         '\n' +
         [
@@ -1680,7 +1699,7 @@ highed.ChartPreview = function(parent, attributes) {
           stringifyFn(getEmbeddableJSON(true)),
           ';',
           highed.isFn(customCode) ? customCodeStr : '',
-          'new Highcharts.' + constr + '("',
+          'new Highcharts.' + chartConstr + '("',
           id,
           '", options);',
           '}',
@@ -1817,7 +1836,9 @@ highed.ChartPreview = function(parent, attributes) {
    *  @returns {string}
    */
   function getConstructor() {
-    return constr;
+    return (constr.some(function(a) {
+      return a === 'StockChart';
+    }) ? 'StockChart' : 'Chart');
   }
 
   function getTheme() {
