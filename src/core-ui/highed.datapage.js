@@ -216,8 +216,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       });
 
       (highed.dom.pos(assignDataPanel.getElement(), true).x - highed.dom.pos(dataTableContainer, true).x) - 10
-      highed.dom.style(container, {
-        width: ((highed.dom.pos(assignDataPanel.getElement(), true).x - highed.dom.pos(dataTableContainer, true).x) + 14) + 'px'
+      highed.dom.style(container, {        
+        width: newWidth + '%'
       });
 
       events.emit('BeforeResize', newWidth);

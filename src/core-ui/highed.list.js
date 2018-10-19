@@ -86,6 +86,9 @@ highed.List = function(parent, responsive, props, planCode) {
         icon: 'comment-o',
         value: 'label'
       },{
+        icon: 'arrows',
+        value: 'drag'
+      },{
         icon: 'trash',
         value: 'delete'
       }];
