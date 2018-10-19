@@ -314,15 +314,13 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       clearSeriesMapping();        
       
       var seriesIndex = [];
-  
       assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, null, true);
-  
       if (loadTemplateForEachSeries) {
         const length = assignDataPanel.getAllOptions().length;
         
         for(var i=0;i<length;i++) {
           seriesIndex.push(i);
-          assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, i);
+          assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, i, true);
         }
       } else seriesIndex = [assignDataPanel.getActiveSerie()];
       

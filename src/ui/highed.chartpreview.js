@@ -697,10 +697,10 @@ highed.ChartPreview = function(parent, attributes) {
     }
 
     // highed.setAttr(customizedOptions, 'series', []);
-
     gc(function(chart) {
       //templateOptions = highed.merge({}, template.config || {});
-      templateOptions = [template.config];
+
+      templateOptions = [highed.merge({}, template.config || {})];
 
       updateAggregated();
       init(aggregatedOptions);
@@ -1194,7 +1194,7 @@ highed.ChartPreview = function(parent, attributes) {
     if (chart && chart.options && chart.options.annotations) {
       chartPlugins.annotations = 1;
     }
-    
+
     return {
       template: templateOptions,
       options: getCleanOptions(customizedOptions),
