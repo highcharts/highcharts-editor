@@ -189,6 +189,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       var newWidth = props.widths.desktop;
       if (highed.onTablet() && props.widths.tablet) newWidth = props.widths.tablet;
       else if (highed.onPhone() && props.widths.phone) newWidth = props.widths.phone;
+
 /*
       if (expanded && activeItem === exports) {
         return;
@@ -214,8 +215,9 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         opacity: 1
       });
 
+      (highed.dom.pos(assignDataPanel.getElement(), true).x - highed.dom.pos(dataTableContainer, true).x) - 10
       highed.dom.style(container, {
-        width: newWidth + '%'
+        width: ((highed.dom.pos(assignDataPanel.getElement(), true).x - highed.dom.pos(dataTableContainer, true).x) + 14) + 'px'
       });
 
       events.emit('BeforeResize', newWidth);
@@ -254,7 +256,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         height: ((size.h - 16)) + 'px'
       });
 
-      dataTable.resize(newWidth, (size.h - 17 - 55) - tsize.h);   
+      dataTable.resize();   
       if(!highed.onPhone()) assignDataPanel.resize(newWidth, highed.dom.pos(chartFrame, true).y - highed.dom.pos(body, true).y)
      }
 

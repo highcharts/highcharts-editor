@@ -601,6 +601,10 @@ highed.AssignDataPanel = function(parent, dataTable) {
     addSerie(lastType, true);
     events.emit('AssignDataChanged');
   }
+
+  function getElement() {
+    return container;
+  }
   ////////////////////////////////////////////////////////////////////////////////
       
   highed.dom.ap(selectContainer, addNewSeriesBtn, deleteSeriesBtn, toggleHideCellsBtn);
@@ -704,6 +708,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
     init: init,
     enable: enable,
     disable: disable,
-    getStatus: getStatus
+    getStatus: getStatus,
+    getElement: getElement
   };
 };
