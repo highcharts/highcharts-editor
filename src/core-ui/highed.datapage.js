@@ -323,7 +323,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
           assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, i, true);
         }
       } else seriesIndex = [assignDataPanel.getActiveSerie()];
-      
+
       chartPreview.loadTemplateForSerie(newTemplate, seriesIndex);
 
       const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
@@ -386,7 +386,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
             }
           } else {
             if (option.linkedTo === 'label') hasLabels = true;
-            serieOption[option.linkedTo] = option.rawValue[0];
+            if (dataTableFields.indexOf(option.rawValue[0]) > -1) {
+              serieOption[option.linkedTo] = dataTableFields.indexOf(option.rawValue[0]);
+            }
+            //serieOption[option.linkedTo] = option.rawValue[0];
           }
         }
       });
