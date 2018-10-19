@@ -243,6 +243,14 @@ highed.ChartPreview = function(parent, attributes) {
     }
 */
 
+    if (chart && chart.annotations) {  
+      var annotations = chart.annotations;
+      for (var i = annotations.length - 1; i > -1; --i) {
+        chart.removeAnnotation(annotations[i].options.id);
+      }
+      chart.annotations.length = 0;
+    }
+
     try {
       const chartConstr = (constr.some(function(a) {
         return a === 'StockChart';
@@ -292,7 +300,6 @@ highed.ChartPreview = function(parent, attributes) {
         setupDeleteAnnotation('initShape', 'shapes');
 
       })(Highcharts);
-
 
       Highcharts.addEvent(chart, 'click', function (e) {
         if (isAnnotating) {
