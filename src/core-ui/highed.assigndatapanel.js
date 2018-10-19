@@ -521,7 +521,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
         return;
       }
       else {
-        if (option && option.noNulls) {
+        if (detailValue !== '' && option && option.noNulls) {
           if (dataTable.areColumnsEmpty(getLetterIndex(detailValue))) {
             option.value = option.previousValue;
             labelInput.selectById(option.previousValue, true);
