@@ -202,14 +202,14 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
         theme: highed.option('codeMirrorTheme')
       });
       codeMirrorBox.setSize('100%', '100%');
-      codeMirrorBox.on('keyup', function() {
+      codeMirrorBox.on('change', function() {
         clearTimeout(timeout);
         timeout = setTimeout(function () {
           setCustomCode();
         }, 500);
       });
     } else {
-      highed.dom.on(customCodeBox, 'keyup', function() {
+      highed.dom.on(customCodeBox, 'change', function() {
         clearTimeout(timeout);
         timeout = setTimeout(function () {
           setCustomCode();
