@@ -243,10 +243,12 @@ highed.ChartPreview = function(parent, attributes) {
     }
 */
 
-    if (chart && chart.annotations) {  
-      var annotations = chart.annotations;
+    if (chart && chart.annotations) {
+      var annotations = chart.annotations || [];
       for (var i = annotations.length - 1; i > -1; --i) {
-        chart.removeAnnotation(annotations[i].options.id);
+        if (annotations[i].options) {
+          chart.removeAnnotation(annotations[i].options.id);
+        }
       }
       chart.annotations.length = 0;
     }
@@ -255,7 +257,6 @@ highed.ChartPreview = function(parent, attributes) {
       const chartConstr = (constr.some(function(a) {
         return a === 'StockChart';
       }) ? 'StockChart' : 'Chart');
-
       chart = new Highcharts[chartConstr](pnode || parent, options);
 
       //This is super ugly.
@@ -275,106 +276,123 @@ highed.ChartPreview = function(parent, attributes) {
         //chart.reflow();
       }
 
-      (function(H) {
+      function setupAnnotationEvents(eventName, type) {
+        Highcharts.wrap(Highcharts.Annotation.prototype, eventName, function(proceed, shapeOptions) {
+          proceed.apply(this, Array.prototype.slice.call(arguments, 1))
 
-        function setupDeleteAnnotation(eventName, type) {
-          H.wrap(H.Annotation.prototype, eventName, function(proceed, shapeOptions) {
-            
-            proceed.apply(this, Array.prototype.slice.call(arguments, 1));
-            var annotation = this[type][this[type].length - 1];
-                
-            (annotation.element).addEventListener('click', function(e) {
-              highed.dom.nodefault(e);
-              if (isAnnotating && annotationType === 'delete') {
-                var optionIndex = customizedOptions.annotations[0][type].findIndex(function(element) {
-                  return element.id === shapeOptions.id;
-                });
-                customizedOptions.annotations[0][type].splice(optionIndex, 1);
-                annotation.destroy();
-              }
-            });
+          var annotation = this[type][this[type].length - 1];
 
-            (annotation.element).addEventListener('mousedown', function(e) {
-              if (!chart.activeAnnotation && (isAnnotating && annotationType === 'drag')) {
-                if (type === 'shapes') {
-                  chart.activeAnnotationOptions = highed.merge({}, annotation.options);
-                  if (annotation.type === 'rect') {
-                    chart.activeAnnotationOptions.width = 20;
-                    chart.activeAnnotationOptions.height = 20;
-                  }
-                } else {
-                  chart.activeAnnotationOptions = {
-                    id: annotation.options.id,
-                    text: annotation.options.text,
-                    point: { 
-                      x: annotation.options.point.x, 
-                      y: annotation.options.point.y,            
-                      xAxis: 0,
-                      yAxis: 0 
-                    },
-                    backgroundColor: annotation.options.backgroundColor,
-                    shape: annotation.options.shape,
-                    borderWidth: annotation.options.borderWidth,
-                    x: 0,
-                    y: 0
-                  };
+          (annotation.element).addEventListener('click', function(e) {
+            highed.dom.nodefault(e);
+            if (isAnnotating && annotationType === 'delete') {
+              var optionIndex = customizedOptions.annotations.findIndex(function(element) {
+                return element.id === annotation.options.id
+              });
+
+              chart.removeAnnotation(annotation.options.id);
+              customizedOptions.annotations.splice(optionIndex, 1);
+
+            }
+          });
+
+          (annotation.element).addEventListener('mousedown', function(e) {
+            if (!chart.activeAnnotation && (isAnnotating && annotationType === 'drag')) {
+              if (type === 'shapes') {
+                chart.activeAnnotationOptions = highed.merge({}, annotation.options);
+                if (annotation.type === 'rect') {
+                  chart.activeAnnotationOptions.width = 20;
+                  chart.activeAnnotationOptions.height = 20;
                 }
-                chart.activeAnnotation = annotation;
-                chart.annotationType = type;
+              } else {
+                chart.activeAnnotationOptions = {
+                  id: annotation.options.id,
+                  text: annotation.options.text,
+                  point: { 
+                    x: annotation.options.point.x, 
+                    y: annotation.options.point.y,            
+                    xAxis: 0,
+                    yAxis: 0 
+                  },
+                  backgroundColor: annotation.options.backgroundColor,
+                  shape: annotation.options.shape,
+                  borderWidth: annotation.options.borderWidth,
+                  x: 0,
+                  y: 0
+                };
               }
-            });
-          })
-        }
+              annotation.id = annotation.options.id;
+              chart.activeAnnotation = annotation;
+              chart.annotationType = type;
+            }
+          });
+        })
+      }
 
-        setupDeleteAnnotation('initLabel', 'labels');
-        setupDeleteAnnotation('initShape', 'shapes');
-
-      })(Highcharts);
+      setupAnnotationEvents('initLabel', 'labels');
+      setupAnnotationEvents('initShape', 'shapes');
 
       Highcharts.addEvent(document, 'mousemove', function (e) {
-
         if (!chart.isInsidePlot(e.chartX - chart.plotLeft, e.chartY - chart.plotTop)) return;
 
         if (chart.activeAnnotationOptions && (isAnnotating && annotationType === 'drag')) {
           var s = chart.pointer.normalize(e),
               prevOptions = chart.activeAnnotationOptions,
               prevAnn = chart.activeAnnotation;
-              
+          
           prevOptions.point.x = chart.xAxis[0].toValue(s.chartX);
           prevOptions.point.y = chart.yAxis[0].toValue(s.chartY);
           
-          if (prevAnn) prevAnn.destroy();
-
+          if(prevAnn && prevAnn.id) {
+            chart.removeAnnotation(prevAnn.id);
+          }
+            
           var newAnnotation;
           if (chart.annotationType === 'shapes') {
             newAnnotation = chart.addAnnotation({
+                id: prevOptions.id,
                 shapes: [prevOptions]
             });
           } else {
             newAnnotation = chart.addAnnotation({
+              id: prevOptions.id,
               labels: [prevOptions]
             });
           }
+          newAnnotation.id = prevOptions.id;
           chart.activeAnnotation = newAnnotation;
         }
       });
-
       
       Highcharts.addEvent(document, 'mouseup', function (e) {
         if (chart.activeAnnotation && (isAnnotating && annotationType === 'drag')) {
+
+          chart.removeAnnotation(chart.activeAnnotationOptions.id);
+
           if (chart.annotationType === 'shapes') {
-            customizedOptions.annotations[0].shapes.some(function(ann) {
-              if (ann.id === chart.activeAnnotationOptions.id) {
-                ann.point.x = chart.activeAnnotation.options.shapes[0].point.x;
-                ann.point.y = chart.activeAnnotation.options.shapes[0].point.y;
+
+            chart.activeAnnotation = chart.addAnnotation({
+              id: chart.activeAnnotationOptions.id,
+              shapes: [chart.activeAnnotationOptions]
+            });
+
+            customizedOptions.annotations.some(function(ann) {
+              if (ann.shapes && ann.shapes[0].id === chart.activeAnnotationOptions.id) {
+                ann.shapes[0].point.x = chart.activeAnnotation.options.shapes[0].point.x;
+                ann.shapes[0].point.y = chart.activeAnnotation.options.shapes[0].point.y;
                 return true;
               }
             });
+
           } else {
-            customizedOptions.annotations[0].labels.some(function(ann) {
-              if (ann.id === chart.activeAnnotationOptions.id) {
-                ann.point.x = chart.activeAnnotation.options.labels[0].point.x;
-                ann.point.y = chart.activeAnnotation.options.labels[0].point.y;
+            chart.activeAnnotation = chart.addAnnotation({
+              id: chart.activeAnnotationOptions.id,
+              labels: [chart.activeAnnotationOptions]
+            });
+
+            customizedOptions.annotations.some(function(ann) {
+              if (ann.labels && ann.labels[0].id === chart.activeAnnotationOptions.id) {
+                ann.labels[0].point.x = chart.activeAnnotation.options.labels[0].point.x;
+                ann.labels[0].point.y = chart.activeAnnotation.options.labels[0].point.y;
                 return true;
               }
             });
@@ -385,17 +403,15 @@ highed.ChartPreview = function(parent, attributes) {
         }
       });
 
-      
-
       Highcharts.addEvent(chart, 'click', function (e) {
         if (isAnnotating) {
           //events.emit('SetAnnotate', e);
 
-          if (!customizedOptions.annotations) customizedOptions.annotations = [{}];
-          if (!customizedOptions.annotations[0].shapes) customizedOptions.annotations[0].shapes = []; 
+          if (!customizedOptions.annotations) customizedOptions.annotations = []; //[{}];
+          //if (!customizedOptions.annotations[0].shapes) customizedOptions.annotations[0].shapes = []; 
           function addShape(chart, type, x, y) {
             var options = {
-                id: customizedOptions.annotations[0].shapes.length,
+                id: "shape_" + customizedOptions.annotations.length, //customizedOptions.annotations[0].shapes.length,
                 type: type,
                 point: {
                     x: x,
@@ -417,9 +433,15 @@ highed.ChartPreview = function(parent, attributes) {
             }
     
             var annotation = chart.addAnnotation({
+                id: "shape_" + customizedOptions.annotations.length, //customizedOptions.annotations[0].shapes.length,
                 shapes: [options]
             });
-            customizedOptions.annotations[0].shapes.push(annotation.options.shapes[0]);
+
+            customizedOptions.annotations.push({ 
+              id: "shape_" + customizedOptions.annotations.length,
+              shapes: [annotation.options.shapes[0]] 
+            });
+            //customizedOptions.annotations[0].shapes.push(annotation.options.shapes[0]);
           }
 
           if (annotationType === 'label') {
@@ -1997,11 +2019,12 @@ highed.ChartPreview = function(parent, attributes) {
 
   function addLabel(x, y, text, color, type) {
     if (chart) {
-      if (!customizedOptions.annotations) customizedOptions.annotations = [{}];
-      if (!customizedOptions.annotations[0].labels) customizedOptions.annotations[0].labels = []; 
+
+      if (!customizedOptions.annotations) customizedOptions.annotations = [];
       var annotation = chart.addAnnotation({
+        id: "label_" + customizedOptions.annotations.length,
         labels: [{
-            id: customizedOptions.annotations[0].labels.length,
+            id: "label_" + customizedOptions.annotations.length,
             text: text,
             point: { 
               x: x, 
@@ -2017,7 +2040,10 @@ highed.ChartPreview = function(parent, attributes) {
         }]
       });
 
-      customizedOptions.annotations[0].labels.push(annotation.options.labels[0]);
+      customizedOptions.annotations.push({
+        id: "label_" + customizedOptions.annotations.length,
+        labels: [annotation.options.labels[0]]
+      });
     }
   }
 
