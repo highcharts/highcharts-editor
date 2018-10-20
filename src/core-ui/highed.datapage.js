@@ -90,7 +90,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     addRowBtn = highed.dom.cr('button', 'highed-import-button highed-ok-button highed-add-row-btn small', 'Add'),
     addRowDiv = highed.dom.ap(highed.dom.cr('div', 'highed-dtable-extra-options'),
                 highed.dom.ap(highed.dom.cr('div', 'highed-add-row-container'),     
-                  highed.dom.cr('span', 'highed-add-row-text', 'Add Rows'),            
+                  highed.dom.cr('span', 'highed-add-row-text highed-hide-sm', 'Add Rows'),            
                   addRowInput,
                   addRowBtn
                 )
@@ -98,20 +98,23 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     assignDataPanel = highed.AssignDataPanel(parent, dataTable),
     dataImportBtn = highed.dom.cr(
       'button',
-      'highed-import-button highed-ok-button ',
-      'Import Data');
+      'highed-import-button highed-ok-button highed-sm-button',
+      'Import');
     dataExportBtn = highed.dom.cr(
       'button',
-      'highed-import-button highed-ok-button ',
+      'highed-import-button highed-ok-button highed-hide-sm',
       'Export Data');
     dataClearBtn = highed.dom.cr(
       'button',
-      'highed-import-button highed-ok-button ',
+      'highed-import-button highed-ok-button highed-sm-button',
        highed.L('dgNewBtn')),
     blacklist = [
       'candlestick',
       'bubble'
     ];
+
+    dataImportBtn.innerHTML += ' <span class="highed-hide-sm">Data</span>';
+    dataClearBtn.innerHTML += ' <span class="highed-hide-sm">Data</span>';
     
     addRowInput.value = 1;
     highed.dom.on(addRowBtn, 'click', function(e) {
@@ -169,14 +172,26 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       resizeChart();
     }
 
+    function afterResize(func){
+      var timer;
+      return function(event){
+        if(timer) clearTimeout(timer);
+        timer = setTimeout(func,100,event);
+      };
+    }
     function resize() {
       if (isVisible) {
         resizeChart();
-        expand();
+        setTimeout(function(){
+          expand()
+        }, 100);
+        //expand();
       }
     }
 
-    highed.dom.on(window, 'resize', resize);
+    highed.dom.on(window, 'resize', afterResize(function(e){
+      resize();
+    }));
     
 
     function showHelp() {
@@ -215,10 +230,13 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         opacity: 1
       });
 
-      (highed.dom.pos(assignDataPanel.getElement(), true).x - highed.dom.pos(dataTableContainer, true).x) - 10
-      highed.dom.style(container, {        
-        width: newWidth + '%'
-      });
+      if (!highed.onPhone()) {
+        //(highed.dom.pos(assignDataPanel.getElement(), true).x - highed.dom.pos(dataTableContainer, true).x) - 10
+        highed.dom.style(container, {        
+          //width: newWidth + '%'
+          width:((highed.dom.pos(assignDataPanel.getElement(), true).x - highed.dom.pos(dataTableContainer, true).x) + 14) + 'px'
+        });
+      }
 
       events.emit('BeforeResize', newWidth);
 

@@ -172,15 +172,28 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
 
   function resize() {
     if (isVisible){
-      resizeChart((((window.innerHeight
-        || document.documentElement.clientHeight
-        || document.body.clientHeight) - highed.dom.pos(body, true).y) - 16));
-      expand();
+
+      expand()
+      setTimeout(function() {
+        resizeChart((((window.innerHeight
+          || document.documentElement.clientHeight
+          || document.body.clientHeight) - highed.dom.pos(body, true).y) - 16));
+      });
     }
   }
 
-  if (!highed.onPhone()) {
-    highed.dom.on(window, 'resize', resize);
+  if (!highed.onPhone()) {    
+    highed.dom.on(window, 'resize', afterResize(function(e){
+      resize();
+    }));
+  }
+
+  function afterResize(func){
+    var timer;
+    return function(event){
+      if(timer) clearTimeout(timer);
+      timer = setTimeout(func,100,event);
+    };
   }
 
   function expand() {
@@ -193,10 +206,30 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
       width: 100 + '%',
       opacity: 1
     });
-
+/*
     highed.dom.style(container, {
       width: newWidth + '%'
     });
+*/
+
+
+
+
+    if (!highed.onPhone()) {
+      const windowWidth = highed.dom.size(parent).w;
+      const percentage = ((100 - 68) / 100);
+      
+      var styles =  window.getComputedStyle(chartFrame);
+      var containerStyles =  window.getComputedStyle(container);
+      var chartMargin = parseFloat(styles['marginLeft']) + parseFloat(styles['marginRight']),
+          containerMargin = parseFloat(containerStyles['marginLeft']) + parseFloat(containerStyles['marginRight']);
+
+      highed.dom.style(container, {
+        width: ((windowWidth*percentage) - (chartMargin + containerMargin + 35) - 3/*margin*/ /*padding*/) + 'px'
+      });
+
+    }
+
 
     events.emit('BeforeResize', newWidth);
 
@@ -213,7 +246,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
         };
           
         highed.dom.style(contents, {
-          width: size.w + 'px',
+          width: "100%",
           height: ((size.h - 16)) + 'px'
         });
 

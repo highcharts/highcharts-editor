@@ -78,17 +78,31 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
     hide();
   }
 
+  
+  function afterResize(func){
+    var timer;
+    return function(event){
+      if(timer) clearTimeout(timer);
+      timer = setTimeout(func,100,event);
+    };
+  }
+
   function resize() {
     if (isVisible){
-      resizeChart((((window.innerHeight
-        || document.documentElement.clientHeight
-        || document.body.clientHeight) - highed.dom.pos(body, true).y) - 16));
-      expand();
+      expand()
+      setTimeout(function() {
+        resizeChart((((window.innerHeight
+          || document.documentElement.clientHeight
+          || document.body.clientHeight) - highed.dom.pos(body, true).y) - 16));
+      }, 1000);
+      //expand();
     }
   }
   
   if (!highed.onPhone()) {
-    highed.dom.on(window, 'resize', resize);
+    highed.dom.on(window, 'resize', afterResize(function(e){
+      resize();
+    }));
   }
 
   function getIcons() {
@@ -104,10 +118,20 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
       opacity: 1
     });
 
-    highed.dom.style(container, {
-      width: newWidth + '%'
-    });
+    if (!highed.onPhone()) {
+      const windowWidth = highed.dom.size(parent).w;
+      const percentage = ((100 - 68) / 100);
+  
+      
+      var styles =  window.getComputedStyle(chartFrame);
+      var containerStyles =  window.getComputedStyle(container);
+      var chartMargin = parseFloat(styles['marginLeft']) + parseFloat(styles['marginRight']),
+          containerMargin = parseFloat(containerStyles['marginLeft']) + parseFloat(containerStyles['marginRight']);
 
+      highed.dom.style(container, {
+        width: ((windowWidth*percentage) - (chartMargin + containerMargin + 35) - 3/*margin*/ /*padding*/) + 'px'
+      });
+    }
     events.emit('BeforeResize', newWidth);
 
     // expanded = true;
@@ -123,7 +147,7 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
         };
 
         highed.dom.style(contents, {
-          width: size.w + 'px',
+          width: "100%",
           height: ((size.h - 16)) + 'px'
         });
 
@@ -147,9 +171,12 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
     });
     
     expand();
-    resizeChart(((window.innerHeight
-      || document.documentElement.clientHeight
-      || document.body.clientHeight) - highed.dom.pos(body, true).y) - 16);
+    setTimeout(function() {
+      resizeChart(((window.innerHeight
+        || document.documentElement.clientHeight
+        || document.body.clientHeight) - highed.dom.pos(body, true).y) - 16);
+    }, 200);
+
     isVisible = true;
   }
   

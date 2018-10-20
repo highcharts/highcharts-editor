@@ -49,7 +49,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       'highed-toolbox-help highed-icon fa fa-question-circle'
     ),
     width,
-    chartWidth = '68%',
+    chartWidth = 68,
     iconClass,
     icon = highed.dom.cr('div', iconClass),
     helpModal,
@@ -249,7 +249,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       width = 66;
       if (highed.onTablet()) width = 64;
 
-      chartWidth = '28%';
+      chartWidth = 28;
       highed.dom.style(backIcon, {
         display: "inline-block"
       });
@@ -298,13 +298,21 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
   function getResolutionContainer() {
     return resolutionSettings;
   }
+  
+  function afterResize(func){
+    var timer;
+    return function(event){
+      if(timer) clearTimeout(timer);
+      timer = setTimeout(func,100,event);
+    };
+  }
 
   function reduceSize(fn) {
     width = props.widths.desktop;
     if (highed.onTablet() && props.widths.tablet) width = props.widths.tablet;
     else if (highed.onPhone() && props.widths.phone) width = props.widths.phone;
     
-    chartWidth = "68%";
+    chartWidth = 68;
 
     expand();
     setTimeout(function() {
@@ -317,15 +325,21 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
   function resize() {
     if (isVisible){
-      resizeChart((((window.innerHeight
-        || document.documentElement.clientHeight
-        || document.body.clientHeight) - highed.dom.pos(body, true).y) - 16));
-      expand();
+      expand()
+      setTimeout(function() {
+
+        resizeChart((((window.innerHeight
+          || document.documentElement.clientHeight
+          || document.body.clientHeight) - highed.dom.pos(body, true).y) - 16));
+      }, 500);
+      //expand();
     }
   }
   
   if (!highed.onPhone()) {
-    highed.dom.on(window, 'resize', resize);
+    highed.dom.on(window, 'resize', afterResize(function(e){
+      resize();
+    }));
   }
 
   resolutions.forEach(function(res) {
@@ -361,7 +375,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     if (highed.onTablet() && props.widths.tablet) width = props.widths.tablet;
     else if (highed.onPhone() && props.widths.phone) width = props.widths.phone;
     
-    chartWidth = "68%";
+    chartWidth = 68;
     
     highed.dom.style(backIcon, {
       display: "none"
@@ -385,13 +399,22 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       opacity: 1
     });
 
-    highed.dom.style(container, {
-      width: newWidth + '%'
-    });
+
+    if (!highed.onPhone()) {
+      const windowWidth = highed.dom.size(parent).w;
+      const percentage = ((100 - chartWidth) / 100);
+  
+      var styles =  window.getComputedStyle(chartFrame);
+      var containerStyles =  window.getComputedStyle(container);
+      var chartMargin = parseFloat(styles['marginLeft']) + parseFloat(styles['marginRight']),
+          containerMargin = parseFloat(containerStyles['marginLeft']) + parseFloat(containerStyles['marginRight']);
+
+      highed.dom.style(container, {
+        width: ((windowWidth*percentage) - (chartMargin + containerMargin + 35) - 3 /*padding*/) + 'px'
+      });
+    }
 
     events.emit('BeforeResize', newWidth);
-
-    // expanded = true;
 
     function resizeBody() {
       var bsize = highed.dom.size(body),
@@ -404,7 +427,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
         };
 
         highed.dom.style(contents, {
-          width: size.w + 'px',
+          width: "100%",
           height: ((size.h - 16)) + 'px'
         });
 
@@ -439,7 +462,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     if (highed.onTablet() && props.widths.tablet) width = props.widths.tablet;
     else if (highed.onPhone() && props.widths.phone) width = props.widths.phone;
 
-    chartWidth = "68%";
+    chartWidth = 68;
     
     highed.dom.style(backIcon, {
       display: "none"
@@ -544,9 +567,10 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
   }
 
   function resizeChart(newHeight) {
+
     highed.dom.style(chartFrame, {
       /*left: newWidth + 'px',*/
-      width: chartWidth, //'68%',
+      width: chartWidth + '%', //'68%',
       height: newHeight + 'px' || '100%'
     });
 /*

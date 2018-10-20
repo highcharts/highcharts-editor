@@ -147,7 +147,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
           onClick: []
         },
         widths: {
-          desktop: 26,
+          desktop: 27,
           tablet: 24,
           phone: 100
         },
