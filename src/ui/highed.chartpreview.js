@@ -296,8 +296,13 @@ highed.ChartPreview = function(parent, attributes) {
 
             (annotation.element).addEventListener('mousedown', function(e) {
               if (!chart.activeAnnotation && (isAnnotating && annotationType === 'drag')) {
-                if (type === 'shapes') chart.activeAnnotationOptions = highed.merge({}, annotation.options);
-                else {
+                if (type === 'shapes') {
+                  chart.activeAnnotationOptions = highed.merge({}, annotation.options);
+                  if (annotation.type === 'rect') {
+                    chart.activeAnnotationOptions.width = 20;
+                    chart.activeAnnotationOptions.height = 20;
+                  }
+                } else {
                   chart.activeAnnotationOptions = {
                     id: annotation.options.id,
                     text: annotation.options.text,
