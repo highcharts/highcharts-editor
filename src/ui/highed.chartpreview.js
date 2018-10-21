@@ -276,6 +276,19 @@ highed.ChartPreview = function(parent, attributes) {
         //chart.reflow();
       }
 
+      Highcharts.error = function (code, stopLoading) {
+        if (stopLoading) throw code;
+        else {      
+          setTimeout(function() {
+            events.emit('Error', {
+              code: code,
+              url : (code ? 'https://www.highcharts.com/errors/' + code : ''),
+              warning: true
+            });  
+          }, 200);
+        }
+      };
+
       function setupAnnotationEvents(eventName, type) {
         Highcharts.wrap(Highcharts.Annotation.prototype, eventName, function(proceed, shapeOptions) {
           proceed.apply(this, Array.prototype.slice.call(arguments, 1))
@@ -459,37 +472,16 @@ highed.ChartPreview = function(parent, attributes) {
       });
 
       events.emit('ChartRecreated');
-    } catch (ex) {
-      var e = ex.toString();
-
-      //So we know that the return here is likely to be an
-      //url with the error code. so extract it.
-      highed.log(1, 'error initializing chart:', e);
-
-      i = e.indexOf('www.');
-
-      events.emit('Error', e);
+    } catch (code) {
+      events.emit('Error', {
+        code: code,
+        url : (code ? 'https://www.highcharts.com/errors/' + code : '')
+      });
 
       highed.emit('UIAction', 'UnsuccessfulChartGeneration');
 
-      if (i > 0) {
-        // highed.snackBar(
-        //   'There is a problem with your chart!',
-        //   e.substr(i),
-        //   function() {
-        //     window.open('http://' + e.substr(i));
-        //   }
-        // );
-      } else {
-        //Our assumption was wrong. The world is ending.
-        // highed.snackBar(e);
-
-        // console.error(e);
-        console.error('exception trace:', ex.stack);
-      }
-
-      (pnode || parent).innerHTML = '';
-
+      (pnode || parent).innerHTML = '';  
+      
       chart = false;
     }
 
@@ -515,6 +507,7 @@ highed.ChartPreview = function(parent, attributes) {
             chart.reflow();
           }
         } catch (e) {
+          console.log("IN EHRERE");
           // No idea why this keeps failing
         }
       }

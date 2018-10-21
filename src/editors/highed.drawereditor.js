@@ -674,10 +674,14 @@ highed.DrawerEditor = function(parent, options, planCode) {
   function hideImportModal() {
     //dataTable.hideImportModal();
   }
-  function showError(title, message) {
+  function showError(title, message, warning) {
+    if (warning) {
+      if (!errorBar.classList.contains('highed-warningbar')) errorBar.classList += ' highed-warningbar';
+    } else errorBar.classList.remove('highed-warningbar');
+    
     highed.dom.style(errorBar, {
       opacity: 1,
-      'pointer-events': 'auto'
+      'pointer-events': 'auto',
     });
 
     errorBarHeadline.innerHTML = title;
@@ -802,24 +806,22 @@ highed.DrawerEditor = function(parent, options, planCode) {
   });
 
   chartPreview.on('Error', function(e) {
-    if (e.indexOf('Highcharts error') >= 0) {
-      var i1 = e.indexOf('#'),
-        i = e.substr(i1).indexOf(':'),
-        id = parseInt(e.substr(i1 + 1, i), 10),
-        item = highed.highchartsErrors[id],
-        urlStart = e.indexOf('www.'),
-        url = '';
+    if (e && e.code && highed.highchartsErrors[e.code]) {
+      
+      var item = highed.highchartsErrors[e.code],
+          url = '';
 
-      if (urlStart >= 0) {
+      if (e.url >= 0) {
         url =
           '<div class="highed-errorbar-more"><a href="https://' +
-          e.substr(urlStart) +
+          e.substr(e.url) +
           '" target="_blank">Click here for more information</a></div>';
       }
 
       return showError(
         (item.title || "There's a problem with your chart") + '!',
-        (item.text || e) + url
+        (item.text) + url,
+        e.warning
       );
     }
 
