@@ -173,6 +173,10 @@ highed.DrawerEditor = function(parent, options, planCode) {
       'div',
       'highed-optionspanel-buttons highed-optionspanel-cloud highed-box-size highed-transition'
     ),
+    smallScreenWorkspaceButtons = highed.dom.cr(
+      'div',
+      'highed-xs-workspace-buttons highed-optionspanel-xs-cloud highed-box-size highed-transition'
+    ),
     workspaceRes = highed.dom.cr(
       'div',
       'highed-optionspanel-buttons highed-optionspanel-res highed-box-size highed-transition'
@@ -185,6 +189,11 @@ highed.DrawerEditor = function(parent, options, planCode) {
     chartFrame = highed.dom.cr(
       'div',
       'highed-transition highed-box-size highed-chart-frame highed-scrollbar'
+    ),
+    showChartSmallScreen = highed.dom.cr(
+      'div',
+      'highed-transition highed-box-size highed-show-chart-xs',
+      '<i class="fa fa-area-chart"/>'
     ),
     chartContainer = highed.dom.cr(
       'div',
@@ -350,12 +359,23 @@ highed.DrawerEditor = function(parent, options, planCode) {
   highed.dom.on(helpIcon, 'click', showHelp);
   highed.dom.ap(splitter.bottom, highed.dom.ap(workspaceBody, workspaceRes, workspaceButtons));
 
-  highed.dom.ap(splitter.bottom, titleContainer);
+  highed.dom.ap(splitter.bottom, titleContainer, smallScreenWorkspaceButtons);
   if (!properties.useHeader) {
     highed.dom.style(splitter.top.parentNode, {
       display: 'none'
     });
   }
+
+  highed.dom.on(showChartSmallScreen, 'click', function() {
+    if (highedChartContainer.classList.contains('active')) {
+      highedChartContainer.classList.remove('active');
+    } else {
+      setTimeout(function(){
+        chartPreview.resize();
+      }, 200);
+      highedChartContainer.classList += ' active';
+    }
+  });
 
   // Alias import to data
   builtInOptions.import = builtInOptions.data;
@@ -466,7 +486,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
 
     createChartPage.init(dataPage, templatePage, customizePage);
 
-    highed.dom.style(workspaceBody, {
+    highed.dom.style([workspaceBody, showChartSmallScreen, smallScreenWorkspaceButtons], {
       opacity: 0
     });
     panel.getPrev().hide();
@@ -486,7 +506,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
       highed.dom.style([chartFrame, titleContainer], {
         opacity: '1'
       });
-      highed.dom.style(workspaceBody, {
+      highed.dom.style([workspaceBody, showChartSmallScreen, smallScreenWorkspaceButtons], {
         opacity: 1
       });
 
@@ -610,20 +630,34 @@ highed.DrawerEditor = function(parent, options, planCode) {
   function addToWorkspace(options) {
 
     const btn = highed.dom.cr('button', 'highed-import-button green action-btn', "Action <i class='fa fa-chevron-down'/>");
+    const btn2 = highed.dom.cr('button', 'highed-import-button green action-btn', "Action <i class='fa fa-chevron-down'/>");
     
     highed.dom.on(btn, 'click', function() {
-      
       highed.dom.style(workspaceButtons, {
         overflow: (workspaceButtons.style.overflow === '' || workspaceButtons.style.overflow === 'hidden' ? 'unset' : 'hidden')
       });
     });
 
-    highed.dom.ap(workspaceButtons, btn);
+    highed.dom.on(btn2, 'click', function() {
+      highed.dom.style(smallScreenWorkspaceButtons, {
+        overflow: (smallScreenWorkspaceButtons.style.overflow === '' || smallScreenWorkspaceButtons.style.overflow === 'hidden' ? 'unset' : 'hidden')
+      });
+    });
 
-    options.forEach(function(option){
+    highed.dom.ap(workspaceButtons, btn);
+    highed.dom.ap(smallScreenWorkspaceButtons, btn2);
+
+    options.forEach(function(option) {
       const btn = highed.dom.cr('button', 'highed-import-button green', option.text);
       highed.dom.on(btn, 'click', option.onClick);
+
+      const btn2 = highed.dom.cr('button', 'highed-import-button green', option.text);
+      highed.dom.on(btn2, 'click', option.onClick);
+
       highed.dom.ap(workspaceButtons, btn);
+      highed.dom.ap(smallScreenWorkspaceButtons, btn2);
+      
+      
     });
   }
 
@@ -829,6 +863,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
       highedChartContainer,
       highed.dom.ap(chartFrame, chartContainer)
     ),
+    showChartSmallScreen,
     highed.dom.ap(errorBar, errorBarHeadline, errorBarBody)
   );
 

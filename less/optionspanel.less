@@ -102,6 +102,9 @@
   display: none;
 }
 
+.highed-xs-workspace-buttons {
+  display: none;
+}
 
 @media screen and (max-width: 1353px) and (min-width: 769px) {
   
@@ -158,5 +161,35 @@
   .highed-optionspanel-res,
   .highed-optionspanel-buttons {
     display: none;
+  }
+
+  .highed-xs-workspace-buttons {
+    display: inline-block;
+  }
+  .highed-optionspanel-xs-cloud {
+    width: 36%;
+    z-index: 1;
+    height: 25px;
+    position: absolute;
+    overflow: hidden;
+    margin-right: 10px;
+    top: 70px;
+    right: 10px;
+    z-index: 10001;
+    .action-btn {
+      border: 0px solid !important;
+      border-bottom: 1px solid rgba(128, 128, 128, 0.27) !important;
+      display: block;
+    }
+    .highed-import-button {
+      width: 100%;
+      border-radius: 0px;
+      border-bottom: 1px solid rgba(128, 128, 128, 0.27);
+      border-left: 1px solid rgba(128, 128, 128, 0.27);
+      border-right: 1px solid rgba(128, 128, 128, 0.27);
+    }
+    .highed-import-button:hover {
+      background-color: #5bd6cf
+    }
   }
 }
