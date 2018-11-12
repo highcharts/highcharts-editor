@@ -49,13 +49,18 @@ highed.OptionsPanel = function(parent, attr) {
       
     var btn = highed.dom.cr(
       'a',
-      'highed-optionspanel-button ', 
+      'highed-optionspanel-button ' + (id === 'data' ? 'active' : ''), 
       option.text + '&nbsp;<i class="fa fa-' + option.icon + '"></i>'
     );
       
     (option.onClick || []).forEach(function(click) {
       highed.dom.on(btn, 'click', function() {
+        Object.keys(options).forEach(function(o) {
+          options[o].classList.remove('active');
+        });
         currentOption = option;
+        btn.classList += ' active';
+
         click(prev, option);
       });
     });
