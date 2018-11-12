@@ -132,8 +132,11 @@ highed.CreateChartPage = function(parent, options, props) {
           ),
           skipAll = highed.dom.cr('span', 'highed-toolbox-skip-all', 'Skip All');
 
-      titleInput.value = 'My Chart';
-      subtitleInput.value = 'My Untitled Chart';
+      titleInput.placeholder = 'Enter chart title';
+      subtitleInput.placeholder = 'Enter chart subtitle';
+
+      titleInput.value = '';
+      subtitleInput.value = '';
       
       highed.dom.on(nextButton, 'click', function() {
         options[1].expand();

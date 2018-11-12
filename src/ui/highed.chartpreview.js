@@ -44,10 +44,10 @@ highed.ChartPreview = function(parent, attributes) {
       {
         defaultChartOptions: {
           title: {
-            text: 'My Chart'
+            text: 'Chart Title'
           },
           subtitle: {
-            text: 'My Untitled Chart'
+            text: ''
           },
           exporting: {
             //   url: 'http://127.0.0.1:7801'
