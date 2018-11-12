@@ -647,11 +647,11 @@ highed.DrawerEditor = function(parent, options, planCode) {
     highed.dom.ap(workspaceButtons, btn);
     highed.dom.ap(smallScreenWorkspaceButtons, btn2);
 
-    options.forEach(function(option) {
-      const btn = highed.dom.cr('button', 'highed-import-button green', option.text);
+    options.forEach(function(option, index) {
+      const btn = highed.dom.cr('button', 'highed-import-button green highed-sm-dropdown-button' + (!index ? ' highed-btn-dropdown-first' : ''), option.text);
       highed.dom.on(btn, 'click', option.onClick);
 
-      const btn2 = highed.dom.cr('button', 'highed-import-button green', option.text);
+      const btn2 = highed.dom.cr('button', 'highed-import-button green highed-sm-dropdown-button' + (!index ? ' highed-btn-dropdown-first' : ''), option.text);
       highed.dom.on(btn2, 'click', option.onClick);
 
       highed.dom.ap(workspaceButtons, btn);
@@ -674,7 +674,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
   function hideImportModal() {
     //dataTable.hideImportModal();
   }
-  function showError(title, message, warning) {
+  function showError(title, message, warning, code) {
     if (warning) {
       if (!errorBar.classList.contains('highed-warningbar')) errorBar.classList += ' highed-warningbar';
     } else errorBar.classList.remove('highed-warningbar');
@@ -686,6 +686,10 @@ highed.DrawerEditor = function(parent, options, planCode) {
 
     errorBarHeadline.innerHTML = title;
     errorBarBody.innerHTML = message;
+
+    if (code === 14) {
+      dataPage.showDataTableError();
+    }
   }
 
   function hideError() {
@@ -693,6 +697,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
       opacity: 0,
       'pointer-events': 'none'
     });
+    dataPage.hideDataTableError();
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -821,7 +826,8 @@ highed.DrawerEditor = function(parent, options, planCode) {
       return showError(
         (item.title || "There's a problem with your chart") + '!',
         (item.text) + url,
-        e.warning
+        e.warning,
+        e.code
       );
     }
 

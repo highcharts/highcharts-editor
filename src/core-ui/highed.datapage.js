@@ -371,6 +371,13 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     chartTitleInput.value = title;
   }
 
+  function showDataTableError() {
+    dataTable.showDataTableError();
+  }
+  function hideDataTableError() {
+    dataTable.hideDataTableError();
+  }
+
   function getChartTitle() {
     return chartTitleInput.value;
   }
@@ -794,6 +801,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     getIcons: getIcons,
     changeAssignDataTemplate: changeAssignDataTemplate,
     createSimpleDataTable: createSimpleDataTable,
-    loadProject: loadProject
+    loadProject: loadProject,
+    showDataTableError: showDataTableError,
+    hideDataTableError: hideDataTableError
   };
 };

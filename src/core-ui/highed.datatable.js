@@ -2221,6 +2221,18 @@ highed.DataTable = function(parent, attributes) {
     }
   }
 
+  function showDataTableError() {
+    highed.dom.style(container, {
+      border: '1px solid #aa5555'
+    });
+  }
+
+  function hideDataTableError() {
+    highed.dom.style(container, {
+      border: 'initial'
+    });
+  }
+
   function addImportTab(tabOptions){
     importer.addImportTab(tabOptions);
   }
@@ -3290,6 +3302,8 @@ highed.DataTable = function(parent, attributes) {
     getDataFieldsUsed: getDataFieldsUsed,
     createSimpleDataTable: createSimpleDataTable,
     areColumnsEmpty: areColumnsEmpty,
-    clearData: clearData
+    clearData: clearData,
+    showDataTableError: showDataTableError,
+    hideDataTableError: hideDataTableError,
   };
 };
