@@ -305,7 +305,6 @@ highed.AssignDataPanel = function(parent, dataTable) {
       id: options.length,
       title: 'Series ' + (options.length + 1) + ' - ' + capitalizeFirstLetter(type)
     }]);
-
     if (maxColumnLength + 1 < columnLength) {
       maxColumnLength++;
     }
@@ -314,14 +313,12 @@ highed.AssignDataPanel = function(parent, dataTable) {
 
     highed.merge(newOptions, highed.meta.charttype[type]);
     clean(newOptions);
-    
     if (newOptions.values) {
       newOptions.values.rawValue = [maxColumnLength]; //TODO: Change later
       newOptions.values.value = getLetterFromIndex(maxColumnLength);
     }
 
     options.push(highed.merge({}, newOptions));
-
     seriesTypeSelect.selectById(options.length - 1);
     if (redrawDOM) resetDOM();
 
@@ -388,7 +385,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
   }
 
 
-  function setAssignDataFields(data, maxColumns, init, seriesIndex, skipEmit) {
+  function setAssignDataFields(data, maxColumns, init, seriesIndex, skipEmit, serieValue) {
     if (!data || disabled) return;
     columnLength = maxColumns;
     var seriesType = getSeriesType(data, 0);
@@ -403,6 +400,12 @@ highed.AssignDataPanel = function(parent, dataTable) {
     options[seriesIndex || index] = null;
     options[seriesIndex || index] = highed.merge({}, defaultOptions);
 
+    if (!isNaN(serieValue)) {
+      if (options[seriesIndex || index].values) {
+        options[seriesIndex || index].values.value = getLetterFromIndex(serieValue);
+        options[seriesIndex || index].values.rawValue = [serieValue];
+      }
+    }
     /*
     if (chartTypeOptions && chartTypeOptions.data) {
       options[seriesIndex || index].data = null;
@@ -605,6 +608,10 @@ highed.AssignDataPanel = function(parent, dataTable) {
   function getElement() {
     return container;
   }
+
+  function setColumnLength(length) {
+    columnLength = length;
+  }
   ////////////////////////////////////////////////////////////////////////////////
       
   highed.dom.ap(selectContainer, addNewSeriesBtn, deleteSeriesBtn, toggleHideCellsBtn);
@@ -704,6 +711,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
     getActiveSerie: getActiveSerie,
     addNewSerie: addNewSerie,
     addSeries: addSeries,
+    setColumnLength: setColumnLength,
     checkToggleCells: checkToggleCells,
     init: init,
     enable: enable,

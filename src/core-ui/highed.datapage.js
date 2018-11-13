@@ -85,7 +85,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         },
         properties.dataGrid
       )
-    ),    
+    ),   
     addRowInput = highed.dom.cr('input', 'highed-field-input highed-add-row-input'),
     addRowBtn = highed.dom.cr('button', 'highed-import-button highed-ok-button highed-add-row-btn small', 'Add'),
     addRowDiv = highed.dom.ap(highed.dom.cr('div', 'highed-dtable-extra-options'),
@@ -340,7 +340,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         
         for(var i=0;i<length;i++) {
           seriesIndex.push(i);
-          assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, i, true);
+          assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, i, true, i + 1);
         }
       } else seriesIndex = [assignDataPanel.getActiveSerie()];
 
@@ -624,6 +624,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   dataTable.on('AssignDataForFileUpload', function(rowsLength) {
     if (!rowsLength) rowsLength = dataTable.getColumnLength(); //Remove first column for the categories, and second as its already added
+    assignDataPanel.setColumnLength(rowsLength);
     rowsLength -= 2;
     assignDataPanel.addSeries(rowsLength);
   }); 

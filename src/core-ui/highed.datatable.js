@@ -2138,8 +2138,7 @@ highed.DataTable = function(parent, attributes) {
 
     if (data && data.csv) {
       rows = parseCSV(data.csv, data.delimiter);
-      
-      if (updateAssignData) events.emit('AssignDataForFileUpload', rows[0].length);
+      if (updateAssignData && rows[0].length < DEFAULT_COLUMN) events.emit('AssignDataForFileUpload', rows[0].length);
 
       if(rows[0] && rows.length < DEFAULT_ROW) {
         var counter = DEFAULT_ROW - rows.length,
@@ -2160,6 +2159,7 @@ highed.DataTable = function(parent, attributes) {
       }
       
       loadRows(rows, function() {
+        if (updateAssignData && rows[0].length > DEFAULT_COLUMN) events.emit('AssignDataForFileUpload', rows[0].length);
         if (cb) cb();
       });
     } else {
