@@ -529,7 +529,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
             attributes: entry.attributes || []
           },
           function(newValue) {
-            newValue = newValue.replace('</script>', '<\\/script>'); //Bug in cloud
+            if (typeof newValue === 'string') newValue = newValue.replace('</script>', '<\\/script>'); //Bug in cloud
             highed.emit(
               'UIAction',
               'AdvancedPropSet',

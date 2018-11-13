@@ -286,6 +286,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
         }
 
         function callHome(v) {
+
           try {
             v = JSON.parse(v);
             tryCallback(callback, v);
@@ -307,8 +308,12 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
 
           updateIt(val || value || properties.defaults);
 
+          var timeout = null;
           editor.on('change', function() {
-            callHome(editor.getValue());
+            clearTimeout(timeout);
+            timeout = setTimeout(function () {
+              callHome(editor.getValue());
+            }, 1000);
           });
 
           resizePoll();
@@ -327,6 +332,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
           reset = createReset(properties.defaults || val || value, function(v) {
             val = v;
             picker.set(val);
+            
             tryCallback(callback, v);
           });
 
@@ -703,7 +709,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
     value = '';
   }
 
-  if (type === 'cssobject') {
+  if (type === 'cssobject' || type === 'highcharts.cssobject') {
     //So there are more than one version of this thing - one of them
     //requires a font picker, the other is dynamic.
     //Figure out which one we're dealing with here.
