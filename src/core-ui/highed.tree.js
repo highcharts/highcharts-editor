@@ -83,7 +83,8 @@ highed.Tree = function(parent) {
       addIcon = highed.dom.cr('div', 'highed-icon fa fa-plus-square-o'),
       index =
         (child.meta.ns ? child.meta.ns + '.' : '') +
-        (!isNaN(myIndex) ? '[' + myIndex + '].' : '') +
+        (myIndex ? '[' + myIndex + '].' : '') +
+        //(!isNaN(myIndex) ? '[' + myIndex + '].' : '') +
         child.meta.name,
       expanded = true;
 
