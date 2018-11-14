@@ -93,7 +93,8 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
           e.cancelBubble = true;
         });
 
-        input.value = decodeURIComponent(JSON.parse('"' + (val || value).replace(/\"/g, '\\"') + '"'));
+        if ((val || value).indexOf('\\u') > -1) input.value = decodeURIComponent(JSON.parse('"' + (val || value).replace(/\"/g, '\\"') + '"')); 
+        else input.value = (val || value);
 
         return highed.dom.ap(
           highed.dom.cr('div', 'highed-field-container'),/*
