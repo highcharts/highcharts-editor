@@ -2895,7 +2895,7 @@ highed.DataTable = function(parent, attributes) {
   // Getting kinda long, probably need to move this all out of here to createchartpage
   function createTableInputs(inputs, maxColSpan, extraClass) {
 
-    var table = highed.dom.cr('table'),
+    var table = highed.dom.cr('table', 'highed-createchartwizard-table'),
     maxColSpan = maxColSpan,
     currentColSpan = maxColSpan,
     tr;
