@@ -153,15 +153,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      */
   function transformAdv(input, onlyOnce) {
     var res;
-
+    
     if (onlyOnce && hasTransformedAdvanced) {
       return input;
     }
 
     function visit(node, pname) {
       var children = (node.subtree = node.subtree || {});
-
+      
       node.meta = node.meta || {};
+      node.meta.default = node.meta.default;
       node.meta.ns = pname;
       node.children = [];
 

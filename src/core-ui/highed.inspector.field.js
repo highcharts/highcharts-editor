@@ -64,6 +64,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @returns {domnode} - a DOM node containing the field + label wrapped in a tr
  */
 highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, planCode) {
+  
   var createReset = function(resetTo, callback) {
       var node = highed.dom.cr('div', 'highed-field-reset fa fa-undo');
 
@@ -92,7 +93,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
           e.cancelBubble = true;
         });
 
-        input.value = val || value;
+        input.value = decodeURIComponent(JSON.parse('"' + (val || value).replace(/\"/g, '\\"') + '"'));
 
         return highed.dom.ap(
           highed.dom.cr('div', 'highed-field-container'),/*
