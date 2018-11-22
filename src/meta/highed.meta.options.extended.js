@@ -85,6 +85,22 @@ highed.meta.optionsExtended = {
             parent: 'subtitle',
             width: 50
           },
+          {
+            id: 'title--style',
+            dataType: 'font',
+            pid: 'title.style',
+            context: 'General',
+            defaults: '{ "color": "#333333", "fontSize": "18px" }',
+            parent: 'title'
+          },
+          {
+            id: 'subtitle--style',
+            dataType: 'font',
+            pid: 'subtitle.style',
+            context: 'General',
+            defaults: '{ "color": "#666666" }',
+            parent: 'subtitle'
+          }
         ]
       },
       {
@@ -179,6 +195,14 @@ highed.meta.optionsExtended = {
             dataType: 'string',
             context: 'General',
             parent: 'chart'
+          },
+          {
+            id: 'colors',
+            pid: 'colors',
+            dataType: 'array<color>',
+            context: 'General',
+            defaults:
+              '[ "#7cb5ec" , "#434348" , "#90ed7d" , "#f7a35c" , "#8085e9" , "#f15c80" , "#e4d354" , "#2b908f" , "#f45b5b" , "#91e8e1"]'
           }
         ]
       },
@@ -360,6 +384,16 @@ highed.meta.optionsExtended = {
             parent: 'yAxis-title'
           },
           {
+            id: 'yAxis-title--text',
+            dataIndex: 0,
+            pid: 'yAxis.title.text',
+            dataType: 'string',
+            context: 'General',
+            defaults: 'Values',
+            parent: 'yAxis-title',
+            width: 50
+          },
+          {
             id: 'yAxis--type',
             dataIndex: 0,
             pid: 'yAxis.type',
@@ -378,7 +412,7 @@ highed.meta.optionsExtended = {
             context: 'General',
             defaults: '{value}',
             parent: 'yAxis-labels',
-            width: 50
+            width: 100
           },
           {
             id: 'yAxis--opposite',
