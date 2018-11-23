@@ -273,8 +273,32 @@ highed.meta.optionsExtended = {
         ]
       },
       {
+        text: 'option.subcat.interaction',
+        dropdown: true,
+        group: 2,
+        options: [
+          {
+            id: 'chart--zoomType',
+            pid: 'chart.zoomType',
+            dataType: 'string',
+            context: 'General',
+            parent: 'chart',
+            values: '[null, "x", "y", "xy"]'
+          },
+          {
+            id: 'chart--polar',
+            pid: 'chart.polar',
+            dataType: 'boolean',
+            context: 'General',
+            defaults: 'false',
+            parent: 'chart'
+          }
+        ]
+      },
+      {
         text: 'option.subcat.credit',
         dropdown: true,
+        group: 2,
         options: [
           {
             id: 'credits--enabled',
