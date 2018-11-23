@@ -95,26 +95,30 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           }
         });
 
-      } else if (trigger && trigger.indexOf('plotOptions') === 0) {
+      } else if ((trigger && trigger.indexOf('plotOptions') === 0) || dest.meta.ns === undefined) {
         if (!dest.meta.validFor) dest.meta.validFor = {};
         dest.meta.validFor[dest.meta.name] = 1;
 
-        Object.keys(current.subtree || {}).forEach(function(key) {
-          dest.subtree[key] =
-            dest.subtree[key] || highed.merge({}, current.subtree[key]);
-          dest.subtree[key].meta.validFor =
-            dest.subtree[key].meta.validFor || {};
-
-          if (
-            dest.meta.excludes &&
-            Object.keys(dest.meta.excludes).length > 0
-          ) {
-            dest.subtree[key].meta.validFor[current.meta.name] = !dest.meta
-              .excludes[key];
-          } else {
-            dest.subtree[key].meta.validFor[current.meta.name] = 1;
-          }
-        });
+        if (dest.meta.ns === undefined) {
+          highed.merge(dest.subtree, current.subtree, false, dest.meta.excludes);
+        } else {
+          Object.keys(current.subtree || {}).forEach(function(key) {
+            dest.subtree[key] =
+              dest.subtree[key] || highed.merge({}, current.subtree[key]);
+            dest.subtree[key].meta.validFor =
+              dest.subtree[key].meta.validFor || {};
+  
+            if (
+              dest.meta.excludes &&
+              Object.keys(dest.meta.excludes).length > 0
+            ) {
+              dest.subtree[key].meta.validFor[current.meta.name] = !dest.meta
+                .excludes[key];
+            } else {
+              dest.subtree[key].meta.validFor[current.meta.name] = 1;
+            }
+          }); 
+        }
 
       } else {
         // Do actual extending
@@ -127,7 +131,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       * Extend a node
       */
   function extend(superset, node, trigger) {
-    if (trigger === undefined) trigger = 'plotOptions';
+    if (trigger === undefined) {
+      if (node.meta.ns && node.meta.ns === "plotOptions") {
+        trigger = 'plotOptions';
+      }
+    }
     if (node.meta.extends && node.meta.extends.length > 0) {
       node.meta.extends = node.meta.extends.replace('{', '').replace('}', '');
       if (trigger === 'series') {
