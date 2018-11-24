@@ -64,7 +64,7 @@ highed.installLanguage({
     'option.subcat.titles': 'Main titles',
     'option.cat.general': 'General',
     'option.subcat.size': 'Chart size',
-    'option.subcat.interaction': 'Chart Interaction',
+    'option.subcat.interaction': 'Interaction',
     'option.cat.appearance': 'Appearance',
     'option.subcat.fonts': 'Fonts',
     'option.subcat.titlestyle': 'Title Style',
