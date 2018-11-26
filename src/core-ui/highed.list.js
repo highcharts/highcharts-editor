@@ -180,10 +180,17 @@ highed.List = function(parent, responsive, props, planCode) {
         def;
 
       options = chartPreview.options.getCustomized(); //userOptions;//chartPreview.options.getCustomized();
-
+      
       if (highed.isArr(group.options)) {
         table = highed.dom.cr('div', 'highed-customizer-table');
+        warningContainer = highed.dom.cr('div', 'highed-customize-warning-container'),
+        warning = highed.dom.cr('div', 'highed-customize-warning', 'You need to be on a paid plan for this to work in production');
         doInclude = shouldInclude(group);
+
+        if (group.warning && group.warning.length > 0 && 
+          planCode && group.warning.indexOf(planCode) > -1) {
+          highed.dom.ap(table, highed.dom.ap(warningContainer, warning));
+        }
 
         if (!doInclude) {
           return;

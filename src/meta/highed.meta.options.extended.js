@@ -299,6 +299,7 @@ highed.meta.optionsExtended = {
         text: 'option.subcat.credit',
         dropdown: true,
         group: 2,
+        warning: [1],
         options: [
           {
             id: 'credits--enabled',
@@ -315,7 +316,8 @@ highed.meta.optionsExtended = {
             dataType: 'string',
             context: 'General',
             defaults: 'Highcharts.com',
-            parent: 'credits'
+            parent: 'credits',
+            warning: [1]
           },
           {
             id: 'credits--href',
@@ -323,7 +325,8 @@ highed.meta.optionsExtended = {
             dataType: 'string',
             context: 'General',
             defaults: 'http://www.highcharts.com',
-            parent: 'credits'
+            parent: 'credits',
+            warning: [1]
           }
         ]
       }

@@ -97,6 +97,11 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
             (val || value || '').indexOf('\\u') > -1) input.value = decodeURIComponent(JSON.parse('"' + (val || value).replace(/\"/g, '\\"') + '"')); 
         else input.value = (val || value);
 
+  
+        if (properties.warning && properties.warning.length > 0 && planCode && properties.warning.indexOf(planCode) > -1) {
+          input.disabled = true;
+        }
+      
         return highed.dom.ap(
           highed.dom.cr('div', 'highed-field-container'),/*
           reset,*/
@@ -130,6 +135,10 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
         });
 
         input.value = val || value;
+
+        if (properties.warning && properties.warning.length > 0 && planCode && properties.warning.indexOf(planCode) > -1) {
+          input.disabled = true;
+        }
 
         return highed.dom.ap(
           highed.dom.cr('div', 'highed-field-container'),/*
@@ -166,6 +175,10 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
         highed.dom.on(input, 'change', function() {
           tryCallback(callback, input.checked);
         });
+        
+        if (properties.warning && properties.warning.length > 0 && planCode && properties.warning.indexOf(planCode) > -1) {
+          input.disabled = true;
+        }
 
         return highed.dom.ap(
           highed.dom.cr('div', 'highed-field-container'),/*
@@ -640,9 +653,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
     helpTD = highed.dom.cr('div', 'highed-customizer-table-help'), //td
     widgetTD = highed.dom.cr('div', 'highed-field-table-widget-column'), //td
     titleCol = highed.dom.cr('div'), //td
-    typeIndicator = highed.dom.cr('span', 'highed-customize-type'),
-    warningContainer = highed.dom.cr('div', 'highed-customize-warning-container'),
-    warning = highed.dom.cr('div', 'highed-customize-warning', 'You need to be on a paid plan for this to work in production');
+    typeIndicator = highed.dom.cr('span', 'highed-customize-type');
 
   function tryCallback(cb, val) {
     cb = cb || fn;
@@ -789,12 +800,8 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
   {
     width: (properties.width || 100) + '%'
   });
-  
-  if (properties.warning && properties.warning.length > 0 && 
-      planCode && properties.warning.indexOf(planCode) > -1) {
-      highed.dom.ap(warningContainer, warning);
-  }
 
+  
   if (type === 'header') {   
     
     return highed.dom.ap(
@@ -810,7 +817,6 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
     return highed.dom.ap(
       highed.dom.ap(
         parent, //tr
-        warningContainer,
         highed.dom.ap(widgetTD, 
           highed.dom.ap(fields[type] ? fields[type]() : fields.string(),
           highed.dom.ap(
@@ -831,7 +837,6 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
     return highed.dom.ap(
       highed.dom.ap(
         parent, //tr
-        warningContainer,
         highed.dom.ap(
           titleCol,
           highed.dom.cr('span', 'highed-customize-field-label', properties.title),

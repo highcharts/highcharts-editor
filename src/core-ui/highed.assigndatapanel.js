@@ -148,6 +148,36 @@ highed.AssignDataPanel = function(parent, dataTable) {
     return all;
   }
 
+  function restart() {
+
+    defaultOptions.labels.colors = {
+      'light': 'rgba(66, 200, 192, 0.2)',
+      'dark': 'rgb(66, 200, 192)',
+    };
+    
+    defaultOptions.values.colors = {
+      'light': 'rgba(145, 151, 229, 0.2)',
+      'dark': 'rgb(145, 151, 229)',
+    };
+    
+    defaultOptions.label.colors = {
+      'light': 'rgba(229, 145, 145, 0.2)',
+      'dark': 'rgb(229, 145, 145)',
+    };
+
+    index = 0,
+    columnLength = 0,
+    maxColumnLength = 1;
+    
+    options = [];
+    addSerie();
+    Object.keys(defaultOptions).forEach(function(key) {
+      defaultOptions[key].colors = null;
+    });
+
+    resetDOM();
+  }
+
   function getMergedLabelAndData() {
     var arr = {},
         extraColumns = [],
@@ -717,6 +747,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
     enable: enable,
     disable: disable,
     getStatus: getStatus,
-    getElement: getElement
+    getElement: getElement,
+    restart: restart
   };
 };

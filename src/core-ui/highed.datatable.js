@@ -522,7 +522,6 @@ highed.DataTable = function(parent, attributes) {
   ////////////////////////////////////////////////////////////////////////////
 
   // Handle drag 'n drop of files
-
   function handleFileUpload(f, cb) {
     if (f.type !== 'text/csv') {
       return highed.snackBar('The file is not a valid CSV file');
@@ -531,6 +530,8 @@ highed.DataTable = function(parent, attributes) {
     var reader = new FileReader();
 
     reader.onload = function(e) {
+      clear();
+      events.emit('ClearSeriesForImport');
       loadCSV({ csv: e.target.result }, null, true, cb);
     };
 
@@ -1696,14 +1697,17 @@ highed.DataTable = function(parent, attributes) {
       }
 
       if (direction === 'ASC') {
-        if (ad) return ad.localeCompare(bd);
+        if (!ad) return bd;
+        return ad.localeCompare(bd);
       }
-      
+
       if (bd) {
+        if (!ad) return bd;
         return bd.localeCompare(ad);
-      } else {
-        if (ad) return ad.localeCompare(bd);
       }
+       else {
+         if (ad) return ad.localeCompare(bd);
+       }
       
     });
 
@@ -2737,19 +2741,21 @@ highed.DataTable = function(parent, attributes) {
     var tempValue = values[0];
     if (values.length > 0) {
       while (tempValue <= values[values.length - 1]) {
-        highed.dom.style(gcolumns[tempValue].letter, {
-          "background-color": color.light,
-          "border-left": "1px double " + color.dark,
-          "border-top": "1px double " + color.dark,
-          "border-bottom": "1px double " + color.dark,
-          "border-right": "1px double " + color.dark,
-        });        
-        highed.dom.style(gcolumns[tempValue].header, {
-          "background-color": color.light,
-          "border-left": "1px double " + color.dark,
-          "border-right": "1px double " + color.dark,
-          "border-bottom": "1px double " + color.dark,
-        });
+        if (gcolumns[tempValue]) {
+          highed.dom.style(gcolumns[tempValue].letter, {
+            "background-color": color.light,
+            "border-left": "1px double " + color.dark,
+            "border-top": "1px double " + color.dark,
+            "border-bottom": "1px double " + color.dark,
+            "border-right": "1px double " + color.dark,
+          });        
+          highed.dom.style(gcolumns[tempValue].header, {
+            "background-color": color.light,
+            "border-left": "1px double " + color.dark,
+            "border-right": "1px double " + color.dark,
+            "border-bottom": "1px double " + color.dark,
+          });
+        }
         tempValue++;
       }
     }

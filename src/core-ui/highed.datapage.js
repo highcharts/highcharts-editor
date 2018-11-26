@@ -681,6 +681,12 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     chartPreview.data.clear();
   });
 
+  dataTable.on('ClearSeriesForImport', function() {
+    var options = chartPreview.options.getCustomized();
+    options.series = [];
+    assignDataPanel.restart();
+  });
+
   dataTable.on('ClearSeries', function() {
     var options = chartPreview.options.getCustomized();
     options.series = [];

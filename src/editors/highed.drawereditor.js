@@ -53,10 +53,19 @@ highed.DrawerEditor = function(parent, options, planCode) {
       'div',
       'highed-errorbar highed-box-size highed-transition'
     ),
+    errorBarHeadlineContainer = highed.dom.cr(
+      'div',
+      'highed-errorbar-headline'
+    ),
     errorBarHeadline = highed.dom.cr(
       'div',
-      'highed-errorbar-headline',
+      'highed-errorbar-headline-text',
       'This is an error!'
+    ),
+    errorBarClose = highed.dom.cr(
+      'div',
+      'highed-errorbar-close',
+      '<i class="fa fa-times"/>'
     ),
     errorBarBody = highed.dom.cr(
       'div',
@@ -202,6 +211,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
     chartPreview = highed.ChartPreview(chartContainer, {
       defaultChartOptions: properties.defaultChartOptions
     }),
+    suppressWarning = false,
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
     customizePage = highed.CustomizePage(
       splitter.bottom,
@@ -676,8 +686,20 @@ highed.DrawerEditor = function(parent, options, planCode) {
   }
   function showError(title, message, warning, code) {
     if (warning) {
+      if (suppressWarning) return;
+      
+      highed.dom.style(errorBarClose, {
+        display: 'inline-block'
+      });
+      
       if (!errorBar.classList.contains('highed-warningbar')) errorBar.classList += ' highed-warningbar';
-    } else errorBar.classList.remove('highed-warningbar');
+    } else {
+      highed.dom.style(errorBarClose, {
+        display: 'none'
+      });
+  
+      errorBar.classList.remove('highed-warningbar');
+    }
     
     highed.dom.style(errorBar, {
       opacity: 1,
@@ -865,6 +887,11 @@ highed.DrawerEditor = function(parent, options, planCode) {
     })
   );
   
+  highed.dom.on(errorBarClose, 'click', function() {
+    hideError();
+    suppressWarning = true;
+  });
+
   highed.dom.ap(
     splitter.bottom,
     highed.dom.ap(
@@ -872,7 +899,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
       highed.dom.ap(chartFrame, chartContainer)
     ),
     showChartSmallScreen,
-    highed.dom.ap(errorBar, errorBarHeadline, errorBarBody)
+    highed.dom.ap(errorBar, highed.dom.ap(errorBarHeadlineContainer, errorBarHeadline, errorBarClose), errorBarBody)
   );
 
   highed.dom.on([resWidth, resHeight], 'change', function() {
