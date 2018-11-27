@@ -493,6 +493,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     if (blacklist.includes(type)) type = null;
 
+    assignDataPanel.setColumnLength(dataTable.getColumnLength());
     assignDataPanel.addNewSerie(type);
     
   })
