@@ -2391,10 +2391,10 @@ highed.DataTable = function(parent, attributes) {
     importModal.hide();
   });
 
-  importer.on('ImportCSV', function(data) {
+  importer.on('ImportCSV', function(data, cb) {
     highed.emit('UIAction', 'ImportCSV');
     events.emit('EnableAssignDataPanel');
-    loadCSV(data, null, true);
+    loadCSV(data, null, true, cb);
   });
 
   importer.on('ImportGoogleSpreadsheet', function() {
@@ -3027,7 +3027,7 @@ highed.DataTable = function(parent, attributes) {
     return container;
   }
 
-  function createSampleData(toNextPage) {
+  function createSampleData(toNextPage, loading) {
     const container = highed.dom.cr('div', 'highed-modal-container'),
           buttonsContainer = highed.dom.cr('div', 'highed-modal-buttons-container');
 
@@ -3042,9 +3042,12 @@ highed.DataTable = function(parent, attributes) {
       highed.dom.style(loadBtn, { width: '99%' });
 
       highed.dom.on(loadBtn, 'click', function() {
+        loading(true);
         dataModal.hide();
-        importer.emitCSVImport(data);
-        if (toNextPage) toNextPage();
+        importer.emitCSVImport(data, function() {
+          loading(false);
+          if (toNextPage) toNextPage();
+        });
       });
 
       highed.dom.ap(
@@ -3061,14 +3064,14 @@ highed.DataTable = function(parent, attributes) {
     return container;
   }
 
-  function createSimpleDataTable(toNextPage) {
+  function createSimpleDataTable(toNextPage, loading) {
     var container = highed.dom.cr('div', 'highed-table-dropzone-container'),
         selectFile = highed.dom.cr('button', 'highed-ok-button highed-import-button', 'Select File'),
         buttonsContainer = highed.dom.cr('div'),
         modalContainer = highed.dom.cr('div', 'highed-table-modal'),
         gSheetContainer = createGSheetContainer(toNextPage),
         liveContainer = createLiveDataContainer(toNextPage),
-        sampleDataContainer = createSampleData(toNextPage);
+        sampleDataContainer = createSampleData(toNextPage, loading);
         cutAndPasteContainer = createCutAndPasteContainer(toNextPage);
 
     var buttons = [{ title: 'Connect Google Sheet', linkedTo: gSheetContainer}, 

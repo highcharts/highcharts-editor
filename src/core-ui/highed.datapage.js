@@ -324,13 +324,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     dataTable.hideImportModal();
   }
   
-  function changeAssignDataTemplate(newTemplate, loadTemplateForEachSeries) {
-    /*
-    const oldValues = assignDataPanel.getAllMergedLabelAndData();
-    dataTable.removeAllCellsHighlight(null, [oldValues.labelColumn].concat(oldValues.dataColumns).sort());
-    */
+  function changeAssignDataTemplate(newTemplate, loadTemplateForEachSeries, cb) {
+    
     if (dataTable.isInCSVMode()) {
-
+      
       clearSeriesMapping();        
       
       var seriesIndex = [];
@@ -353,9 +350,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       }, null, false, function() {
         setSeriesMapping(assignDataPanel.getAllOptions());
         redrawGrid(true);
+        if (cb) cb();
       });
-
-
     } else {
       chartPreview.loadTemplate(newTemplate);
     }
@@ -760,8 +756,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
    */
 
 
-  function createSimpleDataTable(toNextPage) {
-    return dataTable.createSimpleDataTable(toNextPage);
+  function createSimpleDataTable(toNextPage, cb) {
+    return dataTable.createSimpleDataTable(toNextPage, cb);
   } 
 
   function resizeChart(newWidth) {

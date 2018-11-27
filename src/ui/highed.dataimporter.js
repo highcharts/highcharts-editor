@@ -361,14 +361,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       });
     }
 
-    function emitCSVImport(csv) {
+    function emitCSVImport(csv, cb) {
       events.emit('ImportCSV', {
         itemDelimiter: delimiter.value,
         firstRowAsNames: firstAsNames.checked,
         dateFormat: dateFormat.value,
         csv: csv || csvPasteArea.value,
         decimalPoint: decimalPoint.value
-      });
+      }, cb);
     }
 
     function loadCSVExternal(csv) {

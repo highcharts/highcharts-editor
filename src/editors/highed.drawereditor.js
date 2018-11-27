@@ -739,8 +739,8 @@ highed.DrawerEditor = function(parent, options, planCode) {
     templatePage.selectSeriesTemplate(0, projectData);
   });
 
-  templatePage.on('TemplateChanged', function(newTemplate, loadTemplateForEachSerie){
-    dataPage.changeAssignDataTemplate(newTemplate, loadTemplateForEachSerie);
+  templatePage.on('TemplateChanged', function(newTemplate, loadTemplateForEachSerie, cb){
+    dataPage.changeAssignDataTemplate(newTemplate, loadTemplateForEachSerie, cb);
   })
   chartPreview.on('ChartChange', function(newData) {
     events.emit('ChartChangedLately', newData);

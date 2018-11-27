@@ -67,9 +67,16 @@ highed.Toolbox = function(parent, attr) {
       iconClass = 'highed-toolbox-list-item-container',
       icon = highed.dom.cr('div', iconClass),
       resizeTimeout,
-      exports = {};
+      exports = {},
+      circle = highed.dom.cr('div', 'highed-toolbox-list-circle', props.number);
 
-    highed.dom.ap(icon, highed.dom.cr('div', 'highed-toolbox-list-circle', props.number), highed.dom.cr('div', 'highed-toolbox-list-title', props.title));
+    highed.dom.on(circle, 'click', function() {
+      props.onClick(props.number);
+      expand();
+
+    });
+
+    highed.dom.ap(icon, circle, highed.dom.cr('div', 'highed-toolbox-list-title', props.title));
     highed.dom.on(icon, 'click', function() {
       entryEvents.emit('Click');
     });
@@ -172,6 +179,12 @@ highed.Toolbox = function(parent, attr) {
       icon.className = iconClass + ' completed';
     }
 
+    function removeCompleted() {
+      setTimeout(function() {
+        icon.classList.remove('completed');
+      }, 50);
+    }
+
     //highed.dom.on(icon, 'click', toggle);
     highed.dom.ap(bar, icon);
     highed.dom.ap(contents, title, userContents);
@@ -194,6 +207,7 @@ highed.Toolbox = function(parent, attr) {
       expand: expand,
       collapse: collapse,
       body: userContents,
+      removeCompleted: removeCompleted,
       disselect: disselect
     };
     return exports;

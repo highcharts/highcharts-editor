@@ -129,7 +129,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     templates.selectSeriesTemplate(index, projectData);
   }
 
-  function createMostPopularTemplates(toNextPage) {
+  function createMostPopularTemplates(toNextPage, setLoading) {
     const mostPopular = highed.templates.getMostPopular();
     const container = highed.dom.cr('div', 'highed-toolbox-templates-container');
     
@@ -155,9 +155,16 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
       }
 
       highed.dom.on(option, 'click', function() {
-        t.header =  t.parent;
-        events.emit('TemplateChanged', highed.merge({}, t), true);
-        toNextPage();
+        
+        setLoading(true);
+        setTimeout(function() {
+          t.header =  t.parent;
+          events.emit('TemplateChanged', highed.merge({}, t), true, function() {
+            setLoading(false);
+            toNextPage();
+          });
+        }, 1000);
+
       });
 
       highed.dom.ap(container, highed.dom.ap(option, preview, titleBar));

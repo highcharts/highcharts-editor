@@ -104,8 +104,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
       style = highed.merge(
         {
-          fontFamily:
-            '"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif',
+          fontFamily: 'Default',//'"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif',
           color: '#333',
           fontSize: '18px',
           fontWeight: 'normal',
@@ -131,7 +130,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     //Listen to font changes
     fontFamily.on('Change', function(selected) {
-      style.fontFamily = selected.id();
+      
+      if (selected.id() === 'Default') style.fontFamily = '"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif';
+      else style.fontFamily = selected.id();
+
       return callback();
     });
 
