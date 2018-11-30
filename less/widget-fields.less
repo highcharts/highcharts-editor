@@ -228,3 +228,49 @@
   font-weight: 500;
   color: rgb(36, 54, 113);
 }
+
+.annotation-buttons {
+  padding-left: 9px;
+  display: inline-block;
+  padding-right: 10px;
+  padding-top: 8px;
+}
+
+.annotation-buttons-container {
+  overflow: hidden;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  padding: 0px !important;
+}
+
+.highed-annotation-container {    
+  font-size: 14px;
+  background-color: white;
+  color: #25386f;
+  border-radius: 40px;
+  margin-right: 5px;
+  cursor: pointer;
+  display: inline-flex;
+  width: 32px;
+  overflow: hidden;
+  height: 32px;
+  padding: 0px !important;
+}
+
+.highed-annotation-container.active {
+  width:223px;
+}
+.annotation-buttons.active {
+  color: #42c8c0;
+}
+
+.highed-template-tooltip.annotation-buttons {
+  .highed-tooltip-text {
+    position: fixed;
+    top: initial;
+    left: initial;
+    margin-top: 25px;
+    margin-left: -68px;
+  }
+}

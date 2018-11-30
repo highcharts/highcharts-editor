@@ -345,7 +345,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
       highed.meta.optionsExtended.options[key],
       chartPreview);
     });
-
+/*
     list.addItem({
       id: "Annotations",
       annotations: true,
@@ -353,7 +353,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
       onClick: function() {
         events.emit("AnnotationsClicked");
       }
-    }, null, chartPreview);
+    }, null, chartPreview);*/
 
     // buildTree();
   }

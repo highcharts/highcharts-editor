@@ -76,6 +76,7 @@ highed.List = function(parent, responsive, props, planCode) {
     });
 
     if (item.annotations) {
+      /*
       const options = [{
         icon: 'circle-thin',
         value: 'circle'
@@ -115,7 +116,7 @@ highed.List = function(parent, responsive, props, planCode) {
       node.className += ' no-clickable';
       highed.dom.ap(node, annotationsContainer);
 
-
+*/
     }
     else {
       highed.dom.ap(node, nodeArrow);

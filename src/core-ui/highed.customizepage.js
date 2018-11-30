@@ -61,7 +61,39 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       'highed-toolbox-body highed-box-size highed-transition'
     ),
     iconsContainer = highed.dom.cr('div', 'highed-icons-container'),
+    annotationContainer,
+    annotationOptions = [{
+      tooltip: 'Add Circle',
+      icon: 'circle-thin',
+      value: 'circle'
+    }, {
+      tooltip: 'Add Square',
+      icon: 'square-o',
+      value: 'square'
+    }, {
+      tooltip: 'Add Annotations',
+      icon: 'comment',
+      value: 'label'
+    }, {
+      tooltip: 'Move',
+      icon: 'arrows',
+      value: 'drag'
+    }, {
+      tooltip: 'Remove',
+      icon: 'trash'
+    }, {
+      tooltip: 'Close',
+      icon: 'times',
+      value: 'delete',
+      onClick: function() {
+        annotationOptions.forEach(function(o) {
+          o.element.classList.remove('active');
+        });
 
+        chartPreview.setIsAnnotating(false);
+        annotationContainer.classList.remove('active');
+      }
+    }],
     buttons = [
       {
         tooltip: 'Basic',
@@ -95,7 +127,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
         },
         icon: 'eye'
-      },
+      }
     ],
 
     isVisible = false,
@@ -282,6 +314,45 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
         highed.dom.ap(iconsContainer, button.element);
       });
     }
+
+    var annotationButton = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons', '<i class="fa fa-comment" aria-hidden="true"></i><span class="highed-tooltip-text">Annotations</span>');
+
+    highed.dom.on(annotationButton, 'click', function() {
+      if (annotationContainer.classList.contains('active')) annotationContainer.classList.remove('active');
+      else annotationContainer.classList += ' active';
+
+    });
+
+    if (!annotationContainer) {
+      annotationContainer = highed.dom.cr('div', 'highed-transition highed-annotation-container');
+
+      highed.dom.ap(annotationContainer, annotationButton);
+
+      annotationOptions.forEach(function(option) {
+        var btn = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons', '<i class="fa fa-' + option.icon + '" aria-hidden="true"></i><span class="highed-tooltip-text">' + option.tooltip + '</span>');
+        highed.dom.on(btn, 'click', function() {
+          if (option.onClick) option.onClick();
+          else {
+            var isAnnotating = !(option.element.className.indexOf('active') > -1);
+  
+            annotationOptions.forEach(function(o) {
+              o.element.classList.remove('active');
+            });
+    
+            chartPreview.setIsAnnotating(isAnnotating);
+            if (isAnnotating) {
+              chartPreview.options.togglePlugins('annotations', 1);
+              chartPreview.setAnnotationType(option.value);
+              option.element.className += ' active';
+            }
+          }
+        });
+  
+        option.element = btn;
+        highed.dom.ap(annotationContainer, btn);
+      });
+    }
+    highed.dom.ap(iconsContainer, annotationContainer);
 
     highed.dom.ap(contents, userContents);
     highed.dom.ap(body, contents);
