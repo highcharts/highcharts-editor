@@ -64,11 +64,11 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     annotationContainer,
     annotationOptions = [{
       tooltip: 'Add Circle',
-      icon: 'circle-thin',
+      icon: 'circle',
       value: 'circle'
     }, {
       tooltip: 'Add Square',
-      icon: 'square-o',
+      icon: 'stop',
       value: 'square'
     }, {
       tooltip: 'Add Annotations',
@@ -315,7 +315,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       });
     }
 
-    var annotationButton = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons', '<i class="fa fa-comment" aria-hidden="true"></i><span class="highed-tooltip-text">Annotations</span>');
+    var annotationButton = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons', '<i class="fa fa-commenting" aria-hidden="true"></i><span class="highed-tooltip-text">Annotations</span>');
 
     highed.dom.on(annotationButton, 'click', function() {
       if (annotationContainer.classList.contains('active')) annotationContainer.classList.remove('active');
