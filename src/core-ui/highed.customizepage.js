@@ -62,29 +62,33 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     ),
     iconsContainer = highed.dom.cr('div', 'highed-icons-container'),
     annotationContainer,
+    activeAnnotation = null,
     annotationOptions = [{
       tooltip: 'Add Circle',
       icon: 'circle',
-      value: 'circle'
+      value: 'circle',
+      draggable: true
     }, {
       tooltip: 'Add Square',
       icon: 'stop',
-      value: 'square'
+      value: 'square',
+      draggable: true
     }, {
       tooltip: 'Add Annotations',
       icon: 'comment',
-      value: 'label'
+      value: 'label',
+      draggable: true
     }, {
       tooltip: 'Move',
       icon: 'arrows',
       value: 'drag'
     }, {
       tooltip: 'Remove',
-      icon: 'trash'
+      icon: 'trash',
+      value: 'delete',
     }, {
       tooltip: 'Close',
       icon: 'times',
-      value: 'delete',
       onClick: function() {
         annotationOptions.forEach(function(o) {
           o.element.classList.remove('active');
@@ -330,23 +334,59 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
       annotationOptions.forEach(function(option) {
         var btn = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons', '<i class="fa fa-' + option.icon + '" aria-hidden="true"></i><span class="highed-tooltip-text">' + option.tooltip + '</span>');
-        highed.dom.on(btn, 'click', function() {
-          if (option.onClick) option.onClick();
-          else {
-            var isAnnotating = !(option.element.className.indexOf('active') > -1);
-  
-            annotationOptions.forEach(function(o) {
-              o.element.classList.remove('active');
-            });
+        if (option.onClick || !option.draggable) {
+          highed.dom.on(btn, 'click', function() {
+            
+            if (option.onClick) option.onClick();
+            else {
+              var isAnnotating = !(option.element.className.indexOf('active') > -1);
     
-            chartPreview.setIsAnnotating(isAnnotating);
-            if (isAnnotating) {
+              annotationOptions.forEach(function(o) {
+                o.element.classList.remove('active');
+              });
+      
+              chartPreview.setIsAnnotating(isAnnotating);
+              if (isAnnotating) {
+                chartPreview.options.togglePlugins('annotations', 1);
+                chartPreview.setAnnotationType(option.value);
+                option.element.className += ' active';
+              }
+            }
+          });
+        } else {
+          highed.dom.on(btn, 'mousedown', function (e) {
+            
+            activeAnnotation = highed.dom.cr('div', 'highed-active-annotation fa fa-' + option.icon);    
+            
+            highed.dom.ap(document.body, activeAnnotation);
+            function moveAt(pageX, pageY) {
+              highed.dom.style(activeAnnotation, {
+                left: pageX - (btn.offsetWidth / 2 - 10) + 'px',
+                top: pageY - (btn.offsetHeight / 2 - 10) + 'px'
+              });
+            }
+            moveAt(event.pageX, event.pageY);
+            
+            function onMouseMove(event) {
+              moveAt(event.pageX, event.pageY);
+            }
+
+            document.addEventListener('mousemove', onMouseMove);
+
+            highed.dom.on(activeAnnotation, 'mouseup', function (e) {
+              e = chartPreview.options.all().pointer.normalize(e);
+              document.removeEventListener('mousemove', onMouseMove);
+              activeAnnotation.onmouseup = null;
+              activeAnnotation.remove();
+              activeAnnotation = null;
+              
               chartPreview.options.togglePlugins('annotations', 1);
               chartPreview.setAnnotationType(option.value);
-              option.element.className += ' active';
-            }
-          }
-        });
+              chartPreview.addAnnotation(e);
+            });
+          });
+        }
+
   
         option.element = btn;
         highed.dom.ap(annotationContainer, btn);

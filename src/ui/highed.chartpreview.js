@@ -190,6 +190,41 @@ highed.ChartPreview = function(parent, attributes) {
     }, 200);
   }
 
+  function addShape(chart, type, x, y) {
+    var options = {
+        id: "shape_" + customizedOptions.annotations.length, //customizedOptions.annotations[0].shapes.length,
+        type: type,
+        point: {
+            x: x,
+            y: y,
+            xAxis: 0,
+            yAxis: 0
+        },
+        x: 0,
+        y: 0
+    };
+
+    if (type === 'circle') {
+        options.r = 10;
+    } else if (type === 'square') {
+        options.width = 20;
+        options.height = 20;
+        options.x = -10;
+        options.y = -10;
+    }
+
+    var annotation = chart.addAnnotation({
+        id: "shape_" + customizedOptions.annotations.length, //customizedOptions.annotations[0].shapes.length,
+        shapes: [options]
+    });
+
+    customizedOptions.annotations.push({ 
+      id: "shape_" + customizedOptions.annotations.length,
+      shapes: [annotation.options.shapes[0]] 
+    });
+    //customizedOptions.annotations[0].shapes.push(annotation.options.shapes[0]);
+  }
+
   /* Init the chart */
   function init(options, pnode, noAnimation) {
     var i;
@@ -422,40 +457,6 @@ highed.ChartPreview = function(parent, attributes) {
 
           if (!customizedOptions.annotations) customizedOptions.annotations = []; //[{}];
           //if (!customizedOptions.annotations[0].shapes) customizedOptions.annotations[0].shapes = []; 
-          function addShape(chart, type, x, y) {
-            var options = {
-                id: "shape_" + customizedOptions.annotations.length, //customizedOptions.annotations[0].shapes.length,
-                type: type,
-                point: {
-                    x: x,
-                    y: y,
-                    xAxis: 0,
-                    yAxis: 0
-                },
-                x: 0,
-                y: 0
-            };
-    
-            if (type === 'circle') {
-                options.r = 10;
-            } else if (type === 'square') {
-                options.width = 20;
-                options.height = 20;
-                options.x = -10;
-                options.y = -10;
-            }
-    
-            var annotation = chart.addAnnotation({
-                id: "shape_" + customizedOptions.annotations.length, //customizedOptions.annotations[0].shapes.length,
-                shapes: [options]
-            });
-
-            customizedOptions.annotations.push({ 
-              id: "shape_" + customizedOptions.annotations.length,
-              shapes: [annotation.options.shapes[0]] 
-            });
-            //customizedOptions.annotations[0].shapes.push(annotation.options.shapes[0]);
-          }
 
           if (annotationType === 'label') {
             events.emit('ShowTextDialog', this, e.xAxis[0].value, e.yAxis[0].value/*this, e.chartX - this.plotLeft, e.chartY - this.plotTop*/);
@@ -2071,7 +2072,22 @@ highed.ChartPreview = function(parent, attributes) {
     updateAggregated();
     init();
   }
+  
+  function addAnnotation(e) {
+    var xValue = chart.xAxis[0].toValue(e.chartX),
+        yValue = chart.yAxis[0].toValue(e.chartY);
 
+    
+    if (!chart.isInsidePlot(e.chartX - chart.plotLeft, e.chartY - chart.plotTop)) return;
+
+    if (!customizedOptions.annotations) customizedOptions.annotations = []; //[{}];
+    if (annotationType === 'label') {
+      events.emit('ShowTextDialog', chart, xValue, yValue);
+    } else if (annotationType === 'delete'){
+    } else {
+      addShape(chart, annotationType, xValue, yValue/*e.chartX - this.plotLeft, e.chartY - this.plotTop*/);
+    }
+  }
   ///////////////////////////////////////////////////////////////////////////
 
   exports = {
@@ -2103,6 +2119,7 @@ highed.ChartPreview = function(parent, attributes) {
     setIsAnnotating: setIsAnnotating,
     setAnnotationType: setAnnotationType,
     addAnnotationLabel: addAnnotationLabel,
+    addAnnotation: addAnnotation,
 
     options: {
       set: set,

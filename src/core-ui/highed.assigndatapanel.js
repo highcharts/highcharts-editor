@@ -30,7 +30,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
   var defaultOptions = {
     'labels': {
       'name': "Categories",
-      'desc': 'A column of names or times',
+      'desc': 'Choose a column for the category types. Can be names or a date.',
       'default': 'A',
       'value': 'A',
       'rawValue': [0],
