@@ -47,7 +47,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @return {object} - A new instance of OverlayModal
  */
 highed.OverlayModal = function(contents, attributes) {
-  var container = highed.dom.cr('div', 'highed-overlay-modal'),
+  var container = highed.dom.cr('div', 'highed-overlay-modal '),
     events = highed.events(),
     properties = highed.merge(
       {
@@ -64,6 +64,10 @@ highed.OverlayModal = function(contents, attributes) {
     ),
     hideDimmer = false,
     visible = false;
+
+    if (properties.class) {
+      container.classList += properties.class;
+    }
 
   ///////////////////////////////////////////////////////////////////////////
 

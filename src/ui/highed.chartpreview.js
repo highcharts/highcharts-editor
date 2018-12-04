@@ -508,7 +508,6 @@ highed.ChartPreview = function(parent, attributes) {
             chart.reflow();
           }
         } catch (e) {
-          console.log("IN EHRERE");
           // No idea why this keeps failing
         }
       }
@@ -2043,7 +2042,7 @@ highed.ChartPreview = function(parent, attributes) {
 
 
   function addAnnotationLabel(x, y, text, color, type) {
-    addLabel(x, y, text, color, type.id());
+    addLabel(x, y, text, color, type);
   }
   ///////////////////////////////////////////////////////////////////////////
 

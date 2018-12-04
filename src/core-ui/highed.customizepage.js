@@ -160,16 +160,33 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       // zIndex: 20000,
       showOnInit: false,
       width: 300,
-      height: 350
+      height: 350,
+      class: ' highed-annotations-modal'
     }),
     activeColor = 'rgba(0, 0, 0, 0.75)',
     addTextModalContainer = highed.dom.cr('div', 'highed-add-text-popup'),
     addTextModalInput = highed.dom.cr('textarea', 'highed-imp-input-stretch'),
     colorDropdownParent = highed.dom.cr('div'),
     typeDropdownParent = highed.dom.cr('div'),
+    addTextModalHeader = highed.dom.cr('div', 'highed-modal-header', 'Add Annotation'),
     addTextModalColorSelect = highed.DropDown(colorDropdownParent),
-    addTextModalTypeSelect = highed.DropDown(typeDropdownParent),
-    addTextModalSubmit = highed.dom.cr('button', 'highed-ok-button highed-dtable-gsheet-button', 'Submit'),
+    addTextModalTypeOptions = [{
+      text: 'Callout',
+      icon: 'comment-o',
+      value: 'callout'
+    },{
+      text: 'Connector',
+      icon: 'external-link',
+      value: 'connector'
+    }, {
+      text: 'Circle',
+      icon: 'circle-o',
+      value: 'circle'
+    }],
+    addTextModalTypeValue = 'callout',
+    addTextModalBtnContainer = highed.dom.cr('div', 'highed-modal-button-container'),
+    addTextModalSubmit = highed.dom.cr('button', 'highed-ok-button highed-import-button mini', 'Save'),
+    addTextModalCancel = highed.dom.cr('button', 'highed-ok-button highed-import-button grey negative mini', 'Cancel'),
     addLabelX = null,
     addLabelY = null;
     
@@ -202,41 +219,47 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
     addTextModalColorSelect.selectByIndex(0);
 
-    addTextModalTypeSelect.addItems([
-      {
-        title: 'Callout',
-        id: 'callout'
-      },
-      {
-        title: 'Connector',
-        id: 'connector'
-      },
-      {
-        title: 'Circle',
-        id: 'circle'
-      }
-    ]);
+    highed.dom.on(addTextModalCancel, 'click', function() {
+      overlayAddTextModal.hide();
+    });
 
-    addTextModalTypeSelect.selectByIndex(0);
+    addTextModalTypeOptions.forEach(function(option) {
 
+      var container = highed.dom.cr('div', 'highed-modal-container' + (addTextModalTypeValue === option.value ? ' active' : '')),
+          icon = highed.dom.cr('div', 'highed-modal-icon fa fa-' + option.icon),
+          text = highed.dom.cr('div', 'highed-modal-text', option.text);
+          option.element = container;
+      
+      highed.dom.on(container, 'click', function() {
+        addTextModalTypeOptions.forEach(function(o) {
+          if (o.element.classList.contains('active'))  o.element.classList.remove('active');
+        })
+        option.element.classList += ' active';
+        addTextModalTypeValue = option.value;
+      })
+      
+      highed.dom.ap(typeDropdownParent, highed.dom.ap(container, icon, text));
+    });
+
+    addTextModalInput.placeholder = 'Write annotation here';
     highed.dom.ap(overlayAddTextModal.body,
       highed.dom.ap(addTextModalContainer, 
-                    highed.dom.cr('div', 'highed-add-text-label', 'Text:'),
+                    addTextModalHeader,
                     addTextModalInput,
-                    highed.dom.cr('div', 'highed-add-text-label', 'Color:'),
-                    colorDropdownParent,
                     highed.dom.cr('div', 'highed-add-text-label', 'Type:'),
                     typeDropdownParent,
-                    addTextModalSubmit
+                    highed.dom.cr('div', 'highed-add-text-label', 'Color:'),
+                    colorDropdownParent,
+                    highed.dom.ap(addTextModalBtnContainer,
+                      addTextModalSubmit,
+                      addTextModalCancel
+                    )
                   )
     );
 
     highed.dom.on(addTextModalSubmit, 'click', function() {
       overlayAddTextModal.hide();
-      chartPreview.addAnnotationLabel(addLabelX, addLabelY, addTextModalInput.value.replace('\n', '<br/>'), activeColor, addTextModalTypeSelect.getSelectedItem());
-
-      addTextModalTypeSelect.selectByIndex(0);
-      addTextModalTypeSelect.selectByIndex(0);
+      chartPreview.addAnnotationLabel(addLabelX, addLabelY, addTextModalInput.value.replace('\n', '<br/>'), activeColor, addTextModalTypeValue);
       addTextModalInput.value = '';
 
     });
@@ -368,6 +391,8 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
             moveAt(event.pageX, event.pageY);
             
             function onMouseMove(event) {
+              if(event.stopPropagation) event.stopPropagation();
+              if(event.preventDefault) event.preventDefault();
               moveAt(event.pageX, event.pageY);
             }
 
@@ -664,6 +689,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
   chartPreview.on('ShowTextDialog', function(chart, x, y) {
     addLabelX = x;
     addLabelY = y;
+    addTextModalInput.focus();
 
     overlayAddTextModal.show();
 
