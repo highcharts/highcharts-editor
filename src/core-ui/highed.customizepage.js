@@ -236,7 +236,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
     addTextModalTypeOptions.forEach(function(option) {
 
-      var container = highed.dom.cr('div', 'highed-modal-container' + (addTextModalTypeValue === option.value ? ' active' : '')),
+      var container = highed.dom.cr('div', 'highed-annotation-modal-container ' + (addTextModalTypeValue === option.value ? ' active' : '')),
           icon = highed.dom.cr('div', 'highed-modal-icon fa fa-' + option.icon),
           text = highed.dom.cr('div', 'highed-modal-text', option.text);
           option.element = container;
