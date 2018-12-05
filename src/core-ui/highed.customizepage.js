@@ -444,7 +444,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
                 top: pageY - (btn.offsetHeight / 2 - 10) + 'px'
               });
             }
-            moveAt(event.pageX, event.pageY);
+            moveAt(e.pageX, e.pageY);
             
             function onMouseMove(event) {
               if(event.stopPropagation) event.stopPropagation();
