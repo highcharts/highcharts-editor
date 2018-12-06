@@ -734,8 +734,8 @@ highed.DrawerEditor = function(parent, options, planCode) {
     templatePage.selectSeriesTemplate(index, chartPreview.toProject());
   });
 
-  chartPreview.on('LoadProject', function (projectData) {
-    dataPage.loadProject(projectData);
+  chartPreview.on('LoadProject', function (projectData, aggregated) {
+    dataPage.loadProject(projectData, aggregated);
     templatePage.selectSeriesTemplate(0, projectData);
   });
 

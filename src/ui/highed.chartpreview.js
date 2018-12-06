@@ -982,7 +982,7 @@ highed.ChartPreview = function(parent, attributes) {
       };
 
     highed.emit('UIAction', 'LoadProject');
-
+    
     lastLoadedCSV = false;
     lastLoadedSheet = false;
     lastLoadedLiveData = false;
@@ -1150,12 +1150,13 @@ highed.ChartPreview = function(parent, attributes) {
       //     });
       // }
 
-      if (!hasData) {
+      //if (!hasData) {
         updateAggregated();
         init(aggregatedOptions);
         emitChange();
-      }
-      events.emit('LoadProject', projectData);
+      //}
+      
+      events.emit('LoadProject', projectData, aggregatedOptions);
     }
   }
 

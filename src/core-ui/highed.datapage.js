@@ -461,14 +461,14 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
   }
 
-  function loadProject(projectData) {
+  function loadProject(projectData, aggregated) {
 
     if (projectData.settings && projectData.settings.dataProvider && projectData.settings.dataProvider.csv) {
       dataTable.loadCSV({
         csv: projectData.settings.dataProvider.csv
       }, null, null, function() {
           assignDataPanel.enable();
-          assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true);
+          assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, null, true, aggregated);
           assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
           chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
       });

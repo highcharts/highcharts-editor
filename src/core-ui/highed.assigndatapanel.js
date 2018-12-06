@@ -403,22 +403,25 @@ highed.AssignDataPanel = function(parent, dataTable) {
     });
   }
 
-  function getSeriesType(data, index) {
+  function getSeriesType(data, index, aggregatedOptions) { 
+    // Change this in future, data should handle 99% of cases but have had to use aggregatedoptions due to users setting chart type through custom code
+    // Looks messy using both atm
     if (data.config) return data.config.chart.type;
     else {
       if (data.options && data.options.series && data.options.series[index] && data.options.series[index].type) return data.options.series[index].type;
       if (data.template && data.template.chart && data.template.chart.type) return data.template.chart.type;
       else if (data.options && data.options.chart && data.options.chart.type) return data.options.chart.type;
       else if (data.theme && data.theme.options.chart && data.theme.options.chart.type) return data.theme.options.chart.type;
+      else if (aggregatedOptions && aggregatedOptions.chart && aggregatedOptions.chart.type) return aggregatedOptions.chart.type;
       else return 'line';
     }
   }
 
 
-  function setAssignDataFields(data, maxColumns, init, seriesIndex, skipEmit, serieValue) {
+  function setAssignDataFields(data, maxColumns, init, seriesIndex, skipEmit, serieValue, aggregatedOptions) {
     if (!data || disabled) return;
     columnLength = maxColumns;
-    var seriesType = getSeriesType(data, 0);
+    var seriesType = getSeriesType(data, 0, aggregatedOptions);
     
     seriesTypeSelect.updateByIndex(seriesIndex || index, {
       title: 'Series ' + ((seriesIndex || index) + 1) + ' - ' + capitalizeFirstLetter(seriesType)
@@ -470,7 +473,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
         }
 
         for(var i=1; i<length; i++) {
-          const seriesType = getSeriesType(data, i);
+          const seriesType = getSeriesType(data, i, aggregatedOptions);
           if(!options[i]) {
             addSerie(seriesType);
           }
