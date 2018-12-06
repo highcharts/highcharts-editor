@@ -1046,6 +1046,8 @@ highed.ChartPreview = function(parent, attributes) {
         },
         true
       );
+
+      events.emit('LoadCustomCode');
       
       constr = ['Chart'];
 

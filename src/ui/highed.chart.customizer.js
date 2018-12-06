@@ -175,6 +175,20 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
       highed.emit('UIAction', 'CustomCodeUpdate');
       customCodeDebug.innerHTML = '';
       if (chartPreview) {
+        
+        chartPreview.on('LoadCustomCode', function(options) {
+          var code;
+
+          if (chartPreview) {
+            code = chartPreview.getCustomCode() || '';
+            if (codeMirrorBox) {
+              codeMirrorBox.setValue(code);
+            } else {
+              customCodeBox.value = code;
+            }
+          }
+        });
+
         chartPreview.on('UpdateCustomCode', function() {
           chartPreview.setCustomCode(
             codeMirrorBox ? codeMirrorBox.getValue() : customCodeBox.value,
