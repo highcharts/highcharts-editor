@@ -250,15 +250,10 @@ highed.DrawerEditor = function(parent, options, planCode) {
       chartPreview,
       highedChartContainer,
       builtInOptions.templates
-    ),
+    );
     createChartPage = highed.CreateChartPage(
       splitter.bottom,
-      highed.merge(
-        {
-          importer: properties.importer
-        },
-        properties.dataGrid
-      ),
+      properties.features,
       {
         title: 'Create Chart',
         widths: {

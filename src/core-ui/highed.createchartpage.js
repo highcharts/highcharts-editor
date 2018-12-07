@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.CreateChartPage = function(parent, options, props) {
+highed.CreateChartPage = function(parent, userOptions, props) {
   var events = highed.events(),
     builtInOptions = [
       {
@@ -47,6 +47,7 @@ highed.CreateChartPage = function(parent, options, props) {
       {
         id: 3,
         title: 'Choose Template',
+        permission: 'templates',
         create: function(body) {
           highed.dom.ap(body, templateContainer);
         }
@@ -54,6 +55,7 @@ highed.CreateChartPage = function(parent, options, props) {
       {
         id: 4,
         title: 'Customize',
+        permission: 'customize',
         hideTitle: true,
         create: function(body) {
           highed.dom.ap(body, customizerContainer);
@@ -88,11 +90,14 @@ highed.CreateChartPage = function(parent, options, props) {
 
     function init(dataPage,templatePage, customizePage) {
 
+      var counter = 1;
       toolbox = highed.Toolbox(userContents);
       builtInOptions.forEach(function(option, index) {
+        if (option.permission && userOptions.indexOf(option.permission) === -1) return;
+
         var o = toolbox.addEntry({
           title: option.title,
-          number: option.id,
+          number: counter,//option.id,
           onClick: manualSelection,
           hideTitle: option.hideTitle
         });
@@ -102,6 +107,7 @@ highed.CreateChartPage = function(parent, options, props) {
         }
 
         options.push(o);
+        counter++;
 
       });
       options[0].expand();
@@ -201,7 +207,10 @@ highed.CreateChartPage = function(parent, options, props) {
           });
 
       highed.dom.on(nextButton, 'click', function() {
-        options[2].expand();
+        if(userOptions && (userOptions.indexOf('templates') === -1 && userOptions.indexOf('customize') === -1)) {
+          events.emit("SimpleCreateChartDone", true);
+        }
+        else options[2].expand();
       });
       highed.dom.ap(dataTableContainer, 
         highed.dom.ap(dataTableDropzoneContainer,
@@ -224,7 +233,9 @@ highed.CreateChartPage = function(parent, options, props) {
       loader = highed.dom.cr('span','highed-wizard-loader', '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>'),
       templatesContainer = templatePage.createMostPopularTemplates(function() {
         setTimeout(function() {
-          options[3].expand();
+          if(userOptions && (userOptions.indexOf('customize') === -1)) {
+            events.emit("SimpleCreateChartDone", true);
+          } else options[3].expand();
         },200);
       }, function(loading) {
         if (loading) loader.classList += ' active';
@@ -232,7 +243,9 @@ highed.CreateChartPage = function(parent, options, props) {
       });
       
       highed.dom.on(nextButton, 'click', function() {
-        options[3].expand();
+        if(userOptions && (userOptions.indexOf('customize') === -1)) {
+          events.emit("SimpleCreateChartDone", true);
+        } else options[3].expand();
       });
 
       highed.dom.ap(templateContainer, 
