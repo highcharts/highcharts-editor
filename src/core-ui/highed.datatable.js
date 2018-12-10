@@ -502,7 +502,7 @@ highed.DataTable = function(parent, attributes) {
   }, false);
 
   document.addEventListener('contextmenu', function(e) {
-    if (e.path.indexOf(container) > -1) {
+    if (e.path && e.path.indexOf(container) > -1) {
       globalContextMenu.show(e.clientX, e.clientY, true);
       return highed.dom.nodefault(e);
     }
@@ -693,8 +693,8 @@ highed.DataTable = function(parent, attributes) {
 
   ////////////////////////////////////////////////////////////////////////////
   function Column(row, colNumber, val, keyVal) {
-    
-    var value = (typeof val === 'undefined') || (val === 'null') ? null : val,
+
+    var value = typeof val === 'undefined' || typeof val === 'object' || (val === 'null') ? null : val, //object check for ie11/edge
       col = highed.dom.cr('td', 'highed-dtable-cell'),
       colVal = highed.dom.cr('div', 'highed-dtable-col-val', value),
       input = highed.dom.cr('input'),
@@ -1391,9 +1391,9 @@ highed.DataTable = function(parent, attributes) {
 
     exports.hideColumns = function() {
       if (!col.classList.contains('cell-hide')) {
-        col.classList += ' cell-hide';
-        header.classList += ' cell-hide';
-        letter.classList += ' cell-hide';
+        col.classList.add('cell-hide');
+        header.classList.add('cell-hide');
+        letter.classList.add('cell-hide');
       }
     }
 
@@ -1862,7 +1862,7 @@ highed.DataTable = function(parent, attributes) {
 
   function checkSections(sections, index) {
     return (sections || []).some(function(section) {
-      return section.dataColumns.includes(index) || section.extraColumns.includes(index) || section.labelColumn === index;
+      return (section.dataColumns.indexOf(index) > -1 || section.extraColumns.indexOf(index) > -1 || section.labelColumn === index);
     });
   }
 
@@ -1914,7 +1914,7 @@ highed.DataTable = function(parent, attributes) {
           hasData = true;
         }
 
-        if (!dataFieldsUsed.includes(index)) {
+        if (dataFieldsUsed.indexOf(index) === -1) {
           dataFieldsUsed.push(index);
           if (!v) {
             hasData = true;
@@ -2866,7 +2866,7 @@ highed.DataTable = function(parent, attributes) {
     var found = false;
 
     gcolumns.forEach(function(col, index) {
-      if (!values.includes(index)) {
+      if (!values.indexOf(index) === -1) {
         toggle ? col.hideColumns() : col.showColumns();
       } else {
         col.showColumns();

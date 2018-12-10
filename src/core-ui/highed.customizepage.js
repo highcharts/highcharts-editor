@@ -391,7 +391,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
           buttons.forEach(function(b){
             if (!b.noPermission)  b.element.classList.remove('active');
           });
-          button.element.classList += ' active';
+          button.element.classList.add('active');
           button.onClick();
         });
         highed.dom.ap(iconsContainer, button.element);
@@ -402,7 +402,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
     highed.dom.on(annotationButton, 'click', function() {
       if (annotationContainer.classList.contains('active')) annotationContainer.classList.remove('active');
-      else annotationContainer.classList += ' active';
+      else annotationContainer.classList.add('active');
 
     });
 
@@ -473,6 +473,8 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
         highed.dom.ap(annotationContainer, btn);
       });
     }
+
+    
     highed.dom.ap(iconsContainer, annotationContainer);
 
     highed.dom.ap(contents, userContents);
@@ -481,7 +483,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     highed.dom.ap(userContents, customizerContainer);
     highed.dom.ap(parent, highed.dom.ap(container,body));
   
-    customizer.resize();
+    //customizer.resize();
 
     expand();
     hide();
@@ -655,7 +657,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     else if (highed.onPhone() && props.widths.phone) width = props.widths.phone;
 
     chartWidth = 68;
-    
+   
     highed.dom.style(backIcon, {
       display: "none"
     });
@@ -669,9 +671,11 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     isVisible = false;
     searchAdvancedOptions.hide();
     
-    highed.dom.style(resolutionSettings, {
-      display: 'none'
-    });
+    if (resolutionSettings) {
+      highed.dom.style(resolutionSettings, {
+        display: 'none'
+      });
+    }
 
     if (!highed.onPhone()){
       buttons.forEach(function(button, i) {

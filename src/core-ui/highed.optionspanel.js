@@ -46,7 +46,6 @@ highed.OptionsPanel = function(parent, attr) {
   }
 
   function addOption(option, id) {
-      
     var btn = highed.dom.cr(
       'a',
       'highed-optionspanel-button ' + (id === 'data' ? 'active' : ''), 
@@ -59,7 +58,7 @@ highed.OptionsPanel = function(parent, attr) {
           options[o].classList.remove('active');
         });
         currentOption = option;
-        btn.classList += ' active';
+        btn.classList.add('active');
 
         click(prev, option);
       });

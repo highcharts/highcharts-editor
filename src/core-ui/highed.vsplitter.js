@@ -68,13 +68,16 @@ highed.VSplitter = function(parent, attributes) {
     });
 
     if (!w && !h) {
+      
       highed.dom.style(top, {
         height: properties.topHeight
       })
-      highed.dom.style(bottom, {
-        width: '100%',
-        height: 'calc(100% - ' + properties.topHeight + ')'
-      });
+      if (bottom) {
+        highed.dom.style(bottom, {
+          width: '100%',
+          height:  (typeof properties.topHeight === 'string' ? 'calc(100% - ' + properties.topHeight + ')' : 100 - properties.topHeight + '%' )
+        });
+      }
       return;
     }
     highed.dom.style(container, {
