@@ -329,7 +329,7 @@ highed.TabControl = function(parent, noOverflow, extraPadding, skipTabs) {
      *    > h {number} - the height of the control
      */
     barSize: function() {
-      return 0;//highed.dom.size(paneBar);
+      return highed.dom.size(paneBar);
     }
   };
 };

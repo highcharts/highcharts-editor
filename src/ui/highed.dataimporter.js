@@ -108,7 +108,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       tabs = highed.TabControl(parent, false, true),
       csvTab = tabs.createTab({ title: 'Import' }),
       exportTab = tabs.createTab({ title: 'Export' }),
-      //jsonTab = tabs.createTab({ title: 'JSON' }),
+      jsonTab = tabs.createTab({ title: 'JSON' }),
       webTab = tabs.createTab({ title: 'Plugins' }),
       samplesTab = tabs.createTab({ title: 'Sample Data' }),
       csvPasteArea = highed.dom.cr('textarea', 'highed-imp-pastearea'),
@@ -154,7 +154,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     jsonPasteArea.value = JSON.stringify({}, undefined, 2);
 
-    setDefaultTabSize(600, 600, [csvTab, exportTab, /*jsonTab, webTab,*/ samplesTab]);
+    setDefaultTabSize(600, 600, [csvTab, exportTab, jsonTab, webTab, samplesTab]);
     ///////////////////////////////////////////////////////////////////////////
 
     highed.dom.style(samplesTab.body, { overflow: 'hidden' });
@@ -188,10 +188,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       }
 
       //Always disable json options..
-      /*
+      
       if (1 === 1 || !properties.options.json) {
         jsonTab.hide();
-      }*/
+      }
 
       if (
         Object.keys(properties.plugins).length === 0 ||
@@ -401,7 +401,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
       tabs.resize(w || ps.w, h || ps.h);
       bsize = tabs.barSize();
-
       webSplitter.resize(w || ps.w, (h || ps.h) - bsize.h - 20);
       webList.resize(w || ps.w, (h || ps.h) - bsize.h);
 
@@ -483,7 +482,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
       csvImportBtn
     );
-/*
+
     highed.dom.ap(
       jsonTab.body,
       highed.dom.cr(
@@ -495,7 +494,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       jsonImportFileBtn,
       jsonImportBtn
     );
-*/
+
     highed.dom.on(commaDelimitedBtn, 'click', function(){
       events.emit('ExportComma');
     });
@@ -513,8 +512,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     });
 
     highed.dom.on(liveDataImportBtn, 'click', function () {
-      //console.log(liveDataInput);
-      //console.log(liveDataInput.value);
       events.emit('ImportLiveData', {
       //  url: liveDataInput.value
       });
