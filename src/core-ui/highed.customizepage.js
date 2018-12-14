@@ -320,6 +320,10 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
     });
 
+  function usingSafari() {
+    return (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Mac') != -1 && navigator.userAgent.indexOf('Chrome') == -1)
+  }
+
   function init() {
 
     width = props.width,
@@ -385,6 +389,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     if (!highed.onPhone()) {
       buttons.forEach(function(button, i) {
         if (button.noPermission) return;
+        
         button.element = highed.dom.cr('span', 'highed-toolbox-custom-code-icon highed-template-tooltip ' + ( i === 0 ? ' active' : ''), '<i class="fa fa-' + button.icon + '" aria-hidden="true"></i><span class="highed-tooltip-text">' + button.tooltip + '</span>');
         
         highed.dom.on(button.element, 'click', function() {
@@ -398,7 +403,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       });
     }
 
-    var annotationButton = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons', '<i class="fa fa-commenting" aria-hidden="true"></i><span class="highed-tooltip-text">Annotations</span>');
+    var annotationButton = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons ' + (usingSafari() ? ' usingsafari ' : '') , '<i class="fa fa-commenting" aria-hidden="true"></i><span class="highed-tooltip-text">Annotations</span>');
 
     highed.dom.on(annotationButton, 'click', function() {
       if (annotationContainer.classList.contains('active')) annotationContainer.classList.remove('active');
@@ -412,7 +417,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       highed.dom.ap(annotationContainer, annotationButton);
 
       annotationOptions.forEach(function(option) {
-        var btn = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons', '<i class="fa fa-' + option.icon + '" aria-hidden="true"></i><span class="highed-tooltip-text">' + option.tooltip + '</span>');
+        var btn = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons ' + (usingSafari() ? ' usingsafari ' : '') , '<i class="fa fa-' + option.icon + '" aria-hidden="true"></i><span class="highed-tooltip-text">' + option.tooltip + '</span>');
         if (option.onClick || !option.draggable) {
           highed.dom.on(btn, 'click', function() {
             
