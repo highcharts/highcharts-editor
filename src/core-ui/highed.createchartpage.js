@@ -200,7 +200,10 @@ highed.CreateChartPage = function(parent, userOptions, props) {
           ),
           loader = highed.dom.cr('span','highed-wizard-loader', '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>'),
           dataTableDropzoneContainer = dataPage.createSimpleDataTable(function() {
-            options[2].expand();
+
+            if(userOptions && (userOptions.indexOf('templates') === -1 && userOptions.indexOf('customize') === -1)) {
+              events.emit("SimpleCreateChartDone", true);
+            } else options[2].expand();
           }, function(loading) {
             if (loading) loader.classList += ' active';
             else loader.classList.remove('active');

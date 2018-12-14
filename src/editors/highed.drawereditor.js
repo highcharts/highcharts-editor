@@ -726,10 +726,12 @@ highed.DrawerEditor = function(parent, options, planCode) {
   });
 
   dataPage.on('SeriesChanged', function(index) {
-    templatePage.selectSeriesTemplate(index, chartPreview.toProject());
+    if (!options.features || (options.features && options.features.indexOf('templates') > -1)) {
+      templatePage.selectSeriesTemplate(index, chartPreview.toProject());
+    }
   });
 
-  chartPreview.on('LoadProject', function (projectData, aggregated) {
+  chartPreview.on('LoadProject', function (projectData, aggregated) { 
     dataPage.loadProject(projectData, aggregated);
     templatePage.selectSeriesTemplate(0, projectData);
   });
