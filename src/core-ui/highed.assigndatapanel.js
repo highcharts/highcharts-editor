@@ -300,7 +300,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
           alpha = 0.5;
 
     return {
-      "light": "hsl(" + hue + ", " + saturation + "%, " + (lightness + 20) + "%, " + alpha + ")",
+      "light": "hsla(" + hue + ", " + saturation + "%, " + (lightness + 20) + "%, " + alpha + ")",
       "dark": "hsl(" + hue + ", " + saturation + "%, " + lightness + "%)",
     };
   }
@@ -587,7 +587,6 @@ highed.AssignDataPanel = function(parent, dataTable) {
   
     labelInput.value = option.value;
     const colorDiv = highed.dom.cr('div', 'highed-assigndatapanel-color');
-    
     highed.dom.style(colorDiv, {
       "background-color": option.colors.light,
       "border": '1px solid ' + option.colors.dark,
