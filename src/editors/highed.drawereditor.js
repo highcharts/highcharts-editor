@@ -727,7 +727,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
 
   dataPage.on('SeriesChanged', function(index) {
     if (!options.features || (options.features && options.features.indexOf('templates') > -1)) {
-      templatePage.selectSeriesTemplate(index, chartPreview.toProject());
+      templatePage.selectSeriesTemplate(index, chartPreview.options.getTemplateSettings());
     }
   });
 

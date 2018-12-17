@@ -220,7 +220,7 @@ highed.ChartPreview = function(parent, attributes) {
 
     customizedOptions.annotations.push({ 
       id: "shape_" + customizedOptions.annotations.length,
-      shapes: [annotation.options.shapes[0]] 
+      shapes: [annotation.options.shapes[0]]
     });
     //customizedOptions.annotations[0].shapes.push(annotation.options.shapes[0]);
   }
@@ -329,7 +329,7 @@ highed.ChartPreview = function(parent, attributes) {
           proceed.apply(this, Array.prototype.slice.call(arguments, 1))
 
           var annotation = this[type][this[type].length - 1];
-
+          
           (annotation.element).addEventListener('click', function(e) {
             highed.dom.nodefault(e);
             if (isAnnotating && annotationType === 'delete') {
@@ -1327,6 +1327,10 @@ highed.ChartPreview = function(parent, attributes) {
     };
   }
 
+  function getTemplateSettings() {
+    return templateSettings;
+  }
+
   function clearData(skipReinit) {
     lastLoadedCSV = false;
     lastLoadedSheet = false;
@@ -2138,7 +2142,8 @@ highed.ChartPreview = function(parent, attributes) {
         return chart;
       },
       addBlankSeries: addBlankSeries,
-      togglePlugins: togglePlugins
+      togglePlugins: togglePlugins,
+      getTemplateSettings: getTemplateSettings
     },
 
     data: {

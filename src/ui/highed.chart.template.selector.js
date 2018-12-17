@@ -290,7 +290,7 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
   }
 
   function selectSeriesTemplate(index, projectData) {
-    const settings = projectData.settings && projectData.settings.template;
+    const settings = projectData; //projectData.settings && projectData.settings.template;
     var templateHeader, templateTitle;
     if (settings && !settings[index]) {
       templateHeader = 'Line';
