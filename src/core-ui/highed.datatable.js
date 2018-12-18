@@ -387,7 +387,7 @@ highed.DataTable = function(parent, attributes) {
     selectedEndCell = [],
     selectedCopyFirstCell = [],
     selectedCopyEndCell = [],
-
+    lastSelectedCell = [null, null],
     allSelectedCells = [],
     allSelectedCopyCells = [],
     selectedHeaders = [],
@@ -657,7 +657,9 @@ highed.DataTable = function(parent, attributes) {
     );
     
     highed.dom.ap(target, mainInput);
+
     if (!dontFocus) mainInput.focus();
+
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -796,8 +798,9 @@ highed.DataTable = function(parent, attributes) {
     }
 
     function focus(dontFocus) {
-      
+
       deselectAllCells();
+
       function checkNull(value) {
         return value === null || value === '';
       }
@@ -827,6 +830,8 @@ highed.DataTable = function(parent, attributes) {
         handleKeyup,
         dontFocus
       );
+
+
 
       highed.dom.style(cornerPiece, {
         top: ((highed.dom.pos(col).y + highed.dom.size(col).h - 3)) + "px",
@@ -898,13 +903,15 @@ highed.DataTable = function(parent, attributes) {
           selectedFirstCell[1] === selectedEndCell[1]) {
             //Have not dragged anywhere else on the grid. So the user has just clicked on a cell.
             
-            selectedCopyFirstCell[0] = selectedFirstCell[0];
-            selectedCopyFirstCell[1] = selectedFirstCell[1];
-            selectedCopyEndCell[1] = selectedEndCell[1];
-            selectedCopyEndCell[0] = selectedEndCell[0];
-            selectedHeaders = [];
-            focus();
-            globalContextMenu.hide();
+          lastSelectedCell[0] = colNumber;
+          lastSelectedCell[1] = row.number;
+          selectedCopyFirstCell[0] = selectedFirstCell[0];
+          selectedCopyFirstCell[1] = selectedFirstCell[1];
+          selectedCopyEndCell[1] = selectedEndCell[1];
+          selectedCopyEndCell[0] = selectedEndCell[0];
+          selectedHeaders = [];
+          focus();
+          globalContextMenu.hide();
       }
     });
 
@@ -930,8 +937,10 @@ highed.DataTable = function(parent, attributes) {
       }
     });
     highed.dom.on(col, 'mousedown', function() {
-      focus();
-
+      if (lastSelectedCell[0] !== colNumber && lastSelectedCell[1] !== row.number) {
+        focus();
+      }
+    
       selectedFirstCell[0] = colNumber;//keyVal; 
       selectedEndCell[0] = colNumber;//keyVal; 
       selectedFirstCell[1] = row.number; 

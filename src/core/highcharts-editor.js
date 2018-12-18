@@ -990,7 +990,7 @@ var highed = {
 
   isOnPhone = checkIfPhone();
   isOnTablet = checkIfTabletDimensions();
-  console.log(isOnPhone, isOnTablet);
+  
   ///////////////////////////////////////////////////////////////////////////
 
   //Inject dependencies
