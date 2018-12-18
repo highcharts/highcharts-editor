@@ -209,7 +209,7 @@ highed.meta.optionsExtended = {
       {
         text: 'option.subcat.tooltip',
         dropdown: true,
-        options: [          
+        options: [         
           {
             id: 'tooltip--enabled',
             pid: 'tooltip.enabled',
@@ -269,6 +269,15 @@ highed.meta.optionsExtended = {
             defaults: 'null',
             parent: 'tooltip',
             width: 50
+          },
+          {
+            id: 'tooltip--valueSuffix',
+            pid: 'tooltip.valueSuffix',
+            dataType: 'string',
+            context: 'General',
+            defaults: '',
+            parent: 'tooltip',
+            width: 98
           }
         ]
       },
@@ -796,8 +805,18 @@ highed.meta.optionsExtended = {
             dataType: 'string',
             context: 'General',
             defaults: 'horizontal',
+            width: 50,
             parent: 'legend',
             values: '["horizontal", "vertical"]'
+          },
+          {
+            id: 'legend--labelFormat',
+            pid: 'legend.labelFormat',
+            dataType: 'string',
+            context: 'General',
+            defaults: '{name}',
+            width: 50,
+            parent: 'legend',
           }
         ]
       },

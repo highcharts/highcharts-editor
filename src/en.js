@@ -212,6 +212,9 @@ highed.installLanguage({
     'option.text.legend.enabled': 'Enable legend',
     'option.tooltip.legend.enabled': 'Enable or disable the legend.',
     'option.text.legend.layout': 'Item layout',
+    'option.text.legend.labelFormat': 'Label Format',
+    'option.tooltip.legend.labelFormat':
+      'A format string for each legend label',
     'option.tooltip.legend.layout':
       'The layout of the legend items. Can be one of "horizontal" or "vertical".',
     'option.text.legend.align': 'Horizontal alignment',
@@ -256,6 +259,9 @@ highed.installLanguage({
     'option.text.tooltip.backgroundColor': 'Background color',
     'option.tooltip.tooltip.backgroundColor':
       'The background color of the tooltip',
+    'option.text.tooltip.valueSuffix': 'Value Suffix',
+    'option.tooltip.tooltip.valueSuffix':
+      'A string to append to each series y value',
     'option.text.tooltip.borderWidth': 'Border width',
     'option.tooltip.tooltip.borderWidth':
       '<p>The pixel width of the tooltip border.</p>\r\n\r\n<p>In <a href="http://www.highcharts.com/docs/chart-design-and-style/style-by-css">styled mode</a>, the stroke width is set in the <code>.highcharts-tooltip-box</code> class.</p>',
