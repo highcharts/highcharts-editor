@@ -644,10 +644,17 @@ highed.DataTable = function(parent, attributes) {
           ) {
             rawCSV = mainInput.value;
             highed.emit('UIAction', 'PasteCSVAttempt');
+             loadCSV({
+               csv: rawCSV
+              }, null, true, function() {
+
+            });
+            /*
             return loadRows(ps, function() {
               if (rows.length > 0) rows[0].columns[0].focus();
               events.emit('InitLoaded');
-            });
+              events.emit('AssignDataForFileUpload', rows[0].length);
+            });*/
           }
           return;
         }
@@ -2170,7 +2177,6 @@ highed.DataTable = function(parent, attributes) {
           rows.push(Array(length).fill(null, 0));
         }
       }
-      
       loadRows(rows, function() {
         if (updateAssignData && rows[0].length > DEFAULT_COLUMN) events.emit('AssignDataForFileUpload', rows[0].length);
         if (cb) cb();

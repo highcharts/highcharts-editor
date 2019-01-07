@@ -327,7 +327,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
     });
   }
 
-  function addSerie(seriesType, redrawDOM) {
+  function addSerie(seriesType, redrawDOM, skipSelect) {
     var type = seriesType;
     if (!type) type = 'line';
     
@@ -349,7 +349,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
     }
 
     options.push(highed.merge({}, newOptions));
-    seriesTypeSelect.selectById(options.length - 1);
+    if (!skipSelect) seriesTypeSelect.selectById(options.length - 1);
     if (redrawDOM) resetDOM();
 
     events.emit('AddSeries', options.length - 1, seriesType);
@@ -475,7 +475,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
         for(var i=1; i<length; i++) {
           const seriesType = getSeriesType(data, i, aggregatedOptions);
           if(!options[i]) {
-            addSerie(seriesType);
+            addSerie(seriesType, null, true);
           }
   
           options[i].labels.rawValue = [0];
