@@ -55,8 +55,14 @@ highed.Slider = function(parent, attributes) {
     textIndicator = highed.dom.cr('div', 'highed-slider-text-indicator'),
     sliderBackground = highed.dom.cr('div', 'highed-slider-background'),
     resetIcon = highed.dom.cr('div', 'highed-slider-reset fa fa-undo'),
-    mover = highed.Movable(indicator, 'x', true, sliderBackground);
 
+    numberInput = highed.dom.cr('input', 'highed-slider-input'),
+    mover = highed.Movable(indicator, 'x', true, sliderBackground);
+    
+    numberInput.type = "number";
+    numberInput.value = value;
+    numberInput.max = properties.max;
+    numberInput.min = 0;
   ////////////////////////////////////////////////////////////////////////////
 
   function updateText() {
@@ -119,10 +125,27 @@ highed.Slider = function(parent, attributes) {
       properties.min +
       Math.round(x / (s.w - ms.w) * (properties.max - properties.min));
 
+    numberInput.value = value;
     textIndicator.innerHTML = value;
     if (!highed.onPhone()) {
       events.emit('Change', value);
     }
+  });
+
+  highed.dom.on(numberInput, 'keyup', function(e) {
+    
+    if (e.target.value && !isNaN(e.target.value)) {
+      if (parseInt(e.target.value) > properties.max) {
+        value = properties.max;
+      } else value = parseInt(e.target.value);
+
+      textIndicator.innerHTML = value;
+      calcIndicator();  
+      if (!highed.onPhone()) {
+        events.emit('Change', value);
+      }
+    }
+
   });
 
   mover.on('StartMove', function() {
@@ -169,6 +192,7 @@ highed.Slider = function(parent, attributes) {
   highed.dom.ap(
     container,
     sliderBackground,
+    numberInput,
     resetIcon,
     highed.dom.ap(indicator, textIndicator)
   );

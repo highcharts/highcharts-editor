@@ -98,7 +98,7 @@ highed.meta.optionsExtended = {
             dataType: 'font',
             pid: 'subtitle.style',
             context: 'General',
-            defaults: '{ "color": "#666666" }',
+            defaults: '{ "color": "#666666", "fontSize": "12px" }',
             parent: 'subtitle'
           }
         ]
