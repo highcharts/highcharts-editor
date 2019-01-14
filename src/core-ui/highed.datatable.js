@@ -2207,9 +2207,9 @@ highed.DataTable = function(parent, attributes) {
     gsheetWorksheetID.value = worksheet || '';
     gsheetRefreshTime.value = dataRefreshRate || '';
     gsheetStartRow.value = startRow || 0;
-    gsheetEndRow.value = endRow || '';
+    gsheetEndRow.value = (endRow === Number.MAX_VALUE ? '' : endRow) || '';
     gsheetStartCol.value = startColumn || 0;
-    gsheetEndCol.value = endColumn || 0;
+    gsheetEndCol.value =  (endColumn === Number.MAX_VALUE ? '' : endColumn) || '';
 
     isInGSheetMode = true;
     isInLiveDataMode = false;
