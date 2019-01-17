@@ -287,7 +287,7 @@ highed.ChartPreview = function(parent, attributes) {
       }
       chart.annotations.length = 0;
     }
-
+    
     try {
       const chartConstr = (constr.some(function(a) {
         return a === 'StockChart';
@@ -1087,6 +1087,11 @@ highed.ChartPreview = function(parent, attributes) {
               seriesMapping: projectData.settings.dataProvider.seriesMapping
             }
           });
+
+        }
+        
+        if (projectData.settings.dataProvider.assignDataFields) {
+          assignDataFields = projectData.settings.dataProvider.assignDataFields;
         }
 
         if (projectData.settings.dataProvider.googleSpreadsheet) {
