@@ -1827,9 +1827,10 @@ highed.DataTable = function(parent, attributes) {
       height: ps.h - hs.h - 55 - 17 + 'px' //55 is padding from top for data column and letter
     });
 
-    highed.dom.style(container, {
+    highed.dom.style([container, gsheetFrame, liveDataFrame], {
       height: ps.h - hs.h - 22 /*- tb.h*/ + 'px'
     });
+
 
     highed.dom.style(table, {
       width: ps.w + 'px'
