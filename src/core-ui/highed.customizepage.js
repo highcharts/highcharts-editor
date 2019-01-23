@@ -71,7 +71,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     }, {
       tooltip: 'Add Square',
       icon: 'stop',
-      value: 'square',
+      value: 'rect',
       draggable: true
     }, {
       tooltip: 'Add Annotations',

@@ -206,16 +206,24 @@ highed.ChartPreview = function(parent, attributes) {
 
     if (type === 'circle') {
         options.r = 10;
-    } else if (type === 'square') {
+    } else if (type === 'rect') {
         options.width = 20;
         options.height = 20;
         options.x = -10;
         options.y = -10;
     }
 
+
+    var annotation = chart.addAnnotation({
+      id: "shape_" + customizedOptions.annotations.length, //customizedOptions.annotations[0].shapes.length,
+      shapes: [options],
+      type: type
+    });
+    
     var annotation = chart.addAnnotation({
         id: "shape_" + customizedOptions.annotations.length, //customizedOptions.annotations[0].shapes.length,
-        shapes: [options]
+        shapes: [options],
+        type: type
     });
 
     customizedOptions.annotations.push({ 
@@ -261,22 +269,6 @@ highed.ChartPreview = function(parent, attributes) {
     //   delete options.chart.height;
     // }
 
-
-    // Parses for null values
-    /*
-    if (options.data && options.data.csv) {
-      options.data.parsed = function(columns) {
-        var newColumns = [];
-        Highcharts.each(columns, function(c, j) {
-          newColumns.push([]);
-          Highcharts.each(c, function(p, i) {
-            newColumns[j].push(p === 'null' ? null : p)
-          })
-        })
-        this.columns = newColumns;
-      }
-    }
-*/
 
     if (chart && chart.annotations) {
       var annotations = chart.annotations || [];
@@ -327,7 +319,6 @@ highed.ChartPreview = function(parent, attributes) {
       function setupAnnotationEvents(eventName, type) {
         Highcharts.wrap(Highcharts.Annotation.prototype, eventName, function(proceed, shapeOptions) {
           proceed.apply(this, Array.prototype.slice.call(arguments, 1))
-
           var annotation = this[type][this[type].length - 1];
           
           (annotation.element).addEventListener('click', function(e) {
@@ -460,7 +451,7 @@ highed.ChartPreview = function(parent, attributes) {
 
           if (annotationType === 'label') {
             events.emit('ShowTextDialog', this, e.xAxis[0].value, e.yAxis[0].value/*this, e.chartX - this.plotLeft, e.chartY - this.plotTop*/);
-          } else if (annotationType === 'delete'){
+          } else if (annotationType === 'delete' || annotationType === 'drag'){
           } else {
             addShape(this, annotationType, e.xAxis[0].value, e.yAxis[0].value /*e.chartX - this.plotLeft, e.chartY - this.plotTop*/);
           }
@@ -1699,7 +1690,7 @@ highed.ChartPreview = function(parent, attributes) {
           'https://code.highcharts.com/modules/data.js',
           'https://code.highcharts.com/modules/exporting.js',
           'https://code.highcharts.com/modules/funnel.js',
-          'https://code.highcharts.com/modules/annotations.js',
+          'https://code.highcharts.com/6.0.2/modules/annotations.js',
           // 'https://code.highcharts.com/modules/series-label.js'
           'https://code.highcharts.com/modules/solid-gauge.js'
         ],
@@ -2092,6 +2083,7 @@ highed.ChartPreview = function(parent, attributes) {
     if (!chart.isInsidePlot(e.chartX - chart.plotLeft, e.chartY - chart.plotTop)) return;
 
     if (!customizedOptions.annotations) customizedOptions.annotations = []; //[{}];
+
     if (annotationType === 'label') {
       events.emit('ShowTextDialog', chart, xValue, yValue);
     } else if (annotationType === 'delete'){

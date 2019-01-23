@@ -421,7 +421,8 @@ highed.AssignDataPanel = function(parent, dataTable) {
   function setAssignDataFields(data, maxColumns, init, seriesIndex, skipEmit, serieValue, aggregatedOptions) {
     if (!data || disabled) return;
     columnLength = maxColumns;
-    var seriesType = getSeriesType(data, 0, aggregatedOptions);
+    var seriesType = getSeriesType(data, 0, aggregatedOptions),
+        previousValues = null;
     
     seriesTypeSelect.updateByIndex(seriesIndex || index, {
       title: 'Series ' + ((seriesIndex || index) + 1) + ' - ' + capitalizeFirstLetter(seriesType)
@@ -429,6 +430,10 @@ highed.AssignDataPanel = function(parent, dataTable) {
     seriesTypeSelect.selectByIndex(index);
     
     chartTypeOptions = highed.meta.charttype[seriesType.toLowerCase()];
+
+    if (options[seriesIndex || index] && options[seriesIndex || index].values) {
+      previousValues = options[seriesIndex || index].values;
+    }
 
     options[seriesIndex || index] = null;
     options[seriesIndex || index] = highed.merge({}, defaultOptions);
@@ -438,6 +443,10 @@ highed.AssignDataPanel = function(parent, dataTable) {
         options[seriesIndex || index].values.value = getLetterFromIndex(serieValue);
         options[seriesIndex || index].values.rawValue = [serieValue];
       }
+    }
+
+    if (previousValues && options[seriesIndex || index] && options[seriesIndex || index].values) {
+      highed.merge(options[seriesIndex || index].values, previousValues);
     }
     /*
     if (chartTypeOptions && chartTypeOptions.data) {
