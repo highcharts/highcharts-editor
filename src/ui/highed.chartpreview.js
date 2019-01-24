@@ -757,14 +757,6 @@ highed.ChartPreview = function(parent, attributes) {
     //templateOptions = highed.merge({}, template.config || {});
     templateOptions[seriesIndex] = highed.merge({}, template.config || {});
     
-    if (customizedOptions.xAxis) {
-      delete customizedOptions.xAxis;
-    }
-
-    if (customizedOptions.yAxis) {
-      delete customizedOptions.yAxis;
-    }
-    
     updateAggregated();
     init(aggregatedOptions);
     //loadSeries();
