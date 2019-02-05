@@ -305,9 +305,10 @@ highed.AssignDataPanel = function(parent, dataTable) {
     };
   }
 
-  function addSeries(length) {
-    for(var i=0; i<length; i++) {
-      addSerie();
+  function addSeries(length, type) {
+
+    for(var i=options.length - 1; i<length; i++) {
+      addSerie(type);
     }
     seriesTypeSelect.selectByIndex(0);
   }

@@ -531,7 +531,7 @@ highed.DataTable = function(parent, attributes) {
 
     reader.onload = function(e) {
       clear();
-      events.emit('ClearSeriesForImport');
+      //events.emit('ClearSeriesForImport');
       loadCSV({ csv: e.target.result }, null, true, cb);
     };
 
@@ -2228,6 +2228,7 @@ highed.DataTable = function(parent, attributes) {
     });
 
     if (!skipLoad) {
+
       events.emit('LoadGSheet', {
         googleSpreadsheetKey: gsheetID.value,
         googleSpreadsheetWorksheet: gsheetWorksheetID.value || false,
@@ -3179,115 +3180,6 @@ highed.DataTable = function(parent, attributes) {
 
     return container;
   }
-
-  ////////////////////////////////////////////////////////////////////////////
-/*
-  toolbar = highed.Toolbar(container, {
-    additionalCSS: ['highed-dtable-toolbar']
-  });
-
-  toolbar.addButton({
-    css: 'fa-plus-circle',
-    tooltip: 'Add row',
-    title: highed.L('dgAddRow'),
-    click: function(e) {
-      highed.emit('UIAction', 'BtnAddRow');
-      addRowCtx.show(e.clientX, e.clientY);
-    }
-  });
-
-  toolbar.addButton({
-    css: 'fa-file-o',
-    tooltip: 'Reset',
-    title: highed.L('dgNewBtn'),
-    click: function() {
-      highed.emit('UIAction', 'BtnFlushData');
-      if (confirm('Start from scratch?')) {
-        highed.emit('UIAction', 'FlushDataConfirm');
-        init();
-        emitChanged();
-      }
-    }
-  });
-
-  toolbar.addButton({
-    tooltip: 'Import Google Spreadsheet',
-    title: 'Google Sheet',
-    click: function() {
-      highed.emit('UIAction', 'BtnGoogleSheet');
-      showGSheet();
-    }
-  });
-
-  toolbar.addButton({
-    css: 'fa-floppy-o',
-    title: highed.L('dgExportBtn'),
-    tooltip: 'Download data',
-    click: function(e) {
-      highed.emit('UIAction', 'BtnExportData');
-      saveCtx.show(e.clientX, e.clientY);
-    }
-  });
-
-  toolbar.addButton({
-    title: highed.L('dgImportBtn'),
-    click: function() {
-      highed.emit('UIAction', 'BtnImport');
-      importModal.show();
-      importer.resize();
-    }
-  });
-
-  highed.dom.on(checkAll, 'change', function() {
-    rows.forEach(function(row) {
-      row.check(checkAll.checked);
-    });
-  });
-
-  highed.dom.ap(
-    toolbar.left,
-    highed.dom.cr(
-      'div',
-      'highed-dtable-toolbar-label',
-      highed.L('dgWithSelected') + ' '
-    )
-  );
-
-  toolbar.addIcon(
-    {
-      css: 'fa-trash',
-      title: 'Delete row(s)',
-      click: function() {
-        highed.emit('UIAction', 'BtnDeleteRow');
-
-        if (!confirm(highed.L('dgDeleteRow'))) {
-          return;
-        }
-
-        highed.emit('UIAction', 'DeleteRowConfirm');
-
-        rows.forEach(function(row) {
-          if (row.isChecked()) {
-            row.destroy();
-            emitChanged();
-          }
-        });
-      }
-    },
-    'left'
-  );
-*/
-  // toolbar.addIcon(
-  //   {
-  //     css: 'fa-clone',
-  //     title: 'Clone Rows',
-  //     click: function() {
-  //       importModal.show();
-  //       importer.resize();
-  //     }
-  //   },
-  //   'left'
-  // );
 
   ////////////////////////////////////////////////////////////////////////////
 

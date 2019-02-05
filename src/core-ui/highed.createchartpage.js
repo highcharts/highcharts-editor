@@ -32,24 +32,24 @@ highed.CreateChartPage = function(parent, userOptions, props) {
     builtInOptions = [
       {
         id: 1,
+        title: 'Choose Template',
+        permission: 'templates',
+        create: function(body) {
+          highed.dom.ap(body, templateContainer);
+        }
+      },
+      {
+        id: 2,
         title: 'Title Your Chart',
         create: function(body) {
           highed.dom.ap(body, titleContainer);
         }
       },
       {
-        id: 2,
+        id: 3,
         title: 'Import Data',
         create: function(body) {
           highed.dom.ap(body, dataTableContainer);
-        }
-      },
-      {
-        id: 3,
-        title: 'Choose Template',
-        permission: 'templates',
-        create: function(body) {
-          highed.dom.ap(body, templateContainer);
         }
       },
       {
@@ -146,17 +146,17 @@ highed.CreateChartPage = function(parent, userOptions, props) {
       subtitleInput.value = '';
       
       highed.dom.on(nextButton, 'click', function() {
-        options[1].expand();
+        options[2].expand();
         events.emit("SimpleCreateChangeTitle", {
           title: titleInput.value,
           subtitle: subtitleInput.value
         });
       });
-
+/*
       highed.dom.on(skipAll, 'click', function() {
         events.emit("SimpleCreateChartDone", true);
       });
-
+*/
       highed.dom.ap(titleContainer,  
         highed.dom.cr(
           'table'
@@ -184,7 +184,7 @@ highed.CreateChartPage = function(parent, userOptions, props) {
           highed.dom.cr('td'),
           highed.dom.ap(
             highed.dom.cr('td','highed-toolbox-button-container'),
-            skipAll,
+            //skipAll,
             nextButton
           )
         )
@@ -201,19 +201,19 @@ highed.CreateChartPage = function(parent, userOptions, props) {
           loader = highed.dom.cr('span','highed-wizard-loader', '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>'),
           dataTableDropzoneContainer = dataPage.createSimpleDataTable(function() {
 
-            if(userOptions && (userOptions.indexOf('templates') === -1 && userOptions.indexOf('customize') === -1)) {
+            if(userOptions && (userOptions.indexOf('customize') === -1)) {
               events.emit("SimpleCreateChartDone", true);
-            } else options[2].expand();
+            } else options[3].expand();
           }, function(loading) {
             if (loading) loader.classList += ' active';
             else loader.classList.remove('active');
           });
 
       highed.dom.on(nextButton, 'click', function() {
-        if(userOptions && (userOptions.indexOf('templates') === -1 && userOptions.indexOf('customize') === -1)) {
+        if(userOptions && (userOptions.indexOf('customize') === -1)) {
           events.emit("SimpleCreateChartDone", true);
         }
-        else options[2].expand();
+        else options[3].expand();
       });
       highed.dom.ap(dataTableContainer, 
         highed.dom.ap(dataTableDropzoneContainer,
@@ -233,22 +233,23 @@ highed.CreateChartPage = function(parent, userOptions, props) {
             'highed-ok-button highed-import-button negative',
             'Choose A Template Later'
       ),
+      skipAll = highed.dom.cr('span', 'highed-toolbox-skip-all', 'Skip All');
       loader = highed.dom.cr('span','highed-wizard-loader', '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>'),
       templatesContainer = templatePage.createMostPopularTemplates(function() {
         setTimeout(function() {
-          if(userOptions && (userOptions.indexOf('customize') === -1)) {
-            events.emit("SimpleCreateChartDone", true);
-          } else options[3].expand();
+          options[1].expand();
         },200);
       }, function(loading) {
         if (loading) loader.classList += ' active';
         else loader.classList.remove('active');
       });
+
+      highed.dom.on(skipAll, 'click', function() {
+        events.emit("SimpleCreateChartDone", true);
+      });
       
       highed.dom.on(nextButton, 'click', function() {
-        if(userOptions && (userOptions.indexOf('customize') === -1)) {
-          events.emit("SimpleCreateChartDone", true);
-        } else options[3].expand();
+        options[1].expand();
       });
 
       highed.dom.ap(templateContainer, 
@@ -258,6 +259,7 @@ highed.CreateChartPage = function(parent, userOptions, props) {
         highed.dom.ap(
           highed.dom.cr('div','highed-toolbox-button-container'),
           loader,
+          skipAll,
           nextButton
         )
       );
