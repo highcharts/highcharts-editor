@@ -64,7 +64,7 @@ highed.CreateChartPage = function(parent, userOptions, props) {
     ],
     container = highed.dom.cr(
       'div',
-      'highed-transition highed-toolbox wizard highed-box-size'
+      'highed-transition highed-toolbox wizard highed-box-size '
     ),
     title = highed.dom.cr('div', 'highed-toolbox-body-title'),
     contents = highed.dom.cr(
@@ -85,7 +85,7 @@ highed.CreateChartPage = function(parent, userOptions, props) {
     titleContainer = highed.dom.cr('div', 'highed-toolbox-title'),
     templateContainer = highed.dom.cr('div', 'highed-toolbox-template'),
     dataTableContainer = highed.dom.cr('div', 'highed-toolbox-data'),
-    toolbox = highed.Toolbox(userContents),
+    //toolbox = highed.Toolbox(userContents),
     options = [];
 
     function init(dataPage,templatePage, customizePage) {
@@ -233,8 +233,8 @@ highed.CreateChartPage = function(parent, userOptions, props) {
             'highed-ok-button highed-import-button negative',
             'Choose A Template Later'
       ),
-      skipAll = highed.dom.cr('span', 'highed-toolbox-skip-all', 'Skip All');
-      loader = highed.dom.cr('span','highed-wizard-loader', '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>'),
+      skipAll = highed.dom.ap(highed.dom.cr('div', 'highed-toolbox-skip-all'), highed.dom.cr('span','', 'Skip All'));
+      loader = highed.dom.cr('span','highed-wizard-loader ', '<i class="fa fa-spinner fa-spin fa-1x fa-fw a"></i>'),
       templatesContainer = templatePage.createMostPopularTemplates(function() {
         setTimeout(function() {
           options[1].expand();
@@ -253,15 +253,22 @@ highed.CreateChartPage = function(parent, userOptions, props) {
       });
 
       highed.dom.ap(templateContainer, 
-        highed.dom.cr('div', 'highed-toolbox-template-text', 'Pick a basic starter template. You can change it later.'),
-        highed.dom.cr('div', 'highed-toolbox-template-text', "If you're not sure, just hit Choose A Template Later."),
-        templatesContainer,
-        highed.dom.ap(
-          highed.dom.cr('div','highed-toolbox-button-container'),
-          loader,
-          skipAll,
-          nextButton
-        )
+        highed.dom.ap(highed.dom.cr('div', 'highed-toolbox-template-body'),         
+          highed.dom.ap(
+            highed.dom.cr('div', 'highed-toolbox-text'), 
+            highed.dom.cr('div', 'highed-toolbox-template-text', 'Pick a basic starter template. You can change it later.'),
+            highed.dom.cr('div', 'highed-toolbox-template-text', "If you're not sure, just hit Choose A Template Later.")
+          ),
+          highed.dom.ap(
+            highed.dom.cr('div', 'highed-toolbox-extras'),
+            nextButton,
+            highed.dom.ap(
+              skipAll,
+              loader
+            )
+          )
+        ),
+        templatesContainer
       );
     }
 

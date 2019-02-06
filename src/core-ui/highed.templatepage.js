@@ -130,16 +130,55 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
   }
 
   function createMostPopularTemplates(toNextPage, setLoading) {
-    const mostPopular = highed.templates.getMostPopular();
+    const templates = highed.templates.getCatArray();
     const container = highed.dom.cr('div', 'highed-toolbox-templates-container');
     
-    Object.keys(mostPopular).forEach(function(key) {
-      const preview = highed.dom.cr('div', 'highed-chart-template-thumbnail'),
-            titleBar = highed.dom.cr('div', 'highed-tooltip-text', key),
+    Object.keys(templates).forEach(function(key) {
+      const titleBar = highed.dom.cr('div', 'highed-tooltip-text', key),
             option = highed.dom.cr('div', 'highed-chart-template-container highed-template-tooltip');
 
-      const t = mostPopular[key];
+      const t = templates[key];
 
+      const headerBar = highed.dom.cr('div', 'highed-template-header', t.id),
+            templatesContainer = highed.dom.cr('div', 'highed-templates-container');
+
+      highed.dom.ap(container, highed.dom.ap(highed.dom.cr('div', 'highed-toolbox-template-container'), headerBar, templatesContainer));
+      
+      highed.templates.eachInCategory(t.id, function(e) {
+
+        const templateContainer = highed.dom.cr('div', 'highed-template-container'),
+              preview = highed.dom.cr('div', 'highed-chart-template-thumbnail');
+              
+        if (highed.meta.images && highed.meta.images[e.thumbnail]) {
+          highed.dom.style(preview, {
+            'background-image':
+              'url("data:image/svg+xml;utf8,' +
+              highed.meta.images[e.thumbnail] +
+              '")'
+          });
+        } else {
+          highed.dom.style(preview, {
+            'background-image':
+              'url(' + highed.option('thumbnailURL') + e.thumbnail + ')'
+          });
+        }
+
+        highed.dom.on(templateContainer, 'click', function() {
+          
+          setLoading(true);
+          setTimeout(function() {
+            e.header =  e.parent;
+            events.emit('TemplateChanged', highed.merge({}, e), true, function() {
+              setLoading(false);
+              toNextPage();
+            });
+          }, 1000);
+  
+        });
+        
+        highed.dom.ap(templatesContainer, highed.dom.ap(templateContainer, preview, highed.dom.cr('div', 'highed-template-title', e.title)));
+      });
+/*
       if (highed.meta.images && highed.meta.images[t.thumbnail]) {
         highed.dom.style(preview, {
           'background-image':
@@ -167,7 +206,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
 
       });
 
-      highed.dom.ap(container, highed.dom.ap(option, preview, titleBar));
+      highed.dom.ap(container, highed.dom.ap(option, preview, titleBar));*/
     });
 
     return container;

@@ -29,12 +29,12 @@ highed.Toolbox = function(parent, attr) {
   var events = highed.events(),
     container = highed.dom.cr(
       'div',
-      'highed-transition highed-toolbox wizard highed-box-size'
+      'highed-transition highed-toolbox highed-wizard highed-box-size'
     ),
     bar = highed.dom.cr('div', 'highed-toolbox-bar highed-box-size highed-wizard-title-container'),
     body = highed.dom.cr(
       'div',
-      'highed-toolbox-body highed-toolbox-body-no-border highed-box-size highed-transition'
+      'highed-toolbox-body highed-toolbox-body-no-border highed-box-size highed-transition highed-wizard-body'
     ),
     activeTimeout,
     expanded = false,
@@ -62,7 +62,7 @@ highed.Toolbox = function(parent, attr) {
       ),
       userContents = highed.dom.cr(
         'div',
-        'highed-box-size highed-toolbox-user-contents'
+        'highed-box-size highed-toolbox-user-contents highed-createchart-body-container'
       ),
       iconClass = 'highed-toolbox-list-item-container',
       icon = highed.dom.cr('div', iconClass),

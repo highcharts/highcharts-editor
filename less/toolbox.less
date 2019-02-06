@@ -1,7 +1,12 @@
 .highed-toolbox {
   position:relative;
   margin-top: 15px;    
+  //overflow: auto;
   margin-left: 30px;
+}
+
+.highed-toolbox-user-contents.test-test {
+  height: 100%;
 }
 
 .highed-toolbox-bar {
@@ -11,8 +16,25 @@
   // border-right:1px solid @panel-divider;
 }
 
+.highed-wizard {
+  height: 100%;
+}
+
+.highed-wizard-body {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.highed-toolbox-text {
+  display: inline-block;
+  width: 40%;
+}
+.highed-toolbox-extras {
+  display: inline-block;
+  float: right;
+}
 .highed-toolbox-body {
   width: 78%;
+  height: 100% !important;
   display: inline-block;
   opacity: 0;
   border: 1px solid @border-main-color;
@@ -97,13 +119,14 @@
 .highed-toolbox-button-container {
   text-align: right;
   padding-top: 20px;
-  .highed-toolbox-skip-all {
-    float: left;
-    position: relative;
-    color: #25386f;
-    cursor: pointer;
-    top: 6px;
-  }
+}  
+.highed-toolbox-skip-all {
+  color: #25386f;
+  cursor: pointer;
+
+  text-align: right;
+  margin-top: 10px;
+  margin-right: 10px;
 }
 .highed-toolbox-body-title {    
   width: 100%;
@@ -236,7 +259,18 @@
 
 .highed-toolbox-template {
   margin-left: 25px;
-  width: 66%;
+  max-width: 963px;
+  .highed-template-header {
+    color: #243571;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .highed-template-title {
+    font-size: 13px;
+    color: #233272;
+    font-weight: 500;
+  }
   .highed-toolbox-templates-container {
     margin-top: 15px;
   }
@@ -244,6 +278,20 @@
     color: rgb(47, 62, 77);
     padding: 4px;
   }
+
+  .highed-template-container {
+    margin: 5px 18px;
+    display: inline-block;
+    width: 100px;
+    vertical-align: top;
+    cursor: pointer;
+  }
+  
+  .highed-toolbox-template-container {
+      margin-bottom: 15px;
+  }
+  
+
 }
 
 .highed-toolbox-customise {
