@@ -129,56 +129,21 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     templates.selectSeriesTemplate(index, projectData);
   }
 
-  function createMostPopularTemplates(toNextPage, setLoading) {
-    const templates = highed.templates.getCatArray();
-    const container = highed.dom.cr('div', 'highed-toolbox-templates-container');
+  function createTemplates(container, titleHeader, options, setLoading, toNextPage) {
     
-    Object.keys(templates).forEach(function(key) {
-      const titleBar = highed.dom.cr('div', 'highed-tooltip-text', key),
-            option = highed.dom.cr('div', 'highed-chart-template-container highed-template-tooltip');
+    const headerBar = highed.dom.cr('div', 'highed-template-header', titleHeader),
+          templatesContainer = highed.dom.cr('div', 'highed-templates-container');
 
-      const t = templates[key];
-
-      const headerBar = highed.dom.cr('div', 'highed-template-header', t.id),
-            templatesContainer = highed.dom.cr('div', 'highed-templates-container');
-
-      highed.dom.ap(container, highed.dom.ap(highed.dom.cr('div', 'highed-toolbox-template-container'), headerBar, templatesContainer));
-      
-      highed.templates.eachInCategory(t.id, function(e) {
-
-        const templateContainer = highed.dom.cr('div', 'highed-template-container'),
-              preview = highed.dom.cr('div', 'highed-chart-template-thumbnail');
-              
-        if (highed.meta.images && highed.meta.images[e.thumbnail]) {
-          highed.dom.style(preview, {
-            'background-image':
-              'url("data:image/svg+xml;utf8,' +
-              highed.meta.images[e.thumbnail] +
-              '")'
-          });
-        } else {
-          highed.dom.style(preview, {
-            'background-image':
-              'url(' + highed.option('thumbnailURL') + e.thumbnail + ')'
-          });
-        }
-
-        highed.dom.on(templateContainer, 'click', function() {
+          highed.dom.ap(container, highed.dom.ap(highed.dom.cr('div', 'highed-toolbox-template-container'), headerBar, templatesContainer));
           
-          setLoading(true);
-          setTimeout(function() {
-            e.header =  e.parent;
-            events.emit('TemplateChanged', highed.merge({}, e), true, function() {
-              setLoading(false);
-              toNextPage();
-            });
-          }, 1000);
-  
-        });
-        
-        highed.dom.ap(templatesContainer, highed.dom.ap(templateContainer, preview, highed.dom.cr('div', 'highed-template-title', e.title)));
-      });
-/*
+    if (options.id) options = highed.templates.getAllInCat(options.id);
+
+    Object.keys(options).forEach(function(key) { 
+      const templateContainer = highed.dom.cr('div', 'highed-template-container'),
+            preview = highed.dom.cr('div', 'highed-chart-template-thumbnail');
+
+      const t = options[key];
+
       if (highed.meta.images && highed.meta.images[t.thumbnail]) {
         highed.dom.style(preview, {
           'background-image':
@@ -193,8 +158,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
         });
       }
 
-      highed.dom.on(option, 'click', function() {
-        
+      highed.dom.on(templateContainer, 'click', function() {
         setLoading(true);
         setTimeout(function() {
           t.header =  t.parent;
@@ -203,10 +167,27 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
             toNextPage();
           });
         }, 1000);
-
       });
 
-      highed.dom.ap(container, highed.dom.ap(option, preview, titleBar));*/
+      highed.dom.ap(templatesContainer, highed.dom.ap(templateContainer, preview, highed.dom.cr('div', 'highed-template-title', t.title)));
+
+    });
+    
+  }
+
+  function createMostPopularTemplates(toNextPage, setLoading) {
+    const templates = highed.templates.getCatArray();
+    const container = highed.dom.cr('div', 'highed-toolbox-templates-container');
+    
+    const mostPopular = highed.templates.getMostPopular();
+
+    createTemplates(container, 'Most Popular', mostPopular, setLoading, toNextPage);
+    
+    Object.keys(templates).forEach(function(key) {
+      const t = templates[key];
+
+      createTemplates(container, t.id, t, setLoading, toNextPage);
+
     });
 
     return container;
