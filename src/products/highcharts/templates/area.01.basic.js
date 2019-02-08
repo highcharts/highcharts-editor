@@ -1,4 +1,6 @@
-/*******************************************************************************
+/*
+
+Highcharts Editor
 
 Copyright (c) 2016-2017, Highsoft
 
@@ -21,27 +23,19 @@ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-******************************************************************************/
+*/
 
-/* Standard Line Series */
-
-highed.templates.add('Pie', {
-  title: 'Pacman Pie',
-  description: ['Pacman Pie.'],
-  constructor: 'Chart',
-  thumbnail: 'yqoxob.svg',
-  sampleSets: ['pie-pacman'],
-  validator: 'pie',
+highed.templates.add('Area', {
+  title: 'Basic Arearange',
+  description: '',
+  thumbnail: 'ecexev.svg',
+  dataValidator: false,
+  sampleSets: [],
+  popular: true,
   config: {
     chart: {
-      type: 'pie'
-    },
-    series: [
-      {
-        startAngle: 45,
-        colors: ['#fafafa', '#ffff8d'],
-        borderColor: '#000000'
-      }
-    ]
+      type: 'area',
+      polar: false
+    }
   }
 });

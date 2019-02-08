@@ -26,7 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 highed.templates.add('Pie', {
-  title: 'Pie chart',
+  title: 'Pie chart with labels',
   description: '',
   thumbnail: 'yqoxob.svg',
   dataValidator: false,
