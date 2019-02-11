@@ -152,11 +152,11 @@ highed.CreateChartPage = function(parent, userOptions, props) {
           subtitle: subtitleInput.value
         });
       });
-/*
+
       highed.dom.on(skipAll, 'click', function() {
         events.emit("SimpleCreateChartDone", true);
       });
-*/
+
       highed.dom.ap(titleContainer,  
         highed.dom.cr(
           'table'
@@ -184,7 +184,7 @@ highed.CreateChartPage = function(parent, userOptions, props) {
           highed.dom.cr('td'),
           highed.dom.ap(
             highed.dom.cr('td','highed-toolbox-button-container'),
-            //skipAll,
+            skipAll,
             nextButton
           )
         )
