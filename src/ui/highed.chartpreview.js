@@ -370,6 +370,7 @@ highed.ChartPreview = function(parent, attributes) {
       setupAnnotationEvents('initLabel', 'labels');
       setupAnnotationEvents('initShape', 'shapes');
 
+
       Highcharts.addEvent(document, 'mousemove', function (e) {
         if (!chart.isInsidePlot(e.chartX - chart.plotLeft, e.chartY - chart.plotTop)) return;
 
@@ -450,10 +451,10 @@ highed.ChartPreview = function(parent, attributes) {
           //if (!customizedOptions.annotations[0].shapes) customizedOptions.annotations[0].shapes = []; 
 
           if (annotationType === 'label') {
-            events.emit('ShowTextDialog', this, e.xAxis[0].value, e.yAxis[0].value/*this, e.chartX - this.plotLeft, e.chartY - this.plotTop*/);
+            events.emit('ShowTextDialog', this, e.xAxis[0].value, e.yAxis[0].value);
           } else if (annotationType === 'delete' || annotationType === 'drag'){
           } else {
-            addShape(this, annotationType, e.xAxis[0].value, e.yAxis[0].value /*e.chartX - this.plotLeft, e.chartY - this.plotTop*/);
+            addShape(this, annotationType, e.xAxis[0].value, e.yAxis[0].value);
           }
         }
       });
@@ -1117,16 +1118,6 @@ highed.ChartPreview = function(parent, attributes) {
               htmlEntities[ent]
             );
           });
-/*
-          loadCSVData(
-            {
-              csv: projectData.settings.dataProvider.csv
-            },
-            true
-          );*/
-
-          // events.emit('LoadProjectData', projectData.settings.dataProvider.csv);
-
           hasData = true;
         }
       }
@@ -1138,11 +1129,12 @@ highed.ChartPreview = function(parent, attributes) {
       //     });
       // }
 
-      //if (!hasData) {
         updateAggregated();
-        init(aggregatedOptions);
+
+        if (!hasData) {
+          init(aggregatedOptions); 
+        }
         emitChange();
-      //}
       
       events.emit('LoadProject', projectData, aggregatedOptions);
     }
@@ -1197,7 +1189,7 @@ highed.ChartPreview = function(parent, attributes) {
     init(aggregatedOptions);
     loadSeries();
     emitChange();
-
+    
     // The sheet will be loaded async, so we should listen to the load event.
     gc(function(chart) {
       var found = Highcharts.addEvent(chart, 'load', function() {
@@ -1992,7 +1984,13 @@ highed.ChartPreview = function(parent, attributes) {
 
     if (!skipEmit) {
       updateAggregated();
-      init(aggregatedOptions);
+      if (customizedOptions
+         && customizedOptions.settings 
+         && customizedOptions.settings.dataProvider 
+         && !customizedOptions.settings.dataProvider.googleSpreadsheet) {
+        init(aggregatedOptions);
+      }
+
       emitChange();
     }
   }
