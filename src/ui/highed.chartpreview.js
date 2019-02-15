@@ -1984,10 +1984,10 @@ highed.ChartPreview = function(parent, attributes) {
 
     if (!skipEmit) {
       updateAggregated();
-      if (customizedOptions
-         && customizedOptions.settings 
-         && customizedOptions.settings.dataProvider 
-         && !customizedOptions.settings.dataProvider.googleSpreadsheet) {
+      
+      if (!customizedOptions.data || (customizedOptions 
+         && customizedOptions.data 
+         && !customizedOptions.data.googleSpreadsheetKey)) {
         init(aggregatedOptions);
       }
 
