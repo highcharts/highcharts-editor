@@ -458,6 +458,16 @@ var highed = {
     return result;
   },
 
+  isEmptyObjectArray: function(arr) {
+    return highed.isObj(arr[0]) && arr.some(function(b) {
+      return Object.keys(b).length === 0;
+    });
+  },
+
+  isObj: function(what) {
+    return what && what.constructor.toString().indexOf('Object') > -1;
+  },
+
   /** Deep merge two objects.
    * Note: this modifies object `a`!
    * @namespace highed
@@ -479,6 +489,8 @@ var highed = {
       } else if (highed.isNull(b[bk]) || highed.isBasic(b[bk])) {
         a[bk] = b[bk];
       } else if (highed.isArr(b[bk])) {
+
+        if (highed.isEmptyObjectArray(b[bk])) return;
         a[bk] = [];
 
         b[bk].forEach(function(i) {

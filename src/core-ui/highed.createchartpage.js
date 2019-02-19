@@ -146,7 +146,10 @@ highed.CreateChartPage = function(parent, userOptions, props) {
       subtitleInput.value = '';
       
       highed.dom.on(nextButton, 'click', function() {
-        options[2].expand();
+        
+        if(userOptions && (userOptions.indexOf('templates') === -1)) {
+          options[1].expand();
+        } else options[2].expand();
         events.emit("SimpleCreateChangeTitle", {
           title: titleInput.value,
           subtitle: subtitleInput.value
@@ -200,17 +203,21 @@ highed.CreateChartPage = function(parent, userOptions, props) {
           ),
           loader = highed.dom.cr('span','highed-wizard-loader', '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>'),
           dataTableDropzoneContainer = dataPage.createSimpleDataTable(function() {
-
-            if(userOptions && (userOptions.indexOf('customize') === -1)) {
+            if(userOptions && (userOptions.indexOf('templates') === -1)) { 
+              options[2].expand();
+            } else if(userOptions && (userOptions.indexOf('customize') === -1)) {
               events.emit("SimpleCreateChartDone", true);
             } else options[3].expand();
+
           }, function(loading) {
             if (loading) loader.classList += ' active';
             else loader.classList.remove('active');
           });
 
       highed.dom.on(nextButton, 'click', function() {
-        if(userOptions && (userOptions.indexOf('customize') === -1)) {
+        if(userOptions && (userOptions.indexOf('templates') === -1)) { 
+          options[2].expand();
+        } else if(userOptions && (userOptions.indexOf('customize') === -1)) {
           events.emit("SimpleCreateChartDone", true);
         }
         else options[3].expand();

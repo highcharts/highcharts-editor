@@ -703,6 +703,12 @@ highed.ChartPreview = function(parent, attributes) {
       });
     }
 
+    highed.merge(
+      aggregatedOptions,
+      highed.merge({}, customizedOptions)
+    );
+
+
     if (aggregatedOptions.yAxis && !highed.isArr(aggregatedOptions.yAxis)) {
       aggregatedOptions.yAxis = [aggregatedOptions.yAxis];
     }
