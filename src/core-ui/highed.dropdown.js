@@ -359,6 +359,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     function deleteByIndex(index) {
       items.splice(index, 1);
     }
+    
+    function sliceList(length) {
+      items = items.slice(0, length);
+    }
 
     function getSelectedItem() {
       return selectedItem;
@@ -382,6 +386,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       selectAll: selectAll,
       updateByIndex: updateByIndex,
       deleteByIndex: deleteByIndex,
+      sliceList: sliceList,
       addItems: addItems,
       getSelectedItem: getSelectedItem,
       addItem: addItem,

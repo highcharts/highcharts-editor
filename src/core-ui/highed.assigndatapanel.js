@@ -307,9 +307,18 @@ highed.AssignDataPanel = function(parent, dataTable) {
 
   function addSeries(length, type) {
 
-    for(var i=options.length - 1; i<length; i++) {
-      addSerie(type);
+    if (length < options.length) {
+      //Need to do some culling
+      options = options.slice(0,length + 1);
+      events.emit('RemoveSeries', length);
+      seriesTypeSelect.sliceList(length + 1);
+      resetDOM();
+    } else {
+      for(var i=options.length - 1; i<length; i++) {
+        addSerie(type);
+      }
     }
+
     seriesTypeSelect.selectByIndex(0);
   }
 
@@ -654,6 +663,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
   function setColumnLength(length) {
     columnLength = length;
   }
+
   ////////////////////////////////////////////////////////////////////////////////
       
   highed.dom.ap(selectContainer, addNewSeriesBtn, deleteSeriesBtn, toggleHideCellsBtn);

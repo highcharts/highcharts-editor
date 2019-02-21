@@ -725,7 +725,18 @@ highed.ChartPreview = function(parent, attributes) {
     }
   }
 
-  function deleteSeries(index) {
+
+  function deleteSeries(length) {
+    if (customizedOptions && customizedOptions.series) {
+      customizedOptions.series = customizedOptions.series.slice(0, length);
+      updateAggregated();
+      init(aggregatedOptions);
+      emitChange();
+    }
+  }
+
+  function deleteSerie(index) {
+    
     if (customizedOptions.series && customizedOptions.series[index]) {
       customizedOptions.series.splice(index, 1);
       delete templateSettings[index];
@@ -2149,6 +2160,7 @@ highed.ChartPreview = function(parent, attributes) {
       live: loadLiveData,
       setDataTableCSV: setDataTableCSV,
       setAssignDataFields: setAssignDataFields,
+      deleteSerie: deleteSerie,
       deleteSeries: deleteSeries
     },
 

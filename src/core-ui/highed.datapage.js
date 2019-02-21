@@ -110,7 +110,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
        highed.L('dgNewBtn')),
     blacklist = [
       'candlestick',
-      'bubble'
+      'bubble',
+      'pie'
     ];
 
     dataImportBtn.innerHTML += ' <span class="highed-hide-sm">Data</span>';
@@ -323,6 +324,18 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   function hideImportModal() {
     dataTable.hideImportModal();
   }
+
+  assignDataPanel.on('RemoveSeries', function(length) {
+    clearSeriesMapping();
+    chartPreview.data.deleteSeries(length);
+
+    const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
+    chartPreview.data.csv({
+      csv: data
+    }, null, false, function() {
+      setSeriesMapping(assignDataPanel.getAllOptions());
+    });
+  });
   
   function changeAssignDataTemplate(newTemplate, loadTemplateForEachSeries, cb) {
     
@@ -515,7 +528,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   assignDataPanel.on('DeleteSeries', function(index) {
     clearSeriesMapping();
-    chartPreview.data.deleteSeries(index);
+    chartPreview.data.deleteSerie(index);
 
     const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
     chartPreview.data.csv({
@@ -630,7 +643,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     var type = chartOptions.series[chartOptions.series.length - 1].type;
 
     if (blacklist.includes(type)) type = null;
-    
+
     assignDataPanel.addSeries(rowsLength, type);
   }); 
 
