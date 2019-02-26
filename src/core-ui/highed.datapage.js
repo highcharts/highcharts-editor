@@ -206,23 +206,9 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       if (highed.onTablet() && props.widths.tablet) newWidth = props.widths.tablet;
       else if (highed.onPhone() && props.widths.phone) newWidth = props.widths.phone;
 
-/*
-      if (expanded && activeItem === exports) {
-        return;
-      }
-*/
       if (props.iconOnly) {
         return;
       }
-/*
-      if (activeItem) {
-        activeItem.disselect();
-      }
-*/
- //     entryEvents.emit('BeforeExpand');
-
-   //   body.innerHTML = '';
-   //   highed.dom.ap(body, contents);
 
    //console.log(bsize.h);
       highed.dom.style(body, {
@@ -239,36 +225,17 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         });
       }
 
-      events.emit('BeforeResize', newWidth);
+    events.emit('BeforeResize', newWidth);
 
-     // expanded = true;
-
-
-
-     function resizeBody() {
-       /*
+    function resizeBody() {
       var bsize = highed.dom.size(body),
-        tsize = highed.dom.size(title),
-        size = {
-          w: bsize.w,
-          h: bsize.h - tsize.h - 55
-        };
-
-      highed.dom.style(contents, {
-        width: size.w + 'px',
-        height: size.h + 'px'
-      });
-
-      return size;*/
-
-      var bsize = highed.dom.size(body),
-      tsize = highed.dom.size(title),
-      size = {
-        w: bsize.w,
-        h: (window.innerHeight
-          || document.documentElement.clientHeight
-          || document.body.clientHeight) - highed.dom.pos(body, true).y
-      };
+          tsize = highed.dom.size(title),
+          size = {
+            w: bsize.w,
+            h: (window.innerHeight
+              || document.documentElement.clientHeight
+              || document.body.clientHeight) - highed.dom.pos(body, true).y
+          };
         
       highed.dom.style(contents, {
         width: '100%',
@@ -277,25 +244,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
       dataTable.resize();   
       if(!highed.onPhone()) assignDataPanel.resize(newWidth, highed.dom.pos(chartFrame, true).y - highed.dom.pos(body, true).y)
-     }
+    }
 
     setTimeout(resizeBody, 300);
-    /*
-      setTimeout(function() {
-        var height = resizeBody().h;
-
-        dataTable.resize(newWidth, height - 20);     
-        highed.dom.style(body, {
-          height: (height + highed.dom.size(title).h) + 'px',
-        });
-        highed.dom.style(contents, {
-          height: height + 'px',
-        });
-  
-        //entryEvents.emit('Expanded', newWidth, height - 20);
-      }, 300);  */
-
-      highed.emit('UIAction', 'ToolboxNavigation', props.title);
+    highed.emit('UIAction', 'ToolboxNavigation', props.title);
     }
 
   function show() {
@@ -307,6 +259,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     resizeChart();
     resize(); 
   }
+
   function hide() {
     highed.dom.style(container, {
       display: 'none'
@@ -584,23 +537,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       setSeriesMapping(allOptions);
     });
   });
-/*
-  templates.on('Select', function(template) {
-    chartPreview.loadTemplate(template);
-  });
-
-  templates.on('LoadDataSet', function(sample) {
-    if (sample.type === 'csv') {
-      if (highed.isArr(sample.dataset)) {
-        chartPreview.data.csv(sample.dataset.join('\n'));
-      } else {
-        chartPreview.data.csv(sample.dataset);
-      }
-
-      chartPreview.options.set('subtitle-text', '');
-      chartPreview.options.set('title-text', sample.title);
-    }
-  });*/
 
   dataTable.on('DisableAssignDataPanel', function() {
     assignDataPanel.disable();
@@ -635,6 +571,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
 
   dataTable.on('AssignDataForFileUpload', function(rowsLength) {
+
     if (!rowsLength) rowsLength = dataTable.getColumnLength(); //Remove first column for the categories, and second as its already added
     assignDataPanel.setColumnLength(rowsLength);
     rowsLength -= 2;
@@ -643,7 +580,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     var type = chartOptions.series[chartOptions.series.length - 1].type;
 
     if (blacklist.includes(type)) type = null;
-
     assignDataPanel.addSeries(rowsLength, type);
   }); 
 
@@ -729,54 +665,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     dataTable.loadLiveDataPanel(p);
   });
 
-  //chartPreview.on('ChartRecreated', hideError);
-
-  //////////////////////////////////////////////////////////////////////////////
-/*
-  highed.dom.ap(
-    toolbar.left,
-    highed.dom.style(highed.dom.cr('span'), {
-      'margin-left': '2px',
-      width: '200px',
-      height: '60px',
-      float: 'left',
-      display: 'inline-block',
-      'background-position': 'left middle',
-      'background-size': 'auto 100%',
-      'background-repeat': 'no-repeat',
-      'background-image':
-        'url("data:image/svg+xml;utf8,' +
-        encodeURIComponent(highed.resources.logo) +
-        '")'
-    })
-  );*/
-
-
-  ////////////////////////////////////////////////// UNCOMMENT TO SHOW CHART!!!! ///////////////////////////////////////////
- 
-/*
-  highed.dom.ap(
-    splitter.bottom,
-    highed.dom.ap(
-      chartFrame,
-      chartContainer,
-      highed.dom.ap(errorBar, errorBarHeadline, errorBarBody)
-    )
-  );
-
-  highed.dom.on([resWidth, resHeight], 'change', function() {
-    sizeChart(parseInt(resWidth.value, 10), parseInt(resHeight.value, 10));
-  });
-*/
-  // Create the features
- // createFeatures();
- // createToolbar();
-
- // resize();
-  /**
-   * Resize the chart preview based on a given width
-   */
-
 
   function createSimpleDataTable(toNextPage, cb) {
     return dataTable.createSimpleDataTable(toNextPage, cb);
@@ -789,11 +677,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       height: '38%'
     });
     chartPreview.resize();
-/*
-    highed.dom.style(chartContainer, {
-      width: psize.w - newWidth - 100 + 'px',
-      height: psize.h - 100 + 'px'
-    });*/
 
     setTimeout(function() { chartPreview.resize(); }, 200);
   }
