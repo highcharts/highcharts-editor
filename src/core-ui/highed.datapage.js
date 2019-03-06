@@ -530,6 +530,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   assignDataPanel.on('ChangeData', function(allOptions) {
     //Series map all of the "linkedTo" options
     const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
+    chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
 
     chartPreview.data.csv({
       csv: data
