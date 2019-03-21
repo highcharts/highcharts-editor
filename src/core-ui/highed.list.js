@@ -66,6 +66,7 @@ highed.List = function(parent, responsive, props, planCode) {
      *   > select {function} - selects the item if called
      */
   function addItem(item, children, chartPreview) {
+    
     var node = highed.dom.cr('a', 'item', item.title),
       nodeArrow = highed.dom.cr('span', 'item-arrow', '<i class="fa fa-angle-right" aria-hidden="true"></i>'),
       nodeChildren = highed.dom.cr('span', 'highed-list-suboptions', ''),
@@ -75,52 +76,7 @@ highed.List = function(parent, responsive, props, planCode) {
       display: 'none'
     });
 
-    if (item.annotations) {
-      /*
-      const options = [{
-        icon: 'circle-thin',
-        value: 'circle'
-      },{
-        icon: 'square-o',
-        value: 'square'
-      },{
-        icon: 'comment-o',
-        value: 'label'
-      },{
-        icon: 'arrows',
-        value: 'drag'
-      },{
-        icon: 'trash',
-        value: 'delete'
-      }];
-
-      var annotationsContainer = highed.dom.cr('div', 'annotations-container');
-      options.forEach(function(option) {
-        option.element = highed.dom.cr('div', 'annotations-btn', '<i class="fa fa-' + option.icon + '">');
-        highed.dom.on(option.element, 'click', function() {
-          var isAnnotating = !(option.element.className.indexOf('active') > -1);
-
-          options.forEach(function(o) {
-            o.element.classList.remove('active');
-          });
-
-          chartPreview.setIsAnnotating(isAnnotating);
-          if (isAnnotating) {
-            chartPreview.setAnnotationType(option.value);
-            option.element.className += ' active';
-          }
-        });
-        highed.dom.ap(annotationsContainer, option.element);
-      });
-
-      node.className += ' no-clickable';
-      highed.dom.ap(node, annotationsContainer);
-
-*/
-    }
-    else {
-      highed.dom.ap(node, nodeArrow);
-    }
+    highed.dom.ap(node, nodeArrow);
     
     (children || []).forEach(function(thing) {
       selectGroup(thing);

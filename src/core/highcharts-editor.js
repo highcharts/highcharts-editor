@@ -279,14 +279,14 @@ var highed = {
    *    > b {number} - blue
    */
   hexToRgb: function(hex) {
-    if (!hex) {
+    if (!hex || highed.isObj(hex)) {
       return {
         r: 0,
         g: 0,
         b: 0
       };
     }
-
+    
     if (hex.indexOf('rgba') === 0) {
       hex = hex
         .substr(5)
