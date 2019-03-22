@@ -580,8 +580,9 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     var chartOptions = chartPreview.options.getCustomized();
     var type = chartOptions.series[chartOptions.series.length - 1].type;
 
-    if (blacklist.includes(type)) type = null;
-    assignDataPanel.addSeries(rowsLength, type);
+    if (!blacklist.includes(type)) {
+      assignDataPanel.addSeries(rowsLength, type);
+    }
   }); 
 
   dataTable.on('AssignDataChanged', function(input, options) {
