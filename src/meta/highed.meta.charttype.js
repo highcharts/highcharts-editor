@@ -171,4 +171,27 @@ highed.meta.charttype = {
             'rawValue': [2]
         }
     },
+    columnrange: {
+        'values': null,
+        'low': {
+            'name': "Low",
+            'desc': 'The low or minimum value for each data point.',
+            'default': 'B',
+            'value': 'B',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'low',
+            'rawValue': [1]
+        },
+        'high': {
+            'name': "High",
+            'desc': 'The high or maximum value for each data point.',
+            'default': 'C',
+            'value': 'C',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'high',
+            'rawValue': [2]
+        }
+    },
 };
