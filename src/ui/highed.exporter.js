@@ -282,7 +282,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       }
 
       jsonValue.value = JSON.stringify(chartData);
-      exportJSON.href = 'data:application/octet-stream,' + jsonValue.value;
+      exportJSON.href = 'data:application/octet-stream,' + encodeURIComponent(jsonValue.value);
 
       htmlValue.value = chartHTML;
       exportHTML.href =
