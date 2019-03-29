@@ -624,6 +624,7 @@ highed.ChartPreview = function(parent, attributes) {
       }
     });
 
+
     highed.merge(
       aggregatedOptions,
       highed.merge(highed.merge({}, aggregatedTemplate), customizedOptions)
@@ -707,6 +708,17 @@ highed.ChartPreview = function(parent, attributes) {
       aggregatedOptions,
       highed.merge({}, customizedOptions)
     );
+
+
+    if (themeOptions && themeOptions.series) {
+      if (aggregatedOptions.series) {
+        aggregatedOptions.series.forEach(function (serie, i) {
+          if (!serie.type && themeOptions.series[i] && themeOptions.series[i].type) {
+            serie.type = themeOptions.series[i].type
+          }
+        });
+      }
+    }
 
 
     if (aggregatedOptions.yAxis && !highed.isArr(aggregatedOptions.yAxis)) {
