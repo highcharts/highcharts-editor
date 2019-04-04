@@ -301,6 +301,14 @@ highed.meta.optionsExtended = {
             context: 'General',
             defaults: 'false',
             parent: 'chart'
+          },
+          {
+            id: 'plotOptions--series--states--inactive--opacity',
+            pid: 'plotOptions.series.states.inactive.opacity',
+            dataType: 'number',
+            context: 'General',
+            defaults: '0.2',
+            parent: 'chart'
           }
         ]
       },

@@ -114,6 +114,9 @@ highed.installLanguage({
     'option.text.chart.zoomType': 'Allow zooming',
     'option.tooltip.chart.zoomType':
       'Decides in what dimensions the user can zoom by dragging the mouse. Can be one of <code>x</code>, <code>y</code> or <code>xy</code>.',
+    'option.text.plotOptions.series.states.inactive.opacity': 'Series Dimming',
+    'option.tooltip.plotOptions.series.states.inactive.opacity':
+      'Opacity of series elements (dataLabels, line, area).',
     'option.text.chart.polar': 'Polar (radar) projection',
     'option.tooltip.chart.polar':
       'When true, cartesian charts like line, spline, area and column are transformed into the polar coordinate system. Requires <code>highcharts-more.js</code>.',
@@ -163,6 +166,9 @@ highed.installLanguage({
     'option.text.xAxis.opposite': 'Opposite side of chart',
     'option.tooltip.xAxis.opposite':
       'Whether to display the axis on the opposite side of the normal. The normal is on the left side for vertical axes and bottom for horizontal, so the opposite sides will be right and top respectively. This is typically used with dual or multiple axes.',
+    'option.text.xAxis.margin': 'Margin',
+    'option.tooltip.xaxis.margin':
+      'If there are multiple axes on the same side of the chart, the pixel margin between the axes.',
     'option.text.xAxis.reversed': 'Reversed direction',
     'option.tooltip.xAxis.reversed':
       'Whether to reverse the axis so that the highest number is closest to the origin. If the chart is inverted, the x axis is reversed by default.',
