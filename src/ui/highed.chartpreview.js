@@ -284,6 +284,7 @@ highed.ChartPreview = function(parent, attributes) {
       const chartConstr = (constr.some(function(a) {
         return a === 'StockChart';
       }) ? 'StockChart' : 'Chart');
+
       chart = new Highcharts[chartConstr](pnode || parent, options);
 
       //This is super ugly.
@@ -624,11 +625,18 @@ highed.ChartPreview = function(parent, attributes) {
       }
     });
 
-
     highed.merge(
       aggregatedOptions,
       highed.merge(highed.merge({}, aggregatedTemplate), customizedOptions)
     );
+
+    if (!aggregatedOptions.yAxis && customizedOptions.yAxis) {
+      aggregatedOptions.yAxis = customizedOptions.yAxis
+    }
+
+    if (!aggregatedOptions.xAxis && customizedOptions.xAxis) {
+      aggregatedOptions.xAxis = customizedOptions.xAxis
+    }
 
     //This needs to be cleaned up
     if (aggregatedOptions.yAxis && aggregatedTemplate.yAxis) {
@@ -735,6 +743,7 @@ highed.ChartPreview = function(parent, attributes) {
     if (!noCustomCode && highed.isFn(customCode)) {
       customCode(aggregatedOptions);
     }
+
   }
 
 
