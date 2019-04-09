@@ -389,7 +389,7 @@ highed.Tree = function(parent) {
             if (myIndex) customizedSeriesOption = [customizedSeriesOption[myIndex]];
             
             var found = false;
-            customizedSeriesOption.forEach(function(serieOption) {
+            (customizedSeriesOption || []).forEach(function(serieOption) {
               fstate = serieOption[filters[tree.meta.fullname].controller] || filters[tree.meta.fullname].default;
               if (child.meta.validFor[fstate]) found = true;
             });

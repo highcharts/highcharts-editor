@@ -326,11 +326,13 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
 
         const series = chartPreview.options.all().series;
         allOptions = highed.merge({}, chartPreview.options.full);//highed.merge({}, chartPreview.options.getCustomized());
-        if (series) {
+        if (series && series.length > 0) {
           series.forEach(function(serie, i) {
-            highed.merge(allOptions.series[i], {
-              type: serie.type || 'line'
-            });
+            if (allOptions.series && allOptions.series[i]){
+              highed.merge(allOptions.series[i], {
+                type: serie.type || 'line'
+              });
+            }
           });
           advTree.build(
             highed.meta.optionsAdvanced,
