@@ -2932,7 +2932,22 @@ highed.DataTable = function(parent, attributes) {
 
       currentColSpan += input.colspan;
       input.element = {};
-      input.element.input = highed.dom.cr('input','highed-imp-input-stretch');
+
+      if (input.type && input.type === 'select') {
+        input.element.dropdown = highed.DropDown(null, 'highed-wizard-dropdown-container');
+        input.element.dropdown.addItems([
+          {id: 'columnsURL', title: "JSON (Column Ordered)"},
+          {id: 'rowsURL', title: "JSON (Row Ordered)"},
+          {id: 'csvURL', title: "CSV"}
+        ]);
+        input.element.dropdown.selectByIndex(0);
+        input.element.dropdown.on('Change', function(selected) {
+          detailValue = selected.id();
+        });
+
+        input.element.input = input.element.dropdown.container;
+
+      } else input.element.input = highed.dom.cr('input','highed-imp-input-stretch');
       if (input.placeholder) input.element.input.placeholder = input.placeholder
       input.element.label = highed.dom.cr('span', '', input.label);
       
@@ -2959,7 +2974,8 @@ highed.DataTable = function(parent, attributes) {
     const container = highed.dom.cr('div', 'highed-modal-container'),
     inputs = [
       { label: 'URL', placeholder: 'Spreadsheet ID', colspan: 2, linkedTo: liveDataInput},
-      { label: 'Refresh Time in Seconds', placeholder: 'Refresh time  (leave blank for no refresh)', colspan: 2, linkedTo: liveDataIntervalInput}],
+      { label: 'Refresh Time in Seconds', placeholder: 'Refresh time  (leave blank for no refresh)', colspan: 2, linkedTo: liveDataIntervalInput},
+      { label: 'Type', colspan: 2, linkedTo: liveDataTypeSelect, type:'select'}],
     table = createTableInputs(inputs, 2, 'highed-live-data'),
     importData = highed.dom.cr('button', 'highed-ok-button highed-import-button negative', 'Import Data'),
     cancel = createCancelBtn();
@@ -2968,7 +2984,10 @@ highed.DataTable = function(parent, attributes) {
       showLiveData(true);
       dataModal.hide();
       inputs.forEach(function(input) {
-        input.linkedTo.value = input.element.input.value;
+        if (input.type && input.type === 'select') {
+          input.linkedTo.selectByIndex(input.element.dropdown.getSelectedItem().index());
+        }
+        else input.linkedTo.value = input.element.input.value;
       });
       liveDataLoadButton.click();
       toNextPage();
