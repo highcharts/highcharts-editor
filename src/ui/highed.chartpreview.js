@@ -838,6 +838,21 @@ highed.ChartPreview = function(parent, attributes) {
     });
   }
 
+
+  function loadSeriesFromDataSource(){
+    if (
+      !gc(function(chart) {
+        if (chart.options && chart.options.series) {
+          customizedOptions.series = chart.options.series;
+        }
+        return true;
+      })
+    ) {
+      customizedOptions.series = [];
+    }
+    updateAggregated();
+  }
+
   function loadSeries() {/*
     if (
       !gc(function(chart) {
@@ -1196,6 +1211,14 @@ highed.ChartPreview = function(parent, attributes) {
     loadSeries();
     emitChange();
 
+    // The sheet will be loaded async, so we should listen to the load event.
+    gc(function(chart) {
+      var found = Highcharts.addEvent(chart, 'load', function() {
+        loadSeriesFromDataSource();
+        found();
+      });
+    });
+
   }
 
   function loadGSpreadsheet(options) {
@@ -1223,15 +1246,17 @@ highed.ChartPreview = function(parent, attributes) {
       data: lastLoadedSheet
     });
 
+
+
     updateAggregated();
     init(aggregatedOptions);
     loadSeries();
     emitChange();
-    
     // The sheet will be loaded async, so we should listen to the load event.
     gc(function(chart) {
       var found = Highcharts.addEvent(chart, 'load', function() {
-        loadSeries();
+        loadSeriesFromDataSource();
+        //loadSeries();
         found();
       });
     });
