@@ -2664,7 +2664,7 @@ highed.DataTable = function(parent, attributes) {
             'This means that the published chart always loads the latest version of the sheet.<br/><br/>',
 
             'For more information on how to set up your spreadsheet, visit',
-            '<a target="_blank" href="https://www.highcharts.com/cloud/import-data/how-to-set-up-a-google-spreadsheet-file">the documentation</a>.'
+            '<a target="_blank" href="https://cloud.highcharts.com/docs/#/google-spread-sheet-setting">the documentation</a>.'
           ].join(' ')
         )
       )
