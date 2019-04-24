@@ -295,6 +295,11 @@ highed.DataTable = function(parent, attributes) {
       'highed-import-button green padded',
       'Detach Sheet From Chart'
     ),
+    switchRowColumns = highed.dom.cr(
+      'button',
+      'switch-column-button',
+      '<i class="fa fa-refresh" aria-hidden="true"></i>'
+    ),
     gsheetLoadButton = highed.dom.cr(
       'button',
       'highed-import-button green padded',
@@ -341,47 +346,9 @@ highed.DataTable = function(parent, attributes) {
       NOV: 11,
       DEC: 12
     },
-    saveCtx = highed.ContextMenu([
-      {
-        title: 'Use <code>,</code> as delimiter',
-        click: function() {
-          highed.download('data.csv', toCSV(','), 'application/csv');
-        }
-      },
-      {
-        title: 'Use <code>;</code> as delimiter',
-        click: function() {
-          highed.download('data.csv', toCSV(';'), 'application/csv');
-        }
-      }
-    ]),
     selectedRowIndex = 0,
     keyValue = "A",
     tempKeyValue = "A",
-    addRowCtx = highed.ContextMenu([
-      {
-        title: 'At the end',
-        icon: '',
-        click: function() {
-          addRow();
-          highed.emit('UIAction', 'AddRowAtEnd');
-        }
-      },
-      {
-        title: 'After highlighted',
-        click: function() {
-          addRowAfter(selectedRowIndex);
-          highed.emit('UIAction', 'AddRowAfterHighlight');
-        }
-      },
-      {
-        title: 'Before highlighted',
-        click: function() {
-          addRowBefore(selectedRowIndex);
-          highed.emit('UIAction', 'AddRowBeforeHighlight');
-        }
-      }
-    ]);
     //checkAll.type = 'checkbox',
     selectedFirstCell = [],
     selectedEndCell = [],
@@ -477,6 +444,9 @@ highed.DataTable = function(parent, attributes) {
   const DEFAULT_COLUMN = 9,
         DEFAULT_ROW = 20;
     
+
+  highed.dom.ap(hideCellsDiv, switchRowColumns)
+
   highed.dom.on(mainInput, 'click', function(e) {
     return highed.dom.nodefault(e);
   });
@@ -2433,6 +2403,45 @@ highed.DataTable = function(parent, attributes) {
     importModal.hide();
   });
 
+  highed.dom.on(switchRowColumns, 'click', function() {
+    var csvData = rowsToColumns(highed.parseCSV(toCSV()))
+    .map(function(cols) {
+      return cols.join(';');
+    }).join('\n')
+
+    init();
+    emitChanged();
+    if (rows.length > 0) rows[0].columns[0].focus();
+    loadCSV({
+      csv: csvData
+    }, null, true);
+
+  })
+
+  function rowsToColumns(rows) {
+    var row,
+        rowsLength,
+        col,
+        colsLength,
+        columns;
+
+    if (rows) {
+        columns = [];
+        rowsLength = rows.length;
+        for (row = 0; row < rowsLength; row++) {
+            colsLength = rows[row].length;
+            for (col = 0; col < colsLength; col++) {
+                if (!columns[col]) {
+                    columns[col] = [];
+                }
+                columns[col][row] = rows[row][col];
+            }
+        }
+    }
+    return columns;
+  }
+
+
   highed.dom.on(gsheetCancelButton, 'click', function() {
     hideGSheet();
     events.emit('CancelDataInput');
@@ -2904,6 +2913,12 @@ highed.DataTable = function(parent, attributes) {
   function areColumnsEmpty(colNumber) {
     return !rows.some(function(row){
       return row.columns[colNumber].value() !== null;
+    });
+  }
+
+  function areRowsEmpty(rowNumber) {
+    return !rows[rowNumber].columns.some(function(column){
+      return column.value() !== null;
     });
   }
 
