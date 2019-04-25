@@ -283,9 +283,30 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     chartPreview.data.deleteSeries(length);
 
     const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
+
     chartPreview.data.csv({
       csv: data
     }, null, false, function() {
+      
+
+      var chartOptions = chartPreview.options.getCustomized();
+      var assignDataOptions = assignDataPanel.getAllOptions();    
+      
+      if (chartOptions && chartOptions.series){
+        if (chartOptions.series.length < assignDataOptions.length){
+          var optionsLength = chartOptions.series.length
+          var assignDataOptionsLength = assignDataOptions.length
+          
+          var type = chartOptions.series[chartOptions.series.length - 1].type;
+      
+          if (blacklist.includes(type)) type = null;
+
+          for(var i=optionsLength; i<assignDataOptionsLength; i++) {
+            chartPreview.options.addBlankSeries(i, type);
+          }
+        }
+      }
+
       setSeriesMapping(assignDataPanel.getAllOptions());
     });
   });

@@ -2409,9 +2409,7 @@ highed.DataTable = function(parent, attributes) {
       return cols.join(';');
     }).join('\n')
 
-    init();
-    emitChanged();
-    if (rows.length > 0) rows[0].columns[0].focus();
+    clearData()
     loadCSV({
       csv: csvData
     }, null, true);
