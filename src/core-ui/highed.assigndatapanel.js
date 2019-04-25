@@ -309,7 +309,7 @@ highed.AssignDataPanel = function(parent, dataTable) {
     if (length + 1 < options.length) {
       //Need to do some culling
       options = options.slice(0,length + 1);
-      events.emit('RemoveSeries', length);
+      events.emit('RemoveSeries', length + 1);
       seriesTypeSelect.sliceList(length + 1);
       resetDOM();
     } else {
