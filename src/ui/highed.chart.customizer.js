@@ -385,11 +385,13 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
     }
 
     n.focus();
+    /*
     n.scrollIntoView({
       inline: 'nearest'
-    });
+    });*/
 
     // Draw a dot where the item was clicked
+    
     var attention = highed.dom.cr('div', 'highed-attention');
     highed.dom.style(attention, {
       width: '10px',
@@ -404,6 +406,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
     var pos = Highcharts.offset(n);
 
     var bgColor = n.style.backgroundColor;
+    
     highed.dom.style(attention, {
       width: n.clientWidth + 'px',
       height: n.clientHeight + 'px',
@@ -411,6 +414,8 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
       left: pos.left + 'px',
       top: pos.top + 'px'
     });
+
+
     window.setTimeout(function() {
       highed.dom.style(n, {
         backgroundColor: window.getComputedStyle(attention).backgroundColor,

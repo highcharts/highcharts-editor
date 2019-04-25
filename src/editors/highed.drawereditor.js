@@ -427,30 +427,37 @@ highed.DrawerEditor = function(parent, options, planCode) {
         defaultPage.init();
         option.nav.page = defaultPage;
       }
-      
-      option.nav.onClick.push(
-        function(prev, newOption) {
-          prev.hide();
-          newOption.page.show();
-          panel.setDefault(newOption.page);
-          titleHeader.innerHTML = newOption.text;
-          helpModal = (option.help ? highed.HelpModal(option.help  || []) : null);
-          
-          highed.dom.style(helpIcon, {
-            display: (helpModal ? 'inline' : 'none')
-          });
 
-          iconContainer.innerHTML = '';
-          if (newOption.page.getIcons()) {
-            highed.dom.ap(iconContainer, newOption.page.getIcons());
-          }
-          
-          highed.dom.style(iconContainer, {
-            display: (newOption.page.getIcons() ? 'inline' : 'none')
-          });
 
+      var func = function(prev, newOption) {
+        prev.hide();
+        newOption.page.show();
+        panel.setDefault(newOption.page);
+        titleHeader.innerHTML = newOption.text;
+        helpModal = (option.help ? highed.HelpModal(option.help  || []) : null);
+        
+        highed.dom.style(helpIcon, {
+          display: (helpModal ? 'inline' : 'none')
+        });
+
+        iconContainer.innerHTML = '';
+        if (newOption.page.getIcons()) {
+          highed.dom.ap(iconContainer, newOption.page.getIcons());
         }
-      );
+        
+        highed.dom.style(iconContainer, {
+          display: (newOption.page.getIcons() ? 'inline' : 'none')
+        });
+
+      }
+
+
+      if (id == 'customize') {
+        option.nav.onClick = [func];
+      } else {
+        option.nav.onClick.push(func);
+      }
+
 
       panel.addOption(option.nav, id);
       addedOptions[id] = id;
@@ -529,7 +536,10 @@ highed.DrawerEditor = function(parent, options, planCode) {
 
         const customize = panel.getOptions().customize;
 
-        if (customize) customize.click();
+        if (customize) {
+          customizePage.setTabBehaviour(true)
+          customize.click();
+        }
 /*
         titleHeader.innerHTML = builtInOptions.customize.title;
         customizePage.show();
@@ -679,6 +689,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
   function hideImportModal() {
     //dataTable.hideImportModal();
   }
+  
   function showError(title, message, warning, code) {
     if (warning) {
       if (suppressWarning) return;
@@ -792,7 +803,10 @@ highed.DrawerEditor = function(parent, options, planCode) {
 
     const customize = panel.getOptions().customize;
     if (!panel.getCurrentOption() || panel.getCurrentOption().text !== 'Customize') {
-      if (customize) customize.click();
+      if (customize) {
+        customizePage.setTabBehaviour(false)
+        customize.click();
+      }
     }
 
     setTimeout(function() {

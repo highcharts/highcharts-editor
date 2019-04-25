@@ -297,8 +297,8 @@ highed.DataTable = function(parent, attributes) {
     ),
     switchRowColumns = highed.dom.cr(
       'button',
-      'switch-column-button',
-      '<i class="fa fa-refresh" aria-hidden="true"></i>'
+      'switch-column-button highed-template-tooltip',
+      '<i class="fa fa-refresh" aria-hidden="true"></i> <span class="highed-tooltip-text highed-template-tooltip-text-left">Switch Rows/Columns</span>'
     ),
     gsheetLoadButton = highed.dom.cr(
       'button',
@@ -2404,41 +2404,8 @@ highed.DataTable = function(parent, attributes) {
   });
 
   highed.dom.on(switchRowColumns, 'click', function() {
-    var csvData = rowsToColumns(highed.parseCSV(toCSV()))
-    .map(function(cols) {
-      return cols.join(';');
-    }).join('\n')
-
-    clearData()
-    loadCSV({
-      csv: csvData
-    }, null, true);
-
+    selectSwitchRowsColumns()
   })
-
-  function rowsToColumns(rows) {
-    var row,
-        rowsLength,
-        col,
-        colsLength,
-        columns;
-
-    if (rows) {
-        columns = [];
-        rowsLength = rows.length;
-        for (row = 0; row < rowsLength; row++) {
-            colsLength = rows[row].length;
-            for (col = 0; col < colsLength; col++) {
-                if (!columns[col]) {
-                    columns[col] = [];
-                }
-                columns[col][row] = rows[row][col];
-            }
-        }
-    }
-    return columns;
-  }
-
 
   highed.dom.on(gsheetCancelButton, 'click', function() {
     hideGSheet();
@@ -2750,6 +2717,42 @@ highed.DataTable = function(parent, attributes) {
       )
     )
   );
+
+  function selectSwitchRowsColumns() {
+    var csvData = rowsToColumns(highed.parseCSV(toCSV()))
+    .map(function(cols) {
+      return cols.join(';');
+    }).join('\n')
+
+    clearData()
+    loadCSV({
+      csv: csvData
+    }, null, true);
+  }
+
+  function rowsToColumns(rows) {
+    var row,
+        rowsLength,
+        col,
+        colsLength,
+        columns;
+
+    if (rows) {
+        columns = [];
+        rowsLength = rows.length;
+        for (row = 0; row < rowsLength; row++) {
+            colsLength = rows[row].length;
+            for (col = 0; col < colsLength; col++) {
+                if (!columns[col]) {
+                    columns[col] = [];
+                }
+                columns[col][row] = rows[row][col];
+            }
+        }
+    }
+    return columns;
+  }
+
 
   function getRawCSV() {
     return rawCSV;
@@ -3254,5 +3257,6 @@ highed.DataTable = function(parent, attributes) {
     clearData: clearData,
     showDataTableError: showDataTableError,
     hideDataTableError: hideDataTableError,
+    selectSwitchRowsColumns: selectSwitchRowsColumns
   };
 };

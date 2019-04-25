@@ -153,7 +153,7 @@ highed.List = function(parent, responsive, props, planCode) {
           return;
         }
         
-        container = highed.dom.cr('div', 'highed-customize-group' + (group.dropdown ? ' highed-list-general-drop-down' : ' highed-list-normal'));
+        container = highed.dom.cr('div', 'highed-customize-group' + (group.dropdown ? ' highed-list-general-drop-down' : ' highed-list-normal'), null, 'highed-list-header-' + highed.L(group.text));
         masterNode = highed.dom.cr('div', 'highed-customize-master-dropdown');
         nodeHeading = highed.dom.cr(
           'div',
@@ -318,7 +318,7 @@ highed.List = function(parent, responsive, props, planCode) {
               if (group.plugins && group.plugins.length > 0) {
                 events.emit('TogglePlugins', group.id, newValue);
               }
-
+              
               if (!group.noChange) events.emit('PropertyChange', group.id, newValue, detailIndex);
               
               highed.emit(

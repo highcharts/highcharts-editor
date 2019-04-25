@@ -292,13 +292,13 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       var chartOptions = chartPreview.options.getCustomized();
       var assignDataOptions = assignDataPanel.getAllOptions();    
       
-      if (chartOptions && chartOptions.series){
-        if (chartOptions.series.length < assignDataOptions.length){
+      if (chartOptions && chartOptions.series) {
+        if (chartOptions.series.length < assignDataOptions.length) {
           var optionsLength = chartOptions.series.length
           var assignDataOptionsLength = assignDataOptions.length
-          
-          var type = chartOptions.series[chartOptions.series.length - 1].type;
-      
+          var type
+
+          if (chartOptions.series.length != 0) type = chartOptions.series[chartOptions.series.length - 1].type;
           if (blacklist.includes(type)) type = null;
 
           for(var i=optionsLength; i<assignDataOptionsLength; i++) {
@@ -693,6 +693,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     return dataTable.createSimpleDataTable(toNextPage, cb);
   } 
 
+  function selectSwitchRowsColumns() {
+    dataTable.selectSwitchRowsColumns()
+  }
+
   function resizeChart(newWidth) {
     highed.dom.style(chartFrame, {
       /*left: newWidth + 'px',*/
@@ -734,6 +738,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     createSimpleDataTable: createSimpleDataTable,
     loadProject: loadProject,
     showDataTableError: showDataTableError,
-    hideDataTableError: hideDataTableError
+    hideDataTableError: hideDataTableError,
+    selectSwitchRowsColumns: selectSwitchRowsColumns
   };
 };

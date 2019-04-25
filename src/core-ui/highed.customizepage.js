@@ -51,6 +51,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     width,
     chartWidth = 68,
     iconClass,
+    autoAppearanceTab = true,
     icon = highed.dom.cr('div', iconClass),
     helpModal,
     // Data table
@@ -343,7 +344,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     customizer.on('PropertyChange', chartPreview.options.set);
     customizer.on('PropertySetChange', chartPreview.options.setAll);
     customizer.on('TogglePlugins', chartPreview.options.togglePlugins);
-  
+    
     customizer.on('AdvancedBuilt', function() {
 
       var bsize = highed.dom.size(body),
@@ -651,6 +652,16 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     highed.dom.style(resolutionSettings, {
       display: 'block'
     });
+
+
+    if (autoAppearanceTab) {
+      setTimeout(function() {
+        if (!document.getElementById('highed-list-header-Appearance').classList.contains('active')){
+          document.getElementById('highed-list-header-Appearance').children[0].click()
+        }
+      }, 300)
+    }
+
   }
   
   function hide() {
@@ -699,6 +710,10 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
   function selectOption(event, x, y) {
     customizer.focus(event, x, y);
+  }
+
+  function setTabBehaviour(behaviour) {
+    autoAppearanceTab = behaviour
   }
 
   function destroy() {}
@@ -801,7 +816,8 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     init: init,
     getIcons: getIcons,
     selectOption: selectOption,
-    getResolutionContainer: getResolutionContainer
+    getResolutionContainer: getResolutionContainer,
+    setTabBehaviour: setTabBehaviour
     //toolbar: toolbar
   };
 };
