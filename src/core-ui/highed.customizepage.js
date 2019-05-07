@@ -403,7 +403,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
         highed.dom.ap(iconsContainer, button.element);
       });
     }
-
+/*
     var annotationButton = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons ' + (usingSafari() ? ' usingsafari ' : '') , '<i class="fa fa-commenting" aria-hidden="true"></i><span class="highed-tooltip-text">Annotations</span>');
 
     highed.dom.on(annotationButton, 'click', function() {
@@ -482,7 +482,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
     
     highed.dom.ap(iconsContainer, annotationContainer);
-
+*/
     highed.dom.ap(contents, userContents);
     highed.dom.ap(body, contents);
   

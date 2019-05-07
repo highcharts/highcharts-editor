@@ -280,8 +280,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   assignDataPanel.on('RemoveSeries', function(length) {
     clearSeriesMapping();
-    chartPreview.data.deleteSeries(length);
 
+    chartPreview.data.deleteSeries(length);
     const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
 
     chartPreview.data.csv({
