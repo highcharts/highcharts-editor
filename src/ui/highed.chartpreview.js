@@ -133,6 +133,7 @@ highed.ChartPreview = function(parent, attributes) {
       '.highcharts-series': { tab: 'Data series', id: 'series' },
       'g.highcharts-tooltip': { tab: 'Chart', dropdown: 'Tooltip', id: 'tooltip--enabled' }
     },
+    stockToolsContainer
     isAnnotating = true,
     annotationType = false;
 
@@ -142,7 +143,20 @@ highed.ChartPreview = function(parent, attributes) {
     //setInterval(toProject, 3000)
     Object.keys(wysiwyg).forEach(function(key) {
       highed.dom.on(parent.querySelector(key), 'click', function(e) {
-        if (isAnnotating) return;
+
+        stockToolsContainer = document.querySelector('.highcharts-stocktools-toolbar');
+        var found = false;
+        if (stockToolsContainer) {
+          var children = stockToolsContainer.children;
+          for (var i = 0; i < children.length; i++) {
+              if (children[i].classList.contains("highcharts-active")) {
+                found = true;
+                break;
+              }
+          }
+        }
+
+        if (found) return;
         events.emit('RequestEdit', wysiwyg[key], e.clientX, e.clientY);
         e.cancelBubble = true;
         e.preventDefault();
@@ -268,7 +282,6 @@ highed.ChartPreview = function(parent, attributes) {
       }
       
       Highcharts.error = function (code, stopLoading) {
-        console.log(code)
         if (stopLoading) throw code;
         else {      
           setTimeout(function() {
@@ -288,7 +301,6 @@ highed.ChartPreview = function(parent, attributes) {
 
       events.emit('ChartRecreated');
     } catch (code) {
-      console.log("ERRROR", code)
       events.emit('Error', {
         code: code,
         url : (code ? 'https://www.highcharts.com/errors/' + code : '')
@@ -561,8 +573,6 @@ highed.ChartPreview = function(parent, attributes) {
 
 
     if (aggregatedOptions.data && Object.keys(aggregatedOptions.data).length > 0 && aggregatedOptions.data.csv){ //&& chart && chart.annotations && chart.annotations.length !== 0) {
-      console.log("CHART HAS ANNO")
-      console.log(JSON.stringify(aggregatedOptions.data))
 /*
       customizedOptions.annotations = []
       chart.annotations.forEach(function(annotation, index) {
@@ -1015,11 +1025,7 @@ highed.ChartPreview = function(parent, attributes) {
         annotations = projectData.options.annotations
         delete customizedOptions.annotations
       }
-
-      console.log("LOADED")
-      console.log("PROJECT DATA")
-      console.log(JSON.stringify(projectData))
-      console.log(JSON.stringify(customizedOptions))
+      
       // Not sure if this should be part of the project files yet
       // if (projectData.editorOptions) {
       //     Object.keys(projectData.editorOptions, function (key) {
@@ -1231,7 +1237,6 @@ highed.ChartPreview = function(parent, attributes) {
       customizedOptions.annotations.push(annotation.userOptions);
     });
 
-    console.log(customizedOptions.annotations.slice())
   }
 
   function getTemplateSettings() {
