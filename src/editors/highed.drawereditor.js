@@ -210,7 +210,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
     ),
     chartPreview = highed.ChartPreview(chartContainer, {
       defaultChartOptions: properties.defaultChartOptions
-    }),
+    }, planCode),
     suppressWarning = false,
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
     customizePage = highed.CustomizePage(
@@ -402,7 +402,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
       if (!option || !option.icon || !option.nav) {
         return;
       }
-
+      
       if (id === 'data') {
         option.nav.page = dataPage;
         dataPage.init();
