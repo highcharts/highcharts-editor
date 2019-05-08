@@ -39,7 +39,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @param attributes {object} - the settings
  *    > defaultChartOptions {object} - the default chart options
  */
-highed.ChartPreview = function(parent, attributes) {
+highed.ChartPreview = function(parent, attributes, planCode) {
   var properties = highed.merge(
       {
         defaultChartOptions: {
@@ -135,8 +135,11 @@ highed.ChartPreview = function(parent, attributes) {
     },
     stockToolsContainer
     isAnnotating = true,
-    annotationType = false;
-
+    stockToolsToolbarConfig = {
+      gui: {
+        enabled: false
+      }
+    }
   ///////////////////////////////////////////////////////////////////////////
 
   function attachWYSIWYG() {
@@ -165,10 +168,6 @@ highed.ChartPreview = function(parent, attributes) {
         return false;
       });
     });
-
-    highed.dom.on(document.querySelector('.highcharts-arrow-left'), 'click', function(e) {
-      isAnnotating = !isAnnotating;
-    })
   }
 
   function stringifyFn(obj, tabs) {
@@ -229,6 +228,12 @@ highed.ChartPreview = function(parent, attributes) {
       highed.setAttr(options, 'plotOptions--series--animation', false);
     }
 
+
+  
+    if (planCode && planCode == 1) {
+      options.stockTools = stockToolsToolbarConfig
+    }
+    
     if (typeof window.Highcharts === 'undefined') {
       highed.snackBar('Highcharts.JS must be included to use the editor');
       return;
