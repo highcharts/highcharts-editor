@@ -385,6 +385,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
   // Alias import to data
   builtInOptions.import = builtInOptions.data;
   panel.setDefault(dataPage);
+  dataPage.show()
   /**
    * Creates the features defined in property.features
    * Call this after changing properties.features to update the options.
@@ -402,7 +403,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
       if (!option || !option.icon || !option.nav) {
         return;
       }
-
+      
       if (id === 'data') {
         option.nav.page = dataPage;
         dataPage.init();
@@ -622,6 +623,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
    */
   function resize() {
     splitter.resize();
+    panel.getPrev().resize()
     //resizeChart(toolbox.width());
   }
 
