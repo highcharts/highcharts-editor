@@ -25,7 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // @format
 
-highed.AssignDataPanel = function(parent, dataTable) {
+highed.AssignDataPanel = function(parent, dataTable, extraClass) {
 
   var defaultOptions = {
     'labels': {
@@ -84,12 +84,12 @@ highed.AssignDataPanel = function(parent, dataTable) {
   var events = highed.events(),
     container = highed.dom.cr(
       'div',
-      'highed-transition highed-assigndatapanel highed-box-size'
+      'highed-transition highed-assigndatapanel highed-box-size ' + extraClass
     ),
-    bar = highed.dom.cr('div', 'highed-assigndatapanel-bar highed-box-size'),
+    bar = highed.dom.cr('div', 'highed-assigndatapanel-bar highed-box-size ' + extraClass),
     body = highed.dom.cr(
       'div',
-      'highed-assigndatapanel-body highed-box-size highed-transition'
+      'highed-assigndatapanel-body highed-box-size highed-transition ' + extraClass
     ),
     headerToggle = highed.dom.cr('span', '', '<i class="fa fa-chevron-down highed-assigndatapanel-toggle" aria-hidden="true"></i>'),
     header = highed.dom.ap(
