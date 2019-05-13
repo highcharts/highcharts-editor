@@ -284,13 +284,13 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
 
   }
 
-  function getFieldsToHighlight(cb, overrideCheck) {
+  function getFieldsToHighlight(cb, overrideCheck, dontEmit) {
     if (!options[index]) return;
     Object.keys(options[index]).forEach(function(key) {
       var input = options[index][key];
       processField(input, overrideCheck, cb);
     });
-    if (!disabled) events.emit("ChangeData", options);
+    if (!disabled && !dontEmit) events.emit("ChangeData", options);
   }
 
   function generateColors() {
@@ -598,13 +598,13 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
       }
       //liveDataTypeSelect.selectById(detailValue || 'json');
     });
-    
-    var colors = option.colors || generateColors();
-
-    option.colors = colors;
   
+    var colors = option.colors || generateColors();
+    option.colors = colors;
+
     labelInput.value = option.value;
     const colorDiv = highed.dom.cr('div', 'highed-assigndatapanel-color');
+    
     highed.dom.style(colorDiv, {
       "background-color": option.colors.light,
       "border": '1px solid ' + option.colors.dark,
@@ -621,7 +621,6 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
   }
 
   function resetDOM() {
-    
     inputContainer.innerHTML = '';
     if (options[index]){
       Object.keys(options[index]).forEach(function(key) {
@@ -712,7 +711,8 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
   seriesTypeSelect.on('Change', function(selected) {
     if (index !== selected.id()) {
       index = selected.id();
-      resetDOM();      
+      resetDOM();  
+          
       if (showCells) events.emit('ToggleHideCells', options[index], showCells);
       if (!disabled) {
         events.emit('RedrawGrid', true);

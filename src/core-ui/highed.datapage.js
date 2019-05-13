@@ -443,8 +443,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       }
       dataTable.removeAllCellsHighlight(null, columns);
     }
+    
     assignDataPanel.checkToggleCells();
-    assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+    
+    assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true, true);
     chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
   }
 
