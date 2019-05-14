@@ -1738,6 +1738,7 @@ highed.ChartPreview = function(parent, attributes) {
           'https://code.highcharts.com/modules/exporting.js',
           'https://code.highcharts.com/modules/funnel.js',
           'https://code.highcharts.com/6.0.2/modules/annotations.js',
+          'https://code.highcharts.com/modules/accessibility.js',
           // 'https://code.highcharts.com/modules/series-label.js'
           'https://code.highcharts.com/modules/solid-gauge.js'
         ],
