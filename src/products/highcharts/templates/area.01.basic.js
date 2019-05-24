@@ -26,7 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 highed.templates.add('Area', {
-  title: 'Basic Arearange',
+  title: 'Basic Area',
   description: '',
   thumbnail: 'ecexev.svg',
   dataValidator: false,
