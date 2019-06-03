@@ -1241,6 +1241,7 @@ highed.DataTable = function(parent, attributes) {
         }
 
         if (highed.isStr(v) && Date.parse(v) !== NaN) {
+          v = v.replace(" ", "T");
           //v = (new Date(v)).getTime();
         }
 
