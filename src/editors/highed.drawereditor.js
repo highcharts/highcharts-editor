@@ -266,7 +266,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
       }
     ),
     changePlanBtn = highed.dom.cr('button', 'highed-import-button', "Choose a plan"),
-
+    createAccountLink = highed.dom.cr('a', '', 'Create one')
     // Res preview bar
     resPreviewBar = highed.dom.cr('div', 'highed-res-preview'),
     resWidth = highed.dom.cr('input', 'highed-res-number'),
@@ -859,6 +859,13 @@ highed.DrawerEditor = function(parent, options, planCode) {
   highed.dom.on(changePlanBtn, 'click', function() {
     //Hook for cloud to pick up
     events.emit("SwitchToSubscriptionPage");
+    payupModal.hide()
+  })
+
+  highed.dom.on(createAccountLink, 'click', function() {
+    //Hook for cloud to pick up
+    events.emit("SwitchToCreateAccountPage");
+    payupModal.hide()
   })
 
   //////////////////////////////////////////////////////////////////////////////
@@ -866,7 +873,12 @@ highed.DrawerEditor = function(parent, options, planCode) {
   highed.dom.ap(payupModal.body, 
                 highed.dom.cr("div", 'highed-premium-feature-header', 'Premium Feature'),
                 highed.dom.cr("div", 'highed-premium-feature-text', "Annotate isn't available to free users. To use this feature, please choose a subscription plan"),
-                highed.dom.ap(highed.dom.cr("div", 'highed-premium-feature-text'), changePlanBtn)
+                highed.dom.ap(highed.dom.cr("div", 'highed-premium-feature-text'), changePlanBtn),
+                highed.dom.ap(
+                  highed.dom.cr("div", 'highed-premium-feature-text', "Dont have an account? "),
+                  highed.dom.ap(highed.dom.cr("span"), createAccountLink)
+                )
+
                 );
   
   highed.dom.ap(
