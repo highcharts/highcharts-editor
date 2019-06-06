@@ -213,10 +213,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
     }, planCode),
     suppressWarning = false,
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
-    payupModal = highed.OverlayModal(false, {
-      width: 321,
-      height: 219 
-    }),
+    payupModal = highed.SubscribeModal(),
     customizePage = highed.CustomizePage(
       splitter.bottom,
       highed.merge(
@@ -841,6 +838,14 @@ highed.DrawerEditor = function(parent, options, planCode) {
 
   chartPreview.on('ChartRecreated', hideError);
 
+  payupModal.on('SwitchToSubscriptionPage', function(){
+    events.emit("SwitchToSubscriptionPage");
+  });
+  
+  payupModal.on('SwitchToCreateAccountPage', function(){
+    events.emit("SwitchToCreateAccountPage");
+  });
+
   highed.dom.on(window, 'resize', resize);
   
   highed.dom.on(window, 'afterprint', function() {
@@ -856,31 +861,8 @@ highed.DrawerEditor = function(parent, options, planCode) {
     suppressWarning = true;
   });
 
-  highed.dom.on(changePlanBtn, 'click', function() {
-    //Hook for cloud to pick up
-    events.emit("SwitchToSubscriptionPage");
-    payupModal.hide()
-  })
-
-  highed.dom.on(createAccountLink, 'click', function() {
-    //Hook for cloud to pick up
-    events.emit("SwitchToCreateAccountPage");
-    payupModal.hide()
-  })
-
   //////////////////////////////////////////////////////////////////////////////
 
-  highed.dom.ap(payupModal.body, 
-                highed.dom.cr("div", 'highed-premium-feature-header', 'Premium Feature'),
-                highed.dom.cr("div", 'highed-premium-feature-text', "Annotate isn't available to free users. To use this feature, please choose a subscription plan"),
-                highed.dom.ap(highed.dom.cr("div", 'highed-premium-feature-text'), changePlanBtn),
-                highed.dom.ap(
-                  highed.dom.cr("div", 'highed-premium-feature-text', "Dont have an account? "),
-                  highed.dom.ap(highed.dom.cr("span"), createAccountLink)
-                )
-
-                );
-  
   highed.dom.ap(
     toolbar.left,
     highed.dom.style(highed.dom.cr('span'), {
