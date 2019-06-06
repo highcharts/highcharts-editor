@@ -213,6 +213,10 @@ highed.DrawerEditor = function(parent, options, planCode) {
     }, planCode),
     suppressWarning = false,
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
+    payupModal = highed.OverlayModal(false, {
+      width: 321,
+      height: 219 
+    }),
     customizePage = highed.CustomizePage(
       splitter.bottom,
       highed.merge(
@@ -239,7 +243,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
       highedChartContainer,
       builtInOptions.data
     ),
-    templatePage = highed.TemplatePage(      
+    templatePage = highed.TemplatePage(     
       splitter.bottom,
       highed.merge(
         {
@@ -261,6 +265,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
         }
       }
     ),
+    changePlanBtn = highed.dom.cr('button', 'highed-import-button', "Choose a plan"),
 
     // Res preview bar
     resPreviewBar = highed.dom.cr('div', 'highed-res-preview'),
@@ -554,8 +559,6 @@ highed.DrawerEditor = function(parent, options, planCode) {
     });
   }
 
-
-
   /**
    * Resize the chart preview based on a given width
    */
@@ -770,35 +773,14 @@ highed.DrawerEditor = function(parent, options, planCode) {
       chartPreview.options.set('title-text', sample.title);
     }
   });
-/*
-  dataTable.on('LoadLiveData', function(settings){
-    //chartPreview.data.live(settings);
 
-    const liveDataSetting = {};
-
-    liveDataSetting[settings.type] = settings.url;
-    if (settings.interval && settings.interval > 0){
-      liveDataSetting.enablePolling = true;
-      liveDataSetting.dataRefreshRate = settings.interval
-    }
-    chartPreview.data.live(liveDataSetting);
-  });*/
-/*
-  dataTable.on('UpdateLiveData', function(p){
-    chartPreview.data.liveURL(p);
-  });
-*/
   chartPreview.on('LoadProject', function () {
     setTimeout(function () {
  //   resQuickSel.selectByIndex(0);
     setToActualSize();
     }, 2000);
   });
-/*
-  dataTable.on('LoadGSheet', function(settings) {
-    //chartPreview.data.gsheet(settings);
-  });
-*/
+
   chartPreview.on('RequestEdit', function(event, x, y) {
 
     const customize = panel.getOptions().customize;
@@ -813,17 +795,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
       customizePage.selectOption(event, x, y);
     }, 500);
   });
-/*
-  dataTable.on('Change', function(headers, data) {
-    
-    return chartPreview.data.csv({
-      csv: dataTable.toCSV(';', true)
-    });
-  });*/
-/*
-  dataTable.on('ClearData', function() {
-    chartPreview.data.clear();
-  });*/
+
 
   chartPreview.on('ProviderGSheet', function(p) {
     /*
@@ -878,8 +850,25 @@ highed.DrawerEditor = function(parent, options, planCode) {
       resize();
     }, 1100);
   })
+
+  highed.dom.on(errorBarClose, 'click', function() {
+    hideError();
+    suppressWarning = true;
+  });
+
+  highed.dom.on(changePlanBtn, 'click', function() {
+    //Hook for cloud to pick up
+    events.emit("SwitchToSubscriptionPage");
+  })
+
   //////////////////////////////////////////////////////////////////////////////
 
+  highed.dom.ap(payupModal.body, 
+                highed.dom.cr("div", 'highed-premium-feature-header', 'Premium Feature'),
+                highed.dom.cr("div", 'highed-premium-feature-text', "Annotate isn't available to free users. To use this feature, please choose a subscription plan"),
+                highed.dom.ap(highed.dom.cr("div", 'highed-premium-feature-text'), changePlanBtn)
+                );
+  
   highed.dom.ap(
     toolbar.left,
     highed.dom.style(highed.dom.cr('span'), {
@@ -897,11 +886,6 @@ highed.DrawerEditor = function(parent, options, planCode) {
         '")'
     })
   );
-  
-  highed.dom.on(errorBarClose, 'click', function() {
-    hideError();
-    suppressWarning = true;
-  });
 
   highed.dom.ap(
     splitter.bottom,
@@ -956,6 +940,11 @@ highed.DrawerEditor = function(parent, options, planCode) {
   chartPreview.on('SetResizeData', function () {
     setToActualSize();
   });
+
+  chartPreview.on('Payup', function() {
+    payupModal.show();
+  });
+
   return {
     on: events.on,
     resize: resize,

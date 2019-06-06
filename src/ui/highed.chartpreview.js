@@ -136,10 +136,12 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     stockToolsContainer
     isAnnotating = true,
     stockToolsToolbarConfig = {
-      gui: {
-        enabled: false
-      }
-    }
+        gui: {
+            visible: false,
+            placed: true
+        }
+    };
+
   ///////////////////////////////////////////////////////////////////////////
 
   function attachWYSIWYG() {
@@ -229,10 +231,10 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     }
 
 
-  
+    /*
     if (planCode && planCode == 1) {
       options.stockTools = stockToolsToolbarConfig
-    }
+    }*/
     
     if (typeof window.Highcharts === 'undefined') {
       highed.snackBar('Highcharts.JS must be included to use the editor');
@@ -254,6 +256,62 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       const chartConstr = (constr.some(function(a) {
         return a === 'StockChart';
       }) ? 'StockChart' : 'Chart');
+
+      Highcharts.Toolbar.prototype.showHideToolbar = function () {
+
+        var stockToolbar = this,
+            chart = this.chart,
+            wrapper = stockToolbar.wrapper,
+            toolbar = this.listWrapper,
+            submenu = this.submenu,
+            visible = this.visible,
+            PREFIX = 'highcharts-',
+            DIV = 'div',
+            createElement = Highcharts.createElement,
+            showhideBtn;
+      
+        // Show hide toolbar
+        this.showhideBtn = showhideBtn = createElement(DIV, {
+            className: PREFIX + 'toggle-toolbar '
+        }, null, wrapper);
+
+        if (!visible) {
+            // hide
+            if (submenu) {
+                submenu.style.display = 'none';
+            }
+            stockToolbar.visible = visible = false;
+      
+            toolbar.classList.add(PREFIX + 'hide');
+            wrapper.style.height = showhideBtn.offsetHeight + 'px';
+
+            this.showhideBtn.innerHTML = 'Annotate <span class="fa fa-chevron-down"/>'
+        } else {
+            wrapper.style.height = '100%';
+            this.showhideBtn.innerHTML = 'Annotate <span class="fa fa-chevron-right"/>'
+        }
+
+        stockToolbar.listWrapper.style.height = 'calc(100% - 70px)';
+      
+        // toggle menu
+        ['click', 'touchstart'].forEach(function (eventName) {
+            Highcharts.addEvent(showhideBtn, eventName, function () {
+              if (planCode && planCode === 1) {
+                // Show pay up dialog
+                events.emit('Payup');
+              } else {
+                chart.update({
+                  stockTools: {
+                      gui: {
+                          visible: !visible,
+                          placed: true
+                      }
+                  }
+              });
+              }
+            });
+        });
+      }
 
       Highcharts.Annotation.ControlPoint.prototype.redraw = function (animation) {
         this.graphic[animation ? 'animate' : 'attr'](
