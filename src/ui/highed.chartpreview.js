@@ -137,10 +137,13 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     isAnnotating = true,
     stockToolsToolbarConfig = {
         gui: {
-            visible: false,
-            placed: true
+          buttons: ['simpleShapes', 'lines', 'crookedLines', 'toggleAnnotations', 'verticalLabels', 'flags', 'separator', 'fullScreen']
         }
     };
+
+    if (planCode && planCode === 1) {
+      stockToolsToolbarConfig.gui.visible = false;
+    }
 
   ///////////////////////////////////////////////////////////////////////////
 
@@ -229,12 +232,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     if (noAnimation) {
       highed.setAttr(options, 'plotOptions--series--animation', false);
     }
-
-
-    /*
-    if (planCode && planCode == 1) {
-      options.stockTools = stockToolsToolbarConfig
-    }*/
     
     if (typeof window.Highcharts === 'undefined') {
       highed.snackBar('Highcharts.JS must be included to use the editor');
@@ -641,10 +638,10 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       chart.annotations.forEach(function(annotation, index) {
         customizedOptions.annotations.push(annotation.userOptions);
       });*/
-      aggregatedOptions.annotations = annotations
+      aggregatedOptions.annotations = annotations;
     }
 
-
+    aggregatedOptions.stockTools = stockToolsToolbarConfig;
 
     highed.merge(aggregatedOptions, highed.option('stickyChartProperties'));
 
