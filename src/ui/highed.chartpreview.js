@@ -254,6 +254,151 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         return a === 'StockChart';
       }) ? 'StockChart' : 'Chart');
 
+      
+
+
+
+      /** Annotations */
+
+      // Show edit-annotation form:
+      function selectableAnnotation(annotationType) {
+        var originalClick = annotationType.prototype.defaultOptions.events &&
+                annotationType.prototype.defaultOptions.events.click;
+
+
+        function overrideClick(event){
+          if (originalClick && originalClick.click) {
+              originalClick.click.call(annotation, event);
+          }
+        }
+
+        function selectAndshowPopup(event) {
+            var annotation = this,
+                navigation = annotation.chart.navigationBindings,
+                prevAnnotation = navigation.activeAnnotation;
+/*
+            if (originalClick) {
+                originalClick.click.call(annotation, event);
+            }*/
+
+            if (prevAnnotation !== annotation) {
+                // Select current:
+                navigation.deselectAnnotation();
+
+                navigation.activeAnnotation = annotation;
+                annotation.setControlPointsVisibility(true);
+                
+
+                Highcharts.fireEvent(
+                    navigation,
+                    'showPopup',
+                    {
+                        annotation: annotation,
+                        formType: 'annotation-toolbar',
+                        options: navigation.annotationToFields(annotation),
+                        onSubmit: function (data) {
+
+                            var config = {},
+                                typeOptions;
+
+                            if (data.actionType === 'remove') {
+                                navigation.activeAnnotation = false;
+                                navigation.chart.removeAnnotation(annotation);
+                            } else {
+                                navigation.fieldsToOptions(data.fields, config);
+                                navigation.deselectAnnotation();
+
+                                typeOptions = config.typeOptions;
+
+                                if (annotation.options.type === 'measure') {
+                                    // Manually disable crooshars according to
+                                    // stroke width of the shape:
+                                    typeOptions.crosshairY.enabled =
+                                        typeOptions.crosshairY.strokeWidth !== 0;
+                                    typeOptions.crosshairX.enabled =
+                                        typeOptions.crosshairX.strokeWidth !== 0;
+                                }
+
+                                annotation.update(config);
+                            }
+                        }
+                    }
+                );
+
+
+            } else {
+                // Deselect current:
+                navigation.deselectAnnotation();
+                Highcharts.fireEvent(navigation, 'closePopup');
+            }
+            // Let bubble event to chart.click:
+            event.activeAnnotation = true;
+
+            return highed.dom.nodefault(event);
+        }
+
+        function onDblClick(){
+
+          var annotation = this,
+          navigation = annotation.chart.navigationBindings,
+          prevAnnotation = navigation.activeAnnotation;
+          
+          Highcharts.Popup.prototype.showForm(
+            'annotation-edit',
+            this.chart,
+            navigation.annotationToFields(annotation),
+            function (data) {
+
+                var config = {},
+                    typeOptions;
+
+                if (data.actionType === 'remove') {
+                    navigation.activeAnnotation = false;
+                    navigation.chart.removeAnnotation(annotation);
+                } else {
+                    navigation.fieldsToOptions(data.fields, config);
+                    navigation.deselectAnnotation();
+
+                    typeOptions = config.typeOptions;
+
+                    if (annotation.options.type === 'measure') {
+                        // Manually disable crooshars according to
+                        // stroke width of the shape:
+                        typeOptions.crosshairY.enabled =
+                            typeOptions.crosshairY.strokeWidth !== 0;
+                        typeOptions.crosshairX.enabled =
+                            typeOptions.crosshairX.strokeWidth !== 0;
+                    }
+
+                    annotation.update(config);
+                }
+            }
+          );
+
+
+        }
+
+        Highcharts.merge(
+            true,
+            annotationType.prototype.defaultOptions.events,
+            {
+                contextmenu: selectAndshowPopup,
+                click: overrideClick,
+                dblclick: onDblClick
+            }
+        );
+      }
+
+      if (Highcharts.Annotation) {
+        // Basic shapes:
+        selectableAnnotation(Highcharts.Annotation);
+    
+        // Advanced annotations:
+        Highcharts.objectEach(Highcharts.Annotation.types, function (annotationType) {
+            selectableAnnotation(annotationType);
+        });
+    }
+
       Highcharts.Toolbar.prototype.showHideToolbar = function () {
 
         var stockToolbar = this,
@@ -315,6 +460,12 @@ highed.ChartPreview = function(parent, attributes, planCode) {
             this.options.positioner ? this.options.positioner.call(this, this.target) : null
         );
       };
+      
+      /** End of Annotations */
+
+
+
+
 
       chart = new Highcharts[chartConstr](pnode || parent, options);
 
