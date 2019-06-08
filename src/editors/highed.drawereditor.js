@@ -214,6 +214,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
     suppressWarning = false,
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
     payupModal = highed.SubscribeModal(),
+    annotationModal = highed.AnnotationModal(),
     customizePage = highed.CustomizePage(
       splitter.bottom,
       highed.merge(
@@ -938,6 +939,20 @@ highed.DrawerEditor = function(parent, options, planCode) {
   chartPreview.on('Payup', function() {
     payupModal.show();
   });
+
+  chartPreview.on('ShowAnnotationModal', function(type) {
+    annotationModal.show(type);
+  });
+
+  annotationModal.on('UpdateAnnotation', function(config) {
+    chartPreview.updateAnnotation(config);
+  });
+
+
+  annotationModal.on('ClosePopup', function() {
+    chartPreview.closeAnnotationPopup();
+  });
+
 
   return {
     on: events.on,

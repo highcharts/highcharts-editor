@@ -133,19 +133,127 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       '.highcharts-series': { tab: 'Data series', id: 'series' },
       'g.highcharts-tooltip': { tab: 'Chart', dropdown: 'Tooltip', id: 'tooltip--enabled' }
     },
-    stockToolsContainer
+    stockToolsContainer,
     isAnnotating = true,
+    popup,
     stockToolsToolbarConfig = {
-        gui: {
-          buttons: ['simpleShapes', 'lines', 'crookedLines', 'toggleAnnotations', 'verticalLabels', 'flags', 'separator', 'fullScreen']
+/*
+      chart: {
+        events: {
+          load: function() {
+            // Function which saves the new background color.
+            var chart = this;
+            // Select the save button of the popup and assign a click event
+            document.querySelectorAll('.highcharts-popup-annotations highed-annotation-save-button')[0].addEventListener(
+                'click',
+                function() {
+                    var color = document.querySelectorAll(
+                        '.highcharts-popup-annotations input[name="stroke"]'
+                    )[0].value;
+
+                    // Update the circle
+                    chart.currentAnnotation.update({
+                        shapes: [{
+                            fill: color
+                        }]
+                    });
+
+                    // Close the container
+                    chart.annotationsPopupContainer.style.display = 'none';
+                }
+            )
+          }
         }
-    };
+      },*/
+
+      stockTools: {
+        gui: {
+          buttons: ['simpleShapes', 'lines', 'crookedLines', 'toggleAnnotations', 'verticalLabels'/*, 'flags'*/, 'separator', 'fullScreen']
+        },
+      },
+      navigation: {
+        events: {
+          // On selecting the annotation the showPopup event is fired
+          showPopup: function(event) {
+
+              if (!this.chart.indicatorsPopupContainer) {
+                this.chart.indicatorsPopupContainer = document
+                  .getElementsByClassName('highcharts-popup-indicators')[0];
+              }
+    
+              if (!this.chart.annotationsPopupContainer) {
+                this.chart.annotationsPopupContainer = document
+                  .getElementsByClassName('highcharts-popup-annotations')[0];
+                
+              }
+    
+              if (event.formType === 'indicators') {
+                this.chart.indicatorsPopupContainer.style.display = 'block';
+              } else if (event.formType === 'annotation-toolbar') {
+                // If user is still adding an annotation, don't show popup:
+                if (!this.chart.activeButton) {
+                  this.chart.currentAnnotation = event.annotation;
+                  this.chart.annotationsPopupContainer.style.display = 'block';
+                }
+              }
+    
+              if (this.popup) {
+                popup = this.popup;
+                var currentAnnotation = this.chart.currentAnnotation
+                
+                setTimeout(function() {
+                  var child = popup.container.children[1];
+
+                  if (child.tagName !== 'SPAN') {
+                    events.emit('ShowAnnotationModal', currentAnnotation.options);
+                    popup.container.style.display = 'none';
+                  }
+
+
+                }, 1);
+              }
+          },
+          closePopup: function() {
+            // Hide the popup container, and reset currentAnnotation
+            this.chart.annotationsPopupContainer.style.display = 'none';
+            this.chart.currentAnnotation = null;
+          }
+        }
+      }
+        /*,  
+              
+        navigation: {
+          bindings: {
+              rect: {
+                  annotationsOptions: {
+                      shapeOptions: {
+                          fill: 'rgba(255, 0, 0, 0.8)'
+                      }
+                  }
+              }
+          },
+          annotationsOptions: {
+              typeOptions: {
+                  line: {
+                      stroke: 'rgba(255, 0, 0, 1)',
+                      strokeWidth: 10
+                  }
+              }
+          }
+        }*/
+    }
 
     if (planCode && planCode === 1) {
-      stockToolsToolbarConfig.gui.visible = false;
+      stockToolsToolbarConfig.stockTools.gui.visible = false;
     }
 
   ///////////////////////////////////////////////////////////////////////////
+
+  function closeAnnotationPopup(){
+    if (popup) {
+      popup.closePopup()
+    }
+  }
 
   function attachWYSIWYG() {
     //setInterval(toProject, 3000)
@@ -338,43 +446,46 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         }
 
         function onDblClick(){
-
           var annotation = this,
-          navigation = annotation.chart.navigationBindings,
-          prevAnnotation = navigation.activeAnnotation;
-          
-          Highcharts.Popup.prototype.showForm(
-            'annotation-edit',
-            this.chart,
-            navigation.annotationToFields(annotation),
-            function (data) {
+          navigation = annotation.chart.navigationBindings;
 
-                var config = {},
-                    typeOptions;
+          Highcharts.fireEvent(
+            navigation,
+            'showPopup',
+            {
+                annotation: annotation,
+                formType: 'annotation-toolbar',
+                options: navigation.annotationToFields(annotation),
+                onSubmit: function (data) {
 
-                if (data.actionType === 'remove') {
-                    navigation.activeAnnotation = false;
-                    navigation.chart.removeAnnotation(annotation);
-                } else {
-                    navigation.fieldsToOptions(data.fields, config);
-                    navigation.deselectAnnotation();
+                    var config = {},
+                        typeOptions;
 
-                    typeOptions = config.typeOptions;
+                    if (data.actionType === 'remove') {
+                        navigation.activeAnnotation = false;
+                        navigation.chart.removeAnnotation(annotation);
+                    } else {
+                        navigation.fieldsToOptions(data.fields, config);
+                        navigation.deselectAnnotation();
 
-                    if (annotation.options.type === 'measure') {
-                        // Manually disable crooshars according to
-                        // stroke width of the shape:
-                        typeOptions.crosshairY.enabled =
-                            typeOptions.crosshairY.strokeWidth !== 0;
-                        typeOptions.crosshairX.enabled =
-                            typeOptions.crosshairX.strokeWidth !== 0;
+                        typeOptions = config.typeOptions;
+
+                        if (annotation.options.type === 'measure') {
+                            // Manually disable crooshars according to
+                            // stroke width of the shape:
+                            typeOptions.crosshairY.enabled =
+                                typeOptions.crosshairY.strokeWidth !== 0;
+                            typeOptions.crosshairX.enabled =
+                                typeOptions.crosshairX.strokeWidth !== 0;
+                        }
+
+                        annotation.update(config);
                     }
-
-                    annotation.update(config);
                 }
             }
-          );
+        );
 
+        document.querySelector('.highcharts-annotation-edit-button').click()
 
         }
 
@@ -460,11 +571,96 @@ highed.ChartPreview = function(parent, attributes, planCode) {
             this.options.positioner ? this.options.positioner.call(this, this.target) : null
         );
       };
+
+      Highcharts.Popup.prototype.showPopup = function () {
+
+        var popupDiv = this.container,
+            PREFIX = 'highcharts-',
+            toolbarClass = PREFIX + 'annotation-toolbar',
+            popupCloseBtn = popupDiv
+                .querySelectorAll('.' + PREFIX + 'popup-close')[0];
+
+        // reset content
+        popupDiv.innerHTML = '';
+
+        popupDiv.classList.remove('hcc-popup')
+        // reset toolbar styles if exists
+        if (popupDiv.className.indexOf(toolbarClass) >= 0) {
+            popupDiv.classList.remove(toolbarClass);
+
+            // reset toolbar inline styles
+            popupDiv.removeAttribute('style');
+        }
+
+        // add close button
+        popupDiv.appendChild(popupCloseBtn);
+        popupDiv.style.display = 'block';
+      }
+
+
+      Highcharts.Popup.prototype.annotations.addToolbar = function (chart, options, callback) {
+        var _self = this,
+            lang = this.lang,
+            popupDiv = this.popup.container,
+            showForm = this.showForm,
+            PREFIX = 'highcharts-',
+            toolbarClass = PREFIX + 'annotation-toolbar hcc-popup',
+            createElement = Highcharts.createElement,
+            pick = Highcharts.pick,
+            SPAN = 'span',
+            button;
+
+        // set small size
+        if (popupDiv.className.indexOf(toolbarClass) === -1) {
+            popupDiv.className += ' ' + toolbarClass;
+        }
+
+        // set position
+        popupDiv.style.top = chart.plotTop + 10 + 'px';
+
+        // create label
+        createElement(SPAN, {
+            innerHTML: pick(
+                // Advanced annotations:
+                lang[options.langKey] || options.langKey,
+                // Basic shapes:
+                options.shapes && options.shapes[0].type
+            )
+        }, null, popupDiv);
+
+        // add buttons
+        button = this.addButton(
+            popupDiv,
+            lang.removeButton || 'remove',
+            'remove',
+            callback,
+            popupDiv
+        );
+
+        button.className += ' ' + PREFIX + 'annotation-remove-button';
+
+        button = this.addButton(
+            popupDiv,
+            lang.editButton || 'edit',
+            'edit',
+            function () {
+                showForm.call(
+                    _self,
+                    'annotation-edit',
+                    chart,
+                    options,
+                    callback
+                );
+            },
+            popupDiv
+        );
+
+        button.className += ' ' + PREFIX + 'annotation-edit-button';
+    },
+
+
       
       /** End of Annotations */
-
-
-
 
 
       chart = new Highcharts[chartConstr](pnode || parent, options);
@@ -675,6 +871,9 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       highed.merge(highed.merge({}, aggregatedTemplate), customizedOptions)
     );
 
+    aggregatedOptions = highed.merge(aggregatedOptions, stockToolsToolbarConfig)
+    //aggregatedOptions.stockTools = stockToolsToolbarConfig;
+
     if (!aggregatedOptions.yAxis && customizedOptions.yAxis) {
       aggregatedOptions.yAxis = customizedOptions.yAxis
     }
@@ -792,7 +991,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       aggregatedOptions.annotations = annotations;
     }
 
-    aggregatedOptions.stockTools = stockToolsToolbarConfig;
 
     highed.merge(aggregatedOptions, highed.option('stickyChartProperties'));
 
@@ -2144,6 +2342,15 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     isAnnotating = isAnnotate
   }
 
+  function updateAnnotation(config){
+    // Update the circle
+    chart.currentAnnotation.update(config);
+
+    // Close the container
+    chart.annotationsPopupContainer.style.display = 'none';
+  }
+
+
   ///////////////////////////////////////////////////////////////////////////
 
   //Init the initial chart
@@ -2201,6 +2408,8 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
     toString: toString,
     setIsAnnotating: setIsAnnotating,
+    updateAnnotation: updateAnnotation,
+    closeAnnotationPopup: closeAnnotationPopup,
     options: {
       set: set,
       setAll: setChartOptions,
