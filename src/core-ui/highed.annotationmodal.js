@@ -103,12 +103,12 @@ highed.AnnotationModal = function() {
     highed.dom.ap(typeDropdownParent, highed.dom.ap(container, icon, text));
   });
 
-
   addTextModalInput.placeholder = 'Write annotation here';
 
   function show(type) {
 
-    console.log(type);
+    containerHeader.innerHTML = 'Edit ' + type.langKey;
+    
     if (type && type.langKey === 'label') {
       annotationType = 'labels';
       annotationKey = 'label'
@@ -136,16 +136,21 @@ highed.AnnotationModal = function() {
     } else if (type && (type.type === 'crookedLine' || type.type === 'elliottWave')) {
       annotationType = 'shapes';
       annotationKey = 'line'
-/*
-      colorInputs.background.value = type.labels[0].stroke;
-      colorInputs.background.element.value = type.labels[0].stroke;    
-      highed.dom.style(colorInputs.background.element, {
-        background: colorInputs.background.value,
-        color: highed.getContrastedColor(colorInputs.background.value)
-      });
 
-      if ()
-*/
+      if (type.typeOptions.line.stroke) {
+        colorInputs.background.value = type.typeOptions.line.stroke;
+        colorInputs.background.element.value = type.typeOptions.line.stroke;
+
+        highed.dom.style(colorInputs.background.element, {
+          background: colorInputs.background.value,
+          color: highed.getContrastedColor(colorInputs.background.value)
+        });
+      }
+
+      if (type.typeOptions.line.strokeWidth) {
+        sizeInput.value = type.typeOptions.line.strokeWidth;
+      }
+
       resetLineDOM();
     } 
     else if (type && (type.langKey === 'circle' || type.langKey === 'rect')) {
