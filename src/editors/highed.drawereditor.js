@@ -944,8 +944,8 @@ highed.DrawerEditor = function(parent, options, planCode) {
     annotationModal.show(type);
   });
 
-  annotationModal.on('UpdateAnnotation', function(config) {
-    chartPreview.updateAnnotation(config);
+  annotationModal.on('UpdateAnnotation', function(config, type) {
+    chartPreview.updateAnnotation(config, type);
   });
 
 

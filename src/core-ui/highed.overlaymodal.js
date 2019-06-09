@@ -77,8 +77,8 @@ highed.OverlayModal = function(contents, attributes) {
      */
 
   function resize(width, height) {
-    properties.minWidth = width;
-    properties.minHeight = height;
+    properties.minWidth = properties.width = width;
+    properties.minHeight = properties.height = height;
   }
   /** Show the modal
      *  @memberof highed.OverlayModal

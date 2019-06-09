@@ -29,7 +29,7 @@ highed.AnnotationModal = function() {
 
   var overlayAddTextModal = highed.OverlayModal(false, {
     width: 321,
-    height: 219, 
+    height: 300, 
     class: ' highed-annotations-modal highcharts-popup highcharts-popup-annotations',
     showOnInit: true
   }),
@@ -47,21 +47,31 @@ highed.AnnotationModal = function() {
   addTextModalSubmit = highed.dom.cr('button', 'highed-ok-button highed-import-button mini', 'Save'),
   addTextModalCancel = highed.dom.cr('button', 'highed-ok-button highed-import-button grey negative mini', 'Cancel'),
   annotationType,
+  annotationKey,
+  typeDropdownParent = highed.dom.cr('div', 'highed-modal-label-type'),
+  addTextModalTypeOptions = [{
+    text: 'Callout',
+    icon: 'comment-o',
+    value: 'callout'
+  },{
+    text: 'Connector',
+    icon: 'external-link',
+    value: 'connector'
+  }, {
+    text: 'Circle',
+    icon: 'circle-o',
+    value: 'circle'
+  }],
+  addTextModalTypeValue = 'callout',
   colorInputs = {
     color: {element: highed.dom.cr('div', 'highed-field-colorpicker', ''), value: '#000000'}, 
     background: {element: highed.dom.cr('div', 'highed-field-colorpicker', ''), value: '#000000'}
   };
 
   sizeInput.type = 'number';
-  sizeInput.value = 14;
+  sizeInput.value = 11;
 
   addTextModalColorSelect.selectByIndex(0);
-
-  inputMap = {
-    shape: [
-
-    ]
-  }
   highed.dom.on(addTextModalCancel, 'click', function() {
     overlayAddTextModal.hide();
     events.emit("ClosePopup")
@@ -75,32 +85,88 @@ highed.AnnotationModal = function() {
     });
   });
 
+  addTextModalTypeOptions.forEach(function(option) {
+
+    var container = highed.dom.cr('div', 'highed-annotation-modal-container ' + (addTextModalTypeValue === option.value ? ' active' : '')),
+        icon = highed.dom.cr('div', 'highed-modal-icon fa fa-' + option.icon),
+        text = highed.dom.cr('div', 'highed-modal-text', option.text);
+        option.element = container;
+    
+    highed.dom.on(container, 'click', function() {
+      addTextModalTypeOptions.forEach(function(o) {
+        if (o.element.classList.contains('active'))  o.element.classList.remove('active');
+      })
+      option.element.classList += ' active';
+      addTextModalTypeValue = option.value;
+    })
+    
+    highed.dom.ap(typeDropdownParent, highed.dom.ap(container, icon, text));
+  });
+
+
   addTextModalInput.placeholder = 'Write annotation here';
 
   function show(type) {
 
-    /*
-    highed.dom.style([addTextModalHeader, addTextModalInput], {
-      display:  (type && type.langKey === 'label' ? 'block' : 'none') 
-    });
-*/
+    console.log(type);
+    if (type && type.langKey === 'label') {
+      annotationType = 'labels';
+      annotationKey = 'label'
+      if (type.labels[0].style) {
+        colorInputs.color.value = type.labels[0].style.color;
+        colorInputs.color.element.value = type.labels[0].style.color;    
+        highed.dom.style(colorInputs.color.element, {
+          background: colorInputs.color.value,
+          color: highed.getContrastedColor(colorInputs.color.value)
+        });
 
-    /*
-    if (type && (type.langKey === 'circle' || type.langKey === 'rect')) {
+        sizeInput.value = type.labels[0].style.fontSize;
+      }
+
+      colorInputs.background.value = type.labels[0].backgroundColor;
+      colorInputs.background.element.value = type.labels[0].backgroundColor;    
+      highed.dom.style(colorInputs.background.element, {
+        background: colorInputs.background.value,
+        color: highed.getContrastedColor(colorInputs.background.value)
+      });
+
+      if (type.labels[0].format) addTextModalInput.value = type.labels[0].format;
+
+      resetLabelDOM();
+    } else if (type && (type.type === 'crookedLine' || type.type === 'elliottWave')) {
+      annotationType = 'shapes';
+      annotationKey = 'line'
+/*
+      colorInputs.background.value = type.labels[0].stroke;
+      colorInputs.background.element.value = type.labels[0].stroke;    
+      highed.dom.style(colorInputs.background.element, {
+        background: colorInputs.background.value,
+        color: highed.getContrastedColor(colorInputs.background.value)
+      });
+
+      if ()
+*/
+      resetLineDOM();
+    } 
+    else if (type && (type.langKey === 'circle' || type.langKey === 'rect')) {
+      annotationType = 'shapes';
+      annotationKey = 'shape';
+
       colorInputs.color.value = type.shapes[0].fill;
       colorInputs.color.element.value = type.shapes[0].fill;    
       highed.dom.style(colorInputs.color.element, {
         background: colorInputs.color.value,
         color: highed.getContrastedColor(colorInputs.color.value)
       });
-    }*/
 
-    if (type && type.langKey === 'label') {
-      annotationType = 'labels';
-      resetLabelDOM();
-    } else if (type && (type.langKey === 'circle' || type.langKey === 'rect')) {
-      annotationType = 'shapes';
-      resetShapeDOM()
+      colorInputs.background.value = type.shapes[0].stroke;
+      colorInputs.background.element.value = type.shapes[0].stroke;    
+      highed.dom.style(colorInputs.background.element, {
+        background: colorInputs.background.value,
+        color: highed.getContrastedColor(colorInputs.background.value)
+      });
+
+      resetShapeDOM();
     }
     overlayAddTextModal.show();
   }
@@ -123,17 +189,17 @@ highed.AnnotationModal = function() {
       background: col,
       color: highed.getContrastedColor(col)
     });
-
   }
 
   function resetLabelDOM() {
+
+    overlayAddTextModal.resize(321, 300);
+
     addTextModalContainer.innerHTML = '';
-    
+
     highed.dom.ap(addTextModalContainer, 
       addTextModalHeader,
       addTextModalInput,
-      //highed.dom.cr('div', 'highed-add-text-label', 'Type:'),
-      //typeDropdownParent,
       highed.dom.ap(highed.dom.cr('table'), 
                     highed.dom.ap(highed.dom.cr('tr'), 
                                   highed.dom.cr('td', 'highed-modal-text', 'Color'),
@@ -144,7 +210,8 @@ highed.AnnotationModal = function() {
                     highed.dom.ap(highed.dom.cr('td', 'highed-modal-text'), highed.dom.ap(addTextModalColorContainer, colorInputs.color.element)),
                     highed.dom.ap(highed.dom.cr('td', 'highed-modal-text'), sizeInput),
                     highed.dom.ap(highed.dom.cr('td', 'highed-modal-text'), highed.dom.ap(backgroundColorContainer,  colorInputs.background.element)))),
-      //colorDropdownParent,
+      highed.dom.cr('div', 'highed-add-text-label', 'Type:'),
+      typeDropdownParent,
       highed.dom.ap(addTextModalBtnContainer,
         addTextModalSubmit,
         addTextModalCancel
@@ -153,6 +220,9 @@ highed.AnnotationModal = function() {
   }
 
   function resetShapeDOM() {
+
+    overlayAddTextModal.resize(321, 150);
+
     addTextModalContainer.innerHTML = '';
     
     highed.dom.ap(addTextModalContainer, 
@@ -164,6 +234,30 @@ highed.AnnotationModal = function() {
                     highed.dom.ap(highed.dom.cr('tr'), 
                     highed.dom.ap(highed.dom.cr('td', 'highed-modal-text'), highed.dom.ap(addTextModalColorContainer, colorInputs.color.element)),
                     highed.dom.ap(highed.dom.cr('td', 'highed-modal-text'), highed.dom.ap(backgroundColorContainer,  colorInputs.background.element)))),
+      //colorDropdownParent,
+      highed.dom.ap(addTextModalBtnContainer,
+        addTextModalSubmit,
+        addTextModalCancel
+      )
+    )
+  }
+  
+
+  function resetLineDOM() {
+
+    overlayAddTextModal.resize(321, 150);
+    
+    addTextModalContainer.innerHTML = '';
+    
+    highed.dom.ap(addTextModalContainer, 
+      highed.dom.ap(highed.dom.cr('table'), 
+                    highed.dom.ap(highed.dom.cr('tr'), 
+                                  highed.dom.cr('td', 'highed-modal-text', 'Line Color'),
+                                  highed.dom.cr('td', 'highed-modal-text', 'Line Width')),
+                                  
+                    highed.dom.ap(highed.dom.cr('tr'), 
+                    highed.dom.ap(highed.dom.cr('td', 'highed-modal-text'), highed.dom.ap(backgroundColorContainer, colorInputs.background.element)),
+                    highed.dom.ap(highed.dom.cr('td', 'highed-modal-text'), sizeInput))),
       //colorDropdownParent,
       highed.dom.ap(addTextModalBtnContainer,
         addTextModalSubmit,
@@ -195,20 +289,41 @@ highed.AnnotationModal = function() {
     overlayAddTextModal.hide();
     
     var obj = {};
-
-    obj[annotationType] = [{
-      //text: addTextModalInput.value.replace('\n', '<br/>'),  
-      fill: colorInputs.color.value, 
-      stroke: colorInputs.background.value
-    }];
+    obj[annotationType] = [{}];
 
     if (annotationType === 'labels') {
-      obj[annotationType][0].text = addTextModalInput.value.replace('\n', '<br/>');
+
+      if( addTextModalInput.value.replace('\n', '<br/>') !== '') {
+        obj[annotationType][0].format = addTextModalInput.value.replace('\n', '<br/>');
+      }
+
+      if (!obj[annotationType][0].style) obj[annotationType][0].style = {};
+
+      obj[annotationType][0].backgroundColor = colorInputs.background.value;
+      obj[annotationType][0].shape = addTextModalTypeValue;
+      obj[annotationType][0].style.color = colorInputs.color.value;
+      obj[annotationType][0].style.fontSize = sizeInput.value;
+
+    } else if (annotationKey === 'line') {
+    //Highcharts.charts[Highcharts.charts.length-1].annotations[0].shapes[0].update({strokeWidth: 10})
+
+
+      obj = {
+          stroke: colorInputs.background.value,
+          strokeWidth: parseInt(sizeInput.value)
+      };
+    }
+    else {
+      obj[annotationType] = [{
+        //text: addTextModalInput.value.replace('\n', '<br/>'),  
+        fill: colorInputs.color.value, 
+        stroke: colorInputs.background.value
+      }];
+
     }
 
     console.log(obj);
-
-    events.emit("UpdateAnnotation", obj)
+    events.emit("UpdateAnnotation", obj, annotationKey)
     //chartPreview.addAnnotationLabel(addLabelX, addLabelY, addTextModalInput.value.replace('\n', '<br/>'), addTextModalColorValue, addTextModalTypeValue);
 
     addTextModalInput.value = '';

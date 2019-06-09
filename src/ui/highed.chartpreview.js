@@ -137,38 +137,9 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     isAnnotating = true,
     popup,
     stockToolsToolbarConfig = {
-/*
-      chart: {
-        events: {
-          load: function() {
-            // Function which saves the new background color.
-            var chart = this;
-            // Select the save button of the popup and assign a click event
-            document.querySelectorAll('.highcharts-popup-annotations highed-annotation-save-button')[0].addEventListener(
-                'click',
-                function() {
-                    var color = document.querySelectorAll(
-                        '.highcharts-popup-annotations input[name="stroke"]'
-                    )[0].value;
-
-                    // Update the circle
-                    chart.currentAnnotation.update({
-                        shapes: [{
-                            fill: color
-                        }]
-                    });
-
-                    // Close the container
-                    chart.annotationsPopupContainer.style.display = 'none';
-                }
-            )
-          }
-        }
-      },*/
-
       stockTools: {
         gui: {
-          buttons: ['simpleShapes', 'lines', 'crookedLines', 'toggleAnnotations', 'verticalLabels'/*, 'flags'*/, 'separator', 'fullScreen']
+          buttons: ['simpleShapes', 'lines', 'crookedLines', 'verticalLabels', 'separator', 'toggleAnnotations', 'fullScreen']
         },
       },
       navigation: {
@@ -208,8 +179,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
                     events.emit('ShowAnnotationModal', currentAnnotation.options);
                     popup.container.style.display = 'none';
                   }
-
-
                 }, 1);
               }
           },
@@ -220,27 +189,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
           }
         }
       }
-        /*,  
-              
-        navigation: {
-          bindings: {
-              rect: {
-                  annotationsOptions: {
-                      shapeOptions: {
-                          fill: 'rgba(255, 0, 0, 0.8)'
-                      }
-                  }
-              }
-          },
-          annotationsOptions: {
-              typeOptions: {
-                  line: {
-                      stroke: 'rgba(255, 0, 0, 1)',
-                      strokeWidth: 10
-                  }
-              }
-          }
-        }*/
     }
 
     if (planCode && planCode === 1) {
@@ -485,7 +433,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
             }
         );
 
-        document.querySelector('.highcharts-annotation-edit-button').click()
+        document.querySelector('.highcharts-annotation-edit-button').click();
 
         }
 
@@ -2342,10 +2290,16 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     isAnnotating = isAnnotate
   }
 
-  function updateAnnotation(config){
+  function updateAnnotation(config, type){
     // Update the circle
-    chart.currentAnnotation.update(config);
+    //chart.currentAnnotation.shapes[0].update.update(config);
 
+    if (type === 'line') 
+      chart.currentAnnotation.shapes[0].update(config);
+    else 
+      chart.currentAnnotation.update(config);
+    
+    console.log(chart.currentAnnotation);
     // Close the container
     chart.annotationsPopupContainer.style.display = 'none';
   }
