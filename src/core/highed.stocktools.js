@@ -26,7 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // @format
 
 
-highed.StockTools = function() {
+highed.StockTools = function(planCode) {
 
   var popup,
   events = highed.events(),
@@ -41,40 +41,39 @@ highed.StockTools = function() {
         // On selecting the annotation the showPopup event is fired
         showPopup: function(event) {
 
-            if (!this.chart.indicatorsPopupContainer) {
-              this.chart.indicatorsPopupContainer = document
-                .getElementsByClassName('highcharts-popup-indicators')[0];
-            }
-  
-            if (!this.chart.annotationsPopupContainer) {
-              this.chart.annotationsPopupContainer = document
-                .getElementsByClassName('highcharts-popup-annotations')[0];
-              
-            }
-  
-            if (event.formType === 'indicators') {
-              this.chart.indicatorsPopupContainer.style.display = 'block';
-            } else if (event.formType === 'annotation-toolbar') {
-              // If user is still adding an annotation, don't show popup:
-              if (!this.chart.activeButton) {
-                this.chart.currentAnnotation = event.annotation;
-                this.chart.annotationsPopupContainer.style.display = 'block';
-              }
-            }
-  
-            if (this.popup) {
-              popup = this.popup;
-              var currentAnnotation = this.chart.currentAnnotation
-              
-              setTimeout(function() {
-                var child = popup.container.children[1];
+          if (!this.chart.indicatorsPopupContainer) {
+            this.chart.indicatorsPopupContainer = document
+              .getElementsByClassName('highcharts-popup-indicators')[0];
+          }
 
-                if (child.tagName !== 'SPAN') {
-                  events.emit('ShowAnnotationModal', currentAnnotation.options);
-                  popup.container.style.display = 'none';
-                }
-              }, 1);
+          if (!this.chart.annotationsPopupContainer) {
+            this.chart.annotationsPopupContainer = document
+              .getElementsByClassName('highcharts-popup-annotations')[0];
+          }
+
+          if (event.formType === 'indicators') {
+            this.chart.indicatorsPopupContainer.style.display = 'block';
+          } else if (event.formType === 'annotation-toolbar') {
+            // If user is still adding an annotation, don't show popup:
+            if (!this.chart.activeButton) {
+              this.chart.currentAnnotation = event.annotation;
+              this.chart.annotationsPopupContainer.style.display = 'block';
             }
+          }
+
+          if (this.popup) {
+            popup = this.popup;
+            var currentAnnotation = this.chart.currentAnnotation
+            
+            setTimeout(function() {
+              var child = popup.container.children[1];
+
+              if (child.tagName !== 'SPAN') {
+                events.emit('ShowAnnotationModal', currentAnnotation.options);
+                popup.container.style.display = 'none';
+              }
+            }, 1);
+          }
         },
         closePopup: function() {
           // Hide the popup container, and reset currentAnnotation

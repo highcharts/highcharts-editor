@@ -135,12 +135,11 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     },
     stockToolsContainer,
     isAnnotating = true,
-    stockTools = highed.StockTools();
+    stockTools = highed.StockTools(planCode);
 
     if (planCode && planCode === 1) {
       stockTools.hide()
     }
-
 
     stockTools.on('ShowAnnotationModal', function(options) {
       events.emit('ShowAnnotationModal', options);
@@ -162,10 +161,10 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         if (stockToolsContainer) {
           var children = stockToolsContainer.children;
           for (var i = 0; i < children.length; i++) {
-              if (children[i].classList.contains("highcharts-active")) {
-                found = true;
-                break;
-              }
+            if (children[i].classList.contains("highcharts-active")) {
+              found = true;
+              break;
+            }
           }
         }
 
@@ -1240,6 +1239,11 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       if (!customizedOptions.annotations) {
         customizedOptions.annotations = []
       }
+
+      if (annotation.userOptions && (annotation.userOptions.type === 'crookedLine' || annotation.userOptions.type === 'elliottWave')) {
+        annotation.userOptions.typeOptions.line = highed.merge({}, annotation.shapes[0].options);
+      }
+
 
       customizedOptions.annotations.push(annotation.userOptions);
     });
