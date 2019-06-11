@@ -145,6 +145,10 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       events.emit('ShowAnnotationModal', options);
     });
 
+    stockTools.on('Payup', function(){
+      events.emit('Payup');
+    });
+
   ///////////////////////////////////////////////////////////////////////////
 
   function closeAnnotationPopup(){

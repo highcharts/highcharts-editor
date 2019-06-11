@@ -38,7 +38,7 @@ highed.AnnotationModal = function() {
   addTextModalInput = highed.dom.cr('textarea', 'highed-imp-input-stretch'),
   colorDropdownParent = highed.dom.cr('div'),
   addTextModalHeader = highed.dom.cr('div', 'highed-modal-text', 'Text'),
-  containerHeader = highed.dom.cr('div', 'highed-premium-feature-header', 'Edit'),
+  containerHeader = highed.dom.cr('div', 'highed-premium-feature-header'),
   addTextModalColorSelect = highed.DropDown(colorDropdownParent),
   addTextModalColorContainer = highed.dom.cr('div', 'highed-modal-color-container'),
   backgroundColorContainer = highed.dom.cr('div', 'highed-modal-color-container'),
@@ -46,6 +46,8 @@ highed.AnnotationModal = function() {
   addTextModalBtnContainer = highed.dom.cr('div', 'highed-modal-button-container'),
   addTextModalSubmit = highed.dom.cr('button', 'highed-ok-button highed-import-button mini', 'Save'),
   addTextModalCancel = highed.dom.cr('button', 'highed-ok-button highed-import-button grey negative mini', 'Cancel'),
+  annotationLabel = highed.dom.cr('span', '', 'Edit'),
+  closeBtn = highed.dom.ap(highed.dom.cr('span', 'fa fa-times close-btn')),
   annotationType,
   annotationKey,
   typeDropdownParent = highed.dom.cr('div', 'highed-modal-label-type'),
@@ -74,8 +76,17 @@ highed.AnnotationModal = function() {
   addTextModalColorSelect.selectByIndex(0);
   highed.dom.on(addTextModalCancel, 'click', function() {
     overlayAddTextModal.hide();
-    events.emit("ClosePopup")
+    events.emit("ClosePopup");
   });
+
+
+  highed.dom.on(closeBtn, 'click', function() {
+    overlayAddTextModal.hide();
+    events.emit("ClosePopup");
+  });
+
+  highed.dom.ap(containerHeader, annotationLabel, closeBtn);
+
 
   Object.keys(colorInputs).forEach(function(key){
     var object = colorInputs[key];
@@ -107,7 +118,7 @@ highed.AnnotationModal = function() {
 
   function show(type) {
 
-    containerHeader.innerHTML = 'Edit ' + type.langKey;
+    annotationLabel.innerHTML = 'Edit ' + type.langKey;
     
     if (type && type.langKey === 'label') {
       annotationType = 'labels';

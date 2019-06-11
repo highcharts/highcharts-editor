@@ -33,19 +33,24 @@ highed.SubscribeModal = function() {
   }),
   events = highed.events(),
   changePlanBtn = highed.dom.cr('button', 'highed-import-button', "Choose a plan"),
-  createAccountLink = highed.dom.cr('a', '', 'Create one')
+  createAccountLink = highed.dom.cr('a', '', 'Create one'),
+  premiumFeatureLabel = highed.dom.cr('span', '', 'Premium Feature'),
+  closeBtn = highed.dom.ap(highed.dom.cr('span', 'fa fa-times close-btn'));
 
   highed.dom.ap(payupModal.body, 
-    highed.dom.cr("div", 'highed-premium-feature-header', 'Premium Feature'),
-    highed.dom.cr("div", 'highed-premium-feature-text', "Annotate isn't available to free users. To use this feature, please choose a subscription plan"),
-    highed.dom.ap(highed.dom.cr("div", 'highed-premium-feature-text'), changePlanBtn),
-    highed.dom.ap(
-      highed.dom.cr("div", 'highed-premium-feature-text', "Dont have an account? "),
-      highed.dom.ap(highed.dom.cr("span"), createAccountLink)
-    )
-
+      highed.dom.ap(highed.dom.cr("div", 'highed-premium-feature-header'), premiumFeatureLabel, closeBtn),
+      highed.dom.cr("div", 'highed-premium-feature-text', "Annotate isn't available to free users. To use this feature, please choose a subscription plan"),
+      highed.dom.ap(highed.dom.cr("div", 'highed-premium-feature-text'), changePlanBtn),
+      highed.dom.ap(
+        highed.dom.cr("div", 'highed-premium-feature-text', "Dont have an account? "),
+        highed.dom.ap(highed.dom.cr("span"), createAccountLink)
+      )
     );
 
+  highed.dom.on(closeBtn, 'click', function() {
+    payupModal.hide();
+  })
+  
   highed.dom.on(changePlanBtn, 'click', function() {
     //Hook for cloud to pick up
     events.emit("SwitchToSubscriptionPage");
