@@ -153,7 +153,7 @@ highed.AnnotationModal = function() {
 
       resetLineDOM();
     } 
-    else if (type && (type.langKey === 'circle' || type.langKey === 'rect')) {
+    else if (type && (type.langKey === 'circle' || type.langKey === 'rectangle')) {
       annotationType = 'shapes';
       annotationKey = 'shape';
 
@@ -324,10 +324,7 @@ highed.AnnotationModal = function() {
         fill: colorInputs.color.value, 
         stroke: colorInputs.background.value
       }];
-
     }
-
-    console.log(obj);
     events.emit("UpdateAnnotation", obj, annotationKey)
     //chartPreview.addAnnotationLabel(addLabelX, addLabelY, addTextModalInput.value.replace('\n', '<br/>'), addTextModalColorValue, addTextModalTypeValue);
 

@@ -1229,16 +1229,18 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     };
   }
 
-
   function getAnnotations() {
     
     var navigation = chart.navigationBindings,
     navChart = navigation.chart;
 
+    customizedOptions.annotations = [];
+
     navChart.annotations.forEach(function(annotation, index) {
+      /*
       if (!customizedOptions.annotations) {
         customizedOptions.annotations = []
-      }
+      }*/
 
       if (annotation.userOptions && (annotation.userOptions.type === 'crookedLine' || annotation.userOptions.type === 'elliottWave')) {
         annotation.userOptions.typeOptions.line = highed.merge({}, annotation.shapes[0].options);
