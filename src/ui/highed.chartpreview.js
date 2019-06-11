@@ -149,9 +149,20 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       events.emit('Payup');
     });
 
+
+    stockTools.on('StockToolsChanged', function(option, index, type) {
+      
+      if (chart.annotations[index] && chart.annotations[index].userOptions) {
+        if (chart.annotations[index].userOptions.langKey === 'label') {
+          chart.annotations[index].userOptions.labels[0].point = (type === 'AnnotationHandleMoved' ? option.point : option.labels[0].point);
+        } else {
+          //chart.annotations[index].userOptions.shapes[0].point = option.point
+        }
+      }
+    })
   ///////////////////////////////////////////////////////////////////////////
 
-  function closeAnnotationPopup(){
+  function closeAnnotationPopup() {
     stockTools.closeAnnotationPopup()
   }
 
@@ -278,13 +289,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       }
 
       attachWYSIWYG();
-/*
-      customizedOptions.annotations = []
 
-      chart.annotations.forEach(function(annotation, index) {
-        customizedOptions.annotations.push(annotation.userOptions);
-      });
-*/
       if (chart && chart.reflow) {
         //chart.reflow();
       }
@@ -584,12 +589,16 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
 
     if (aggregatedOptions.data && Object.keys(aggregatedOptions.data).length > 0 && aggregatedOptions.data.csv){ //&& chart && chart.annotations && chart.annotations.length !== 0) {
-/*
-      customizedOptions.annotations = []
-      chart.annotations.forEach(function(annotation, index) {
-        customizedOptions.annotations.push(annotation.userOptions);
-      });*/
-      aggregatedOptions.annotations = annotations;
+      if (chart) {
+        annotations = [];
+
+        chart.annotations.forEach(function(annotation, index) {
+
+          annotations.push(annotation.userOptions);
+        });
+      }
+  
+      aggregatedOptions.annotations = annotations.slice();
     }
 
 
@@ -599,9 +608,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     if (!noCustomCode && highed.isFn(customCode)) {
       customCode(aggregatedOptions);
     }
-
   }
-
 
   function deleteSeries(length) {
     if (customizedOptions && customizedOptions.series) {
@@ -1032,8 +1039,10 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       }
 
       if (projectData.options && projectData.options.annotations) {
-        annotations = projectData.options.annotations
-        delete customizedOptions.annotations
+        annotations = projectData.options.annotations.slice()
+        //chart.annotations = annotations.slice();
+        
+        //delete customizedOptions.annotations
       }
       
       // Not sure if this should be part of the project files yet
@@ -1249,7 +1258,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       if (annotation.userOptions && (annotation.userOptions.type === 'crookedLine' || annotation.userOptions.type === 'elliottWave')) {
         annotation.userOptions.typeOptions.line = highed.merge({}, annotation.shapes[0].options);
       }
-
 
       customizedOptions.annotations.push(annotation.userOptions);
     });

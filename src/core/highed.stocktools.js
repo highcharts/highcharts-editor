@@ -388,6 +388,27 @@ highed.StockTools = function(planCode) {
       button.className += ' ' + PREFIX + 'annotation-edit-button';
     }
 
+    Highcharts.Annotation.prototype.onMouseUp = function () {
+      var chart = this.chart,
+          annotation = this.target || this,
+          annotationsOptions = chart.options.annotations,
+          index = chart.annotations.indexOf(annotation);
+
+      this.removeDocEvents();
+      annotationsOptions[index] = annotation.options;
+      events.emit("StockToolsChanged", annotation.options, index, "AnnotationMoved");
+    }
+
+    Highcharts.Annotation.ControlPoint.prototype.onMouseUp = function () {
+      var chart = this.chart,
+          annotation = this.target.annotation || this,
+          annotationsOptions = chart.options.annotations,
+          index = chart.annotations.indexOf(annotation);
+
+      this.removeDocEvents();
+      annotationsOptions[index] = this.target.options;
+      events.emit("StockToolsChanged", this.target.options, index, "AnnotationHandleMoved");
+    }
   }
 
   ///////////////////////////////////////////////////////////////////////////
