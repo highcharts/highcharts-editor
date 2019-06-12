@@ -1961,6 +1961,10 @@ highed.ChartPreview = function(parent, attributes, planCode) {
   function updateAnnotation(config, type){
     if (type === 'line') 
       chart.currentAnnotation.shapes[0].update(config);
+    else if (type === 'verticalCounter') {
+      chart.currentAnnotation.shapes[0].update(config);
+      chart.currentAnnotation.labels[0].update(config);
+    }
     else 
       chart.currentAnnotation.update(config);
     

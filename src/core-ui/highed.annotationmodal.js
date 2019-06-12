@@ -119,7 +119,6 @@ highed.AnnotationModal = function() {
   function show(type) {
 
     annotationLabel.innerHTML = 'Edit ' + type.langKey;
-    
     if (type && type.langKey === 'label') {
       annotationType = 'labels';
       annotationKey = 'label'
@@ -163,8 +162,7 @@ highed.AnnotationModal = function() {
       }
 
       resetLineDOM();
-    } 
-    else if (type && (type.langKey === 'circle' || type.langKey === 'rectangle')) {
+    } else if (type && (type.langKey === 'circle' || type.langKey === 'rectangle')) {
       annotationType = 'shapes';
       annotationKey = 'shape';
 
@@ -183,7 +181,19 @@ highed.AnnotationModal = function() {
       });
 
       resetShapeDOM();
+    } else {
+      annotationType = 'shapes';
+      annotationKey = 'verticalCounter';
+
+      if (type && type.typeOptions && type.typeOptions.label) {
+        addTextModalInput.value = type.typeOptions.label.text;
+        colorInputs.background.element.value = type.typeOptions.label.stroke;
+        sizeInput.value = type.typeOptions.label.strokeWidth || 1;
+      }      
+
+      resetVerticalCounterDOM();
     }
+
     overlayAddTextModal.show();
   }
 
@@ -205,6 +215,30 @@ highed.AnnotationModal = function() {
       background: col,
       color: highed.getContrastedColor(col)
     });
+  }
+
+  function resetVerticalCounterDOM() {
+    overlayAddTextModal.resize(321, 230);
+    
+    addTextModalContainer.innerHTML = '';
+    
+    highed.dom.ap(addTextModalContainer, 
+      addTextModalHeader,
+      addTextModalInput,
+      highed.dom.ap(highed.dom.cr('table'), 
+                    highed.dom.ap(highed.dom.cr('tr'), 
+                                  highed.dom.cr('td', 'highed-modal-text', 'Line Color'),
+                                  highed.dom.cr('td', 'highed-modal-text', 'Arrow Size')),
+                                  
+                    highed.dom.ap(highed.dom.cr('tr'), 
+                    highed.dom.ap(highed.dom.cr('td', 'highed-modal-text'), highed.dom.ap(backgroundColorContainer, colorInputs.background.element)),
+                    highed.dom.ap(highed.dom.cr('td', 'highed-modal-text'), sizeInput))),
+      //colorDropdownParent,
+      highed.dom.ap(addTextModalBtnContainer,
+        addTextModalSubmit,
+        addTextModalCancel
+      )
+    )
   }
 
   function resetLabelDOM() {
@@ -322,20 +356,25 @@ highed.AnnotationModal = function() {
 
     } else if (annotationKey === 'line') {
     //Highcharts.charts[Highcharts.charts.length-1].annotations[0].shapes[0].update({strokeWidth: 10})
-
-
       obj = {
           stroke: colorInputs.background.value,
           strokeWidth: parseInt(sizeInput.value)
       };
-    }
-    else {
+    } else if (annotationKey === 'verticalCounter') {
+      obj = {
+        stroke: colorInputs.background.value,
+        strokeWidth: parseInt(sizeInput.value),
+        text: addTextModalInput.value
+      };
+
+    } else {
       obj[annotationType] = [{
         //text: addTextModalInput.value.replace('\n', '<br/>'),  
         fill: colorInputs.color.value, 
         stroke: colorInputs.background.value
       }];
     }
+
     events.emit("UpdateAnnotation", obj, annotationKey)
     //chartPreview.addAnnotationLabel(addLabelX, addLabelY, addTextModalInput.value.replace('\n', '<br/>'), addTextModalColorValue, addTextModalTypeValue);
 

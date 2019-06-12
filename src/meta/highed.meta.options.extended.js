@@ -332,7 +332,7 @@ highed.meta.optionsExtended = {
             pid: 'credits.text',
             dataType: 'string',
             context: 'General',
-            defaults: 'Highcharts.com',
+            defaults: 'cloud.highcharts.com',
             parent: 'credits',
             warning: [1]
           },
@@ -341,7 +341,7 @@ highed.meta.optionsExtended = {
             pid: 'credits.href',
             dataType: 'string',
             context: 'General',
-            defaults: 'http://www.highcharts.com',
+            defaults: 'https://cloud.highcharts.com',
             parent: 'credits',
             warning: [1]
           }
