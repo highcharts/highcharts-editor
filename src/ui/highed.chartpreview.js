@@ -149,7 +149,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       events.emit('Payup');
     });
 
-
     stockTools.on('StockToolsChanged', function(option, index, type) {
       
       if (chart.annotations[index] && chart.annotations[index].userOptions) {
@@ -593,7 +592,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         annotations = [];
 
         chart.annotations.forEach(function(annotation, index) {
-
           annotations.push(annotation.userOptions);
         });
       }
@@ -1959,11 +1957,20 @@ highed.ChartPreview = function(parent, attributes, planCode) {
   }
 
   function updateAnnotation(config, type){
-    if (type === 'line') 
+    if (type === 'line') {
       chart.currentAnnotation.shapes[0].update(config);
+      chart.currentAnnotation.userOptions.typeOptions.line.stroke = config.stroke;
+      chart.currentAnnotation.userOptions.typeOptions.line.strokeWidth = config.strokeWidth;
+
+    }
     else if (type === 'verticalCounter') {
+      //There must be a better way to do this
       chart.currentAnnotation.shapes[0].update(config);
       chart.currentAnnotation.labels[0].update(config);
+      
+      chart.currentAnnotation.userOptions.typeOptions.label.text = config.text;
+      chart.currentAnnotation.userOptions.typeOptions.connector.stroke = config.stroke;
+      chart.currentAnnotation.userOptions.typeOptions.connector.strokeWidth = config.strokeWidth;
     }
     else 
       chart.currentAnnotation.update(config);
