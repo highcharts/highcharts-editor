@@ -102,23 +102,16 @@ highed.StockTools = function(planCode) {
 
     function selectableAnnotation(annotationType) {
       var originalClick = annotationType.prototype.defaultOptions.events &&
-              annotationType.prototype.defaultOptions.events.click;
-
-
-      function overrideClick(event){
-        if (originalClick && originalClick.click) {
-            originalClick.click.call(annotation, event);
-        }
-      }
+      annotationType.prototype.defaultOptions.events.click;
 
       function selectAndshowPopup(event) {
           var annotation = this,
               navigation = annotation.chart.navigationBindings,
               prevAnnotation = navigation.activeAnnotation;
-/*
-          if (originalClick) {
-              originalClick.click.call(annotation, event);
-          }*/
+
+          if (originalClick && originalClick.click) {
+            originalClick.click.call(annotation, event);
+          }
 
           if (prevAnnotation !== annotation) {
               // Select current:
@@ -184,35 +177,34 @@ highed.StockTools = function(planCode) {
           navigation,
           'showPopup',
           {
-              annotation: annotation,
-              formType: 'annotation-toolbar',
-              options: navigation.annotationToFields(annotation),
-              onSubmit: function (data) {
+            annotation: annotation,
+            formType: 'annotation-toolbar',
+            options: navigation.annotationToFields(annotation),
+            onSubmit: function (data) {
+              var config = {},
+                  typeOptions;
 
-                  var config = {},
-                      typeOptions;
+              if (data.actionType === 'remove') {
+                  navigation.activeAnnotation = false;
+                  navigation.chart.removeAnnotation(annotation);
+              } else {
+                  navigation.fieldsToOptions(data.fields, config);
+                  navigation.deselectAnnotation();
 
-                  if (data.actionType === 'remove') {
-                      navigation.activeAnnotation = false;
-                      navigation.chart.removeAnnotation(annotation);
-                  } else {
-                      navigation.fieldsToOptions(data.fields, config);
-                      navigation.deselectAnnotation();
+                  typeOptions = config.typeOptions;
 
-                      typeOptions = config.typeOptions;
-
-                      if (annotation.options.type === 'measure') {
-                          // Manually disable crooshars according to
-                          // stroke width of the shape:
-                          typeOptions.crosshairY.enabled =
-                              typeOptions.crosshairY.strokeWidth !== 0;
-                          typeOptions.crosshairX.enabled =
-                              typeOptions.crosshairX.strokeWidth !== 0;
-                      }
-
-                      annotation.update(config);
+                  if (annotation.options.type === 'measure') {
+                      // Manually disable crooshars according to
+                      // stroke width of the shape:
+                      typeOptions.crosshairY.enabled =
+                          typeOptions.crosshairY.strokeWidth !== 0;
+                      typeOptions.crosshairX.enabled =
+                          typeOptions.crosshairX.strokeWidth !== 0;
                   }
+
+                  annotation.update(config);
               }
+            }
           }
       );
 
@@ -224,9 +216,8 @@ highed.StockTools = function(planCode) {
           true,
           annotationType.prototype.defaultOptions.events,
           {
-              contextmenu: selectAndshowPopup,
-              click: overrideClick,
-              dblclick: onDblClick
+            contextmenu: selectAndshowPopup,
+            dblclick: onDblClick
           }
       );
     }
