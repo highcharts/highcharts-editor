@@ -159,6 +159,19 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         }
       }
     })
+
+
+    document.addEventListener('keydown', function (e) {
+
+      if(e.keyCode === 8 || e.keyCode === 46){
+        if (chart.currentAnnotation) {
+          var navigation = chart.navigationBindings;
+          navigation.activeAnnotation = false;
+          navigation.chart.removeAnnotation(chart.currentAnnotation);
+          chart.currentAnnotation = null;
+        }
+      }
+    }, false);
   ///////////////////////////////////////////////////////////////////////////
 
   function closeAnnotationPopup() {
@@ -1970,6 +1983,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       
       chart.currentAnnotation.userOptions.typeOptions.label.text = config.text;
       chart.currentAnnotation.userOptions.typeOptions.connector.stroke = config.stroke;
+      chart.currentAnnotation.userOptions.typeOptions.connector.fill = config.stroke;
       chart.currentAnnotation.userOptions.typeOptions.connector.strokeWidth = config.strokeWidth;
     }
     else 

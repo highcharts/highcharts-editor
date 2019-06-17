@@ -363,6 +363,7 @@ highed.AnnotationModal = function() {
     } else if (annotationKey === 'verticalCounter') {
       obj = {
         stroke: colorInputs.background.value,
+        fill: colorInputs.background.value,
         strokeWidth: parseInt(sizeInput.value),
         text: addTextModalInput.value
       };
