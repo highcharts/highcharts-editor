@@ -400,6 +400,115 @@ highed.StockTools = function(planCode) {
       annotationsOptions[index] = this.target.options;
       events.emit("StockToolsChanged", this.target.options, index, "AnnotationHandleMoved");
     }
+
+    Highcharts.setOptions({
+      navigation: {
+          bindings: {
+  
+              labelAnnotation: {
+                  start: function (e) {
+                      var x = this.chart.xAxis[0].toValue(e.chartX),
+                          y = this.chart.yAxis[0].toValue(e.chartY),
+                          type = 'label',
+                          navigation = this.chart.options.navigation,
+                          bindings = navigation && navigation.bindings;
+  
+                      this.chart.addAnnotation(Highcharts.merge({
+                          langKey: 'label',
+                          labelOptions: {
+                              format: '{y:.2f}'
+                          },
+                          labels: [{
+                              point: {
+                                  x: x,
+                                  y: y,
+                                  xAxis: 0,
+                                  yAxis: 0
+                              },
+                              controlPoints: [{
+                                  symbol: 'triangle-down',
+                                  positioner: function (target) {
+                                      if (!target.graphic.placed) {
+                                          return {
+                                              x: 0,
+                                              y: -9e7
+                                          };
+                                      }
+  
+                                      var xy = Highcharts.Annotation.MockPoint
+                                          .pointToPixels(
+                                              target.points[0]
+                                          );
+  
+                                      return {
+                                          x: xy.x - this.graphic.width / 2,
+                                          y: xy.y - this.graphic.height / 2
+                                      };
+                                  },
+  
+                                  // TRANSLATE POINT/ANCHOR
+                                  events: {
+                                    drag: function (e, target) {
+                                      var xy = this.mouseMoveToTranslation(e);
+
+                                      target.translate(-xy.x, -xy.y);
+                                      target.translatePoint(xy.x, xy.y);
+                        
+                                      target.annotation.labels[0].options =
+                                        target.options;
+
+                                      target.redraw(false);
+                                    }
+                                  }
+                              }, {
+                                  symbol: 'square',
+                                  positioner: function (target) {
+                                      if (!target.graphic.placed) {
+                                          return {
+                                              x: 0,
+                                              y: -9e7
+                                          };
+                                      }
+  
+                                      return {
+                                          x: target.graphic.alignAttr.x -
+                                              this.graphic.width / 2,
+                                          y: target.graphic.alignAttr.y -
+                                              this.graphic.height / 2
+                                      };
+                                  },
+  
+                                  // TRANSLATE POSITION WITHOUT CHANGING THE
+                                  // ANCHOR
+                                  events: {
+                                      drag: function (e, target) {
+                                        
+                                        var xy = this.mouseMoveToTranslation(e);
+
+                                        target.translatePoint(xy.x, xy.y);
+
+                                        target.annotation.labels[0].options =
+                                            target.options;
+
+                                        target.redraw(false);
+
+                                      }
+                                  }
+                              }],
+                              overflow: 'none',
+                              crop: true
+                          }]
+                      },
+                      navigation.annotationsOptions,
+                      bindings[type] && bindings[type].annotationsOptions));
+                  }
+              }
+          }
+      }
+  });
+
+
+  
   }
 
   ///////////////////////////////////////////////////////////////////////////
