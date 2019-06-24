@@ -75,22 +75,104 @@
   left: 0px;
   top: 13px;
   padding: 10px;
-  margin-top: 10px;
+  margin-top: 24px;
 }
 
 .highcharts-toggle-toolbar {
   width: initial;
   height: initial;
-  left: 8px;
+  left: 10px;
   top: 4px;
-  border: 1px solid rgb(37, 56, 111);
-  color: rgb(37, 56, 111);
   font-size: 12px;
   padding: 4px;
-  border-radius: 19px;
-  min-width: 80px;
+  min-width: 32px;
+  height: 32px;
+  background-color: transparent;
   text-align: center;
-  font-weight: 700;
+
+  .fa-marker {
+    font-size: 15px;
+    padding-top:4px;
+    display: block;
+    position: absolute;
+    top: 15px;
+    left: 13px;
+    -webkit-transition: all 1s ease;
+    transition: all 1s ease;
+  }
+  .fa-chevron-down {
+    position: absolute;
+    bottom: 0px;
+    opacity: 0;
+    left: 14px;
+    transition: 300ms all;
+  }
+  .fa-chevron-up {
+    position: absolute;
+    left: 15px;
+    top: 2px;
+  }
+
+  .tooltip {
+    position: absolute;
+    left: 48px;
+    max-width: 89px;
+    width: 72px;
+    top: 5px;
+    cursor: initial;
+    background-color: #364f94;
+    color: white;
+    padding: 5px 3px;
+    border-radius: 5px;
+    font-size: 10px;
+    opacity: 0;
+    display: none;
+  }
+
+
+  .tooltip:after {
+    right: 100%;
+    top: 48%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-color: rgba(54, 79, 148, 0);
+    border-right-color: #364f94;
+    border-width: 5px;
+    margin-top: -4px;
+  }
+
+}
+
+.highcharts-toggle-toolbar.inactive {
+  .fa-marker {
+    top: 5px;
+  }
+
+  .fa-chevron-up {
+    transition: 1000ms all;
+    opacity: 0;
+  }
+}
+
+.highcharts-toggle-toolbar.active:hover {
+  background-color: #F5F5F5;
+  .fa-chevron-down {
+    opacity: 0;
+  }
+}
+
+.highcharts-toggle-toolbar.inactive:hover {
+  .fa-chevron-down {
+    opacity: 1;
+  }
+  .tooltip {
+    opacity: 1;
+    display: initial;
+  }
 }
 
 .highcharts-bindings-wrapper li:hover, .highcharts-submenu-item-arrow:hover {

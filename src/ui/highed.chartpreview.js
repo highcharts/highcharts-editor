@@ -138,7 +138,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     stockTools = highed.StockTools(planCode);
 
     if (planCode && planCode === 1) {
-      stockTools.hide()
+      stockTools.hide();
     }
 
     stockTools.on('ShowAnnotationModal', function(options) {
@@ -153,13 +153,11 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       
       if (chart.annotations[index] && chart.annotations[index].userOptions) {
         if (chart.annotations[index].userOptions.langKey === 'label') {
-          chart.annotations[index].userOptions.labels[0].point = (type === 'AnnotationHandleMoved' ? option.point : option.labels[0].point);
-        } else {
-          //chart.annotations[index].userOptions.shapes[0].point = option.point
+          chart.annotations[index].userOptions.labels[0].point = (type === 'AnnotationHandleMoved' ? option : option.labels[0].point);
         }
       }
-    })
 
+    })
 
     document.addEventListener('keydown', function (e) {
 
@@ -288,7 +286,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       }) ? 'StockChart' : 'Chart');
 
       chart = new Highcharts[chartConstr](pnode || parent, options);
-
       //This is super ugly.
       // customizedOptions.series = customizedOptions.series || [];
       //  customizedOptions.series = chart.options.series || [];
@@ -1969,7 +1966,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     isAnnotating = isAnnotate
   }
 
-  function updateAnnotation(config, type){
+  function updateAnnotation(config, type) {
     if (type === 'line') {
       chart.currentAnnotation.shapes[0].update(config);
       chart.currentAnnotation.userOptions.typeOptions.line.stroke = config.stroke;

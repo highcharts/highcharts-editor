@@ -94,11 +94,38 @@ highed.StockTools = function(planCode) {
     stockToolsToolbarConfig.stockTools.gui.visible = false;
   }
 
+  function removeStockTools(){
+    stockToolsToolbarConfig.stockTools.gui.enabled = false;
+  }
+
+  function addStockTools(){
+    stockToolsToolbarConfig.stockTools.gui.enabled = true;
+  }
+
   function getStockToolsToolbarConfig(){
     return stockToolsToolbarConfig;
   }
 
   function init(Highcharts) {
+
+    Highcharts.addEvent(Highcharts.Chart, 'redraw', function () {
+      
+      var blacklist = ['pie'],
+          chart = this;
+        
+      if (chart.options && chart.options.series) {
+        var typeInBlacklist = chart.options.series.some(function(series) {
+          return blacklist.includes(series.type);
+        });
+
+        if (typeInBlacklist) {
+          removeStockTools();
+          return;
+        }
+      }
+
+      addStockTools();
+    });
 
     function selectableAnnotation(annotationType) {
       var originalClick = annotationType.prototype.defaultOptions.events &&
@@ -243,11 +270,25 @@ highed.StockTools = function(planCode) {
           PREFIX = 'highcharts-',
           DIV = 'div',
           createElement = Highcharts.createElement,
-          showhideBtn;
-    
+          showhideBtn,
+          blacklist = ['pie'];
+
+
+      if (chart.options && chart.options.series) {
+        var typeInBlacklist = chart.options.series.some(function(series) {
+          return blacklist.includes(series.type);
+        });
+
+        if (typeInBlacklist) {
+          removeStockTools();
+          return;
+        }
+      }
+
+      addStockTools();
       // Show hide toolbar
       this.showhideBtn = showhideBtn = createElement(DIV, {
-          className: PREFIX + 'toggle-toolbar '
+          className: PREFIX + 'toggle-toolbar ' + (visible ? ' active' : ' inactive')
       }, null, wrapper);
 
       if (!visible) {
@@ -260,13 +301,13 @@ highed.StockTools = function(planCode) {
           toolbar.classList.add(PREFIX + 'hide');
           wrapper.style.height = showhideBtn.offsetHeight + 'px';
 
-          this.showhideBtn.innerHTML = 'Annotate <span class="fa fa-chevron-down"/>'
+          this.showhideBtn.innerHTML = '<span><span class="fa fa-chevron-up"></span><i class="fas fa-marker"></i><span class="fa fa-chevron-down"></span><span class="tooltip">Annotate Chart</span></span>'
       } else {
           wrapper.style.height = '100%';
-          this.showhideBtn.innerHTML = 'Annotate <span class="fa fa-chevron-right"/>'
+          this.showhideBtn.innerHTML = '<span><span class="fa fa-chevron-up"></span> <i class="fas fa-marker"></i> <span class="fa fa-chevron-down"/></span>'
       }
 
-      stockToolbar.listWrapper.style.height = 'calc(100% - 70px)';
+      stockToolbar.listWrapper.style.height = 'calc(100% - 90px)';
     
       // toggle menu
       ['click', 'touchstart'].forEach(function (eventName) {
@@ -379,28 +420,6 @@ highed.StockTools = function(planCode) {
       button.className += ' ' + PREFIX + 'annotation-edit-button';
     }
 
-    Highcharts.Annotation.prototype.onMouseUp = function () {
-      var chart = this.chart,
-          annotation = this.target || this,
-          annotationsOptions = chart.options.annotations,
-          index = chart.annotations.indexOf(annotation);
-
-      this.removeDocEvents();
-      annotationsOptions[index] = annotation.options;
-      events.emit("StockToolsChanged", annotation.options, index, "AnnotationMoved");
-    }
-
-    Highcharts.Annotation.ControlPoint.prototype.onMouseUp = function () {
-      var chart = this.chart,
-          annotation = this.target.annotation || this,
-          annotationsOptions = chart.options.annotations,
-          index = chart.annotations.indexOf(annotation);
-
-      this.removeDocEvents();
-      annotationsOptions[index] = this.target.options;
-      events.emit("StockToolsChanged", this.target.options, index, "AnnotationHandleMoved");
-    }
-
     Highcharts.setOptions({
       navigation: {
           bindings: {
@@ -505,10 +524,41 @@ highed.StockTools = function(planCode) {
               }
           }
       }
-  });
+    });
+
+    Highcharts.Annotation.prototype.onMouseUp = function () {
+      var chart = this.chart,
+          annotation = this.target || this,
+          annotationsOptions = chart.options.annotations,
+          index = chart.annotations.indexOf(annotation);
+
+      this.removeDocEvents();
+      annotationsOptions[index] = annotation.options;
+      events.emit("StockToolsChanged", annotation.options, index, "AnnotationMoved");
+    }
+
+    Highcharts.Annotation.ControlPoint.prototype.onMouseUp = function () {
+      var chart = this.chart,
+          annotation = this.target.annotation || this,
+          annotationsOptions = chart.options.annotations,
+          index = chart.annotations.indexOf(annotation);
+
+      if (annotation.target && annotation.target.options && (annotation.target.options.type === 'crookedLine' || annotation.target.options.type === "elliottWave")) {
+        //annotationsOptions[index].typeOptions.points = annotation.target.points;
+        events.emit("StockToolsChanged", annotation.target.points, index, "AnnotationHandleMoved");
+      } 
+      else if (annotation.options && (annotation.options.langKey === 'rectangle' || annotation.options.langKey === 'circle')) {
+        events.emit("StockToolsChanged",  annotation.shapes[0].options.point, index, "AnnotationHandleMoved");
+      }
+      else {
+        annotationsOptions[index].labels[0].point = annotation.labels[0].options.point;
+        events.emit("StockToolsChanged",  annotation.labels[0].options.point, index, "AnnotationHandleMoved");
+      }
+
+      this.removeDocEvents();
+    }
 
 
-  
   }
 
   ///////////////////////////////////////////////////////////////////////////

@@ -123,7 +123,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
         showLiveStatus: true
       },
       templates: {
-        icon: 'fa-bar-chart',
+        icon: 'fa-chart-bar',
         widths: {
           desktop: 26,
           tablet: 24,
@@ -131,7 +131,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
         },
         title: 'Templates',
         nav: {
-          icon: 'bar-chart',
+          icon: 'chart-bar',
           text: 'Templates',
           onClick: []
         },
@@ -148,10 +148,10 @@ highed.DrawerEditor = function(parent, options, planCode) {
         ]
       },
       customize: {
-        icon: 'fa-sliders',
+        icon: 'chart-pie',
         title: 'Customize Chart',
         nav: {
-          icon: 'pie-chart',
+          icon: 'chart-pie',
           text: 'Customize',
           onClick: []
         },
@@ -295,7 +295,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
       },
       {
         title: highed.L('saveProject'),
-        css: 'fa-floppy-o',
+        css: ' fas fa-save',
         click: function() {
           var name;
 
@@ -330,14 +330,14 @@ highed.DrawerEditor = function(parent, options, planCode) {
       '-',
       {
         title: highed.L('saveCloud'),
-        css: 'fa-cloud-upload',
+        css: 'fas fa-cloud-upload-alt',
         click: function() {
           highed.cloud.save(chartPreview);
         }
       },
       {
         title: highed.L('loadCloud'),
-        css: 'fa-cloud-download',
+        css: 'fas fa-cloud-download-alt',
         click: function() {
           highed.cloud.showUI(chartPreview);
         }
@@ -738,7 +738,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
   });
 
   dataPage.on('SeriesChanged', function(index) {
-    if ((!options && !options.features) || (options.features && options.features.indexOf('templates') > -1)) {
+    if ((options && !options.features) || (options && options.features && options.features.indexOf('templates') > -1)) {
       templatePage.selectSeriesTemplate(index, chartPreview.options.getTemplateSettings());
     }
   });

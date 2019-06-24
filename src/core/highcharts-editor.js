@@ -1012,7 +1012,7 @@ var highed = {
     }
 
     highed.include(
-      'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css'
+      'https://use.fontawesome.com/releases/v5.9.0/css/all.css'
     );
     highed.include(
       'https://fonts.googleapis.com/css?family=Roboto:400,300,100,700|Source Sans:400,300,100',
