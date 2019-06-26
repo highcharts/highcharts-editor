@@ -111,7 +111,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     constr = ['Chart'],
     wysiwyg = {
       'g.highcharts-legend': { tab: 'Legend', dropdown: 'General', id: 'legend--enabled' },
-      'text.highcharts-title': { tab: 'Chart',  dropdown: 'Title', id: 'title--text' },
+      //'text.highcharts-title': { tab: 'Chart',  dropdown: 'Title', id: 'title--text' },
       'text.highcharts-subtitle': { tab: 'Chart', dropdown: 'Title',id: 'subtitle--text' },
       '.highcharts-yaxis-labels': { tab: 'Axes', dropdown: 'Y Axis', id: 'yAxis-labels--format' },
       '.highcharts-xaxis-labels': { tab: 'Axes', dropdown: 'X Axis', id: 'xAxis-labels--format' },
@@ -133,6 +133,11 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       '.highcharts-series': { tab: 'Data series', id: 'series' },
       'g.highcharts-tooltip': { tab: 'Chart', dropdown: 'Tooltip', id: 'tooltip--enabled' }
     },
+    /*
+    wysiwyg2 = {
+      'text.highcharts-title': { id: 'title--text', source: 'text.highcharts-title tspan'},
+    },
+    inputField = highed.dom.cr('input', 'highed-chart-input-field'),*/
     stockToolsContainer,
     isAnnotating = true,
     stockTools = highed.StockTools(planCode);
@@ -150,14 +155,20 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     });
 
     stockTools.on('StockToolsChanged', function(option, index, type) {
-      
       if (chart.annotations[index] && chart.annotations[index].userOptions) {
         if (chart.annotations[index].userOptions.langKey === 'label') {
           chart.annotations[index].userOptions.labels[0].point = (type === 'AnnotationHandleMoved' ? option : option.labels[0].point);
         }
       }
+    });
 
-    })
+
+/*
+    highed.dom.ap(document.body, inputField);
+
+    inputField.addEventListener('keydown', function (e) {
+    });
+*/
 
     document.addEventListener('keydown', function (e) {
 
@@ -177,23 +188,13 @@ highed.ChartPreview = function(parent, attributes, planCode) {
   }
 
   function attachWYSIWYG() {
-    //setInterval(toProject, 3000)
+    
     Object.keys(wysiwyg).forEach(function(key) {
       highed.dom.on(parent.querySelector(key), 'click', function(e) {
+        
+        var navigation = chart.navigationBindings;
+        if (navigation.selectedButtonElement) return;
 
-        stockToolsContainer = document.querySelector('.highcharts-stocktools-toolbar');
-        var found = false;
-        if (stockToolsContainer) {
-          var children = stockToolsContainer.children;
-          for (var i = 0; i < children.length; i++) {
-            if (children[i].classList.contains("highcharts-active")) {
-              found = true;
-              break;
-            }
-          }
-        }
-
-        if (found) return;
         events.emit('RequestEdit', wysiwyg[key], e.clientX, e.clientY);
         e.cancelBubble = true;
         e.preventDefault();
@@ -202,6 +203,32 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         return false;
       });
     });
+
+/*
+    Object.keys(wysiwyg2).forEach(function(key) {
+
+      highed.dom.on(parent.querySelector(key), 'click', function(e) {
+
+        var element = document.querySelector(key);
+        var source = document.querySelector(wysiwyg2[key].source),
+            pos = highed.dom.pos(element, true);
+
+        highed.dom.style(inputField, {
+          position: 'absolute',
+          top: pos.y + 'px',
+          left: pos.x + 'px'
+        });
+
+        console.log(source);
+        inputField.value = source.innerHTML;
+
+        inputField.focus();
+      });
+
+    })
+
+*/
+
   }
 
   function stringifyFn(obj, tabs) {
@@ -286,6 +313,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       }) ? 'StockChart' : 'Chart');
 
       chart = new Highcharts[chartConstr](pnode || parent, options);
+
       //This is super ugly.
       // customizedOptions.series = customizedOptions.series || [];
       //  customizedOptions.series = chart.options.series || [];

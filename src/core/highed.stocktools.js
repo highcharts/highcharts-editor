@@ -66,6 +66,7 @@ highed.StockTools = function(planCode) {
             var currentAnnotation = this.chart.currentAnnotation
             
             setTimeout(function() {
+
               var child = popup.container.children[1];
 
               if (child.tagName !== 'SPAN') {
@@ -199,7 +200,7 @@ highed.StockTools = function(planCode) {
       function onDblClick(){
         var annotation = this,
         navigation = annotation.chart.navigationBindings;
-
+        
         Highcharts.fireEvent(
           navigation,
           'showPopup',
@@ -336,7 +337,6 @@ highed.StockTools = function(planCode) {
     };
 
     Highcharts.Popup.prototype.showPopup = function () {
-
       var popupDiv = this.container,
           PREFIX = 'highcharts-',
           toolbarClass = PREFIX + 'annotation-toolbar',
@@ -406,13 +406,8 @@ highed.StockTools = function(planCode) {
           lang.editButton || 'edit',
           'edit',
           function () {
-              showForm.call(
-                  _self,
-                  'annotation-edit',
-                  chart,
-                  options,
-                  callback
-              );
+            var currentAnnotation = chart.currentAnnotation;            
+            events.emit('ShowAnnotationModal', currentAnnotation.options);
           },
           popupDiv
       );

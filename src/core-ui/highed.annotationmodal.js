@@ -35,7 +35,7 @@ highed.AnnotationModal = function() {
   }),
   events = highed.events(),
   addTextModalContainer = highed.dom.cr('div', 'highcharts-popup-wrapper'),
-  addTextModalInput = highed.dom.cr('textarea', 'highed-imp-input-stretch'),
+  addTextModalInput = highed.dom.cr('textarea', 'highed-imp-input-stretch highed-popup-textarea'),
   colorDropdownParent = highed.dom.cr('div'),
   addTextModalHeader = highed.dom.cr('div', 'highed-modal-text', 'Text'),
   containerHeader = highed.dom.cr('div', 'highed-premium-feature-header'),
@@ -55,7 +55,7 @@ highed.AnnotationModal = function() {
     text: 'Callout',
     icon: 'comment-o',
     value: 'callout'
-  },{
+  }, {
     text: 'Connector',
     icon: 'external-link',
     value: 'connector'
@@ -140,7 +140,12 @@ highed.AnnotationModal = function() {
         color: highed.getContrastedColor(colorInputs.background.value)
       });
 
-      if (type.labels[0].format) addTextModalInput.value = type.labels[0].format;
+      if (type.labels[0].format) {
+
+        if( type.labels[0].format.replace('<br/>', '\n') !== '') {
+          addTextModalInput.value = type.labels[0].format.replace('<br/>', '\n');
+        }
+      }
 
       resetLabelDOM();
     } else if (type && (type.type === 'crookedLine' || type.type === 'elliottWave')) {
@@ -186,7 +191,11 @@ highed.AnnotationModal = function() {
       annotationKey = 'verticalCounter';
 
       if (type && type.typeOptions && type.typeOptions.label) {
-        addTextModalInput.value = type.typeOptions.label.text;
+        
+        if( type.labels[0].format.replace('<br/>', '\n') !== '') {
+          addTextModalInput.value = type.typeOptions.label.text.replace('<br/>', '\n');
+        }
+        
         colorInputs.background.element.value = type.typeOptions.label.stroke;
         sizeInput.value = type.typeOptions.label.strokeWidth || 1;
       }      
@@ -342,7 +351,6 @@ highed.AnnotationModal = function() {
     obj[annotationType] = [{}];
 
     if (annotationType === 'labels') {
-
       if( addTextModalInput.value.replace('\n', '<br/>') !== '') {
         obj[annotationType][0].format = addTextModalInput.value.replace('\n', '<br/>');
       }
@@ -365,7 +373,7 @@ highed.AnnotationModal = function() {
         stroke: colorInputs.background.value,
         fill: colorInputs.background.value,
         strokeWidth: parseInt(sizeInput.value),
-        text: addTextModalInput.value
+        text: addTextModalInput.value.replace('<br/>', '\n')
       };
 
     } else {
