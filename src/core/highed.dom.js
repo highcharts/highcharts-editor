@@ -151,8 +151,7 @@ highed.dom = {
       if (typeof cssClass !== 'undefined') {
         res.className = cssClass;
       }
-
-      if (typeof innerHTML !== 'undefined') {
+      if (typeof innerHTML !== 'undefined' && typeof innerHTML !== 'object') {
         res.innerHTML = innerHTML;
       }
 
@@ -330,10 +329,10 @@ highed.dom = {
 
     if (abs) {
       var b = node.getBoundingClientRect();
-
+      
       return {
-        x: b.left + window.scrollX,
-        y: b.top + window.scrollY
+        x: b.left + (window.scrollX || 0),
+        y: b.top + (window.scrollY || 0)
       };
     }
 

@@ -1,4 +1,13 @@
 
+
+.highed-dropdown {
+    display: block;
+    padding-top: 0px;
+    color: #495057;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: .25rem;
+}
+
 .highed-dropdown {
     .highed-box-size;
     position: relative;
@@ -14,18 +23,15 @@
     height:32px;
 
     background:@bright-background;
-
-    border-top:@border-strong;
-    border-bottom:@border-strong;
-    border-left:@border-strong;
+    border: 1px solid rgb(204, 204, 204);
 }
 
 .highed-dropdown-body {
     padding-right:36px;
     padding-left:7px;
-    padding-top:7px;
+    padding-top:5px;
     padding-bottom:7px;
-    font-size: 13px;
+    font-size: 12px;
     text-overflow: ellipsis;
     height:20px;
 
@@ -42,26 +48,31 @@
     .highed-box-size;
 }
 
+.highed-wizard-dropdown-container {
+    margin-left: 0px !important;
+}
+
 .highed-dropdown-item {
     position: relative;
-    height:20px;
+    height:26px;
     padding: 5px 5px 5px 10px;
     font-size: 12px;
-    line-height: 20px;
     font-family: @font-secondary;
     min-width: 100px;
     overflow: hidden;
+    white-space: nowrap;    
+    text-overflow: ellipsis;    
     .highed-nosel;
 }
 
 .highed-dropdown-item:hover {
     background:@selected-item-color;
-    color:@selected-item-text;
+    color:@selected-item-text; 
 }
 
 .highed-dropdown-arrow {
-    background: @wiz-bar-background;
-    color: @wiz-bar-color;
+    background: @wiz-dropdown-background;
+    color: @wiz-dropdown-color;
     position: absolute;
     right:0px;
     top:0px;
@@ -88,8 +99,6 @@
 }
 
 .highed-dropdown-arrow:hover {
-    background:@selected-item-color;
-    color:@selected-item-text;
 }
 
 .highed-dropdown-item-selected, .highed-dropdown-item-selected:hover {
@@ -98,10 +107,9 @@
 }
 
 .highed-dropdown-items {
-    border:@border-strong;
     background:@bright-background;
     color:@bright-matched-text;
-
+    border: 1px solid rgb(204, 204, 204);
     left: -20000px;
     opacity:0;
     pointer-events: none;
@@ -110,7 +118,12 @@
     overflow-x: hidden;
     position: fixed;
     z-index: 20000;
+    border-radius: 5px;
     .highed-transition-opacity;
+}
+.highed-font-size {
+    min-height: 10px;
+    height: 25px;
 }
 
 // @media only screen and (max-device-width:480px) {

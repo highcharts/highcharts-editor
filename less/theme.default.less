@@ -1,34 +1,36 @@
 /* Fonts */
-@font-main: 'Roboto', sans-serif;
+@font-main: 'Raleway', 'Arial' !important;
 @font-secondary: 'Source Sans', sans-serif;
 
 /* Main colors */
 @text-main: #242424;
-@background-main: #e5e5e5;
-@border-main-color: #444;
+@background-main: #eaf1fd;
+@border-main-color:rgb(232, 232, 232);;
 @border-strong-color: #555;
 @border-main: 1px solid @border-main-color;
 @border-strong: 1px solid @border-strong-color;
-@selected-item-color: #dd470c;
-@selected-item-text: #fff;
+@selected-item-color: rgba(222, 222, 222, 0.37);
+@selected-item-text: #000;
 @template-background: #fff;
 
 /* Panel colors */
 @text-panel: #afafaf;
-@text-panel-inverted: #222;
-@background-panel: #222;
+@text-panel-inverted: #000;
+@background-panel: #fff;
+@panel-text: #000;
 @background-panel-inverted: #fff;
 @background-preview: #e0e0e0;
 @panel-divider: #444;
+@letter-cell-background-color: #f3f3f3;
 
-@secondary-background-panel: #333;
-@secondary-color-panel: #fafafa;
+@secondary-background-panel: #fff;
+@secondary-color-panel: #000;
 
 @bright-background-panel: #444;
 @bright-color-panel: #fafafa;
 
 /* The accent color */
-@accent-color: #111;
+@accent-color: #E3E3E3;
 @accent-text: #afafaf;
 
 /* Bright colors - used for e.g. the customizer and template selector */
@@ -46,13 +48,17 @@
 @wiz-bar-background: #8888aa;
 @wiz-bar-color: #FFF;
 
+/* Used for the dropdown bar */
+@wiz-dropdown-background: #fff;
+@wiz-dropdown-color: #000;
+
 /* Used for headings */
 @background-header: #FFF;
 @color-header: #999;
 
 /* Used for the main toolbar */
-@background-toolbar:#333;
-@color-toolbar: #afafaf;
+@background-toolbar:#fff;
+@color-toolbar: #25386f;
 
 /* Input, select, textarea, colorpicker */
 @input-border-color: #aaa;
@@ -65,10 +71,15 @@
 @type-number: #52a440;
 @type-string: #814a73;
 
-/* OK/Cancel colors */
-@background-ok: #61BC7B;
+/* OK/Cancel/Import colors */
+@background-ok: rgba(27, 112, 240, 0.67);
+@background-import: #25386F;
+@color-import: #fafafa;
 @color-ok: #fafafa;
 @background-error: #aa5555;
 @color-error: #fafafa;
+@default-button-background: #25386F;
+@default-button-color: #fff;
+@default-button-background-hover: rgba(27, 112, 240, 0.67);;
 
 @import "base.less";

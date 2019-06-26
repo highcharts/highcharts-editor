@@ -177,7 +177,7 @@ highed.HSplitter = function(parent, attributes) {
     });
 
     highed.dom.style(right, {
-      width: 100 - properties.leftWidth + '%'
+      width: (properties.rightWidth ? properties.rightWidth : 100 - properties.leftWidth) + '%'
     });
   }
 

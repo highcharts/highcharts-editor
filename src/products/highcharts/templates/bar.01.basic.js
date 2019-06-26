@@ -25,15 +25,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-highed.templates.add('Area', {
-  title: 'Basic',
+highed.templates.add('Bar', {
+  title: 'Basic bar',
   description: '',
-  thumbnail: 'ecexev.svg',
+  thumbnail: 'ovuvul.svg',
   dataValidator: false,
+  popular: true,
   sampleSets: [],
   config: {
     chart: {
-      type: 'area',
+      type: 'column',
+      inverted: true,
       polar: false
     }
   }

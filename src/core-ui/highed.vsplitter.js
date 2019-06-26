@@ -62,10 +62,28 @@ highed.VSplitter = function(parent, attributes) {
      */
   function resize(w, h) {
     var s = highed.dom.size(parent);
+    
+    highed.dom.style(container, {
+      height: '100%'
+    });
 
+    if (!w && !h) {
+      
+
+      highed.dom.style(top, {
+        height: (typeof properties.topHeight === 'string' ? properties.topHeight : properties.topHeight + '%' )
+      })
+      if (bottom) {
+        highed.dom.style(bottom, {
+          width: '100%',
+          height:  (typeof properties.topHeight === 'string' ? 'calc(100% - ' + properties.topHeight + ')' : 100 - properties.topHeight + '%' )
+        });
+      }
+      return;
+    }
     highed.dom.style(container, {
       width: (w || s.w) + 'px',
-      height: (h || s.h) + 'px'
+      height: ((h || s.h)) + 'px'
     });
 
     if (properties.topHeight.toString().indexOf('px') > 0) {

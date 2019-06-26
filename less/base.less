@@ -51,7 +51,6 @@
 
 .highed-vsplitter a {
   color: @text-panel;
-  text-decoration: underline;
 }
 
 .highed-vsplitter a:hover {
@@ -106,19 +105,11 @@
   font-weight: 100;
   font-family: @font-main;
 }
-
-.highcharts-container {
-  width: 100% !important;
-  height: 100% !important;
-  .highed-box-size;
-  // box-shadow: 0 5px 10px @border-main-color;
-}
-
 .highed-done-button {
   padding: 5px 7px;
   border: none;
   background: lighten(@background-toolbar, 24);
-  color: @color-ok;
+  color: #4c4c4c;
   font-size: 12px;
   font-weight: bold;
   //border-radius:50%;
@@ -147,7 +138,7 @@
   margin-bottom: 10px;
   margin-top: 10px;
   text-align: center;
-  background: @background-ok;
+  background: @background-import;
   color: @color-ok;
   border-radius: 3px;
   padding: 7px 10px;
@@ -158,6 +149,92 @@
   cursor: pointer;
   .highed-transition;
   .highed-nosel;
+}
+
+.grey.negative {
+  background-color: white !important;
+  border: 1px solid #bababa !important;
+  color: #bababa !important;
+}
+
+.highed-ok-button.mini {
+  min-width: 50px;
+  width: 70px;
+  min-height: 20px;
+  height: 22px;
+  margin-top: 9px;
+  padding-top: 5px;
+  font-size: 11px;
+}
+
+.highed-import-button {
+  background-color: white;
+  border: 1px solid @background-import;
+  color: @background-import;
+  text-transform: initial;
+  border-radius: 59px;
+  margin-bottom: 0;
+  padding: 7px 11px;
+  min-width: 101px;
+  font-size: 9px;
+  margin-top: 0;
+  margin-right: 5px;
+  vertical-align: top;
+  cursor: pointer !important;
+}
+.highed-import-button.green {    
+  background-color: @background-import;
+  border: 0;
+  color: white;
+  font-weight: 800;
+  font-size: 11px;
+  font-family: Raleway;
+}
+.highed-import-button.padded {
+  padding: 9px 18px;
+}
+
+.highed-import-button.small {
+  min-width: 53px;
+}
+
+.highed-import-button.grey {
+  border: 1px solid rgb(163, 163, 163);
+  background-color: rgb(186, 186, 186);
+  color: white;
+  font-size: 11px;
+}
+
+.highed-import-button.negative {
+  border: 1px solid @background-import;
+  background-color: @background-import;
+  color: white;
+  font-size: 11px;
+}
+
+.highed-import-button.grey:hover {
+  border: 1px solid rgb(163, 163, 163);
+  background-color: rgb(186, 186, 186);
+  color: white;
+  font-size: 11px;
+}
+
+.highed-page-title {    
+  margin: 25px 0 16px 30px;
+  h3 {
+    color: rgb(37, 56, 111);
+    font-size: 24px;
+    margin-left: 5px;
+    display: inline;
+  }
+  .highed-toolbox-help {
+    display: inline;
+    position: relative;
+    top: -9px;
+    left: -7px;
+    font-size: 10px;
+    margin-right: 0px;
+  }
 }
 
 .highed-done-pane {
@@ -178,9 +255,14 @@
 }
 
 .highed-ok-button:hover {
-  background: darken(@background-ok, 6);
+  background: @background-ok;
+  color: white;
 }
 
+.highed-import-button:hover {
+  background: @background-import;
+  color: white;
+}
 .highed-background-normal {
   background: @background-main;
   color: @text-main;
@@ -190,6 +272,17 @@
   text-align: center;
   font-weight: 200;
   // color: @text-main;
+}
+
+.CodeMirror {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11px;
+}
+
+@media screen and (max-width: 768px) {
+  .highed-page-title {
+    margin: 25px 0 16px 5px;
+  }  
 }
 
 @import "editor.style.less";
@@ -220,6 +313,9 @@
 @import "dtable.less";
 @import "cloud.less";
 @import "toolbox.less";
+@import "optionspanel.less";
+@import "assigndatapanel.less";
+@import "searchadvancedoptions.less";
 @import "chart.less";
 @import "respreview.less";
 @import "help.modal.less";

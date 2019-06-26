@@ -37,7 +37,7 @@ highed.installLanguage({
     dgWithSelected: 'With Selection:',
     dgImportBtn: 'IMPORT',
     dgExportBtn: 'EXPORT DATA',
-    dgNewBtn: 'CLEAR DATA',
+    dgNewBtn: 'Clear',
     dgAddRow: 'ADD ROW',
     dgDataImported: 'Data imported',
     dgDataImporting: 'Importing data',
@@ -55,10 +55,16 @@ highed.installLanguage({
     customizeCustomCode: 'CUSTOM CODE',
     customizePreview: 'PREVIEW OPTIONS',
     'option.cat.title': 'Titles',
+    'option.cat.chart': 'Chart',
+    'option.subcat.dimension': 'Dimensions',
+    'option.subcat.title': 'Title',
+    'option.subcat.appearance': 'Appearance',
+    'option.subcat.tooltip': 'Tooltip',
+    'option.subcat.credit': 'Credits',
     'option.subcat.titles': 'Main titles',
     'option.cat.general': 'General',
     'option.subcat.size': 'Chart size',
-    'option.subcat.interaction': 'Chart Interaction',
+    'option.subcat.interaction': 'Interaction',
     'option.cat.appearance': 'Appearance',
     'option.subcat.fonts': 'Fonts',
     'option.subcat.titlestyle': 'Title Style',
@@ -67,8 +73,8 @@ highed.installLanguage({
     'option.subcat.plotarea': 'Plot Area',
     'option.cat.axes': 'Axes',
     'option.subcat.axessetup': 'Axes Setup',
-    'option.subcat.xaxis': 'X-Axis',
-    'option.subcat.yaxis': 'Y-Axis',
+    'option.subcat.xaxis': 'X Axis',
+    'option.subcat.yaxis': 'Y Axis',
     'option.cat.series': 'Data Series',
     'option.cat.labels': 'Value Labels',
     'option.subcat.labels': 'Value Labels',
@@ -78,10 +84,11 @@ highed.installLanguage({
     'option.subcat.legendappearance': 'Appearance',
     'option.cat.tooltip': 'Tooltip',
     'option.subcat.colorborder': 'Color and Border',
+    'option.cat.export': 'Export',
     'option.cat.exporting': 'Exporting',
     'option.cat.localization': 'Localization',
     'option.subcat.numberformat': 'Number formatting',
-    'option.subcat.exportbutton': 'Exporting button and menu',
+    'option.subcat.exportbutton': 'Exporting Menu',
     'option.subcat.zoombutton': 'Zoom button',
     'option.cat.credits': 'Credits',
     'option.series.label': 'Series Labels',
@@ -107,6 +114,9 @@ highed.installLanguage({
     'option.text.chart.zoomType': 'Allow zooming',
     'option.tooltip.chart.zoomType':
       'Decides in what dimensions the user can zoom by dragging the mouse. Can be one of <code>x</code>, <code>y</code> or <code>xy</code>.',
+    'option.text.plotOptions.series.states.inactive.opacity': 'Series Dimming',
+    'option.tooltip.plotOptions.series.states.inactive.opacity':
+      'Opacity of series elements (dataLabels, line, area).',
     'option.text.chart.polar': 'Polar (radar) projection',
     'option.tooltip.chart.polar':
       'When true, cartesian charts like line, spline, area and column are transformed into the polar coordinate system. Requires <code>highcharts-more.js</code>.',
@@ -156,6 +166,9 @@ highed.installLanguage({
     'option.text.xAxis.opposite': 'Opposite side of chart',
     'option.tooltip.xAxis.opposite':
       'Whether to display the axis on the opposite side of the normal. The normal is on the left side for vertical axes and bottom for horizontal, so the opposite sides will be right and top respectively. This is typically used with dual or multiple axes.',
+    'option.text.xAxis.margin': 'Margin',
+    'option.tooltip.xaxis.margin':
+      'If there are multiple axes on the same side of the chart, the pixel margin between the axes.',
     'option.text.xAxis.reversed': 'Reversed direction',
     'option.tooltip.xAxis.reversed':
       'Whether to reverse the axis so that the highest number is closest to the origin. If the chart is inverted, the x axis is reversed by default.',
@@ -205,6 +218,9 @@ highed.installLanguage({
     'option.text.legend.enabled': 'Enable legend',
     'option.tooltip.legend.enabled': 'Enable or disable the legend.',
     'option.text.legend.layout': 'Item layout',
+    'option.text.legend.labelFormat': 'Label Format',
+    'option.tooltip.legend.labelFormat':
+      'A format string for each legend label',
     'option.tooltip.legend.layout':
       'The layout of the legend items. Can be one of "horizontal" or "vertical".',
     'option.text.legend.align': 'Horizontal alignment',
@@ -249,6 +265,9 @@ highed.installLanguage({
     'option.text.tooltip.backgroundColor': 'Background color',
     'option.tooltip.tooltip.backgroundColor':
       'The background color of the tooltip',
+    'option.text.tooltip.valueSuffix': 'Value Suffix',
+    'option.tooltip.tooltip.valueSuffix':
+      'A string to append to each series y value',
     'option.text.tooltip.borderWidth': 'Border width',
     'option.tooltip.tooltip.borderWidth':
       '<p>The pixel width of the tooltip border.</p>\r\n\r\n<p>In <a href="http://www.highcharts.com/docs/chart-design-and-style/style-by-css">styled mode</a>, the stroke width is set in the <code>.highcharts-tooltip-box</code> class.</p>',
@@ -267,6 +286,9 @@ highed.installLanguage({
     'option.text.exporting.scale': 'Scaling factor',
     'option.tooltip.exporting.scale':
       'The export scale. Note that this is overridden if width is set.',
+    'option.text.exporting.offlineExporting': 'Offline Exporting',
+    'option.tooltip.exporting.offlineExporting':
+      'The offline-exporting module allows for image export of charts without sending data to an external server',
     'option.text.lang.decimalPoint': 'Decimal point',
     'option.tooltip.lang.decimalPoint':
       'The decimal point used for all numbers',

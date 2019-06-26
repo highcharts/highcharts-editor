@@ -44,11 +44,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      *
      *  @param parent {domnode} - the node to attach the dropdown to
      */
-  highed.DropDown = function(parent) {
+  highed.DropDown = function(parent, extraClasses, icons) {
     var events = highed.events(),
-      container = highed.dom.cr('div', 'highed-dropdown'),
+      container = highed.dom.cr('div', 'highed-dropdown ' + extraClasses),
       body = highed.dom.cr('div', 'highed-dropdown-body'),
-      arrow = highed.dom.cr('div', 'highed-dropdown-arrow fa fa-arrow-down'),
+      arrow = highed.dom.cr('div', 'highed-dropdown-arrow fa fa-caret-down'),
       items = [],
       selectedItem = false,
       expanded = false,
@@ -63,7 +63,29 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       items.forEach(function(item) {
         highed.dom.ap(dropdownItems, item.node);
         //IE fix
-        item.node.innerHTML = item.title();
+        item.node.innerHTML = ''; //item.title();
+        
+        const icon = highed.dom.cr('span', 'highed-icon-container');
+        if (icons) {
+            highed.dom.ap(icon, highed.dom.style(highed.dom.cr('span'), {
+              'margin-left': '2px',
+              width: '15px',
+              height: '15px',
+              float: 'left',
+              display: 'inline-block',
+              "margin-right": "5px",
+              "color": "rgb(66, 200, 192)",
+              'background-position': 'left middle',
+              'background-size': 'auto 100%',
+              'background-repeat': 'no-repeat',
+              'background-image':
+                'url("data:image/svg+xml;utf8,' +
+                encodeURIComponent(icons[item.id().toLowerCase()]) +
+                '")'
+            }));
+        }
+
+        highed.dom.ap(item.node, icon, highed.dom.style(highed.dom.cr('span', '', item.title() || ''), { 'position': 'relative', 'top': '3px'}));
       });
     }
 
@@ -76,7 +98,26 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
       //Should update the container
       if (selectedItem) {
-        body.innerHTML = selectedItem.title();
+        body.innerHTML = '';
+        if (icons) {      
+          highed.dom.ap(body, highed.dom.style(highed.dom.cr('span'), {
+            'margin-left': '2px',
+            width: '15px',
+            height: '15px',
+            float: 'left',
+            display: 'inline-block',
+            "margin-right": "5px",
+            "color": "rgb(66, 200, 192)",
+            'background-position': 'left middle',
+            'background-size': 'auto 100%',
+            'background-repeat': 'no-repeat',
+            'background-image':
+              'url("data:image/svg+xml;utf8,' +
+              encodeURIComponent(icons[selectedItem.id().toLowerCase()]) +
+            '")'
+          }));
+        }
+        body.innerHTML += selectedItem.title();
       }
 
       highed.dom.style(dropdownItems, {
@@ -116,7 +157,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         opacity: 1,
         'pointer-events': 'auto',
         left: pos.x + 'px',
-        top: pos.y + s.h + 'px',
+        top: pos.y + s.h + 4 + 'px',
         width: s.w - 1 + 'px',
         'min-height': s.h + 'px'
       });
@@ -183,6 +224,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             return id;
           },
 
+          icon: function() {
+            return item.icon;
+          },
+
           //Get the title
           title: function() {
             return highed.isStr(item) ? item : item.title || '';
@@ -194,7 +239,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           },
 
           //Select the item
-          select: function() {
+          select: function(dontEmit) {
             if (selectedItem) {
               selectedItem.unselect();
             }
@@ -205,13 +250,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
             body.innerHTML = selectedItem.title();
 
-            events.emit('Change', itemInstance);
+            if (!dontEmit) events.emit('Change', itemInstance);
 
             if (item && highed.isFn(item.select)) {
               item.select(itemInstance);
             }
 
             collapse();
+          }, 
+
+          updateOptions: function(updatedItem) {
+            item = updatedItem;
+          },
+
+          setId: function(newId) {
+            id = newId;
           }
         };
 
@@ -223,7 +276,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         node.innerHTML = item;
         id = item;
       } else {
-        node.innerHTML = item.title || '';
+        
+        const icon = highed.dom.cr('span', 'highed-icon-container', (item.icon ? '<i class="fa fa-' + item.icon + '" />' : ''));
+
+        highed.dom.style(icon, {
+          "margin-right": "5px",
+          "color": "rgb(66, 200, 192)"
+        });
+        
+        highed.dom.ap(node, icon, highed.dom.cr('span', '', item.title || ''));
         id = item.id; // || id;
 
         if (item.selected) {
@@ -266,24 +327,45 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
          *  @memberof highed.DropDown
          *  @param id {anything} - the id to select
          */
-    function selectById(id) {
+    function selectById(id, dontEmit) {
       items.some(function(item) {
         //This is not a typo..
         if (item.id() == id) {
-          item.select();
+          item.select(dontEmit);
           return true;
         }
       });
+    }
+
+    function updateByIndex(index, details, newId) {
+      items[index].updateOptions(details);
+      if (newId) items[index].setId(newId);
     }
 
     /** Set the current selection by index
          *  @memberof highed.DropDown
          *  @param index {number} - the index to select in range [0..item.length]
          */
-    function selectByIndex(index) {
+    function selectByIndex(index, dontEmit) {
       if (index >= 0 && index < items.length) {
-        items[index].select();
+        items[index].select(dontEmit);
       }
+    }
+
+    function selectAll() {
+      return items;
+    }
+
+    function deleteByIndex(index) {
+      items.splice(index, 1);
+    }
+    
+    function sliceList(length) {
+      items = items.slice(0, length);
+    }
+
+    function getSelectedItem() {
+      return selectedItem;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -301,7 +383,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       container: container,
       selectById: selectById,
       selectByIndex: selectByIndex,
+      selectAll: selectAll,
+      updateByIndex: updateByIndex,
+      deleteByIndex: deleteByIndex,
+      sliceList: sliceList,
       addItems: addItems,
+      getSelectedItem: getSelectedItem,
       addItem: addItem,
       clear: clear,
       on: events.on

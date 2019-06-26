@@ -41,13 +41,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @param parent {domnode} - the node to attach the list to
  *  @param responsive {boolean} - set to true to get JS-based responsive functionality
  */
-highed.List = function(parent, responsive) {
+highed.List = function(parent, responsive, props, planCode) {
   var container = highed.dom.cr('div', 'highed-list'),
     compactIndicator = highed.dom.cr('div', 'highed-list-compact', 'compact'),
     ctx = highed.ContextMenu(),
     selectedItem = false,
     events = highed.events(),
-    items = [];
+    items = [],
+    dropdowns = {},
+    properties = props;
 
   ///////////////////////////////////////////////////////////////////////////
 
@@ -63,16 +65,307 @@ highed.List = function(parent, responsive) {
      *   > node {domnode} - the dom node for the item
      *   > select {function} - selects the item if called
      */
-  function addItem(item) {
+  function addItem(item, children, chartPreview) {
+    
     var node = highed.dom.cr('a', 'item', item.title),
+      nodeArrow = highed.dom.cr('span', 'item-arrow', '<i class="fa fa-angle-right" aria-hidden="true"></i>'),
+      nodeChildren = highed.dom.cr('span', 'highed-list-suboptions', ''),
       iexports = {};
+
+    highed.dom.style(nodeChildren, {
+      display: 'none'
+    });
+
+    highed.dom.ap(node, nodeArrow);
+    
+    (children || []).forEach(function(thing) {
+      selectGroup(thing);
+    });
+
+    function shouldInclude(group) {
+      var doInclude = false;
+
+      if (Object.keys(properties.availableSettings || {}).length > 0) {
+        if (highed.isArr(group)) {
+          group.forEach(function(sub) {
+            if (shouldInclude(sub)) {
+              doInclude = true;
+            }
+          });
+        } else if (highed.isArr(group.options)) {
+          group.options.forEach(function(sub) {
+            if (shouldInclude(sub)) {
+              doInclude = true;
+            }
+          });
+        } else if (
+          properties.availableSettings[group.id] ||
+          properties.availableSettings[group.pid]
+        ) {
+          doInclude = true;
+        }
+
+        return doInclude;
+      }
+
+      return true;
+    }
+
+
+    function applyFilter(detailIndex, filteredBy, filter) {
+      var selected = selectedItem, //list.selected(),
+        id = selected.id,
+        entry = highed.meta.optionsExtended.options[id];
+
+      if (!selected) return false;
+
+      //body.innerHTML = '';
+
+      entry.forEach(function(thing) {
+        selectGroup(thing, false, false, detailIndex, filteredBy, filter);
+      });
+
+      highlighted = false;
+    }
+        //This function has mutated into a proper mess. Needs refactoring.
+    function selectGroup(group, table, options, detailIndex, filteredBy, filter) {
+      var master,
+        vals,
+        doInclude = true,
+        container,
+        masterNode,
+        def;
+
+      options = chartPreview.options.getCustomized(); //userOptions;//chartPreview.options.getCustomized();
+      
+      if (highed.isArr(group.options)) {
+        table = highed.dom.cr('div', 'highed-customizer-table');
+        warningContainer = highed.dom.cr('div', 'highed-customize-warning-container'),
+        warning = highed.dom.cr('div', 'highed-customize-warning', 'You need to be on a paid plan for this to work in production');
+        doInclude = shouldInclude(group);
+
+        if (group.warning && group.warning.length > 0 && 
+          planCode && group.warning.indexOf(planCode) > -1) {
+          highed.dom.ap(table, highed.dom.ap(warningContainer, warning));
+        }
+
+        if (!doInclude) {
+          return;
+        }
+        
+        container = highed.dom.cr('div', 'highed-customize-group' + (group.dropdown ? ' highed-list-general-drop-down' : ' highed-list-normal'), null, 'highed-list-header-' + highed.L(group.text));
+        masterNode = highed.dom.cr('div', 'highed-customize-master-dropdown');
+        nodeHeading = highed.dom.cr(
+          'div',
+          'highed-customizer-table-heading' + (group.dropdown ? ' highed-list-general-drop-down-header' : ''),
+          highed.L(group.text)
+        );
+
+        if (group.dropdown) {
+          dropdowns[highed.L(group.text)] = container;
+          highed.dom.on(nodeHeading, 'click', function(e) {
+            
+            if (e.target !== this) {
+              Object.keys(dropdowns).forEach(function(d) {
+                if (dropdowns[d] !== container) dropdowns[d].classList.remove('active');
+              });
+
+              if (container.classList.contains('active')) {
+                container.classList.remove('active');
+              } else {
+                container.className += ' active';
+              }
+            }
+
+          });
+        }
+
+
+        highed.dom.ap(
+          nodeChildren,
+          highed.dom.ap(
+            container,
+            nodeHeading,
+            masterNode,
+            table
+          )
+        );
+
+        if (group.filteredBy) {
+          filter = highed.getAttr(options, group.filteredBy, detailIndex);
+        }
+
+        if (group.controlledBy) {
+          master = highed.DropDown();
+          highed.dom.style(masterNode, {
+            display: 'block'
+          });
+
+          if (highed.isStr(group.controlledBy.options)) {
+            vals = highed.getAttr(
+              options,
+              group.controlledBy.options,
+              detailIndex
+            );
+
+            if (highed.isArr(vals)) {
+              
+              if (vals.length === 0) {
+                highed.dom.ap(
+                  parent,
+                  highed.dom.cr('i', '', 'No data to display..')
+                );
+                return;
+              }
+
+              master.addItems(
+                vals.map(function(t, i) {
+                  return (
+                    (group.controlledBy.optionsTitle
+                      ? t[group.controlledBy.optionsTitle]
+                      : '#' + (i + 1)) || '#' + (i + 1)
+                  );
+                })
+              );
+
+              master.selectByIndex(detailIndex || 0);
+
+              master.on('Change', function(selected) {
+
+                detailIndex = selected.index();
+
+                table.innerHTML = '';
+
+                group.options.forEach(function(sub) {
+                  if (group.filteredBy) {
+                    filter = highed.getAttr(
+                      options,
+                      group.filteredBy,
+                      detailIndex
+                    );
+                  }
+                  selectGroup(
+                    sub,
+                    table,
+                    options,
+                    detailIndex,
+                    group.filteredBy,
+                    filter
+                  );
+                });
+              });
+
+              highed.dom.ap(masterNode, master.container);
+              detailIndex = detailIndex || 0;
+            } else {
+              return;
+            }
+          }
+        }
+
+        //highed.dom.ap(body, table);
+
+        group.options.forEach(function(sub) {
+          selectGroup(sub, table, options, detailIndex, group.filteredBy, filter);
+        });
+      } else if (typeof group.id !== 'undefined') {
+        //Check if we should filter out this column
+        if (filter && group.subType && group.subType.length) {
+          if (!highed.arrToObj(group.subType)[filter]) {
+            return;
+          }
+        }
+
+        if (Object.keys(properties.availableSettings || {}).length > 0) {
+          if (
+            !properties.availableSettings[group.id] &&
+            !properties.availableSettings[group.pid]
+          ) {
+            return;
+          }
+        }
+
+        if (typeof group.dataIndex !== 'undefined') {
+          detailIndex = group.dataIndex;
+        }
+
+        def = highed.getAttr(options, group.id, detailIndex);
+
+        //highed.dom.ap(sub, highed.dom.cr('span', '', referenced[0].returnType));
+        
+        highed.dom.ap(
+          table,
+          highed.InspectorField(
+            group.values ? 'options' : group.dataType,
+            typeof def !== 'undefined'
+              ? def
+              : filter && group.subTypeDefaults[filter]
+                ? group.subTypeDefaults[filter]
+                : group.defaults,
+            {
+              title: highed.L('option.text.' + group.pid),
+              tooltip: highed.L('option.tooltip.' + group.pid),
+              values: group.values,
+              custom: group.custom,
+              defaults: group.defaults,
+              width: group.width || 100,
+              attributes: group.attributes || [],
+              warning: group.warning || [],
+              header: highed.L(group.pid)
+            },
+            function(newValue) {
+              if (group.header) return;
+              if (group.plugins && group.plugins.length > 0) {
+                events.emit('TogglePlugins', group.id, newValue);
+              }
+              
+              if (!group.noChange) events.emit('PropertyChange', group.id, newValue, detailIndex);
+              
+              highed.emit(
+                'UIAction',
+                'SimplePropSet',
+                highed.L('option.text.' + group.pid),
+                newValue
+              );
+
+              if (group.id === filteredBy) {
+                //This is a master for the rest of the childs,
+                //which means that we need to rebuild everything
+                //here somehow and check their subType
+                nodeChildren.innerHTML = '';
+                applyFilter(detailIndex, filteredBy, newValue);
+              }
+            },
+            false,
+            group.id,
+            planCode
+          )
+        );
+      }
+    }
 
     function select(e) {
       if (selectedItem) {
         selectedItem.selected = false;
         selectedItem.node.className = 'item';
+        selectedItem.nodeArrow.innerHTML = '<i class="fa fa-angle-right" aria-hidden="true"></i>';
+        highed.dom.style(selectedItem.nodeChildren, {
+          display: "none"
+        });
       }
+      dropdowns = {};
 
+      nodeArrow.innerHTML = '<i class="fa fa-angle-down" aria-hidden="true"></i>';
+      nodeChildren.innerHTML = '';
+      var entry = highed.meta.optionsExtended.options[item.id];
+      (entry || []).forEach(function(thing) {
+        selectGroup(thing);
+      });
+
+      highed.dom.style(nodeChildren, {
+        display: 'block'
+      });
+      
       selectedItem = iexports;
       selectedItem.selected = true;
       node.className = 'item item-selected';
@@ -85,13 +378,17 @@ highed.List = function(parent, responsive) {
       }
     }
 
-    highed.dom.on(node, 'click', select);
-    highed.dom.ap(container, node);
+    if (!item.annotations) {
+      highed.dom.on(node, 'click', item.onClick || select);
+    }
+    highed.dom.ap(container, node, nodeChildren);
 
     iexports = {
       id: item.id,
       title: item.title,
       node: node,
+      nodeArrow: nodeArrow,
+      nodeChildren: nodeChildren,
       select: select,
       selected: false
     };
@@ -111,7 +408,10 @@ highed.List = function(parent, responsive) {
      */
   function addItems(items) {
     if (highed.isArr(items)) {
-      items.forEach(addItem);
+
+      items.forEach(function(item) {
+        addItem(item);
+      });
     }
   }
 
@@ -177,12 +477,31 @@ highed.List = function(parent, responsive) {
      *  @param which {string} - the id of the item to select
      */
   function select(which) {
+
     items.some(function(item) {
       if (which === item.title) {
+        if (item.selected) return true;
         item.select();
         return true;
       }
     });
+  }
+
+  function selectDropdown(dropdownKey) {
+
+
+    if (dropdowns[dropdownKey].classList.contains('active')) {
+      return true;
+    }
+
+    Object.keys(dropdowns).forEach(function(d) {
+      if (dropdowns[d] !== dropdowns[dropdownKey]) dropdowns[d].classList.remove('active');
+    });
+
+    if (!dropdowns[dropdownKey].classList.contains('active')) {
+      dropdowns[dropdownKey].className += ' active';
+    }
+
   }
 
   /** Reselect the current item
@@ -238,6 +557,7 @@ highed.List = function(parent, responsive) {
     hide: hide,
     selectFirst: selectFirst,
     select: select,
+    selectDropdown: selectDropdown,
     reselect: reselect,
     selected: selected,
     count: countItems,

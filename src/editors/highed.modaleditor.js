@@ -89,7 +89,10 @@ highed.ModalEditor = function(summoner, attributes, fn) {
     }
 
     //Show the modal when clicking the summoner
-    sumFn = highed.dom.on(highed.dom.get(nn), 'click', modal.show);
+    sumFn = highed.dom.on(highed.dom.get(nn), 'click', function(){
+      modal.show();
+      editor.resize();
+    });
   }
 
   function doDone() {
@@ -120,6 +123,7 @@ highed.ModalEditor = function(summoner, attributes, fn) {
     show: modal.show,
     hide: modal.hide,
     on: editor.on,
+    resize: editor.resize,
     attachToSummoner: attachToSummoner
   };
 };

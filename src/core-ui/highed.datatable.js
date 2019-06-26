@@ -46,7 +46,6 @@ function parseCSV(inData, delimiter) {
     };
   //The only thing CSV formats have in common..
   rows = (csv || '').replace(/\r\n/g, '\n').split('\n');
-
   // If there's no delimiter, look at the first few rows to guess it.
 
   if (!options.delimiter) {
@@ -173,7 +172,6 @@ function parseCSV(inData, delimiter) {
 
     result.push(cols);
   });
-
   return result;
 }
 
@@ -193,6 +191,7 @@ highed.DataTable = function(parent, attributes) {
     events = highed.events(),
     container = highed.dom.cr('div', 'highed-dtable-container'),
     frame = highed.dom.cr('div', 'highed-dtable-table-frame highed-scrollbar'),
+    movementBar = highed.dom.cr('div', 'highed-dtable-movement-bar', ''),
     table = highed.dom.cr('table', 'highed-dtable-table'),
     thead = highed.dom.cr('thead', 'highed-dtable-head'),
     tbody = highed.dom.cr('tbody', 'highed-dtable-body'),
@@ -203,10 +202,14 @@ highed.DataTable = function(parent, attributes) {
     ),
     colgroup = highed.dom.cr('colgroup'),
     leftBar = highed.dom.cr('div', 'highed-dtable-left-bar'),
+    hideCellsDiv = highed.dom.cr('div', 'highed-dtable-hide-cells'),
     topBar = highed.dom.cr('div', 'highed-dtable-top-bar'),
+    topLetterBar = highed.dom.cr('div', 'highed-dtable-top-letter-bar'),
+    topColumnBar = highed.dom.cr('div', 'highed-dtable-top-column-bar'),
     topLeftPanel = highed.dom.cr('div', 'highed-dtable-top-left-panel'),
-    checkAll = highed.dom.cr('input'),
+    //checkAll = highed.dom.cr('input'),
     mainInput = highed.dom.cr('textarea', 'highed-dtable-input'),
+    cornerPiece = highed.dom.cr('div', 'highed-dtable-corner-piece'),
     weirdDataModal = highed.OverlayModal(false, {
       // zIndex: 20000,
       showOnInit: false,
@@ -230,7 +233,7 @@ highed.DataTable = function(parent, attributes) {
     loadIndicator = highed.dom.cr(
       'div',
       'highed-dtable-load-indicator',
-      'Loading Data...'
+      '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i> Loading'
     ),
     dropZone = highed.dom.cr(
       'div',
@@ -289,22 +292,27 @@ highed.DataTable = function(parent, attributes) {
     ),
     gsheetCancelButton = highed.dom.cr(
       'button',
-      'highed-ok-button highed-dtable-gsheet-button',
+      'highed-import-button green padded',
       'Detach Sheet From Chart'
+    ),
+    switchRowColumns = highed.dom.cr(
+      'button',
+      'switch-column-button highed-template-tooltip',
+      '<i class="fa fa-refresh" aria-hidden="true"></i> <span class="highed-tooltip-text highed-template-tooltip-text-left">Switch Rows/Columns</span>'
     ),
     gsheetLoadButton = highed.dom.cr(
       'button',
-      'highed-ok-button highed-dtable-gsheet-button',
+      'highed-import-button green padded',
       'Load Spreadsheet'
     ),
     liveDataLoadButton = highed.dom.cr(
       'button',
-      'highed-ok-button highed-dtable-gsheet-button',
+      'highed-import-button green padded',
       'Load Live Data'
     ),
     liveDataCancelButton = highed.dom.cr(
       'button',
-      'highed-ok-button highed-dtable-gsheet-button',
+      'highed-import-button green padded',
       'Cancel'
     ),
     detailValue = 0,
@@ -322,6 +330,7 @@ highed.DataTable = function(parent, attributes) {
     rows = [],
     gcolumns = [],
     changeTimeout = false,
+    dataModal,
     surpressChangeEvents = false,
     monthNumbers = {
       JAN: 1,
@@ -337,46 +346,106 @@ highed.DataTable = function(parent, attributes) {
       NOV: 11,
       DEC: 12
     },
-    saveCtx = highed.ContextMenu([
-      {
-        title: 'Use <code>,</code> as delimiter',
-        click: function() {
-          highed.download('data.csv', toCSV(','), 'application/csv');
-        }
-      },
-      {
-        title: 'Use <code>;</code> as delimiter',
-        click: function() {
-          highed.download('data.csv', toCSV(';'), 'application/csv');
-        }
-      }
-    ]),
     selectedRowIndex = 0,
-    addRowCtx = highed.ContextMenu([
+    keyValue = "A",
+    tempKeyValue = "A",
+    //checkAll.type = 'checkbox',
+    selectedFirstCell = [],
+    selectedEndCell = [],
+    selectedCopyFirstCell = [],
+    selectedCopyEndCell = [],
+    lastSelectedCell = [null, null],
+    allSelectedCells = [],
+    allSelectedCopyCells = [],
+    selectedHeaders = [],
+    columnsToHighlight = [],
+    dataFieldsUsed = [],
+    inCopyOverCellMode = false;
+    moveToColumn = null,
+    dragHeaderMode = false,
+    globalContextMenu = highed.ContextMenu([
       {
-        title: 'At the end',
-        icon: '',
+        title: "Insert Row Above",
+        icon: 'plus',
         click: function() {
-          addRow();
-          highed.emit('UIAction', 'AddRowAtEnd');
+          events.emit('ColumnMoving');
+          addRowBefore(selectedFirstCell[1]);
+          highed.emit('UIAction', 'AddRowBeforeHighlight'); 
+          events.emit('ColumnMoved');
         }
       },
       {
-        title: 'After highlighted',
+        title: "Insert Row Below",
+        icon: 'plus',
         click: function() {
-          addRowAfter(selectedRowIndex);
-          highed.emit('UIAction', 'AddRowAfterHighlight');
+          events.emit('ColumnMoving');
+          addRowAfter(selectedEndCell[1]);
+          highed.emit('UIAction', 'AddRowAfterHighlight'); 
+          events.emit('ColumnMoved');
+        }
+      },
+      '-',
+      {
+        title: 'Remove Row',
+        icon: 'trash',
+        click: function() {
+          highed.emit('UIAction', 'BtnDeleteRow');
+
+          if (!confirm(highed.L('dgDeleteRow'))) {
+            return;
+          }
+
+          highed.emit('UIAction', 'DeleteRowConfirm');
+
+          rows.forEach(function(row, index) {
+            //if (row.isChecked()) {
+              if(row.number === selectedFirstCell[1]) {
+                row.destroy();
+                emitChanged();
+              }
+            //}
+          });
+          rebuildRows();
         }
       },
       {
-        title: 'Before highlighted',
+        title: highed.L('dgDelCol'),
+        icon: 'trash',
         click: function() {
-          addRowBefore(selectedRowIndex);
-          highed.emit('UIAction', 'AddRowBeforeHighlight');
+          if (confirm(highed.L('dgDelColConfirm'))) {
+            events.emit('ColumnMoving');
+            delCol(selectedFirstCell[0]);
+            updateColumns();
+            events.emit('ColumnMoved');
+          }
+        }
+      },
+      '-',
+      {
+        title: highed.L('dgInsColBefore'),
+        icon: 'plus',
+        click: function() {
+          events.emit('ColumnMoving');
+          insertCol(selectedFirstCell[0]);
+          events.emit('ColumnMoved');
+        }
+      },
+      {
+        title: highed.L('dgInsColAfter'),
+        icon: 'plus',
+        click: function() {
+          events.emit('ColumnMoving');
+          insertCol(selectedFirstCell[0] + 1);
+          events.emit('ColumnMoved');
         }
       }
     ]);
-  checkAll.type = 'checkbox';
+    
+  const DEFAULT_COLUMN = 9,
+        DEFAULT_ROW = 20;
+    
+
+  highed.dom.ap(hideCellsDiv, switchRowColumns)
 
   highed.dom.on(mainInput, 'click', function(e) {
     return highed.dom.nodefault(e);
@@ -385,11 +454,45 @@ highed.DataTable = function(parent, attributes) {
   highed.dom.style(liveDataIntervalInput, {
     padding: '8px'
   });
+
+  var mouseDown = false;
+  document.body.onmousedown = function() { 
+    mouseDown = true;
+  }
+  document.body.onmouseup = function() {
+    mouseDown = false;
+  }
+
+  document.addEventListener('keydown', function (e) {  
+    if(e.keyCode === 8 || e.keyCode === 46){
+      allSelectedCells.forEach(function(cell){
+        cell.deleteContents();
+      });
+    }
+  }, false);
+
+  document.addEventListener('contextmenu', function(e) {
+    if (e.path && e.path.indexOf(container) > -1) {
+      globalContextMenu.show(e.clientX, e.clientY, true);
+      return highed.dom.nodefault(e);
+    }
+  }, false);
+
+  highed.dom.on(document.querySelector('body'), 'click', function(){
+    globalContextMenu.hide();
+  });
+
+  highed.dom.on(cornerPiece, 'mousedown', function(e){
+    inCopyOverCellMode = true;
+    deselectAllCells();
+  });
+
+
+  highed.dom.ap(frame, cornerPiece);
   ////////////////////////////////////////////////////////////////////////////
 
   // Handle drag 'n drop of files
-
-  function handleFileUpload(f) {
+  function handleFileUpload(f, cb) {
     if (f.type !== 'text/csv') {
       return highed.snackBar('The file is not a valid CSV file');
     }
@@ -397,7 +500,9 @@ highed.DataTable = function(parent, attributes) {
     var reader = new FileReader();
 
     reader.onload = function(e) {
-      loadCSV({ csv: e.target.result });
+      clear();
+      //events.emit('ClearSeriesForImport');
+      loadCSV({ csv: e.target.result }, null, true, cb);
     };
 
     reader.readAsText(f);
@@ -465,12 +570,13 @@ highed.DataTable = function(parent, attributes) {
     //emitted in succession when e.g. loading sets.
     changeTimeout = window.setTimeout(function() {
       if (!isInGSheetMode && !isInLiveDataMode) {
-        events.emit('Change', getHeaderTextArr(), toData());
+        events.emit('Change', getHeaderTextArr());
       }
     }, 1000);
   }
 
-  function makeEditable(target, value, fn, keyup, close) {
+  function makeEditable(target, value, fn, keyup, close, dontFocus) {
+    
     if (mainInputCb.length) {
       mainInputCb = mainInputCb.filter(function(fn) {
         fn();
@@ -485,7 +591,7 @@ highed.DataTable = function(parent, attributes) {
     mainInputCloseCb = close;
 
     mainInput.value = value;
-    mainInput.setSelectionRange(0, mainInput.value.length);
+    //mainInput.setSelectionRange(0, mainInput.value.length);
 
     mainInputCb.push(
       highed.dom.on(mainInput, 'keydown', function(e) {
@@ -500,7 +606,7 @@ highed.DataTable = function(parent, attributes) {
       highed.dom.on(mainInput, 'keyup', function(e) {
         // Super hack to allow pasting CSV into cells
         var ps = highed.parseCSV(mainInput.value);
-        if (ps.length > 1) {
+        if (ps.length > 1) { //TODO: Need to fix this...
           if (
             confirm(
               'You are about to load CSV data. This will overwrite your current data. Continue?'
@@ -508,7 +614,17 @@ highed.DataTable = function(parent, attributes) {
           ) {
             rawCSV = mainInput.value;
             highed.emit('UIAction', 'PasteCSVAttempt');
-            return loadRows(ps);
+             loadCSV({
+               csv: rawCSV
+              }, null, true, function() {
+
+            });
+            /*
+            return loadRows(ps, function() {
+              if (rows.length > 0) rows[0].columns[0].focus();
+              events.emit('InitLoaded');
+              events.emit('AssignDataForFileUpload', rows[0].length);
+            });*/
           }
           return;
         }
@@ -516,20 +632,50 @@ highed.DataTable = function(parent, attributes) {
         return highed.isFn(fn) && fn(mainInput.value);
       })
     );
-
+    
     highed.dom.ap(target, mainInput);
-    mainInput.focus();
+
+    if (!dontFocus) mainInput.focus();
+
   }
 
   ////////////////////////////////////////////////////////////////////////////
+  function highlightLeft(colNumber) {
+    columnsToHighlight.forEach(function(highlightedColumn) {
+      highlightedColumn.element.classList.remove('highlight-right');
+    });
+    
+    rows.forEach(function(row) {
+      if (row.columns[colNumber].element.className.indexOf('highlight-right') === -1) {
+        row.columns[colNumber].element.className += ' highlight-right';
+        columnsToHighlight.push(row.columns[colNumber]);
+      }
+    });
 
-  function Column(row, colNumber, val) {
-    var value = typeof val === 'undefined' ? null : val,
-      col = highed.dom.cr('td'),
+    if (gcolumns[colNumber].header.className.indexOf('highlight-right') === -1) {
+      gcolumns[colNumber].header.className += ' highlight-right';
+      columnsToHighlight.push({
+        element: gcolumns[colNumber].header
+      });
+    }
+
+    if (gcolumns[colNumber].letter.className.indexOf('highlight-right') === -1) {
+      gcolumns[colNumber].letter.className += ' highlight-right';
+      columnsToHighlight.push({
+        element: gcolumns[colNumber].letter
+      });
+      moveToColumn = colNumber;
+    }
+  }
+
+  ////////////////////////////////////////////////////////////////////////////
+  function Column(row, colNumber, val, keyVal) {
+
+    var value = typeof val === 'undefined' || typeof val === 'object' || (val === 'null') ? null : val, //object check for ie11/edge
+      col = highed.dom.cr('td', 'highed-dtable-cell'),
       colVal = highed.dom.cr('div', 'highed-dtable-col-val', value),
       input = highed.dom.cr('input'),
       exports = {};
-
     function goLeft() {
       if (colNumber >= 1) {
         row.columns[colNumber - 1].focus();
@@ -596,8 +742,11 @@ highed.DataTable = function(parent, attributes) {
         //insert a new row.
         if (row.number === rows.length - 1) {
           // && colNumber === rows.columns.length - 1) {
+          events.emit('ColumnMoving');
           addRow();
           rows[row.number + 1].columns[0].focus();
+          events.emit('ColumnMoved');
+    
         } else {
           goBelow();
         }
@@ -609,11 +758,39 @@ highed.DataTable = function(parent, attributes) {
       input.setSelectionRange(0, input.value.length);
     }
 
-    function focus() {
+    function deleteContents() {
+      colVal.innerHTML = '';
+      mainInput.value = '';
+      value = null;
+      emitChanged();
+    }
+
+    function setValue(newValue) {
+      colVal.innerHTML = newValue;
+      mainInput.value = newValue;
+      value = newValue;
+      emitChanged();
+    }
+
+    function focus(dontFocus) {
+
+      deselectAllCells();
+
       function checkNull(value) {
         return value === null || value === '';
       }
       mainInput.className = 'highed-dtable-input';
+      mainInput.draggable = false;
+
+      highed.dom.on(mainInput, 'dragstart', function(e){
+        highed.dom.nodefault(e);
+        return false;
+      });
+      highed.dom.on(mainInput, 'ondrop', function(e){
+        highed.dom.nodefault(e);
+        return false;
+      });
+
       makeEditable(
         col,
         value,
@@ -625,10 +802,48 @@ highed.DataTable = function(parent, attributes) {
             emitChanged();
           }
         },
-        handleKeyup
+        handleKeyup,
+        dontFocus
       );
 
+
+
+      highed.dom.style(cornerPiece, {
+        top: ((highed.dom.pos(col).y + highed.dom.size(col).h - 3)) + "px",
+        left: ((highed.dom.pos(col).x + highed.dom.size(col).w - 3)) + "px",
+        display: "block"
+      });
+
       row.select();
+    }
+
+    function deselectCell() {
+      col.classList.remove('cell-selected');
+    }
+
+    function deselectCopyCell() {
+      col.classList.remove('cell-copy-selected');
+    }
+
+    function selectCell() {
+      if(col.className.indexOf('cell-selected') === -1) {
+        col.className += ' cell-selected';
+        if (allSelectedCells.indexOf(exports) === -1) allSelectedCells.push(exports);
+      }
+    }
+
+    function select() {
+      selectedEndCell[0] = colNumber;
+      selectedEndCell[1] = row.number; 
+
+      selectNewCells(selectedFirstCell, selectedEndCell);
+    }
+
+    function selectCellToCopy() {
+      if(col.className.indexOf('cell-copy-selected') === -1) {
+        col.className += ' cell-copy-selected';
+        if (allSelectedCopyCells.indexOf(exports) === -1) allSelectedCopyCells.push(exports);
+      }
     }
 
     function destroy() {
@@ -646,7 +861,72 @@ highed.DataTable = function(parent, attributes) {
       highed.dom.ap(row.node, highed.dom.ap(col, colVal));
     }
 
-    highed.dom.on(col, 'click', focus);
+    highed.dom.on(col, 'mouseup', function(e) {
+      if (inCopyOverCellMode) {
+        inCopyOverCellMode = false;
+        
+        const newValue = rows[selectedCopyFirstCell[1]].columns[selectedCopyFirstCell[0]].value();
+        allSelectedCopyCells.forEach(function(cell) {
+          cell.setValue(newValue);
+          cell.deselectCopyCell();
+        });
+
+        allSelectedCopyCells = [];
+
+      }
+      else if (selectedFirstCell[0] === selectedEndCell[0] && 
+          selectedFirstCell[1] === selectedEndCell[1]) {
+            //Have not dragged anywhere else on the grid. So the user has just clicked on a cell.
+            
+          lastSelectedCell[0] = colNumber;
+          lastSelectedCell[1] = row.number;
+          selectedCopyFirstCell[0] = selectedFirstCell[0];
+          selectedCopyFirstCell[1] = selectedFirstCell[1];
+          selectedCopyEndCell[1] = selectedEndCell[1];
+          selectedCopyEndCell[0] = selectedEndCell[0];
+          selectedHeaders = [];
+          focus();
+          globalContextMenu.hide();
+      }
+    });
+
+    highed.dom.on([col, colVal], 'mouseover', function(e) {
+      if(mouseDown) {
+        if (inCopyOverCellMode) {
+
+          if (colNumber === selectedCopyEndCell[0]) {
+            selectedCopyEndCell[1] = row.number;
+            selectedCopyEndCell[0] = selectedCopyFirstCell[0];
+          } else if (selectedCopyEndCell[1] === row.number) {
+            selectedCopyEndCell[1] = selectedCopyFirstCell[1];
+            selectedCopyEndCell[0] = colNumber;
+          }
+
+          selectCellsToMove(selectedCopyFirstCell, selectedCopyEndCell);
+
+        } else if (dragHeaderMode) {
+          highlightLeft(colNumber);
+        } else {
+          select();      
+        }
+      }
+    });
+    highed.dom.on(col, 'mousedown', function() {
+      if (lastSelectedCell[0] !== colNumber && lastSelectedCell[1] !== row.number) {
+        focus();
+      }
+    
+      selectedFirstCell[0] = colNumber;//keyVal; 
+      selectedEndCell[0] = colNumber;//keyVal; 
+      selectedFirstCell[1] = row.number; 
+      selectedEndCell[1] = row.number;                   
+      
+      selectedCopyFirstCell[0] = selectedFirstCell[0];
+      selectedCopyFirstCell[1] = selectedFirstCell[1];
+      selectedCopyEndCell[1] = selectedEndCell[1];
+      selectedCopyEndCell[0] = selectedEndCell[0];
+
+    });
 
     if (rows.length <= 500) {
       addToDOM();
@@ -656,10 +936,112 @@ highed.DataTable = function(parent, attributes) {
       focus: focus,
       value: getVal,
       destroy: destroy,
-      addToDOM: addToDOM
+      addToDOM: addToDOM,
+      selectCell: selectCell,
+      deleteContents: deleteContents,
+      deselectCell: deselectCell,
+      deselectCopyCell: deselectCopyCell,
+      element: col,
+      setValue: setValue,
+      rowNumber: row.number,
+      colNumber: colNumber,
+      selectCellToCopy: selectCellToCopy,
+      updateColNumber: function(i){
+        colNumber = i;
+        exports.colNumber = i;
+      }
     };
 
     return exports;
+  }
+
+  function deselectAllCells() {
+
+    allSelectedCells.forEach(function(cells) {
+      cells.deselectCell();
+    });
+    
+    allSelectedCells = [];
+    selectedEndCell[0] = null;
+    selectedEndCell[1] = null;
+    selectedFirstCell[0] = null;
+    selectedFirstCell[1] = null;
+  }
+
+  function selectCellsToMove(firstCell, endCell){ // selectedCopyFirstCell, selectedCopyEndCell
+
+    allSelectedCopyCells = allSelectedCopyCells.filter(function(cell) {
+      if ((cell.rowNumber > endCell[1] || cell.colNumber > endCell[0]) || (cell.rowNumber < firstCell[1] || cell.colNumber < firstCell[0])) {
+        cell.deselectCopyCell();
+        return false;
+      }
+
+      return cell;
+    });
+
+    var tempColValue,
+        lowCell,
+        highCell,
+        cell;
+
+    if (firstCell[0] <= endCell[0]) {
+      tempColValue = firstCell[0];
+      cell = endCell;
+    } else if (firstCell[0] > endCell[0]) {
+      tempColValue = endCell[0];      
+      cell = firstCell;
+    }
+
+    lowCell = (firstCell[1] > endCell[1] ? endCell : firstCell);
+    highCell = (firstCell[1] < endCell[1] ? endCell : firstCell);
+    
+
+    while(tempColValue <= cell[0]) {
+      for(var i = lowCell[1];i<= highCell[1]; i++) {
+        if (rows[i]) rows[i].columns[tempColValue].selectCellToCopy();
+      }
+      tempColValue++;
+    }
+
+  }
+
+  function selectNewCells(firstCell, endCell) { //firstCell, endCell
+    
+    if (firstCell.length === 0 || endCell.length === 0 ||   // Weird bug when opening the console and hovering over cells
+      (firstCell[0] === null || firstCell[1] === null)
+    ) return;
+
+    allSelectedCells = allSelectedCells.filter(function(cell) {
+      if ((cell.rowNumber > endCell[1] || cell.colNumber > endCell[0]) || (cell.rowNumber < firstCell[1] || cell.colNumber < firstCell[0])) {
+        cell.deselectCell();
+        return false;
+      }
+
+      return cell;
+    });
+
+    var tempColValue,
+        lowCell,
+        highCell,
+        cell;
+
+    if (firstCell[0] <= endCell[0]) {
+      tempColValue = firstCell[0];
+      cell = endCell;
+    } else if (firstCell[0] > endCell[0]) {
+      tempColValue = endCell[0];      
+      cell = firstCell;
+    }
+
+    lowCell = (firstCell[1] > endCell[1] ? endCell : firstCell);
+    highCell = (firstCell[1] < endCell[1] ? endCell : firstCell);
+    
+    while(tempColValue <= cell[0]) {
+      for(var i = lowCell[1];i<= highCell[1]; i++) {
+        if (rows[i]) rows[i].columns[tempColValue].selectCell();
+      }
+      tempColValue++;
+    }
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -668,15 +1050,33 @@ highed.DataTable = function(parent, attributes) {
     var columns = [],
       row = highed.dom.cr('tr'),
       leftItem = highed.dom.cr('div', 'highed-dtable-left-bar-row', ''),
-      checker = highed.dom.cr('input', 'highed-dtable-row-select-box'),
+      checker = highed.dom.cr('div', 'highed-dtable-row'),
       checked = false,
       didAddHTML = false,
       exports = {};
 
-    checker.type = 'checkbox';
+    highed.dom.on(leftItem, 'mouseover', function(e) {
+      if(mouseDown) {
+          selectedEndCell[1] = checker.value;
+          selectNewCells(selectedFirstCell, selectedEndCell);
+      }
+    });    
+    
+    highed.dom.on(leftItem, 'mousedown', function(e) {
+      //if (e.button === 2 && selectedFirstCell.length > 0 && selectedEndCell.length > 0 && selectedFirstCell[0] === 0 && selectedEndCell[0] === (rows[0].columns.length - 1)) {
+      deselectAllCells();
+    
+      selectedFirstCell[0] = 0
+      selectedEndCell[0] = rows[0].columns.length - 1;
+      selectedFirstCell[1] = e.target.value; 
+      selectedEndCell[1] = e.target.value;
 
-    function addCol(val) {
-      columns.push(Column(exports, columns.length, val));
+      selectNewCells(selectedFirstCell, selectedEndCell);
+
+    });
+
+    function addCol(val, keyValue) {
+      columns.push(Column(exports, columns.length, val, keyValue));
     }
 
     function insertCol(where) {
@@ -720,7 +1120,9 @@ highed.DataTable = function(parent, attributes) {
     function addToDOM(number) {
       didAddHTML = true;
       exports.number = number;
-
+      checker.innerHTML = number + 1;
+      checker.value = number;
+      leftItem.value = number;
       highed.dom.ap(tbody, row);
 
       highed.dom.ap(leftBar, highed.dom.ap(leftItem, checker));
@@ -729,6 +1131,7 @@ highed.DataTable = function(parent, attributes) {
     function rebuildColumns() {
       row.innerHTML = '';
       columns.forEach(function(col, i) {
+        col.updateColNumber(i);
         col.addToDOM(i);
       });
     }
@@ -743,7 +1146,6 @@ highed.DataTable = function(parent, attributes) {
     highed.dom.on(checker, 'change', function() {
       checked = checker.checked;
     });
-
     if (rows.length < 500) {
       addToDOM(rows.length);
     } else if (rows.length === 500) {
@@ -786,7 +1188,6 @@ highed.DataTable = function(parent, attributes) {
       }
       row.rowIndex = i;
     });
-
     emitChanged();
   }
 
@@ -812,30 +1213,35 @@ highed.DataTable = function(parent, attributes) {
 
   function init() {
     clear();
-
     surpressChangeEvents = true;
 
-    for (var i = 0; i < 1; i++) {
-      var r = Row();
+    setTimeout(function(){ events.emit('InitLoaded'); }, 10);
+    
+    for (var i = 0; i < DEFAULT_ROW; i++) {
+      var r = Row(false, keyValue);
     }
 
-    for (var j = 0; j < 2; j++) {
+    tempKeyValue = "A";
+    for (var j = 0; j < DEFAULT_COLUMN; j++) {
       addCol('Column ' + (j + 1));
     }
-
     highed.dom.ap(colgroup, highed.dom.cr('col'));
     resize();
-
     surpressChangeEvents = false;
   }
 
   function updateColumns() {
     colgroup.innerHTML = '';
-    topBar.innerHTML = '';
-
-    gcolumns.forEach(function(col, i) {
+    topColumnBar.innerHTML = '';
+    topLetterBar.innerHTML = '';
+    var resetLetters = 'A';
+    
+    gcolumns.forEach(function(col, i) {      
       col.colNumber = i;
+      col.setLetter(resetLetters);
+      resetLetters = getNextLetter(resetLetters);
       col.addToDOM();
+
     });
 
     rebuildColumns();
@@ -844,12 +1250,28 @@ highed.DataTable = function(parent, attributes) {
     resize();
   }
 
+  function getNextLetter(key) {
+    if (key === 'Z' || key === 'z') {
+      return String.fromCharCode(key.charCodeAt() - 25) + String.fromCharCode(key.charCodeAt() - 25);
+    } else {
+      var lastChar = key.slice(-1);
+      var sub = key.slice(0, -1);
+      if (lastChar === 'Z' || lastChar === 'z') {
+        return getNextLetter(sub) + String.fromCharCode(lastChar.charCodeAt() - 25);
+      } else {
+        return sub + String.fromCharCode(lastChar.charCodeAt() + 1);
+      }
+    }
+    return key;
+  };
+
   function addCol(value, where) {
     //The header columns control the colgroup
     var col = highed.dom.cr('col'),
       colNumber = gcolumns.length,
       header = highed.dom.cr('span', 'highed-dtable-top-bar-col'),
-      headerTitle = highed.dom.cr('div', '', value),
+      letter = highed.dom.cr('span', 'highed-dtable-top-bar-letter'),
+      headerTitle = highed.dom.cr('div', '', (typeof value === 'undefined' || value === 'null' ? null : value)),
       moveHandle = highed.dom.cr('div', 'highed-dtable-resize-handle'),
       options = highed.dom.cr(
         'div',
@@ -859,7 +1281,9 @@ highed.DataTable = function(parent, attributes) {
         col: col,
         header: header,
         headerTitle: headerTitle,
-        colNumber: gcolumns.length
+        colNumber: gcolumns.length,
+        letter: letter,
+        test: true
       },
       mover = highed.Movable(
         moveHandle,
@@ -921,36 +1345,183 @@ highed.DataTable = function(parent, attributes) {
           title: highed.L('dgInsColBefore'),
           icon: 'plus',
           click: function() {
+
+            events.emit('ColumnMoving');
             insertCol(exports.colNumber);
+            events.emit('ColumnMoved')
           }
         },
         {
           title: highed.L('dgInsColAfter'),
           icon: 'plus',
           click: function() {
+            events.emit('ColumnMoving');
             insertCol(exports.colNumber + 1);
+            events.emit('ColumnMoved')
           }
         }
       ]),
-      ox;
+      ox,
+      keyCell = highed.dom.cr('span', 'highed-dtable-cell-value', keyValue);
 
+    //letter.innerHTML = keyValue;
+    letter.value = highed.getLetterIndex(keyValue);
+
+    exports.setLetter = function (str) {
+      keyCell.innerHTML = str;
+      letter.value = highed.getLetterIndex(str);
+      //exports.colNumber = highed.getLetterIndex(str);
+    }
+
+    exports.hideColumns = function() {
+      if (!col.classList.contains('cell-hide')) {
+        col.classList.add('cell-hide');
+        header.classList.add('cell-hide');
+        letter.classList.add('cell-hide');
+      }
+    }
+
+    exports.showColumns = function() {
+      if (col.classList.contains('cell-hide')) {
+        col.classList.remove('cell-hide');
+        header.classList.remove('cell-hide');
+        letter.classList.remove('cell-hide');
+      }
+    }
+
+    highed.dom.on(letter, 'mouseover', function(e) {
+      if(mouseDown && (e.target !== options && e.target !== moveHandle)) {
+        if (dragHeaderMode) {
+          if (movementBar.className.indexOf('active') === -1) {
+            movementBar.className += ' active'; 
+            highed.dom.style(movementBar, {
+              width: 140 * ((selectedHeaders[0] < selectedHeaders[1] ? selectedHeaders[1] - selectedHeaders[0]  : selectedHeaders[0] - selectedHeaders[1]) +1) + 'px'
+              //width: 140 * selectedHeaders.length + 'px'
+            });
+          }
+          highlightLeft(letter.value);
+          
+          highed.dom.style(movementBar, {
+            left: (e.clientX - highed.dom.size(movementBar).w / 2) + 'px'
+          });
+        } else {
+          selectedEndCell[0] = letter.value;
+          selectedHeaders[1] = letter.value;
+          selectNewCells(selectedFirstCell, selectedEndCell);
+        }
+      }
+    });    
+    
+    highed.dom.on(letter, 'mousedown', function(e) {
+
+      deselectAllCells();
+      
+      if (selectedHeaders.length > 0 && ( e.target.value >= selectedHeaders[0] && e.target.value <= selectedHeaders[1])) {
+        //User is trying to drag headers left and right.
+        dragHeaderMode = true;
+      } else {
+        //deselectAllCells();
+        if(e.target !== options && e.target !== moveHandle) {
+          selectedHeaders = [];
+
+          selectedHeaders[0] = e.target.value;
+          selectedHeaders[1] = e.target.value;
+
+          selectedFirstCell[0] = e.target.value;
+          selectedEndCell[0] = e.target.value;
+          selectedFirstCell[1] = 0; 
+          selectedEndCell[1] = rows.length - 1; 
+          selectNewCells(selectedFirstCell, selectedEndCell);
+        }
+      }
+    });
+
+    highed.dom.on(container, 'mouseover', function(e) {
+      if (dragHeaderMode) {
+        highed.dom.style(movementBar, {
+          left: (e.clientX - highed.dom.size(movementBar).w / 2) + 'px'
+        });
+      } 
+    });
+
+    function shuffleArray(arr, min, amount, moveTo) {
+      var x = arr.splice(min, amount);
+      var args = [moveTo, 0].concat(x);
+      Array.prototype.splice.apply(arr, args);
+    }
+
+    function moveCells() {
+      
+      if (moveToColumn !== null) {    
+        events.emit('ColumnMoving');
+        
+        const min = selectedHeaders[0/*(moveToColumn < selectedHeaders[0] ? 1 : 0)*/],
+              max = (selectedHeaders[0] < selectedHeaders[1] ? selectedHeaders[1] - selectedHeaders[0]  : selectedHeaders[0] - selectedHeaders[1]) +1,
+              total = (selectedHeaders[0] < selectedHeaders[1] ? selectedHeaders[1] - selectedHeaders[0]  : selectedHeaders[0] - selectedHeaders[1]);
+
+        shuffleArray(gcolumns, min, max, (moveToColumn < selectedHeaders[0] ? moveToColumn + 1 : moveToColumn - total));
+
+        rows.forEach(function(row) {
+          shuffleArray(row.columns, min, max, (moveToColumn < selectedHeaders[0] ? moveToColumn + 1 : moveToColumn - total));
+        });
+
+        if (rows.length > 0) rows[0].columns[0].focus();
+        updateColumns();
+        emitChanged();
+        events.emit('ColumnMoved');
+      }
+    }
+
+    highed.dom.on(container, 'mouseup', function(e) {
+      if (dragHeaderMode) {
+
+        moveCells();
+        selectedHeaders = [];
+        dragHeaderMode = false;
+        movementBar.classList.remove('active');
+        columnsToHighlight.forEach(function(highlightedColumn) {
+          highlightedColumn.element.classList.remove('highlight-right');
+        });
+        columnsToHighlight = [];
+        moveToColumn = null;
+      }
+      globalContextMenu.hide();
+    })
+
+    highed.dom.on(header, 'mouseover', function(e) {
+      if(mouseDown) {
+        if (dragHeaderMode) {
+          highlightLeft(exports.colNumber);
+        }
+      }
+    });
+
+    
+    keyValue = getNextLetter(keyValue);
     ////////////////////////////////////////////////////////////////////////
-
     exports.addToDOM = function() {
+
       highed.dom.ap(colgroup, col);
       highed.dom.ap(
-        topBar,
-        highed.dom.ap(header, headerTitle, options, moveHandle)
+        topLetterBar,
+        highed.dom.ap(letter, keyCell, options, moveHandle)
+      );
+
+      highed.dom.ap(
+        topColumnBar,
+        highed.dom.ap(header, headerTitle)
       );
     };
 
     exports.destroy = function() {
       colgroup.removeChild(col);
-      topBar.removeChild(header);
+      topColumnBar.removeChild(header);
+      topLetterBar.removeChild(letter);
 
       gcolumns = gcolumns.filter(function(b) {
         return b !== exports;
       });
+
     };
 
     ////////////////////////////////////////////////////////////////////////
@@ -960,12 +1531,24 @@ highed.DataTable = function(parent, attributes) {
     // highed.dom.showOnHover(header, options);
 
     col.width = 140;
-    highed.dom.style([col, header], {
-      width: col.width + 'px'
+    highed.dom.style([col, header, letter], {
+      width: col.width + 'px',
+      'max-width': col.width + 'px'
     });
 
     mover.on('StartMove', function(x) {
       ox = x;
+
+      if (!header.classList.contains('no-transition')) {
+        header.classList += ' no-transition';
+        letter.classList += ' no-transition';
+        col.classList += ' no-transition';
+      }
+
+      if (rows.length > 0) rows[0].columns[0].focus();
+      highed.dom.style(cornerPiece, {
+        display: 'none'
+      })
 
       highed.dom.style(document.body, {
         cursor: 'ew-resize'
@@ -975,8 +1558,13 @@ highed.DataTable = function(parent, attributes) {
     mover.on('Moving', function(x) {
       col.width = x;
 
-      highed.dom.style([col, header], {
-        width: x + 'px'
+      highed.dom.style(cornerPiece, {
+        display: 'none'
+      })
+
+      highed.dom.style([col, header, letter], {
+        width: x + 'px',
+        'max-width': x + 'px'
       });
 
       moveHandle.className =
@@ -988,7 +1576,14 @@ highed.DataTable = function(parent, attributes) {
         cursor: ''
       });
 
+      if (header.classList.contains('no-transition')) {
+        header.classList.remove('no-transition');
+        letter.classList.remove('no-transition');
+        col.classList.remove('no-transition');
+      }
+
       moveHandle.className = 'highed-dtable-resize-handle';
+      if (rows.length > 0) rows[0].columns[0].focus();
     });
 
     highed.dom.on(options, 'click', function(e) {
@@ -999,8 +1594,13 @@ highed.DataTable = function(parent, attributes) {
     highed.dom.on(header, 'click', function(e) {
       //Ugly.
       mainInput.className = 'highed-dtable-input highed-dtable-input-header';
-
       //Spawn an edit box in the node
+
+      highed.dom.style(cornerPiece, {
+        display: "none"
+      });
+      deselectAllCells();
+
       makeEditable(
         header,
         value,
@@ -1021,11 +1621,13 @@ highed.DataTable = function(parent, attributes) {
       if (where) {
         row.insertCol(where);
       } else {
-        row.addCol();
+        row.addCol(null, tempKeyValue);
       }
+
+      tempKeyValue = getNextLetter(tempKeyValue);
     });
 
-    if (where) {
+    if (!isNaN(where)) {
       gcolumns.splice(where, 0, exports);
     } else {
       gcolumns.push(exports);
@@ -1059,7 +1661,6 @@ highed.DataTable = function(parent, attributes) {
     tbody.innerHTML = '';
 
     direction = (direction || '').toUpperCase();
-
     rows.sort(function(a, b) {
       var ad = a.columns[column].value(),
         bd = b.columns[column].value();
@@ -1080,12 +1681,23 @@ highed.DataTable = function(parent, attributes) {
       }
 
       if (direction === 'ASC') {
+        if (!ad) return bd;
         return ad.localeCompare(bd);
       }
-      return bd.localeCompare(ad);
+
+      if (bd) {
+        if (!ad) return bd;
+        return bd.localeCompare(ad);
+      }
+       else {
+         if (ad) return ad.localeCompare(bd);
+       }
+      
     });
 
     rebuildRows();
+
+    if (rows.length > 0) rows[0].columns[column].focus();
     emitChanged();
   }
 
@@ -1105,14 +1717,16 @@ highed.DataTable = function(parent, attributes) {
 
     tbody.innerHTML = '';
     leftBar.innerHTML = '';
-    topBar.innerHTML = '';
+    topColumnBar.innerHTML = '';
+    topLetterBar.innerHTML = '';
     colgroup.innerHTML = '';
+    keyValue = "A";
 
     highed.dom.style(tableTail, {
       display: ''
     });
 
-    events.emit('ClearData');
+    events.emit('ClearData', true);
 
     emitChanged(noWait);
     showDropzone();
@@ -1131,7 +1745,6 @@ highed.DataTable = function(parent, attributes) {
     if (!supressChange) {
       emitChanged();
     }
-
     if (rows.length > 1) {
       hideDropzone();
     }
@@ -1144,10 +1757,9 @@ highed.DataTable = function(parent, attributes) {
    * @param {number} where - is the position where to add it
    */
   function insertCol(where) {
-    if (!where) gcolumns.length;
-    if (where < 0) where = 0;
+    if (where === null) where = gcolumns.length;
+    if (where <= 0) where = 0;
     if (where >= gcolumns.length) where = gcolumns.length;
-
     //Insert into gcolumns and on each row, then call updateColumns()
     addCol(highed.L('dgNewCol'), where);
 
@@ -1176,34 +1788,66 @@ highed.DataTable = function(parent, attributes) {
    */
   function resize() {
     var ps = highed.dom.size(parent),
-      hs = highed.dom.size(topBar),
-      tb = highed.dom.size(toolbar.container);
-
+      hs = highed.dom.size(topBar);
+      //tb = highed.dom.size(toolbar.container);
+    
     highed.dom.style(frame, {
-      height: ps.h - hs.h - tb.h + 'px',
-      width: ps.w - hs.h + 'px'
+      height: ps.h - hs.h - 55 - 17 + 'px' //55 is padding from top for data column and letter
     });
+
+    highed.dom.style([container, gsheetFrame, liveDataFrame], {
+      height: ps.h - hs.h - 22 /*- tb.h*/ + 'px'
+    });
+
 
     highed.dom.style(table, {
-      width: ps.w - hs.h + 'px'
+      width: ps.w + 'px'
     });
+
   }
 
   /** Returns the header titles as an array
    *  @memberof highed.DataTable
    *  @returns {array<string>} - the headers
    */
-  function getHeaderTextArr(quoteStrings) {
-    return gcolumns.map(function(item) {
-      var title = item.headerTitle.innerHTML.length
-        ? item.headerTitle.innerHTML
-        : null;
+  function getHeaderTextArr(quoteStrings, section) {
 
+    var columnNames = [];
+
+
+    function cleanData(data) {
+      var title = data && data.headerTitle.innerHTML.length
+      ? data.headerTitle.innerHTML
+      : null;
+      
       if (quoteStrings) {
         title = '"' + title + '"';
       }
 
-      return title;
+      columnNames.push(title);  
+    }
+
+    if (section) {
+      //Add in label data first
+      //cleanData(gcolumns[section.labelColumn]);
+    }
+
+    gcolumns.reduce(function(result, item, index) {
+      
+      if ( section && !checkSections(section, index)) {
+            return;
+          }
+      
+      cleanData(item);
+
+    }, []);
+
+    return columnNames;
+  }
+
+  function checkSections(sections, index) {
+    return (sections || []).some(function(section) {
+      return (section.dataColumns.indexOf(index) > -1 || section.extraColumns.indexOf(index) > -1 || section.labelColumn === index);
     });
   }
 
@@ -1213,45 +1857,64 @@ highed.DataTable = function(parent, attributes) {
    *  @param {boolean} includeHeaders - if true, the header texts will be included as the first row
    *  @returns {array<array<string>>}
    */
-  function toData(quoteStrings, includeHeaders) {
+  function toData(quoteStrings, includeHeaders, section) {
     var data = [];
-
     if (includeHeaders) {
-      data.push(getHeaderTextArr(quoteStrings));
+      data.push(getHeaderTextArr(quoteStrings, section));
+    }
+    dataFieldsUsed = [];
+
+    function addData(column, arr) {
+
+      if (quoteStrings && !highed.isNum(column) && highed.isStr(column)) {
+        column = '"' + column.replace(/\"/g, '"') + '"';
+      }
+
+      if (highed.isNum(column)) {
+        column = parseFloat(column);
+      }
+
+      if (highed.isStr(column) && Date.parse(column) !== NaN) {
+        //v = (new Date(v)).getTime();
+      }
+
+      arr.push(column);
     }
 
     rows.forEach(function(row) {
       var rarr = [],
         hasData = false;
 
-      row.columns.forEach(function(col) {
-        var v = col.value(),
-          d;
+      if (section) {
+        //Add in label data first
+        //addData(row.columns[section[0].labelColumn].value(), rarr);
+      }
+
+      row.columns.forEach(function(col, index) {
+        if (section && !checkSections(section, index)) return;
+
+        var v = col.value();
 
         if (v) {
           hasData = true;
         }
 
-        if (quoteStrings && !highed.isNum(v) && highed.isStr(v)) {
-          v = '"' + v.replace(/\"/g, '"') + '"';
+        if (dataFieldsUsed.indexOf(index) === -1) {
+          dataFieldsUsed.push(index);
+          if (!v) {
+            hasData = true;
+            v = undefined;
+          }
         }
 
-        if (highed.isNum(v)) {
-          v = parseFloat(v);
-        }
+        addData(v, rarr);
 
-        if (highed.isStr(v) && Date.parse(v) !== NaN) {
-          //v = (new Date(v)).getTime();
-        }
-
-        rarr.push(v);
       });
 
       if (hasData) {
         data.push(rarr);
       }
     });
-
     return data;
   }
 
@@ -1308,10 +1971,11 @@ highed.DataTable = function(parent, attributes) {
   /** Get the table contents as standard CSV
    *  @memberof highed.DataTable
    *  @param delimiter {string} - the delimiter to use. Defaults to `,`.
+   *  @param section {array} - the section of the data table which is the data.
    */
-  function toCSV(delimiter, quoteStrings) {
-    delimiter = delimiter || ',';
-    return toData(quoteStrings, true)
+  function toCSV(delimiter, quoteStrings, section) {
+    delimiter = delimiter || ','; 
+    return toData(quoteStrings, true, section)
       .map(function(cols) {
         return cols.join(delimiter);
       })
@@ -1320,7 +1984,6 @@ highed.DataTable = function(parent, attributes) {
 
   function loadRows(rows, done) {
     var sanityCounts = {};
-
     clear();
 
     if (rows.length > 1) {
@@ -1350,20 +2013,44 @@ highed.DataTable = function(parent, attributes) {
       opacity: 1
     });
 
+    highed.dom.style(hideCellsDiv, {
+      opacity: 0
+    });
+
     setTimeout(function() {
+
+      if(rows[0] && rows.length < DEFAULT_ROW) {
+        var counter = DEFAULT_ROW - rows.length,
+            length = (rows[0].length > DEFAULT_COLUMN ? rows[0].length : DEFAULT_COLUMN);
+
+        rows.forEach(function(row) {
+          if (row.length < DEFAULT_COLUMN) {
+            const len = DEFAULT_COLUMN - row.length;
+            for(var i=0;i<len;i++) {
+              row.push(null);
+            }
+          }
+        });
+
+        for(var i =0;i<counter; i++) {
+          rows.push(Array(length).fill(null, 0));
+        }
+      }
+
       rows.forEach(function(cols, i) {
         var row;
 
         if (i) {
           row = Row();
         }
-
+        tempKeyValue = "A";
         cols.forEach(function(c) {
           if (i === 0) {
             addCol(c);
           } else {
-            row.addCol(c);
+            row.addCol(c, tempKeyValue);
           }
+          tempKeyValue = getNextLetter(tempKeyValue);
         });
       });
 
@@ -1374,6 +2061,9 @@ highed.DataTable = function(parent, attributes) {
 
       highed.dom.style(loadIndicator, {
         opacity: 0
+      });
+      highed.dom.style(hideCellsDiv, {
+        opacity: 1
       });
 
       if (highed.isFn(done)) {
@@ -1408,7 +2098,7 @@ highed.DataTable = function(parent, attributes) {
                                   type: type });
   }
 
-  function loadCSV(data, surpressEvents) {
+  function loadCSV(data, surpressEvents, updateAssignData, cb) {
     var rows;
 
     if (isInGSheetMode) {
@@ -1437,7 +2127,29 @@ highed.DataTable = function(parent, attributes) {
 
     if (data && data.csv) {
       rows = parseCSV(data.csv, data.delimiter);
-      loadRows(rows, function() {});
+      if (updateAssignData && rows[0].length < DEFAULT_COLUMN) events.emit('AssignDataForFileUpload', rows[0].length);
+
+      if(rows[0] && rows.length < DEFAULT_ROW) {
+        var counter = DEFAULT_ROW - rows.length,
+            length = (rows[0].length > DEFAULT_COLUMN ? rows[0].length : DEFAULT_COLUMN);
+
+        rows.forEach(function(row) {
+          if (row.length < DEFAULT_COLUMN) {
+            const len = DEFAULT_COLUMN - row.length;
+            for(var i=0;i<len;i++) {
+              row.push(null);
+            }
+          }
+        });
+
+        for(var i =0;i<counter; i++) {
+          rows.push(Array(length).fill(null, 0));
+        }
+      }
+      loadRows(rows, function() {
+        if (updateAssignData && rows[0].length > DEFAULT_COLUMN) events.emit('AssignDataForFileUpload', rows[0].length);
+        if (cb) cb();
+      });
     } else {
       // surpressChangeEvents = false;
       // if (!surpressEvents) {
@@ -1464,9 +2176,9 @@ highed.DataTable = function(parent, attributes) {
     gsheetWorksheetID.value = worksheet || '';
     gsheetRefreshTime.value = dataRefreshRate || '';
     gsheetStartRow.value = startRow || 0;
-    gsheetEndRow.value = endRow || '';
+    gsheetEndRow.value = (endRow === Number.MAX_VALUE ? '' : endRow) || '';
     gsheetStartCol.value = startColumn || 0;
-    gsheetEndCol.value = endColumn || 0;
+    gsheetEndCol.value =  (endColumn === Number.MAX_VALUE ? '' : endColumn) || '';
 
     isInGSheetMode = true;
     isInLiveDataMode = false;
@@ -1483,8 +2195,8 @@ highed.DataTable = function(parent, attributes) {
       display: 'none'
     });
 
-
     if (!skipLoad) {
+
       events.emit('LoadGSheet', {
         googleSpreadsheetKey: gsheetID.value,
         googleSpreadsheetWorksheet: gsheetWorksheetID.value || false,
@@ -1498,6 +2210,18 @@ highed.DataTable = function(parent, attributes) {
     }
   }
 
+  function showDataTableError() {
+    highed.dom.style(container, {
+      border: '1px solid #aa5555'
+    });
+  }
+
+  function hideDataTableError() {
+    highed.dom.style(container, {
+      border: 'initial'
+    });
+  }
+
   function addImportTab(tabOptions){
     importer.addImportTab(tabOptions);
   }
@@ -1506,12 +2230,24 @@ highed.DataTable = function(parent, attributes) {
     importModal.hide();
   }
 
-  function showLiveData() {
+  function showImportModal(index) {
+    importModal.show();
+    if (!isNaN(index)) {
+      importer.selectTab(index);
+    }
+
+    events.emit('initExporter', importer.exporter);
+    importer.resize();
+  }
+
+  function showLiveData(skipConfirm) {
     if (
+      skipConfirm ||
       rows.length <= 1 ||
       confirm('This will clear your existing data. Continue?')
     ) {
       clear(true);
+      events.emit('ClearSeries');
 
       liveDataInput.value = '';
       liveDataIntervalInput.value = '';
@@ -1533,20 +2269,20 @@ highed.DataTable = function(parent, attributes) {
       isInGSheetMode = false;
       isInLiveDataMode = true;
     }
-
   }
 
-  function showGSheet() {
+  function showGSheet(skipConfirm) {
     if (
+      skipConfirm ||
       rows.length <= 1 ||
       confirm('This will clear your existing data. Continue?')
     ) {
       clear(true);
-
+      events.emit('ClearSeries');
+      
       gsheetID.value = '';
       gsheetWorksheetID.value = '';
       gsheetRefreshTime.value = '';
-
       highed.dom.style(gsheetFrame, {
         display: 'block'
       });
@@ -1559,6 +2295,7 @@ highed.DataTable = function(parent, attributes) {
         display: 'none'
       });
 
+      importModal.hide();
       isInGSheetMode = true;
       isInLiveDataMode = false;
     }
@@ -1625,14 +2362,35 @@ highed.DataTable = function(parent, attributes) {
   }
 
   ////////////////////////////////////////////////////////////////////////////
+  importer.on('ExportComma', function(data) {
+    highed.emit('UIAction', 'ExportComma');
+    highed.download('data.csv', toCSV(','), 'application/csv');
+    events.emit('EnableAssignDataPanel');
+    importModal.hide();
+  });
 
-  importer.on('ImportCSV', function(data) {
+  importer.on('ExportSemiColon', function(data) {
+    highed.emit('UIAction', 'ExportSemiColon');
+    highed.download('data.csv', toCSV(';'), 'application/csv');
+    events.emit('EnableAssignDataPanel');
+    importModal.hide();
+  });
+
+  importer.on('ImportCSV', function(data, cb) {
     highed.emit('UIAction', 'ImportCSV');
-    loadCSV(data);
+    events.emit('EnableAssignDataPanel');
+    loadCSV(data, null, true, cb);
+  });
+
+  importer.on('ImportGoogleSpreadsheet', function() {
+    highed.emit('UIAction', 'BtnGoogleSheet');
+    events.emit('DisableAssignDataPanel');
+    showGSheet();
   });
 
   importer.on('ImportLiveData', function(data) {
     isInLiveDataMode = true;
+    events.emit('DisableAssignDataPanel');
     showLiveData();
     //loadLiveDataFromURL(data.url);
   });
@@ -1643,14 +2401,20 @@ highed.DataTable = function(parent, attributes) {
     importModal.hide();
   });
 
+  highed.dom.on(switchRowColumns, 'click', function() {
+    selectSwitchRowsColumns()
+  })
+
   highed.dom.on(gsheetCancelButton, 'click', function() {
     hideGSheet();
     events.emit('CancelDataInput');
+    events.emit('EnableAssignDataPanel');
   });
 
   highed.dom.on(liveDataCancelButton, 'click', function() {
     hideLiveData();
     events.emit('CancelDataInput');
+    events.emit('EnableAssignDataPanel');
   });
 
   highed.dom.on(liveDataLoadButton, 'click', function() {
@@ -1658,11 +2422,13 @@ highed.DataTable = function(parent, attributes) {
   });
 
   highed.dom.on(gsheetLoadButton, 'click', function() {
+
+    var value = parseInt(gsheetRefreshTime.value);
     events.emit('LoadGSheet', {
       googleSpreadsheetKey: gsheetID.value,
       googleSpreadsheetWorksheet: gsheetWorksheetID.value || false,
-      dataRefreshRate: gsheetRefreshTime.value || false,
-      enablePolling: (parseInt(gsheetRefreshTime.value) !== 0),
+      dataRefreshRate: (!isNaN(value) && value !== 0 ? value : false),
+      enablePolling: (!isNaN(value) && value !== 0),
       startRow: gsheetStartRow.value || 0,
       endRow: gsheetEndRow.value || Number.MAX_VALUE,
       startColumn: gsheetStartCol.value || 0,
@@ -1739,22 +2505,22 @@ highed.DataTable = function(parent, attributes) {
       loadCSV({
         csv: rawCSV,
         delimiter: selectedDelimiter
-      });
+      }, null, true);
     });
   });
 
   ////////////////////////////////////////////////////////////////////////////
 
   dropZone.innerHTML =
-    'DROP CSV FILES HERE OR ON THE TABLE!<br/>' +
-    '<span class="highed-dtable-drop-zone-small">...you can also paste CSV or Excel data into any cell</span>';
+    'Drop CSV files here.<br/>' +
+    '<span class="highed-dtable-drop-zone-small">You can also paste CSV or Excel data into any cell</span>';
 
   table.cellPadding = 0;
   table.cellSpacing = 0;
 
   highed.dom.on(frame, 'scroll', function(e) {
     leftBar.style.top = -frame.scrollTop + 'px';
-    topBar.style.left = -frame.scrollLeft + 'px';
+    topBar.style.left = -frame.scrollLeft + 40 + 'px';
   });
 
   parent = highed.dom.get(parent);
@@ -1768,11 +2534,13 @@ highed.DataTable = function(parent, attributes) {
         frame,
         highed.dom.ap(table, colgroup, thead, tbody),
         tableTail,
-        dropZone
+        dropZone,
+        movementBar
       ),
+      hideCellsDiv,
       leftBar,
-      topBar,
-      highed.dom.ap(topLeftPanel, checkAll)
+      highed.dom.ap(topBar, topLetterBar, topColumnBar)
+      //highed.dom.ap(topLeftPanel, checkAll)
     ),
     highed.dom.ap(
       weirdDataContainer,
@@ -1804,7 +2572,7 @@ highed.DataTable = function(parent, attributes) {
       highed.dom.cr(
         'div',
         'highed-dtable-gsheet-heading',
-        'Google Spreadsheet'
+        'Link Google Spreadsheet'
       ),
       highed.dom.ap(
         highed.dom.cr('div', 'highed-dtable-gsheet-inner'),
@@ -1858,19 +2626,19 @@ highed.DataTable = function(parent, attributes) {
           )
         ),
         highed.dom.ap(
-          highed.dom.cr('div'),
+          highed.dom.cr('div', 'highed-gsheet-btn-container'),
           gsheetLoadButton,
           gsheetCancelButton
         ),
         highed.dom.cr(
           'div',
-          '',
+          'highed-gsheet-text',
           [
             'When using Google Spreadsheet, Highcharts references the sheet directly.<br/><br/>',
             'This means that the published chart always loads the latest version of the sheet.<br/><br/>',
 
             'For more information on how to set up your spreadsheet, visit',
-            '<a target="_blank" href="https://www.highcharts.com/cloud/import-data/how-to-set-up-a-google-spreadsheet-file">the documentation</a>.'
+            '<a target="_blank" href="https://cloud.highcharts.com/docs/#/google-spread-sheet-setting">the documentation</a>.'
           ].join(' ')
         )
       )
@@ -1938,11 +2706,11 @@ highed.DataTable = function(parent, attributes) {
         ),
 
         highed.dom.ap(
-          highed.dom.cr('div'),
+          highed.dom.cr('div', 'highed-gsheet-btn-container'),
           liveDataLoadButton,
           liveDataCancelButton
         ),
-        highed.dom.cr('div', '', [
+        highed.dom.cr('div', 'highed-gsheet-text', [
           'Live data needs a url to your JSON data to reference.<br/><br/>',
           'This means that the published chart always loads the latest version of your data.<br/><br/>'
         ].join(' '))
@@ -1950,118 +2718,503 @@ highed.DataTable = function(parent, attributes) {
     )
   );
 
+  function selectSwitchRowsColumns() {
+    var csvData = rowsToColumns(highed.parseCSV(toCSV()))
+    .map(function(cols) {
+      return cols.join(';');
+    }).join('\n')
+
+    clearData()
+    loadCSV({
+      csv: csvData
+    }, null, true);
+  }
+
+  function rowsToColumns(rows) {
+    var row,
+        rowsLength,
+        col,
+        colsLength,
+        columns;
+
+    if (rows) {
+        columns = [];
+        rowsLength = rows.length;
+        for (row = 0; row < rowsLength; row++) {
+            colsLength = rows[row].length;
+            for (col = 0; col < colsLength; col++) {
+                if (!columns[col]) {
+                    columns[col] = [];
+                }
+                columns[col][row] = rows[row][col];
+            }
+        }
+    }
+    return columns;
+  }
+
+
   function getRawCSV() {
     return rawCSV;
   }
 
-  ////////////////////////////////////////////////////////////////////////////
-
-  toolbar = highed.Toolbar(container, {
-    additionalCSS: ['highed-dtable-toolbar']
-  });
-
-  toolbar.addButton({
-    css: 'fa-plus-circle',
-    tooltip: 'Add row',
-    title: highed.L('dgAddRow'),
-    click: function(e) {
-      highed.emit('UIAction', 'BtnAddRow');
-      addRowCtx.show(e.clientX, e.clientY);
-    }
-  });
-
-  toolbar.addButton({
-    css: 'fa-file-o',
-    tooltip: 'Reset',
-    title: highed.L('dgNewBtn'),
-    click: function() {
-      highed.emit('UIAction', 'BtnFlushData');
-      if (confirm('Start from scratch?')) {
-        highed.emit('UIAction', 'FlushDataConfirm');
-        init();
-        emitChanged();
-      }
-    }
-  });
-
-  toolbar.addButton({
-    tooltip: 'Import Google Spreadsheet',
-    title: 'Google Sheet',
-    click: function() {
-      highed.emit('UIAction', 'BtnGoogleSheet');
-      showGSheet();
-    }
-  });
-
-  toolbar.addButton({
-    css: 'fa-floppy-o',
-    title: highed.L('dgExportBtn'),
-    tooltip: 'Download data',
-    click: function(e) {
-      highed.emit('UIAction', 'BtnExportData');
-      saveCtx.show(e.clientX, e.clientY);
-    }
-  });
-
-  toolbar.addButton({
-    title: highed.L('dgImportBtn'),
-    click: function() {
-      highed.emit('UIAction', 'BtnImport');
-      importModal.show();
-      importer.resize();
-    }
-  });
-
-  highed.dom.on(checkAll, 'change', function() {
-    rows.forEach(function(row) {
-      row.check(checkAll.checked);
-    });
-  });
-
-  highed.dom.ap(
-    toolbar.left,
-    highed.dom.cr(
-      'div',
-      'highed-dtable-toolbar-label',
-      highed.L('dgWithSelected') + ' '
-    )
-  );
-
-  toolbar.addIcon(
-    {
-      css: 'fa-trash',
-      title: 'Delete row(s)',
-      click: function() {
-        highed.emit('UIAction', 'BtnDeleteRow');
-
-        if (!confirm(highed.L('dgDeleteRow'))) {
-          return;
+  function clearData() {
+    highed.emit('UIAction', 'FlushDataConfirm');
+    init();
+    emitChanged();
+    if (rows.length > 0) rows[0].columns[0].focus();
+  }
+  function colorHeader(values, color) {
+    var tempValue = values[0];
+    if (values.length > 0) {
+      while (tempValue <= values[values.length - 1]) {
+        if (gcolumns[tempValue]) {
+          highed.dom.style(gcolumns[tempValue].letter, {
+            "background-color": color.light,
+            "border-left": "1px double " + color.dark,
+            "border-top": "1px double " + color.dark,
+            "border-bottom": "1px double " + color.dark,
+            "border-right": "1px double " + color.dark,
+          });        
+          highed.dom.style(gcolumns[tempValue].header, {
+            "background-color": color.light,
+            "border-left": "1px double " + color.dark,
+            "border-right": "1px double " + color.dark,
+            "border-bottom": "1px double " + color.dark,
+          });
         }
-
-        highed.emit('UIAction', 'DeleteRowConfirm');
-
-        rows.forEach(function(row) {
-          if (row.isChecked()) {
-            row.destroy();
-            emitChanged();
-          }
-        });
+        tempValue++;
       }
-    },
-    'left'
-  );
+    }
+  }
 
-  // toolbar.addIcon(
-  //   {
-  //     css: 'fa-clone',
-  //     title: 'Clone Rows',
-  //     click: function() {
-  //       importModal.show();
-  //       importer.resize();
-  //     }
-  //   },
-  //   'left'
-  // );
+  function colorCells(values, color) {
+    if (values.length > 0) {
+      rows.forEach(function(row) {
+        var tempValue = values[0];
+        while (tempValue <= values[values.length - 1]) {
+          if (row.columns[tempValue]) {
+            highed.dom.style(row.columns[tempValue].element, {
+              "background-color": color.light 
+            });      
+          }  
+          tempValue++;
+        }
+      });
+    }
+  }
+
+  function outlineCell(values, color) {
+    values.forEach(function(value, index) {
+      rows.forEach(function(row) {
+        if (row.columns[value]) {
+          highed.dom.style(row.columns[value].element, {
+            "border-right": (index === (values.length - 1) ? '1px double ' + color.dark : ''),
+            "border-left": (index === 0 ? '1px double ' + color.dark : ''),
+          });
+        }
+      });
+    });
+  }
+
+  function decolorCells(previousValues) {
+    if (previousValues && previousValues.length > 0) {
+      
+      rows.forEach(function(row) {
+        var tempValue = previousValues[0];
+        if (previousValues.length > 0) {
+          while (tempValue <= previousValues[previousValues.length - 1]) {
+            if (row.columns[tempValue]) {
+              highed.dom.style(row.columns[tempValue].element, {
+                "background-color": ''
+              });
+            }
+            tempValue++; //= getNextLetter(tempValue);
+          }
+        }
+      });
+    }
+  }
+
+  function decolorHeader(previousValues) {
+    if (previousValues && previousValues.length > 0){
+      var tempValue = previousValues[0];
+      if (previousValues.length > 0) {
+        while (tempValue <= previousValues[previousValues.length - 1]) {
+          if (gcolumns[tempValue]) {
+            highed.dom.style([gcolumns[tempValue].letter, gcolumns[tempValue].header], {
+              "background-color": '',
+              "border": '',
+            });
+          }
+          tempValue++; //= getNextLetter(tempValue);
+        }
+      }
+    }
+  }
+
+  function removeOutlineFromCell(values) {
+    (values || []).forEach(function(value) {
+      (rows || []).forEach(function(row){
+        if (row.columns[value]) { //May have been deleted on startup
+          highed.dom.style(row.columns[value].element, {
+            "border-right": '',
+            "border-left": '',
+          });
+        }
+      });
+    });
+  }
+
+  function removeCellColoring(previousValues) {
+    removeOutlineFromCell(previousValues);
+    decolorHeader(previousValues);
+    decolorCells(previousValues);
+  }
+
+  function colorFields(values, color) {
+    outlineCell(values, color);
+    colorCells(values, color);
+    colorHeader(values, color);
+  }
+
+  function highlightCells(previousValues, values, input, newOptions) {
+    removeCellColoring(previousValues);
+    colorFields(values, input.colors);
+    //events.emit('AssignDataChanged', input, newOptions);
+  }
+
+  function removeAllCellsHighlight(previousValues, values, input, newOptions) {
+    removeCellColoring(values);
+  }
+
+  function toggleUnwantedCells(values, toggle) {
+    
+    var found = false;
+
+    gcolumns.forEach(function(col, index) {
+      if (!values.indexOf(index) === -1) {
+        toggle ? col.hideColumns() : col.showColumns();
+      } else {
+        col.showColumns();
+
+        if (!found && rows[0]) {
+          rows[0].columns[index].focus();
+          found = true;
+        }
+        
+      }
+    });
+  }
+  
+  function getColumnLength(){
+    return (rows[0] && rows[0].columns ? rows[0].columns.length : 2);
+  }
+
+  function areColumnsEmpty(colNumber) {
+    return !rows.some(function(row){
+      return row.columns[colNumber].value() !== null;
+    });
+  }
+
+  function areRowsEmpty(rowNumber) {
+    return !rows[rowNumber].columns.some(function(column){
+      return column.value() !== null;
+    });
+  }
+
+  function getDataFieldsUsed() {
+    return dataFieldsUsed;
+  }
+
+  function isInCSVMode() {
+    return (!isInGSheetMode && !isInLiveDataMode);
+  }
+
+  // Getting kinda long, probably need to move this all out of here to createchartpage
+  function createTableInputs(inputs, maxColSpan, extraClass) {
+
+    var table = highed.dom.cr('table', 'highed-createchartwizard-table'),
+    maxColSpan = maxColSpan,
+    currentColSpan = maxColSpan,
+    tr;
+
+    inputs.forEach(function(input) {
+      if (currentColSpan >= maxColSpan) {
+        tr = highed.dom.cr('tr', extraClass);
+        highed.dom.ap(table, tr);
+        currentColSpan = 0;
+      }
+
+      currentColSpan += input.colspan;
+      input.element = {};
+
+      if (input.type && input.type === 'select') {
+        input.element.dropdown = highed.DropDown(null, 'highed-wizard-dropdown-container');
+        input.element.dropdown.addItems([
+          {id: 'columnsURL', title: "JSON (Column Ordered)"},
+          {id: 'rowsURL', title: "JSON (Row Ordered)"},
+          {id: 'csvURL', title: "CSV"}
+        ]);
+        input.element.dropdown.selectByIndex(0);
+        input.element.dropdown.on('Change', function(selected) {
+          detailValue = selected.id();
+        });
+
+        input.element.input = input.element.dropdown.container;
+
+      } else input.element.input = highed.dom.cr('input','highed-imp-input-stretch');
+      if (input.placeholder) input.element.input.placeholder = input.placeholder
+      input.element.label = highed.dom.cr('span', '', input.label);
+      
+      const tdLabel = highed.dom.ap(highed.dom.cr('td', 'highed-modal-label'), input.element.label),
+            tdInput = highed.dom.ap(highed.dom.cr('td', ''), input.element.input);
+      
+      tdLabel.colSpan = 1;
+      tdInput.colSpan = input.colspan - 1;
+
+      highed.dom.ap(tr, tdLabel, tdInput);
+    });
+    return table;
+  }
+
+  function createCancelBtn() {
+    cancel = highed.dom.cr('button', 'highed-ok-button highed-import-button grey', 'Cancel');
+    highed.dom.on(cancel, 'click', function() {
+      dataModal.hide();
+    });
+    return cancel;
+  }
+
+  function createLiveDataContainer(toNextPage) {
+    const container = highed.dom.cr('div', 'highed-modal-container'),
+    inputs = [
+      { label: 'URL', placeholder: 'Spreadsheet ID', colspan: 2, linkedTo: liveDataInput},
+      { label: 'Refresh Time in Seconds', placeholder: 'Refresh time  (leave blank for no refresh)', colspan: 2, linkedTo: liveDataIntervalInput},
+      { label: 'Type', colspan: 2, linkedTo: liveDataTypeSelect, type:'select'}],
+    table = createTableInputs(inputs, 2, 'highed-live-data'),
+    importData = highed.dom.cr('button', 'highed-ok-button highed-import-button negative', 'Import Data'),
+    cancel = createCancelBtn();
+
+    highed.dom.on(importData, 'click', function() {
+      showLiveData(true);
+      dataModal.hide();
+      inputs.forEach(function(input) {
+        if (input.type && input.type === 'select') {
+          input.linkedTo.selectByIndex(input.element.dropdown.getSelectedItem().index());
+        }
+        else input.linkedTo.value = input.element.input.value;
+      });
+      liveDataLoadButton.click();
+      toNextPage();
+    });
+    highed.dom.ap(container, 
+      highed.dom.cr('div', 'highed-modal-title highed-help-toolbar', 'Import Live Data'),
+      highed.dom.ap(highed.dom.cr('div'), 
+        highed.dom.cr('div', 'highed-modal-text', 'Live data needs a url to your JSON data to reference.'),
+        highed.dom.cr('div', 'highed-modal-text', 'This means that the published chart always loads the latest version of your data.')),
+      highed.dom.ap(highed.dom.cr('div', 'highed-table-container'), table),
+      highed.dom.ap(highed.dom.cr('div', 'highed-button-container'), importData, cancel));
+    
+    return container;
+  }
+
+  function createGSheetContainer(toNextPage) {
+    const container = highed.dom.cr('div', 'highed-modal-container');
+    inputs = [
+      { label: 'Google Spreadsheet ID', placeholder: 'Spreadsheet ID', colspan: 4, linkedTo: gsheetID},
+      { label: 'Worksheet', placeholder: 'Worksheet (leave blank for first)', colspan: 4, linkedTo: gsheetWorksheetID},
+      { label: 'Refresh Time in Seconds', placeholder: 'Refresh time  (leave blank for no refresh)', colspan: 4, linkedTo: gsheetRefreshTime},
+      { label: 'Start Row', colspan: 2, linkedTo: gsheetStartRow},
+      { label: 'End Row', colspan: 2, linkedTo: gsheetEndRow},
+      { label: 'Start Column', colspan: 2, linkedTo: gsheetStartCol},
+      { label: 'End Column', colspan: 2, linkedTo: gsheetEndCol}],
+    table = createTableInputs(inputs, 4),
+    connectSheet = highed.dom.cr('button', 'highed-ok-button highed-import-button negative', 'Connect Sheet');
+    cancel = createCancelBtn();
+
+    highed.dom.on(connectSheet, 'click', function() {
+      showGSheet(true);
+      dataModal.hide();
+      inputs.forEach(function(input) {
+        input.linkedTo.value = input.element.input.value;
+      });
+      gsheetLoadButton.click();
+      toNextPage();
+    });
+
+    highed.dom.ap(container, 
+                  highed.dom.cr('div', 'highed-modal-title highed-help-toolbar', 'Connect Google Sheet'),
+                  highed.dom.ap(highed.dom.cr('div'), 
+                    highed.dom.cr('div', 'highed-modal-text', 'When using Google Spreadsheet, Highcharts references the sheet directly.'),
+                    highed.dom.cr('div', 'highed-modal-text', 'This means that the published chart always loads the latest version of the sheet.'),
+                    highed.dom.cr('div', 'highed-modal-text', 'For more information on how to set up your spreadsheet, visit the documentation.')),
+                  highed.dom.ap(highed.dom.cr('div', 'highed-table-container'), table),
+                  highed.dom.ap(highed.dom.cr('div', 'highed-button-container'), connectSheet, cancel));
+
+    return container;
+  }
+
+  function createCutAndPasteContainer(toNextPage) {
+    const container = highed.dom.cr('div', 'highed-modal-container');
+    importData = highed.dom.cr('button', 'highed-ok-button highed-import-button negative', 'Import Data');
+    input = highed.dom.cr('textarea', 'highed-table-input'),
+    cancel = createCancelBtn();
+
+    highed.dom.on(importData, 'click', function() {
+      importer.emitCSVImport(input.value);
+      dataModal.hide();
+      toNextPage();
+    });
+
+    highed.dom.ap(container, 
+                  highed.dom.cr('div', 'highed-modal-title highed-help-toolbar', 'Cut And Paste Data'),
+                  highed.dom.ap(
+                    highed.dom.cr('div'), 
+                    highed.dom.cr('div', 'highed-modal-text', 'Paste CSV into the below box, or upload a file. Click Import to import your data.')
+                  ),
+                  highed.dom.ap(highed.dom.cr('div'), input),
+                  highed.dom.ap(highed.dom.cr('div', 'highed-button-container'), importData, cancel));
+
+    return container;
+  }
+
+  function createSampleData(toNextPage, loading) {
+    const container = highed.dom.cr('div', 'highed-modal-container'),
+          buttonsContainer = highed.dom.cr('div', 'highed-modal-buttons-container');
+
+    highed.samples.each(function(sample) {
+      var data = sample.dataset.join('\n'),
+        loadBtn = highed.dom.cr(
+          'button',
+          'highed-box-size highed-imp-button',
+          sample.title
+        );
+
+      highed.dom.style(loadBtn, { width: '99%' });
+
+      highed.dom.on(loadBtn, 'click', function() {
+        loading(true);
+        dataModal.hide();
+        importer.emitCSVImport(data, function() {
+          loading(false);
+          if (toNextPage) toNextPage();
+        });
+      });
+
+      highed.dom.ap(
+        buttonsContainer,
+        //highed.dom.cr('div', '', name),
+        //highed.dom.cr('br'),
+        loadBtn,
+        highed.dom.cr('br')
+      );
+    });
+
+    highed.dom.ap(container, buttonsContainer);
+    
+    return container;
+  }
+
+  function createSimpleDataTable(toNextPage, loading) {
+    var container = highed.dom.cr('div', 'highed-table-dropzone-container'),
+        selectFile = highed.dom.cr('button', 'highed-ok-button highed-import-button', 'Select File'),
+        buttonsContainer = highed.dom.cr('div'),
+        modalContainer = highed.dom.cr('div', 'highed-table-modal'),
+        gSheetContainer = createGSheetContainer(toNextPage),
+        liveContainer = createLiveDataContainer(toNextPage),
+        sampleDataContainer = createSampleData(toNextPage, loading);
+        cutAndPasteContainer = createCutAndPasteContainer(toNextPage);
+
+    var buttons = [{ title: 'Connect Google Sheet', linkedTo: gSheetContainer}, 
+                   { title: 'Import Live Data', linkedTo: liveContainer, height: 321}, 
+                   { title: 'Cut and Paste Data', linkedTo: cutAndPasteContainer, height: 448, width: 518}, 
+                   { title: 'Load Sample Data', linkedTo: sampleDataContainer}];
+
+    buttons.forEach(function(buttonProp) {
+      const button = highed.dom.cr('button', 'highed-ok-button highed-import-button', buttonProp.title);
+      highed.dom.on(button, 'click', function() {
+        dataModal.resize(buttonProp.width || 530, buttonProp.height || 530);
+        modalContainer.innerHTML = '';
+        highed.dom.ap(modalContainer, buttonProp.linkedTo);
+        dataModal.show();
+      });
+      highed.dom.ap(buttonsContainer, button);
+    });
+
+
+    highed.dom.on(selectFile, 'click', function(){
+      highed.readLocalFile({
+        type: 'text',
+        accept: '.csv',
+        success: function(info) {
+          highed.snackBar('File uploaded');
+          importer.emitCSVImport(info.data);
+          //events.emit("AssignDataForFileUpload", info.data); - Does this later in loadCSV
+          toNextPage();
+        }
+      });
+    });
+    
+    dataModal = highed.OverlayModal(false, {
+      minWidth: 530,
+      minHeight: 530,
+      showCloseIcon: true
+    });
+
+    highed.dom.ap(dataModal.body, modalContainer);
+
+    container.ondragover = function(e) {
+      e.preventDefault();
+    };
+
+    container.ondrop = function(e) {
+      e.preventDefault();
+
+      var d = e.dataTransfer;
+      var f;
+      var i;
+
+      if (d.items) {
+        for (i = 0; i < d.items.length; i++) {
+          f = d.items[i];
+          if (f.kind === 'file') {
+            handleFileUpload(f.getAsFile(), function() {
+              highed.snackBar('File uploaded');
+              toNextPage();
+            });
+          }
+        }
+      } else {
+        for (i = 0; i < d.files.length; i++) {
+          f = d.files[i];
+          handleFileUpload(f, function() {
+            highed.snackBar('File uploaded');
+            toNextPage();
+          });
+        }
+      }
+
+      //events.emit('AssignDataForFileUpload');
+      //toNextPage();
+    };
+
+    highed.dom.ap(container, 
+      highed.dom.ap(
+        highed.dom.cr('div','highed-table-dropzone'),
+        highed.dom.cr('div', 'highed-table-dropzone-title', 'Drop CSV files here'),
+        highed.dom.cr('div', 'highed-table-dropzone-subtitle', 'or'),
+        highed.dom.ap(
+          highed.dom.cr('div', 'highed-table-dropzone-button'),
+          selectFile
+        ),
+        highed.dom.cr('div', 'highed-table-dropzone-subtitle highed-table-dropzone-message', 'You can also:'),
+        buttonsContainer
+      )
+    );
+
+    return container;
+  }
 
   ////////////////////////////////////////////////////////////////////////////
 
@@ -2086,10 +3239,24 @@ highed.DataTable = function(parent, attributes) {
     getHeaderTextArr: getHeaderTextArr,
     addImportTab: addImportTab,
     hideImportModal: hideImportModal,
+    showImportModal: showImportModal,
     initGSheet: initGSheet,
     on: events.on,
     resize: resize,
     loadLiveDataFromURL: loadLiveDataFromURL,
-    loadLiveDataPanel: loadLiveDataPanel
+    loadLiveDataPanel: loadLiveDataPanel,
+    isInCSVMode: isInCSVMode,
+    //highlightSelectedFields: highlightSelectedFields,
+    highlightCells: highlightCells,
+    removeAllCellsHighlight: removeAllCellsHighlight,
+    toggleUnwantedCells: toggleUnwantedCells,
+    getColumnLength: getColumnLength,
+    getDataFieldsUsed: getDataFieldsUsed,
+    createSimpleDataTable: createSimpleDataTable,
+    areColumnsEmpty: areColumnsEmpty,
+    clearData: clearData,
+    showDataTableError: showDataTableError,
+    hideDataTableError: hideDataTableError,
+    selectSwitchRowsColumns: selectSwitchRowsColumns
   };
 };

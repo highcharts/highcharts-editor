@@ -56,7 +56,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   highed.FontPicker = function(fn, style) {
     var container = highed.dom.cr('div', 'highed-font-picker'),
       fontFamily = highed.DropDown(), //highed.dom.cr('select', 'font-family'),
-      fontSize = highed.DropDown(), //highed.dom.cr('select', 'font-size'),
+      fontSize = highed.DropDown(null, 'highed-font-size'), //highed.dom.cr('select', 'font-size'),
       boldBtn = highed.PushButton(false, 'bold'),
       italicBtn = highed.PushButton(false, 'italic'),
       color = highed.dom.cr('span', 'font-color', '&nbsp;');
@@ -104,8 +104,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
       style = highed.merge(
         {
-          fontFamily:
-            '"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif',
+          fontFamily: 'Default',//'"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif',
           color: '#333',
           fontSize: '18px',
           fontWeight: 'normal',
@@ -131,7 +130,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     //Listen to font changes
     fontFamily.on('Change', function(selected) {
-      style.fontFamily = selected.id();
+      
+      if (selected.id() === 'Default') style.fontFamily = '"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif';
+      else style.fontFamily = selected.id();
+
       return callback();
     });
 
@@ -162,15 +164,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     highed.dom.ap(
       container,
       fontFamily.container,
-      highed.dom.ap(
-        highed.dom.cr('div', 'highed-font-picker-button-container'),
         fontSize.container,
         highed.dom.ap(
           highed.dom.cr('div', 'highed-font-picker-buttons'),
-          boldBtn.button,
-          italicBtn.button,
+          highed.dom.ap (
+            highed.dom.cr('div', 'highed-font-style'),
+            boldBtn.button,
+            italicBtn.button
+          ),
           color
-        )
       )
     );
 

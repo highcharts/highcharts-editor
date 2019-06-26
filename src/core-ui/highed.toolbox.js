@@ -29,12 +29,12 @@ highed.Toolbox = function(parent, attr) {
   var events = highed.events(),
     container = highed.dom.cr(
       'div',
-      'highed-transition highed-toolbox highed-box-size'
+      'highed-transition highed-toolbox highed-wizard highed-box-size'
     ),
-    bar = highed.dom.cr('div', 'highed-toolbox-bar highed-box-size'),
+    bar = highed.dom.cr('div', 'highed-toolbox-bar highed-box-size highed-wizard-title-container'),
     body = highed.dom.cr(
       'div',
-      'highed-toolbox-body highed-box-size highed-transition'
+      'highed-toolbox-body highed-toolbox-body-no-border highed-box-size highed-transition highed-wizard-body'
     ),
     activeTimeout,
     expanded = false,
@@ -44,67 +44,41 @@ highed.Toolbox = function(parent, attr) {
         animate: true
       },
       attr
-    ),
-    liveDiv = highed.dom.cr(
-      'div',
-      'highed-toolbox-live',
-      'LIVE'
     );
 
   function addEntry(def) {
     var props = highed.merge(
         {
-          title: 'Tooltip Missing',
-          icon: 'fa-trash',
-          width: 200
+          number: 0,
+          title: 'Title Missing'
         },
         def
       ),
       entryEvents = highed.events(),
-      title = highed.dom.cr('div', 'highed-toolbox-body-title', props.title),
+      title = highed.dom.cr('div', 'highed-toolbox-body-title wizard', props.hideTitle ? '' : props.title),
       contents = highed.dom.cr(
         'div',
         'highed-box-size highed-toolbox-inner-body'
       ),
       userContents = highed.dom.cr(
         'div',
-        'highed-box-size highed-toolbox-user-contents'
+        'highed-box-size highed-toolbox-user-contents highed-createchart-body-container'
       ),
-      helpIcon = highed.dom.cr(
-        'div',
-        'highed-toolbox-help highed-icon fa fa-question-circle'
-      ),
-      iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + props.icon,
+      iconClass = 'highed-toolbox-list-item-container',
       icon = highed.dom.cr('div', iconClass),
-      helpModal = highed.HelpModal(props.help || []),
       resizeTimeout,
-      exports = {};
+      exports = {},
+      circle = highed.dom.cr('div', 'highed-toolbox-list-circle', props.number);
 
-    if (def.iconOnly) {
-      props.width = 0;
-    }
+    highed.dom.on(circle, 'click', function() {
+      props.onClick(props.number);
+      expand();
 
+    });
+
+    highed.dom.ap(icon, circle, highed.dom.cr('div', 'highed-toolbox-list-title', props.title));
     highed.dom.on(icon, 'click', function() {
       entryEvents.emit('Click');
-    });
-
-    highed.dom.on(icon, 'mouseover', function(e) {
-      var pos = highed.dom.pos(icon),
-        size = highed.dom.size(icon),
-        ppos = highed.dom.pos(parent);
-
-      pos.y += ppos.y;
-
-      clearTimeout(activeTimeout);
-
-      activeTimeout = setTimeout(function() {
-        highed.Tooltip(pos.x + 10 + size.w, pos.y + size.h, def.title);
-      }, 800);
-    });
-
-    highed.dom.on(icon, 'mouseout', function() {
-      clearTimeout(activeTimeout);
-      highed.hideAllTooltips();
     });
 
     function resizeBody() {
@@ -112,20 +86,21 @@ highed.Toolbox = function(parent, attr) {
         tsize = highed.dom.size(title),
         size = {
           w: bsize.w,
-          h: bsize.h - tsize.h
+          h: bsize.h - tsize.h - 55
         };
-
+/*
       highed.dom.style(contents, {
         width: size.w + 'px',
         height: size.h + 'px'
       });
-
+*/
       return size;
     }
 
     function expand() {
       var bsize = highed.dom.size(bar);
-      var newWidth = bsize.w + props.width;
+      
+      var newWidth = props.width;
 
       if (expanded && activeItem === exports) {
         return;
@@ -143,15 +118,14 @@ highed.Toolbox = function(parent, attr) {
 
       body.innerHTML = '';
       highed.dom.ap(body, contents);
-
+      
       highed.dom.style(body, {
-        width: props.width + 'px',
-        height: bsize.h + 'px',
+        height: (bsize.h - 55) + 'px',
         opacity: 1
       });
 
       highed.dom.style(container, {
-        width: newWidth + 'px'
+        width: newWidth + '%'
       });
 
       events.emit('BeforeResize', newWidth);
@@ -168,13 +142,9 @@ highed.Toolbox = function(parent, attr) {
       if (props.iconOnly) {
         activeItem = false;
       } else {
-        icon.className = iconClass + ' highed-toolbox-bar-icon-sel';
+        icon.className = iconClass + ' active';
         activeItem = exports;
       }
-
-      highed.dom.style(helpIcon, {
-        display: props.iconOnly ? 'none' : 'block'
-      });
 
       highed.emit('UIAction', 'ToolboxNavigation', props.title);
     }
@@ -189,7 +159,7 @@ highed.Toolbox = function(parent, attr) {
         });
 
         highed.dom.style(container, {
-          width: newWidth + 'px'
+          width: newWidth + '%'
         });
 
         events.emit('BeforeResize', newWidth);
@@ -198,33 +168,26 @@ highed.Toolbox = function(parent, attr) {
         expanded = false;
         activeItem = false;
 
-        highed.dom.style(helpIcon, {
-          display: 'none'
-        });
       }
     }
 
     function toggle() {
-      if (activeItem === exports) {
-        collapse();
-      } else {
         expand();
-      }
     }
 
     function disselect() {
-      icon.className = iconClass;
+      icon.className = iconClass + ' completed';
     }
 
-    function showHelp() {
-      highed.emit('UIAction', 'IconHelp', props.title);
-      helpModal.show();
+    function removeCompleted() {
+      setTimeout(function() {
+        icon.classList.remove('completed');
+      }, 50);
     }
 
-    highed.dom.on(helpIcon, 'click', showHelp);
-    highed.dom.on(icon, 'click', toggle);
+    //highed.dom.on(icon, 'click', toggle);
     highed.dom.ap(bar, icon);
-    highed.dom.ap(contents, (props.showLiveStatus ? highed.dom.ap(title, liveDiv, helpIcon) :  highed.dom.ap(title, helpIcon)), userContents);
+    highed.dom.ap(contents, title, userContents);
 
     function reflowEverything() {
       clearTimeout(resizeTimeout);
@@ -244,9 +207,9 @@ highed.Toolbox = function(parent, attr) {
       expand: expand,
       collapse: collapse,
       body: userContents,
+      removeCompleted: removeCompleted,
       disselect: disselect
     };
-
     return exports;
   }
 
@@ -262,26 +225,12 @@ highed.Toolbox = function(parent, attr) {
     body.innerHTML = '';
   }
 
-  function showLiveStatus() {
-    highed.dom.style(liveDiv, {
-      display: 'inline'
-    });
-  }
-
-  function hideLiveStatus() {
-    highed.dom.style(liveDiv, {
-      display: 'none'
-    });
-  }
-
-  highed.dom.ap(parent, highed.dom.ap(container, bar, body));
+  highed.dom.ap(parent, highed.dom.ap(container,bar,body));
 
   return {
     clear: clear,
     on: events.on,
     addEntry: addEntry,
-    width: width,
-    showLiveStatus: showLiveStatus,
-    hideLiveStatus: hideLiveStatus
+    width: width
   };
 };

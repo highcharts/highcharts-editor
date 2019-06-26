@@ -91,9 +91,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       pluginTab = tctrl.createTab({ title: 'Plugins' }),
       pluginSplitter = highed.HSplitter(pluginTab.body, { leftWidth: 30 }),
       pluginList = highed.List(pluginSplitter.left),
-      exportJSON = highed.dom.cr('a', '', 'Download'),
-      exportHTML = highed.dom.cr('a', '', 'Download'),
-      exportSVG = highed.dom.cr('a', '', 'Download'),
+      exportJSON = highed.dom.cr('a', 'highed-imp-button highed-imp-pasted-button', 'Download'), //highed.dom.cr('a', '', 'Download'),
+      exportHTML = highed.dom.cr('a', 'highed-imp-button highed-imp-pasted-button', 'Download'),
+      exportSVG = highed.dom.cr('a', 'highed-imp-button highed-imp-pasted-button', 'Download'),
       jsonValue = highed.dom.cr(
         'textarea',
         'highed-imp-pastearea highed-scrollbar'
@@ -282,7 +282,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       }
 
       jsonValue.value = JSON.stringify(chartData);
-      exportJSON.href = 'data:application/octet-stream,' + jsonValue.value;
+      exportJSON.href = 'data:application/octet-stream,' + encodeURIComponent(jsonValue.value);
 
       htmlValue.value = chartHTML;
       exportHTML.href =
@@ -353,21 +353,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       htmlTab.body,
       // highed.dom.cr('div', 'highed-imp-headline', 'Export HTML'),
       highed.dom.ap(highed.dom.cr('div', 'highed-imp-spacer'), htmlValue),
-      highed.dom.ap(highed.dom.cr('button', 'highed-imp-button'), exportHTML)
+      exportHTML
     );
 
     highed.dom.ap(
       jsonTab.body,
       // highed.dom.cr('div', 'highed-imp-headline', 'Export JSON'),
       highed.dom.ap(highed.dom.cr('div', 'highed-imp-spacer'), jsonValue),
-      highed.dom.ap(highed.dom.cr('button', 'highed-imp-button'), exportJSON)
+      exportJSON
     );
 
     highed.dom.ap(
       svgTab.body,
       // highed.dom.cr('div', 'highed-imp-headline', 'Export JSON'),
       highed.dom.ap(highed.dom.cr('div', 'highed-imp-spacer'), svgValue),
-      highed.dom.ap(highed.dom.cr('button', 'highed-imp-button'), exportSVG)
+      exportSVG
     );
 
     resize();

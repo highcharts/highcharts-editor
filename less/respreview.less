@@ -16,10 +16,20 @@
 }
 
 .highed-res-number {
-  width: 40px;
-  margin-left: 4px;
-  margin-right: 4px;
-  font-size: 22px;
+  width: 35px;
+  margin-left: 0px;
+  margin-right: 2px;
+  height: 18px;
+  font-size: 10px;
+  position: relative;
+  top: -2px;    
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+}
+
+input::placeholder {
+  color: #ced4da;
+  font-size: 9px;
 }
 
 .highed-res-headline {
@@ -27,3 +37,27 @@
   padding-top: 6px;
   padding-right: 4px;
 }
+
+.highed-resolution-settings {
+  position: absolute;
+  top: 15px;
+  font-size: 14px;
+  color: #757575;
+  span.text {
+    font-size: 10px;
+    cursor: default;
+    font-weight: 600;
+    position: relative;
+    top: -1px;
+  }
+  span {
+    padding-right: 8px;
+    cursor: pointer;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .highed-resolution-settings{
+    display: none !important;
+  }
+}
+  

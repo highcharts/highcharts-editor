@@ -1,19 +1,36 @@
 .highed-pushbutton {
-	background: @background-main;
+	background: @accent-color;
 	color:@text-main;
 	border:@border-main;
 
 	padding:5px;
-	min-width:32px;
+	min-width:26px;
 	display: inline-block;
 	text-align: center;
 	font-size: 12px;
 	margin-right:4px;
-	min-height: 32px;
+	min-height: 26px;
 	.highed-box-size;
 }
 
+.highed-pushbutton.fa-bold:before,
+.highed-pushbutton.fa-italic:before {
+    position: relative;
+    top: 2px;
+}
+
 .highed-pushbutton-active {
-	background: @accent-color;
+	background: @background-main;
 	color: @accent-text;
+}
+a.highed-imp-pasted-button{
+	display: block;
+	text-align: center;
+}
+
+.switch-column-button {
+	background-color: transparent;
+	border: 0px;
+	margin-top: 15px;
+	margin-left: 6px;
 }

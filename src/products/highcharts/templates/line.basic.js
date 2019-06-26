@@ -29,6 +29,7 @@ highed.templates.add('Line', {
   title: 'Line chart',
   description: '',
   thumbnail: 'abywon.svg',
+  popular: true,
   dataValidator: false,
   sampleSets: [],
   config: {

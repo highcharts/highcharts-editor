@@ -25,18 +25,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-highed.templates.add('Combinations', {
-  title: 'Column and line',
+highed.templates.add('Area', {
+  title: 'Basic Area',
   description: '',
-  thumbnail: 'ufafag.svg',
+  thumbnail: 'ecexev.svg',
   dataValidator: false,
   sampleSets: [],
+  popular: true,
   config: {
     chart: {
-      type: 'column'
-    },
-    'series[0]': {
-      type: 'line'
+      type: 'area',
+      polar: false
     }
   }
 });

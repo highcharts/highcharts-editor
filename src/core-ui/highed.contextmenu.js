@@ -115,11 +115,11 @@ highed.ContextMenu = function(stuff) {
      *  @param x {number} - the x position
      *  @param y {number} - the y position
      */
-  function show(x, y) {
+  function show(x, y, noDimmer) {
     var psize = highed.dom.size(document.body),
       size = highed.dom.size(container);
 
-    if (visible) return;
+    if (!noDimmer && visible) return;
 
     if (x > psize.w - size.w - 20) {
       x = psize.w - size.w - 20;
@@ -137,7 +137,7 @@ highed.ContextMenu = function(stuff) {
     });
 
     visible = true;
-    dimHide = highed.showDimmer(hide, true, true, 10);
+    if (!noDimmer) dimHide = highed.showDimmer(hide, true, true, 10);
   }
 
   /** Hide the menu

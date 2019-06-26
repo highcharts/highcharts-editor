@@ -25,19 +25,22 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-highed.templates.add('Line', {
-  title: 'Combination chart',
+highed.templates.add('Scatter And Bubble', {
+  title: 'Scatter with line',
   description: '',
-  thumbnail: 'ynikoc.svg',
+  thumbnail: 'ydaqok.svg',
   dataValidator: false,
+  popular: true,
   sampleSets: [],
   config: {
     chart: {
-      type: 'line',
+      type: 'scatter',
       polar: false
     },
-    'series[0]': {
-      type: 'column'
+    plotOptions: {
+      series: {
+        lineWidth: 1
+      }
     }
   }
 });

@@ -25,20 +25,26 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-highed.templates.add('Scatterandbubble', {
-  title: 'Scatter with line',
+highed.templates.add('Pie', {
+  title: 'Pie chart with labels',
   description: '',
-  thumbnail: 'ydaqok.svg',
+  thumbnail: 'yqoxob.svg',
   dataValidator: false,
   sampleSets: [],
   config: {
     chart: {
-      type: 'scatter',
+      type: 'pie',
       polar: false
     },
     plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: true
+      },
       series: {
-        lineWidth: 1
+        dataLabels: {
+          enabled: true
+        }
       }
     }
   }

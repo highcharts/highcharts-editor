@@ -52,6 +52,7 @@ highed.Movable = function(
   if (target) {
     highed.dom.on(target, ['mousedown', 'touchstart'], function(e) {
       //   if (moving) return;
+      
       moving = true;
       var cp = highed.dom.pos(target),
         ps = highed.dom.size(parentNode || target.parentNode),
@@ -67,7 +68,7 @@ highed.Movable = function(
             if (constrain === 'X' || constrain === 'XY') {
               x =
                 cp.x + ((moveE.clientX || moveE.touches[0].clientX) - offsetX);
-
+                
               if (constrainParent) {
                 if (x < 0) x = 0;
                 if (x > ps.w - ns.w) x = ps.w - ns.w;
@@ -136,7 +137,7 @@ highed.Movable = function(
       return false;
     });
   }
-
+  
   ////////////////////////////////////////////////////////////////////////////
 
   return {

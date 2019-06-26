@@ -47,7 +47,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @return {object} - A new instance of OverlayModal
  */
 highed.OverlayModal = function(contents, attributes) {
-  var container = highed.dom.cr('div', 'highed-overlay-modal'),
+  var container = highed.dom.cr('div', 'highed-overlay-modal '),
     events = highed.events(),
     properties = highed.merge(
       {
@@ -56,21 +56,35 @@ highed.OverlayModal = function(contents, attributes) {
         minWidth: 10,
         minHeight: 10,
         showOnInit: true,
-        zIndex: 10000
+        zIndex: 10000,
+        showCloseIcon: false,
+        cancelButton: false
       },
       attributes
     ),
     hideDimmer = false,
     visible = false;
 
+    if (properties.class) {
+      container.classList += properties.class;
+    }
+
   ///////////////////////////////////////////////////////////////////////////
 
+
+  /** resize the modal
+     *  @memberof highed.OverlayModal
+     */
+
+  function resize(width, height) {
+    properties.minWidth = width;
+    properties.minHeight = height;
+  }
   /** Show the modal
      *  @memberof highed.OverlayModal
      */
   function show() {
     if (visible) return;
-
     highed.dom.style(container, {
       width:
         properties.width +
@@ -92,6 +106,14 @@ highed.OverlayModal = function(contents, attributes) {
       'overflow-x': 'hidden',
       'overflow-y': 'hidden'
     });
+
+    if (properties.showCloseIcon) {
+      const icon = highed.dom.cr('span', 'highed-overlaymodal-close', '<i class="fa fa-times" aria-hidden="true"></i>');
+      highed.dom.on(icon, 'click', function() {
+        hide();
+      });
+      highed.dom.ap(container, icon);
+    }
 
     hideDimmer = highed.showDimmer(
       hide,
@@ -162,6 +184,7 @@ highed.OverlayModal = function(contents, attributes) {
     on: events.on,
     show: show,
     hide: hide,
+    resize: resize,
     /** The container DOM node
          *  @memberof highed.OverlayModal
          */

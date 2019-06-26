@@ -8,12 +8,12 @@
 .highed-tooltip {
   margin-top: 10px;
   margin-right: 10px;
-  padding: 20px;
-  font-size: 20px;
+  padding: 10px;
+  font-size: 10px;
   max-height: 300px;
   overflow-y: auto;
   //display: none;
-  border-radius: 15px;
+  border-radius: 5px;
   background: @secondary-background-panel;
   color: @secondary-color-panel;
   border: @border-main;
@@ -24,4 +24,10 @@
   .highed-tooltip {
     font-size: 20px;
   }
+}
+.highed-template-tooltip-text-left {
+  left: 57px !important;
+}
+.highed-template-tooltip-text-left::after {
+  left: 13% !important;
 }

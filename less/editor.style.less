@@ -75,30 +75,54 @@
   background-color: #fff;
 }
 
+.highed-warningbar {
+  background: #e6a031 !important;
+  .highed-errorbar-body {
+    background: #F5AB35;
+  }
+}
+
 .highed-errorbar {
   opacity: 0;
   pointer-events: none;
-  width: 100%;
-  height: 140px;
+  width: 40%;
+  margin-left: auto;
+  margin-right: auto;
   background: @background-error;
   color: @color-error;
-  position: absolute;
-  z-index: 10;
+  position: fixed;
+  z-index: 100000;
   bottom: 0px;
-  left: 0px;
+  left: 22px;
+  margin-bottom: 15px;    
+  border-radius: 3px;
+  border: 1px solid rgba(128, 128, 128, 0.4392156862745098);
+  box-shadow: 2px 3px 6px 0px rgba(0, 0, 0, 0.25882352941176473);
 }
 
 .highed-errorbar-headline {
-  font-size: 28px;
-  text-align: center;
-  padding-bottom: 5px;
+  font-size: 15px;
+  text-align: left;
+  padding: 5px;
 }
-
+.highed-errorbar-headline-text {
+  width: calc(100% - 15px);
+  display: inline-block;
+}
+.highed-errorbar-close {
+  width: 10px;
+  padding-right: 5px;
+  float: right;
+  vertical-align: top;
+  cursor: pointer;
+}
 .highed-errorbar-body {
   overflow-y: auto;
-  height: 90px;
+  min-height: 23px;
   padding: 5px;
-  background: lighten(@background-error, 5);
+  background: lighten(@background-error, 5);    
+  padding-top: 10px;
+  font-size: 12px;
 }
 
 .highed-errorbar a {

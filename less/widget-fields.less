@@ -16,10 +16,13 @@
 }
 
 .highed-field-container {
-  padding-right: 36px;
+  padding-right: 5px;
   width: 100%;
   position: relative;
   .highed-box-size;
+  .cm-s-neo.CodeMirror {
+    border: 1px solid #aaa;
+  }
 }
 
 .highed-field-reset {
@@ -55,13 +58,45 @@
   color: @accent-color;
 }
 
+.highed-field-colorpicker {
+  max-width: 29px;
+  display: block;
+  width: 100%;
+  font-size: 9px !important;
+  line-height: 1.5 !important;
+  padding-top: 8px !important;
+  padding-right: 0px !important;
+  padding-left: 0px !important;
+  text-align: center;
+}
+
+.highed-field-input,
+.highed-field-colorpicker {
+  display: block;
+  width: 100%;
+  padding: .375rem .75rem;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+}
+
+@media screen and (max-width: 768px) {
+  .highed-customize-field-label {
+    font-weight: 500; 
+    font-size: 12px;
+  }
+}
+
 .highed-field-input {
   width: 100%;
   outline: none;
   border: @input-border;
   color: @text-main !important;
   padding: 7px;
-  font-size: 13px;
   min-height: 30px;
   .highed-box-size;
 }
@@ -115,19 +150,24 @@
 }
 
 .highed-field-array-add {
-  background: @accent-color;
-  color: @accent-text;
-  float: right;
-  width: 30px;
-  height: 30px;
+  background: @background-main;
+  color: @text-main;
+  width: 28px;
+  height: 28px;
   padding: 4px;
   font-size: 14px;
   line-height: 30px !important;
   text-align: center;
   display: inline-block;
+  border: 1px dashed #000;
+  border-radius: 3px;
   cursor: pointer;
-  border: @border-main;
   .highed-transition;
+}
+
+.highed-field-array-add.fa-plus:before {
+  position: relative;
+  top: -4px;
 }
 
 .highed-field-table {
@@ -183,4 +223,69 @@
   padding: 4px;
   .highed-box-size;
   .highed-transition;
+}
+
+.highed-field-header {
+  font-size: 13px;
+  padding-bottom: 5px;
+  font-weight: 500;
+  color: rgb(36, 54, 113);
+}
+
+.annotation-buttons {
+  padding-left: 9px;
+  display: inline-block;
+  padding-right: 10px;
+  padding-top: 8px;
+}
+
+.annotation-buttons-container {
+  overflow: hidden;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  padding: 0px !important;
+}
+
+.highed-annotation-container {    
+  font-size: 14px;
+  background-color: white;
+  color: #25386f;
+  border-radius: 40px;
+  margin-right: 5px;
+  cursor: pointer;
+  display: inline-flex;
+  width: 32px;
+  overflow: hidden;
+  height: 32px;
+  padding: 0px !important;
+  vertical-align: bottom;
+}
+
+.highed-annotation-container.active {
+  width:223px;
+}
+.annotation-buttons.active {
+  color: #42c8c0;
+}
+
+.highed-active-annotation {
+  position: absolute;
+}
+
+.highed-template-tooltip.annotation-buttons {
+  .highed-tooltip-text {
+    position: fixed;
+    top: initial;
+    left: initial;
+    margin-top: 25px;
+    margin-left: -68px;
+  }
+}
+.highed-template-tooltip.annotation-buttons.usingsafari {
+  padding-right: 14px;
+  .highed-tooltip-text {
+    margin-top: 80px;
+    margin-left: -54px;
+  }
 }

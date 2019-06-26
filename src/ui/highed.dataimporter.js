@@ -100,27 +100,28 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     var events = highed.events(),
       properties = highed.merge(
         {
-          options: ['csv', 'plugins', 'samples'],
+          options: ['csv', 'plugins', 'samples', 'export'],
           plugins: ['CSV', 'JSON', 'Difi', 'Socrata', 'Google Spreadsheets']
         },
         attributes
       ),
       tabs = highed.TabControl(parent, false, true),
-      csvTab = tabs.createTab({ title: 'CSV' }),
+      csvTab = tabs.createTab({ title: 'Import' }),
+      exportTab = tabs.createTab({ title: 'Export' }),
       jsonTab = tabs.createTab({ title: 'JSON' }),
       webTab = tabs.createTab({ title: 'Plugins' }),
       samplesTab = tabs.createTab({ title: 'Sample Data' }),
       csvPasteArea = highed.dom.cr('textarea', 'highed-imp-pastearea'),
       csvImportBtn = highed.dom.cr(
         'button',
-        'highed-imp-button',
+        'highed-imp-button highed-imp-pasted-button',
         'Import Pasted Data'
       ),
-      liveDataImportBtn = highed.dom.cr('button', 'highed-imp-button', 'Import Live Data'),
+      liveDataImportBtn = highed.dom.cr('button', 'highed-imp-button', 'Live Data'),
       csvImportFileBtn = highed.dom.cr(
         'button',
         'highed-imp-button',
-        'Upload & Import File'
+        'Import File'
       ),
       delimiter = highed.dom.cr('input', 'highed-imp-input'),
       dateFormat = highed.dom.cr('input', 'highed-imp-input'),
@@ -132,13 +133,28 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         'button',
         'highed-imp-button',
         'Upload & Import File'
+      ),      
+      spreadsheetImportBtn = highed.dom.cr(
+        'button',
+        'highed-imp-button',
+        'Google Spreadsheet'
+      ),
+      commaDelimitedBtn = highed.dom.cr(
+        'button',
+        'highed-imp-button highed-export-btn',
+        'Export comma delimited'
+      ),
+      semicolonDelimitedBtn = highed.dom.cr(
+        'button',
+        'highed-imp-button highed-export-btn',
+        'Export semi-colon delimited'
       ),
       webSplitter = highed.HSplitter(webTab.body, { leftWidth: 30 }),
       webList = highed.List(webSplitter.left);
 
     jsonPasteArea.value = JSON.stringify({}, undefined, 2);
 
-    setDefaultTabSize(600, 600, [csvTab, jsonTab, webTab, samplesTab]);
+    setDefaultTabSize(600, 600, [csvTab, exportTab, jsonTab, webTab, samplesTab]);
     ///////////////////////////////////////////////////////////////////////////
 
     highed.dom.style(samplesTab.body, { overflow: 'hidden' });
@@ -167,7 +183,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         csvTab.hide();
       }
 
+      if (!properties.options.export) {
+        exportTab.hide();
+      }
+
       //Always disable json options..
+      
       if (1 === 1 || !properties.options.json) {
         jsonTab.hide();
       }
@@ -340,14 +361,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       });
     }
 
-    function emitCSVImport(csv) {
+    function emitCSVImport(csv, cb) {
       events.emit('ImportCSV', {
         itemDelimiter: delimiter.value,
         firstRowAsNames: firstAsNames.checked,
         dateFormat: dateFormat.value,
         csv: csv || csvPasteArea.value,
         decimalPoint: decimalPoint.value
-      });
+      }, cb);
     }
 
     function loadCSVExternal(csv) {
@@ -380,9 +401,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
       tabs.resize(w || ps.w, h || ps.h);
       bsize = tabs.barSize();
-
       webSplitter.resize(w || ps.w, (h || ps.h) - bsize.h - 20);
       webList.resize(w || ps.w, (h || ps.h) - bsize.h);
+
+      exporter.resize(null, 300);
     }
 
     /** Show the importer
@@ -413,10 +435,28 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       }
     }
 
+    function selectTab(index) {
+      tabs.select(index);
+    }
     ///////////////////////////////////////////////////////////////////////////
 
     highed.dom.ap(
+      exportTab.body,
+      commaDelimitedBtn,
+      semicolonDelimitedBtn,
+      highed.dom.cr('hr', 'highed-imp-hr')
+    );
+
+
+    var exporter = highed.Exporter(exportTab.body);
+    exporter.resize(null, 300);
+
+    highed.dom.ap(
       csvTab.body,
+      spreadsheetImportBtn,
+      liveDataImportBtn,
+      csvImportFileBtn,
+      highed.dom.cr('hr', 'highed-imp-hr'),
       highed.dom.cr(
         'div',
         'highed-imp-help',
@@ -440,9 +480,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       // firstAsNames,
       // highed.dom.cr('br'),
 
-      csvImportBtn,
-      csvImportFileBtn,
-      liveDataImportBtn
+      csvImportBtn
     );
 
     highed.dom.ap(
@@ -457,13 +495,23 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       jsonImportBtn
     );
 
+    highed.dom.on(commaDelimitedBtn, 'click', function(){
+      events.emit('ExportComma');
+    });
+
+    highed.dom.on(semicolonDelimitedBtn, 'click', function(){
+      events.emit('ExportSemiColon');
+    });
+
+    highed.dom.on(spreadsheetImportBtn, 'click', function(){
+      events.emit('ImportGoogleSpreadsheet');
+    });
+
     highed.dom.on(csvImportBtn, 'click', function() {
       emitCSVImport();
     });
 
     highed.dom.on(liveDataImportBtn, 'click', function () {
-      //console.log(liveDataInput);
-      //console.log(liveDataInput.value);
       events.emit('ImportLiveData', {
       //  url: liveDataInput.value
       });
@@ -524,7 +572,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       resize: resize,
       show: show,
       hide: hide,
-      addImportTab: addImportTab
+      addImportTab: addImportTab,
+      exporter: exporter,
+      selectTab: selectTab,
+      emitCSVImport: emitCSVImport
     };
   };
 })();

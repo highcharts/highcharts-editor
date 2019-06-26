@@ -47,18 +47,29 @@ highed.Tree = function(parent) {
       //Filter the series properties based on the series.type property
       series: {
         controller: 'type',
-        state: false
+        state: false,
+        default: 'line'
+      },
+      plotOptions: {
+        controller: 'type',
+        state: false,
+        default: 'line'
       }
     };
 
   ////////////////////////////////////////////////////////////////////////////
 
   function createNode(child, pnode, instancedData, productFilter, myIndex) {
+
+    var id =  (child.meta.ns ? child.meta.ns + '.' : '') +
+    (!isNaN(myIndex) ? '[' + myIndex + '].' : '') +
+    child.meta.name;
+
     var node = highed.dom.cr(
         'div',
         'node',
         '',
-        (child.meta.ns ? child.meta.ns : '') + child.meta.name
+        id
       ),
       title = highed.dom.cr(
         'div',
@@ -73,10 +84,12 @@ highed.Tree = function(parent) {
       index =
         (child.meta.ns ? child.meta.ns + '.' : '') +
         (myIndex ? '[' + myIndex + '].' : '') +
+        //(!isNaN(myIndex) ? '[' + myIndex + '].' : '') +
         child.meta.name,
       expanded = true;
 
-    child.meta.fullname = index;
+    //child.meta.fullname = index;
+    child.meta.fullname = (myIndex ? child.meta.name : index);
 
     function pushExpandState() {
       if (
@@ -97,14 +110,13 @@ highed.Tree = function(parent) {
       selectedPath = index;
 
       title.className = 'parent-title parent-title-selected';
-
       events.emit(
         'Select',
         child,
         title.innerHTML,
         child.data,
         productFilter,
-        filters[index] ? child.data[filters[index].controller] : false
+        filters[index] ? child.data[filters[index].controller] || filters[index].default : false
       );
     }
 
@@ -217,7 +229,6 @@ highed.Tree = function(parent) {
         highed.dom.ap(node, highed.dom.ap(rightIcons, addIcon));
 
         icon.className = 'exp-col-icon fa fa-th-list';
-
         // We need to create one child per. existing entry
         child.data = instancedData[child.meta.name] =
           instancedData[child.meta.name] || [];
@@ -249,9 +260,8 @@ highed.Tree = function(parent) {
               children: highed.merge([], child.children)
             },
             node = createNode(cat, body, data, productFilter, i);
-
           if (node) {
-            build(cat, node.body, data, productFilter);
+            build(cat, node.body, data, productFilter, i);
           }
         }
 
@@ -300,7 +310,7 @@ highed.Tree = function(parent) {
     ////////////////////////////////////////////////////////////////////////
 
     highed.dom.ap(pnode, highed.dom.ap(node, icon, title), body);
-
+    
     expands[index] = expand;
 
     buildSubtree();
@@ -348,10 +358,11 @@ highed.Tree = function(parent) {
    *  @param instancedData {object} - the actual tree data
    *  @param dataIndex {number} - the path to data in arrays
    */
-  function build(tree, pnode, instancedData, productFilter) {
+  function build(tree, pnode, instancedData, productFilter, myIndex) {
     if (!tree) {
       return;
     }
+
 
     // Handled in createNode, just skip.
     if (tree.meta.types['array']) {
@@ -363,7 +374,7 @@ highed.Tree = function(parent) {
       Object.keys(tree.meta.products || {}).length > 0 &&
       !tree.meta.products[productFilter]
     ) {
-      return;
+      //return;
     }
 
     if (highed.isArr(tree.children)) {
@@ -371,11 +382,22 @@ highed.Tree = function(parent) {
         var node, fstate;
 
         if (tree.meta.fullname && filters[tree.meta.fullname]) {
+
           if (child.meta && child.meta.validFor) {
-            fstate = tree.data[filters[tree.meta.fullname].controller];
-            if (fstate && fstate.length > 0 && !child.meta.validFor[fstate]) {
+
+            var customizedSeriesOption = productFilter.series;
+            if (myIndex) customizedSeriesOption = [customizedSeriesOption[myIndex]];
+            
+            var found = false;
+            (customizedSeriesOption || []).forEach(function(serieOption) {
+              fstate = serieOption[filters[tree.meta.fullname].controller] || filters[tree.meta.fullname].default;
+              if (child.meta.validFor[fstate]) found = true;
+            });
+
+            if (!found) {
               return;
             }
+
           }
         }
 
@@ -414,7 +436,7 @@ highed.Tree = function(parent) {
     build: function(tree, data) {
       attachedData = data;
       container.innerHTML = '';
-      build(tree, container, data, false);
+      build(tree, container, data, data);
     }
   };
 };

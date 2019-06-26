@@ -45,14 +45,28 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.ChartTemplateSelector = function(parent, chartPreview) {
   var events = highed.events(),
     container = highed.dom.cr('div', 'highed-chart-templates'),
-    splitter = highed.HSplitter(container, { leftWidth: 30 }),
-    list = highed.List(splitter.left),
-    templates = splitter.right,
+    //splitter = highed.HSplitter(container, { leftWidth: 30 }),
+    //list = highed.List(splitter.left),
+    //templates = splitter.right,
+    templates = highed.dom.cr('div', 'highed-chart-template-type-container'),
     catNode = highed.dom.cr('div', 'highed-chart-template-cat-desc'),
-    selected = false;
+    selected = false,
+    templateTypeSelect = highed.DropDown(container, null, {
+      area: highed.resources.icons.area,
+      line: highed.resources.icons.line,
+      bar: highed.resources.icons.bar,
+      column: highed.resources.icons.column,
+      more: highed.resources.icons.more,
+      pie: highed.resources.icons.pie,
+      polar: highed.resources.icons.polar,
+      stock: highed.resources.icons.stock,
+      'scatter and bubble': highed.resources.icons['scatter and bubble']
+    }),
+    detailValue;
 
-  highed.dom.ap(parent, container);
-  splitter.right.className += ' highed-chart-template-frame';
+  
+  highed.dom.ap(parent, highed.dom.ap(container, templates));
+  //splitter.right.className += ' highed-chart-template-frame';
 
   ///////////////////////////////////////////////////////////////////////////
 
@@ -98,7 +112,7 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
       });
     }
 
-    highed.dom.ap(catNode, title, desc, samples);
+    highed.dom.ap(title, desc, samples);
   }
 
   function showTemplates(templateList, masterID, catmeta) {
@@ -111,14 +125,14 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
       buildCatMeta(catmeta);
     }
 
-    highed.dom.ap(templates, catNode);
+    highed.dom.ap(templates);
 
     Object.keys(templateList).forEach(function(key) {
       var t = templateList[key],
-        node = highed.dom.cr('div', 'highed-chart-template-container'),
+        node = highed.dom.cr('div', 'highed-chart-template-container highed-template-tooltip'),
         body = highed.dom.cr('div', 'highed-chart-template-body'),
         preview = highed.dom.cr('div', 'highed-chart-template-thumbnail'),
-        titleBar = highed.dom.cr('div', 'highed-chart-template-title', t.title),
+        titleBar = highed.dom.cr('div', 'highed-tooltip-text', t.title),
         description = highed.dom.cr('div', 'highed-chart-template-description'),
         samples = highed.dom.cr('div', 'highed-chart-template-samples');
 
@@ -147,7 +161,7 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
 
       if (selected && selected.id === masterID + key + t.title) {
         node.className =
-          'highed-chart-template-container highed-chart-template-preview-selected';
+          'highed-chart-template-container highed-chart-template-preview-selected highed-template-tooltip';
         selected.node = node;
       }
 
@@ -167,11 +181,11 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
 
       highed.dom.on(node, 'click', function() {
         if (selected) {
-          selected.node.className = 'highed-chart-template-container';
+          selected.node.className = 'highed-chart-template-container highed-template-tooltip';
         }
 
         node.className =
-          'highed-chart-template-container highed-chart-template-preview-selected';
+          'highed-chart-template-container highed-chart-template-preview-selected highed-template-tooltip';
 
         selected = {
           id: masterID + key + t.title,
@@ -209,7 +223,8 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
             }
           });
         } else {
-          events.emit('Select', t);
+          t.header =  templateTypeSelect.getSelectedItem().title();
+          events.emit('Select', highed.merge({}, t));
         }
 
         highed.emit('UIAction', 'TemplateChoose', t.title);
@@ -220,15 +235,17 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
         highed.dom.ap(
           node,
           preview,
+          titleBar/*,
           highed.dom.ap(
             body,
-            titleBar,
-            description,
+            titleBar//,
+            //description,
             // highed.dom.cr('h4', '', 'Sample Data Sets'),
-            samples
-          )
+            //samples
+          )*/
         )
       );
+      
     });
 
     if (compatible === 0) {
@@ -245,14 +262,6 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
         )
       );
     } else {
-      highed.dom.ap(
-        catNode,
-        highed.dom.cr(
-          'h3',
-          'highed-template-choose-text',
-          'Choose a template below by clicking it'
-        )
-      );
     }
   }
 
@@ -260,23 +269,69 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
   function resize(w, h) {
     var lsize;
 
-    splitter.resize(w, h);
-    list.resize();
-
+    //splitter.resize(w, h);
+    //list.resize();
+/*
     lsize = highed.dom.size(list.container);
     highed.dom.style(templates, {
       minHeight: lsize.h + 'px'
-    });
+    });*/
   }
 
   /* Build the UI */
   function build() {
-    list.addItems(highed.templates.getCatArray());
-    list.selectFirst();
+    templateTypeSelect.addItems(highed.templates.getCatArray());
+    templateTypeSelect.selectByIndex(0); // TODO: Need to change this later
+
+    //highed.dom.ap(container, templateTypeSelect);
+
+    //list.addItems(highed.templates.getCatArray());
+    //list.selectFirst();
+  }
+
+  function selectSeriesTemplate(index, projectData) {
+    const settings = projectData; //projectData.settings && projectData.settings.template;
+    var templateHeader, templateTitle;
+    if (settings && !settings[index]) {
+      templateHeader = 'Line';
+      templateTitle = 'Line chart';
+    }
+    else if (settings && settings[index]) {
+      //Select this template
+      templateHeader = settings[index].templateHeader;
+      templateTitle = settings[index].templateTitle;
+    } 
+    else return ;
+
+    templateTypeSelect.selectById(templateHeader);
+    
+    var templates = highed.templates.getAllInCat(templateHeader);
+    selected = {
+      id:  templateHeader + templateTitle + templateTitle
+    };
+    
+    if (templates) {
+      showTemplates(templates, templateHeader, highed.templates.getCatInfo(templateHeader));
+    }
+    
   }
 
   ///////////////////////////////////////////////////////////////////////////
 
+  templateTypeSelect.on('Change', function(selected) {
+    detailValue = selected.id();
+
+    var templates = highed.templates.getAllInCat(detailValue);
+
+    highed.emit('UIAction', 'TemplateCatChoose', detailValue);
+
+    if (templates) {
+      showTemplates(templates, detailValue, highed.templates.getCatInfo(detailValue));
+    }
+
+  });
+
+/*
   list.on('Select', function(id) {
     var templates = highed.templates.getAllInCat(id);
 
@@ -286,7 +341,7 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
       showTemplates(templates, id, highed.templates.getCatInfo(id));
     }
   });
-
+*/
   build();
 
   ///////////////////////////////////////////////////////////////////////////
@@ -294,6 +349,7 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
   return {
     on: events.on,
     resize: resize,
-    rebuild: build
+    rebuild: build,
+    selectSeriesTemplate: selectSeriesTemplate
   };
 };

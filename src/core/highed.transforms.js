@@ -95,7 +95,31 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           }
         });
 
-        // console.log(dest);
+      } else if ((trigger && trigger.indexOf('plotOptions') === 0) || dest.meta.ns === undefined) {
+        if (!dest.meta.validFor) dest.meta.validFor = {};
+        dest.meta.validFor[dest.meta.name] = 1;
+
+        if (dest.meta.ns === undefined) {
+          highed.merge(dest.subtree, current.subtree, false, dest.meta.excludes);
+        } else {
+          Object.keys(current.subtree || {}).forEach(function(key) {
+            dest.subtree[key] =
+              dest.subtree[key] || highed.merge({}, current.subtree[key]);
+            dest.subtree[key].meta.validFor =
+              dest.subtree[key].meta.validFor || {};
+  
+            if (
+              dest.meta.excludes &&
+              Object.keys(dest.meta.excludes).length > 0
+            ) {
+              dest.subtree[key].meta.validFor[current.meta.name] = !dest.meta
+                .excludes[key];
+            } else {
+              dest.subtree[key].meta.validFor[current.meta.name] = 1;
+            }
+          }); 
+        }
+
       } else {
         // Do actual extending
         highed.merge(dest.subtree, current.subtree, false, dest.meta.excludes);
@@ -107,13 +131,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       * Extend a node
       */
   function extend(superset, node, trigger) {
+    if (trigger === undefined) {
+      if (node.meta.ns && node.meta.ns === "plotOptions") {
+        trigger = 'plotOptions';
+      }
+    }
     if (node.meta.extends && node.meta.extends.length > 0) {
       node.meta.extends = node.meta.extends.replace('{', '').replace('}', '');
-
       if (trigger === 'series') {
         node.meta.extends += ',plotOptions.line';
       }
-
+      
       node.meta.extends.split(',').forEach(function(part) {
         if (part && part.length > 0) {
           mergeAdv(superset, node, part.trim(), trigger);
@@ -133,15 +161,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      */
   function transformAdv(input, onlyOnce) {
     var res;
-
+    
     if (onlyOnce && hasTransformedAdvanced) {
       return input;
     }
 
     function visit(node, pname) {
       var children = (node.subtree = node.subtree || {});
-
+      
       node.meta = node.meta || {};
+      node.meta.default = node.meta.default;
       node.meta.ns = pname;
       node.children = [];
 

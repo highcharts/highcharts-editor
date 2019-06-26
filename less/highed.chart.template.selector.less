@@ -2,6 +2,14 @@
     padding:10px;
 }*/
 
+.highed-chart-templates {
+    padding: 10px;
+    .highed-dropdown-body {
+        font-size: 10px;
+        line-height: 15px;
+    }
+}
+
 .highed-step-body .highed-chart-templates .highed-hsplitter .panel.right .highed-hsplitter-body {
     padding-top: 10px;
 }
@@ -12,21 +20,9 @@
 }
 
 .highed-chart-template-title {
-	  //position: absolute;
-	  //display: block;
-    //background-color: rgba(66, 66, 100, 0.8);
-    //bottom: 0px;
-    width: 100%;
-    line-height: 2em;
-    //border-radius: 0;
-    //position: absolute;
-    font-size: 1.2em;
-    //color: #ffffff;
-    //text-align: center;
-    //transition: bottom 0.2s;
-    //z-index: 1;
-    //opacity: 0;
-    //.highed-transition;
+    font-size: 10px;
+    color: black;
+    padding-left: 5px;
 }
 
 .highed-template-choose-text {
@@ -49,31 +45,25 @@
     padding-top:5px;
 }
 
-.highed-chart-template-container {
-    position:relative;
+.highed-chart-template-container {    
+    vertical-align: top;
+    display: inline-block;
+    min-width: 100px;
+    min-height: 86px;
+    margin: 1px;
+    border: 1px solid rgba(128, 128, 128, 0.23137254901);
     cursor: pointer;
-    margin-bottom:10px;
-    padding:5px;
-    background: @secondary-background-panel;
-    color: @secondary-color-panel;
     // box-shadow: 0px 3px 7px @bright-shadow;
     .highed-box-size;
 }
 
 .highed-chart-template-body {
-    padding-left:130px;
-    min-height:100px;
 }
 
 .highed-chart-template-thumbnail {
-  position:absolute;
-  background-repeat:no-repeat;
-  width: 120px;
-  height: 80px;
-  background-size:90% auto;
-  background-position: middle middle;
-  top:50%;
-  transform:translate(0, -50%);
+    width: 102px;    
+    background-size: 100% 100%;
+    height: 74px;
   .highed-box-size;
 }
 
@@ -95,9 +85,45 @@
 }
 
 .highed-chart-template-preview-selected {
-    border: 5px solid @background-ok !important;
+    border: 2px solid @background-ok !important;
 }
 
 .highed-chart-template-preview:hover {
 	border: 5px solid rgba(66, 66, 100, 0.4);
+}
+.highed-chart-template-type-container {
+    padding-top: 15px;
+}
+
+.highed-template-tooltip {
+    position: relative;
+    display: inline-block;
+}
+.highed-template-tooltip .highed-tooltip-text {
+    visibility: hidden;
+    width: 120px;
+    background-color: rgb(37, 56, 111);
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1000;
+    font-size: 11px;
+    top: 100%;
+    left: 50%; 
+    margin-left: -60px;
+}
+.highed-template-tooltip .highed-tooltip-text::after {
+    content: " ";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent rgb(37, 56, 111) transparent;
+}
+.highed-template-tooltip:hover .highed-tooltip-text {
+    visibility: visible;
 }

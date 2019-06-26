@@ -25,27 +25,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-highed.templates.add('Pie', {
-  title: 'Pie chart',
+highed.templates.add('Column', {
+  title: 'Basic Column',
   description: '',
-  thumbnail: 'yqoxob.svg',
+  thumbnail: 'ovobiq.svg',
   dataValidator: false,
+  popular: true,
   sampleSets: [],
   config: {
     chart: {
-      type: 'pie',
+      type: 'column',
       polar: false
-    },
-    plotOptions: {
-      pie: {
-        allowPointSelect: true,
-        cursor: true
-      },
-      series: {
-        dataLabels: {
-          enabled: true
-        }
-      }
     }
   }
 });

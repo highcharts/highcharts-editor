@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.DrawerEditor = function(parent, options) {
+highed.DrawerEditor = function(parent, options, planCode) {
   var events = highed.events(),
     // Main properties
     properties = highed.merge(
@@ -53,10 +53,19 @@ highed.DrawerEditor = function(parent, options) {
       'div',
       'highed-errorbar highed-box-size highed-transition'
     ),
+    errorBarHeadlineContainer = highed.dom.cr(
+      'div',
+      'highed-errorbar-headline'
+    ),
     errorBarHeadline = highed.dom.cr(
       'div',
-      'highed-errorbar-headline',
+      'highed-errorbar-headline-text',
       'This is an error!'
+    ),
+    errorBarClose = highed.dom.cr(
+      'div',
+      'highed-errorbar-close',
+      '<i class="fa fa-times"/>'
     ),
     errorBarBody = highed.dom.cr(
       'div',
@@ -68,24 +77,132 @@ highed.DrawerEditor = function(parent, options) {
     splitter = highed.VSplitter(parent, {
       topHeight: properties.useHeader ? '60px' : '0px',
       noOverflow: true
-    }),
-    toolbar = highed.Toolbar(splitter.top),
-    toolbox = highed.Toolbox(splitter.bottom),
-    // Data table
-    dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
-    dataTable = highed.DataTable(
-      dataTableContainer,
-      highed.merge(
-        {
-          importer: properties.importer
+    }),    
+    builtInOptions = {
+      data: {
+        icon: 'fa-table',
+        title: 'Data',
+        widths: {
+          desktop: 66,
+          tablet: 64,
+          phone: 100
         },
-        properties.dataGrid
-      )
+        nav: {
+          icon: 'table',
+          text: 'Data',
+          onClick: []
+        },
+        help: [
+          {
+            title: 'Manually Add/Edit Data',
+            gif: 'dataImport.gif',
+            description: [
+              'Click a cell to edit its contents.<br/><br/>',
+              'The cells can be navigated using the arrow keys.<br/><br/>',
+              'Pressing Enter creates a new row, or navigates to the row directly below the current row.'
+            ]
+          },
+          {
+            title: 'Setting headings',
+            gif: 'dataImport.gif',
+            description: [
+              'The headings are used as the series titles.<br/><br/>',
+              'They can be edited by left clicking them.<br/><br/>',
+              'Click the arrow symbol in the header to access column properties.'
+            ]
+          },
+          {
+            title: 'Importing Data',
+            gif: 'import.gif',
+            description: [
+              'To import data, simply drag and drop CSV files onto the table, or paste CSV/Excel data into any cell.<br/><br/>',
+              'For more advanced data import, click the IMPORT DATA button.'
+            ]
+          }
+        ],
+        showLiveStatus: true
+      },
+      templates: {
+        icon: 'fa-bar-chart',
+        widths: {
+          desktop: 26,
+          tablet: 24,
+          phone: 100
+        },
+        title: 'Templates',
+        nav: {
+          icon: 'bar-chart',
+          text: 'Templates',
+          onClick: []
+        },
+        help: [
+          {
+            title: 'Templates',
+            description: [
+              'Templates are pre-defined bundles of configuration.<br/><br/>',
+              'Start by choosing the template category in the list to the left,',
+              'then pick a suitable template for your data and use case in the',
+              'template list.'
+            ]
+          }
+        ]
+      },
+      customize: {
+        icon: 'fa-sliders',
+        title: 'Customize Chart',
+        nav: {
+          icon: 'pie-chart',
+          text: 'Customize',
+          onClick: []
+        },
+        widths: {
+          desktop: 27,
+          tablet: 24,
+          phone: 100
+        },
+        help: [
+          {
+            title: 'Customize',
+            description: [
+              'The customize pane lets you customize your chart.<br/><br/>',
+              'The customizer has three different sections:<br/>',
+              '<li>Simple: A simple customizer with the most used options</li>',
+              '<li>Advanced: All options available in Highcharts/Highstock can be set here</li>',
+              '<li>Custom code: Here, properties can be overridden programatically</li>'
+            ]
+          }
+        ]
+      },
+    },
+    workspaceBody = highed.dom.cr(
+      'div',
+      'highed-optionspanel-body highed-box-size highed-transition'
     ),
+    workspaceButtons = highed.dom.cr(
+      'div',
+      'highed-optionspanel-buttons highed-optionspanel-cloud highed-box-size highed-transition'
+    ),
+    smallScreenWorkspaceButtons = highed.dom.cr(
+      'div',
+      'highed-xs-workspace-buttons highed-optionspanel-xs-cloud highed-box-size highed-transition'
+    ),
+    workspaceRes = highed.dom.cr(
+      'div',
+      'highed-optionspanel-buttons highed-optionspanel-res highed-box-size highed-transition'
+    ),
+    defaultPage,
+    panel = highed.OptionsPanel(workspaceBody),
+    toolbar = highed.Toolbar(splitter.top),
     // Chart preview
+    highedChartContainer = highed.dom.cr('div', 'highed-chart-container highed-transition'),
     chartFrame = highed.dom.cr(
       'div',
       'highed-transition highed-box-size highed-chart-frame highed-scrollbar'
+    ),
+    showChartSmallScreen = highed.dom.cr(
+      'div',
+      'highed-transition highed-box-size highed-show-chart-xs',
+      '<i class="fa fa-area-chart"/>'
     ),
     chartContainer = highed.dom.cr(
       'div',
@@ -94,10 +211,59 @@ highed.DrawerEditor = function(parent, options) {
     chartPreview = highed.ChartPreview(chartContainer, {
       defaultChartOptions: properties.defaultChartOptions
     }),
+    suppressWarning = false,
+    dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
+    customizePage = highed.CustomizePage(
+      splitter.bottom,
+      highed.merge(
+        {
+          importer: properties.importer
+        },
+        properties.customizer
+      ),
+      chartPreview,
+      highedChartContainer,
+      builtInOptions.customize,
+      chartFrame,
+      planCode
+    ),
+    dataPage = highed.DataPage(  
+      splitter.bottom,
+      highed.merge(
+        {
+          importer: properties.importer
+        },
+        properties.dataGrid
+      ),
+      chartPreview,
+      highedChartContainer,
+      builtInOptions.data
+    ),
+    templatePage = highed.TemplatePage(      
+      splitter.bottom,
+      highed.merge(
+        {
+          importer: properties.importer
+        },
+        properties.dataGrid
+      ),
+      chartPreview,
+      highedChartContainer,
+      builtInOptions.templates
+    );
+    createChartPage = highed.CreateChartPage(
+      splitter.bottom,
+      properties.features,
+      {
+        title: 'Create Chart',
+        widths: {
+          desktop: 95
+        }
+      }
+    ),
+
     // Res preview bar
     resPreviewBar = highed.dom.cr('div', 'highed-res-preview'),
-    resQuickSelContainer = highed.dom.cr('div', 'highed-res-quicksel'),
-    resQuickSel = highed.DropDown(resQuickSelContainer),
     resWidth = highed.dom.cr('input', 'highed-res-number'),
     resHeight = highed.dom.cr('input', 'highed-res-number'),
     // Exporter
@@ -185,218 +351,135 @@ highed.DrawerEditor = function(parent, options) {
     // Custom toolbox options
     customOptions = {},
     // The toolbox options
-    builtInOptions = {
-      data: {
-        icon: 'fa-table',
-        title: 'Chart Data',
-        width: 800,
-        help: [
-          {
-            title: 'Manually Add/Edit Data',
-            gif: 'dataImport.gif',
-            description: [
-              'Click a cell to edit its contents.<br/><br/>',
-              'The cells can be navigated using the arrow keys.<br/><br/>',
-              'Pressing Enter creates a new row, or navigates to the row directly below the current row.'
-            ]
-          },
-          {
-            title: 'Setting headings',
-            gif: 'dataImport.gif',
-            description: [
-              'The headings are used as the series titles.<br/><br/>',
-              'They can be edited by left clicking them.<br/><br/>',
-              'Click the arrow symbol in the header to access column properties.'
-            ]
-          },
-          {
-            title: 'Importing Data',
-            gif: 'import.gif',
-            description: [
-              'To import data, simply drag and drop CSV files onto the table, or paste CSV/Excel data into any cell.<br/><br/>',
-              'For more advanced data import, click the IMPORT DATA button.'
-            ]
-          }
-        ],
-        create: function(body) {
-          highed.dom.ap(body, dataTableContainer);
-          dataTable.resize();
-        },
-        events: {
-          Expanded: function(width, height) {
-            dataTable.resize(width, height);
-          }
-        },
-        showLiveStatus: true
-      },
-      templates: {
-        icon: 'fa-bar-chart',
-        width: 700,
-        title: 'Templates',
-        help: [
-          {
-            title: 'Templates',
-            description: [
-              'Templates are pre-defined bundles of configuration.<br/><br/>',
-              'Start by choosing the template category in the list to the left,',
-              'then pick a suitable template for your data and use case in the',
-              'template list.'
-            ]
-          }
-        ],
-        create: function(body) {
-          highed.dom.ap(body, templatesContainer);
-        },
-        events: {
-          Expanded: function(width, height) {
-            templates.resize(width, height);
-          }
-        }
-      },
-      export: {
-        icon: 'fa-download',
-        title: 'Export',
-        width: 600,
-        help: [
-          {
-            title: 'Export Chart',
-            description: [
-              'The export pane lets you export your chart to HTML, SVG, JSON, or JavaScript.<br/><br/>'
-            ]
-          }
-        ],
-        create: function(body) {
-          highed.dom.ap(body, exporterContainer);
-          exporter.resize();
-        },
-        events: {
-          Expanded: function(width, height) {
-            exporter.resize(width, height);
-            exporter.init(
-              chartPreview.export.json(),
-              chartPreview.export.html(),
-              chartPreview.export.svg(),
-              chartPreview
-            );
-          }
-        }
-      },
-      customize: {
-        icon: 'fa-sliders',
-        title: 'Customize Chart',
-        width: 800,
-        help: [
-          {
-            title: 'Customize',
-            description: [
-              'The customize pane lets you customize your chart.<br/><br/>',
-              'The customizer has three different sections:<br/>',
-              '<li>Simple: A simple customizer with the most used options</li>',
-              '<li>Advanced: All options available in Highcharts/Highstock can be set here</li>',
-              '<li>Custom code: Here, properties can be overridden programatically</li>'
-            ]
-          }
-        ],
-        create: function(body) {
-          highed.dom.ap(body, customizerContainer);
-          customizer.resize();
-        },
-        events: {
-          Expanded: function(width, height) {
-            customizer.resize(width, height);
-          }
-        }
-      }
-    },
-    toolboxEntries,
-    resolutions = {
-      'Stretch to fit': [false, false],
-      'iPhone X': [375, 812],
-      'iPhone 8 Plus': [414, 736],
-      'iPhone 8': [375, 667],
-      'iPhone 7 Plus': [414, 736],
-      'iPhone 7': [375, 667],
-      'iPhone 6 Plus': [414, 736],
-      'iPhone 6/6S': [375, 667],
-      'iPhone 5': [320, 568],
-      'iPad Pro': [1024, 1366],
-      iPad: [768, 1024],
-      'Nexus 6P': [411, 731],
-      'Nexus 5X': [411, 731],
-      'Google Pixel': [411, 731],
-      'Google Pixel XL': [411, 731],
-      'Google Pixel 2': [411, 731],
-      'Google Pixel 2 XL': [411, 731],
-      'Samsung Galaxy Note 5': [480, 853],
-      'LG G5': [480, 853],
-      'One Plus 3': [480, 853],
-      'Samsung Galaxy S8': [360, 740],
-      'Samsung Galaxy S8+': [360, 740],
-      'Samsung Galaxy S7': [360, 640],
-      'Samsung Galaxy S7 Edge': [360, 640]
-    };
 
+    helpIcon = highed.dom.cr(
+      'div',
+      'highed-toolbox-help highed-icon fa fa-question-circle'
+    ),
+    titleHeader = highed.dom.cr('h3', '', 'Data'),
+    iconContainer = highed.dom.cr('div', ''),
+    titleContainer = highed.dom.ap(highed.dom.cr('div', 'highed-page-title'), titleHeader, helpIcon, iconContainer),
+    helpModal = highed.HelpModal(builtInOptions.data.help || []);
+
+  highed.dom.on(helpIcon, 'click', showHelp);
+  highed.dom.ap(splitter.bottom, highed.dom.ap(workspaceBody, workspaceRes, workspaceButtons));
+
+  highed.dom.ap(splitter.bottom, titleContainer, smallScreenWorkspaceButtons);
   if (!properties.useHeader) {
     highed.dom.style(splitter.top.parentNode, {
       display: 'none'
     });
   }
 
+  highed.dom.on(showChartSmallScreen, 'click', function() {
+    if (highedChartContainer.classList.contains('active')) {
+      highedChartContainer.classList.remove('active');
+    } else {
+      setTimeout(function(){
+        chartPreview.resize();
+      }, 200);
+      highedChartContainer.classList += ' active';
+    }
+  });
+
   // Alias import to data
   builtInOptions.import = builtInOptions.data;
-
+  panel.setDefault(dataPage);
+  dataPage.show()
   /**
    * Creates the features defined in property.features
    * Call this after changing properties.features to update the options.
    */
   function createFeatures() {
     var addedOptions = {};
+    panel.clearOptions();
 
     properties.features = highed.isArr(properties.features)
       ? properties.features
       : properties.features.split(' ');
-
+    
     function addOption(option, id) {
-      if (!option || !option.icon) {
+
+      if (!option || !option.icon || !option.nav) {
         return;
       }
-
-      var o = toolbox.addEntry({
-        title: option.title,
-        width: option.width,
-        iconOnly: option.iconOnly,
-        icon: option.icon,
-        help: option.help,
-        showLiveStatus: option.showLiveStatus
-      });
-
-      if (highed.isFn(option.create)) {
-        option.create(o.body);
+      
+      if (id === 'data') {
+        option.nav.page = dataPage;
+        dataPage.init();
+        option.nav.onClick.push(
+          function() {
+            highed.dom.style([highedChartContainer, chartContainer, chartFrame], {
+              width: '100%',
+              height: '100%',
+            });
+          }
+        );
+      } else if (id === 'templates') {
+        option.nav.page = templatePage;
+        templatePage.init();
+      } else if (id === 'customize') {
+        option.nav.page = customizePage;
+        customizePage.init();
+        highed.dom.ap(workspaceRes, customizePage.getResolutionContainer());
+      } else {
+        // Create page
+        defaultPage = highed.DefaultPage(splitter.bottom, option, chartPreview, highedChartContainer);
+        defaultPage.init();
+        option.nav.page = defaultPage;
       }
 
-      Object.keys(option.events || {}).forEach(function(e) {
-        o.on(e, option.events[e]);
-      });
 
-      addedOptions[id] = o;
+      var func = function(prev, newOption) {
+        prev.hide();
+        newOption.page.show();
+        panel.setDefault(newOption.page);
+        titleHeader.innerHTML = newOption.text;
+        helpModal = (option.help ? highed.HelpModal(option.help  || []) : null);
+        
+        highed.dom.style(helpIcon, {
+          display: (helpModal ? 'inline' : 'none')
+        });
+
+        iconContainer.innerHTML = '';
+        if (newOption.page.getIcons()) {
+          highed.dom.ap(iconContainer, newOption.page.getIcons());
+        }
+        
+        highed.dom.style(iconContainer, {
+          display: (newOption.page.getIcons() ? 'inline' : 'none')
+        });
+
+      }
+
+
+      if (id == 'customize') {
+        option.nav.onClick = [func];
+      } else {
+        option.nav.onClick.push(func);
+      }
+
+
+      panel.addOption(option.nav, id);
+      addedOptions[id] = id;
+
     }
 
-    toolbox.clear();
+    //toolbox.clear();
     resize();
-
+    
     properties.features.forEach(function(feature) {
       addOption(
         builtInOptions[feature] || customOptions[feature] || false,
         feature
       );
     });
-
-    if (addedOptions.data) {
-      setTimeout(addedOptions.data.expand, 200);
-    }
-
     toolboxEntries = addedOptions;
     // resizeChart(toolbox.width());
+  }
+
+  function showHelp() {
+    helpModal.show();
   }
 
   /**
@@ -412,6 +495,68 @@ highed.DrawerEditor = function(parent, options) {
     });
   }
 
+  function showCreateChartPage() {
+
+    createChartPage.init(dataPage, templatePage, customizePage);
+
+    highed.dom.style([workspaceBody, showChartSmallScreen, smallScreenWorkspaceButtons], {
+      opacity: 0
+    });
+    panel.getPrev().hide();
+    createChartPage.show();
+    highed.dom.style([chartFrame, titleContainer], {
+      opacity: '0'
+    });
+
+    if(highed.onPhone()) {
+      highed.dom.style(titleContainer, {
+        display: 'none'
+      });
+    }
+
+    createChartPage.on('SimpleCreateChartDone', function(goToDataPage) {
+      createChartPage.hide();
+      highed.dom.style([chartFrame, titleContainer], {
+        opacity: '1'
+      });
+      highed.dom.style([workspaceBody, showChartSmallScreen, smallScreenWorkspaceButtons], {
+        opacity: 1
+      });
+
+      if(highed.onPhone()) {
+        highed.dom.style(titleContainer, {
+          display: 'block'
+        });
+      }
+
+      if (goToDataPage) {
+        dataPage.show();
+        panel.setDefault(dataPage);
+        dataPage.resize();
+      } else {
+
+        const customize = panel.getOptions().customize;
+
+        if (customize) {
+          customizePage.setTabBehaviour(true)
+          customize.click();
+        }
+/*
+        titleHeader.innerHTML = builtInOptions.customize.title;
+        customizePage.show();
+        panel.setDefault(customizePage);*/
+      }
+    });
+
+    createChartPage.on('SimpleCreateChangeTitle', function(options) {
+      chartPreview.options.set('title--text', options.title);
+      chartPreview.options.set('subtitle--text', options.subtitle);
+      setChartTitle(options.title);
+    });
+  }
+
+
+
   /**
    * Resize the chart preview based on a given width
    */
@@ -420,10 +565,10 @@ highed.DrawerEditor = function(parent, options) {
 
     lastSetWidth = newWidth;
 
-    highed.dom.style(chartFrame, {
-      left: newWidth + 'px',
-      width: psize.w - newWidth + 'px',
-      height: psize.h + 'px'
+    highed.dom.style(highedChartContainer, {
+      /*left: newWidth + 'px',*/
+      width: '28%',
+      height: '37%'
     });
 
     if (fixedSize) {
@@ -433,11 +578,11 @@ highed.DrawerEditor = function(parent, options) {
       }, 400);
       return;
     }
-
+/*
     highed.dom.style(chartContainer, {
       width: psize.w - newWidth - 100 + 'px',
       height: psize.h - 100 + 'px'
-    });
+    });*/
 
     chartPreview.resize();
   }
@@ -449,7 +594,7 @@ highed.DrawerEditor = function(parent, options) {
       resWidth.value = '';
       resizeChart(lastSetWidth);
     } else {
-      var s = highed.dom.size(chartFrame);
+      var s = highed.dom.size(highedChartContainer);
 
       // highed.dom.style(chartFrame, {
       //   paddingLeft: (s.w / 2) - (w / 2) + 'px',
@@ -463,12 +608,12 @@ highed.DrawerEditor = function(parent, options) {
 
       w = w || s.w - 100;
       h = h || s.h - 100;
-
+/*
       highed.dom.style(chartContainer, {
         width: w + 'px',
         height: h + 'px'
       });
-
+*/
       chartPreview.resize();
     }
   }
@@ -478,7 +623,8 @@ highed.DrawerEditor = function(parent, options) {
    */
   function resize() {
     splitter.resize();
-    resizeChart(toolbox.width());
+    panel.getPrev().resize()
+    //resizeChart(toolbox.width());
   }
 
   /**
@@ -494,26 +640,86 @@ highed.DrawerEditor = function(parent, options) {
    */
   function addFeature(name, feat) {
     customOptions[name] = feat;
+    //addPage(feat);
     createFeatures();
+  }
+
+  function addToWorkspace(options) {
+
+    const btn = highed.dom.cr('button', 'highed-import-button green action-btn', "Action <i class='fa fa-chevron-down'/>");
+    const btn2 = highed.dom.cr('button', 'highed-import-button green action-btn', "Action <i class='fa fa-chevron-down'/>");
+    
+    highed.dom.on(btn, 'click', function() {
+      highed.dom.style(workspaceButtons, {
+        overflow: (workspaceButtons.style.overflow === '' || workspaceButtons.style.overflow === 'hidden' ? 'unset' : 'hidden')
+      });
+    });
+
+    highed.dom.on(btn2, 'click', function() {
+      highed.dom.style(smallScreenWorkspaceButtons, {
+        overflow: (smallScreenWorkspaceButtons.style.overflow === '' || smallScreenWorkspaceButtons.style.overflow === 'hidden' ? 'unset' : 'hidden')
+      });
+    });
+
+    highed.dom.ap(workspaceButtons, btn);
+    highed.dom.ap(smallScreenWorkspaceButtons, btn2);
+
+    options.forEach(function(option, index) {
+      const btn = highed.dom.cr('button', 'highed-import-button green highed-sm-dropdown-button' + (!index ? ' highed-btn-dropdown-first' : ''), option.text);
+      highed.dom.on(btn, 'click', option.onClick);
+
+      const btn2 = highed.dom.cr('button', 'highed-import-button green highed-sm-dropdown-button' + (!index ? ' highed-btn-dropdown-first' : ''), option.text);
+      highed.dom.on(btn2, 'click', option.onClick);
+
+      highed.dom.ap(workspaceButtons, btn);
+      highed.dom.ap(smallScreenWorkspaceButtons, btn2);
+      
+      
+    });
   }
 
   function destroy() {}
 
+  function setChartTitle(title) {
+    dataPage.setChartTitle(title);
+  }
+
   function addImportTab(tabOptions) {
-    dataTable.addImportTab(tabOptions);
+    dataPage.addImportTab(tabOptions);
   }
 
   function hideImportModal() {
-    dataTable.hideImportModal();
+    //dataTable.hideImportModal();
   }
-  function showError(title, message) {
+  
+  function showError(title, message, warning, code) {
+    if (warning) {
+      if (suppressWarning) return;
+      
+      highed.dom.style(errorBarClose, {
+        display: 'inline-block'
+      });
+      
+      if (!errorBar.classList.contains('highed-warningbar')) errorBar.classList += ' highed-warningbar';
+    } else {
+      highed.dom.style(errorBarClose, {
+        display: 'none'
+      });
+  
+      errorBar.classList.remove('highed-warningbar');
+    }
+    
     highed.dom.style(errorBar, {
       opacity: 1,
-      'pointer-events': 'auto'
+      'pointer-events': 'auto',
     });
 
     errorBarHeadline.innerHTML = title;
     errorBarBody.innerHTML = message;
+
+    if (code === 14) {
+      dataPage.showDataTableError();
+    }
   }
 
   function hideError() {
@@ -521,25 +727,31 @@ highed.DrawerEditor = function(parent, options) {
       opacity: 0,
       'pointer-events': 'none'
     });
+    dataPage.hideDataTableError();
   }
 
   //////////////////////////////////////////////////////////////////////////////
   // Event attachments
 
-  toolbox.on('BeforeResize', resizeChart);
-
-  customizer.on('PropertyChange', chartPreview.options.set);
-  customizer.on('PropertySetChange', chartPreview.options.setAll);
-
-  chartPreview.on('LoadProjectData', function(csv) {
-    dataTable.loadCSV(
-      {
-        csv: csv
-      },
-      true
-    );
+  dataPage.on('GoToTemplatePage', function() {
+    const templates = panel.getOptions().templates;
+    if (templates) templates.click();
   });
 
+  dataPage.on('SeriesChanged', function(index) {
+    if ((!options && !options.features) || (options.features && options.features.indexOf('templates') > -1)) {
+      templatePage.selectSeriesTemplate(index, chartPreview.options.getTemplateSettings());
+    }
+  });
+
+  chartPreview.on('LoadProject', function (projectData, aggregated) { 
+    dataPage.loadProject(projectData, aggregated);
+    templatePage.selectSeriesTemplate(0, projectData);
+  });
+
+  templatePage.on('TemplateChanged', function(newTemplate, loadTemplateForEachSerie, cb){
+    dataPage.changeAssignDataTemplate(newTemplate, loadTemplateForEachSerie, cb);
+  })
   chartPreview.on('ChartChange', function(newData) {
     events.emit('ChartChangedLately', newData);
   });
@@ -560,7 +772,7 @@ highed.DrawerEditor = function(parent, options) {
       chartPreview.options.set('title-text', sample.title);
     }
   });
-
+/*
   dataTable.on('LoadLiveData', function(settings){
     //chartPreview.data.live(settings);
 
@@ -572,7 +784,7 @@ highed.DrawerEditor = function(parent, options) {
       liveDataSetting.dataRefreshRate = settings.interval
     }
     chartPreview.data.live(liveDataSetting);
-  });
+  });*/
 /*
   dataTable.on('UpdateLiveData', function(p){
     chartPreview.data.liveURL(p);
@@ -580,41 +792,43 @@ highed.DrawerEditor = function(parent, options) {
 */
   chartPreview.on('LoadProject', function () {
     setTimeout(function () {
-    resQuickSel.selectByIndex(0);
+ //   resQuickSel.selectByIndex(0);
     setToActualSize();
     }, 2000);
   });
-
+/*
   dataTable.on('LoadGSheet', function(settings) {
-    chartPreview.data.gsheet(settings);
+    //chartPreview.data.gsheet(settings);
   });
-
+*/
   chartPreview.on('RequestEdit', function(event, x, y) {
-    // Expanded
-    if (toolboxEntries.customize.body.offsetWidth) {
-      customizer.focus(event, x, y);
 
-      // Collapsed
-    } else {
-      var unbind = toolboxEntries.customize.on('Expanded', function() {
-        customizer.focus(event, x, y);
-        unbind();
-      });
-      toolboxEntries.customize.expand();
+    const customize = panel.getOptions().customize;
+    if (!panel.getCurrentOption() || panel.getCurrentOption().text !== 'Customize') {
+      if (customize) {
+        customizePage.setTabBehaviour(false)
+        customize.click();
+      }
     }
-  });
 
+    setTimeout(function() {
+      customizePage.selectOption(event, x, y);
+    }, 500);
+  });
+/*
   dataTable.on('Change', function(headers, data) {
+    
     return chartPreview.data.csv({
       csv: dataTable.toCSV(';', true)
     });
-  });
-
+  });*/
+/*
   dataTable.on('ClearData', function() {
     chartPreview.data.clear();
-  });
+  });*/
 
   chartPreview.on('ProviderGSheet', function(p) {
+    /*
     dataTable.initGSheet(
       p.id || p.googleSpreadsheetKey,
       p.worksheet || p.googleSpreadsheetWorksheet,
@@ -624,32 +838,31 @@ highed.DrawerEditor = function(parent, options) {
       p.endColumn,
       true,
       p.dataRefreshRate
-    );
+    );*/
   });
 
   chartPreview.on('ProviderLiveData', function(p) {
-    dataTable.loadLiveDataPanel(p);
+    //dataTable.loadLiveDataPanel(p);
   });
 
   chartPreview.on('Error', function(e) {
-    if (e.indexOf('Highcharts error') >= 0) {
-      var i1 = e.indexOf('#'),
-        i = e.substr(i1).indexOf(':'),
-        id = parseInt(e.substr(i1 + 1, i), 10),
-        item = highed.highchartsErrors[id],
-        urlStart = e.indexOf('www.'),
-        url = '';
+    if (e && e.code && highed.highchartsErrors[e.code]) {
+      
+      var item = highed.highchartsErrors[e.code],
+          url = '';
 
-      if (urlStart >= 0) {
+      if (e.url >= 0) {
         url =
           '<div class="highed-errorbar-more"><a href="https://' +
-          e.substr(urlStart) +
+          e.substr(e.url) +
           '" target="_blank">Click here for more information</a></div>';
       }
 
       return showError(
         (item.title || "There's a problem with your chart") + '!',
-        (item.text || e) + url
+        (item.text) + url,
+        e.warning,
+        e.code
       );
     }
 
@@ -658,10 +871,15 @@ highed.DrawerEditor = function(parent, options) {
 
   chartPreview.on('ChartRecreated', hideError);
 
-  if (!highed.onPhone()) {
-    highed.dom.on(window, 'resize', resize);
-  }
-
+  highed.dom.on(window, 'resize', resize);
+  
+  highed.dom.on(window, 'afterprint', function() {
+    setTimeout(function() {
+      const currentOption = (panel.getCurrentOption() ? panel.getCurrentOption().page : dataPage);
+      setTimeout(currentOption.resize, 10);
+      resize();
+    }, 1100);
+  })
   //////////////////////////////////////////////////////////////////////////////
 
   highed.dom.ap(
@@ -681,27 +899,20 @@ highed.DrawerEditor = function(parent, options) {
         '")'
     })
   );
+  
+  highed.dom.on(errorBarClose, 'click', function() {
+    hideError();
+    suppressWarning = true;
+  });
 
   highed.dom.ap(
     splitter.bottom,
     highed.dom.ap(
-      chartFrame,
-
-      highed.dom.ap(
-        resPreviewBar,
-        highed.dom.cr('div', 'highed-res-headline', 'Size Preview:'),
-        resQuickSelContainer,
-        highed.dom.ap(
-          highed.dom.cr('div', 'highed-res-quicksel'),
-          resWidth,
-          highed.dom.cr('span', '', 'x'),
-          resHeight
-        )
-      ),
-
-      chartContainer,
-      highed.dom.ap(errorBar, errorBarHeadline, errorBarBody)
-    )
+      highedChartContainer,
+      highed.dom.ap(chartFrame, chartContainer)
+    ),
+    showChartSmallScreen,
+    highed.dom.ap(errorBar, highed.dom.ap(errorBarHeadlineContainer, errorBarHeadline, errorBarClose), errorBarBody)
   );
 
   highed.dom.on([resWidth, resHeight], 'change', function() {
@@ -731,23 +942,15 @@ highed.DrawerEditor = function(parent, options) {
 
       sizeChart(w, h);
     });
-
+/*
     highed.dom.style(chartFrame, {
       'overflow-x': 'auto'
-    });
+    });*/
   }
-
-  resQuickSel.addItem({
-    id: 'actual',
-    title: 'Actual Size',
-    select: function() {
-      setToActualSize();
-    }
-  });
 
   chartPreview.on('AttrChange', function(option) {
     if (option.id === 'chart.height' || option.id === 'chart.width') {
-      resQuickSel.selectByIndex(0);
+     //resQuickSel.selectByIndex(0);
       // setToActualSize();
     }
   });
@@ -755,28 +958,6 @@ highed.DrawerEditor = function(parent, options) {
   chartPreview.on('SetResizeData', function () {
     setToActualSize();
   });
-
-  Object.keys(resolutions).forEach(function(devName) {
-    resQuickSel.addItem({
-      id: devName,
-      title: devName,
-      select: function() {
-        resWidth.disabled = resHeight.disabled = undefined;
-
-        resWidth.value = resolutions[devName][0];
-        resHeight.value = resolutions[devName][1];
-
-        sizeChart(resolutions[devName][0], resolutions[devName][1]);
-
-        highed.dom.style(chartFrame, {
-          'overflow-x': ''
-        });
-      }
-    });
-  });
-
-  resQuickSel.selectByIndex(0);
-
   return {
     on: events.on,
     resize: resize,
@@ -793,12 +974,16 @@ highed.DrawerEditor = function(parent, options) {
     addFeature: addFeature,
     chart: chartPreview,
     toolbar: toolbar,
+    getChartTitle: dataPage.getChartTitle,
+    setChartTitle: setChartTitle,
+    showCreateChartPage: showCreateChartPage,
+    addToWorkspace: addToWorkspace,
     data: {
-      on: dataTable.on,
-      showLiveStatus: toolbox.showLiveStatus,
-      hideLiveStatus: toolbox.hideLiveStatus
+      on: function() {}, //dataTable.on,
+      showLiveStatus: function() {}, //toolbox.showLiveStatus,
+      hideLiveStatus: function() {} //toolbox.hideLiveStatus
     },
-    dataTable: dataTable,
+    //dataTable: dataTable,
     toolbar: toolbar
   };
 };

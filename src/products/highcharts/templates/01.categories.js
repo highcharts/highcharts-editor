@@ -1,6 +1,8 @@
-/******************************************************************************
+/*
 
-Copyright (c) 2016, Highsoft
+Highcharts Editor
+
+Copyright (c) 2016-2017, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -21,8 +23,12 @@ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-******************************************************************************/
+*/
 
+highed.templates.addCategory('Area', {
+});
+highed.templates.addCategory('Bar', {
+});
 highed.templates.addCategory('Line', {
   description: [
     'A line chart is a type of chart which diplays information as a series of data points called "markers" connected by straight line segments'
@@ -54,4 +60,16 @@ highed.templates.addCategory('Column', {
   description: [],
 
   samples: []
+});
+
+highed.templates.addCategory('Stock', {
+});
+
+highed.templates.addCategory('Scatter And Bubble', {
+});
+
+highed.templates.addCategory('Polar', {
+});
+
+highed.templates.addCategory('More', {
 });
