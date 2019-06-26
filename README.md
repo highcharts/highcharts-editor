@@ -9,7 +9,7 @@ Highcharts Editor
 
 ## Introduction
 
-![screenshots/customize.png](screenshots/new_design.png)
+![screenshots/customize.png](screenshots/newer_design.png)
 
 **[Click here for live demos](http://editor.highcharts.com)**
 
