@@ -1995,6 +1995,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
   }
 
   function updateAnnotation(config, type) {
+
     if (type === 'line') {
       chart.currentAnnotation.shapes[0].update(config);
       chart.currentAnnotation.userOptions.typeOptions.line.stroke = config.stroke;

@@ -53,15 +53,15 @@ highed.AnnotationModal = function() {
   typeDropdownParent = highed.dom.cr('div', 'highed-modal-label-type'),
   addTextModalTypeOptions = [{
     text: 'Callout',
-    icon: 'comment-o',
+    icon: 'comment',
     value: 'callout'
   }, {
     text: 'Connector',
-    icon: 'external-link',
+    icon: 'external-link-alt',
     value: 'connector'
   }, {
     text: 'Circle',
-    icon: 'circle-o',
+    icon: 'circle',
     value: 'circle'
   }],
   addTextModalTypeValue = 'callout',
@@ -99,7 +99,7 @@ highed.AnnotationModal = function() {
   addTextModalTypeOptions.forEach(function(option) {
 
     var container = highed.dom.cr('div', 'highed-annotation-modal-container ' + (addTextModalTypeValue === option.value ? ' active' : '')),
-        icon = highed.dom.cr('div', 'highed-modal-icon fa fa-' + option.icon),
+        icon = highed.dom.cr('div', 'highed-modal-icon fas fa-' + option.icon),
         text = highed.dom.cr('div', 'highed-modal-text', option.text);
         option.element = container;
     
@@ -358,9 +358,11 @@ highed.AnnotationModal = function() {
       if (!obj[annotationType][0].style) obj[annotationType][0].style = {};
 
       obj[annotationType][0].backgroundColor = colorInputs.background.value;
+      obj[annotationType][0].borderColor = colorInputs.background.value;
       obj[annotationType][0].shape = addTextModalTypeValue;
       obj[annotationType][0].style.color = colorInputs.color.value;
       obj[annotationType][0].style.fontSize = sizeInput.value;
+
 
     } else if (annotationKey === 'line') {
     //Highcharts.charts[Highcharts.charts.length-1].annotations[0].shapes[0].update({strokeWidth: 10})
