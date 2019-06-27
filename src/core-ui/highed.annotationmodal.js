@@ -191,8 +191,7 @@ highed.AnnotationModal = function() {
       annotationKey = 'verticalCounter';
 
       if (type && type.typeOptions && type.typeOptions.label) {
-        
-        if( type.labels[0].format.replace('<br/>', '\n') !== '') {
+        if(type.typeOptions.label.text.replace('<br/>', '\n') !== '') {
           addTextModalInput.value = type.typeOptions.label.text.replace('<br/>', '\n');
         }
         
