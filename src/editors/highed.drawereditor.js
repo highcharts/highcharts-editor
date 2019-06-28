@@ -433,6 +433,15 @@ highed.DrawerEditor = function(parent, options, planCode) {
 
 
       var func = function(prev, newOption) {
+
+        var stockToolsInclude = ['Customize', 'Templates', 'Themes'];
+
+        if (stockToolsInclude.includes(newOption.text)) {
+          chartPreview.toggleShowAnnotationIcon(true);
+        } else {
+          chartPreview.toggleShowAnnotationIcon(false);
+        }
+
         prev.hide();
         newOption.page.show();
         panel.setDefault(newOption.page);
@@ -451,6 +460,8 @@ highed.DrawerEditor = function(parent, options, planCode) {
         highed.dom.style(iconContainer, {
           display: (newOption.page.getIcons() ? 'inline' : 'none')
         });
+
+        chartPreview.redraw();
 
       }
 

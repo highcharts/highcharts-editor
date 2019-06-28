@@ -402,9 +402,11 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       display: 'block'
     });
     expand();
+
     resizeChart(((window.innerHeight
       || document.documentElement.clientHeight
       || document.body.clientHeight) - highed.dom.pos(body, true).y) - 16);
+
     isVisible = true;
     highed.dom.style(resolutionSettings, {
       display: 'block'

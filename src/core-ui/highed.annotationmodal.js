@@ -144,6 +144,7 @@ highed.AnnotationModal = function() {
 
         if( type.labels[0].format.replace('<br/>', '\n') !== '') {
           addTextModalInput.value = type.labels[0].format.replace('<br/>', '\n');
+          addTextModalInput.value = type.labels[0].format.replace('<br>', '\n');
         }
       }
 
@@ -193,6 +194,7 @@ highed.AnnotationModal = function() {
       if (type && type.typeOptions && type.typeOptions.label) {
         if(type.typeOptions.label.text.replace('<br/>', '\n') !== '') {
           addTextModalInput.value = type.typeOptions.label.text.replace('<br/>', '\n');
+          addTextModalInput.value = type.typeOptions.label.text.replace('<br>', '\n');
         }
         
         colorInputs.background.element.value = type.typeOptions.label.stroke;

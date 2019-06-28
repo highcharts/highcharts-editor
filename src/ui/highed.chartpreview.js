@@ -111,7 +111,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     constr = ['Chart'],
     wysiwyg = {
       'g.highcharts-legend': { tab: 'Legend', dropdown: 'General', id: 'legend--enabled' },
-      //'text.highcharts-title': { tab: 'Chart',  dropdown: 'Title', id: 'title--text' },
+      'text.highcharts-title': { tab: 'Chart',  dropdown: 'Title', id: 'title--text' },
       'text.highcharts-subtitle': { tab: 'Chart', dropdown: 'Title',id: 'subtitle--text' },
       '.highcharts-yaxis-labels': { tab: 'Axes', dropdown: 'Y Axis', id: 'yAxis-labels--format' },
       '.highcharts-xaxis-labels': { tab: 'Axes', dropdown: 'X Axis', id: 'xAxis-labels--format' },
@@ -154,6 +154,10 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       events.emit('Payup');
     });
 
+    stockTools.on('ForceChartRefresh', function(){
+      init();
+    });
+
     stockTools.on('StockToolsChanged', function(option, index, type) {
       if (chart.annotations[index] && chart.annotations[index].userOptions) {
         if (chart.annotations[index].userOptions.langKey === 'label') {
@@ -185,6 +189,10 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
   function closeAnnotationPopup() {
     stockTools.closeAnnotationPopup()
+  }
+
+  function toggleShowAnnotationIcon(toggle){
+    stockTools.toggleAnnotationIcon(toggle);
   }
 
   function attachWYSIWYG() {
@@ -311,6 +319,8 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       const chartConstr = (constr.some(function(a) {
         return a === 'StockChart';
       }) ? 'StockChart' : 'Chart');
+
+      options = highed.merge(options, stockTools.getStockToolsToolbarConfig());
 
       chart = new Highcharts[chartConstr](pnode || parent, options);
 
@@ -2073,11 +2083,14 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     toProject: toProject,
     toProjectStr: toProjectStr,
     loadProject: loadProject,
+    redraw: init,
 
     toString: toString,
     setIsAnnotating: setIsAnnotating,
+    toggleShowAnnotationIcon: toggleShowAnnotationIcon,
     updateAnnotation: updateAnnotation,
     closeAnnotationPopup: closeAnnotationPopup,
+
     options: {
       set: set,
       setAll: setChartOptions,

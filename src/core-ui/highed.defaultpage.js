@@ -166,6 +166,7 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
   }
 
   function show() {
+    chartPreview.toggleShowAnnotationIcon(false);
     highed.dom.style(container, {
       display: 'block'
     });
