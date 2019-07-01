@@ -31,6 +31,7 @@ highed.StockTools = function(planCode) {
   var popup,
   events = highed.events(),
   showAnnotationIcon = true,
+  annotationModalOpen = false,
   stockToolsToolbarConfig = {
     stockTools: {
       gui: {
@@ -72,6 +73,7 @@ highed.StockTools = function(planCode) {
 
               if (child.tagName !== 'SPAN') {
                 events.emit('ShowAnnotationModal', currentAnnotation.options);
+                annotationModalOpen = true;
                 popup.container.style.display = 'none';
               }
             }, 1);
@@ -91,6 +93,7 @@ highed.StockTools = function(planCode) {
     if (popup) {
       popup.closePopup()
     }
+    annotationModalOpen = false;
   }
   
   function toggleAnnotationIcon(toggle) {
@@ -118,9 +121,6 @@ highed.StockTools = function(planCode) {
     return stockToolsToolbarConfig;
   }
 
-
-
-
   function hideTooltip() {
     if (timeout) {
       clearTimeout(timeout);
@@ -145,6 +145,9 @@ highed.StockTools = function(planCode) {
     }, 1000);
   }
 
+  function getAnnotationModalOpen() {
+    return annotationModalOpen
+  }
 
   function init(H) {
 
@@ -301,13 +304,6 @@ highed.StockTools = function(planCode) {
       });
     }
 
-
-
-
-
-
-
-
     H.Toolbar.prototype.showHideToolbar = function () {
 
       var stockToolbar = this,
@@ -456,6 +452,7 @@ highed.StockTools = function(planCode) {
           function () {
             var currentAnnotation = chart.currentAnnotation;            
             events.emit('ShowAnnotationModal', currentAnnotation.options);
+            annotationModalOpen = true
           },
           popupDiv
       );
@@ -691,7 +688,8 @@ highed.StockTools = function(planCode) {
     closeAnnotationPopup: closeAnnotationPopup,
     getStockToolsToolbarConfig: getStockToolsToolbarConfig,
     toggleAnnotationIcon: toggleAnnotationIcon,
-    on: events.on
+    on: events.on,
+    getAnnotationModalOpen: getAnnotationModalOpen
   };
 
 };

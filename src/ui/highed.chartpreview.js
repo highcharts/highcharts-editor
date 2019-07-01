@@ -146,7 +146,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       stockTools.hide();
     }
 
-    stockTools.on('ShowAnnotationModal', function(options) {
+  stockTools.on('ShowAnnotationModal', function(options) {
       events.emit('ShowAnnotationModal', options);
     });
 
@@ -177,7 +177,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     document.addEventListener('keydown', function (e) {
 
       if(e.keyCode === 8 || e.keyCode === 46){
-        if (chart.currentAnnotation) {
+        if (chart.currentAnnotation && !stockTools.getAnnotationModalOpen()) {
           var navigation = chart.navigationBindings;
           navigation.activeAnnotation = false;
           navigation.chart.removeAnnotation(chart.currentAnnotation);

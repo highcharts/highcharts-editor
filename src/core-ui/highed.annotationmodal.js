@@ -66,7 +66,7 @@ highed.AnnotationModal = function() {
   }],
   addTextModalTypeValue = 'callout',
   colorInputs = {
-    color: {element: highed.dom.cr('div', 'highed-field-colorpicker', ''), value: '#000000'}, 
+    color: {element: highed.dom.cr('div', 'highed-field-colorpicker', ''), value: '#FFFFFF'}, 
     background: {element: highed.dom.cr('div', 'highed-field-colorpicker', ''), value: '#000000'}
   };
 
@@ -358,8 +358,9 @@ highed.AnnotationModal = function() {
 
       if (!obj[annotationType][0].style) obj[annotationType][0].style = {};
 
-      obj[annotationType][0].backgroundColor = colorInputs.background.value;
-      obj[annotationType][0].borderColor = colorInputs.background.value;
+      if (colorInputs.background.value) obj[annotationType][0].backgroundColor = colorInputs.background.value;
+      if (colorInputs.background.value) obj[annotationType][0].borderColor = colorInputs.background.value;
+
       obj[annotationType][0].shape = addTextModalTypeValue;
       obj[annotationType][0].style.color = colorInputs.color.value;
       obj[annotationType][0].style.fontSize = sizeInput.value;
@@ -380,16 +381,17 @@ highed.AnnotationModal = function() {
       };
 
     } else {
+
       obj[annotationType] = [{
-        //text: addTextModalInput.value.replace('\n', '<br/>'),  
-        fill: colorInputs.color.value, 
-        stroke: colorInputs.background.value
       }];
+
+      if (colorInputs.color.value) obj[annotationType][0].fill = colorInputs.color.value;
+      if (colorInputs.background.value) obj[annotationType][0].stroke = colorInputs.background.value;
+
     }
-
+    
     events.emit("UpdateAnnotation", obj, annotationKey)
-    //chartPreview.addAnnotationLabel(addLabelX, addLabelY, addTextModalInput.value.replace('\n', '<br/>'), addTextModalColorValue, addTextModalTypeValue);
-
+    
     addTextModalInput.value = '';
 
   });
