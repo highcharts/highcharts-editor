@@ -947,7 +947,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
     setToActualSize();
   });
 
-  chartPreview.on('Payup', function() {
+  customizePage.on('Payup', function() {
     payupModal.show();
   });
 

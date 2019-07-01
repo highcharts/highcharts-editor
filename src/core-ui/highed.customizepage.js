@@ -275,6 +275,13 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     var annotationButton = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons ' + (usingSafari() ? ' usingsafari ' : '') , '<i class="fas fa-marker" aria-hidden="true"></i><span class="highed-tooltip-text">Annotations</span>');
 
     highed.dom.on(annotationButton, 'click', function() {
+
+      if (planCode && planCode === 1) {
+        // Show pay up dialog
+        events.emit('Payup');
+        return;
+      }
+
       closeAnnotationDropdown();
 
       if (annotationContainer.classList.contains('active')) annotationContainer.classList.remove('active');
