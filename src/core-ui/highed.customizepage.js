@@ -65,32 +65,40 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     annotationContainer,
     activeAnnotation = null,
     annotationOptions = [{
-      tooltip: 'Add Circle',
-      icon: 'circle',
-      value: 'circle',
-      draggable: true
+      className: 'highcharts-label-annotation',
+      imageIcon: 'https://code.highcharts.com/7.1.2/gfx/stock-icons/label.svg',
+      tooltip: 'Label'
     }, {
-      tooltip: 'Add Square',
-      icon: 'stop',
-      value: 'rect',
-      draggable: true
+      className: "highcharts-segment",
+      imageIcon: 'https://code.highcharts.com/7.1.2/gfx/stock-icons/segment.svg',
+      tooltip: 'Line',
+      submenu: [
+        {className:"highcharts-segment", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/segment.svg"},
+        {className:"highcharts-arrow-segment", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/arrow-segment.svg"},
+        {className:"highcharts-ray", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/ray.svg"},
+        {className:"highcharts-arrow-ray", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/arrow-ray.svg"},
+        {className:"highcharts-infinity-line", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/line.svg"},
+        {className:"highcharts-arrow-infinity-line", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/arrow-line.svg"},
+        {className:"highcharts-horizontal-line", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/horizontal-line.svg"},
+        {className:"highcharts-vertical-line", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/vertical-line.svg"},
+      ]
     }, {
-      tooltip: 'Add Annotations',
-      icon: 'comment',
-      value: 'label',
-      draggable: true
-    }, {
-      tooltip: 'Move',
-      icon: 'arrows',
-      value: 'drag'
-    }, {
-      tooltip: 'Remove',
-      icon: 'trash',
-      value: 'delete',
-    }, {
+      className: "highcharts-crooked3",
+      imageIcon: 'https://code.highcharts.com/7.1.2/gfx/stock-icons/elliott-3.svg',
+      tooltip: 'Crooked Line',
+      submenu: [
+        {className:"highcharts-elliott3", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/elliott-3.svg"},
+        {className:"highcharts-elliott5", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/elliott-5.svg"},
+        {className:"highcharts-crooked3", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/crooked-3.svg"},
+        {className:"highcharts-crooked5", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/crooked-5.svg"}
+      ]
+    },
+    {
       tooltip: 'Close',
       icon: 'times',
       onClick: function() {
+        closeAnnotationDropdown()
+
         annotationOptions.forEach(function(o) {
           o.element.classList.remove('active');
         });
@@ -145,6 +153,13 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     chartSizeText = highed.dom.cr('span', 'text', 'Chart Size:'),
     resWidth = highed.dom.cr('input', 'highed-res-number'),
     resHeight = highed.dom.cr('input', 'highed-res-number'),
+
+
+
+    toolsContainer = highed.dom.cr('div', 'tools-container'),
+    toolsCircle = highed.dom.cr('button', 'highcharts-circle-annotation'),
+
+
     resolutions = [
       {
         iconElement: phoneIcon,
@@ -160,6 +175,23 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     
     resWidth.placeholder = 'W';
     resHeight.placeholder = 'H';
+
+
+  highed.dom.ap(toolsContainer, toolsCircle);
+
+
+  function usingSafari() {
+    return (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Mac') != -1 && navigator.userAgent.indexOf('Chrome') == -1)
+  }
+
+  function closeAnnotationDropdown(){
+    annotationOptions.forEach(function(option) {
+      if (option.subContainer) {
+        option.subContainer.classList.remove('active');
+      }
+    });
+  }
+
 
   function init() {
 
@@ -239,7 +271,86 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
         highed.dom.ap(iconsContainer, button.element);
       });
     }
+
+    var annotationButton = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons ' + (usingSafari() ? ' usingsafari ' : '') , '<i class="fas fa-marker" aria-hidden="true"></i><span class="highed-tooltip-text">Annotations</span>');
+
+    highed.dom.on(annotationButton, 'click', function() {
+      closeAnnotationDropdown();
+
+      if (annotationContainer.classList.contains('active')) annotationContainer.classList.remove('active');
+      else annotationContainer.classList.add('active');
+
+    });
+
+    if (!annotationContainer) {
+      annotationContainer = highed.dom.cr('div', 'highed-transition highed-annotation-container tools-container');
+
+      highed.dom.ap(annotationContainer, annotationButton);
+
+      annotationOptions.forEach(function(option) {
+        var btn = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons ' + option.icon + ' ' + option.className + ' ' + (usingSafari() ? ' usingsafari ' : '') + (option.className ? ' highed-svg-icon' : ''), 
+                                '<i class="fa fa-' + option.icon + '" aria-hidden="true"></i><span class="highed-tooltip-text">' + option.tooltip + '</span>');
+        
+        if (option.imageIcon) {
+          var img = highed.dom.cr('img');
+          img.src = option.imageIcon;
+          highed.dom.ap(btn, img);
+        }
+
+        var ellipses;
+        if (option.submenu) {
+          ellipses = highed.dom.cr('span', 'fas fa-ellipsis-h');
+          var subContainer = highed.dom.cr('div', 'highed-annotation-submenu');
+          option.subContainer = subContainer;
+          option.btn = btn;
+
+          option.submenu.forEach(function(submenuOption) {
+
+            var subBtn = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons ' + submenuOption.className + '-icon ' + (usingSafari() ? ' usingsafari ' : ''));
+            
+            highed.dom.on(subBtn, 'click', function() {
+              btn.innerHTML = '<span class="highed-tooltip-text">' + option.tooltip + '</span>';
+              
+              var img = highed.dom.cr('img');
+              img.src = submenuOption.imageIcon;
+              highed.dom.ap(btn, img);
+              btn.click();
+            });
+
+            if (submenuOption.imageIcon) {
+              var img = highed.dom.cr('img');
+              img.src = submenuOption.imageIcon;
+              highed.dom.ap(subBtn, img);
+            }
+            highed.dom.ap(subContainer, subBtn);
+          });
+
+          highed.dom.ap(ellipses, subContainer);
+
+          highed.dom.on(ellipses, 'click', function(event){
+            
+            var isActive = subContainer.classList.contains('active');
+            closeAnnotationDropdown();
+
+            if (!isActive) subContainer.className += ' active';
+          });
+
+          //highed.dom.ap(btn, ellipses);
+
+        }
+        
+        if (option.onClick || !option.draggable) {
+          highed.dom.on(btn, 'click', function() {
+            if (option.onClick) option.onClick();
+          });
+        }
+
+        option.element = btn;
+        highed.dom.ap(annotationContainer, btn, ellipses);
+      });
+    }
     
+    highed.dom.ap(iconsContainer, annotationContainer);
     highed.dom.ap(contents, userContents);
     highed.dom.ap(body, contents);
   

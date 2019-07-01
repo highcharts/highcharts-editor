@@ -24,7 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 *******************************************************************************/
 
 // @format
-
+// Stock tools overrides
 
 highed.StockTools = function(planCode) {
 
@@ -35,7 +35,8 @@ highed.StockTools = function(planCode) {
   stockToolsToolbarConfig = {
     stockTools: {
       gui: {
-        buttons: ['simpleShapes', 'lines', 'crookedLines', 'verticalLabels', 'separator', 'toggleAnnotations', 'fullScreen']
+        buttons: ['simpleShapes', 'lines', 'crookedLines'],
+        enabled: false
       },
     },
     navigation: {
@@ -83,8 +84,25 @@ highed.StockTools = function(planCode) {
           // Hide the popup container, and reset currentAnnotation
           this.chart.annotationsPopupContainer.style.display = 'none';
           this.chart.currentAnnotation = null;
+        },
+        selectButton: function (event) {
+            var newClassName = event.button.className + ' highcharts-active';
+
+
+            if (event.button.classList.contains('highcharts-active')) return;
+
+            event.button.className = newClassName;
+
+            // Store info about active button:
+            this.chart.activeButton = event.button;
+        },
+        deselectButton: function (event) {
+            event.button.classList.remove('highcharts-active');
+            // Remove info about active button:
+            this.chart.activeButton = null;
         }
-      }
+      },
+      bindingsClassName: "tools-container"
     }
   },
   timeout = null;
@@ -106,15 +124,15 @@ highed.StockTools = function(planCode) {
   }
 
   function hide(){
-    stockToolsToolbarConfig.stockTools.gui.visible = false;
+    //stockToolsToolbarConfig.stockTools.gui.visible = false;
   }
 
   function removeStockTools(){
-    stockToolsToolbarConfig.stockTools.gui.enabled = false;
+    //stockToolsToolbarConfig.stockTools.gui.enabled = false;
   }
 
   function addStockTools(){
-    stockToolsToolbarConfig.stockTools.gui.enabled = true;
+    //stockToolsToolbarConfig.stockTools.gui.enabled = true;
   }
 
   function getStockToolsToolbarConfig(){
@@ -677,6 +695,52 @@ highed.StockTools = function(planCode) {
         });
       }, 1000);
     });
+
+
+    H.NavigationBindings.prototype.bindingsButtonClick = function (button, events, clickEvent) {
+      var navigation = this,
+          chart = navigation.chart,
+          PREFIX = 'highcharts-';
+
+      if (navigation.selectedButtonElement) {
+        H.fireEvent(
+            navigation,
+            'deselectButton',
+            { button: navigation.selectedButtonElement }
+        );
+
+        if (navigation.nextEvent) {
+            // Remove in-progress annotations adders:
+            if (
+                navigation.currentUserDetails &&
+                navigation.currentUserDetails.coll === 'annotations'
+            ) {
+                chart.removeAnnotation(navigation.currentUserDetails);
+            }
+            navigation.mouseMoveEvent = navigation.nextEvent = false;
+        }
+        if (events.start || events.steps) {
+            chart.renderer.boxWrapper.removeClass(PREFIX + 'draw-mode');
+        }
+
+        if (button.classList.contains(navigation.selectedButton.className)) return;
+        
+      }
+
+      navigation.selectedButton = events;
+      navigation.selectedButtonElement = button;
+
+      H.fireEvent(navigation, 'selectButton', { button: button });
+
+      // Call "init" event, for example to open modal window
+      if (events.init) {
+          events.init.call(navigation, button, clickEvent);
+      }
+
+      if (events.start || events.steps) {
+          chart.renderer.boxWrapper.addClass(PREFIX + 'draw-mode');
+      }
+    }
     
   }
 
