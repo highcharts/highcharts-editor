@@ -26,7 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 highed.templates.add('Bar', {
-  title: 'Basic bar',
+  title: 'Bar',
   description: '',
   thumbnail: 'ovuvul.svg',
   dataValidator: false,

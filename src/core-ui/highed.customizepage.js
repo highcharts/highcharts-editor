@@ -142,7 +142,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     tabletIcon = highed.dom.cr('span', '', '<i class="fa fa-tablet" aria-hidden="true"></i>'),
     tabletIcon = highed.dom.cr('span', '', '<i class="fa fa-tablet" aria-hidden="true"></i>'),
     stretchToFitIcon = highed.dom.cr('span', '', '<i class="fa fa-laptop" aria-hidden="true"></i>'),
-    chartSizeText = highed.dom.cr('span', 'text', 'Chart Size:'),
+    chartSizeText = highed.dom.cr('span', 'text', 'Preview Size:'),
     resWidth = highed.dom.cr('input', 'highed-res-number'),
     resHeight = highed.dom.cr('input', 'highed-res-number'),
     resolutions = [
