@@ -317,7 +317,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
             
             highed.dom.on(subBtn, 'click', function() {
               btn.innerHTML = '<span class="highed-tooltip-text">' + option.tooltip + '</span>';
-              
+              btn.className = 'highed-template-tooltip annotation-buttons ' + submenuOption.icon + ' ' + submenuOption.className + ' ' + (usingSafari() ? ' usingsafari ' : '') + (submenuOption.className ? ' highed-svg-icon' : '')
               var img = highed.dom.cr('img');
               img.src = submenuOption.imageIcon;
               highed.dom.ap(btn, img);
