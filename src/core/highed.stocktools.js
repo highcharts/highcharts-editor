@@ -653,7 +653,7 @@ highed.StockTools = function(planCode) {
           annotationsOptions = chart.options.annotations,
           index = chart.annotations.indexOf(annotation);
 
-      if (annotation.target && annotation.target.options && (annotation.target.options.type === 'crookedLine' || annotation.target.options.type === "elliottWave")) {
+      if (annotation.target && annotation.target.options && (annotation.target.options.type === 'crookedLine' || annotation.target.options.type === "infinityLine" || annotation.target.options.type === "elliottWave")) {
         //annotationsOptions[index].typeOptions.points = annotation.target.points;
         events.emit("StockToolsChanged", annotation.target.points, index, "AnnotationHandleMoved");
       } 
@@ -661,13 +661,12 @@ highed.StockTools = function(planCode) {
         events.emit("StockToolsChanged",  annotation.shapes[0].options.point, index, "AnnotationHandleMoved");
       }
       else {
-        annotationsOptions[index].labels[0].point = annotation.labels[0].options.point;
+        if (annotationsOptions[index]) annotationsOptions[index].labels[0].point = annotation.labels[0].options.point;
         events.emit("StockToolsChanged",  annotation.labels[0].options.point, index, "AnnotationHandleMoved");
       }
 
       this.removeDocEvents();
     }
-
 
     // Comunication with bindings:
     H.addEvent(H.NavigationBindings, 'selectButton', function (event) {
