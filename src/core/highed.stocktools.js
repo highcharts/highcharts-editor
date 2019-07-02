@@ -32,6 +32,8 @@ highed.StockTools = function(planCode) {
   events = highed.events(),
   showAnnotationIcon = true,
   annotationModalOpen = false,
+  dragging = false,
+  popupContainer,
   stockToolsToolbarConfig = {
     stockTools: {
       gui: {
@@ -66,18 +68,6 @@ highed.StockTools = function(planCode) {
 
           if (this.popup) {
             popup = this.popup;
-            var currentAnnotation = this.chart.currentAnnotation
-            
-            setTimeout(function() {
-
-              var child = popup.container.children[1];
-
-              if (child.tagName !== 'SPAN') {
-                events.emit('ShowAnnotationModal', currentAnnotation.options);
-                annotationModalOpen = true;
-                popup.container.style.display = 'none';
-              }
-            }, 1);
           }
         },
         closePopup: function() {
@@ -105,6 +95,10 @@ highed.StockTools = function(planCode) {
       bindingsClassName: "tools-container"
     }
   },
+  position = {
+    x: 0,
+    y: 0
+  }
   timeout = null;
   
   function closeAnnotationPopup(){
@@ -168,26 +162,7 @@ highed.StockTools = function(planCode) {
   }
 
   function init(H) {
-/*
-    H.addEvent(H.Chart, 'redraw', function () {
-      var blacklist = ['pie'],
-          chart = this;
-        
-      if (chart.options && chart.options.series) {
-        var typeInBlacklist = chart.options.series.some(function(series) {
-          return blacklist.includes(series.type);
-        });
-
-
-        if (typeInBlacklist || !showAnnotationIcon) {
-          removeStockTools();
-          return;
-        }
-      }
-
-      addStockTools();
-    });
-*/
+    
     function selectableAnnotation(annotationType) {
       var originalClick = annotationType.prototype.defaultOptions.events &&
       annotationType.prototype.defaultOptions.events.click;
@@ -306,7 +281,11 @@ highed.StockTools = function(planCode) {
             contextmenu: selectAndshowPopup,
             dblclick: onDblClick,
             mouseover: hideTooltip,
-            mouseleave: showTooltip
+            mouseleave: showTooltip,            
+            mouseup: function(event) {
+              position.x = event.layerX;
+              position.y = event.layerY;
+            }
           }
       );
     }
@@ -333,23 +312,8 @@ highed.StockTools = function(planCode) {
           PREFIX = 'highcharts-',
           DIV = 'div',
           createElement = H.createElement,
-          showhideBtn,
-          blacklist = ['pie'];
-
-/*
-      if (chart.options && chart.options.series) {
-        var typeInBlacklist = chart.options.series.some(function(series) {
-          return blacklist.includes(series.type);
-        });
-
-        if (typeInBlacklist || !showAnnotationIcon) {
-          removeStockTools();
-          return;
-        }
-      }
-
-      addStockTools();*/
-      
+          showhideBtn;
+          
       // Show hide toolbar
       this.showhideBtn = showhideBtn = createElement(DIV, {
           className: PREFIX + 'toggle-toolbar ' + (visible ? ' active' : ' inactive')
@@ -443,16 +407,6 @@ highed.StockTools = function(planCode) {
       // set position
       popupDiv.style.top = chart.plotTop + 10 + 'px';
 
-      // create label
-      createElement(SPAN, {
-          innerHTML: pick(
-              // Advanced annotations:
-              lang[options.langKey] || options.langKey,
-              // Basic shapes:
-              options.shapes && options.shapes[0].type
-          )
-      }, null, popupDiv);
-
       // add buttons
       button = this.addButton(
           popupDiv,
@@ -477,6 +431,23 @@ highed.StockTools = function(planCode) {
       );
 
       button.className += ' ' + PREFIX + 'annotation-edit-button';
+
+      if ((position.x + 130 + 100) >= chart.containerWidth) this.container.style.left = position.x - 180 + 'px';
+      else this.container.style.left = position.x + 50 + 'px';
+
+      this.container.style.top = position.y - 10 + 'px';
+
+      this.container.style.right = 'initial';
+      popupContainer = this.container;
+
+      /*
+      highed.dom.on(this.container, 'mouseover', function(){
+        if (chart.currentAnnotation.hasDragged || dragging)
+          container.style.opacity = 0.2;
+      });
+      highed.dom.on(this.container, 'mouseleave', function(){
+        container.style.opacity = 1;
+      });*/
     }
 
     H.setOptions({
@@ -539,7 +510,7 @@ highed.StockTools = function(planCode) {
                                     }
                                   }
                               }, {
-                                  symbol: 'square',
+                                  symbol: 'circle',
                                   positioner: function (target) {
                                       if (!target.graphic.placed) {
                                           return {
@@ -585,11 +556,16 @@ highed.StockTools = function(planCode) {
       }
     });
 
-    H.Annotation.prototype.onMouseUp = function () {
+    H.Annotation.prototype.onMouseUp = function (event) {
       var chart = this.chart,
           annotation = this.target || this,
           annotationsOptions = chart.options.annotations,
           index = chart.annotations.indexOf(annotation);
+
+      
+      if (popupContainer) {
+        popupContainer.style.opacity = 1.0;
+      }
 
       this.removeDocEvents();
       annotationsOptions[index] = annotation.options;
@@ -648,12 +624,113 @@ highed.StockTools = function(planCode) {
       }
     }
 
+    H.Annotation.ControlPoint.prototype.onMouseDown = function (e) {
+      var emitter = this,
+          pointer = emitter.chart.pointer,
+          prevChartX,
+          prevChartY;
+
+      dragging = true;
+
+      if (popupContainer) {
+        popupContainer.style.opacity = 0.2;
+      }
+      if (e.preventDefault) {
+          e.preventDefault();
+      }
+
+      // On right click, do nothing:
+      if (e.button === 2) {
+          return;
+      }
+
+      e = pointer.normalize(e);
+      prevChartX = e.chartX;
+      prevChartY = e.chartY;
+
+      emitter.cancelClick = false;
+
+      emitter.removeDrag = H.addEvent(
+          H.doc,
+          'mousemove',
+          function (e) {
+              emitter.hasDragged = true;
+
+              e = pointer.normalize(e);
+              e.prevChartX = prevChartX;
+              e.prevChartY = prevChartY;
+
+              H.fireEvent(emitter, 'drag', e);
+
+              prevChartX = e.chartX;
+              prevChartY = e.chartY;
+          }
+      );
+
+      emitter.removeMouseUp = H.addEvent(
+          H.doc,
+          'mouseup',
+          function (e) {
+              emitter.cancelClick = emitter.hasDragged;
+              emitter.hasDragged = false;
+              // ControlPoints vs Annotation:
+              H.fireEvent(H.pick(emitter.target, emitter), 'afterUpdate');
+              emitter.onMouseUp(e);
+          }
+      );
+    }
+
+    H.Annotation.prototype.onDrag = function (e) {
+      
+      if (popupContainer) {
+        popupContainer.style.opacity = 0.2;
+      }
+
+      if (
+          this.chart.isInsidePlot(
+              e.chartX - this.chart.plotLeft,
+              e.chartY - this.chart.plotTop
+          )
+      ) {
+          var translation = this.mouseMoveToTranslation(e);
+
+          if (this.options.draggable === 'x') {
+              translation.y = 0;
+          }
+
+          if (this.options.draggable === 'y') {
+              translation.x = 0;
+          }
+
+          if (this.points.length) {
+              this.translate(translation.x, translation.y);
+          } else {
+              this.shapes.forEach(function (shape) {
+                  shape.translate(translation.x, translation.y);
+              });
+              this.labels.forEach(function (label) {
+                  label.translate(translation.x, translation.y);
+              });
+          }
+
+          this.redraw(false);
+      }
+  };
+
+
+
     H.Annotation.ControlPoint.prototype.onMouseUp = function () {
       var chart = this.chart,
           annotation = this.target.annotation || this,
           annotationsOptions = chart.options.annotations,
           index = chart.annotations.indexOf(annotation);
 
+      dragging = false;
+
+      if (popupContainer) {
+        popupContainer.style.opacity = 1.0
+      }
+      
       if (annotation.target && annotation.target.options && (annotation.target.options.type === 'crookedLine' || annotation.target.options.type === "infinityLine" || annotation.target.options.type === "elliottWave")) {
         //annotationsOptions[index].typeOptions.points = annotation.target.points;
         events.emit("StockToolsChanged", annotation.target.points, index, "AnnotationHandleMoved");

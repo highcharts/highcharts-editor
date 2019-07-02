@@ -264,7 +264,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       });
     }
 
-    annotationButton = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons ' + (usingSafari() ? ' usingsafari ' : '') , '<i class="fas fa-marker" aria-hidden="true"></i><span class="highed-tooltip-text">Annotations</span>');
+    annotationButton = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons annotation-button' + (usingSafari() ? ' usingsafari ' : '') , '<i class="fas fa-marker" aria-hidden="true"></i><span class="highed-tooltip-text">Annotations</span>');
 
     highed.dom.on(annotationButton, 'click', function() {
 
