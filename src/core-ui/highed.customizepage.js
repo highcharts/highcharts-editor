@@ -64,6 +64,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     iconsContainer = highed.dom.cr('div', 'highed-icons-container'),
     annotationContainer,
     activeAnnotation = null,
+    annotationButton,
     annotationOptions = [{
       className: 'highcharts-label-annotation',
       imageIcon: 'https://code.highcharts.com/7.1.2/gfx/stock-icons/label.svg',
@@ -107,6 +108,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
         annotationContainer.classList.remove('active');
       }
     }],
+    disableAnnotation = false,
     buttons = [
       {
         tooltip: 'Basic',
@@ -154,12 +156,6 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     resWidth = highed.dom.cr('input', 'highed-res-number'),
     resHeight = highed.dom.cr('input', 'highed-res-number'),
 
-
-
-    toolsContainer = highed.dom.cr('div', 'tools-container'),
-    toolsCircle = highed.dom.cr('button', 'highcharts-circle-annotation'),
-
-
     resolutions = [
       {
         iconElement: phoneIcon,
@@ -175,10 +171,6 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     
     resWidth.placeholder = 'W';
     resHeight.placeholder = 'H';
-
-
-  highed.dom.ap(toolsContainer, toolsCircle);
-
 
   function usingSafari() {
     return (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Mac') != -1 && navigator.userAgent.indexOf('Chrome') == -1)
@@ -272,9 +264,11 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       });
     }
 
-    var annotationButton = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons ' + (usingSafari() ? ' usingsafari ' : '') , '<i class="fas fa-marker" aria-hidden="true"></i><span class="highed-tooltip-text">Annotations</span>');
+    annotationButton = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons ' + (usingSafari() ? ' usingsafari ' : '') , '<i class="fas fa-marker" aria-hidden="true"></i><span class="highed-tooltip-text">Annotations</span>');
 
     highed.dom.on(annotationButton, 'click', function() {
+
+      if (disableAnnotation) return;
 
       if (planCode && planCode === 1) {
         // Show pay up dialog
@@ -316,6 +310,8 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
             var subBtn = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons ' + submenuOption.className + '-icon ' + (usingSafari() ? ' usingsafari ' : ''));
             
             highed.dom.on(subBtn, 'click', function() {
+              if (disableAnnotation) return;
+        
               btn.innerHTML = '<span class="highed-tooltip-text">' + option.tooltip + '</span>';
               btn.className = 'highed-template-tooltip annotation-buttons ' + submenuOption.icon + ' ' + submenuOption.className + ' ' + (usingSafari() ? ' usingsafari ' : '') + (submenuOption.className ? ' highed-svg-icon' : '')
               var img = highed.dom.cr('img');
@@ -335,6 +331,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
           highed.dom.ap(ellipses, subContainer);
 
           highed.dom.on(ellipses, 'click', function(event){
+            if (disableAnnotation) return;      
             
             var isActive = subContainer.classList.contains('active');
             closeAnnotationDropdown();
@@ -465,6 +462,23 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     setTimeout(customizer.showSimpleEditor, 200);
   });
 
+
+  function hideAnnotationsOptions(){
+    var blacklist = ['pie'];
+
+    if (chartPreview.options.full && chartPreview.options.full.series) {
+      disableAnnotation = chartPreview.options.full.series.some(function(series) {
+        return blacklist.includes(series.type);
+      });
+    
+      if (!disableAnnotation)
+        annotationContainer.classList.remove('disable')
+      else
+        annotationContainer.className += ' disable'
+
+    }
+  }
+
   function expand() {
     
     var newWidth = width; //props.width;
@@ -516,6 +530,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
   }
 
   function show() {
+    hideAnnotationsOptions()
     highed.dom.style(container, {
       display: 'block'
     });

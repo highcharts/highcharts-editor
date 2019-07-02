@@ -168,7 +168,7 @@ highed.StockTools = function(planCode) {
   }
 
   function init(H) {
-
+/*
     H.addEvent(H.Chart, 'redraw', function () {
       var blacklist = ['pie'],
           chart = this;
@@ -187,7 +187,7 @@ highed.StockTools = function(planCode) {
 
       addStockTools();
     });
-
+*/
     function selectableAnnotation(annotationType) {
       var originalClick = annotationType.prototype.defaultOptions.events &&
       annotationType.prototype.defaultOptions.events.click;
@@ -336,7 +336,7 @@ highed.StockTools = function(planCode) {
           showhideBtn,
           blacklist = ['pie'];
 
-
+/*
       if (chart.options && chart.options.series) {
         var typeInBlacklist = chart.options.series.some(function(series) {
           return blacklist.includes(series.type);
@@ -348,7 +348,8 @@ highed.StockTools = function(planCode) {
         }
       }
 
-      addStockTools();
+      addStockTools();*/
+      
       // Show hide toolbar
       this.showhideBtn = showhideBtn = createElement(DIV, {
           className: PREFIX + 'toggle-toolbar ' + (visible ? ' active' : ' inactive')
