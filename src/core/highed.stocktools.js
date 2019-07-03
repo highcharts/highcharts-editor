@@ -456,8 +456,8 @@ highed.StockTools = function(planCode) {
   
               labelAnnotation: {
                   start: function (e) {
-                      var x = this.chart.xAxis[0].toValue(e.chartX),
-                          y = this.chart.yAxis[0].toValue(e.chartY),
+
+                      var coords = this.chart.pointer.getCoordinates(e),
                           type = 'label',
                           navigation = this.chart.options.navigation,
                           bindings = navigation && navigation.bindings;
@@ -469,8 +469,8 @@ highed.StockTools = function(planCode) {
                           },
                           labels: [{
                               point: {
-                                  x: x,
-                                  y: y,
+                                  x: coords.xAxis[0].value,
+                                  y: coords.yAxis[0].value,
                                   xAxis: 0,
                                   yAxis: 0
                               },
@@ -715,9 +715,7 @@ highed.StockTools = function(planCode) {
 
           this.redraw(false);
       }
-  };
-
-
+    };
 
     H.Annotation.ControlPoint.prototype.onMouseUp = function () {
       var chart = this.chart,

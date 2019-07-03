@@ -121,8 +121,9 @@ highed.AnnotationModal = function() {
     annotationLabel.innerHTML = 'Edit ' + type.langKey;
     if (type && type.langKey === 'label') {
       annotationType = 'labels';
-      annotationKey = 'label'
-      if (type.labels[0].style) {
+      annotationKey = 'label';
+
+      if (type.labels[0].style && type.labels[0].style.color) {
         colorInputs.color.value = type.labels[0].style.color;
         colorInputs.color.element.value = type.labels[0].style.color;    
         highed.dom.style(colorInputs.color.element, {
@@ -133,8 +134,12 @@ highed.AnnotationModal = function() {
         sizeInput.value = type.labels[0].style.fontSize;
       }
 
-      colorInputs.background.value = type.labels[0].backgroundColor;
-      colorInputs.background.element.value = type.labels[0].backgroundColor;    
+      if (type.labels[0].backgroundColor) {
+
+        colorInputs.background.value = type.labels[0].backgroundColor;
+        colorInputs.background.element.value = type.labels[0].backgroundColor;    
+      }
+      
       highed.dom.style(colorInputs.background.element, {
         background: colorInputs.background.value,
         color: highed.getContrastedColor(colorInputs.background.value)
@@ -153,7 +158,7 @@ highed.AnnotationModal = function() {
       annotationType = 'shapes';
       annotationKey = 'line'
 
-      if (type.typeOptions.line.stroke) {
+      if (type.typeOptions && type.typeOptions.line.stroke) {
         colorInputs.background.value = type.typeOptions.line.stroke;
         colorInputs.background.element.value = type.typeOptions.line.stroke;
 
@@ -172,19 +177,23 @@ highed.AnnotationModal = function() {
       annotationType = 'shapes';
       annotationKey = 'shape';
 
-      colorInputs.color.value = type.shapes[0].fill;
-      colorInputs.color.element.value = type.shapes[0].fill;    
-      highed.dom.style(colorInputs.color.element, {
-        background: colorInputs.color.value,
-        color: highed.getContrastedColor(colorInputs.color.value)
-      });
+      if (type.shapes[0] && type.shapes[0].fill) {
+        colorInputs.color.value = type.shapes[0].fill;
+        colorInputs.color.element.value = type.shapes[0].fill;    
+        highed.dom.style(colorInputs.color.element, {
+          background: colorInputs.color.value,
+          color: highed.getContrastedColor(colorInputs.color.value)
+        }); 
+      }
 
-      colorInputs.background.value = type.shapes[0].stroke;
-      colorInputs.background.element.value = type.shapes[0].stroke;    
-      highed.dom.style(colorInputs.background.element, {
-        background: colorInputs.background.value,
-        color: highed.getContrastedColor(colorInputs.background.value)
-      });
+      if ( type.shapes[0] && type.shapes[0].stroke) {
+        colorInputs.background.value = type.shapes[0].stroke;
+        colorInputs.background.element.value = type.shapes[0].stroke;    
+        highed.dom.style(colorInputs.background.element, {
+          background: colorInputs.background.value,
+          color: highed.getContrastedColor(colorInputs.background.value)
+        });
+      }
 
       resetShapeDOM();
     } else {
