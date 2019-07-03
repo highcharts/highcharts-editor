@@ -182,6 +182,10 @@ highed.ChartPreview = function(parent, attributes, planCode) {
           navigation.activeAnnotation = false;
           navigation.chart.removeAnnotation(chart.currentAnnotation);
           chart.currentAnnotation = null;
+          var popupCloseBtn = document.querySelector('.highcharts-popup-close');
+          if (popupCloseBtn) {
+            popupCloseBtn.click();
+          }
         }
       }
     }, false);
