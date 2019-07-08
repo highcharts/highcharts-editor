@@ -200,6 +200,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     }
 
     function expand() {
+      
+      chartPreview.toggleShowAnnotationIcon(false);
       //var bsize = highed.dom.size(bar);
 
       var newWidth = props.widths.desktop;
@@ -225,32 +227,33 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         });
       }
 
-    events.emit('BeforeResize', newWidth);
+      events.emit('BeforeResize', newWidth);
 
-    function resizeBody() {
-      var bsize = highed.dom.size(body),
-          tsize = highed.dom.size(title),
-          size = {
-            w: bsize.w,
-            h: (window.innerHeight
-              || document.documentElement.clientHeight
-              || document.body.clientHeight) - highed.dom.pos(body, true).y
-          };
-        
-      highed.dom.style(contents, {
-        width: '100%',
-        height: ((size.h - 16)) + 'px'
-      });
+      function resizeBody() {
+        var bsize = highed.dom.size(body),
+            tsize = highed.dom.size(title),
+            size = {
+              w: bsize.w,
+              h: (window.innerHeight
+                || document.documentElement.clientHeight
+                || document.body.clientHeight) - highed.dom.pos(body, true).y
+            };
+          
+        highed.dom.style(contents, {
+          width: '100%',
+          height: ((size.h - 16)) + 'px'
+        });
 
-      dataTable.resize();   
-      if(!highed.onPhone()) assignDataPanel.resize(newWidth, highed.dom.pos(chartFrame, true).y - highed.dom.pos(body, true).y)
-    }
+        dataTable.resize();   
+        if(!highed.onPhone()) assignDataPanel.resize(newWidth, highed.dom.pos(chartFrame, true).y - highed.dom.pos(body, true).y)
+      }
 
-    setTimeout(resizeBody, 300);
-    highed.emit('UIAction', 'ToolboxNavigation', props.title);
+      setTimeout(resizeBody, 300);
+      highed.emit('UIAction', 'ToolboxNavigation', props.title);
     }
 
   function show() {
+    chartPreview.toggleShowAnnotationIcon(false);
     highed.dom.style(container, {
       display: 'block'
     });
@@ -280,8 +283,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   assignDataPanel.on('RemoveSeries', function(length) {
     clearSeriesMapping();
-    chartPreview.data.deleteSeries(length);
 
+    chartPreview.data.deleteSeries(length);
     const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
 
     chartPreview.data.csv({

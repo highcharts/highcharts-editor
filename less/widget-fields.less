@@ -155,7 +155,7 @@
   width: 28px;
   height: 28px;
   padding: 4px;
-  font-size: 14px;
+  font-size: 11px;
   line-height: 30px !important;
   text-align: center;
   display: inline-block;
@@ -167,7 +167,7 @@
 
 .highed-field-array-add.fa-plus:before {
   position: relative;
-  top: -4px;
+  top: -5px;
 }
 
 .highed-field-table {
@@ -233,10 +233,29 @@
 }
 
 .annotation-buttons {
-  padding-left: 9px;
   display: inline-block;
-  padding-right: 10px;
-  padding-top: 8px;
+  margin-left: 10px;
+  margin-right: 9px;
+  padding-top: 6px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  img {
+    width: 25px;
+    margin-top: -5px;
+  }
+}
+.annotation-buttons.highcharts-active {
+  border: 1px solid #25386F;
+  border-radius: 4px;
+}
+
+.annotation-buttons.highed-svg-icon {
+  .highed-tooltip-text {
+    margin-left: -47px !important;
+  }
+}
+.annotation-buttons.times {
+  margin-left: 10px;
 }
 
 .annotation-buttons-container {
@@ -247,7 +266,7 @@
   padding: 0px !important;
 }
 
-.highed-annotation-container {    
+.highed-annotation-container {
   font-size: 14px;
   background-color: white;
   color: #25386f;
@@ -260,10 +279,50 @@
   height: 32px;
   padding: 0px !important;
   vertical-align: bottom;
+
+  .fa-ellipsis-h {
+    font-size: 8px;
+    padding-top: 21px;
+    margin-left: -6px;
+    cursor: pointer;
+    .highed-annotation-submenu {
+      position: absolute;
+      width: 44px;
+      z-index: 10;
+      margin-left: -39px;
+      margin-top: 3px;
+      border: 1px solid #e8e8e8;
+      background-color: white;
+      border-top: 0px solid transparent;
+      display: none;
+    }
+
+    .highed-annotation-submenu.active {
+      display: block;
+      .annotation-buttons {
+        margin-left: 0px;
+        margin-right: 0px;
+        padding-left: 10px;
+        padding-right: 9px;
+      }
+      .annotation-buttons:hover {
+        background-color: #eff2fb;
+      }
+    }
+  }
+}
+
+.highed-annotation-container.disable {
+  background-color: rgba(197, 197, 197, 0.65);
 }
 
 .highed-annotation-container.active {
-  width:223px;
+  width: 207px;
+  .annotation-button {
+    .fa-marker {
+      color: #42C8C0;
+    }
+  }
 }
 .annotation-buttons.active {
   color: #42c8c0;

@@ -40,7 +40,7 @@ highed.HelpModal = function(items) {
       heading = highed.dom.cr('div', 'highed-modal-title highed-help-toolbar', item.title),
       gif = highed.dom.cr('div', 'highed-help-gif'),
       desc = highed.dom.cr('div', 'highed-scrollbar highed-help-desc'),
-      activate = highed.dom.cr('span', 'highed-icon fa fa-circle-o');
+      activate = highed.dom.cr('span', 'highed-icon far fa-circle');
 
     if (highed.isArr(item.description)) {
       item.description = item.description.join(' ');
@@ -59,7 +59,7 @@ highed.HelpModal = function(items) {
 
     function makeActive() {
       if (active) {
-        active.className = 'highed-icon fa fa-circle-o';
+        active.className = 'highed-icon far fa-circle';
       }
 
       body.innerHTML = '';

@@ -64,33 +64,42 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     iconsContainer = highed.dom.cr('div', 'highed-icons-container'),
     annotationContainer,
     activeAnnotation = null,
+    annotationButton,
     annotationOptions = [{
-      tooltip: 'Add Circle',
-      icon: 'circle',
-      value: 'circle',
-      draggable: true
+      className: 'highcharts-label-annotation',
+      imageIcon: 'https://code.highcharts.com/7.1.2/gfx/stock-icons/label.svg',
+      tooltip: 'Label'
     }, {
-      tooltip: 'Add Square',
-      icon: 'stop',
-      value: 'rect',
-      draggable: true
+      className: "highcharts-segment",
+      imageIcon: 'https://code.highcharts.com/7.1.2/gfx/stock-icons/segment.svg',
+      tooltip: 'Line',
+      submenu: [
+        {className:"highcharts-segment", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/segment.svg"},
+        {className:"highcharts-arrow-segment", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/arrow-segment.svg"},
+        {className:"highcharts-ray", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/ray.svg"},
+        {className:"highcharts-arrow-ray", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/arrow-ray.svg"},
+        {className:"highcharts-infinity-line", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/line.svg"},
+        {className:"highcharts-arrow-infinity-line", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/arrow-line.svg"},
+        {className:"highcharts-horizontal-line", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/horizontal-line.svg"},
+        {className:"highcharts-vertical-line", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/vertical-line.svg"},
+      ]
     }, {
-      tooltip: 'Add Annotations',
-      icon: 'comment',
-      value: 'label',
-      draggable: true
-    }, {
-      tooltip: 'Move',
-      icon: 'arrows',
-      value: 'drag'
-    }, {
-      tooltip: 'Remove',
-      icon: 'trash',
-      value: 'delete',
-    }, {
+      className: "highcharts-crooked3",
+      imageIcon: 'https://code.highcharts.com/7.1.2/gfx/stock-icons/elliott-3.svg',
+      tooltip: 'Crooked Line',
+      submenu: [
+        {className:"highcharts-elliott3", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/elliott-3.svg"},
+        {className:"highcharts-elliott5", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/elliott-5.svg"},
+        {className:"highcharts-crooked3", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/crooked-3.svg"},
+        {className:"highcharts-crooked5", imageIcon:"https://code.highcharts.com/7.1.2/gfx/stock-icons/crooked-5.svg"}
+      ]
+    },
+    {
       tooltip: 'Close',
       icon: 'times',
       onClick: function() {
+        closeAnnotationDropdown()
+
         annotationOptions.forEach(function(o) {
           o.element.classList.remove('active');
         });
@@ -99,6 +108,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
         annotationContainer.classList.remove('active');
       }
     }],
+    disableAnnotation = false,
     buttons = [
       {
         tooltip: 'Basic',
@@ -145,6 +155,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     chartSizeText = highed.dom.cr('span', 'text', 'Preview Size:'),
     resWidth = highed.dom.cr('input', 'highed-res-number'),
     resHeight = highed.dom.cr('input', 'highed-res-number'),
+
     resolutions = [
       {
         iconElement: phoneIcon,
@@ -156,174 +167,23 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
         width: 1024,
         height: 768
       }
-    ],
-    overlayAddTextModal = highed.OverlayModal(false, {
-      // zIndex: 20000,
-      showOnInit: false,
-      width: 300,
-      height: 350,
-      class: ' highed-annotations-modal'
-    }),
-    activeColor = 'rgba(0, 0, 0, 0.75)',
-    addTextModalContainer = highed.dom.cr('div', 'highed-add-text-popup'),
-    addTextModalInput = highed.dom.cr('textarea', 'highed-imp-input-stretch'),
-    colorDropdownParent = highed.dom.cr('div'),
-    typeDropdownParent = highed.dom.cr('div'),
-    addTextModalHeader = highed.dom.cr('div', 'highed-modal-header', 'Add Annotation'),
-    addTextModalColorSelect = highed.DropDown(colorDropdownParent),
-    addTextModalTypeOptions = [{
-      text: 'Callout',
-      icon: 'comment-o',
-      value: 'callout'
-    },{
-      text: 'Connector',
-      icon: 'external-link',
-      value: 'connector'
-    }, {
-      text: 'Circle',
-      icon: 'circle-o',
-      value: 'circle'
-    }],
-    addTextModalTypeValue = 'callout',
-    addTextModalColorValue = '#000000',
-    addTextModalColorContainer = highed.dom.cr('div', 'highed-modal-color-container'),
-    addTextModalColorInput = highed.dom.cr('input', 'highed-color-input'),
-    box = highed.dom.cr('div', 'highed-field-colorpicker', ''),
-    addTextModalBtnContainer = highed.dom.cr('div', 'highed-modal-button-container'),
-    addTextModalSubmit = highed.dom.cr('button', 'highed-ok-button highed-import-button mini', 'Save'),
-    addTextModalCancel = highed.dom.cr('button', 'highed-ok-button highed-import-button grey negative mini', 'Cancel'),
-    addLabelX = null,
-    addLabelY = null;
+    ];
     
     resWidth.placeholder = 'W';
     resHeight.placeholder = 'H';
 
-    addTextModalColorSelect.addItems([
-      {
-        title: 'Black',
-        id: 'black',
-        select: function() {
-          activeColor = 'rgba(0, 0, 0, 0.75)';
-        }
-      },
-      {
-        title: 'Red',
-        id: 'red',
-        select: function() {
-          activeColor = 'rgba(255, 0, 0, 0.75)';
-        }
-      },
-      {
-        title: 'Blue',
-        id: 'blue',
-        select: function() {
-          activeColor = 'rgba(0, 0, 255, 0.75)';
-        }
-      }
-    ]);
-
-    addTextModalColorSelect.selectByIndex(0);
-    
-    addTextModalColorInput.value = addTextModalColorValue;
-
-    highed.dom.on(addTextModalCancel, 'click', function() {
-      overlayAddTextModal.hide();
-    });
-
-    highed.dom.style(box, {
-      background: addTextModalColorValue,
-      color: highed.getContrastedColor(addTextModalColorValue)
-    });
-
-    addTextModalTypeOptions.forEach(function(option) {
-
-      var container = highed.dom.cr('div', 'highed-annotation-modal-container ' + (addTextModalTypeValue === option.value ? ' active' : '')),
-          icon = highed.dom.cr('div', 'highed-modal-icon fa fa-' + option.icon),
-          text = highed.dom.cr('div', 'highed-modal-text', option.text);
-          option.element = container;
-      
-      highed.dom.on(container, 'click', function() {
-        addTextModalTypeOptions.forEach(function(o) {
-          if (o.element.classList.contains('active'))  o.element.classList.remove('active');
-        })
-        option.element.classList += ' active';
-        addTextModalTypeValue = option.value;
-      })
-      
-      highed.dom.ap(typeDropdownParent, highed.dom.ap(container, icon, text));
-    });
-
-    addTextModalInput.placeholder = 'Write annotation here';
-
-
-    function update(col) {
-      if (
-        col &&
-        col !== 'null' &&
-        col !== 'undefined' &&
-        typeof col !== 'undefined'
-      ) {
-        box.innerHTML = "";
-        //box.innerHTML = col;
-      } else {
-        box.innerHTML = 'auto';
-        col = '#FFFFFF';
-      }
-
-      highed.dom.style(box, {
-        background: col,
-        color: highed.getContrastedColor(col)
-      });
-
-    }
-
-    var timeout = null;
-    highed.dom.on(addTextModalColorInput, 'change', function(e) {
-      clearTimeout(timeout);
-      timeout = setTimeout(function () {
-        addTextModalColorValue = addTextModalColorInput.value;
-        update(addTextModalColorValue);
-      }, 500);
-    });
-
-    highed.dom.on(box, 'click', function(e) {
-      highed.pickColor(e.clientX, e.clientY, addTextModalColorValue, function(col) {
-        if (highed.isArr(addTextModalColorValue)) {
-          addTextModalColorValue = '#000000';
-        }
-
-        addTextModalColorValue = col;
-        addTextModalColorInput.value = addTextModalColorValue;
-        update(col);
-      });
-    });
-
-    highed.dom.ap(overlayAddTextModal.body,
-      highed.dom.ap(addTextModalContainer, 
-                    addTextModalHeader,
-                    addTextModalInput,
-                    highed.dom.cr('div', 'highed-add-text-label', 'Type:'),
-                    typeDropdownParent,
-                    highed.dom.cr('div', 'highed-add-text-label', 'Color:'),
-                    //colorDropdownParent,
-                    highed.dom.ap(addTextModalColorContainer, box, addTextModalColorInput),
-                    highed.dom.ap(addTextModalBtnContainer,
-                      addTextModalSubmit,
-                      addTextModalCancel
-                    )
-                  )
-    );
-
-    highed.dom.on(addTextModalSubmit, 'click', function() {
-      overlayAddTextModal.hide();
-      chartPreview.addAnnotationLabel(addLabelX, addLabelY, addTextModalInput.value.replace('\n', '<br/>'), addTextModalColorValue, addTextModalTypeValue);
-      addTextModalInput.value = '';
-
-    });
-
   function usingSafari() {
     return (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Mac') != -1 && navigator.userAgent.indexOf('Chrome') == -1)
   }
+
+  function closeAnnotationDropdown(){
+    annotationOptions.forEach(function(option) {
+      if (option.subContainer) {
+        option.subContainer.classList.remove('active');
+      }
+    });
+  }
+
 
   function init() {
 
@@ -404,85 +264,97 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       });
     }
 
-    var annotationButton = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons ' + (usingSafari() ? ' usingsafari ' : '') , '<i class="fa fa-commenting" aria-hidden="true"></i><span class="highed-tooltip-text">Annotations</span>');
+    annotationButton = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons annotation-button' + (usingSafari() ? ' usingsafari ' : '') , '<i class="fas fa-marker" aria-hidden="true"></i><span class="highed-tooltip-text">Annotations</span>');
 
     highed.dom.on(annotationButton, 'click', function() {
+
+      if (disableAnnotation) return;
+
+      if (planCode && planCode === 1) {
+        // Show pay up dialog
+        events.emit('Payup');
+        return;
+      }
+
+      closeAnnotationDropdown();
+
       if (annotationContainer.classList.contains('active')) annotationContainer.classList.remove('active');
       else annotationContainer.classList.add('active');
 
     });
 
     if (!annotationContainer) {
-      annotationContainer = highed.dom.cr('div', 'highed-transition highed-annotation-container');
+      annotationContainer = highed.dom.cr('div', 'highed-transition highed-annotation-container tools-container');
 
       highed.dom.ap(annotationContainer, annotationButton);
 
       annotationOptions.forEach(function(option) {
-        var btn = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons ' + (usingSafari() ? ' usingsafari ' : '') , '<i class="fa fa-' + option.icon + '" aria-hidden="true"></i><span class="highed-tooltip-text">' + option.tooltip + '</span>');
+        var btn = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons ' + option.icon + ' ' + option.className + ' ' + (usingSafari() ? ' usingsafari ' : '') + (option.className ? ' highed-svg-icon' : ''), 
+                                '<i class="fa fa-' + option.icon + '" aria-hidden="true"></i><span class="highed-tooltip-text">' + option.tooltip + '</span>');
+        
+        if (option.imageIcon) {
+          var img = highed.dom.cr('img');
+          img.src = option.imageIcon;
+          highed.dom.ap(btn, img);
+        }
+
+        var ellipses;
+        if (option.submenu) {
+          ellipses = highed.dom.cr('span', 'fas fa-ellipsis-h');
+          var subContainer = highed.dom.cr('div', 'highed-annotation-submenu');
+          option.subContainer = subContainer;
+          option.btn = btn;
+
+          option.submenu.forEach(function(submenuOption) {
+
+            var subBtn = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons ' + submenuOption.className + '-icon ' + (usingSafari() ? ' usingsafari ' : ''));
+            
+            highed.dom.on(subBtn, 'click', function() {
+              if (disableAnnotation) return;
+        
+              btn.innerHTML = '<span class="highed-tooltip-text">' + option.tooltip + '</span>';
+              btn.className = 'highed-template-tooltip annotation-buttons ' + submenuOption.icon + ' ' + submenuOption.className + ' ' + (usingSafari() ? ' usingsafari ' : '') + (submenuOption.className ? ' highed-svg-icon' : '')
+              var img = highed.dom.cr('img');
+              img.src = submenuOption.imageIcon;
+              highed.dom.ap(btn, img);
+              btn.click();
+            });
+
+            if (submenuOption.imageIcon) {
+              var img = highed.dom.cr('img');
+              img.src = submenuOption.imageIcon;
+              highed.dom.ap(subBtn, img);
+            }
+            highed.dom.ap(subContainer, subBtn);
+          });
+
+          highed.dom.ap(ellipses, subContainer);
+
+          highed.dom.on(ellipses, 'click', function(event){
+            if (disableAnnotation) return;      
+            
+            var isActive = subContainer.classList.contains('active');
+            closeAnnotationDropdown();
+
+            if (!isActive) subContainer.className += ' active';
+          });
+
+          //highed.dom.ap(btn, ellipses);
+
+        }
+        
         if (option.onClick || !option.draggable) {
           highed.dom.on(btn, 'click', function() {
-            
             if (option.onClick) option.onClick();
-            else {
-              var isAnnotating = !(option.element.className.indexOf('active') > -1);
-    
-              annotationOptions.forEach(function(o) {
-                o.element.classList.remove('active');
-              });
-      
-              chartPreview.setIsAnnotating(isAnnotating);
-              if (isAnnotating) {
-                chartPreview.options.togglePlugins('annotations', 1);
-                chartPreview.setAnnotationType(option.value);
-                option.element.className += ' active';
-              }
-            }
-          });
-        } else {
-          highed.dom.on(btn, 'mousedown', function (e) {
-            
-            activeAnnotation = highed.dom.cr('div', 'highed-active-annotation fa fa-' + option.icon);    
-            
-            highed.dom.ap(document.body, activeAnnotation);
-            function moveAt(pageX, pageY) {
-              highed.dom.style(activeAnnotation, {
-                left: pageX - (btn.offsetWidth / 2 - 10) + 'px',
-                top: pageY - (btn.offsetHeight / 2 - 10) + 'px'
-              });
-            }
-            moveAt(e.pageX, e.pageY);
-            
-            function onMouseMove(event) {
-              if(event.stopPropagation) event.stopPropagation();
-              if(event.preventDefault) event.preventDefault();
-              moveAt(event.pageX, event.pageY);
-            }
-
-            document.addEventListener('mousemove', onMouseMove);
-
-            highed.dom.on(activeAnnotation, 'mouseup', function (e) {
-              e = chartPreview.options.all().pointer.normalize(e);
-              document.removeEventListener('mousemove', onMouseMove);
-              activeAnnotation.onmouseup = null;
-              activeAnnotation.remove();
-              activeAnnotation = null;
-              
-              chartPreview.options.togglePlugins('annotations', 1);
-              chartPreview.setAnnotationType(option.value);
-              chartPreview.addAnnotation(e);
-            });
           });
         }
 
-  
         option.element = btn;
-        highed.dom.ap(annotationContainer, btn);
+        highed.dom.ap(annotationContainer, btn, ellipses);
       });
     }
-
     
     highed.dom.ap(iconsContainer, annotationContainer);
-
     highed.dom.ap(contents, userContents);
     highed.dom.ap(body, contents);
   
@@ -590,6 +462,23 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     setTimeout(customizer.showSimpleEditor, 200);
   });
 
+
+  function hideAnnotationsOptions(){
+    var blacklist = ['pie'];
+
+    if (chartPreview.options.full && chartPreview.options.full.series) {
+      disableAnnotation = chartPreview.options.full.series.some(function(series) {
+        return blacklist.includes(series.type);
+      });
+    
+      if (!disableAnnotation)
+        annotationContainer.classList.remove('disable')
+      else
+        annotationContainer.className += ' disable'
+
+    }
+  }
+
   function expand() {
     
     var newWidth = width; //props.width;
@@ -641,13 +530,16 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
   }
 
   function show() {
+    hideAnnotationsOptions()
     highed.dom.style(container, {
       display: 'block'
     });
     expand();
+
     resizeChart(((window.innerHeight
       || document.documentElement.clientHeight
       || document.body.clientHeight) - highed.dom.pos(body, true).y) - 16);
+
     isVisible = true;
     highed.dom.style(resolutionSettings, {
       display: 'block'
@@ -765,16 +657,6 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     sizeChart(parseInt(resWidth.value, 10), parseInt(resHeight.value, 10));
   });
 
-
-  chartPreview.on('ShowTextDialog', function(chart, x, y) {
-    addLabelX = x;
-    addLabelY = y;
-    addTextModalInput.focus();
-
-    overlayAddTextModal.show();
-
-  });
-  
   chartPreview.on('ChartChange', function(newData) {
     events.emit('ChartChangedLately', newData);
   });

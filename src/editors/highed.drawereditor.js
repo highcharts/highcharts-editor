@@ -123,7 +123,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
         showLiveStatus: true
       },
       templates: {
-        icon: 'fa-bar-chart',
+        icon: 'fa-chart-bar',
         widths: {
           desktop: 26,
           tablet: 24,
@@ -131,7 +131,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
         },
         title: 'Templates',
         nav: {
-          icon: 'bar-chart',
+          icon: 'chart-bar',
           text: 'Templates',
           onClick: []
         },
@@ -148,10 +148,10 @@ highed.DrawerEditor = function(parent, options, planCode) {
         ]
       },
       customize: {
-        icon: 'fa-sliders',
+        icon: 'chart-pie',
         title: 'Customize Chart',
         nav: {
-          icon: 'pie-chart',
+          icon: 'chart-pie',
           text: 'Customize',
           onClick: []
         },
@@ -210,9 +210,11 @@ highed.DrawerEditor = function(parent, options, planCode) {
     ),
     chartPreview = highed.ChartPreview(chartContainer, {
       defaultChartOptions: properties.defaultChartOptions
-    }),
+    }, planCode),
     suppressWarning = false,
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
+    payupModal = highed.SubscribeModal(),
+    annotationModal = highed.AnnotationModal(),
     customizePage = highed.CustomizePage(
       splitter.bottom,
       highed.merge(
@@ -239,7 +241,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
       highedChartContainer,
       builtInOptions.data
     ),
-    templatePage = highed.TemplatePage(      
+    templatePage = highed.TemplatePage(     
       splitter.bottom,
       highed.merge(
         {
@@ -261,7 +263,8 @@ highed.DrawerEditor = function(parent, options, planCode) {
         }
       }
     ),
-
+    changePlanBtn = highed.dom.cr('button', 'highed-import-button', "Choose a plan"),
+    createAccountLink = highed.dom.cr('a', '', 'Create one')
     // Res preview bar
     resPreviewBar = highed.dom.cr('div', 'highed-res-preview'),
     resWidth = highed.dom.cr('input', 'highed-res-number'),
@@ -292,7 +295,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
       },
       {
         title: highed.L('saveProject'),
-        css: 'fa-floppy-o',
+        css: ' fas fa-save',
         click: function() {
           var name;
 
@@ -327,14 +330,14 @@ highed.DrawerEditor = function(parent, options, planCode) {
       '-',
       {
         title: highed.L('saveCloud'),
-        css: 'fa-cloud-upload',
+        css: 'fas fa-cloud-upload-alt',
         click: function() {
           highed.cloud.save(chartPreview);
         }
       },
       {
         title: highed.L('loadCloud'),
-        css: 'fa-cloud-download',
+        css: 'fas fa-cloud-download-alt',
         click: function() {
           highed.cloud.showUI(chartPreview);
         }
@@ -431,6 +434,15 @@ highed.DrawerEditor = function(parent, options, planCode) {
 
 
       var func = function(prev, newOption) {
+
+        var stockToolsInclude = ['Customize', 'Templates', 'Themes'];
+
+        if (stockToolsInclude.includes(newOption.text)) {
+          chartPreview.toggleShowAnnotationIcon(true);
+        } else {
+          chartPreview.toggleShowAnnotationIcon(false);
+        }
+
         prev.hide();
         newOption.page.show();
         panel.setDefault(newOption.page);
@@ -449,6 +461,8 @@ highed.DrawerEditor = function(parent, options, planCode) {
         highed.dom.style(iconContainer, {
           display: (newOption.page.getIcons() ? 'inline' : 'none')
         });
+
+        chartPreview.redraw();
 
       }
 
@@ -554,8 +568,6 @@ highed.DrawerEditor = function(parent, options, planCode) {
       setChartTitle(options.title);
     });
   }
-
-
 
   /**
    * Resize the chart preview based on a given width
@@ -739,7 +751,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
   });
 
   dataPage.on('SeriesChanged', function(index) {
-    if ((!options && !options.features) || (options.features && options.features.indexOf('templates') > -1)) {
+    if ((options && !options.features) || (options && options.features && options.features.indexOf('templates') > -1)) {
       templatePage.selectSeriesTemplate(index, chartPreview.options.getTemplateSettings());
     }
   });
@@ -772,35 +784,14 @@ highed.DrawerEditor = function(parent, options, planCode) {
       chartPreview.options.set('title-text', sample.title);
     }
   });
-/*
-  dataTable.on('LoadLiveData', function(settings){
-    //chartPreview.data.live(settings);
 
-    const liveDataSetting = {};
-
-    liveDataSetting[settings.type] = settings.url;
-    if (settings.interval && settings.interval > 0){
-      liveDataSetting.enablePolling = true;
-      liveDataSetting.dataRefreshRate = settings.interval
-    }
-    chartPreview.data.live(liveDataSetting);
-  });*/
-/*
-  dataTable.on('UpdateLiveData', function(p){
-    chartPreview.data.liveURL(p);
-  });
-*/
   chartPreview.on('LoadProject', function () {
     setTimeout(function () {
  //   resQuickSel.selectByIndex(0);
     setToActualSize();
     }, 2000);
   });
-/*
-  dataTable.on('LoadGSheet', function(settings) {
-    //chartPreview.data.gsheet(settings);
-  });
-*/
+
   chartPreview.on('RequestEdit', function(event, x, y) {
 
     const customize = panel.getOptions().customize;
@@ -815,17 +806,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
       customizePage.selectOption(event, x, y);
     }, 500);
   });
-/*
-  dataTable.on('Change', function(headers, data) {
-    
-    return chartPreview.data.csv({
-      csv: dataTable.toCSV(';', true)
-    });
-  });*/
-/*
-  dataTable.on('ClearData', function() {
-    chartPreview.data.clear();
-  });*/
+
 
   chartPreview.on('ProviderGSheet', function(p) {
     /*
@@ -871,6 +852,14 @@ highed.DrawerEditor = function(parent, options, planCode) {
 
   chartPreview.on('ChartRecreated', hideError);
 
+  payupModal.on('SwitchToSubscriptionPage', function(){
+    events.emit("SwitchToSubscriptionPage");
+  });
+  
+  payupModal.on('SwitchToCreateAccountPage', function(){
+    events.emit("SwitchToCreateAccountPage");
+  });
+
   highed.dom.on(window, 'resize', resize);
   
   highed.dom.on(window, 'afterprint', function() {
@@ -880,6 +869,12 @@ highed.DrawerEditor = function(parent, options, planCode) {
       resize();
     }, 1100);
   })
+
+  highed.dom.on(errorBarClose, 'click', function() {
+    hideError();
+    suppressWarning = true;
+  });
+
   //////////////////////////////////////////////////////////////////////////////
 
   highed.dom.ap(
@@ -899,11 +894,6 @@ highed.DrawerEditor = function(parent, options, planCode) {
         '")'
     })
   );
-  
-  highed.dom.on(errorBarClose, 'click', function() {
-    hideError();
-    suppressWarning = true;
-  });
 
   highed.dom.ap(
     splitter.bottom,
@@ -958,6 +948,25 @@ highed.DrawerEditor = function(parent, options, planCode) {
   chartPreview.on('SetResizeData', function () {
     setToActualSize();
   });
+
+  customizePage.on('Payup', function() {
+    payupModal.show();
+  });
+
+  chartPreview.on('ShowAnnotationModal', function(type) {
+    annotationModal.show(type);
+  });
+
+  annotationModal.on('UpdateAnnotation', function(config, type) {
+    chartPreview.updateAnnotation(config, type);
+  });
+
+
+  annotationModal.on('ClosePopup', function() {
+    chartPreview.closeAnnotationPopup();
+  });
+
+
   return {
     on: events.on,
     resize: resize,

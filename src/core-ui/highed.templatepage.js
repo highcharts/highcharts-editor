@@ -224,7 +224,6 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
   }
 
   function expand() {
-      
     var newWidth = props.widths.desktop;
     if (highed.onTablet() && props.widths.tablet) newWidth = props.widths.tablet;
     else if (highed.onPhone() && props.widths.phone) newWidth = props.widths.phone;
