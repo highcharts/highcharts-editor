@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
+highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview, chartFrame, props) {
   var events = highed.events(),
     // Main properties
     properties = highed.merge(
@@ -51,7 +51,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     ),
     container = highed.dom.cr(
       'div',
-      'highed-transition highed-toolbox highed-box-size'
+      'highed-transition highed-toolbox highed-simple-toolbox highed-box-size'
     ),
     title = highed.dom.cr('div', 'highed-dtable-title'),
     chartTitle = highed.dom.cr('div', 'highed-toolbox-body-chart-title'),
@@ -75,7 +75,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
     body = highed.dom.cr(
       'div',
-      'highed-toolbox-body highed-datapage-body highed-box-size highed-transition'
+      'highed-toolbox-body highed-simple-toolbox-body highed-datapage-body highed-box-size highed-transition'
     ),
     dataTable = highed.DataTable(
       dataTableContainer,
@@ -95,7 +95,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
                   addRowBtn
                 )
               ),
-    assignDataPanel = highed.AssignDataPanel(parent, dataTable),
+    assignDataPanel = highed.AssignDataPanel(assignDataParent, dataTable, 'simple'),
     dataImportBtn = highed.dom.cr(
       'button',
       'highed-import-button highed-ok-button highed-sm-button',
@@ -170,7 +170,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       assignDataPanel.init(dataTable.getColumnLength());
 
       expand();
-      resizeChart();
     }
 
     function afterResize(func){
@@ -182,7 +181,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     }
     function resize() {
       if (isVisible) {
-        resizeChart();
         setTimeout(function(){
           expand()
         }, 100);
@@ -200,66 +198,49 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     }
 
     function expand() {
-      
-      chartPreview.toggleShowAnnotationIcon(false);
       //var bsize = highed.dom.size(bar);
 
-      var newWidth = props.widths.desktop;
-      if (highed.onTablet() && props.widths.tablet) newWidth = props.widths.tablet;
-      else if (highed.onPhone() && props.widths.phone) newWidth = props.widths.phone;
-
-      if (props.iconOnly) {
-        return;
-      }
-
-   //console.log(bsize.h);
-      highed.dom.style(body, {
-        width: 100 + '%',
-        //height: //(bsize.h - 55) + 'px',
-        opacity: 1
-      });
+      var newWidth = 100
 
       if (!highed.onPhone()) {
         //(highed.dom.pos(assignDataPanel.getElement(), true).x - highed.dom.pos(dataTableContainer, true).x) - 10
-        highed.dom.style(container, {        
+        highed.dom.style(container, {   
           //width: newWidth + '%'
-          width:((highed.dom.pos(assignDataPanel.getElement(), true).x - highed.dom.pos(dataTableContainer, true).x) + 14) + 'px'
+          width: '100%'
         });
       }
 
-      events.emit('BeforeResize', newWidth);
+    events.emit('BeforeResize', newWidth);
 
-      function resizeBody() {
-        var bsize = highed.dom.size(body),
-            tsize = highed.dom.size(title),
-            size = {
-              w: bsize.w,
-              h: (window.innerHeight
-                || document.documentElement.clientHeight
-                || document.body.clientHeight) - highed.dom.pos(body, true).y
-            };
-          
-        highed.dom.style(contents, {
-          width: '100%',
-          height: ((size.h - 16)) + 'px'
-        });
+    function resizeBody() {
+      var bsize = highed.dom.size(body),
+          tsize = highed.dom.size(title),
+          size = {
+            w: bsize.w,
+            h: (window.innerHeight
+              || document.documentElement.clientHeight
+              || document.body.clientHeight) - highed.dom.pos(body, true).y
+          };
+        
+      highed.dom.style(contents, {
+        width: '100%',
+        height: ((size.h - 16)) + 'px'
+      });
 
-        dataTable.resize();   
-        if(!highed.onPhone()) assignDataPanel.resize(newWidth, highed.dom.pos(chartFrame, true).y - highed.dom.pos(body, true).y)
-      }
+      dataTable.resize();   
+      if(!highed.onPhone()) assignDataPanel.resize(newWidth, highed.dom.pos(chartFrame, true).y - highed.dom.pos(body, true).y)
+    }
 
-      setTimeout(resizeBody, 300);
-      highed.emit('UIAction', 'ToolboxNavigation', props.title);
+    setTimeout(resizeBody, 300);
+    highed.emit('UIAction', 'ToolboxNavigation', props.title);
     }
 
   function show() {
-    chartPreview.toggleShowAnnotationIcon(false);
     highed.dom.style(container, {
       display: 'block'
     });
     assignDataPanel.show();
     isVisible = true;
-    resizeChart();
     resize(); 
   }
 
@@ -283,8 +264,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   assignDataPanel.on('RemoveSeries', function(length) {
     clearSeriesMapping();
-
     chartPreview.data.deleteSeries(length);
+
     const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
 
     chartPreview.data.csv({
@@ -446,10 +427,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       }
       dataTable.removeAllCellsHighlight(null, columns);
     }
-    
     assignDataPanel.checkToggleCells();
-    
-    assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true, true);
+    assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
     chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
   }
 
@@ -483,7 +462,11 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   
   assignDataPanel.on('GetLastType', function() {
     var chartOptions = chartPreview.options.getCustomized();
-    var type = chartOptions.series[chartOptions.series.length - 1].type;
+    var type = chartOptions.series[chartOptions.series.length - 1];
+    
+    if (type){
+      type = type.type;
+    }
 
     if (blacklist.includes(type)) type = null;
 

@@ -1,8 +1,16 @@
-# Latest (Master)
+# 0.2.2-rc3
   * Added data import failure detection for when it's not possible to deduce the CSV delimiter
   * Added special case for handling the dataLabels type
   * Added support for the `series-label` module
+  * Added `encodedUrl` to custom code
+  * Added function to clear the theme
+  * Added support for live data
+  * Fixed an issue with deleting rows not updating the chart
+  * Fixed default values for adding new rows
+  * Fixed an issue with custom code and series
   * Google Spreadsheet support now extracts the correct ID from a URL
+  * Navigation events in the editor now emits `UIAction` events on the global even object
+  * Misc smaller performance and bug fixes
 
 # 0.2.1-rc2
   * Fixed issue causing propagation of importer properties to fail

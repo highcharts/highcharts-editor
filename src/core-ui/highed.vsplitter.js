@@ -69,8 +69,9 @@ highed.VSplitter = function(parent, attributes) {
 
     if (!w && !h) {
       
+
       highed.dom.style(top, {
-        height: properties.topHeight
+        height: (typeof properties.topHeight === 'string' ? properties.topHeight : properties.topHeight + '%' )
       })
       if (bottom) {
         highed.dom.style(bottom, {

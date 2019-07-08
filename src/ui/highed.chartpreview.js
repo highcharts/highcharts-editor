@@ -58,7 +58,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       attributes
     ),
     events = highed.events(),
-    customizedOptions = highed.merge({}, properties.defaultChartOptions),
+    customizedOptions = {},
     aggregatedOptions = {},
     flatOptions = {},
     templateOptions = [],
@@ -406,12 +406,11 @@ highed.ChartPreview = function(parent, attributes, planCode) {
   }
 
   /**
-   * Clear all themes from the chart. 
+   * Clear all themes from the chart.
    * Used by cloud to reset theme
    */
   function clearTheme(theme, skipEmit) {
-    
-    themeOptions = false
+    themeOptions = false;
 
     if (!skipEmit) {
       updateAggregated();
@@ -500,6 +499,8 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     //Merge fest
 
     highed.clearObj(aggregatedOptions);
+
+    highed.merge(aggregatedOptions, properties.defaultChartOptions);
 
     // Apply theme first
     if (themeOptions && Object.keys(themeOptions).length) {
@@ -1057,7 +1058,9 @@ highed.ChartPreview = function(parent, attributes, planCode) {
             sheet.endColumn =
               provider.endColumn || customizedOptions.data.endColumn;
             if (provider.dataRefreshRate && provider.dataRefreshRate > 0) {
-              sheet.dataRefreshRate = provider.dataRefreshRate || customizedOptions.data.dataRefreshRate;
+              sheet.dataRefreshRate =
+                provider.dataRefreshRate ||
+                customizedOptions.data.dataRefreshRate;
               sheet.enablePolling = true;
             }
           }
@@ -1070,8 +1073,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
           loadGSpreadsheet(sheet);
 
           hasData = true;
-        } else if (projectData.settings.dataProvider.liveData){
-
+        } else if (projectData.settings.dataProvider.liveData) {
           var provider = projectData.settings.dataProvider;
           var live = provider.liveData;
 
@@ -1281,7 +1283,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         template: templateSettings,
         plugins: chartPlugins,//getPlugins(),
         dataProvider: {
-          csv: (!gsheet && !livedata) ? (loadedCSVRaw || lastLoadedCSV) : false,
+          csv: !gsheet && !livedata ? loadedCSVRaw || lastLoadedCSV : false,
           googleSpreadsheet: gsheet,
           liveData: livedata,
           assignDataFields: assignDataFields,
@@ -1684,6 +1686,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
           'https://code.highcharts.com/modules/annotations.js',
           'https://code.highcharts.com/stock/modules/annotations-advanced.js',
           'https://code.highcharts.com/stock/modules/stock-tools.js',
+          'https://code.highcharts.com/modules/accessibility.js',
           // 'https://code.highcharts.com/modules/series-label.js'
           'https://code.highcharts.com/modules/solid-gauge.js'
         ],
@@ -1905,7 +1908,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
     customCode = false;
 
-    highed.merge(customizedOptions, properties.defaultChartOptions);
+    // highed.merge(customizedOptions, properties.defaultChartOptions);
 
     updateAggregated();
 

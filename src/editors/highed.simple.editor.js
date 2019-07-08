@@ -85,19 +85,24 @@ highed.SimpleEditor = function(parent, attributes) {
       additionalCSS: ['highed-header']
     }),
     hsplitter = highed.HSplitter(mainVSplitter.bottom, {
-      leftWidth: 40,
+      leftWidth: 30,
       noOverflow: false
     }),
     vsplitterRight = highed.VSplitter(hsplitter.right, {
       noOverflow: true
     }),
+    vsplitterLeft = highed.VSplitter(hsplitter.left, {
+      topHeight: 60
+    }),
     preview = highed.ChartPreview(vsplitterRight.top, {
       defaultChartOptions: properties.defaultChartOptions,
       expandTo: expandContainer
     }),
+    importer = highed.SimpleDataPage(vsplitterRight.bottom, vsplitterLeft.bottom, properties.importer, preview, vsplitterRight.top, {}),
     //importer = highed.DataImporter(vsplitterRight.bottom, properties.importer),
-    importer = highed.DataTable(vsplitterRight.bottom),
-    customizer = highed.SimpleCustomizer(hsplitter.left, {
+    //importer = highed.DataTable(vsplitterRight.bottom),
+    //dataPage = highed.SimpleDataPage(),
+    customizer = highed.SimpleCustomizer(vsplitterLeft.top, {
       availableSettings: properties.availableSettings
     }),
     cmenu = highed.DefaultContextMenu(preview);
@@ -106,6 +111,8 @@ highed.SimpleEditor = function(parent, attributes) {
 
   properties.features = highed.arrToObj(properties.features.split(' '));
 
+  importer.init()
+  
   ///////////////////////////////////////////////////////////////////////////
 
   function applyFeatures() {
@@ -129,6 +136,7 @@ highed.SimpleEditor = function(parent, attributes) {
     mainVSplitter.resize(ps.w, ps.h);
 
     vsplitterRight.resize(false, ps.h - 60);
+    vsplitterLeft.resize();
 
     hsplitter.resize(ps.w, ps.h - 60);
 
@@ -150,6 +158,8 @@ highed.SimpleEditor = function(parent, attributes) {
   // importer.on('ImportJSON', [preview.data.json, attachToCustomizer]);
   // importer.on('ImportChartSettings', [preview.data.settings, attachToCustomizer]);
 
+
+  /*
   importer.on('Change', function(headers, data) {
     if (data.length) {
       var d = importer.toDataSeries();
@@ -158,7 +168,7 @@ highed.SimpleEditor = function(parent, attributes) {
 
       preview.loadSeries(d.series);
     }
-  });
+  });*/
 
   preview.on('RequestEdit', function(event, x, y) {
     customizer.focus(event, x, y);

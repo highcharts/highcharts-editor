@@ -26,7 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 highed.templates.add('Column', {
-  title: 'Basic Column',
+  title: 'Column',
   description: '',
   thumbnail: 'ovobiq.svg',
   dataValidator: false,

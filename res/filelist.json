@@ -34,6 +34,7 @@
     "./src/core-ui/highed.slider.js",
     "./src/core-ui/highed.datatable.js",
     "./src/core-ui/highed.datapage.js",
+    "./src/core-ui/highed.simple.datapage.js",
     "./src/core-ui/highed.createchartpage.js",
     "./src/core-ui/highed.templatepage.js",
     "./src/core-ui/highed.customizepage.js",

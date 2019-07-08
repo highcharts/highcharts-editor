@@ -25,7 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // @format
 
-highed.AssignDataPanel = function(parent, dataTable) {
+highed.AssignDataPanel = function(parent, dataTable, extraClass) {
 
   var defaultOptions = {
     'labels': {
@@ -84,12 +84,12 @@ highed.AssignDataPanel = function(parent, dataTable) {
   var events = highed.events(),
     container = highed.dom.cr(
       'div',
-      'highed-transition highed-assigndatapanel highed-box-size'
+      'highed-transition highed-assigndatapanel highed-box-size ' + extraClass
     ),
-    bar = highed.dom.cr('div', 'highed-assigndatapanel-bar highed-box-size'),
+    bar = highed.dom.cr('div', 'highed-assigndatapanel-bar highed-box-size ' + extraClass),
     body = highed.dom.cr(
       'div',
-      'highed-assigndatapanel-body highed-box-size highed-transition'
+      'highed-assigndatapanel-body highed-box-size highed-transition ' + extraClass
     ),
     headerToggle = highed.dom.cr('span', '', '<i class="fa fa-chevron-down highed-assigndatapanel-toggle" aria-hidden="true"></i>'),
     header = highed.dom.ap(
@@ -284,13 +284,13 @@ highed.AssignDataPanel = function(parent, dataTable) {
 
   }
 
-  function getFieldsToHighlight(cb, overrideCheck) {
+  function getFieldsToHighlight(cb, overrideCheck, dontEmit) {
     if (!options[index]) return;
     Object.keys(options[index]).forEach(function(key) {
       var input = options[index][key];
       processField(input, overrideCheck, cb);
     });
-    if (!disabled) events.emit("ChangeData", options);
+    if (!disabled && !dontEmit) events.emit("ChangeData", options);
   }
 
   function generateColors() {
@@ -598,13 +598,13 @@ highed.AssignDataPanel = function(parent, dataTable) {
       }
       //liveDataTypeSelect.selectById(detailValue || 'json');
     });
-    
-    var colors = option.colors || generateColors();
-
-    option.colors = colors;
   
+    var colors = option.colors || generateColors();
+    option.colors = colors;
+
     labelInput.value = option.value;
     const colorDiv = highed.dom.cr('div', 'highed-assigndatapanel-color');
+    
     highed.dom.style(colorDiv, {
       "background-color": option.colors.light,
       "border": '1px solid ' + option.colors.dark,
@@ -621,7 +621,6 @@ highed.AssignDataPanel = function(parent, dataTable) {
   }
 
   function resetDOM() {
-    
     inputContainer.innerHTML = '';
     if (options[index]){
       Object.keys(options[index]).forEach(function(key) {
@@ -712,7 +711,8 @@ highed.AssignDataPanel = function(parent, dataTable) {
   seriesTypeSelect.on('Change', function(selected) {
     if (index !== selected.id()) {
       index = selected.id();
-      resetDOM();      
+      resetDOM();  
+          
       if (showCells) events.emit('ToggleHideCells', options[index], showCells);
       if (!disabled) {
         events.emit('RedrawGrid', true);

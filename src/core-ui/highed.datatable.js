@@ -651,8 +651,6 @@ highed.DataTable = function(parent, attributes) {
         columnsToHighlight.push(row.columns[colNumber]);
       }
     });
-    
-
 
     if (gcolumns[colNumber].header.className.indexOf('highlight-right') === -1) {
       gcolumns[colNumber].header.className += ' highlight-right';
@@ -2424,11 +2422,13 @@ highed.DataTable = function(parent, attributes) {
   });
 
   highed.dom.on(gsheetLoadButton, 'click', function() {
+
+    var value = parseInt(gsheetRefreshTime.value);
     events.emit('LoadGSheet', {
       googleSpreadsheetKey: gsheetID.value,
       googleSpreadsheetWorksheet: gsheetWorksheetID.value || false,
-      dataRefreshRate: gsheetRefreshTime.value || false,
-      enablePolling: (parseInt(gsheetRefreshTime.value) !== 0),
+      dataRefreshRate: (!isNaN(value) && value !== 0 ? value : false),
+      enablePolling: (!isNaN(value) && value !== 0),
       startRow: gsheetStartRow.value || 0,
       endRow: gsheetEndRow.value || Number.MAX_VALUE,
       startColumn: gsheetStartCol.value || 0,
