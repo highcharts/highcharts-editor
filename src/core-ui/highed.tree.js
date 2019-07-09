@@ -77,10 +77,10 @@ highed.Tree = function(parent) {
         highed.uncamelize(child.meta.title || child.meta.name)
       ),
       body = highed.dom.cr('div', 'parent-body'),
-      icon = highed.dom.cr('div', 'exp-col-icon fa fa-folder-o'),
+      icon = highed.dom.cr('div', 'exp-col-icon fas fa-folder'),
       rightIcons = highed.dom.cr('div', 'right-icons'),
-      remIcon = highed.dom.cr('div', 'highed-icon fa fa-minus-square-o'),
-      addIcon = highed.dom.cr('div', 'highed-icon fa fa-plus-square-o'),
+      remIcon = highed.dom.cr('div', 'highed-icon far fa-minus-square'),
+      addIcon = highed.dom.cr('div', 'highed-icon far fa-plus-square'),
       index =
         (child.meta.ns ? child.meta.ns + '.' : '') +
         (myIndex ? '[' + myIndex + '].' : '') +
@@ -126,7 +126,7 @@ highed.Tree = function(parent) {
         child.children.length &&
         child.meta.hasSubTree
       ) {
-        icon.className = 'exp-col-icon fa fa-folder-open-o';
+        icon.className = 'exp-col-icon fas fa-folder-open';
         highed.dom.style(body, { display: 'block' });
         expanded = true;
         pushExpandState();
@@ -145,7 +145,7 @@ highed.Tree = function(parent) {
 
     function collapse(noSelect, noPush) {
       if (expanded && child.children.length && child.meta.hasSubTree) {
-        icon.className = 'exp-col-icon fa fa-folder-o';
+        icon.className = 'exp-col-icon fas fa-folder';
         highed.dom.style(body, { display: 'none' });
         expanded = false;
         if (!noPush) {
@@ -228,7 +228,7 @@ highed.Tree = function(parent) {
       if (child.meta.types.array) {
         highed.dom.ap(node, highed.dom.ap(rightIcons, addIcon));
 
-        icon.className = 'exp-col-icon fa fa-th-list';
+        icon.className = 'exp-col-icon fas fa-th-list';
         // We need to create one child per. existing entry
         child.data = instancedData[child.meta.name] =
           instancedData[child.meta.name] || [];
@@ -285,7 +285,7 @@ highed.Tree = function(parent) {
         highed.dom.on(icon, 'click', toggle);
 
         if (!child.meta.hasSubTree) {
-          icon.className = 'exp-col-icon fa fa-sliders';
+          icon.className = 'exp-col-icon fas fa-sliders-h';
         }
 
         // Add data instance
