@@ -462,8 +462,6 @@ highed.DrawerEditor = function(parent, options, planCode) {
           display: (newOption.page.getIcons() ? 'inline' : 'none')
         });
 
-        chartPreview.redraw();
-
       }
 
 
