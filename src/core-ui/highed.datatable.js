@@ -298,7 +298,7 @@ highed.DataTable = function(parent, attributes) {
     switchRowColumns = highed.dom.cr(
       'button',
       'switch-column-button highed-template-tooltip',
-      '<i class="fa fa-refresh" aria-hidden="true"></i> <span class="highed-tooltip-text highed-template-tooltip-text-left">Switch Rows/Columns</span>'
+      '<i class="fa fa-sync-alt" aria-hidden="true"></i> <span class="highed-tooltip-text highed-template-tooltip-text-left">Switch Rows/Columns</span>'
     ),
     gsheetLoadButton = highed.dom.cr(
       'button',
@@ -2893,7 +2893,7 @@ highed.DataTable = function(parent, attributes) {
     var found = false;
 
     gcolumns.forEach(function(col, index) {
-      if (!values.indexOf(index) === -1) {
+      if (values.indexOf(index) === -1) {
         toggle ? col.hideColumns() : col.showColumns();
       } else {
         col.showColumns();
