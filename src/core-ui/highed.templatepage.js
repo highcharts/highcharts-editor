@@ -175,14 +175,14 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     
   }
 
-  function createMostPopularTemplates(toNextPage, setLoading) {
+  function createMostPopularTemplates(chartType, toNextPage, setLoading) {
     const templates = highed.templates.getCatArray();
     const container = highed.dom.cr('div', 'highed-toolbox-templates-container');
     
     const mostPopular = highed.templates.getMostPopular();
 
     createTemplates(container, 'Most Popular', mostPopular, setLoading, toNextPage);
-    
+
     Object.keys(templates).forEach(function(key) {
       const t = templates[key];
 

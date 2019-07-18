@@ -320,12 +320,14 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     // }
 
     try {
-      const chartConstr = (constr.some(function(a) {
+      var chartConstr = (constr.some(function(a) {
         return a === 'StockChart';
       }) ? 'StockChart' : 'Chart');
 
       options = highed.merge(options, stockTools.getStockToolsToolbarConfig());
 
+      chartConstr = 'Map';
+      
       chart = new Highcharts[chartConstr](pnode || parent, options);
 
       //This is super ugly.
@@ -365,6 +367,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
       events.emit('ChartRecreated');
     } catch (code) {
+      console.log(code)
       events.emit('Error', {
         code: code,
         url : (code ? 'https://www.highcharts.com/errors/' + code : '')

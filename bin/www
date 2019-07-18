@@ -80,7 +80,7 @@ function updateFiles() {
     // Include product files
     appendFilesFromProduct('highcharts'); 
     appendFilesFromProduct('highstock'); 
-    //appendFilesFromProduct('highmaps'); 
+    appendFilesFromProduct('highmaps'); 
 
 }
 

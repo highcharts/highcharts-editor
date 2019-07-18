@@ -31,13 +31,14 @@ highed.templates.add('Map', {
     'Basic map of Africa.',
     'Good starting point for African geographical data.'
   ],
-  thumbnail: '',
+  thumbnail: 'mapafrica.svg',
   dataValidator: false,
   sampleSets: [],
   constructor: 'Map',
   config: {
     chart: {
-      borderWidth: 1
+      borderWidth: 1,
+      map: 'custom/africa',
     },
 
     mapNavigation: {

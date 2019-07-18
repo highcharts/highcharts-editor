@@ -23,8 +23,8 @@ var dest = 'dist/',
     sources = require(__dirname + '/res/filelist.json'),
     products = [
         'highcharts',
-        'highstock'//,
-        //'highmaps'
+        'highstock',
+        'highmaps'
     ]
 ;
 
@@ -57,7 +57,6 @@ function appendFilesFromProduct(prodName) {
     include('validators');
     include('samples');
     include('templates');
-
     return files;
 }
 

@@ -2893,7 +2893,7 @@ highed.DataTable = function(parent, attributes) {
     var found = false;
 
     gcolumns.forEach(function(col, index) {
-      if (!values.indexOf(index) === -1) {
+      if (values.indexOf(index) === -1) {
         toggle ? col.hideColumns() : col.showColumns();
       } else {
         col.showColumns();

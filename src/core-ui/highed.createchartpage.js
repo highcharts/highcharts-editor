@@ -88,7 +88,7 @@ highed.CreateChartPage = function(parent, userOptions, props) {
     //toolbox = highed.Toolbox(userContents),
     options = [];
 
-    function init(dataPage,templatePage, customizePage) {
+    function init(dataPage,templatePage, customizePage, chartType) {
 
       var counter = 1;
       toolbox = highed.Toolbox(userContents);
@@ -114,7 +114,7 @@ highed.CreateChartPage = function(parent, userOptions, props) {
 
       createTitleSection();
       createImportDataSection(dataPage);
-      createTemplateSection(templatePage);
+      createTemplateSection(templatePage, chartType);
       createCustomizeSection();
 
       highed.dom.ap(contents, userContents);
@@ -233,7 +233,7 @@ highed.CreateChartPage = function(parent, userOptions, props) {
       );
     }
 
-    function createTemplateSection(templatePage) {
+    function createTemplateSection(templatePage, chartType) {
 
       var nextButton = highed.dom.cr(
             'button',
@@ -242,10 +242,10 @@ highed.CreateChartPage = function(parent, userOptions, props) {
       ),
       skipAll = highed.dom.ap(highed.dom.cr('div', 'highed-toolbox-skip-all'), highed.dom.cr('span','', 'Skip All'));
       loader = highed.dom.cr('span','highed-wizard-loader ', '<i class="fa fa-spinner fa-spin fa-1x fa-fw a"></i>'),
-      templatesContainer = templatePage.createMostPopularTemplates(function() {
+      templatesContainer = templatePage.createMostPopularTemplates(chartType, function() {
         setTimeout(function() {
           options[1].expand();
-        },200);
+        }, 200);
       }, function(loading) {
         if (loading) loader.classList += ' active';
         else loader.classList.remove('active');
@@ -356,26 +356,27 @@ highed.CreateChartPage = function(parent, userOptions, props) {
 
     }
 
-  function show() {
-    highed.dom.style(container, {
-      display: 'block'
-    });
-    isVisible = true;
-    //expand();
+    function show() {
+      highed.dom.style(container, {
+        display: 'block'
+      });
+      isVisible = true;
+      //expand();
+      
+    }
     
-  }
-  function hide() {
-    highed.dom.style(container, {
-      display: 'none'
-    });
-    isVisible = false;
-  }
+    function hide() {
+      highed.dom.style(container, {
+        display: 'none'
+      });
+      isVisible = false;
+    }
 
-  function destroy() {}
+    function destroy() {}
 
-  function getIcons() {
-    return null;
-  }
+    function getIcons() {
+      return null;
+    }
 
   //////////////////////////////////////////////////////////////////////////////
 

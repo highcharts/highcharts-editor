@@ -31,7 +31,7 @@ highed.templates.add('Map', {
     'Basic map of the European Union member countries.',
     'Good starting point for EU-related geographical data.'
   ],
-  thumbnail: '',
+  thumbnail: 'mapeu.svg',
   dataValidator: false,
   sampleSets: [],
   constructor: 'Map',

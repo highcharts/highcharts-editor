@@ -31,7 +31,7 @@ highed.templates.add('Map', {
     'Basic map of Asia.',
     'Good starting point for Asian geographical data.'
   ],
-  thumbnail: '',
+  thumbnail: 'mapasia.svg',
   dataValidator: false,
   sampleSets: ['asia-gdp'],
   constructor: 'Map',
