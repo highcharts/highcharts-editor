@@ -910,6 +910,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
   // Create the features
   createFeatures();
   createToolbar();
+  //showCreateChartPage();
 
   resize();
 

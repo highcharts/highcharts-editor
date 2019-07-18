@@ -26,14 +26,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 highed.templates.add('Map', {
-  title: 'Basic European Map',
+  title: 'Choropleth',
   description: [
-    'Basic European map.',
-    'Good starting point for European geographical data.'
+    '',
   ],
-  thumbnail: '',
+  thumbnail: 'mapchoropleth.svg',
   dataValidator: false,
-  sampleSets: ['eu-gdp'],
   constructor: 'Map',
   config: {
     chart: {
@@ -44,22 +42,10 @@ highed.templates.add('Map', {
       enabled: true
     },
 
-    legend: {
-      layout: 'horizontal',
-      verticalAlign: 'bottom'
-    },
-
-    colorAxis: {
-      min: 0
-    },
-
     series: [
       {
-        mapData: 'custom/europe',
-        joinBy: 'name',
         dataLabels: {
-          enabled: false,
-          format: '{point.name}'
+          enabled: false
         }
       }
     ]

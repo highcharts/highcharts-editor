@@ -89,7 +89,7 @@ highed.CreateChartPage = function(parent, userOptions, props) {
     options = [];
 
     function init(dataPage,templatePage, customizePage, chartType) {
-
+      chartType = 'Map';
       var counter = 1;
       toolbox = highed.Toolbox(userContents);
       builtInOptions.forEach(function(option, index) {

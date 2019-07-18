@@ -26,14 +26,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 highed.templates.add('Map', {
-  title: 'Basic US Map',
+  title: 'Bubble',
   description: [
-    'Basic map of the US.',
-    'Good starting point for US geographical data.'
+    '',
   ],
-  thumbnail: '',
+  thumbnail: 'mapbubble.svg',
   dataValidator: false,
-  sampleSets: [],
+  sampleSets: ['asia-gdp'],
   constructor: 'Map',
   config: {
     chart: {
@@ -41,51 +40,30 @@ highed.templates.add('Map', {
     },
 
     mapNavigation: {
-      enabled: true
+      enabled: true,
+      buttonOptions: {
+          verticalAlign: 'bottom'
+      }
     },
 
     legend: {
-      layout: 'horizontal',
-      borderWidth: 0,
-      backgroundColor: 'rgba(255,255,255,0.85)',
-      verticalAlign: 'bottom'
+      enabled: false
     },
 
     colorAxis: {
-      min: 1,
-      type: 'logarithmic',
-      minColor: '#EEEEFF',
-      maxColor: '#000022',
-      stops: [[0, '#EFEFFF'], [0.67, '#4444FF'], [1, '#000022']]
+      min: 0
     },
 
-    series: [
-      {
-        animation: {
-          duration: 1000
-        },
-        data: [
-          {
-            value: 2000,
-            code: 'TX'
-          }
-        ],
-        mapData: 'countries/us/us-all',
-        joinBy: ['postal-code', 'code'],
-        dataLabels: {
-          enabled: true,
-          color: '#FFFFFF',
-          format: '{point.code}'
-        },
-        dataLabels: {
-          enabled: true,
-          color: '#FFFFFF',
-          format: '{point.code}'
-        },
-        tooltip: {
-          pointFormat: '{point.code}: {point.value{/km2'
-        }
-      }
-    ]
+    series: [{
+        name: 'Countries',
+        color: '#E0E0E0',
+        enableMouseTracking: false
+      },{
+        type: 'mapbubble',
+        name: 'Population 2016',
+        joinBy: ['iso-a3', 'code3'],
+        minSize: 4,
+        maxSize: '12%'
+    }]
   }
 });

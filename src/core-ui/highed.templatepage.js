@@ -135,7 +135,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
           templatesContainer = highed.dom.cr('div', 'highed-templates-container');
 
           highed.dom.ap(container, highed.dom.ap(highed.dom.cr('div', 'highed-toolbox-template-container'), headerBar, templatesContainer));
-          
+    
     if (options.id) options = highed.templates.getAllInCat(options.id);
 
     Object.keys(options).forEach(function(key) { 
@@ -176,16 +176,15 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
   }
 
   function createMostPopularTemplates(chartType, toNextPage, setLoading) {
-    const templates = highed.templates.getCatArray();
+    const templates = chartType === 'Map' ? highed.templates.getCatObj('Map') : highed.templates.getCatArray();
     const container = highed.dom.cr('div', 'highed-toolbox-templates-container');
 
     const mostPopular = highed.templates.getMostPopular();
 
-    createTemplates(container, 'Most Popular', mostPopular, setLoading, toNextPage);
+    if (chartType !== 'Map') createTemplates(container, 'Most Popular', mostPopular, setLoading, toNextPage);
 
     Object.keys(templates).forEach(function(key) {
       const t = templates[key];
-
       createTemplates(container, t.id, t, setLoading, toNextPage);
 
     });

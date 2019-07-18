@@ -696,7 +696,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   function createSimpleDataTable(chartType, toNextPage, cb) {
 
-    chartType = 'Map';
     if (chartType && chartType === 'Map' && Highcharts) {
 
       var container = highed.dom.cr('div', 'highed-table-dropzone-container'),
@@ -722,8 +721,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
                   //mapOptions += '<option value="' + path + '">' + desc + '</option>';
                   highed.dom.ap(mapSelectorOptions, highed.dom.cr('div', 'highed-map-option', desc));
 
-                  if (mapCount < 5){
-
+                  if (mapCount < 5) {
                     var mapSelectorImage = highed.dom.cr('img', 'highed-map-selector-image'),
                         mapSelectorImageContainer = highed.dom.cr('div', 'highed-map-selector-image-container'),
                         mapSelectorImageTitle = highed.dom.cr('div', 'highed-map-selector-image-text', desc);
@@ -731,7 +729,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
                     mapSelectorImage.src = baseMapPath + (Highcharts.mapDataIndex[mapGroup][desc]).replace('.js', '.svg');
                     highed.dom.ap(mapSelectorImageContainer,mapSelectorImageTitle, mapSelectorImage);
                     highed.dom.ap(mapSelectorImages, mapSelectorImageContainer);
-
                   }
 
                   mapCount += 1;

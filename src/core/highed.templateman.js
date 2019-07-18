@@ -154,6 +154,24 @@ highed.templates = {};
     });
   };
 
+
+
+  /**
+     * Get a list of id/title pairs for selected template
+     */
+  highed.templates.getCatObj = function(cat) {
+    var temp = {}
+
+    // {[cat]: {}}
+    temp[cat] = {
+        id: cat,
+        title: cat,
+        icon: templates[cat].icon
+    };
+    return temp;
+  };
+  
+
   /**
      * Add meta information to a category
      */

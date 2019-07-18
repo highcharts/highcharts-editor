@@ -26,19 +26,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 highed.templates.add('Map', {
-  title: 'Basic Africa Map',
+  title: 'Tilemap Circle',
   description: [
-    'Basic map of Africa.',
-    'Good starting point for African geographical data.'
+    '',
   ],
-  thumbnail: 'mapafrica.svg',
+  thumbnail: 'mapcircle.svg',
   dataValidator: false,
-  sampleSets: [],
   constructor: 'Map',
   config: {
     chart: {
-      borderWidth: 1,
-      map: 'custom/africa',
+      borderWidth: 1
     },
 
     mapNavigation: {
@@ -47,35 +44,19 @@ highed.templates.add('Map', {
 
     legend: {
       layout: 'horizontal',
-      borderWidth: 0,
-      backgroundColor: 'rgba(255,255,255,0.85)',
       verticalAlign: 'bottom'
     },
 
     colorAxis: {
-      min: 1,
-      type: 'logarithmic',
-      minColor: '#EEEEFF',
-      maxColor: '#000022',
-      stops: [[0, '#EFEFFF'], [0.67, '#4444FF'], [1, '#000022']]
+      min: 0
     },
 
     series: [
       {
-        mapData: 'custom/africa',
-        joinBy: ['postal-code', 'code'],
+        mapData: 'custom/asia',
+        joinBy: 'name',
         dataLabels: {
-          enabled: true,
-          color: '#FFFFFF',
-          format: '{point.code}'
-        },
-        dataLabels: {
-          enabled: true,
-          color: '#FFFFFF',
-          format: '{point.code}'
-        },
-        tooltip: {
-          pointFormat: '{point.code}: {point.value{/km2'
+          enabled: false
         }
       }
     ]
