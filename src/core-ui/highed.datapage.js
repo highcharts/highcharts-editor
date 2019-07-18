@@ -385,8 +385,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         dataTableFields = dataTable.getDataFieldsUsed(),
         hasLabels = false;
     
-    var dataValues  = allOptions.data,
-        series = allOptions.length;
+    var series = allOptions.length;
+
 
     for(var i = 0; i < series; i++) {
       var serieOption = {};
@@ -694,7 +694,86 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
 
 
-  function createSimpleDataTable(toNextPage, cb) {
+  function createSimpleDataTable(chartType, toNextPage, cb) {
+
+    chartType = 'Map';
+    if (chartType && chartType === 'Map' && Highcharts) {
+
+      var container = highed.dom.cr('div', 'highed-table-dropzone-container'),
+          baseMapPath = "https://code.highcharts.com/mapdata/",
+          showDataLabels = false, // Switch for data labels enabled/disabled
+          mapCount = 0,
+          searchText,
+          mapOptions = highed.dom.cr('div', 'highed-map-selector');
+          mapSelectorImages = highed.dom.cr('div', 'highed-map-selector-images-container');
+
+      function getSearchResults(query) {
+        mapOptions.innerHTML = '';
+        mapSelectorImages.innerHTML = '';
+        mapCount = 0;
+
+        Object.keys(Highcharts.mapDataIndex).forEach(function (mapGroup, maps) {
+            if (mapGroup !== "version") {
+              var found = false;
+              var mapSelectorOptions = highed.dom.cr('div', 'highed-map-selector-options');
+              Object.keys(Highcharts.mapDataIndex[mapGroup]).forEach(function (desc, path) {
+                var pos = desc.search(query);
+                if (pos > -1) {
+                  //mapOptions += '<option value="' + path + '">' + desc + '</option>';
+                  highed.dom.ap(mapSelectorOptions, highed.dom.cr('div', 'highed-map-option', desc));
+
+                  if (mapCount < 5){
+
+                    var mapSelectorImage = highed.dom.cr('img', 'highed-map-selector-image'),
+                        mapSelectorImageContainer = highed.dom.cr('div', 'highed-map-selector-image-container'),
+                        mapSelectorImageTitle = highed.dom.cr('div', 'highed-map-selector-image-text', desc);
+
+                    mapSelectorImage.src = baseMapPath + (Highcharts.mapDataIndex[mapGroup][desc]).replace('.js', '.svg');
+                    highed.dom.ap(mapSelectorImageContainer,mapSelectorImageTitle, mapSelectorImage);
+                    highed.dom.ap(mapSelectorImages, mapSelectorImageContainer);
+
+                  }
+
+                  mapCount += 1;
+                  found = true;
+                }
+              });
+
+              if (found) highed.dom.ap(mapOptions, highed.dom.cr('div', 'highed-map-option-header', mapGroup), mapSelectorOptions);
+            }
+        });
+      }
+
+      getSearchResults('');
+      searchText = 'Search ' + mapCount + ' maps';
+
+      var input = highed.dom.cr('input', 'highed-map-selector-input');
+      input.placeholder = 'Search ' + mapCount + ' maps';
+
+      highed.dom.on(input, 'keyup', function(ev) {
+        if (ev.target.value === '') { 
+          mapOptions.classList.remove("active");
+          return;
+        }
+        if (!mapOptions.classList.contains('active')) mapOptions.classList += " active";
+        getSearchResults(ev.target.value); 
+      });
+
+      //mapOptions = '<option value="custom/world.js">' + searchText + '</option>' + mapOptions;
+      var inputSelector = highed.dom.cr('div', 'highed-map-selector-arrow', '<i class="fa fa-chevron-down"/>');
+
+      highed.dom.on(inputSelector, 'click', function() {
+        if (mapOptions.classList.contains('active')) mapOptions.classList.remove('active');
+        else mapOptions.classList += " active";
+      });
+
+      highed.dom.ap(container, 
+                    highed.dom.ap(highed.dom.cr('div', ''), input, inputSelector), 
+                    highed.dom.ap(highed.dom.cr('div', ''), mapOptions),
+                    mapSelectorImages);
+      return container;
+    } 
+
     return dataTable.createSimpleDataTable(toNextPage, cb);
   } 
 

@@ -194,4 +194,39 @@ highed.meta.charttype = {
             'rawValue': [2]
         }
     },
+    Map: {
+        'values': null,
+        'labels': null,
+        'index': {
+            'name': "Index",
+            'desc': 'Index',
+            'default': 'C',
+            'value': 'C',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'x',
+            'rawValue': [2]
+        },
+        'country_code': {
+            'name': "Country Code",
+            'desc': 'The country code',
+            'default': 'B',
+            'value': 'B',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'hc-key',
+            'rawValue': [1]
+        },
+        'value': {
+            'name': "Value",
+            'desc': 'The value of the country',
+            'default': 'C',
+            'value': 'C',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'value',
+            'rawValue': [2]
+        }
+
+    }
 };

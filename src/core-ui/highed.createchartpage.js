@@ -113,7 +113,7 @@ highed.CreateChartPage = function(parent, userOptions, props) {
       options[0].expand();
 
       createTitleSection();
-      createImportDataSection(dataPage);
+      createImportDataSection(dataPage, chartType);
       createTemplateSection(templatePage, chartType);
       createCustomizeSection();
 
@@ -194,7 +194,7 @@ highed.CreateChartPage = function(parent, userOptions, props) {
       );   
     }
 
-    function createImportDataSection(dataPage) {
+    function createImportDataSection(dataPage, chartType) {
 
       var nextButton = highed.dom.cr(
             'button',
@@ -202,7 +202,7 @@ highed.CreateChartPage = function(parent, userOptions, props) {
             'No thanks, I will enter my data manually'
           ),
           loader = highed.dom.cr('span','highed-wizard-loader', '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>'),
-          dataTableDropzoneContainer = dataPage.createSimpleDataTable(function() {
+          dataTableDropzoneContainer = dataPage.createSimpleDataTable(chartType, function() {
             if(userOptions && (userOptions.indexOf('templates') === -1)) { 
               options[2].expand();
             } else if(userOptions && (userOptions.indexOf('customize') === -1)) {

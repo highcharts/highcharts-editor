@@ -1,0 +1,81 @@
+.highed-map-selector {
+    max-height: 400px;
+    width: 498px;
+    overflow: auto;
+    color: black;
+    border: 1px solid rgba(128, 128, 128, 0.11);
+    position: absolute;
+    z-index: 1;
+    background-color: white;
+    display: none;
+}
+.highed-map-selector.active {
+    display: block;
+}
+.highed-map-option-header {
+    color: #26386e;
+    font-weight: 800;
+    height: 35px;
+    padding-top: 10px;
+    font-size: 16px;
+    padding-left: 5px;
+}
+
+.highed-map-option {    
+    padding-top: 10px;
+    font-size: 14px;
+    height: 35px;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.35);
+    padding-left: 5px;
+    cursor: pointer;
+}
+
+.highed-map-option:hover {
+    background-color: rgba(37, 56, 111, 0.09)
+}
+
+.highed-map-selector-input {
+    width: 450px;
+    height: 33px;
+    vertical-align: top;
+    top: -1px;
+    position: relative;
+    border: 1px solid rgba(0, 0, 0, 0.22);
+    padding-left: 10px;
+    display: inline-block;
+}
+
+.highed-map-selector-arrow {
+    display: inline-block;
+    padding: 8px 11px;
+    border-right: 1px solid rgba(0, 0, 0, 0.22);
+    border-top: 1px solid rgba(0, 0, 0, 0.22);
+    vertical-align: top;
+    margin: 0px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.22);
+    position: relative;
+    top: -1px;
+}
+
+.highed-map-selector-images-container {
+    margin-top: 40px;
+
+    .highed-map-selector-image-container {
+        width: 18%;
+        display: inline-block;
+        padding: 0px 7px;
+    }
+    .highed-map-selector-image {
+        width: 100%;
+    }
+    .highed-map-selector-image-text {
+        position: relative;
+        top: -10px;
+        margin-bottom: 6px;
+        color: black;
+        font-size: 11px;
+        vertical-align: top;
+        height: 35px;
+        padding-left: 10px;
+    }
+}
