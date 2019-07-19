@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.DrawerEditor = function(parent, options, planCode) {
+highed.DrawerEditor = function(parent, options, planCode, chartType) {
   var events = highed.events(),
     // Main properties
     properties = highed.merge(
@@ -210,7 +210,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
     ),
     chartPreview = highed.ChartPreview(chartContainer, {
       defaultChartOptions: properties.defaultChartOptions
-    }, planCode),
+    }, planCode, chartType),
     suppressWarning = false,
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
     payupModal = highed.SubscribeModal(),
@@ -239,7 +239,8 @@ highed.DrawerEditor = function(parent, options, planCode) {
       ),
       chartPreview,
       highedChartContainer,
-      builtInOptions.data
+      builtInOptions.data,
+      chartType
     ),
     templatePage = highed.TemplatePage(     
       splitter.bottom,
@@ -251,7 +252,8 @@ highed.DrawerEditor = function(parent, options, planCode) {
       ),
       chartPreview,
       highedChartContainer,
-      builtInOptions.templates
+      builtInOptions.templates,
+      chartType
     );
     createChartPage = highed.CreateChartPage(
       splitter.bottom,
@@ -261,7 +263,8 @@ highed.DrawerEditor = function(parent, options, planCode) {
         widths: {
           desktop: 95
         }
-      }
+      },
+      chartType
     ),
     changePlanBtn = highed.dom.cr('button', 'highed-import-button', "Choose a plan"),
     createAccountLink = highed.dom.cr('a', '', 'Create one')

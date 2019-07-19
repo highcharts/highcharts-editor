@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props) {
+highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props, chartType) {
   var events = highed.events(),
     // Main properties
     properties = highed.merge(
@@ -175,16 +175,20 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     
   }
 
-  function createMostPopularTemplates(chartType, toNextPage, setLoading) {
-    const templates = chartType === 'Map' ? highed.templates.getCatObj('Map') : highed.templates.getCatArray();
-    const container = highed.dom.cr('div', 'highed-toolbox-templates-container');
+  function createMostPopularTemplates(toNextPage, setLoading) {
+    const templates = highed.merge({}, chartType === 'Map' ? highed.templates.getCatObj('Map') : highed.templates.getCatArray()),
+          container = highed.dom.cr('div', 'highed-toolbox-templates-container'),
+          usingMaps = (chartType === 'Map');
 
     const mostPopular = highed.templates.getMostPopular();
 
-    if (chartType !== 'Map') createTemplates(container, 'Most Popular', mostPopular, setLoading, toNextPage);
+    if (!usingMaps) {
+      createTemplates(container, 'Most Popular', mostPopular, setLoading, toNextPage);
+    }
 
     Object.keys(templates).forEach(function(key) {
       const t = templates[key];
+      if (!usingMaps && t.id === 'Map') return;
       createTemplates(container, t.id, t, setLoading, toNextPage);
 
     });

@@ -39,7 +39,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @param attributes {object} - the settings
  *    > defaultChartOptions {object} - the default chart options
  */
-highed.ChartPreview = function(parent, attributes, planCode) {
+highed.ChartPreview = function(parent, attributes, planCode, chartType) {
   var properties = highed.merge(
       {
         defaultChartOptions: {
@@ -320,14 +320,11 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     // }
 
     try {
-      var chartConstr = (constr.some(function(a) {
+      const chartConstr = (chartType === 'Map' ? 'Map' : (constr.some(function(a) {
         return a === 'StockChart';
-      }) ? 'StockChart' : 'Chart');
+      }) ? 'StockChart' : 'Chart'));
 
       options = highed.merge(options, stockTools.getStockToolsToolbarConfig());
-
-      chartConstr = 'Map';
-      
       chart = new Highcharts[chartConstr](pnode || parent, options);
 
       //This is super ugly.
@@ -367,7 +364,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
       events.emit('ChartRecreated');
     } catch (code) {
-      console.log(code)
       events.emit('Error', {
         code: code,
         url : (code ? 'https://www.highcharts.com/errors/' + code : '')

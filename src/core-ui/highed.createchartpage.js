@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.CreateChartPage = function(parent, userOptions, props) {
+highed.CreateChartPage = function(parent, userOptions, props, chartType) {
   var events = highed.events(),
     builtInOptions = [
       {
@@ -88,8 +88,7 @@ highed.CreateChartPage = function(parent, userOptions, props) {
     //toolbox = highed.Toolbox(userContents),
     options = [];
 
-    function init(dataPage,templatePage, customizePage, chartType) {
-      chartType = 'Map';
+    function init(dataPage,templatePage, customizePage) {
       var counter = 1;
       toolbox = highed.Toolbox(userContents);
       builtInOptions.forEach(function(option, index) {
@@ -113,8 +112,8 @@ highed.CreateChartPage = function(parent, userOptions, props) {
       options[0].expand();
 
       createTitleSection();
-      createImportDataSection(dataPage, chartType);
-      createTemplateSection(templatePage, chartType);
+      createImportDataSection(dataPage);
+      createTemplateSection(templatePage);
       createCustomizeSection();
 
       highed.dom.ap(contents, userContents);
@@ -194,7 +193,7 @@ highed.CreateChartPage = function(parent, userOptions, props) {
       );   
     }
 
-    function createImportDataSection(dataPage, chartType) {
+    function createImportDataSection(dataPage) {
 
       var nextButton = highed.dom.cr(
             'button',
@@ -202,7 +201,7 @@ highed.CreateChartPage = function(parent, userOptions, props) {
             'No thanks, I will enter my data manually'
           ),
           loader = highed.dom.cr('span','highed-wizard-loader', '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>'),
-          dataTableDropzoneContainer = dataPage.createSimpleDataTable(chartType, function() {
+          dataTableDropzoneContainer = dataPage.createSimpleDataTable(function() {
             if(userOptions && (userOptions.indexOf('templates') === -1)) { 
               options[2].expand();
             } else if(userOptions && (userOptions.indexOf('customize') === -1)) {
@@ -233,7 +232,7 @@ highed.CreateChartPage = function(parent, userOptions, props) {
       );
     }
 
-    function createTemplateSection(templatePage, chartType) {
+    function createTemplateSection(templatePage) {
 
       var nextButton = highed.dom.cr(
             'button',
@@ -242,7 +241,7 @@ highed.CreateChartPage = function(parent, userOptions, props) {
       ),
       skipAll = highed.dom.ap(highed.dom.cr('div', 'highed-toolbox-skip-all'), highed.dom.cr('span','', 'Skip All'));
       loader = highed.dom.cr('span','highed-wizard-loader ', '<i class="fa fa-spinner fa-spin fa-1x fa-fw a"></i>'),
-      templatesContainer = templatePage.createMostPopularTemplates(chartType, function() {
+      templatesContainer = templatePage.createMostPopularTemplates(function() {
         setTimeout(function() {
           options[1].expand();
         }, 200);

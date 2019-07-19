@@ -25,7 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // @format
 
-highed.AssignDataPanel = function(parent, dataTable, extraClass) {
+highed.AssignDataPanel = function(parent, dataTable, extraClass, chartType) {
 
   var defaultOptions = {
     'labels': {
@@ -338,7 +338,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
 
   function addSerie(seriesType, redrawDOM, skipSelect) {
     var type = seriesType;
-    if (!type) type = 'Map';
+    if (!type) type = (chartType === 'Map' ? 'Map' : 'Line');
     
     seriesTypeSelect.addItems([{
       id: options.length,

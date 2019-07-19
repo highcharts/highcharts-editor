@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
+highed.DataPage = function(parent, options, chartPreview, chartFrame, props, chartType) {
   var events = highed.events(),
     // Main properties
     properties = highed.merge(
@@ -95,7 +95,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
                   addRowBtn
                 )
               ),
-    assignDataPanel = highed.AssignDataPanel(parent, dataTable),
+    assignDataPanel = highed.AssignDataPanel(parent, dataTable, null, chartType),
     dataImportBtn = highed.dom.cr(
       'button',
       'highed-import-button highed-ok-button highed-sm-button',
@@ -694,7 +694,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
 
 
-  function createSimpleDataTable(chartType, toNextPage, cb) {
+  function createSimpleDataTable(toNextPage, cb) {
 
     if (chartType && chartType === 'Map' && Highcharts) {
 
@@ -767,7 +767,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
           mapOptions.classList.remove("active");
           return;
         }
-        if (!mapOptions.classList.contains('active')) mapOptions.classList += " active";
+        //if (!mapOptions.classList.contains('active')) mapOptions.classList += " active";
         getSearchResults(ev.target.value); 
       });
 
