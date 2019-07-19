@@ -147,6 +147,7 @@ highed.Toolbox = function(parent, attr) {
       }
 
       highed.emit('UIAction', 'ToolboxNavigation', props.title);
+      
     }
 
     function collapse() {
@@ -225,12 +226,18 @@ highed.Toolbox = function(parent, attr) {
     body.innerHTML = '';
   }
 
+
+  function getActiveItem() {
+    return activeItem;
+  }
+
   highed.dom.ap(parent, highed.dom.ap(container,bar,body));
 
   return {
     clear: clear,
     on: events.on,
     addEntry: addEntry,
+    getActiveItem: getActiveItem,
     width: width
   };
 };

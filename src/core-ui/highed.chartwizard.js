@@ -25,9 +25,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // @format
 
-/* global window */
 
-highed.CreateChartPage = function(parent, userOptions, props, chartType) {
+/** Basic chart wizard for creating a chart
+ * Includes 
+ * 1) Choose template
+ * 2) Title/Subtitle
+ * 3) Choose map (Maps only)
+ * 4) Importing Data
+ * 5) Customize
+ */
+
+highed.ChartWizard = function(parent, userOptions, props, chartType) {
   var events = highed.events(),
     builtInOptions = [
       {
@@ -47,13 +55,20 @@ highed.CreateChartPage = function(parent, userOptions, props, chartType) {
       },
       {
         id: 3,
+        title: 'Choose Map',
+        create: function(body) {
+          highed.dom.ap(body, mapContainer);
+        }
+      },
+      {
+        id: 4,
         title: 'Import Data',
         create: function(body) {
           highed.dom.ap(body, dataTableContainer);
         }
       },
       {
-        id: 4,
+        id: 5,
         title: 'Customize',
         permission: 'customize',
         hideTitle: true,
@@ -85,14 +100,17 @@ highed.CreateChartPage = function(parent, userOptions, props, chartType) {
     titleContainer = highed.dom.cr('div', 'highed-toolbox-title'),
     templateContainer = highed.dom.cr('div', 'highed-toolbox-template'),
     dataTableContainer = highed.dom.cr('div', 'highed-toolbox-data'),
+    mapContainer = highed.dom.cr('div', 'highed-toolbox-map'),
     //toolbox = highed.Toolbox(userContents),
+    activeOption,
     options = [];
 
-    function init(dataPage,templatePage, customizePage) {
+    function init(dataPage,templatePage, customizePage, mapSelector) {
       var counter = 1;
       toolbox = highed.Toolbox(userContents);
       builtInOptions.forEach(function(option, index) {
         if (option.permission && userOptions.indexOf(option.permission) === -1) return;
+        if (chartType !== 'Map' && option.title === 'Choose Map') return;
 
         var o = toolbox.addEntry({
           title: option.title,
@@ -109,10 +127,12 @@ highed.CreateChartPage = function(parent, userOptions, props, chartType) {
         counter++;
 
       });
+
       options[0].expand();
 
       createTitleSection();
       createImportDataSection(dataPage);
+      createMapDataSection(mapSelector);
       createTemplateSection(templatePage);
       createCustomizeSection();
 
@@ -126,6 +146,14 @@ highed.CreateChartPage = function(parent, userOptions, props, chartType) {
       expand();
     }
 
+
+    function goToNextPage() {
+      var expanded = toolbox.getActiveItem();
+      var length = options.length - 1;
+      var index = options.findIndex(function(opt){ return expanded === opt; });
+      if (index + 1 <= length) options[index+1].expand();
+      else events.emit("SimpleCreateChartDone");
+    }
 
     function createTitleSection() {
 
@@ -146,9 +174,7 @@ highed.CreateChartPage = function(parent, userOptions, props, chartType) {
       
       highed.dom.on(nextButton, 'click', function() {
         
-        if(userOptions && (userOptions.indexOf('templates') === -1)) {
-          options[1].expand();
-        } else options[2].expand();
+        goToNextPage();
         events.emit("SimpleCreateChangeTitle", {
           title: titleInput.value,
           subtitle: subtitleInput.value
@@ -193,6 +219,10 @@ highed.CreateChartPage = function(parent, userOptions, props, chartType) {
       );   
     }
 
+    function createMapDataSection(mapSelector) {
+      highed.dom.ap(mapContainer, mapSelector.createMapDataSection(goToNextPage));
+    }
+
     function createImportDataSection(dataPage) {
 
       var nextButton = highed.dom.cr(
@@ -202,24 +232,14 @@ highed.CreateChartPage = function(parent, userOptions, props, chartType) {
           ),
           loader = highed.dom.cr('span','highed-wizard-loader', '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>'),
           dataTableDropzoneContainer = dataPage.createSimpleDataTable(function() {
-            if(userOptions && (userOptions.indexOf('templates') === -1)) { 
-              options[2].expand();
-            } else if(userOptions && (userOptions.indexOf('customize') === -1)) {
-              events.emit("SimpleCreateChartDone", true);
-            } else options[3].expand();
-
+            goToNextPage();
           }, function(loading) {
             if (loading) loader.classList += ' active';
             else loader.classList.remove('active');
           });
 
       highed.dom.on(nextButton, 'click', function() {
-        if(userOptions && (userOptions.indexOf('templates') === -1)) { 
-          options[2].expand();
-        } else if(userOptions && (userOptions.indexOf('customize') === -1)) {
-          events.emit("SimpleCreateChartDone", true);
-        }
-        else options[3].expand();
+        goToNextPage();
       });
       highed.dom.ap(dataTableContainer, 
         highed.dom.ap(dataTableDropzoneContainer,
@@ -243,7 +263,7 @@ highed.CreateChartPage = function(parent, userOptions, props, chartType) {
       loader = highed.dom.cr('span','highed-wizard-loader ', '<i class="fa fa-spinner fa-spin fa-1x fa-fw a"></i>'),
       templatesContainer = templatePage.createMostPopularTemplates(function() {
         setTimeout(function() {
-          options[1].expand();
+          goToNextPage();
         }, 200);
       }, function(loading) {
         if (loading) loader.classList += ' active';
@@ -255,7 +275,7 @@ highed.CreateChartPage = function(parent, userOptions, props, chartType) {
       });
       
       highed.dom.on(nextButton, 'click', function() {
-        options[1].expand();
+        goToNextPage();
       });
 
       highed.dom.ap(templateContainer, 

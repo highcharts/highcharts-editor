@@ -215,6 +215,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
     payupModal = highed.SubscribeModal(),
     annotationModal = highed.AnnotationModal(),
+    mapSelector = highed.MapSelector(chartPreview, chartType),
     customizePage = highed.CustomizePage(
       splitter.bottom,
       highed.merge(
@@ -255,7 +256,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
       builtInOptions.templates,
       chartType
     );
-    createChartPage = highed.CreateChartPage(
+    createChartPage = highed.ChartWizard(
       splitter.bottom,
       properties.features,
       {
@@ -510,9 +511,9 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     });
   }
 
-  function showCreateChartPage() {
+  function showChartWizard() {
 
-    createChartPage.init(dataPage, templatePage, customizePage);
+    createChartPage.init(dataPage, templatePage, customizePage, mapSelector);
 
     highed.dom.style([workspaceBody, showChartSmallScreen, smallScreenWorkspaceButtons], {
       opacity: 0
@@ -745,6 +746,9 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
 
   //////////////////////////////////////////////////////////////////////////////
   // Event attachments
+  mapSelector.on('LoadMapData', function(data) {
+    dataPage.loadMapData(data);
+  });
 
   dataPage.on('GoToTemplatePage', function() {
     const templates = panel.getOptions().templates;
@@ -913,7 +917,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
   // Create the features
   createFeatures();
   createToolbar();
-  //showCreateChartPage();
+  //showChartWizard();
 
   resize();
 
@@ -987,7 +991,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     toolbar: toolbar,
     getChartTitle: dataPage.getChartTitle,
     setChartTitle: setChartTitle,
-    showCreateChartPage: showCreateChartPage,
+    showChartWizard: showChartWizard,
     addToWorkspace: addToWorkspace,
     data: {
       on: function() {}, //dataTable.on,
