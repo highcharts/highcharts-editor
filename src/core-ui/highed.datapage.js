@@ -743,7 +743,18 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
                     javascriptPath = baseMapPath + Highcharts.mapDataIndex[mapGroup][desc];
                     
                     chartPreview.options.updateMap(mapKey, javascriptPath);
-                    toNextPage();
+                    highed.ajax({
+                      url: geojsonPath,
+                      type: 'GET',
+                      dataType: 'json',
+                      success: function(data){
+                        dataTable.loadMapData(data.features);
+                        if (toNextPage) toNextPage();
+                      },
+                      error: function(e) {
+                      }
+                    })
+
                   });
 
                   mapCount += 1;

@@ -3216,6 +3216,13 @@ highed.DataTable = function(parent, attributes) {
     return container;
   }
 
+  function loadMapData(mapData) {
+    const rowLength = rows.length
+    mapData.forEach(function(data, index) {
+      if (index >= rowLength) addRow();
+      rows[index].columns[0].setValue(data.properties['hc-key']);
+    });
+  }
   ////////////////////////////////////////////////////////////////////////////
 
   highed.ready(function() {
@@ -3257,6 +3264,7 @@ highed.DataTable = function(parent, attributes) {
     clearData: clearData,
     showDataTableError: showDataTableError,
     hideDataTableError: hideDataTableError,
-    selectSwitchRowsColumns: selectSwitchRowsColumns
+    selectSwitchRowsColumns: selectSwitchRowsColumns,
+    loadMapData: loadMapData
   };
 };

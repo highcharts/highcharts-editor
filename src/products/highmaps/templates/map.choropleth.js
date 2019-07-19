@@ -41,6 +41,18 @@ highed.templates.add('Map', {
       enabled: true
     },
 
+    colorAxis: {
+      min: 1,
+      type: 'logarithmic',
+      minColor: '#EEEEFF',
+      maxColor: '#000022',
+      stops: [
+          [0, '#EFEFFF'],
+          [0.67, '#4444FF'],
+          [1, '#000022']
+      ]
+    },
+
     series: [
       {
         dataLabels: {
