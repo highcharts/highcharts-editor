@@ -92,7 +92,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props,
     iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + props.icon;
 
     templatesContainer.innerHTML = '';
-    templates = highed.ChartTemplateSelector(templatesContainer, chartPreview);
+    templates = highed.ChartTemplateSelector(templatesContainer, chartPreview, chartType);
     helpModal = highed.HelpModal(props.help || []);
 
     templates.on('Select', function(template) {
@@ -176,7 +176,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props,
   }
 
   function createMostPopularTemplates(toNextPage, setLoading) {
-    const templates = highed.merge({}, chartType === 'Map' ? highed.templates.getCatObj('Map') : highed.templates.getCatArray()),
+    const templates = chartType === 'Map' ? highed.templates.getCatObj('Map') : highed.templates.getCatArray(),
           container = highed.dom.cr('div', 'highed-toolbox-templates-container'),
           usingMaps = (chartType === 'Map');
 
