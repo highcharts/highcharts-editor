@@ -35,30 +35,58 @@ highed.templates.add('Map', {
   constructor: 'Map',
   config: {
     chart: {
-      borderWidth: 1
+      type: 'tilemap',
+      inverted: true,
+      height: '80%'
     },
 
-    mapNavigation: {
-      enabled: true
+
+    xAxis: {
+      visible: false
+    },
+
+    yAxis: {
+        visible: false
+    },
+
+    colorAxis: {
+      dataClasses: [{
+          to: 2,
+          color: '#e8f5e9',
+          name: 'Weak'
+      }, {
+          from: 2,
+          to: 5,
+          color: '#81c784',
+          name: 'Average'
+      }, {
+          from: 5,
+          to: 6,
+          color: '#43a047',
+          name: 'Strong'
+      }, {
+          from: 6,
+          color: '#1b5e20',
+          name: 'Stellar'
+      }]
+    },
+
+    plotOptions: {
+      series: {
+          tileShape: 'circle',
+          dataLabels: {
+              enabled: true,
+              color: '#000000',
+              style: {
+                  textOutline: false
+              }
+          }
+      }
     },
 
     legend: {
       layout: 'horizontal',
       verticalAlign: 'bottom'
-    },
-
-    colorAxis: {
-      min: 0
-    },
-
-    series: [
-      {
-        mapData: 'custom/asia',
-        joinBy: 'name',
-        dataLabels: {
-          enabled: false
-        }
-      }
-    ]
+    }
   }
 });

@@ -24,29 +24,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 // @format
-
-
-/** Basic chart wizard for creating a chart
- * Includes 
- * 1) Choose template
- * 2) Title/Subtitle
- * 3) Choose map (Maps only)
- * 4) Importing Data
- * 5) Customize
+/** Map selector
  */
 
 highed.MapSelector = function(chartPreview, chartType) {
-  var events = highed.events();
+  var events = highed.events(),
+      predefinedMaps = highed.dom.cr('div', ''),
+      container = highed.dom.cr('div', 'highed-table-dropzone-container'),
+      mapSelectorContainer = highed.dom.cr('div');
 
   function createMapDataSection(toNextPage, cb) {
 
     if (chartType && chartType === 'Map' && Highcharts) {
 
-      var container = highed.dom.cr('div', 'highed-table-dropzone-container'),
-          baseMapPath = "https://code.highcharts.com/mapdata/",
-          showDataLabels = false, // Switch for data labels enabled/disabled
+      var baseMapPath = "https://code.highcharts.com/mapdata/",
           mapCount = 0,
-          searchText,
           mapOptions = highed.dom.cr('div', 'highed-map-selector');
           mapSelectorImages = highed.dom.cr('div', 'highed-map-selector-images-container');
 
@@ -135,12 +127,53 @@ highed.MapSelector = function(chartPreview, chartType) {
       });
 
       highed.dom.ap(container, 
+                    highed.dom.ap(mapSelectorContainer,
                     highed.dom.ap(highed.dom.cr('div', ''), input, inputSelector), 
                     highed.dom.ap(highed.dom.cr('div', ''), mapOptions),
-                    mapSelectorImages);
+                    mapSelectorImages),
+                    predefinedMaps);
       return container
     }
 
+  }
+
+  function toggleVisible(element, style) {
+    highed.dom.style(element, {
+      display: style
+    });
+  }
+
+  function showMaps(type, toNextPage) {
+    if (!type || (type && (type.templateTitle !== 'Honeycomb' && type.templateTitle !== 'Tilemap Circle'))) {
+      toggleVisible(mapSelectorContainer, 'block');
+      toggleVisible(predefinedMaps, 'none');
+    } else {
+      const samples = highed.samples.getMap(type.templateTitle);
+      
+      predefinedMaps.innerHTML = '';
+
+      Object.keys(samples).forEach(function(key) {
+        var sample = samples[key];
+        
+        var container = highed.dom.cr('div', 'highed-chart-template-container highed-map-container'),
+            thumbnail = highed.dom.cr('div', 'highed-chart-template-thumbnail'),
+            title = highed.dom.cr('div', 'highed-map-text', sample.title);
+
+        highed.dom.style(thumbnail, {
+          'background-image': 'url(' + highed.option('thumbnailURL') + sample.thumbnail + ')'
+        });
+
+        highed.dom.on(container, 'click', function() {
+          events.emit('LoadDataSet', sample.dataset.join('\n'));  
+          if (toNextPage) toNextPage();
+        });
+        
+        highed.dom.ap(predefinedMaps, highed.dom.ap(container, thumbnail, title));
+      });
+
+      toggleVisible(predefinedMaps, 'block');
+      toggleVisible(mapSelectorContainer, 'none');
+    }
   }
 
 
@@ -148,6 +181,7 @@ highed.MapSelector = function(chartPreview, chartType) {
 
   return {
     on: events.on,
-    createMapDataSection: createMapDataSection
+    createMapDataSection: createMapDataSection,
+    showMaps: showMaps
   };
 };

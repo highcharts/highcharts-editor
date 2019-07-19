@@ -194,6 +194,70 @@ highed.meta.charttype = {
             'rawValue': [2]
         }
     },
+    tilemap: {
+        'values': null,
+        'labels': null,
+        'country_code': {
+            'name': "Country Code",
+            'desc': 'The country code',
+            'default': 'A',
+            'value': 'A',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'hc-a2',
+            'rawValue': [0]
+        },
+        'name': {
+            'name': "Name",
+            'desc': 'Name',
+            'default': 'B',
+            'value': 'B',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'name',
+            'rawValue': [1]
+        },
+        'region': {
+            'name': "Region",
+            'desc': 'Region',
+            'default': 'C',
+            'value': 'C',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'region',
+            'rawValue': [2]
+        },
+        'x': {
+            'name': "X Value",
+            'desc': 'X Value',
+            'default': 'E',
+            'value': 'E',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'x',
+            'rawValue': [4]
+        },
+        'y': {
+            'name': "Y Value",
+            'desc': 'Y Value',
+            'default': 'D',
+            'value': 'D',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'y',
+            'rawValue': [3]
+        },
+        'value': {
+            'name': "Value",
+            'desc': 'The value of the country',
+            'default': 'F',
+            'value': 'F',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'value',
+            'rawValue': [5]
+        }
+    },
     Map: {
         'values': null,
         'labels': null,

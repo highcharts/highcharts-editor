@@ -72,15 +72,21 @@ highed.templates.add('Map', {
       }]
     },
 
+    tooltip: {
+      headerFormat: '',
+      pointFormat: 'The population of <b> {point.name}</b> is <b>{point.value}</b>'
+    },
+
     plotOptions: {
       series: {
-          dataLabels: {
-              enabled: true,
-              color: '#000000',
-              style: {
-                  textOutline: false
-              }
+        dataLabels: {
+          enabled: true,
+          format: '{point.hc-a2}',
+          color: '#000000',
+          style: {
+            textOutline: false
           }
+        }
       }
     },
 

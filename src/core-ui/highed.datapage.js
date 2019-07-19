@@ -111,6 +111,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
     blacklist = [
       'candlestick',
       'bubble',
+      'tilemap',
       'pie'
     ];
 
@@ -180,6 +181,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
         timer = setTimeout(func,100,event);
       };
     }
+
     function resize() {
       if (isVisible) {
         resizeChart();
@@ -189,11 +191,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
         //expand();
       }
     }
-
-    highed.dom.on(window, 'resize', afterResize(function(e){
-      resize();
-    }));
-    
 
     function showHelp() {
       helpModal.show();
@@ -252,34 +249,202 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
       highed.emit('UIAction', 'ToolboxNavigation', props.title);
     }
 
-  function show() {
-    chartPreview.toggleShowAnnotationIcon(false);
-    highed.dom.style(container, {
-      display: 'block'
-    });
-    assignDataPanel.show();
-    isVisible = true;
-    resizeChart();
-    resize(); 
-  }
+    function show() {
+      chartPreview.toggleShowAnnotationIcon(false);
+      highed.dom.style(container, {
+        display: 'block'
+      });
+      assignDataPanel.show();
+      isVisible = true;
+      resizeChart();
+      resize(); 
+    }
 
-  function hide() {
-    highed.dom.style(container, {
-      display: 'none'
-    });
-    assignDataPanel.hide();
-    isVisible = false;
-  }
+    function hide() {
+      highed.dom.style(container, {
+        display: 'none'
+      });
+      assignDataPanel.hide();
+      isVisible = false;
+    }
 
-  function destroy() {}
+    function destroy() {}
 
-  function addImportTab(tabOptions) {
-    dataTable.addImportTab(tabOptions);
-  }
+    function addImportTab(tabOptions) {
+      dataTable.addImportTab(tabOptions);
+    }
 
-  function hideImportModal() {
-    dataTable.hideImportModal();
-  }
+    function hideImportModal() {
+      dataTable.hideImportModal();
+    }
+    
+    function changeAssignDataTemplate(newTemplate, loadTemplateForEachSeries, cb) {
+      
+      if (dataTable.isInCSVMode()) {
+        
+        clearSeriesMapping();        
+        
+        var seriesIndex = [];
+        assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, null, true);
+        if (loadTemplateForEachSeries) {
+          const length = assignDataPanel.getAllOptions().length;
+          
+          for(var i=0;i<length;i++) {
+            seriesIndex.push(i);
+            assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, i, true, i + 1);
+          }
+        } else seriesIndex = [assignDataPanel.getActiveSerie()];
+
+        chartPreview.loadTemplateForSerie(newTemplate, seriesIndex);
+
+        const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
+        
+        chartPreview.data.csv({
+          csv: data
+        }, null, false, function() {
+          setSeriesMapping(assignDataPanel.getAllOptions());
+          redrawGrid(true);
+          if (cb) cb();
+        });
+      } else {
+        chartPreview.loadTemplate(newTemplate);
+      }
+
+      //assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+    }
+
+    function getIcons() {
+      return null;
+    }
+
+    function setChartTitle(title) {
+      chartTitleInput.value = title;
+    }
+
+    function showDataTableError() {
+      dataTable.showDataTableError();
+    }
+
+    function hideDataTableError() {
+      dataTable.hideDataTableError();
+    }
+
+    function getChartTitle() {
+      return chartTitleInput.value;
+    }
+
+    function clearSeriesMapping() {
+
+      var chartOptions = chartPreview.options.getCustomized();
+      if (chartOptions.data && chartOptions.data.seriesMapping) {
+        // Causes an issue when a user has added a assigndata input with seriesmapping, so just clear and it will add it in again later
+        chartOptions.data.seriesMapping = null;
+        chartPreview.options.setAll(chartOptions);  
+      }
+
+    }
+    function setSeriesMapping(allOptions) {
+
+      var tempOption = [],
+          chartOptions = chartPreview.options.getCustomized(),
+          dataTableFields = dataTable.getDataFieldsUsed(),
+          hasLabels = false;
+      
+      var series = allOptions.length;
+
+
+      for(var i = 0; i < series; i++) {
+        var serieOption = {};
+        Object.keys(allOptions[i]).forEach(function(key) {
+          const option = allOptions[i][key];
+          if (option.value !== '') {
+            if (option.isData) { //(highed.isArr(option)) { // Data assigndata
+              if (dataTableFields.indexOf(option.rawValue[0]) > -1) {
+                serieOption[option.linkedTo] = dataTableFields.indexOf(option.rawValue[0]);
+              }
+            } else {
+              if (option.linkedTo === 'label') hasLabels = true;
+              if (dataTableFields.indexOf(option.rawValue[0]) > -1) {
+                serieOption[option.linkedTo] = dataTableFields.indexOf(option.rawValue[0]);
+              }
+              //serieOption[option.linkedTo] = option.rawValue[0];
+            }
+          }
+        });
+        tempOption.push(serieOption);
+      };
+      
+      if (tempOption.length > 0) {
+        if (hasLabels) {
+          const dataLabelOptions = {
+            dataLabels: {
+                enabled: true,
+                format: '{point.label}'
+            }
+          };
+
+          if(chartOptions.plotOptions) {
+            const seriesPlotOptions = chartOptions.plotOptions.series;
+            highed.merge(seriesPlotOptions, dataLabelOptions);
+            chartPreview.options.setAll(chartOptions);
+          } else {
+            chartPreview.options.setAll(highed.merge({
+              plotOptions: {
+                series: dataLabelOptions
+              }
+            }, chartOptions));
+          }
+        }
+
+        if (chartOptions.data) {
+          chartOptions.data.seriesMapping = tempOption;
+          chartPreview.options.setAll(chartOptions);
+        }
+      }
+    }
+
+    function redrawGrid(clearGridFirst) {
+      if (clearGridFirst) {
+        var columns = [];
+        for(var i = 0; i < dataTable.getColumnLength(); i++) {
+          columns.push(i);
+        }
+        dataTable.removeAllCellsHighlight(null, columns);
+      }
+      
+      assignDataPanel.checkToggleCells();
+      
+      assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true, true);
+      chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
+    }
+
+    function loadProject(projectData, aggregated) {
+      
+      if (projectData.settings && projectData.settings.dataProvider && projectData.settings.dataProvider.csv) {
+        dataTable.loadCSV({
+          csv: projectData.settings.dataProvider.csv
+        }, null, null, function() {
+          
+            assignDataPanel.enable();
+            
+            assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
+            assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+            chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
+        });
+
+        //chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
+      }
+    }
+
+    function loadSampleData(data){
+      dataTable.loadSampleData(data);
+    }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  highed.dom.on(window, 'resize', afterResize(function(e){
+    resize();
+  }));
 
   assignDataPanel.on('RemoveSeries', function(length) {
     clearSeriesMapping();
@@ -313,165 +478,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
       setSeriesMapping(assignDataPanel.getAllOptions());
     });
   });
-  
-  function changeAssignDataTemplate(newTemplate, loadTemplateForEachSeries, cb) {
-    
-    if (dataTable.isInCSVMode()) {
-      
-      clearSeriesMapping();        
-      
-      var seriesIndex = [];
-      assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, null, true);
-      if (loadTemplateForEachSeries) {
-        const length = assignDataPanel.getAllOptions().length;
-        
-        for(var i=0;i<length;i++) {
-          seriesIndex.push(i);
-          assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, i, true, i + 1);
-        }
-      } else seriesIndex = [assignDataPanel.getActiveSerie()];
-
-      chartPreview.loadTemplateForSerie(newTemplate, seriesIndex);
-
-      const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
-      
-      chartPreview.data.csv({
-        csv: data
-      }, null, false, function() {
-        setSeriesMapping(assignDataPanel.getAllOptions());
-        redrawGrid(true);
-        if (cb) cb();
-      });
-    } else {
-      chartPreview.loadTemplate(newTemplate);
-    }
-
-    //assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
-  }
-
-  function getIcons() {
-    return null;
-  }
-
-  function setChartTitle(title) {
-    chartTitleInput.value = title;
-  }
-
-  function showDataTableError() {
-    dataTable.showDataTableError();
-  }
-  function hideDataTableError() {
-    dataTable.hideDataTableError();
-  }
-
-  function getChartTitle() {
-    return chartTitleInput.value;
-  }
-
-  function clearSeriesMapping() {
-
-    var chartOptions = chartPreview.options.getCustomized();
-    if (chartOptions.data && chartOptions.data.seriesMapping) {
-      // Causes an issue when a user has added a assigndata input with seriesmapping, so just clear and it will add it in again later
-      chartOptions.data.seriesMapping = null;
-      chartPreview.options.setAll(chartOptions);  
-    }
-
-  }
-  function setSeriesMapping(allOptions) {
-
-    var tempOption = [],
-        chartOptions = chartPreview.options.getCustomized(),
-        dataTableFields = dataTable.getDataFieldsUsed(),
-        hasLabels = false;
-    
-    var series = allOptions.length;
-
-
-    for(var i = 0; i < series; i++) {
-      var serieOption = {};
-      Object.keys(allOptions[i]).forEach(function(key) {
-        const option = allOptions[i][key];
-        if (option.value !== '') {
-          if (option.isData) { //(highed.isArr(option)) { // Data assigndata
-            if (dataTableFields.indexOf(option.rawValue[0]) > -1) {
-              serieOption[option.linkedTo] = dataTableFields.indexOf(option.rawValue[0]);
-            }
-          } else {
-            if (option.linkedTo === 'label') hasLabels = true;
-            if (dataTableFields.indexOf(option.rawValue[0]) > -1) {
-              serieOption[option.linkedTo] = dataTableFields.indexOf(option.rawValue[0]);
-            }
-            //serieOption[option.linkedTo] = option.rawValue[0];
-          }
-        }
-      });
-      tempOption.push(serieOption);
-    };
-    
-    if (tempOption.length > 0) {
-      if (hasLabels) {
-        const dataLabelOptions = {
-          dataLabels: {
-              enabled: true,
-              format: '{point.label}'
-          }
-        };
-
-        if(chartOptions.plotOptions) {
-          const seriesPlotOptions = chartOptions.plotOptions.series;
-          highed.merge(seriesPlotOptions, dataLabelOptions);
-          chartPreview.options.setAll(chartOptions);
-        } else {
-          chartPreview.options.setAll(highed.merge({
-            plotOptions: {
-              series: dataLabelOptions
-            }
-          }, chartOptions));
-        }
-      }
-
-      if (chartOptions.data) {
-        chartOptions.data.seriesMapping = tempOption;
-        chartPreview.options.setAll(chartOptions);
-      }
-    }
-  }
-
-  function redrawGrid(clearGridFirst) {
-    if (clearGridFirst) {
-      var columns = [];
-      for(var i = 0; i < dataTable.getColumnLength(); i++) {
-        columns.push(i);
-      }
-      dataTable.removeAllCellsHighlight(null, columns);
-    }
-    
-    assignDataPanel.checkToggleCells();
-    
-    assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true, true);
-    chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
-  }
-
-  function loadProject(projectData, aggregated) {
-    
-    if (projectData.settings && projectData.settings.dataProvider && projectData.settings.dataProvider.csv) {
-      dataTable.loadCSV({
-        csv: projectData.settings.dataProvider.csv
-      }, null, null, function() {
-        
-          assignDataPanel.enable();
-          
-          assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
-          assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
-          chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
-      });
-
-      //chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
-    }
-  }
-
-  //////////////////////////////////////////////////////////////////////////////
 
   assignDataPanel.on('GoToTemplatePage', function() {
     events.emit("GoToTemplatePage");
@@ -704,7 +710,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
   function loadMapData(data) {
     dataTable.loadMapData(data);
   }
-  
+
   function resizeChart(newWidth) {
     highed.dom.style(chartFrame, {
       /*left: newWidth + 'px',*/
@@ -748,6 +754,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
     showDataTableError: showDataTableError,
     hideDataTableError: hideDataTableError,
     selectSwitchRowsColumns: selectSwitchRowsColumns,
-    loadMapData: loadMapData
+    loadMapData: loadMapData,
+    loadSampleData: loadSampleData
   };
 };

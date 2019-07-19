@@ -416,6 +416,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass, chartType) {
     // Change this in future, data should handle 99% of cases but have had to use aggregatedoptions due to users setting chart type through custom code
     // Looks messy using both atm
     if (data.constructor === 'Map') {
+      if (data.config) return data.config.chart.type;
       return 'Map';
     } else {
       if (data.config) return data.config.chart.type;

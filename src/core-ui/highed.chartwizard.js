@@ -35,7 +35,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 5) Customize
  */
 
-highed.ChartWizard = function(parent, userOptions, props, chartType) {
+highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartType) {
   var events = highed.events(),
     builtInOptions = [
       {
@@ -51,13 +51,6 @@ highed.ChartWizard = function(parent, userOptions, props, chartType) {
         title: 'Title Your Chart',
         create: function(body) {
           highed.dom.ap(body, titleContainer);
-        }
-      },
-      {
-        id: 3,
-        title: 'Choose Map',
-        create: function(body) {
-          highed.dom.ap(body, mapContainer);
         }
       },
       {
@@ -106,16 +99,32 @@ highed.ChartWizard = function(parent, userOptions, props, chartType) {
     options = [];
 
     function init(dataPage,templatePage, customizePage, mapSelector) {
+
+      if (chartType === 'Map') {
+        builtInOptions.splice(2, 0, {
+          id: 3,
+          title: 'Choose Map',
+          create: function(body) {
+            highed.dom.ap(body, mapContainer);
+          },
+          onload: function() {
+            //const type = chartPreview.options.full.series[0].type;
+            mapSelector.showMaps(chartPreview.options.getTemplateSettings()[0], goToNextPage);
+          }
+        });
+      }
+
+      
       var counter = 1;
       toolbox = highed.Toolbox(userContents);
       builtInOptions.forEach(function(option, index) {
         if (option.permission && userOptions.indexOf(option.permission) === -1) return;
-        if (chartType !== 'Map' && option.title === 'Choose Map') return;
 
         var o = toolbox.addEntry({
           title: option.title,
           number: counter,//option.id,
           onClick: manualSelection,
+          onload: option.onload,
           hideTitle: option.hideTitle
         });
 
@@ -145,7 +154,6 @@ highed.ChartWizard = function(parent, userOptions, props, chartType) {
 
       expand();
     }
-
 
     function goToNextPage() {
       var expanded = toolbox.getActiveItem();

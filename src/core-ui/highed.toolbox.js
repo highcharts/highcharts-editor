@@ -131,7 +131,10 @@ highed.Toolbox = function(parent, attr) {
       events.emit('BeforeResize', newWidth);
 
       expanded = true;
-
+      
+      if (props.onload && highed.isFn(props.onload)) {
+        props.onload();
+      }
       setTimeout(function() {
         var height = resizeBody().h;
 

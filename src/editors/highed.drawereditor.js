@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.DrawerEditor = function(parent, options, planCode, chartType) {
+highed.DrawerEditor = function(parent, options, planCode, chartType='Map') {
   var events = highed.events(),
     // Main properties
     properties = highed.merge(
@@ -265,6 +265,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
           desktop: 95
         }
       },
+      chartPreview,
       chartType
     ),
     changePlanBtn = highed.dom.cr('button', 'highed-import-button', "Choose a plan"),
@@ -746,6 +747,11 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
 
   //////////////////////////////////////////////////////////////////////////////
   // Event attachments
+
+  mapSelector.on('LoadDataSet', function(data) {
+    dataPage.loadSampleData(data);
+  });
+
   mapSelector.on('LoadMapData', function(data) {
     dataPage.loadMapData(data);
   });
@@ -917,7 +923,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
   // Create the features
   createFeatures();
   createToolbar();
-  //showChartWizard();
+  showChartWizard();
 
   resize();
 

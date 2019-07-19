@@ -3223,6 +3223,11 @@ highed.DataTable = function(parent, attributes) {
       rows[index].columns[0].setValue(data.properties['hc-key']);
     });
   }
+
+  function loadSampleData(data) {
+    importer.emitCSVImport(data);
+  }
+
   ////////////////////////////////////////////////////////////////////////////
 
   highed.ready(function() {
@@ -3250,6 +3255,7 @@ highed.DataTable = function(parent, attributes) {
     initGSheet: initGSheet,
     on: events.on,
     resize: resize,
+    loadSampleData: loadSampleData,
     loadLiveDataFromURL: loadLiveDataFromURL,
     loadLiveDataPanel: loadLiveDataPanel,
     isInCSVMode: isInCSVMode,
