@@ -2038,7 +2038,23 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     chart.annotationsPopupContainer.style.display = 'none';
   }
 
+  function updateMap(path, scriptSrc){
 
+    if (customizedOptions && !customizedOptions.chart) {
+      customizedOptions.chart = {}
+    }
+
+    customizedOptions.chart.map = path;
+    
+    const s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = scriptSrc
+    document.body.appendChild(s);
+    
+    updateAggregated();
+    init(aggregatedOptions);
+  }
   ///////////////////////////////////////////////////////////////////////////
 
   //Init the initial chart
@@ -2117,7 +2133,8 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       },
       addBlankSeries: addBlankSeries,
       togglePlugins: togglePlugins,
-      getTemplateSettings: getTemplateSettings
+      getTemplateSettings: getTemplateSettings,
+      updateMap: updateMap
     },
 
     data: {

@@ -338,7 +338,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
 
   function addSerie(seriesType, redrawDOM, skipSelect) {
     var type = seriesType;
-    if (!type) type = 'line';
+    if (!type) type = 'Map';
     
     seriesTypeSelect.addItems([{
       id: options.length,

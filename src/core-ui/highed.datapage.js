@@ -719,7 +719,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
                 var pos = desc.search(query);
                 if (pos > -1) {
                   //mapOptions += '<option value="' + path + '">' + desc + '</option>';
-                  highed.dom.ap(mapSelectorOptions, highed.dom.cr('div', 'highed-map-option', desc));
+                  const option = highed.dom.cr('div', 'highed-map-option', desc);
+                  var options = [option];
+
+                  highed.dom.ap(mapSelectorOptions, option);
 
                   if (mapCount < 5) {
                     var mapSelectorImage = highed.dom.cr('img', 'highed-map-selector-image'),
@@ -729,7 +732,19 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
                     mapSelectorImage.src = baseMapPath + (Highcharts.mapDataIndex[mapGroup][desc]).replace('.js', '.svg');
                     highed.dom.ap(mapSelectorImageContainer,mapSelectorImageTitle, mapSelectorImage);
                     highed.dom.ap(mapSelectorImages, mapSelectorImageContainer);
+                    options.push(mapSelectorImageContainer);
                   }
+
+                  highed.dom.on(options, 'click', function() {
+
+                    var mapKey = Highcharts.mapDataIndex[mapGroup][desc].slice(0, -3),
+                    svgPath = baseMapPath + mapKey + '.svg',
+                    geojsonPath = baseMapPath + mapKey + '.geo.json',
+                    javascriptPath = baseMapPath + Highcharts.mapDataIndex[mapGroup][desc];
+                    
+                    chartPreview.options.updateMap(mapKey, javascriptPath);
+                    toNextPage();
+                  });
 
                   mapCount += 1;
                   found = true;
