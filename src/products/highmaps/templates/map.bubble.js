@@ -32,8 +32,14 @@ highed.templates.add('Map', {
   ],
   thumbnail: 'mapbubble.svg',
   dataValidator: false,
-  sampleSets: ['asia-gdp'],
+  loadForEachSeries: false,
   constructor: 'Map',
+  load: function(chart, event) {
+    //Create serie if chart only has one
+    if (chart.series && chart.series.length == 1) {
+      event.emit('AddDefaultSeries');
+    }
+  },
   config: {
     chart: {
       borderWidth: 1
@@ -55,13 +61,8 @@ highed.templates.add('Map', {
     },
 
     series: [{
-        name: 'Countries',
-        color: '#E0E0E0',
-        enableMouseTracking: false
-      },{
+        joinBy: 'hc-key',
         type: 'mapbubble',
-        name: 'Population 2016',
-        joinBy: ['iso-a3', 'code3'],
         minSize: 4,
         maxSize: '12%'
     }]

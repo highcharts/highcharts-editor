@@ -772,6 +772,10 @@ highed.DataTable = function(parent, attributes) {
       emitChanged();
     }
 
+    function setHiddenValue(newValue) {
+      colVal.setAttribute('data-value', newValue);
+    }
+
     function focus(dontFocus) {
 
       deselectAllCells();
@@ -853,7 +857,7 @@ highed.DataTable = function(parent, attributes) {
     }
 
     function getVal() {
-      return value;
+      return colVal.getAttribute('data-value') || value;
     }
 
     function addToDOM(me) {
@@ -943,6 +947,7 @@ highed.DataTable = function(parent, attributes) {
       deselectCopyCell: deselectCopyCell,
       element: col,
       setValue: setValue,
+      setHiddenValue: setHiddenValue,
       rowNumber: row.number,
       colNumber: colNumber,
       selectCellToCopy: selectCellToCopy,
@@ -1975,6 +1980,7 @@ highed.DataTable = function(parent, attributes) {
    */
   function toCSV(delimiter, quoteStrings, section) {
     delimiter = delimiter || ','; 
+
     return toData(quoteStrings, true, section)
       .map(function(cols) {
         return cols.join(delimiter);
@@ -3217,10 +3223,16 @@ highed.DataTable = function(parent, attributes) {
   }
 
   function loadMapData(mapData) {
-    const rowLength = rows.length
+    const rowLength = rows.length;
+    var i = 0;
+
     mapData.forEach(function(data, index) {
-      if (index >= rowLength) addRow();
-      rows[index].columns[0].setValue(data.properties['hc-key']);
+      if (!data.properties['name']) return;
+
+      if (i >= rowLength) addRow();
+      rows[i].columns[0].setValue(data.properties['name']);
+      rows[i].columns[0].setHiddenValue(data.properties['hc-key']);
+      i++;
     });
   }
 

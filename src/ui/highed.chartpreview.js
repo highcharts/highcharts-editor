@@ -325,6 +325,7 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
       }) ? 'StockChart' : 'Chart'));
 
       options = highed.merge(options, stockTools.getStockToolsToolbarConfig());
+
       chart = new Highcharts[chartConstr](pnode || parent, options);
 
       //This is super ugly.
@@ -500,7 +501,6 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
     highed.clearObj(aggregatedOptions);
 
     highed.merge(aggregatedOptions, properties.defaultChartOptions);
-
     // Apply theme first
     if (themeOptions && Object.keys(themeOptions).length) {
       highed.merge(
@@ -601,9 +601,10 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
       });
     }
 
+    /*
     if (aggregatedTemplate.series) {
       aggregatedOptions.series = aggregatedOptions.series || [];
-
+      
       aggregatedTemplate.series.forEach(function(obj, i) {
         if (i < aggregatedOptions.series.length) {
           highed.merge(aggregatedOptions.series[i], obj);
@@ -611,7 +612,7 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
           aggregatedOptions.series.push(highed.merge({}, obj));
         }
       });
-    }
+    }*/
     /*
     highed.merge(
       aggregatedOptions,
@@ -680,10 +681,14 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
   }
 
   function loadTemplateForSerie(template, seriesIndex) {
-    const type = template.config.chart.type;
+    var type = template.config.chart.type;
     delete template.config.chart.type;
 
     constr[seriesIndex] = template.constructor || 'Chart';
+
+    if (template.config.series && template.config.series[0]) {
+      type = template.config.series[0].type
+    }
 
     seriesIndex.forEach(function(index) {
 
@@ -693,7 +698,11 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
       templateSettings[index].templateHeader = template.header;
       
       if (customizedOptions.series[index]) {
-        customizedOptions.series[index].type = type; //template.config.chart.type;
+        if (template.config.series && template.config.series[0]) {
+          highed.merge(customizedOptions.series[index], template.config.series[0]);
+        } else {
+          customizedOptions.series[index].type = type; //template.config.chart.type;
+        }
       } else {
         customizedOptions.series[index] = {
           type: type, //template.config.chart.type,
@@ -703,6 +712,7 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
           compare: undefined
         };
       }
+    
     });
     
     //templateOptions = highed.merge({}, template.config || {});
@@ -882,6 +892,7 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
           highed.merge(customizedOptions.series[i], series);
         });
       }
+
 
       if (mergedExisting) {
         updateAggregated();
@@ -2033,7 +2044,7 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
     chart.annotationsPopupContainer.style.display = 'none';
   }
 
-  function updateMap(path, scriptSrc){
+  function updateMap(path, scriptSrc, callback){
 
     if (customizedOptions && !customizedOptions.chart) {
       customizedOptions.chart = {}
@@ -2041,11 +2052,21 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
 
     customizedOptions.chart.map = path;
     
-    const s = document.createElement('script');
+    var s = document.createElement('script');
     s.type = 'text/javascript';
     s.async = true;
     s.src = scriptSrc
-    document.body.appendChild(s);
+
+    s.onload = s.onreadystatechange = function( _, isAbort ) {
+      if(isAbort || !s.readyState || /loaded|complete/.test(s.readyState) ) {
+        s.onload = s.onreadystatechange = null;
+        s = undefined;
+
+        if(!isAbort && callback) setTimeout(callback, 0);
+      }
+    };
+
+    document.getElementsByTagName('head')[0].appendChild(s);
     
     updateAggregated();
     init(aggregatedOptions);
@@ -2061,6 +2082,7 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
   });
 
   function addBlankSeries(index, type) {
+    
     if (!customizedOptions.series[index]) {
       customizedOptions.series[index] = {
         data:[],

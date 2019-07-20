@@ -338,7 +338,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass, chartType) {
 
   function addSerie(seriesType, redrawDOM, skipSelect) {
     var type = seriesType;
-    if (!type) type = (chartType === 'Map' ? 'Map' : 'Line');
+    if (!type) type = (chartType === 'Map' ? 'map' : 'Line');
     
     seriesTypeSelect.addItems([{
       id: options.length,
@@ -416,8 +416,9 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass, chartType) {
     // Change this in future, data should handle 99% of cases but have had to use aggregatedoptions due to users setting chart type through custom code
     // Looks messy using both atm
     if (data.constructor === 'Map') {
-      if (data.config) return data.config.chart.type;
-      return 'Map';
+      if (data.config && data.config.series && data.config.series[index] && data.config.series[index].type) return data.config.series[index].type;
+      else if (data.config && data.config.chart && data.config.chart.type) return data.config.chart.type;
+      else return 'map';
     } else {
       if (data.config) return data.config.chart.type;
       else {
@@ -437,7 +438,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass, chartType) {
     columnLength = maxColumns;
     var seriesType = getSeriesType(data, 0, aggregatedOptions),
         previousValues = null;
-    
+        
     seriesTypeSelect.updateByIndex(seriesIndex || index, {
       title: 'Series ' + ((seriesIndex || index) + 1) + ' - ' + capitalizeFirstLetter(seriesType)
     });

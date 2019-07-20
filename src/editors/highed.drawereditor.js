@@ -748,6 +748,10 @@ highed.DrawerEditor = function(parent, options, planCode, chartType='Map') {
   //////////////////////////////////////////////////////////////////////////////
   // Event attachments
 
+  templatePage.on('AddDefaultSeries', function() {
+    dataPage.addSerie();
+  });
+  
   mapSelector.on('LoadDataSet', function(data) {
     dataPage.loadSampleData(data);
   });
@@ -772,7 +776,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType='Map') {
     templatePage.selectSeriesTemplate(0, projectData);
   });
 
-  templatePage.on('TemplateChanged', function(newTemplate, loadTemplateForEachSerie, cb){
+  templatePage.on('TemplateChanged', function(newTemplate, loadTemplateForEachSerie, cb) {
     dataPage.changeAssignDataTemplate(newTemplate, loadTemplateForEachSerie, cb);
   })
   chartPreview.on('ChartChange', function(newData) {

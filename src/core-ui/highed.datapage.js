@@ -440,6 +440,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
       dataTable.loadSampleData(data);
     }
 
+    function addSerie(type) {
+      assignDataPanel.addNewSerie(type);
+    }
+
   //////////////////////////////////////////////////////////////////////////////
 
   highed.dom.on(window, 'resize', afterResize(function(e){
@@ -755,6 +759,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
     hideDataTableError: hideDataTableError,
     selectSwitchRowsColumns: selectSwitchRowsColumns,
     loadMapData: loadMapData,
-    loadSampleData: loadSampleData
+    loadSampleData: loadSampleData,
+    addSerie: addSerie
   };
 };

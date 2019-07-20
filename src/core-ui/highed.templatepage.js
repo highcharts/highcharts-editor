@@ -161,8 +161,14 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props,
       highed.dom.on(templateContainer, 'click', function() {
         setLoading(true);
         setTimeout(function() {
+
           t.header =  t.parent;
-          events.emit('TemplateChanged', highed.merge({}, t), true, function() {
+
+          if (t.load && highed.isFn(t.load)) {
+           t.load(chartPreview.options.full, events); 
+          }
+
+          events.emit('TemplateChanged', highed.merge({}, t), ('loadForEachSeries' in t ? t['loadForEachSeries'] : true), function() {
             setLoading(false);
             toNextPage();
           });

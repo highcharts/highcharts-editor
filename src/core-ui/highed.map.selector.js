@@ -78,18 +78,20 @@ highed.MapSelector = function(chartPreview, chartType) {
                     geojsonPath = baseMapPath + mapKey + '.geo.json',
                     javascriptPath = baseMapPath + Highcharts.mapDataIndex[mapGroup][desc];
                     
-                    chartPreview.options.updateMap(mapKey, javascriptPath);
-                    highed.ajax({
-                      url: geojsonPath,
-                      type: 'GET',
-                      dataType: 'json',
-                      success: function(data){
-                        events.emit('LoadMapData', data.features);
-                        if (toNextPage) toNextPage();
-                      },
-                      error: function(e) {
-                      }
-                    })
+                    chartPreview.options.updateMap(mapKey, javascriptPath, function() {
+                      highed.ajax({
+                        url: geojsonPath,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(data){
+                          events.emit('LoadMapData', data.features);
+                          if (toNextPage) toNextPage();
+                        },
+                        error: function(e) {
+                        }
+                      })
+                    });
+
 
                   });
 
