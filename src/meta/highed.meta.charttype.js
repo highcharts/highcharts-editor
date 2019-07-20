@@ -230,22 +230,22 @@ highed.meta.charttype = {
         'x': {
             'name': "X Value",
             'desc': 'X Value',
-            'default': 'E',
-            'value': 'E',
-            'mandatory': true,
-            'isData': true,
-            'linkedTo': 'x',
-            'rawValue': [4]
-        },
-        'y': {
-            'name': "Y Value",
-            'desc': 'Y Value',
             'default': 'D',
             'value': 'D',
             'mandatory': true,
             'isData': true,
-            'linkedTo': 'y',
+            'linkedTo': 'x',
             'rawValue': [3]
+        },
+        'y': {
+            'name': "Y Value",
+            'desc': 'Y Value',
+            'default': 'E',
+            'value': 'E',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'y',
+            'rawValue': [4]
         },
         'value': {
             'name': "Value",

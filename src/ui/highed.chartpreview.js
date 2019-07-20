@@ -612,11 +612,11 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
         }
       });
     }
-
+    /*
     highed.merge(
       aggregatedOptions,
       highed.merge({}, customizedOptions)
-    );
+    );*/
 
 
     if (themeOptions && themeOptions.series) {
@@ -628,7 +628,6 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
         });
       }
     }
-
 
     if (aggregatedOptions.yAxis && !highed.isArr(aggregatedOptions.yAxis)) {
       aggregatedOptions.yAxis = [aggregatedOptions.yAxis];

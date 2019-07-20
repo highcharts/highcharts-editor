@@ -26,7 +26,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.samples.addMapType('Honeycomb', {
   id: 'honeycomb-asia',
   title: 'Asia',
-  thumbnail: 'maphoneycomb.svg',
   description: '',
   type: 'csv',
   dataset: [

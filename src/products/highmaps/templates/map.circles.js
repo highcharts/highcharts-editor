@@ -35,9 +35,7 @@ highed.templates.add('Map', {
   constructor: 'Map',
   config: {
     chart: {
-      type: 'tilemap',
-      inverted: true,
-      height: '80%'
+      type: 'tilemap'
     },
 
 
@@ -46,47 +44,57 @@ highed.templates.add('Map', {
     },
 
     yAxis: {
-        visible: false
-    },
-
-    colorAxis: {
-      dataClasses: [{
-          to: 2,
-          color: '#e8f5e9',
-          name: 'Weak'
-      }, {
-          from: 2,
-          to: 5,
-          color: '#81c784',
-          name: 'Average'
-      }, {
-          from: 5,
-          to: 6,
-          color: '#43a047',
-          name: 'Strong'
-      }, {
-          from: 6,
-          color: '#1b5e20',
-          name: 'Stellar'
-      }]
-    },
-
-    plotOptions: {
-      series: {
-          tileShape: 'circle',
-          dataLabels: {
-              enabled: true,
-              color: '#000000',
-              style: {
-                  textOutline: false
-              }
-          }
-      }
+        visible: false,
+        reversed: false
     },
 
     legend: {
-      layout: 'horizontal',
-      verticalAlign: 'bottom'
+        enabled: true,
+        layout: 'vertical',
+        align: 'left',
+        y: -20,
+        floating: true
+    },
+
+    colorAxis: {
+        dataClasses: [{
+            to: 2,
+            color: '#e8f5e9',
+            name: 'Weak'
+        }, {
+            from: 2,
+            to: 5,
+            color: '#81c784',
+            name: 'Average'
+        }, {
+            from: 5,
+            to: 6,
+            color: '#43a047',
+            name: 'Strong'
+        }, {
+            from: 6,
+            color: '#1b5e20',
+            name: 'Stellar'
+        }]
+    },
+
+    tooltip: {
+        headerFormat: '',
+        pointFormat: 'The real GDP growth of <b>{point.name}</b> is <b>{point.value}</b> %'
+    },
+
+    plotOptions: {
+        series: {
+            tileShape: 'circle',
+            dataLabels: {
+                enabled: true,
+                format: '{point.hc-a2}',
+                color: '#000000',
+                style: {
+                    textOutline: false
+                }
+            }
+        }
     }
   }
 });
