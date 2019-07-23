@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.DrawerEditor = function(parent, options, planCode, chartType='Map') {
+highed.DrawerEditor = function(parent, options, planCode, chartType) {
   var events = highed.events(),
     // Main properties
     properties = highed.merge(
@@ -927,7 +927,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType='Map') {
   // Create the features
   createFeatures();
   createToolbar();
-  showChartWizard();
+  //showChartWizard();
 
   resize();
 

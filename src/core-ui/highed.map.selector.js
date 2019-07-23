@@ -30,6 +30,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.MapSelector = function(chartPreview, chartType) {
   var events = highed.events(),
       predefinedMaps = highed.dom.cr('div', ''),
+      importContainer = highed.dom.cr('div', ''),
       container = highed.dom.cr('div', 'highed-table-dropzone-container'),
       mapSelectorContainer = highed.dom.cr('div');
 
@@ -128,11 +129,31 @@ highed.MapSelector = function(chartPreview, chartType) {
         else mapOptions.classList += " active";
       });
 
+      var importInput = highed.dom.cr('button', 'highed-ok-button highed-import-button', 'Select File');
+
+      highed.dom.ap(importContainer, 
+                    highed.dom.cr('hr'),
+                    importInput);
+
+      highed.dom.on(importInput, 'click', function(){
+        highed.readLocalFile({
+          type: 'text',
+          accept: '.json',
+          success: function(info) {
+            var data = JSON.parse(info.data);
+            chartPreview.data.updateMapData(data);
+            events.emit('LoadMapData', data.features);
+            if (toNextPage) toNextPage();
+          }
+        });
+      });
+
       highed.dom.ap(container, 
                     highed.dom.ap(mapSelectorContainer,
                     highed.dom.ap(highed.dom.cr('div', ''), input, inputSelector), 
                     highed.dom.ap(highed.dom.cr('div', ''), mapOptions),
                     mapSelectorImages),
+                    importContainer,
                     predefinedMaps);
       return container
     }
@@ -149,6 +170,7 @@ highed.MapSelector = function(chartPreview, chartType) {
     if (!type || (type && (type.templateTitle !== 'Honeycomb' && type.templateTitle !== 'Tilemap Circle'))) {
       toggleVisible(mapSelectorContainer, 'block');
       toggleVisible(predefinedMaps, 'none');
+      toggleVisible(importContainer, 'block');
     } else {
       const samples = highed.samples.getMap(type.templateTitle);
       
@@ -175,6 +197,7 @@ highed.MapSelector = function(chartPreview, chartType) {
 
       toggleVisible(predefinedMaps, 'block');
       toggleVisible(mapSelectorContainer, 'none');
+      toggleVisible(importContainer, 'none');
     }
   }
 

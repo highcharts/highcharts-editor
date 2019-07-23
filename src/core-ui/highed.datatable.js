@@ -675,6 +675,7 @@ highed.DataTable = function(parent, attributes) {
       col = highed.dom.cr('td', 'highed-dtable-cell'),
       colVal = highed.dom.cr('div', 'highed-dtable-col-val', value),
       input = highed.dom.cr('input'),
+      disabled = false,
       exports = {};
     function goLeft() {
       if (colNumber >= 1) {
@@ -776,6 +777,10 @@ highed.DataTable = function(parent, attributes) {
       colVal.setAttribute('data-value', newValue);
     }
 
+    function setDisabled(){
+      disabled = true;
+    }
+
     function focus(dontFocus) {
 
       deselectAllCells();
@@ -866,6 +871,8 @@ highed.DataTable = function(parent, attributes) {
     }
 
     highed.dom.on(col, 'mouseup', function(e) {
+      
+      if (disabled) return;
       if (inCopyOverCellMode) {
         inCopyOverCellMode = false;
         
@@ -916,6 +923,9 @@ highed.DataTable = function(parent, attributes) {
       }
     });
     highed.dom.on(col, 'mousedown', function() {
+      
+      if (disabled) return;
+
       if (lastSelectedCell[0] !== colNumber && lastSelectedCell[1] !== row.number) {
         focus();
       }
@@ -948,6 +958,7 @@ highed.DataTable = function(parent, attributes) {
       element: col,
       setValue: setValue,
       setHiddenValue: setHiddenValue,
+      setDisabled: setDisabled,
       rowNumber: row.number,
       colNumber: colNumber,
       selectCellToCopy: selectCellToCopy,
@@ -3234,6 +3245,11 @@ highed.DataTable = function(parent, attributes) {
       rows[i].columns[0].setHiddenValue(data.properties['hc-key']);
       i++;
     });
+
+    rows.forEach(function(row) {
+      row.columns[0].setDisabled(true);
+    });
+
   }
 
   function loadSampleData(data) {

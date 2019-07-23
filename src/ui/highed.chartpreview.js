@@ -325,7 +325,7 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
       }) ? 'StockChart' : 'Chart'));
 
       options = highed.merge(options, stockTools.getStockToolsToolbarConfig());
-
+//console.trace(highed.merge({}, options));
       chart = new Highcharts[chartConstr](pnode || parent, options);
 
       //This is super ugly.
@@ -2044,6 +2044,10 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
     chart.annotationsPopupContainer.style.display = 'none';
   }
 
+  function updateMapData(data){
+    customizedOptions.series[0].mapData = data;
+  }
+
   function updateMap(path, scriptSrc, callback){
 
     if (customizedOptions && !customizedOptions.chart) {
@@ -2082,7 +2086,6 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
   });
 
   function addBlankSeries(index, type) {
-    
     if (!customizedOptions.series[index]) {
       customizedOptions.series[index] = {
         data:[],
@@ -2099,7 +2102,7 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
     updateAggregated();
     init();
   }
-  
+
   ///////////////////////////////////////////////////////////////////////////
 
   exports = {
@@ -2165,7 +2168,8 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
       setDataTableCSV: setDataTableCSV,
       setAssignDataFields: setAssignDataFields,
       deleteSerie: deleteSerie,
-      deleteSeries: deleteSeries
+      deleteSeries: deleteSeries,
+      updateMapData: updateMapData
     },
 
     export: {
