@@ -58,21 +58,22 @@ highed.templates.add('Map', {
 
     colorAxis: {
         dataClasses: [{
-            to: 2,
+            from: 0,
+            to: 1000000,
             color: '#e8f5e9',
             name: 'Weak'
         }, {
-            from: 2,
-            to: 5,
+            from: 1000000,
+            to: 5000000,
             color: '#81c784',
             name: 'Average'
         }, {
-            from: 5,
-            to: 6,
+            from: 5000000,
+            to: 20000000,
             color: '#43a047',
             name: 'Strong'
         }, {
-            from: 6,
+            from: 20000000,
             color: '#1b5e20',
             name: 'Stellar'
         }]

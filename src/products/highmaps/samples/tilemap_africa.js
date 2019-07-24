@@ -23,10 +23,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-highed.samples.addMapType('Tilemap Circle', {
+highed.samples.addMapType('Tilemap', {
   id: 'circle-africa',
   title: 'Africa',
-  thumbnail: 'maphoneycomb.svg',
+  thumbnail: {
+    honeycomb: 'maphoneycomb_africa.svg',
+    circle: 'mapcircle.svg'
+  },
   description: '',
   type: 'csv',
   dataset: [

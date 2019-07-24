@@ -172,7 +172,7 @@ highed.MapSelector = function(chartPreview, chartType) {
       toggleVisible(predefinedMaps, 'none');
       toggleVisible(importContainer, 'block');
     } else {
-      const samples = highed.samples.getMap(type.templateTitle);
+      const samples = highed.samples.getMap('Tilemap');
       
       predefinedMaps.innerHTML = '';
 
@@ -182,9 +182,11 @@ highed.MapSelector = function(chartPreview, chartType) {
         var container = highed.dom.cr('div', 'highed-chart-template-container highed-map-container'),
             thumbnail = highed.dom.cr('div', 'highed-chart-template-thumbnail'),
             title = highed.dom.cr('div', 'highed-map-text', sample.title);
+            
+        var mapType = type.templateTitle === 'Honeycomb' ? 'honeycomb' : 'circle';
 
         highed.dom.style(thumbnail, {
-          'background-image': 'url(' + highed.option('thumbnailURL') + sample.thumbnail + ')'
+          'background-image': 'url(' + highed.option('thumbnailURL') + sample.thumbnail[mapType] + ')'
         });
 
         highed.dom.on(container, 'click', function() {

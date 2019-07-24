@@ -97,6 +97,10 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props,
 
     templates.on('Select', function(template) {
       //chartPreview.loadTemplate(template);
+      if (template.load && highed.isFn(template.load)) {
+        template.load(chartPreview.options.full, events); 
+      }
+ 
       events.emit('TemplateChanged', template);
     });
 

@@ -23,11 +23,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-highed.samples.addMapType('Honeycomb', {
-  id: 'honeycomb-us',
-  title: 'United States of America',
+highed.samples.addMapType('Tilemap', {
+  id: 'honeycomb-southamerica',
+  title: 'South America',
   description: '',
-  thumbnail: 'maphoneycomb.svg',
+  thumbnail: {
+    honeycomb: 'maphoneycomb_southamerica.svg',
+    circle: 'mapcircle_southamerica.svg'
+  },
   type: 'csv',
   dataset: [
     "hc-a2,name,region,x,y,value",
