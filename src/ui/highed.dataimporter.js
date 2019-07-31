@@ -518,7 +518,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     });
 
     highed.dom.on(csvPasteArea, 'keyup', function(e) {
-      if (e.keyCode === 13 || ((e.metaKey || e.ctrlKey) && e.key === 'z')) {
+      if (/*e.keyCode === 13 || */((e.metaKey || e.ctrlKey) && e.key === 'z')) {
         emitCSVImport(csvPasteArea.value);
       }
     });
