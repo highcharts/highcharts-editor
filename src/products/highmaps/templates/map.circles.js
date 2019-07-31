@@ -35,7 +35,8 @@ highed.templates.add('Map', {
   constructor: 'Map',
   config: {
     chart: {
-      type: 'tilemap'
+      type: 'tilemap',
+      inverted: true
     },
 
 
@@ -44,8 +45,7 @@ highed.templates.add('Map', {
     },
 
     yAxis: {
-        visible: false,
-        reversed: false
+        visible: false
     },
 
     legend: {
