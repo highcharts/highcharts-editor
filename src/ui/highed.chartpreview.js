@@ -1642,7 +1642,8 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         data: {
           csv: lastLoadedCSV,
           googleSpreadsheetKey: false,
-          googleSpreadsheetWorksheet: false
+          googleSpreadsheetWorksheet: false,
+          seriesMapping: (customizedOptions && customizedOptions.data && customizedOptions.data.seriesMapping ? customizedOptions.data.seriesMapping : null)
         }
       });
     }
