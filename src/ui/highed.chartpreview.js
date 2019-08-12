@@ -49,8 +49,27 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
           subtitle: {
             text: ''
           },
+          plotOptions: {
+            series: {
+              allowPointSelect: true, //Maps
+              states: {
+                hover: {
+                    color: '#a4edba'
+                },
+                select: {
+                    color: '#EFFFEF',
+                    borderColor: 'black',
+                    dashStyle: 'dot'
+                }
+            }
+            }
+          }, 
           exporting: {
             //   url: 'http://127.0.0.1:7801'
+          },
+          credits: {
+            text: 'cloud.highcharts.com',
+            href: 'https://cloud.highcharts.com'
           }
         },
         expandTo: parent
@@ -140,6 +159,7 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
     inputField = highed.dom.cr('input', 'highed-chart-input-field'),*/
     stockToolsContainer,
     isAnnotating = true,
+    mapData, 
     stockTools = highed.StockTools(planCode);
 
     if (planCode && planCode === 1) {
@@ -189,7 +209,8 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
         }
       }
     }, false);
-  ///////////////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////////
 
   function closeAnnotationPopup() {
     stockTools.closeAnnotationPopup()
@@ -199,8 +220,20 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
     stockTools.toggleAnnotationIcon(toggle);
   }
 
+  function updateMapCodes(data) {
+    mapData = data;
+  }
+
+  function attachMapClickHandler() {
+    (mapData || []).forEach(function(d) {
+      highed.dom.on(document.querySelector('.highcharts-key-' + (d.id).toLowerCase()), 'dblclick', function(e) {
+
+      });
+    });
+  }
+
   function attachWYSIWYG() {
-    
+
     Object.keys(wysiwyg).forEach(function(key) {
       highed.dom.on(parent.querySelector(key), 'click', function(e) {
         
@@ -340,6 +373,7 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
       }
 
       attachWYSIWYG();
+      attachMapClickHandler();
 
       if (chart && chart.reflow) {
         //chart.reflow();
@@ -2136,6 +2170,8 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
     toggleShowAnnotationIcon: toggleShowAnnotationIcon,
     updateAnnotation: updateAnnotation,
     closeAnnotationPopup: closeAnnotationPopup,
+
+    updateMapCodes: updateMapCodes,
 
     options: {
       set: set,
