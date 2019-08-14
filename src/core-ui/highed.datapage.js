@@ -84,7 +84,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
           importer: properties.importer
         },
         properties.dataGrid
-      )
+      ),
+      chartType
     ),   
     addRowInput = highed.dom.cr('input', 'highed-field-input highed-add-row-input'),
     addRowBtn = highed.dom.cr('button', 'highed-import-button highed-ok-button highed-add-row-btn small', 'Add'),

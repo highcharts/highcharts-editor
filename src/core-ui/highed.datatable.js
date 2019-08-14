@@ -180,7 +180,7 @@ function parseCSV(inData, delimiter) {
  *  @param {domnode} parent - the node to attach to
  *  @param {object} attributes - the properties
  */
-highed.DataTable = function(parent, attributes) {
+highed.DataTable = function(parent, attributes, chartType) {
   var properties = highed.merge(
       {
         checkable: true,
@@ -1992,11 +1992,18 @@ highed.DataTable = function(parent, attributes) {
   function toCSV(delimiter, quoteStrings, section) {
     delimiter = delimiter || ','; 
 
+    if (chartType !== 'Map') 
+      return toData(quoteStrings, true, section)
+        .map(function(cols) {
+          return cols.join(delimiter);
+        }).join('\n');
+
     return toData(quoteStrings, true, section)
-      .map(function(cols) {
+      .filter(function(cols) {
+        return cols[1] !== null && cols[1] !== undefined;
+      }).map(function(cols) {
         return cols.join(delimiter);
-      })
-      .join('\n');
+      }).join('\n');
   }
 
   function loadRows(rows, done) {
@@ -3252,7 +3259,7 @@ highed.DataTable = function(parent, attributes) {
 
   }
 
-  function getMapValueFromCode(key, assignedValue){
+  function getMapValueFromCode(key, assignedValue){ // TODO: Use assigned value rather than fixed index
     var value;
     rows.some(function(row) {
       if (row.columns[0].element.children[0].getAttribute('data-value') === key) {
