@@ -729,6 +729,9 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
     //setToActualSize();
   });
 
+  function getMapValueFromCode(key) {
+    return dataTable.getMapValueFromCode(key);
+  }
 
   return {
     on: events.on,
@@ -760,6 +763,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
     selectSwitchRowsColumns: selectSwitchRowsColumns,
     loadMapData: loadMapData,
     loadSampleData: loadSampleData,
-    addSerie: addSerie
+    addSerie: addSerie,
+    getMapValueFromCode: getMapValueFromCode
   };
 };

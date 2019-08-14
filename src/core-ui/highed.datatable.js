@@ -3252,6 +3252,17 @@ highed.DataTable = function(parent, attributes) {
 
   }
 
+  function getMapValueFromCode(key, assignedValue){
+    var value;
+    rows.some(function(row) {
+      if (row.columns[0].element.children[0].getAttribute('data-value') === key) {
+        value = row.columns[1];
+        return true;
+      }
+    });
+    return value;
+  }
+
   function loadSampleData(data) {
     importer.emitCSVImport(data);
   }
@@ -3299,6 +3310,7 @@ highed.DataTable = function(parent, attributes) {
     showDataTableError: showDataTableError,
     hideDataTableError: hideDataTableError,
     selectSwitchRowsColumns: selectSwitchRowsColumns,
-    loadMapData: loadMapData
+    loadMapData: loadMapData,
+    getMapValueFromCode: getMapValueFromCode
   };
 };

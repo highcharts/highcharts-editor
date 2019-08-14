@@ -367,7 +367,8 @@ highed.DrawerEditor = function(parent, options, planCode, chartType = 'Map') {
     titleHeader = highed.dom.cr('h3', '', 'Data'),
     iconContainer = highed.dom.cr('div', ''),
     titleContainer = highed.dom.ap(highed.dom.cr('div', 'highed-page-title'), titleHeader, helpIcon, iconContainer),
-    helpModal = highed.HelpModal(builtInOptions.data.help || []);
+    helpModal = highed.HelpModal(builtInOptions.data.help || [])
+    mapModal = highed.MapModal(highedChartContainer, dataPage);
 
   highed.dom.on(helpIcon, 'click', showHelp);
   highed.dom.ap(splitter.bottom, highed.dom.ap(workspaceBody, workspaceRes, workspaceButtons));
@@ -393,7 +394,12 @@ highed.DrawerEditor = function(parent, options, planCode, chartType = 'Map') {
   // Alias import to data
   builtInOptions.import = builtInOptions.data;
   panel.setDefault(dataPage);
-  dataPage.show()
+  dataPage.show();
+
+  chartPreview.on('EditMap', function(data) {
+    mapModal.editMapValues(data)
+  });
+
   /**
    * Creates the features defined in property.features
    * Call this after changing properties.features to update the options.

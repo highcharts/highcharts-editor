@@ -46,6 +46,12 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
           title: {
             text: 'Chart Title'
           },
+
+          mapNavigation: {
+              enabled: true,
+              enableDoubleClickZoomTo: true
+          },
+  
           subtitle: {
             text: ''
           },
@@ -226,8 +232,8 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
 
   function attachMapClickHandler() {
     (mapData || []).forEach(function(d) {
-      highed.dom.on(document.querySelector('.highcharts-key-' + (d.id).toLowerCase()), 'dblclick', function(e) {
-
+      highed.dom.on(document.querySelector('.highcharts-key-' + (d.id).toLowerCase().replace('.', '-')), 'dblclick', function(e) {
+        events.emit('EditMap', d);
       });
     });
   }

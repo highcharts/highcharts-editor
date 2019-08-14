@@ -47,6 +47,7 @@
     "./src/core-ui/highed.helpmodal.js",
     "./src/core-ui/highed.subscribemodal.js",
     "./src/core-ui/highed.annotationmodal.js",
+    "./src/core-ui/highed.map.modal.js",
 
     "./src/meta/highed.meta.options.extended.js",
     "./src/meta/highed.meta.charttype.js",
