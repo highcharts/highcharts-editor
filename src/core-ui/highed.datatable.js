@@ -3244,8 +3244,8 @@ highed.DataTable = function(parent, attributes, chartType) {
     const rowLength = rows.length;
     var i = 0;
 
-    if (!code || code === '') code = 'name';
-    if (!name || name === '') name = 'hc-key';
+    if (!code || code === '') code = 'hc-key';
+    if (!name || name === '') name = 'name';
 
     mapData.forEach(function(data, index) {
       if (!data.properties[name]) return;
@@ -3254,6 +3254,8 @@ highed.DataTable = function(parent, attributes, chartType) {
       rows[i].columns[0].setValue(data.properties[name]); //Change name key to be dynamic
       rows[i].columns[0].setHiddenValue(data.properties[code]); //Change this too
       i++;
+      data.properties.hccode = code; 
+      data.properties.hcname = name; 
     });
 
     rows.forEach(function(row) {

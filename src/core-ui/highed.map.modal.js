@@ -57,8 +57,8 @@ highed.MapModal = function(container, dataPage) {
   }
 
   function editMapValues (data) {
-    editMapHeader.innerHTML = data.properties.name;
-    mapValue = dataPage.getMapValueFromCode(data.properties['hc-key']);
+    editMapHeader.innerHTML = data.properties[data.properties.hcname];
+    mapValue = dataPage.getMapValueFromCode(data.properties[data.properties.hccode]);
     editMapValue.value = mapValue.value();
 
     editMapValue.removeEventListener("keyup", setValue);
