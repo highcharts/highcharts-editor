@@ -121,12 +121,11 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
     
     addRowInput.value = 1;
     highed.dom.on(addRowBtn, 'click', function(e) {
-      
-    assignDataPanel.getFieldsToHighlight(dataTable.removeAllCellsHighlight, true);
+      assignDataPanel.getFieldsToHighlight(dataTable.removeAllCellsHighlight, true);
       for(var i=0;i<addRowInput.value; i++) {
         dataTable.addRow();
       }
-    assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+      assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
     });
 
     highed.dom.on(dataImportBtn, 'click', function() {
@@ -170,7 +169,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
       highed.dom.ap(parent, highed.dom.ap(container, body));
       
       assignDataPanel.init(dataTable.getColumnLength());
-
+      if (chartType === 'Map') assignDataPanel.disableMaps();
       expand();
       resizeChart();
     }
@@ -420,14 +419,11 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
     }
 
     function loadProject(projectData, aggregated) {
-      
       if (projectData.settings && projectData.settings.dataProvider && projectData.settings.dataProvider.csv) {
         dataTable.loadCSV({
           csv: projectData.settings.dataProvider.csv
         }, null, null, function() {
-          
-            assignDataPanel.enable();
-            
+            if (chartType !== 'Map') assignDataPanel.enable();
             assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
             assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
             chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
@@ -581,7 +577,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
   });
 
   dataTable.on('EnableAssignDataPanel', function() {
-    assignDataPanel.enable();
+    if (chartType !== 'Map') assignDataPanel.enable();
   });
 
   dataTable.on('ColumnMoving', function() {
@@ -712,8 +708,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
     dataTable.selectSwitchRowsColumns()
   }
 
-  function loadMapData(data) {
-    dataTable.loadMapData(data);
+  function loadMapData(data, code, name) {
+    dataTable.loadMapData(data, code, name);
   }
 
   function resizeChart(newWidth) {

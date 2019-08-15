@@ -364,7 +364,7 @@ highed.dom = {
      * @return {domnode} - the new button
      */
    btn: function(name, className, id, func) {
-     var btn = highed.dom.cr('btn', className, name, id);
+     var btn = highed.dom.cr('button', className, name, id);
 
      highed.dom.on(btn, 'click', function(e){
       if (func && highed.isFn(func)) func();

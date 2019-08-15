@@ -32,7 +32,12 @@ highed.MapSelector = function(chartPreview, chartType) {
       predefinedMaps = highed.dom.cr('div', ''),
       importContainer = highed.dom.cr('div', ''),
       container = highed.dom.cr('div', 'highed-table-dropzone-container'),
-      mapSelectorContainer = highed.dom.cr('div');
+      mapSelectorContainer = highed.dom.cr('div'),
+      mapSelectorGeojsonContainer = highed.dom.cr('div', 'highed-map-geojson-container'),
+      mapSelectorGeojsonHeader = highed.dom.cr('div', 'highed-map-geojson-header', 'Link Values'),
+      geojsonCodeContainer = highed.dom.cr('div', 'highed-map-geojson-options'),
+      geojsonCountryContainer = highed.dom.cr('div', 'highed-map-geojson-options'),
+      geojsonBtn = highed.dom.btn('Select', 'highed-map-geojson-btn highed-ok-button highed-import-button negative', null);
 
   function createMapDataSection(toNextPage, cb) {
 
@@ -133,6 +138,7 @@ highed.MapSelector = function(chartPreview, chartType) {
 
       highed.dom.ap(importContainer, 
                     highed.dom.cr('hr'),
+                    highed.dom.cr('div', 'highed-toolbox-body-title highed-map-import-geojson-header', 'Import GeoJSON Map'),
                     importInput);
 
       highed.dom.on(importInput, 'click', function(){
@@ -142,19 +148,69 @@ highed.MapSelector = function(chartPreview, chartType) {
           success: function(info) {
             var data = JSON.parse(info.data);
             chartPreview.data.updateMapData(data);
-            events.emit('LoadMapData', data.features);
-            if (toNextPage) toNextPage();
+            if (data.features[0].properties.name && data.features[0].properties['hc-key']) {
+              events.emit('LoadMapData', data.features);
+              if (toNextPage) toNextPage();
+            } else {
+              // Dont have keys, find out from user which they are and use them instead.
+              var keys = Object.keys(data.features[0].properties);
+              highed.dom.on(geojsonBtn, 'click', function(ev) {
+                events.emit('LoadMapData', data.features, document.querySelector('input[name="code"]:checked').value, document.querySelector('input[name="country"]:checked').value);
+                if (toNextPage) toNextPage();
+              });
+
+              [geojsonCodeContainer, geojsonCountryContainer].forEach(function(parent, index){
+                keys.forEach(function(key, i) {
+                  var radioOption = highed.dom.cr('input');
+                  radioOption.type = 'radio';
+                  radioOption.value = key;
+                  radioOption.name = (index === 0 ? 'code' : 'country');
+                  
+                  if (i === 0) radioOption.checked = true;
+
+                  highed.dom.ap(parent, 
+                                highed.dom.ap(
+                                  highed.dom.cr('div', 'highed-map-radio-option'),
+                                  radioOption,
+                                  highed.dom.cr('span', '', key)
+                                ));
+                });
+              });
+
+              mapSelectorGeojsonContainer.classList += ' active';
+
+            }
           }
         });
       });
 
       highed.dom.ap(container, 
-                    highed.dom.ap(mapSelectorContainer,
-                    highed.dom.ap(highed.dom.cr('div', ''), input, inputSelector), 
-                    highed.dom.ap(highed.dom.cr('div', ''), mapOptions),
-                    mapSelectorImages),
+                    highed.dom.ap(
+                      mapSelectorContainer,
+                      highed.dom.ap(highed.dom.cr('div', ''), input, inputSelector), 
+                      highed.dom.ap(highed.dom.cr('div', ''), mapOptions),
+                      mapSelectorImages
+                    ),
                     importContainer,
-                    predefinedMaps);
+                    predefinedMaps,
+                    highed.dom.ap(
+                      mapSelectorGeojsonContainer,
+                      mapSelectorGeojsonHeader,
+                      highed.dom.ap(
+                        highed.dom.cr('div', 'highed-map-geojson-option-container'),
+                        highed.dom.cr('div', 'highed-map-geojson-option-header', 'Select Code'),
+                        geojsonCodeContainer
+                      ),
+                      highed.dom.ap(
+                        highed.dom.cr('div', 'highed-map-geojson-option-container'),
+                        highed.dom.cr('div', 'highed-map-geojson-option-header', 'Select Name'),
+                        geojsonCountryContainer
+                      ),
+                      highed.dom.ap(
+                        highed.dom.cr('div', 'highed-map-geojson-btn-container'),
+                        geojsonBtn
+                      )
+                    ));
       return container
     }
 

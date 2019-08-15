@@ -555,6 +555,8 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass, chartType) {
         valueContainer = highed.dom.cr('div', 'highed-assigndatapanel-input-container');
 
     labelInput = highed.DropDown(valueContainer, 'highed-assigndata-dropdown');
+
+    if (chartType === 'Map') labelInput.disable();
     if(!option.mandatory){
       labelInput.addItem({
         id: '',
@@ -668,6 +670,13 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass, chartType) {
     columnLength = length;
   }
 
+  function disableMaps(){
+    container.classList += ' disabled';
+    [addNewSeriesBtn, deleteSeriesBtn, toggleHideCellsBtn].forEach(function(btn) {
+      btn.disabled = true;
+    });
+  }
+
   ////////////////////////////////////////////////////////////////////////////////
       
   highed.dom.ap(selectContainer, addNewSeriesBtn, deleteSeriesBtn, toggleHideCellsBtn);
@@ -759,6 +768,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass, chartType) {
     getOptions: getOptions,
     resetValues: resetValues,
     resize: resize,
+    disableMaps: disableMaps,
     getFieldsToHighlight: getFieldsToHighlight,
     getMergedLabelAndData: getMergedLabelAndData,
     getAllMergedLabelAndData: getAllMergedLabelAndData,

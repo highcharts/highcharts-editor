@@ -762,8 +762,8 @@ highed.DrawerEditor = function(parent, options, planCode, chartType = 'Map') {
     dataPage.loadSampleData(data);
   });
 
-  mapSelector.on('LoadMapData', function(data) {
-    dataPage.loadMapData(data);
+  mapSelector.on('LoadMapData', function(data, code, name) {
+    dataPage.loadMapData(data, code, name);
     chartPreview.updateMapCodes(data);
   });
 

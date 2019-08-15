@@ -3240,16 +3240,19 @@ highed.DataTable = function(parent, attributes, chartType) {
     return container;
   }
 
-  function loadMapData(mapData) {
+  function loadMapData(mapData, code, name) {
     const rowLength = rows.length;
     var i = 0;
 
+    if (!code || code === '') code = 'name';
+    if (!name || name === '') name = 'hc-key';
+
     mapData.forEach(function(data, index) {
-      if (!data.properties['name']) return;
+      if (!data.properties[name]) return;
 
       if (i >= rowLength) addRow();
-      rows[i].columns[0].setValue(data.properties['name']);
-      rows[i].columns[0].setHiddenValue(data.properties['hc-key']);
+      rows[i].columns[0].setValue(data.properties[name]); //Change name key to be dynamic
+      rows[i].columns[0].setHiddenValue(data.properties[code]); //Change this too
       i++;
     });
 
