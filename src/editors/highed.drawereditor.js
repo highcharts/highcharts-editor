@@ -749,7 +749,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
   });
 
   dataPage.on('SeriesChanged', function(index) {
-    if ((options && !options.features) || (options && options.features && options.features.indexOf('templates') > -1)) {
+    if (((options && !options.features) || (options && options.features && options.features.indexOf('templates') > -1)) && templatePage) {
       templatePage.selectSeriesTemplate(index, chartPreview.options.getTemplateSettings());
     }
   });
