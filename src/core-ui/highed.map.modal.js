@@ -24,7 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 // @format
-/** Map selector
+/** Map Modal
  */
 
 highed.MapModal = function(container, dataPage) {

@@ -162,3 +162,43 @@
         padding-left: 10px;
     }
 }
+
+.highed-map-table-container {    
+    height: 350px;
+    overflow: auto;
+    .highed-map-table {
+        width:100%;
+        border-collapse: collapse;
+        thead {
+            th.map-table-label-header {
+                top: 39px;
+            }
+            th {
+                text-align: left;
+                position: sticky;
+                top: -1px;
+                color: black;
+                text-transform: capitalize;
+                font-weight: 400;
+                padding: 4px;
+                font-size: 14px;
+                margin: 0px;
+                background: #f3f3f3;
+                border: 1px solid #e8e8e8;
+            }
+        }
+        tbody {
+            tr {
+                color: black;
+                font-size: 13px;
+                font-weight: 300;
+                td {
+                    border-right: 1px solid #e8e8e8;
+                    border-bottom: 1px solid #e8e8e8;
+                    padding: 5px;
+                }
+            }
+        }
+    }
+}
+

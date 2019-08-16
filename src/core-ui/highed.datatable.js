@@ -502,7 +502,10 @@ highed.DataTable = function(parent, attributes, chartType) {
     reader.onload = function(e) {
       clear();
       //events.emit('ClearSeriesForImport');
-      loadCSV({ csv: e.target.result }, null, true, cb);
+      if (chartType === 'Map') {
+        mapImporter.show(e.target.result);
+      } else loadCSV({ csv: e.target.result }, null, true, cb);
+      
     };
 
     reader.readAsText(f);
@@ -984,7 +987,7 @@ highed.DataTable = function(parent, attributes, chartType) {
     selectedFirstCell[1] = null;
   }
 
-  function selectCellsToMove(firstCell, endCell){ // selectedCopyFirstCell, selectedCopyEndCell
+  function selectCellsToMove(firstCell, endCell) { // selectedCopyFirstCell, selectedCopyEndCell
 
     allSelectedCopyCells = allSelectedCopyCells.filter(function(cell) {
       if ((cell.rowNumber > endCell[1] || cell.colNumber > endCell[0]) || (cell.rowNumber < firstCell[1] || cell.colNumber < firstCell[0])) {
@@ -3148,7 +3151,8 @@ highed.DataTable = function(parent, attributes, chartType) {
         gSheetContainer = createGSheetContainer(toNextPage),
         liveContainer = createLiveDataContainer(toNextPage),
         sampleDataContainer = createSampleData(toNextPage, loading);
-        cutAndPasteContainer = createCutAndPasteContainer(toNextPage);
+        cutAndPasteContainer = createCutAndPasteContainer(toNextPage),
+        mapImporter = highed.MapImporter(container);
 
     var buttons = [{ title: 'Connect Google Sheet', linkedTo: gSheetContainer}, 
                    { title: 'Import Live Data', linkedTo: liveContainer, height: 321}, 
@@ -3172,10 +3176,15 @@ highed.DataTable = function(parent, attributes, chartType) {
         type: 'text',
         accept: '.csv',
         success: function(info) {
-          highed.snackBar('File uploaded');
-          importer.emitCSVImport(info.data);
-          //events.emit("AssignDataForFileUpload", info.data); - Does this later in loadCSV
-          toNextPage();
+          if (chartType === 'Map') {
+            mapImporter.show();
+          }
+          else {
+            highed.snackBar('File uploaded');
+            importer.emitCSVImport(info.data);
+            //events.emit("AssignDataForFileUpload", info.data); - Does this later in loadCSV
+            toNextPage();
+          }
         }
       });
     });
@@ -3251,8 +3260,8 @@ highed.DataTable = function(parent, attributes, chartType) {
       if (!data.properties[name]) return;
 
       if (i >= rowLength) addRow();
-      rows[i].columns[0].setValue(data.properties[name]); //Change name key to be dynamic
-      rows[i].columns[0].setHiddenValue(data.properties[code]); //Change this too
+      rows[i].columns[0].setValue(data.properties[name]);
+      rows[i].columns[0].setHiddenValue(data.properties[code]);
       i++;
       data.properties.hccode = code; 
       data.properties.hcname = name; 
@@ -3264,7 +3273,7 @@ highed.DataTable = function(parent, attributes, chartType) {
 
   }
 
-  function getMapValueFromCode(key, assignedValue){ // TODO: Use assigned value rather than fixed index
+  function getMapValueFromCode(key, assignedValue) { // TODO: Use assigned value rather than fixed index
     var value;
     rows.some(function(row) {
       if (row.columns[0].element.children[0].getAttribute('data-value') === key) {
