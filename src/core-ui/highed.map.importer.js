@@ -27,9 +27,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /** Map selector
  */
 
-highed.MapImporter = function(container) {
+highed.MapImporter = function() {
   var events = highed.events(),
-  
+      container = null,
       mapContainer = highed.dom.cr(
         'div',
         'highed-edit-map-import-container highed-map-geojson-container'
@@ -39,30 +39,56 @@ highed.MapImporter = function(container) {
       mapTable = highed.dom.cr('table', 'highed-map-table'),
       mapTHeader = highed.dom.cr('thead'),
       mapTBody = highed.dom.cr('tbody'),
+      geojsonBtn = highed.dom.btn('Save', 'highed-map-geojson-btn highed-ok-button highed-import-button negative', null),
       options = [{
-        name: 'Country Codes/Names'
+        name: '---'
       }, {
-        name: 'Values'
-      }];
+        name: 'Country Codes/Names',
+        value: 'country_code'
+      }, {
+        name: 'Values',
+        value: 'value'
+      }],
+      selects = [],
+      data = null,
+      toNextPage = null;
   //////////////////////////////////////////////////////////////////////////////
 
-  highed.dom.ap(
-    container, 
+  
+  highed.dom.on(geojsonBtn, 'click', function(ev) {
+
+    var assigns = selects.map(function(s) {
+      return options[s.getSelectedItem().index()];
+    });
+
+    events.emit('HandleMapImport', data, toNextPage, assigns);
+  });
+
+  function init(parent, cb) {
+    toNextPage = cb,
+    container = parent;
+
     highed.dom.ap(
-      mapContainer,
-      mapHeader,
+      container, 
       highed.dom.ap(
-        mapTableContainer, 
+        mapContainer,
+        mapHeader,
         highed.dom.ap(
-          mapTable,
-          mapTHeader, 
-          mapTBody
-        )
+          mapTableContainer, 
+          highed.dom.ap(
+            mapTable,
+            mapTHeader, 
+            mapTBody
+          )
+        ),
+        highed.dom.ap(highed.dom.cr('div', 'highed-map-geojson-btn-container'), geojsonBtn)
       )
-    )
-  );
+    );
+  }
 
   function show(chartData) {
+    data = chartData;
+
     mapContainer.classList += ' active';
     createTable(highed.parseCSV(chartData));
   }
@@ -71,24 +97,41 @@ highed.MapImporter = function(container) {
     var tr = highed.dom.cr('tr');
     var selectsTr = highed.dom.cr('tr');
     
-    data.forEach(function(element){
+    data.forEach(function(element, index) {
       highed.dom.ap(tr, highed.dom.cr('th', 'map-table-label-header', element));
       var select = highed.dom.cr('div');
       var selectDropdown = highed.DropDown(select, 'highed-map-import-dropdown');
 
-      selectDropdown.addItem({
-        id: 0,
-        title: '---',
-      });
-
-
-      options.forEach(function(option, i){
+      options.forEach(function(option, i) {
         selectDropdown.addItem({
-          id: i + 1,
+          id: i,
           title: option.name,
         });
       });
+
       selectDropdown.selectByIndex(0);
+
+      if(index === 0) selectDropdown.selectByIndex(1);
+      else if (index === data.length - 1) selectDropdown.selectByIndex(options.length - 1);
+      
+      selectDropdown.on('Change', function(item) {
+        var selectedId = item.id();
+
+        var hasSelected = selects.some(function(s) {
+          return (selectedId !== 0 && s !== item && selectedId === s.previousValue);
+        });
+
+        if (selectDropdown.previousValue === item.id()) return;
+        if (hasSelected) {
+          alert("This value has already been assigned to another column. Clear that column first before assigning to this one.");
+          selectDropdown.selectById(selectDropdown.previousValue);
+          return;
+        }
+        selectDropdown.previousValue = selectDropdown.getSelectedItem().id();        
+      });
+
+      selectDropdown.previousValue = selectDropdown.getSelectedItem().id();
+      selects.push(selectDropdown);
 
       highed.dom.ap(selectsTr, highed.dom.ap(highed.dom.cr('th', ''), select));
     });
@@ -109,11 +152,11 @@ highed.MapImporter = function(container) {
       });
       highed.dom.ap(mapTBody, tr);      
     });
-
   }
 
   return {
     on: events.on,
-    show: show
+    show: show,
+    init: init
   };
 };

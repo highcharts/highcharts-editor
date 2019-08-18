@@ -261,16 +261,6 @@ highed.meta.charttype = {
     map: {
         'values': null,
         'labels': null,
-        'index': {
-            'name': "Index",
-            'desc': 'Index',
-            'default': 'B',
-            'value': 'B',
-            'mandatory': true,
-            'isData': true,
-            'linkedTo': 'x',
-            'rawValue': [1]
-        },
         'country_code': {
             'name': "Country Code",
             'desc': 'The country code',
@@ -296,16 +286,6 @@ highed.meta.charttype = {
     mapbubble: {
         'values': null,
         'labels': null,
-        'index': {
-            'name': "Index",
-            'desc': 'Index',
-            'default': 'B',
-            'value': 'B',
-            'mandatory': true,
-            'isData': true,
-            'linkedTo': 'x',
-            'rawValue': [1]
-        },
         'country_code': {
             'name': "Country Code",
             'desc': 'The country code',

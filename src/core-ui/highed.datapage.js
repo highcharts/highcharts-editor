@@ -676,6 +676,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
     assignDataPanel.restart();
   });
 
+  dataTable.on('SetupAssignData', function(assigns) {
+    assignDataPanel.setValues(assigns);
+  })
+
   dataTable.on('ClearSeries', function() {
     var options = chartPreview.options.getCustomized();
     options.series = [];

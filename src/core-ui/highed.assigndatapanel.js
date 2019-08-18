@@ -677,6 +677,19 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass, chartType) {
     });
   }
 
+  function setValues(values) { //For Maps import data
+    values.forEach(function(value, index) {
+      if (value.value) {
+        var letter = getLetterFromIndex(index);
+        options[0][value.value].previousValue = null;
+        options[0][value.value].value = letter;
+        options[0][value.value].rawValue = [index];
+      }
+    });
+    resetDOM();
+    events.emit('RedrawGrid', true);
+  }
+
   ////////////////////////////////////////////////////////////////////////////////
       
   highed.dom.ap(selectContainer, addNewSeriesBtn, deleteSeriesBtn, toggleHideCellsBtn);
@@ -785,6 +798,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass, chartType) {
     disable: disable,
     getStatus: getStatus,
     getElement: getElement,
-    restart: restart
+    restart: restart,
+    setValues: setValues
   };
 };

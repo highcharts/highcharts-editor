@@ -363,6 +363,7 @@ highed.DataTable = function(parent, attributes, chartType) {
     inCopyOverCellMode = false;
     moveToColumn = null,
     dragHeaderMode = false,
+    mapImporter = highed.MapImporter(),
     globalContextMenu = highed.ContextMenu([
       {
         title: "Insert Row Above",
@@ -503,9 +504,8 @@ highed.DataTable = function(parent, attributes, chartType) {
       clear();
       //events.emit('ClearSeriesForImport');
       if (chartType === 'Map') {
-        mapImporter.show(e.target.result);
+        mapImporter.show(e.target.result, cb);
       } else loadCSV({ csv: e.target.result }, null, true, cb);
-      
     };
 
     reader.readAsText(f);
@@ -2149,7 +2149,6 @@ highed.DataTable = function(parent, attributes, chartType) {
     importModal.hide();
 
     surpressChangeEvents = true;
-
     rawCSV = data.csv;
 
     if (data && data.csv) {
@@ -2389,6 +2388,14 @@ highed.DataTable = function(parent, attributes, chartType) {
   }
 
   ////////////////////////////////////////////////////////////////////////////
+
+  mapImporter.on('HandleMapImport', function(data, toNextPage, assigns) {
+    loadCSV({ csv: data }, null, false, function() {
+      events.emit('SetupAssignData', assigns);
+      toNextPage();
+    });
+  });
+
   importer.on('ExportComma', function(data) {
     highed.emit('UIAction', 'ExportComma');
     highed.download('data.csv', toCSV(','), 'application/csv');
@@ -3151,8 +3158,9 @@ highed.DataTable = function(parent, attributes, chartType) {
         gSheetContainer = createGSheetContainer(toNextPage),
         liveContainer = createLiveDataContainer(toNextPage),
         sampleDataContainer = createSampleData(toNextPage, loading);
-        cutAndPasteContainer = createCutAndPasteContainer(toNextPage),
-        mapImporter = highed.MapImporter(container);
+        cutAndPasteContainer = createCutAndPasteContainer(toNextPage);
+
+        mapImporter.init(container, toNextPage);
 
     var buttons = [{ title: 'Connect Google Sheet', linkedTo: gSheetContainer}, 
                    { title: 'Import Live Data', linkedTo: liveContainer, height: 321}, 
