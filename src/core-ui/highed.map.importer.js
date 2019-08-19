@@ -44,14 +44,18 @@ highed.MapImporter = function() {
         name: '---'
       }, {
         name: 'Country Codes/Names',
-        value: 'country_code'
+        value: 'country_code',
+        mandatory: true
       }, {
         name: 'Values',
-        value: 'value'
+        value: 'value',
+        mandatory: true
       }],
       selects = [],
       data = null,
-      toNextPage = null;
+      toNextPage = null,
+      mapData = null,
+      parsedData = null;
   //////////////////////////////////////////////////////////////////////////////
 
   
@@ -60,8 +64,42 @@ highed.MapImporter = function() {
     var assigns = selects.map(function(s) {
       return options[s.getSelectedItem().index()];
     });
+    //TODO: check if mandatory fields have been assigned before continuing
 
-    events.emit('HandleMapImport', data, toNextPage, assigns);
+    var codeIndex = assigns.findIndex(function(a) {
+      return a.value && a.value === 'country_code'
+    });
+
+    //Convert codes to hc-key
+
+    var isCode2 = parsedData.every(function(d) { return d[codeIndex].length === 2}),
+        isCode3,
+        linkedCodes = [];
+
+    if (!isCode2) isCode3 = parsedData.every(function(d) { return d[codeIndex].length === 3});
+
+    parsedData.forEach(function(d, index) {
+      var code = d[codeIndex];
+
+      // iso-a2, iso-a3, name (Africa)
+      //hc-key, hc-a2, name  (US)
+
+      mapData.forEach(function(mData) {
+        if (mData.properties) {
+          if ( (isCode2 && 
+              ((mData.properties['iso-a2'] && mData.properties['iso-a2'] === code) || 
+              (mData.properties['hc-a2'] && mData.properties['hc-a2'] === code))) || 
+              (isCode3 && (mData.properties['iso-a3'] && mData.properties['iso-a3'] === code)) ) {
+            parsedData[index][codeIndex] = mData.properties.name;
+            linkedCodes.push(mData.properties['hc-key']);
+          }
+        }
+      })
+    });
+
+    events.emit('HandleMapImport', parsedData.map(function(cols) {
+      return cols.join(',');
+    }).join('\n'), linkedCodes, toNextPage, assigns);
   });
 
   function init(parent, cb) {
@@ -88,9 +126,10 @@ highed.MapImporter = function() {
 
   function show(chartData) {
     data = chartData;
+    parsedData = highed.parseCSV(chartData);
 
     mapContainer.classList += ' active';
-    createTable(highed.parseCSV(chartData));
+    createTable(parsedData);
   }
 
   function createHeaders(data) {
@@ -154,9 +193,14 @@ highed.MapImporter = function() {
     });
   }
 
+  function setMap(map) {
+    mapData = map;
+  }
+
   return {
     on: events.on,
     show: show,
-    init: init
+    init: init,
+    setMap: setMap
   };
 };

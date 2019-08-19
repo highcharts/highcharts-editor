@@ -152,7 +152,7 @@ highed.MapSelector = function(chartPreview, chartType) {
               events.emit('LoadMapData', data.features);
               if (toNextPage) toNextPage();
             } else {
-              // Dont have keys, find out from user which they are and use them instead.
+              // Dont have default keys, find out from user which they are and use them instead.
               var keys = Object.keys(data.features[0].properties);
               highed.dom.on(geojsonBtn, 'click', function(ev) {
                 events.emit('LoadMapData', data.features, document.querySelector('input[name="code"]:checked').value, document.querySelector('input[name="country"]:checked').value);

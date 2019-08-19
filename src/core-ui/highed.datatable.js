@@ -2389,8 +2389,18 @@ highed.DataTable = function(parent, attributes, chartType) {
 
   ////////////////////////////////////////////////////////////////////////////
 
-  mapImporter.on('HandleMapImport', function(data, toNextPage, assigns) {
+  mapImporter.on('HandleMapImport', function(data, linkedCodes, toNextPage, assigns) {
     loadCSV({ csv: data }, null, false, function() {
+
+      linkedCodes.forEach(function(data, index) {
+        rows[index].columns[0].setHiddenValue(data.toLowerCase());
+      });
+
+      rows.forEach(function(row) {
+        row.columns[0].setDisabled(true);
+      });
+
+
       events.emit('SetupAssignData', assigns);
       toNextPage();
     });
@@ -3279,6 +3289,7 @@ highed.DataTable = function(parent, attributes, chartType) {
       row.columns[0].setDisabled(true);
     });
 
+    mapImporter.setMap(mapData);
   }
 
   function getMapValueFromCode(key, assignedValue) { // TODO: Use assigned value rather than fixed index
