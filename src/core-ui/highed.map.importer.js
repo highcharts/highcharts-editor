@@ -74,7 +74,8 @@ highed.MapImporter = function() {
 
     var isCode2 = parsedData.every(function(d) { return d[codeIndex].length === 2}),
         isCode3,
-        linkedCodes = [];
+        linkedCodes = [],
+        failedCodes = [];
 
     if (!isCode2) isCode3 = parsedData.every(function(d) { return d[codeIndex].length === 3});
 
@@ -83,7 +84,8 @@ highed.MapImporter = function() {
 
       // iso-a2, iso-a3, name (Africa)
       //hc-key, hc-a2, name  (US)
-
+      
+      var found = false;
       mapData.forEach(function(mData) {
         if (mData.properties) {
           if ( (isCode2 && 
@@ -92,11 +94,27 @@ highed.MapImporter = function() {
               (isCode3 && (mData.properties['iso-a3'] && mData.properties['iso-a3'] === code)) ) {
             parsedData[index][codeIndex] = mData.properties.name;
             linkedCodes.push(mData.properties['hc-key']);
+            found = true;
+            return;
           }
         }
       })
+
+      if (!found) {
+        failedCodes.push({
+          code: code, 
+          index: index
+        });
+      }
     });
 
+    if (failedCodes.length > 0) {
+      failedCodes.forEach(function(cells) {
+        mapTable.children[1].children[cells.index].classList += ' highed-map-import-failed';
+      })
+      if (!confirm("There are incompatible values in your dataset. Are you sure you would like to continue?")) return;
+    }
+    
     events.emit('HandleMapImport', parsedData.map(function(cols) {
       return cols.join(',');
     }).join('\n'), linkedCodes, toNextPage, assigns);
