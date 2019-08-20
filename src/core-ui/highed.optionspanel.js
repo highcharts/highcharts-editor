@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016-2018, Highsoft
+Copyright (c) 2016-2019, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -25,7 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // @format
 
-highed.OptionsPanel = function(parent, attr) {
+highed.OptionsPanel = function(parent, chartType) {
   var events = highed.events(),
     container = highed.dom.cr(
       'div',
@@ -46,6 +46,9 @@ highed.OptionsPanel = function(parent, attr) {
   }
 
   function addOption(option, id) {
+    
+    if (id === 'templates' && chartType === 'Map') return;
+
     var btn = highed.dom.cr(
       'a',
       'highed-optionspanel-button ' + (id === 'data' ? 'active' : ''), 

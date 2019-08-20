@@ -72,16 +72,16 @@ highed.MapImporter = function() {
 
     //Convert codes to hc-key
 
-    var isCode2 = parsedData.every(function(d) { return d[codeIndex].length === 2}),
+    var isCode2 = parsedData.every(function(d, index) { return index === 0 || d[codeIndex].length === 2}),
         isCode3,
         linkedCodes = [],
         failedCodes = [];
 
-    if (!isCode2) isCode3 = parsedData.every(function(d) { return d[codeIndex].length === 3});
+    if (!isCode2) isCode3 = parsedData.every(function(d, index) { return index === 0 || d[codeIndex].length === 3});
 
     parsedData.forEach(function(d, index) {
+      if (index === 0) return;
       var code = d[codeIndex];
-
       // iso-a2, iso-a3, name (Africa)
       //hc-key, hc-a2, name  (US)
       
@@ -92,13 +92,16 @@ highed.MapImporter = function() {
               ((mData.properties['iso-a2'] && mData.properties['iso-a2'] === code) || 
               (mData.properties['hc-a2'] && mData.properties['hc-a2'] === code))) || 
               (isCode3 && (mData.properties['iso-a3'] && mData.properties['iso-a3'] === code)) ) {
-            parsedData[index][codeIndex] = mData.properties.name;
-            linkedCodes.push(mData.properties['hc-key']);
+            parsedData[index][codeIndex] = mData.properties[mData.properties.hcname];
+            linkedCodes.push({
+              code: mData.properties[mData.properties.hccode],
+              name: mData.properties[mData.properties.hcname]
+            });
             found = true;
             return;
           }
         }
-      })
+      });
 
       if (!found) {
         failedCodes.push({
@@ -110,11 +113,11 @@ highed.MapImporter = function() {
 
     if (failedCodes.length > 0) {
       failedCodes.forEach(function(cells) {
-        mapTable.children[1].children[cells.index].classList += ' highed-map-import-failed';
+        mapTable.children[1].children[cells.index - 1].classList += ' highed-map-import-failed';
       })
       if (!confirm("There are incompatible values in your dataset. Are you sure you would like to continue?")) return;
     }
-    
+
     events.emit('HandleMapImport', parsedData.map(function(cols) {
       return cols.join(',');
     }).join('\n'), linkedCodes, toNextPage, assigns);
@@ -200,11 +203,13 @@ highed.MapImporter = function() {
     mapTHeader.innerHTML = mapTBody.innerHTML = '';
     
     createHeaders(data[0]);
-    data.shift();
+    
+    //data.shift();
 
-    data.forEach(function(d) {
+    data.forEach(function(d,index) {
+      if (index === 0) return;
       var tr = highed.dom.cr('tr');
-      d.forEach(function(element){
+      d.forEach(function(element) {
         highed.dom.ap(tr, highed.dom.cr('td', '', element));
       });
       highed.dom.ap(mapTBody, tr);      

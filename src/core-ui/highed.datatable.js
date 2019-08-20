@@ -2391,15 +2391,13 @@ highed.DataTable = function(parent, attributes, chartType) {
 
   mapImporter.on('HandleMapImport', function(data, linkedCodes, toNextPage, assigns) {
     loadCSV({ csv: data }, null, false, function() {
-
-      linkedCodes.forEach(function(data, index) {
-        rows[index].columns[0].setHiddenValue(data.toLowerCase());
-      });
-
       rows.forEach(function(row) {
+        var code = linkedCodes.filter(function(v) { return v.name === row.columns[0].value()});
+        if (code && code.length > 0) {
+          row.columns[0].setHiddenValue(code[0].code.toLowerCase());
+        }
         row.columns[0].setDisabled(true);
       });
-
 
       events.emit('SetupAssignData', assigns);
       toNextPage();

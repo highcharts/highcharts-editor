@@ -191,7 +191,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
       'highed-optionspanel-buttons highed-optionspanel-res highed-box-size highed-transition'
     ),
     defaultPage,
-    panel = highed.OptionsPanel(workspaceBody),
+    panel = highed.OptionsPanel(workspaceBody, chartType),
     toolbar = highed.Toolbar(splitter.top),
     // Chart preview
     highedChartContainer = highed.dom.cr('div', 'highed-chart-container highed-transition'),
@@ -778,7 +778,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     }
   });
 
-  chartPreview.on('LoadProject', function (projectData, aggregated) { 
+  chartPreview.on('LoadProject', function (projectData, aggregated) {
     dataPage.loadProject(projectData, aggregated);
     templatePage.selectSeriesTemplate(0, projectData);
   });
