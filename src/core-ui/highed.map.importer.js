@@ -44,7 +44,7 @@ highed.MapImporter = function() {
         name: '---'
       }, {
         name: 'Country Codes/Names',
-        value: 'country_code',
+        value: 'labels',
         mandatory: true
       }, {
         name: 'Values',
@@ -67,7 +67,7 @@ highed.MapImporter = function() {
     //TODO: check if mandatory fields have been assigned before continuing
 
     var codeIndex = assigns.findIndex(function(a) {
-      return a.value && a.value === 'country_code'
+      return a.value && a.value === 'labels'
     });
 
     //Convert codes to hc-key

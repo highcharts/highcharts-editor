@@ -731,7 +731,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
   });
 
   function getMapValueFromCode(key) {
-    return dataTable.getMapValueFromCode(key);
+    return dataTable.getMapValueFromCode(key, assignDataPanel.getMergedLabelAndData());
   }
 
   return {

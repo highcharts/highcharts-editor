@@ -3290,11 +3290,10 @@ highed.DataTable = function(parent, attributes, chartType) {
     mapImporter.setMap(mapData);
   }
 
-  function getMapValueFromCode(key, assignedValue) { // TODO: Use assigned value rather than fixed index
-    var value;
+  function getMapValueFromCode(key, assignedValue) {
     rows.some(function(row) {
       if (row.columns[0].element.children[0].getAttribute('data-value') === key) {
-        value = row.columns[1];
+        value = row.columns[assignedValue.dataColumns[0]];
         return true;
       }
     });

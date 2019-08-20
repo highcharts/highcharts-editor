@@ -260,8 +260,7 @@ highed.meta.charttype = {
     },
     map: {
         'values': null,
-        'labels': null,
-        'country_code': {
+        'labels': {
             'name': "Country Code",
             'desc': 'The country code',
             'default': 'A',
@@ -285,8 +284,7 @@ highed.meta.charttype = {
     },
     mapbubble: {
         'values': null,
-        'labels': null,
-        'country_code': {
+        'labels': {
             'name': "Country Code",
             'desc': 'The country code',
             'default': 'A',
