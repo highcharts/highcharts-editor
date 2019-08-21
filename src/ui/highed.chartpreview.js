@@ -46,12 +46,6 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
           title: {
             text: 'Chart Title'
           },
-
-          mapNavigation: {
-              enabled: true,
-              enableDoubleClickZoomTo: true
-          },
-  
           subtitle: {
             text: ''
           },
@@ -171,6 +165,18 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
     if (planCode && planCode === 1) {
       stockTools.hide();
     }
+
+    if (chartType === 'Map') {
+      highed.merge(properties, 
+        {
+          mapNavigation: {
+            enabled: true,
+            enableDoubleClickZoomTo: true
+          }
+        }
+      );
+    }
+
 
   stockTools.on('ShowAnnotationModal', function(options) {
       events.emit('ShowAnnotationModal', options);

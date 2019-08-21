@@ -40,9 +40,9 @@ highed.MapImporter = function() {
       mapTHeader = highed.dom.cr('thead'),
       mapTBody = highed.dom.cr('tbody'),
       geojsonBtn = highed.dom.btn('Save', 'highed-map-geojson-btn highed-ok-button highed-import-button negative', null),
-      options = [{
+      options = [{ //TODO: Take these from assign data
         name: '---'
-      }, {
+      }, { 
         name: 'Country Codes/Names',
         value: 'labels',
         mandatory: true
@@ -59,7 +59,7 @@ highed.MapImporter = function() {
   //////////////////////////////////////////////////////////////////////////////
 
   
-  highed.dom.on(geojsonBtn, 'click', function(ev) {
+  highed.dom.on(geojsonBtn, 'click', function(ev) { //TODO: Optimize this whole thing
 
     var assigns = selects.map(function(s) {
       return options[s.getSelectedItem().index()];
@@ -92,13 +92,15 @@ highed.MapImporter = function() {
               ((mData.properties['iso-a2'] && mData.properties['iso-a2'] === code) || 
               (mData.properties['hc-a2'] && mData.properties['hc-a2'] === code))) || 
               (isCode3 && (mData.properties['iso-a3'] && mData.properties['iso-a3'] === code)) ) {
+
             parsedData[index][codeIndex] = mData.properties[mData.properties.hcname];
-            linkedCodes.push({
+/*            linkedCodes.push({
               code: mData.properties[mData.properties.hccode],
               name: mData.properties[mData.properties.hcname]
-            });
+            });*/
             found = true;
             return;
+
           }
         }
       });
@@ -111,6 +113,28 @@ highed.MapImporter = function() {
       }
     });
 
+    var newData = [];
+    var length = parsedData[0].length;
+
+    mapData.forEach(function(data, index) {
+      if (data.properties.name) {
+        var oldData = parsedData.filter(function(d){ return d[0] === data.properties.name; });
+
+        if (oldData && oldData.length > 0) {
+          newData.push(oldData);
+        } else {
+          //Not part of data but in map collection. Create vals for it.
+          var arr = Array(length).fill(null, 0);
+          arr[0] = data.properties.name;
+          newData.push(arr);
+        }
+        linkedCodes.push({
+          code: data.properties[data.properties.hccode],
+          name: data.properties[data.properties.hcname]
+        });
+      };
+    });
+
     if (failedCodes.length > 0) {
       failedCodes.forEach(function(cells) {
         mapTable.children[1].children[cells.index - 1].classList += ' highed-map-import-failed';
@@ -118,7 +142,7 @@ highed.MapImporter = function() {
       if (!confirm("There are incompatible values in your dataset. Are you sure you would like to continue?")) return;
     }
 
-    events.emit('HandleMapImport', parsedData.map(function(cols) {
+    events.emit('HandleMapImport', newData.map(function(cols) {
       return cols.join(',');
     }).join('\n'), linkedCodes, toNextPage, assigns);
   });
@@ -203,9 +227,6 @@ highed.MapImporter = function() {
     mapTHeader.innerHTML = mapTBody.innerHTML = '';
     
     createHeaders(data[0]);
-    
-    //data.shift();
-
     data.forEach(function(d,index) {
       if (index === 0) return;
       var tr = highed.dom.cr('tr');
