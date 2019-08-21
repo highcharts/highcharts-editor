@@ -116,6 +116,7 @@ highed.MapImporter = function() {
     var newData = [];
     var length = parsedData[0].length;
 
+    newData.push(parsedData[0]); // Headers
     mapData.forEach(function(data, index) {
       if (data.properties.name) {
         var oldData = parsedData.filter(function(d){ return d[0] === data.properties.name; });
