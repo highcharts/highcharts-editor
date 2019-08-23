@@ -180,7 +180,7 @@ function parseCSV(inData, delimiter) {
  *  @param {domnode} parent - the node to attach to
  *  @param {object} attributes - the properties
  */
-highed.DataTable = function(parent, attributes, chartType) {
+highed.DataTable = function(parent, attributes) {
   var properties = highed.merge(
       {
         checkable: true,
@@ -503,7 +503,7 @@ highed.DataTable = function(parent, attributes, chartType) {
     reader.onload = function(e) {
       clear();
       //events.emit('ClearSeriesForImport');
-      if (chartType === 'Map') {
+      if (highed.chartType === 'Map') {
         mapImporter.show(e.target.result, cb);
       } else loadCSV({ csv: e.target.result }, null, true, cb);
     };
@@ -673,13 +673,13 @@ highed.DataTable = function(parent, attributes, chartType) {
 
   ////////////////////////////////////////////////////////////////////////////
   function Column(row, colNumber, val, keyVal) {
-
-    var value = typeof val === 'undefined' || typeof val === 'object' || (val === 'null') ? null : val, //object check for ie11/edge
+    var value = typeof val === 'undefined' || typeof val === 'object' || (val === 'null') || (highed.chartType === 'Map' && val === 0) ? null : val, //object check for ie11/edge
       col = highed.dom.cr('td', 'highed-dtable-cell'),
       colVal = highed.dom.cr('div', 'highed-dtable-col-val', value),
       input = highed.dom.cr('input'),
       disabled = false,
       exports = {};
+
     function goLeft() {
       if (colNumber >= 1) {
         row.columns[colNumber - 1].focus();
@@ -1995,7 +1995,7 @@ highed.DataTable = function(parent, attributes, chartType) {
   function toCSV(delimiter, quoteStrings, section) {
     delimiter = delimiter || ','; 
 
-    if (chartType !== 'Map') 
+    if (highed.chartType !== 'Map') 
       return toData(quoteStrings, true, section)
         .map(function(cols) {
           return cols.join(delimiter);
@@ -3192,7 +3192,7 @@ highed.DataTable = function(parent, attributes, chartType) {
         type: 'text',
         accept: '.csv',
         success: function(info) {
-          if (chartType === 'Map') {
+          if (highed.chartType === 'Map') {
             mapImporter.show();
           }
           else {

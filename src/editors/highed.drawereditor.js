@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.DrawerEditor = function(parent, options, planCode, chartType) {
+highed.DrawerEditor = function(parent, options, planCode, chartType ) {
   var events = highed.events(),
     // Main properties
     properties = highed.merge(
@@ -191,7 +191,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
       'highed-optionspanel-buttons highed-optionspanel-res highed-box-size highed-transition'
     ),
     defaultPage,
-    panel = highed.OptionsPanel(workspaceBody, chartType),
+    panel = highed.OptionsPanel(workspaceBody),
     toolbar = highed.Toolbar(splitter.top),
     // Chart preview
     highedChartContainer = highed.dom.cr('div', 'highed-chart-container highed-transition'),
@@ -210,12 +210,12 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     ),
     chartPreview = highed.ChartPreview(chartContainer, {
       defaultChartOptions: properties.defaultChartOptions
-    }, planCode, chartType),
+    }, planCode),
     suppressWarning = false,
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
     payupModal = highed.SubscribeModal(),
     annotationModal = highed.AnnotationModal(),
-    mapSelector = highed.MapSelector(chartPreview, chartType),
+    mapSelector = highed.MapSelector(chartPreview),
     customizePage = highed.CustomizePage(
       splitter.bottom,
       highed.merge(
@@ -240,8 +240,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
       ),
       chartPreview,
       highedChartContainer,
-      builtInOptions.data,
-      chartType
+      builtInOptions.data
     ),
     templatePage = highed.TemplatePage(     
       splitter.bottom,
@@ -253,8 +252,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
       ),
       chartPreview,
       highedChartContainer,
-      builtInOptions.templates,
-      chartType
+      builtInOptions.templates
     );
     createChartPage = highed.ChartWizard(
       splitter.bottom,
@@ -265,8 +263,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
           desktop: 95
         }
       },
-      chartPreview,
-      chartType
+      chartPreview
     ),
     changePlanBtn = highed.dom.cr('button', 'highed-import-button', "Choose a plan"),
     createAccountLink = highed.dom.cr('a', '', 'Create one')
@@ -370,6 +367,8 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     helpModal = highed.HelpModal(builtInOptions.data.help || [])
     mapModal = highed.MapModal(highedChartContainer, dataPage);
 
+  highed.chartType = chartType;
+
   highed.dom.on(helpIcon, 'click', showHelp);
   highed.dom.ap(splitter.bottom, highed.dom.ap(workspaceBody, workspaceRes, workspaceButtons));
 
@@ -400,6 +399,11 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     mapModal.editMapValues(data)
   });
 
+  chartPreview.on('SetChartAsMap', function() {
+    chartType = 'Map';
+    highed.chartType = chartType;
+    createFeatures();
+  });
   /**
    * Creates the features defined in property.features
    * Call this after changing properties.features to update the options.
@@ -767,6 +771,11 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     chartPreview.updateMapCodes(data);
   });
 
+  chartPreview.on('LoadMapData', function(data, code, name) {
+    dataPage.loadMapData(data, code, name);
+    chartPreview.updateMapCodes(data);
+  });
+
   dataPage.on('GoToTemplatePage', function() {
     const templates = panel.getOptions().templates;
     if (templates) templates.click();
@@ -934,7 +943,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
   // Create the features
   createFeatures();
   createToolbar();
-  //showChartWizard();
+ // showChartWizard();
 
   resize();
 

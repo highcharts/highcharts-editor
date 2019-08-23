@@ -25,7 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // @format
 
-highed.AssignDataPanel = function(parent, dataTable, extraClass, chartType) {
+highed.AssignDataPanel = function(parent, dataTable, extraClass) {
 
   var defaultOptions = {
     'labels': {
@@ -338,12 +338,14 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass, chartType) {
 
   function addSerie(seriesType, redrawDOM, skipSelect) {
     var type = seriesType;
-    if (!type) type = (chartType === 'Map' ? 'map' : 'Line');
+
+    if (!type) type = (highed.chartType === 'Map' ? 'map' : 'Line');
     
     seriesTypeSelect.addItems([{
       id: options.length,
       title: 'Series ' + (options.length + 1) + ' - ' + capitalizeFirstLetter(type)
     }]);
+
     if (maxColumnLength + 1 < columnLength) {
       maxColumnLength++;
     }
@@ -556,7 +558,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass, chartType) {
 
     labelInput = highed.DropDown(valueContainer, 'highed-assigndata-dropdown');
 
-    if (chartType === 'Map') labelInput.disable();
+    if (highed.chartType === 'Map') labelInput.disable();
     if(!option.mandatory){
       labelInput.addItem({
         id: '',

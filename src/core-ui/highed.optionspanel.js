@@ -25,7 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // @format
 
-highed.OptionsPanel = function(parent, chartType) {
+highed.OptionsPanel = function(parent) {
   var events = highed.events(),
     container = highed.dom.cr(
       'div',
@@ -47,7 +47,7 @@ highed.OptionsPanel = function(parent, chartType) {
 
   function addOption(option, id) {
     
-    if (id === 'templates' && chartType === 'Map') return;
+    if (id === 'templates' && highed.chartType === 'Map') return;
 
     var btn = highed.dom.cr(
       'a',

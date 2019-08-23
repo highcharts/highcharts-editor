@@ -88,16 +88,15 @@ highed.MapImporter = function() {
       var found = false;
       mapData.forEach(function(mData) {
         if (mData.properties) {
+          
           if ( (isCode2 && 
               ((mData.properties['iso-a2'] && mData.properties['iso-a2'] === code) || 
               (mData.properties['hc-a2'] && mData.properties['hc-a2'] === code))) || 
-              (isCode3 && (mData.properties['iso-a3'] && mData.properties['iso-a3'] === code)) ) {
+              (isCode3 && (mData.properties['iso-a3'] && mData.properties['iso-a3'] === code)) ||
+              ((!isCode3 && !isCode2) && mData.properties[mData.properties.hcname] === code) ) {
 
             parsedData[index][codeIndex] = mData.properties[mData.properties.hcname];
-/*            linkedCodes.push({
-              code: mData.properties[mData.properties.hccode],
-              name: mData.properties[mData.properties.hcname]
-            });*/
+
             found = true;
             return;
 
@@ -119,6 +118,7 @@ highed.MapImporter = function() {
     newData.push(parsedData[0]); // Headers
     mapData.forEach(function(data, index) {
       if (data.properties.name) {
+        
         var oldData = parsedData.filter(function(d){ return d[0] === data.properties.name; });
 
         if (oldData && oldData.length > 0) {
@@ -142,7 +142,7 @@ highed.MapImporter = function() {
       })
       if (!confirm("There are incompatible values in your dataset. Are you sure you would like to continue?")) return;
     }
-
+    
     events.emit('HandleMapImport', newData.map(function(cols) {
       return cols.join(',');
     }).join('\n'), linkedCodes, toNextPage, assigns);
@@ -173,7 +173,6 @@ highed.MapImporter = function() {
   function show(chartData) {
     data = chartData;
     parsedData = highed.parseCSV(chartData);
-
     mapContainer.classList += ' active';
     createTable(parsedData);
   }

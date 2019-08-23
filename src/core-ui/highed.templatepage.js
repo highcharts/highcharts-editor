@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props, chartType) {
+highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props) {
   var events = highed.events(),
     // Main properties
     properties = highed.merge(
@@ -92,7 +92,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props,
     iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + props.icon;
 
     templatesContainer.innerHTML = '';
-    templates = highed.ChartTemplateSelector(templatesContainer, chartPreview, chartType);
+    templates = highed.ChartTemplateSelector(templatesContainer, chartPreview);
     helpModal = highed.HelpModal(props.help || []);
 
     templates.on('Select', function(template) {
@@ -186,9 +186,9 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props,
   }
 
   function createMostPopularTemplates(toNextPage, setLoading) {
-    const templates = chartType === 'Map' ? highed.templates.getCatObj('Map') : highed.templates.getCatArray(),
+    const templates = highed.chartType === 'Map' ? highed.templates.getCatObj('Map') : highed.templates.getCatArray(),
           container = highed.dom.cr('div', 'highed-toolbox-templates-container'),
-          usingMaps = (chartType === 'Map');
+          usingMaps = (highed.chartType === 'Map');
 
     const mostPopular = highed.templates.getMostPopular();
 

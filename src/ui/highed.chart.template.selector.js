@@ -42,7 +42,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @emits Hover - when hovering a template
  *    > {object} - the template definition
  */
-highed.ChartTemplateSelector = function(parent, chartPreview, chartType) {
+highed.ChartTemplateSelector = function(parent, chartPreview) {
   var events = highed.events(),
     container = highed.dom.cr('div', 'highed-chart-templates'),
     //splitter = highed.HSplitter(container, { leftWidth: 30 }),
@@ -280,7 +280,7 @@ highed.ChartTemplateSelector = function(parent, chartPreview, chartType) {
 
   /* Build the UI */
   function build() {
-    templateTypeSelect.addItems(chartType === 'Map' ? highed.templates.getCatObj('Map') : highed.templates.getCatArray().filter(function(type){ return type.id !== 'Map'}));
+    templateTypeSelect.addItems(highed.chartType === 'Map' ? highed.templates.getCatObj('Map') : highed.templates.getCatArray().filter(function(type){ return type.id !== 'Map'}));
     templateTypeSelect.selectByIndex(0); // TODO: Need to change this later
 
     //highed.dom.ap(container, templateTypeSelect);

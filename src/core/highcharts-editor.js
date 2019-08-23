@@ -36,6 +36,7 @@ var highed = {
     chartTemplates: {},
     fonts: []
   },
+  chartType: null,
   plugins: {},
 
   resources: {
@@ -978,6 +979,7 @@ var highed = {
   highed.onTablet = function() {
     return isOnTablet;
   };
+
 
   function checkIfPhone() {
     var check = false;

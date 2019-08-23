@@ -35,7 +35,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 5) Customize
  */
 
-highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartType) {
+highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
   var events = highed.events(),
     builtInOptions = [
       {
@@ -100,7 +100,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
 
     function init(dataPage,templatePage, customizePage, mapSelector) {
 
-      if (chartType === 'Map') {
+      if (highed.chartType === 'Map') {
         builtInOptions.splice(2, 0, {
           id: 3,
           title: 'Choose Map',

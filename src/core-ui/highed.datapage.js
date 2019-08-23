@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.DataPage = function(parent, options, chartPreview, chartFrame, props, chartType) {
+highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   var events = highed.events(),
     // Main properties
     properties = highed.merge(
@@ -84,8 +84,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
           importer: properties.importer
         },
         properties.dataGrid
-      ),
-      chartType
+      )
     ),   
     addRowInput = highed.dom.cr('input', 'highed-field-input highed-add-row-input'),
     addRowBtn = highed.dom.cr('button', 'highed-import-button highed-ok-button highed-add-row-btn small', 'Add'),
@@ -96,7 +95,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
                   addRowBtn
                 )
               ),
-    assignDataPanel = highed.AssignDataPanel(parent, dataTable, null, chartType),
+    assignDataPanel = highed.AssignDataPanel(parent, dataTable),
     dataImportBtn = highed.dom.cr(
       'button',
       'highed-import-button highed-ok-button highed-sm-button',
@@ -169,7 +168,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
       highed.dom.ap(parent, highed.dom.ap(container, body));
       
       assignDataPanel.init(dataTable.getColumnLength());
-      if (chartType === 'Map') assignDataPanel.disableMaps();
+      if (highed.chartType === 'Map') assignDataPanel.disableMaps();
       expand();
       resizeChart();
     }
@@ -423,7 +422,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
         dataTable.loadCSV({
           csv: projectData.settings.dataProvider.csv
         }, null, null, function() {
-            if (chartType !== 'Map') assignDataPanel.enable();
+            if (highed.chartType !== 'Map') assignDataPanel.enable();
             assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
             assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
             chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
@@ -577,7 +576,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props, cha
   });
 
   dataTable.on('EnableAssignDataPanel', function() {
-    if (chartType !== 'Map') assignDataPanel.enable();
+    if (highed.chartType !== 'Map') assignDataPanel.enable();
   });
 
   dataTable.on('ColumnMoving', function() {

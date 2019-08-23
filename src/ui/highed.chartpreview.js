@@ -39,7 +39,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @param attributes {object} - the settings
  *    > defaultChartOptions {object} - the default chart options
  */
-highed.ChartPreview = function(parent, attributes, planCode, chartType) {
+highed.ChartPreview = function(parent, attributes, planCode) {
   var properties = highed.merge(
       {
         defaultChartOptions: {
@@ -166,7 +166,7 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
       stockTools.hide();
     }
 
-    if (chartType === 'Map') {
+    if (highed.chartType === 'Map') {
       highed.merge(properties, 
         {
           mapNavigation: {
@@ -367,11 +367,12 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
     // }
 
     try {
-      const chartConstr = (chartType === 'Map' ? 'Map' : (constr.some(function(a) {
+      const chartConstr = (highed.chartType === 'Map' ? 'Map' : (constr.some(function(a) {
         return a === 'StockChart';
       }) ? 'StockChart' : 'Chart'));
 
       options = highed.merge(options, stockTools.getStockToolsToolbarConfig());
+
       chart = new Highcharts[chartConstr](pnode || parent, options);
 
       //This is super ugly.
@@ -1001,8 +1002,27 @@ highed.ChartPreview = function(parent, attributes, planCode, chartType) {
         highed.snackBar('Invalid project');
       }
     }
-    
+
     if (projectData) {
+
+      //Check if a map
+      if (projectData.options && projectData.options.chart && projectData.options.chart.map) {
+        var baseMapPath = "https://code.highcharts.com/mapdata/";
+        events.emit('SetChartAsMap');
+        updateMap(projectData.options.chart.map, baseMapPath + projectData.options.chart.map + '.js', function() {
+          highed.ajax({
+            url: baseMapPath + projectData.options.chart.map + '.geo.json',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+              events.emit('LoadMapData', data.features);
+            },
+            error: function(e) {
+            }
+          })
+        });
+      }
+
       templateOptions = [{}];
       if (projectData.template) {
         if (highed.isArr(projectData.template)) templateOptions = projectData.template;

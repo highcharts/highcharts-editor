@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /** Map selector
  */
 
-highed.MapSelector = function(chartPreview, chartType) {
+highed.MapSelector = function(chartPreview) {
   var events = highed.events(),
       predefinedMaps = highed.dom.cr('div', ''),
       importContainer = highed.dom.cr('div', ''),
@@ -41,7 +41,7 @@ highed.MapSelector = function(chartPreview, chartType) {
 
   function createMapDataSection(toNextPage, cb) {
 
-    if (chartType && chartType === 'Map' && Highcharts) {
+    if (highed.chartType && highed.chartType === 'Map' && Highcharts) {
 
       var baseMapPath = "https://code.highcharts.com/mapdata/",
           mapCount = 0,
@@ -89,7 +89,7 @@ highed.MapSelector = function(chartPreview, chartType) {
                         url: geojsonPath,
                         type: 'GET',
                         dataType: 'json',
-                        success: function(data){
+                        success: function(data) {
                           events.emit('LoadMapData', data.features);
                           if (toNextPage) toNextPage();
                         },
