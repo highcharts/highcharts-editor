@@ -39,11 +39,11 @@ highed.MapSelector = function(chartPreview) {
         selects: [{
           name: '---'
         }, {
-          name: 'Names',
-          value: 'names'
-        }, {
           name: 'Codes',
           value: 'codes'
+        }, {
+          name: 'Names',
+          value: 'names'
         }],
         header: 'Link Values'
       });

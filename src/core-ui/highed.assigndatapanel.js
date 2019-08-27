@@ -680,14 +680,14 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
   }
 
   function setValues(values) { //For Maps import data
-    values.forEach(function(value, index) {
-      if (value.value) {
-        var letter = getLetterFromIndex(index);
-        options[0][value.value].previousValue = null;
-        options[0][value.value].value = letter;
-        options[0][value.value].rawValue = [index];
-      }
+
+    Object.keys(values).forEach(function(key, index) {
+      var letter = getLetterFromIndex(values[key]);
+      options[0][key].previousValue = null;
+      options[0][key].value = letter;
+      options[0][key].rawValue = [values[key]];
     });
+
     resetDOM();
     events.emit('RedrawGrid', true);
   }
