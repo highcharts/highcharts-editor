@@ -1,6 +1,6 @@
 /******************************************************************************
 
-Copyright (c) 2016-2018, Highsoft
+Copyright (c) 2016-2019, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -33,11 +33,20 @@ highed.MapSelector = function(chartPreview) {
       importContainer = highed.dom.cr('div', ''),
       container = highed.dom.cr('div', 'highed-table-dropzone-container'),
       mapSelectorContainer = highed.dom.cr('div'),
+      mapSelectorMapContainer = highed.dom.cr('div', 'highed-map-selector-container'),
       mapSelectorGeojsonContainer = highed.dom.cr('div', 'highed-map-geojson-container'),
-      mapSelectorGeojsonHeader = highed.dom.cr('div', 'highed-map-geojson-header', 'Link Values'),
-      geojsonCodeContainer = highed.dom.cr('div', 'highed-map-geojson-options'),
-      geojsonCountryContainer = highed.dom.cr('div', 'highed-map-geojson-options'),
-      geojsonBtn = highed.dom.btn('Select', 'highed-map-geojson-btn highed-ok-button highed-import-button negative', null);
+      mapTable = highed.MapTable(mapSelectorMapContainer, {
+        selects: [{
+          name: '---'
+        }, {
+          name: 'Names',
+          value: 'names'
+        }, {
+          name: 'Codes',
+          value: 'codes'
+        }],
+        header: 'Link Values'
+      });
 
   function createMapDataSection(toNextPage, cb) {
 
@@ -141,7 +150,7 @@ highed.MapSelector = function(chartPreview) {
                     highed.dom.cr('div', 'highed-toolbox-body-title highed-map-import-geojson-header', 'Import GeoJSON Map'),
                     importInput);
 
-      highed.dom.on(importInput, 'click', function(){
+      highed.dom.on(importInput, 'click', function() {
         highed.readLocalFile({
           type: 'text',
           accept: '.json',
@@ -154,31 +163,20 @@ highed.MapSelector = function(chartPreview) {
             } else {
               // Dont have default keys, find out from user which they are and use them instead.
               var keys = Object.keys(data.features[0].properties);
-              highed.dom.on(geojsonBtn, 'click', function(ev) {
-                events.emit('LoadMapData', data.features, document.querySelector('input[name="code"]:checked').value, document.querySelector('input[name="country"]:checked').value);
+
+              var dataArr = (data.features).slice(0,3).map(function(d) {
+                return Object.keys(d.properties).map(function(key) {
+                  return d.properties[key];
+                })
+              });
+
+              dataArr.unshift(keys);
+              mapTable.createTable(dataArr, function(values) {
+                events.emit('LoadMapData', data.features, dataArr[0][values.codes], dataArr[0][values.names]);
                 if (toNextPage) toNextPage();
               });
-
-              [geojsonCodeContainer, geojsonCountryContainer].forEach(function(parent, index){
-                keys.forEach(function(key, i) {
-                  var radioOption = highed.dom.cr('input');
-                  radioOption.type = 'radio';
-                  radioOption.value = key;
-                  radioOption.name = (index === 0 ? 'code' : 'country');
-                  
-                  if (i === 0) radioOption.checked = true;
-
-                  highed.dom.ap(parent, 
-                                highed.dom.ap(
-                                  highed.dom.cr('div', 'highed-map-radio-option'),
-                                  radioOption,
-                                  highed.dom.cr('span', '', key)
-                                ));
-                });
-              });
-
+              
               mapSelectorGeojsonContainer.classList += ' active';
-
             }
           }
         });
@@ -195,21 +193,7 @@ highed.MapSelector = function(chartPreview) {
                     predefinedMaps,
                     highed.dom.ap(
                       mapSelectorGeojsonContainer,
-                      mapSelectorGeojsonHeader,
-                      highed.dom.ap(
-                        highed.dom.cr('div', 'highed-map-geojson-option-container'),
-                        highed.dom.cr('div', 'highed-map-geojson-option-header', 'Select Code'),
-                        geojsonCodeContainer
-                      ),
-                      highed.dom.ap(
-                        highed.dom.cr('div', 'highed-map-geojson-option-container'),
-                        highed.dom.cr('div', 'highed-map-geojson-option-header', 'Select Name'),
-                        geojsonCountryContainer
-                      ),
-                      highed.dom.ap(
-                        highed.dom.cr('div', 'highed-map-geojson-btn-container'),
-                        geojsonBtn
-                      )
+                      mapSelectorMapContainer,
                     ));
       return container
     }

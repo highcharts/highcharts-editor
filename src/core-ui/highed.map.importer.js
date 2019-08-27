@@ -24,7 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 // @format
-/** Map selector
+/** Map Importer
  */
 
 highed.MapImporter = function() {
@@ -42,7 +42,7 @@ highed.MapImporter = function() {
       geojsonBtn = highed.dom.btn('Save', 'highed-map-geojson-btn highed-ok-button highed-import-button negative', null),
       options = [{ //TODO: Take these from assign data
         name: '---'
-      }, { 
+      }, {
         name: 'Country Codes/Names',
         value: 'labels',
         mandatory: true
@@ -57,10 +57,8 @@ highed.MapImporter = function() {
       mapData = null,
       parsedData = null;
   //////////////////////////////////////////////////////////////////////////////
-
   
   highed.dom.on(geojsonBtn, 'click', function(ev) { //TODO: Optimize this whole thing
-
     var assigns = selects.map(function(s) {
       return options[s.getSelectedItem().index()];
     });
