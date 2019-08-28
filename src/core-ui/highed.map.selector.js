@@ -45,7 +45,8 @@ highed.MapSelector = function(chartPreview) {
           name: 'Names',
           value: 'names'
         }],
-        header: 'Link Values'
+        header: 'Link Values',
+        readOnly: true
       });
 
   function createMapDataSection(toNextPage, cb) {

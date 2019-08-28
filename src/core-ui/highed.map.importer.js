@@ -69,7 +69,7 @@ highed.MapImporter = function() {
     parsedData = highed.parseCSV(chartData);
     mapContainer.classList += ' active';
 
-    mapTable.createTable(parsedData, function(assigns) {
+    mapTable.createTable(parsedData, function(assigns, parsedData) {
       //TODO: check if mandatory fields have been assigned before continuing
   
       var codeIndex = assigns.labels;
@@ -140,11 +140,11 @@ highed.MapImporter = function() {
       });
   
       if (failedCodes.length > 0) {
-        /*
+        
         failedCodes.forEach(function(cells) {
-          mapTable.children[1].children[cells.index - 1].classList += ' highed-map-import-failed';
+          //mapTable.children[1].children[cells.index - 1].classList += ' highed-map-import-failed';
         })
-        if (!confirm("There are incompatible values in your dataset. Are you sure you would like to continue?")) return;*/
+        if (!confirm("There are incompatible values in your dataset. Are you sure you would like to continue?")) return;
       }
       
       events.emit('HandleMapImport', newData.map(function(cols) {

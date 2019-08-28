@@ -40,7 +40,10 @@ highed.MapTable = function(parent, props) {
       mapTBody = highed.dom.cr('tbody'),
       mapBtn = highed.dom.btn('Save', 'highed-map-geojson-btn highed-ok-button highed-import-button negative', null),
       mapOptions = props.selects,
-      selects = [];
+      selects = [],
+      rows = [],
+      mainInput = highed.dom.cr('input'),
+      inputFunc = null;
   //////////////////////////////////////////////////////////////////////////////
 
 
@@ -108,34 +111,89 @@ highed.MapTable = function(parent, props) {
     highed.dom.ap(mapTHeader, selectsTr, tr);
   }
 
+  function createCell(value) {
+    var td = highed.dom.cr('td', '', value);
+
+    if (!props.readOnly) {
+      highed.dom.on(td, 'click', function(){
+      
+        td.innerHTML = '';
+        mainInput = mainInput.cloneNode(true);
+  
+        mainInput.value = value;
+        highed.dom.ap(td, mainInput);
+        mainInput.focus();
+  
+        highed.dom.on(mainInput, 'keyup', function(e) {
+          if (e.keyCode === 13) {
+            td.innerHTML = e.target.value;
+            value = e.target.value;
+          }
+        });
+      });
+    }
+
+    function getVal(){
+      return value;
+    }
+
+    exports = {
+      element: td,
+      value: getVal
+    }
+
+    return exports;
+  }
+
+
+  function createBody(data){
+    data.forEach(function(d,index) {
+      if (index === 0) return;
+      
+      rows[index] = [];
+
+      var tr = highed.dom.cr('tr');
+      d.forEach(function(element) {
+
+        var td = createCell(element);
+        rows[index].push(td);
+
+        highed.dom.ap(tr, td.element);
+      });
+      highed.dom.ap(mapTBody, tr);    
+    });
+
+  }
+
   function createTable(chartData, fn) {
     
     if (!chartData) return;
     data = chartData;  
     
     createHeaders(data[0]);
-    
-    data.forEach(function(d,index) {
-      if (index === 0) return;
-      var tr = highed.dom.cr('tr');
-      d.forEach(function(element) {
-        highed.dom.ap(tr, highed.dom.cr('td', '', element));
-      });
-      highed.dom.ap(mapTBody, tr);    
-    });
+    createBody(data);
 
-    setTimeout(function() {
+    setTimeout(function() { //TODO: Fix this later
         redrawDOM()
     }, 10)
     
     highed.dom.on(mapBtn, 'click', function(ev) {
+
+      var dataArr = rows.map(function(row){
+        return row.map(function(column){
+          return column.value();
+        });
+      });
+
+      dataArr.unshift(data[0]);
+
       var vals = {};
       selects.forEach(function(s, index) {
         if (s.getSelectedItem().index() > 0) {
           vals[s.getSelectedItem().id()] = index;
         }
       });
-      if (fn) fn(vals);
+      if (fn) fn(vals, dataArr);
     });
   
   }
