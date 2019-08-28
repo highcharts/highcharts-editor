@@ -35,7 +35,7 @@ highed.MapTable = function(parent, props) {
       ),
       mapHeader = highed.dom.cr('div', 'highed-map-value-header highed-map-geojson-header', props.header);
       mapTableContainer = highed.dom.cr('div', 'highed-map-table-container');
-      table = highed.dom.cr('table', 'highed-map-table'),
+      table = highed.dom.cr('table', 'highed-map-table ' + (!props.readOnly ? 'edit' : '')),
       mapTHeader = highed.dom.cr('thead'),
       mapTBody = highed.dom.cr('tbody'),
       mapBtn = highed.dom.btn('Save', 'highed-map-geojson-btn highed-ok-button highed-import-button negative', null),
@@ -43,7 +43,7 @@ highed.MapTable = function(parent, props) {
       selects = [],
       rows = [],
       mainInput = highed.dom.cr('input'),
-      inputFunc = null;
+      prevValue = null;
   //////////////////////////////////////////////////////////////////////////////
 
 
@@ -111,35 +111,52 @@ highed.MapTable = function(parent, props) {
     highed.dom.ap(mapTHeader, selectsTr, tr);
   }
 
+  function handlePreviousValue(td) {
+    if (prevValue) {
+      prevValue.setValue(mainInput.value);
+    }
+  }
+
   function createCell(value) {
-    var td = highed.dom.cr('td', '', value);
+    var td = highed.dom.cr('td', '', value),
+        exports = {};
 
     if (!props.readOnly) {
       highed.dom.on(td, 'click', function(){
       
         td.innerHTML = '';
+
+        handlePreviousValue(td);
+
         mainInput = mainInput.cloneNode(true);
   
         mainInput.value = value;
         highed.dom.ap(td, mainInput);
         mainInput.focus();
   
+        prevValue = exports;
+
         highed.dom.on(mainInput, 'keyup', function(e) {
+          setValue(e.target.value);
           if (e.keyCode === 13) {
             td.innerHTML = e.target.value;
-            value = e.target.value;
           }
         });
       });
     }
 
-    function getVal(){
+    function getVal() {
       return value;
+    }
+
+    function setValue(newValue){
+      value = newValue;
     }
 
     exports = {
       element: td,
-      value: getVal
+      value: getVal,
+      setValue: setValue
     }
 
     return exports;
