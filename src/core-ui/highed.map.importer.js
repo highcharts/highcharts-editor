@@ -140,10 +140,7 @@ highed.MapImporter = function() {
       });
   
       if (failedCodes.length > 0) {
-        
-        failedCodes.forEach(function(cells) {
-          //mapTable.children[1].children[cells.index - 1].classList += ' highed-map-import-failed';
-        })
+        mapTable.highlightRows(failedCodes);
         if (!confirm("There are incompatible values in your dataset. Are you sure you would like to continue?")) return;
       }
       

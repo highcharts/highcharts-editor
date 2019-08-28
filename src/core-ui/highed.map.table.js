@@ -167,13 +167,13 @@ highed.MapTable = function(parent, props) {
     data.forEach(function(d,index) {
       if (index === 0) return;
       
-      rows[index] = [];
+      rows[index - 1] = [];
 
       var tr = highed.dom.cr('tr');
       d.forEach(function(element) {
 
         var td = createCell(element);
-        rows[index].push(td);
+        rows[index - 1].push(td);
 
         highed.dom.ap(tr, td.element);
       });
@@ -215,8 +215,15 @@ highed.MapTable = function(parent, props) {
   
   }
 
+  function highlightRows(failedCodes) {
+    failedCodes.forEach(function(cells) {
+      table.children[1].children[cells.index - 1].classList += ' highed-map-import-failed';
+    })
+  }
+
   return {
     on: events.on,
-    createTable: createTable
+    createTable: createTable,
+    highlightRows: highlightRows
   };
 };
