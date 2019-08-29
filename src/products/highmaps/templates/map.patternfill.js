@@ -26,47 +26,33 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 highed.templates.add('Map', {
-  title: 'Bubble',
+  title: 'Pattern Fill',
   description: [
     '',
   ],
-  thumbnail: 'mapbubble.svg',
+  thumbnail: 'mappatternfill.svg',
   dataValidator: false,
-  loadForEachSeries: false,
   constructor: 'Map',
-  load: function(chart, event) {
-    //Create serie if chart only has one
-    if (chart.series && chart.series.length == 1) {
-
-      event.emit('LoadMapBubble', chart.series);
-      //event.emit('AddDefaultSeries');
-    }
-  },
   config: {
     chart: {
-      borderWidth: 1
+      
+    },
+    // Limit zoom
+    xAxis: {
+        minRange: 3500
     },
 
-    mapNavigation: {
-      enabled: true,
-      buttonOptions: {
-          verticalAlign: 'bottom'
-      }
-    },
-
+    // We do not want a legend
     legend: {
-      enabled: false
+        enabled: false
     },
 
-    colorAxis: {
-      min: 0
-    },
-
-    series: [{
-        joinBy: 'hc-key',
-        type: 'mapbubble',
-        minSize: 4,
-        maxSize: '12%'
-    }]
+    // Make tooltip show full image
+    tooltip: {
+        useHTML: true,
+        borderColor: '#aaa',
+        headerFormat: '<b>{point.point.name}</b><br>',
+        pointFormat: '<img style="width: 150px; height: 100px;" src=\'{point.options.color.pattern.image}\'>'
+    }
   }
 });

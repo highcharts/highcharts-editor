@@ -351,7 +351,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       
       var series = allOptions.length;
 
-
       for(var i = 0; i < series; i++) {
         var serieOption = {};
         Object.keys(allOptions[i]).forEach(function(key) {
@@ -733,6 +732,9 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     return dataTable.getMapValueFromCode(key, assignDataPanel.getMergedLabelAndData());
   }
 
+  function createMapShim(serie) {
+    assignDataPanel.setMapShim(serie);
+  }
   return {
     on: events.on,
     destroy: destroy,
@@ -764,6 +766,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     loadMapData: loadMapData,
     loadSampleData: loadSampleData,
     addSerie: addSerie,
-    getMapValueFromCode: getMapValueFromCode
+    getMapValueFromCode: getMapValueFromCode,
+    createMapShim: createMapShim
   };
 };

@@ -692,6 +692,12 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     events.emit('RedrawGrid', true);
   }
 
+  function setMapShim(serie) {
+    highed.merge(options[0], highed.meta.charttype['map']);
+    clean(options[0]);
+
+    resetDOM();
+  }
   ////////////////////////////////////////////////////////////////////////////////
       
   highed.dom.ap(selectContainer, addNewSeriesBtn, deleteSeriesBtn, toggleHideCellsBtn);
@@ -801,6 +807,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     getStatus: getStatus,
     getElement: getElement,
     restart: restart,
-    setValues: setValues
+    setValues: setValues,
+    setMapShim: setMapShim
   };
 };

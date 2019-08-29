@@ -761,6 +761,11 @@ highed.DrawerEditor = function(parent, options, planCode, chartType ) {
   templatePage.on('AddDefaultSeries', function() {
     dataPage.addSerie();
   });
+
+  templatePage.on('LoadMapBubble', function(series) {
+    dataPage.createMapShim(series[0]);
+    dataPage.addSerie();
+  });
   
   mapSelector.on('LoadDataSet', function(data) {
     dataPage.loadSampleData(data);
@@ -943,7 +948,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType ) {
   // Create the features
   createFeatures();
   createToolbar();
- // showChartWizard();
+  //showChartWizard();
 
   resize();
 

@@ -24,7 +24,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
-
+/*
 highed.templates.add('Map', {
   title: 'Flight',
   description: [
@@ -64,3 +64,4 @@ highed.templates.add('Map', {
     ]
   }
 });
+*/
