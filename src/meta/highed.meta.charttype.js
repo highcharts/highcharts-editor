@@ -285,8 +285,8 @@ highed.meta.charttype = {
     mapbubble: {
         'values': null,
         'labels': {
-            'name': "Country Code",
-            'desc': 'The country code',
+            'name': "Country",
+            'desc': 'The country name',
             'default': 'A',
             'value': 'A',
             'mandatory': true,
@@ -302,6 +302,30 @@ highed.meta.charttype = {
             'mandatory': true,
             'isData': true,
             'linkedTo': 'z',
+            'rawValue': [1]
+        }
+
+    },
+    patternfill: {
+        'values': null,
+        'labels': {
+            'name': "Country",
+            'desc': 'The country name',
+            'default': 'A',
+            'value': 'A',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'hc-key',
+            'rawValue': [0]
+        },
+        'value': {
+            'name': "Value",
+            'desc': 'The value of the country',
+            'default': 'B',
+            'value': 'B',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': ['value', 'color.pattern.image'],
             'rawValue': [1]
         }
 

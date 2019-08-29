@@ -208,7 +208,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         return;
       }
 
-   //console.log(bsize.h);
       highed.dom.style(body, {
         width: 100 + '%',
         //height: //(bsize.h - 55) + 'px',
@@ -358,7 +357,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
           if (option.value !== '') {
             if (option.isData) { //(highed.isArr(option)) { // Data assigndata
               if (dataTableFields.indexOf(option.rawValue[0]) > -1) {
-                serieOption[option.linkedTo] = dataTableFields.indexOf(option.rawValue[0]);
+                var linkedTo = highed.isArr(option.linkedTo) ? option.linkedTo : [option.linkedTo];
+                linkedTo.forEach(function(linked){
+                  serieOption[linked] = dataTableFields.indexOf(option.rawValue[0]);
+                });
               }
             } else {
               if (option.linkedTo === 'label') hasLabels = true;
@@ -732,9 +734,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     return dataTable.getMapValueFromCode(key, assignDataPanel.getMergedLabelAndData());
   }
 
-  function createMapShim(serie) {
-    assignDataPanel.setMapShim(serie);
+  function changeAssignDataType(type) {
+    assignDataPanel.changeAssignDataType(type);
   }
+
   return {
     on: events.on,
     destroy: destroy,
@@ -767,6 +770,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     loadSampleData: loadSampleData,
     addSerie: addSerie,
     getMapValueFromCode: getMapValueFromCode,
-    createMapShim: createMapShim
+    changeAssignDataType: changeAssignDataType
   };
 };

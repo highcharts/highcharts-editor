@@ -420,6 +420,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     if (data.constructor === 'Map') {
       if (data.config && data.config.series && data.config.series[index] && data.config.series[index].type) return data.config.series[index].type;
       else if (data.config && data.config.chart && data.config.chart.type) return data.config.chart.type;
+      else if (data.type) return data.type;
       else return 'map';
     } else {
       if (data.config) return data.config.chart.type;
@@ -672,7 +673,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     columnLength = length;
   }
 
-  function disableMaps(){
+  function disableMaps() {
     container.classList += ' disabled';
     [addNewSeriesBtn, deleteSeriesBtn, toggleHideCellsBtn].forEach(function(btn) {
       btn.disabled = true;
@@ -692,10 +693,9 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     events.emit('RedrawGrid', true);
   }
 
-  function setMapShim(serie) {
-    highed.merge(options[0], highed.meta.charttype['map']);
+  function changeAssignDataType(type) {
+    highed.merge(options[0], highed.meta.charttype[type]);
     clean(options[0]);
-
     resetDOM();
   }
   ////////////////////////////////////////////////////////////////////////////////
@@ -808,6 +808,6 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     getElement: getElement,
     restart: restart,
     setValues: setValues,
-    setMapShim: setMapShim
+    changeAssignDataType: changeAssignDataType
   };
 };

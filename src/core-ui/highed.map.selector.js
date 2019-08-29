@@ -194,7 +194,7 @@ highed.MapSelector = function(chartPreview) {
                     predefinedMaps,
                     highed.dom.ap(
                       mapSelectorGeojsonContainer,
-                      mapSelectorMapContainer,
+                      mapSelectorMapContainer
                     ));
       return container
     }

@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.DrawerEditor = function(parent, options, planCode, chartType ) {
+highed.DrawerEditor = function(parent, options, planCode, chartType) {
   var events = highed.events(),
     // Main properties
     properties = highed.merge(
@@ -762,9 +762,9 @@ highed.DrawerEditor = function(parent, options, planCode, chartType ) {
     dataPage.addSerie();
   });
 
-  templatePage.on('LoadMapBubble', function(series) {
-    dataPage.createMapShim(series[0]);
-    dataPage.addSerie();
+  templatePage.on('ChangeAssignDataType', function(type) {
+    dataPage.changeAssignDataType(type);
+    //dataPage.addSerie();
   });
   
   mapSelector.on('LoadDataSet', function(data) {

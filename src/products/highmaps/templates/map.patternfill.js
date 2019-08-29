@@ -30,12 +30,20 @@ highed.templates.add('Map', {
   description: [
     '',
   ],
-  thumbnail: 'mappatternfill.svg',
+  thumbnail: 'mappatternfill.png',
   dataValidator: false,
   constructor: 'Map',
+  /*
+  load: function(chart, event) {
+    //Create serie if chart only has one
+    if (chart.series && chart.series.length == 1) {
+      event.emit('ChangeAssignDataType', 'patternfill');
+      //event.emit('AddDefaultSeries');
+    }
+  },*/
+  type: 'patternfill',
   config: {
     chart: {
-      
     },
     // Limit zoom
     xAxis: {

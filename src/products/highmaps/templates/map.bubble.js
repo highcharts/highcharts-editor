@@ -38,7 +38,9 @@ highed.templates.add('Map', {
     //Create serie if chart only has one
     if (chart.series && chart.series.length == 1) {
 
-      event.emit('LoadMapBubble', chart.series);
+      event.emit('ChangeAssignDataType', 'map');
+      event.emit('AddDefaultSeries');
+      
       //event.emit('AddDefaultSeries');
     }
   },
