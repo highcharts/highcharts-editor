@@ -38,10 +38,12 @@ highed.templates.add('Map', {
     //Create serie if chart only has one
     if (chart.series && chart.series.length == 1) {
 
-      event.emit('ChangeAssignDataType', 'map');
+      event.emit('ChangeAssignDataType', 'map', {
+        "joinBy": undefined
+      });
+
       event.emit('AddDefaultSeries');
-      
-      //event.emit('AddDefaultSeries');
+
     }
   },
   config: {

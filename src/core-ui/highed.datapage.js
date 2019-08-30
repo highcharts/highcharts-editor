@@ -420,6 +420,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     function loadProject(projectData, aggregated) {
       if (projectData.settings && projectData.settings.dataProvider && projectData.settings.dataProvider.csv) {
+        
         dataTable.loadCSV({
           csv: projectData.settings.dataProvider.csv
         }, null, null, function() {
@@ -437,8 +438,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       dataTable.loadSampleData(data);
     }
 
-    function addSerie(type) {
-      assignDataPanel.addNewSerie(type);
+    function addSerie(type, extra) {
+      assignDataPanel.addNewSerie(type, extra);
     }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -484,8 +485,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     events.emit("GoToTemplatePage");
   })
   
-  assignDataPanel.on('AddSeries', function(index, type) {
-    chartPreview.options.addBlankSeries(index, type);
+  assignDataPanel.on('AddSeries', function(index, type, extra) {
+    chartPreview.options.addBlankSeries(index, type, extra);
   })
   
   assignDataPanel.on('GetLastType', function() {

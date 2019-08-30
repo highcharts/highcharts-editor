@@ -305,7 +305,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     };
   }
 
-  function addSeries(length, type) {
+  function addSeries(length, type, extra) {
     if (length + 1 < options.length) {
       //Need to do some culling
       options = options.slice(0,length + 1);
@@ -314,7 +314,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
       resetDOM();
     } else {
       for(var i=options.length - 1; i<length; i++) {
-        addSerie(type);
+        addSerie(type, null, null, extra);
       }
     }
 
@@ -336,7 +336,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     });
   }
 
-  function addSerie(seriesType, redrawDOM, skipSelect) {
+  function addSerie(seriesType, redrawDOM, skipSelect, extra) {
     var type = seriesType;
 
     if (!type) type = (highed.chartType === 'Map' ? 'map' : 'Line');
@@ -363,7 +363,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     if (!skipSelect) seriesTypeSelect.selectById(options.length - 1);
     if (redrawDOM) resetDOM();
 
-    events.emit('AddSeries', options.length - 1, seriesType);
+    events.emit('AddSeries', options.length - 1, seriesType, extra);
   }
 
   function hide() {
@@ -479,7 +479,6 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
 
       if (data.settings && data.settings.dataProvider && data.settings.dataProvider.assignDataFields) {
         const dataFields = data.settings.dataProvider.assignDataFields;
-        
         dataFields.forEach(function(option, index) {
           const seriesType = getSeriesType(data, index);
           if(!options[index]) {
@@ -661,8 +660,8 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     return disabled;
   }
 
-  function addNewSerie(lastType) {
-    addSerie(lastType, true);
+  function addNewSerie(lastType, extra) {
+    addSerie(lastType, true, null, extra);
     events.emit('AssignDataChanged');
   }
 

@@ -444,9 +444,8 @@ highed.DataTable = function(parent, attributes) {
     
   const DEFAULT_COLUMN = 9,
         DEFAULT_ROW = 20;
-    
 
-  highed.dom.ap(hideCellsDiv, switchRowColumns)
+  if (highed.chartType !== 'Map') highed.dom.ap(hideCellsDiv, switchRowColumns)
 
   highed.dom.on(mainInput, 'click', function(e) {
     return highed.dom.nodefault(e);

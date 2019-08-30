@@ -758,13 +758,16 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
   //////////////////////////////////////////////////////////////////////////////
   // Event attachments
 
-  templatePage.on('AddDefaultSeries', function() {
-    dataPage.addSerie();
+  templatePage.on('AddDefaultSeries', function(extra) {
+    dataPage.addSerie(null, extra);
   });
 
-  templatePage.on('ChangeAssignDataType', function(type) {
+  templatePage.on('ChangeAssignDataType', function(type, extra) {
     dataPage.changeAssignDataType(type);
-    //dataPage.addSerie();
+
+    if (extra) {
+      chartPreview.options.addBlankSeries(0, null, extra);
+    }
   });
   
   mapSelector.on('LoadDataSet', function(data) {

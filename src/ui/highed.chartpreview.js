@@ -372,7 +372,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       }) ? 'StockChart' : 'Chart'));
 
       options = highed.merge(options, stockTools.getStockToolsToolbarConfig());
-
       chart = new Highcharts[chartConstr](pnode || parent, options);
 
       //This is super ugly.
@@ -2153,19 +2152,28 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     return expanded ? collapse() : expand();
   });
 
-  function addBlankSeries(index, type) {
+  function addBlankSeries(index, type, extra) {
+    
+    if (!extra) {
+      extra = {};
+    }
+
     if (!customizedOptions.series[index]) {
-      customizedOptions.series[index] = {
+      customizedOptions.series[index] = highed.merge({
         data:[],
         turboThreshold: 0,
         _colorIndex: index,
         _symbolIndex: 0,
         compare: undefined
-      };
+      }, extra);
     }
 
     if(type) customizedOptions.series[index].type = type;
     
+    if (extra) {
+      customizedOptions.series[index] = highed.merge(customizedOptions.series[index], extra);
+    }
+
     //Init the initial chart
     updateAggregated();
     init();
