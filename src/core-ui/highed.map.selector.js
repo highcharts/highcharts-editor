@@ -69,7 +69,7 @@ highed.MapSelector = function(chartPreview) {
               var found = false;
               var mapSelectorOptions = highed.dom.cr('div', 'highed-map-selector-options');
               Object.keys(Highcharts.mapDataIndex[mapGroup]).forEach(function (desc, path) {
-                var pos = desc.search(query);
+                var pos = (desc.toLowerCase()).search(query.toLowerCase());
                 if (pos > -1) {
                   //mapOptions += '<option value="' + path + '">' + desc + '</option>';
                   const option = highed.dom.cr('div', 'highed-map-option', desc);
