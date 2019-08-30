@@ -673,8 +673,8 @@ highed.DataTable = function(parent, attributes) {
 
   ////////////////////////////////////////////////////////////////////////////
   function Column(row, colNumber, val, keyVal) {
-    var value = typeof val === 'undefined' || typeof val === 'object' || (val === 'null') || (highed.chartType === 'Map' && val === 0) ? null : val, //object check for ie11/edge
-      col = highed.dom.cr('td', 'highed-dtable-cell'),
+    var value = typeof val === 'undefined' || typeof val === 'object' || (val === 'null') ? null : val, //object check for ie11/edge
+    col = highed.dom.cr('td', 'highed-dtable-cell'),
       colVal = highed.dom.cr('div', 'highed-dtable-col-val', value),
       input = highed.dom.cr('input'),
       disabled = false,
