@@ -414,13 +414,30 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     });
   }
 
+  function isMap(data){
+    return data.constructor === 'Map' || (data.settings && data.settings.constructor.some(function(constr){ return constr === 'Map' }));
+  }
+
+  function isMapBubble(data, index) {
+    return data.options && data.options.series && data.options.series[index] && data.options.series[index].type === 'mapbubble';
+  }
+  function isPatternFill(data, index) {
+    return data.settings && data.settings.dataProvider && data.settings.dataProvider.seriesMapping && 
+    Object.keys(data.settings.dataProvider.seriesMapping[index]).some(function(key) {
+      return key === 'color.pattern.image';
+    });
+  }
+
   function getSeriesType(data, index, aggregatedOptions) { 
     // Change this in future, data should handle 99% of cases but have had to use aggregatedoptions due to users setting chart type through custom code
     // Looks messy using both atm
-    if (data.constructor === 'Map' || (data.settings && data.settings.constructor[0] === 'Map')) {
+
+    if (isMap(data)) {
       if (data.config && data.config.series && data.config.series[index] && data.config.series[index].type) return data.config.series[index].type;
       else if (data.config && data.config.chart && data.config.chart.type) return data.config.chart.type;
       else if (data.type) return data.type;
+      else if (isMapBubble(data, index)) return 'mapbubble';
+      else if (isPatternFill(data, index)) return 'patternfill'; // Find out if theres a better way for this one
       else return 'map';
     } else {
       if (data.config) return data.config.chart.type;

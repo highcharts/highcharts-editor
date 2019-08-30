@@ -39,7 +39,7 @@ highed.templates.add('Map', {
     if (chart.series && chart.series.length == 1) {
 
       event.emit('ChangeAssignDataType', 'map', {
-        "joinBy": undefined
+        "joinBy": 0
       });
 
       event.emit('AddDefaultSeries');

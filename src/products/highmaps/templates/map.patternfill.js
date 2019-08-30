@@ -33,14 +33,6 @@ highed.templates.add('Map', {
   thumbnail: 'mappatternfill.png',
   dataValidator: false,
   constructor: 'Map',
-  /*
-  load: function(chart, event) {
-    //Create serie if chart only has one
-    if (chart.series && chart.series.length == 1) {
-      event.emit('ChangeAssignDataType', 'patternfill');
-      //event.emit('AddDefaultSeries');
-    }
-  },*/
   type: 'patternfill',
   config: {
     chart: {
@@ -53,6 +45,15 @@ highed.templates.add('Map', {
     // We do not want a legend
     legend: {
         enabled: false
+    },
+    plotOptions: {
+      series: {
+        states: {
+          hover: {
+            color: ''
+          },
+        }
+      }
     },
 
     // Make tooltip show full image
