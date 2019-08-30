@@ -71,14 +71,15 @@ highed.Toolbox = function(parent, attr) {
       circle = highed.dom.cr('div', 'highed-toolbox-list-circle', props.number);
 
     highed.dom.on(circle, 'click', function() {
-      props.onClick(props.number);
-      expand();
-
+      if (highed.chartType !== 'Map') {
+        props.onClick(props.number);
+        expand();
+      }
     });
 
     highed.dom.ap(icon, circle, highed.dom.cr('div', 'highed-toolbox-list-title', props.title));
     highed.dom.on(icon, 'click', function() {
-      entryEvents.emit('Click');
+      if (highed.chartType !== 'Map') entryEvents.emit('Click');
     });
 
     function resizeBody() {

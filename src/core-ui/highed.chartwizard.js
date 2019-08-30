@@ -179,7 +179,13 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
 
       titleInput.value = '';
       subtitleInput.value = '';
-      
+
+      if (highed.chartType === 'Map') {
+        highed.dom.style(skipAll, {
+          display: 'none'
+        })
+      }
+
       highed.dom.on(nextButton, 'click', function() {
         
         goToNextPage();
@@ -267,7 +273,8 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
             'highed-ok-button highed-import-button negative',
             'Choose A Template Later'
       ),
-      skipAll = highed.dom.ap(highed.dom.cr('div', 'highed-toolbox-skip-all'), highed.dom.cr('span','', 'Skip All'));
+      skipAllLink = highed.dom.cr('span','', 'Skip All'),
+      skipAll = highed.dom.ap(highed.dom.cr('div', 'highed-toolbox-skip-all'), skipAllLink);
       loader = highed.dom.cr('span','highed-wizard-loader ', '<i class="fa fa-spinner fa-spin fa-1x fa-fw a"></i>'),
       templatesContainer = templatePage.createMostPopularTemplates(function() {
         setTimeout(function() {
@@ -286,12 +293,18 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
         goToNextPage();
       });
 
+      if (highed.chartType === 'Map') {
+        highed.dom.style([nextButton, skipAllLink], {
+          display: 'none'
+        })
+      }
+
       highed.dom.ap(templateContainer, 
         highed.dom.ap(highed.dom.cr('div', 'highed-toolbox-template-body'),         
           highed.dom.ap(
             highed.dom.cr('div', 'highed-toolbox-text'), 
-            highed.dom.cr('div', 'highed-toolbox-template-text', 'Pick a basic starter template. You can change it later.'),
-            highed.dom.cr('div', 'highed-toolbox-template-text', "If you're not sure, just hit Choose A Template Later.")
+            highed.dom.cr('div', 'highed-toolbox-template-text', 'Pick a basic starter template.' + (highed.chartType === 'Map' ? '' : ' You can change it later.')),
+            highed.dom.cr('div', 'highed-toolbox-template-text', highed.chartType === 'Map' ? '' : "If you're not sure, just hit Choose A Template Later.")
           ),
           highed.dom.ap(
             highed.dom.cr('div', 'highed-toolbox-extras'),

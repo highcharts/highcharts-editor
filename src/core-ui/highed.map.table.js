@@ -33,8 +33,9 @@ highed.MapTable = function(parent, props) {
         'div',
         'highed-edit-map-import-container highed-map-geojson-container active'
       ),
-      mapHeader = highed.dom.cr('div', 'highed-map-value-header highed-map-geojson-header', props.header);
-      mapTableContainer = highed.dom.cr('div', 'highed-map-table-container');
+      mapHeader = highed.dom.cr('div', 'highed-map-value-header highed-map-geojson-header', props.header),
+      mapDescription = highed.dom.cr('div', 'highed-map-value-description highed-map-geojson-description', props.description),
+      mapTableContainer = highed.dom.cr('div', 'highed-map-table-container'),
       table = highed.dom.cr('table', 'highed-map-table ' + (!props.readOnly ? 'edit' : '')),
       mapTHeader = highed.dom.cr('thead'),
       mapTBody = highed.dom.cr('tbody'),
@@ -54,6 +55,7 @@ highed.MapTable = function(parent, props) {
       highed.dom.ap(
       mapContainer,
       mapHeader,
+      mapDescription,
       highed.dom.ap(
         mapTableContainer, 
         highed.dom.ap(

@@ -319,8 +319,8 @@ highed.meta.charttype = {
             'rawValue': [0]
         },
         'value': {
-            'name': "Value",
-            'desc': 'The value of the country',
+            'name': "Links",
+            'desc': 'The image path',
             'default': 'B',
             'value': 'B',
             'mandatory': true,
