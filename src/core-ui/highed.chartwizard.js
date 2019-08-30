@@ -160,7 +160,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
       var length = options.length - 1;
       var index = options.findIndex(function(opt){ return expanded === opt; });
       if (index + 1 <= length) options[index+1].expand();
-      else events.emit("SimpleCreateChartDone");
+      else events.emit("SimpleCreateChartDone", userOptions.indexOf('customize') === -1);
     }
 
     function createTitleSection() {

@@ -230,7 +230,6 @@ highed.Toolbox = function(parent, attr) {
     body.innerHTML = '';
   }
 
-
   function getActiveItem() {
     return activeItem;
   }

@@ -298,7 +298,7 @@ highed.DataTable = function(parent, attributes) {
     switchRowColumns = highed.dom.cr(
       'button',
       'switch-column-button highed-template-tooltip',
-      '<i class="fa fa-refresh" aria-hidden="true"></i> <span class="highed-tooltip-text highed-template-tooltip-text-left">Switch Rows/Columns</span>'
+      '<i class="fa fa-sync-alt" aria-hidden="true"></i> <span class="highed-tooltip-text highed-template-tooltip-text-left">Switch Rows/Columns</span>'
     ),
     gsheetLoadButton = highed.dom.cr(
       'button',
@@ -2155,23 +2155,22 @@ highed.DataTable = function(parent, attributes) {
       rows = parseCSV(data.csv, data.delimiter);
       if (updateAssignData && rows[0].length < DEFAULT_COLUMN) events.emit('AssignDataForFileUpload', rows[0].length);
 
-      if(rows[0] && rows.length < DEFAULT_ROW) {
-        var counter = DEFAULT_ROW - rows.length,
-            length = (rows[0].length > DEFAULT_COLUMN ? rows[0].length : DEFAULT_COLUMN);
+      var counter = DEFAULT_ROW - rows.length,
+          length = (rows[0].length > DEFAULT_COLUMN ? rows[0].length : DEFAULT_COLUMN);
 
-        rows.forEach(function(row) {
-          if (row.length < DEFAULT_COLUMN) {
-            const len = DEFAULT_COLUMN - row.length;
-            for(var i=0;i<len;i++) {
-              row.push(null);
-            }
+      rows.forEach(function(row) {
+        if (row.length < DEFAULT_COLUMN) {
+          const len = DEFAULT_COLUMN - row.length;
+          for(var i=0;i<len;i++) {
+            row.push(null);
           }
-        });
-
-        for(var i =0;i<counter; i++) {
-          rows.push(Array(length).fill(null, 0));
         }
+      });
+
+      for(var i =0;i<counter; i++) {
+        rows.push(Array(length).fill(null, 0));
       }
+
       loadRows(rows, function() {
         if (updateAssignData && rows[0].length > DEFAULT_COLUMN) events.emit('AssignDataForFileUpload', rows[0].length);
         if (cb) cb();
