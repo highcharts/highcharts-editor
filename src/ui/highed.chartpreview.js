@@ -372,6 +372,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       }) ? 'StockChart' : 'Chart'));
 
       options = highed.merge(options, stockTools.getStockToolsToolbarConfig());
+      //console.log(JSON.stringify(options));
       chart = new Highcharts[chartConstr](pnode || parent, options);
 
       //This is super ugly.
@@ -1004,24 +1005,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
     if (projectData) {
 
-      //Check if a map
-      if (projectData.options && projectData.options.chart && projectData.options.chart.map) {
-        var baseMapPath = "https://code.highcharts.com/mapdata/";
-        events.emit('SetChartAsMap');
-        updateMap(projectData.options.chart.map, baseMapPath + projectData.options.chart.map + '.js', function() {
-          highed.ajax({
-            url: baseMapPath + projectData.options.chart.map + '.geo.json',
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-              events.emit('LoadMapData', data.features);
-            },
-            error: function(e) {
-            }
-          })
-        });
-      }
-
       templateOptions = [{}];
       if (projectData.template) {
         if (highed.isArr(projectData.template)) templateOptions = projectData.template;
@@ -1186,7 +1169,10 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         }
         emitChange();
       
-      events.emit('LoadProject', projectData, aggregatedOptions);
+      if (projectData.options && projectData.options.chart && projectData.options.chart.map){
+        events.emit('SetChartAsMap');
+        events.emit('LoadMapProject', projectData, aggregatedOptions);
+      } else events.emit('LoadProject', projectData, aggregatedOptions);
     }
   }
 
@@ -2093,9 +2079,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       chart.currentAnnotation.shapes[0].update(config);
       chart.currentAnnotation.userOptions.typeOptions.line.stroke = config.stroke;
       chart.currentAnnotation.userOptions.typeOptions.line.strokeWidth = config.strokeWidth;
-
-    }
-    else if (type === 'verticalCounter') {
+    } else if (type === 'verticalCounter') {
       //There must be a better way to do this
       chart.currentAnnotation.shapes[0].update(config);
       chart.currentAnnotation.labels[0].update(config);
@@ -2104,9 +2088,8 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       chart.currentAnnotation.userOptions.typeOptions.connector.stroke = config.stroke;
       chart.currentAnnotation.userOptions.typeOptions.connector.fill = config.stroke;
       chart.currentAnnotation.userOptions.typeOptions.connector.strokeWidth = config.strokeWidth;
-    }
-    else 
-      chart.currentAnnotation.update(config);
+    } 
+    else chart.currentAnnotation.update(config);
     
     chart.annotationsPopupContainer.style.display = 'none';
   }

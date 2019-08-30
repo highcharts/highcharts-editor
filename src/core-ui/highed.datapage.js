@@ -418,6 +418,26 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
     }
 
+    function loadMapProject(projectData, aggregated) {
+      var baseMapPath = "https://code.highcharts.com/mapdata/";
+      chartPreview.options.updateMap(projectData.options.chart.map, baseMapPath + projectData.options.chart.map + '.js', function() {
+        highed.ajax({
+          url: baseMapPath + projectData.options.chart.map + '.geo.json',
+          type: 'GET',
+          dataType: 'json',
+          success: function(data) {
+            loadMapData(data.features, null, null, projectData.settings.dataProvider.csv, function () {
+              assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
+              assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+              chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
+            });
+          },
+          error: function(e) {
+          }
+        })
+      });
+    }
+
     function loadProject(projectData, aggregated) {
       if (projectData.settings && projectData.settings.dataProvider && projectData.settings.dataProvider.csv) {
         
@@ -713,8 +733,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     dataTable.selectSwitchRowsColumns()
   }
 
-  function loadMapData(data, code, name) {
-    dataTable.loadMapData(data, code, name);
+  function loadMapData(data, code, name, csv, cb) {
+    dataTable.loadMapData(data, code, name, csv, cb);
   }
 
   function resizeChart(newWidth) {
@@ -764,6 +784,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     changeAssignDataTemplate: changeAssignDataTemplate,
     createSimpleDataTable: createSimpleDataTable,
     loadProject: loadProject,
+    loadMapProject: loadMapProject,
     showDataTableError: showDataTableError,
     hideDataTableError: hideDataTableError,
     selectSwitchRowsColumns: selectSwitchRowsColumns,

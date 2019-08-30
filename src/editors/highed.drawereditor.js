@@ -800,6 +800,11 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     templatePage.selectSeriesTemplate(0, projectData);
   });
 
+  chartPreview.on(['LoadMapProject'], function (projectData, aggregated) {
+    dataPage.loadMapProject(projectData, aggregated);
+    templatePage.selectSeriesTemplate(0, projectData);
+  });
+
   templatePage.on('TemplateChanged', function(newTemplate, loadTemplateForEachSerie, cb) {
     dataPage.changeAssignDataTemplate(newTemplate, loadTemplateForEachSerie, cb);
   })

@@ -2030,7 +2030,7 @@ highed.DataTable = function(parent, attributes) {
     });
 
     if (Object.keys(sanityCounts).length > 4) {
-      // Four or more rows have varrying amounts of columns.
+      // Four or more rows have varying amounts of columns.
       // Something is wrong.
       showDataImportError();
     }
@@ -2066,16 +2066,13 @@ highed.DataTable = function(parent, attributes) {
       rows.forEach(function(cols, i) {
         var row;
 
-        if (i) {
-          row = Row();
-        }
+        if (i) row = Row();
+        
         tempKeyValue = "A";
+        
         cols.forEach(function(c) {
-          if (i === 0) {
-            addCol(c);
-          } else {
-            row.addCol(c, tempKeyValue);
-          }
+          if (i === 0) addCol(c);
+          else row.addCol(c, tempKeyValue);
           tempKeyValue = getNextLetter(tempKeyValue);
         });
       });
@@ -2152,6 +2149,7 @@ highed.DataTable = function(parent, attributes) {
 
     if (data && data.csv) {
       rows = parseCSV(data.csv, data.delimiter);
+
       if (updateAssignData && rows[0].length < DEFAULT_COLUMN) events.emit('AssignDataForFileUpload', rows[0].length);
 
       var counter = DEFAULT_ROW - rows.length,
@@ -2174,12 +2172,8 @@ highed.DataTable = function(parent, attributes) {
         if (updateAssignData && rows[0].length > DEFAULT_COLUMN) events.emit('AssignDataForFileUpload', rows[0].length);
         if (cb) cb();
       });
-    } else {
-      // surpressChangeEvents = false;
-      // if (!surpressEvents) {
-      //   emitChanged(true);
-      // }
-    }
+    } 
+
     surpressChangeEvents = false;
     if (!surpressEvents) {
       emitChanged(true);
@@ -2804,6 +2798,7 @@ highed.DataTable = function(parent, attributes) {
     emitChanged();
     if (rows.length > 0) rows[0].columns[0].focus();
   }
+
   function colorHeader(values, color) {
     var tempValue = values[0];
     if (values.length > 0) {
@@ -3263,19 +3258,38 @@ highed.DataTable = function(parent, attributes) {
     return container;
   }
 
-  function loadMapData(mapData, code, name) {
+  function loadMapData(mapData, code, name, csv, cb) {
     const rowLength = rows.length;
     var i = 0;
 
     if (!code || code === '') code = 'hc-key';
     if (!name || name === '') name = 'name';
 
-    mapData.forEach(function(data, index) {
+    mapData = mapData.sort(function(a, b){
+      if(a.properties['hc-key'] < b.properties['hc-key']) { return -1; }
+      if(a.properties['hc-key'] > b.properties['hc-key']) { return 1; }
+      return 0;
+    });
+
+    var newRows = [];
+    if (csv) newRows = parseCSV(csv);
+
+    mapData.forEach(function(data) {
       if (!data.properties[name]) return;
 
       if (i >= rowLength) addRow();
       rows[i].columns[0].setValue(data.properties[name]);
       rows[i].columns[0].setHiddenValue(data.properties[code]);
+
+      newRows.forEach(function(r, n) {
+        if (r[0] === data.properties[code]) {
+          rows[i].columns.forEach(function(col, x) {
+            if (x === 0) return;
+            col.setValue(newRows[n][x]);
+          })
+        }
+      });
+
       i++;
       data.properties.hccode = code; 
       data.properties.hcname = name; 
@@ -3286,6 +3300,8 @@ highed.DataTable = function(parent, attributes) {
     });
 
     mapImporter.setMap(mapData);
+
+    if (cb && highed.isFn(cb)) cb();
   }
 
   function getMapValueFromCode(key, assignedValue) {

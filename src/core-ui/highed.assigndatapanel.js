@@ -452,7 +452,6 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     }
   }
 
-
   function setAssignDataFields(data, maxColumns, init, seriesIndex, skipEmit, serieValue, aggregatedOptions) {
     if (!data || disabled) return;
     columnLength = maxColumns;

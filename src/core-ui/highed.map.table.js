@@ -184,6 +184,12 @@ highed.MapTable = function(parent, props) {
 
   }
 
+  function arraymove(arr, fromIndex, toIndex) {
+    var element = arr[fromIndex];
+    arr.splice(fromIndex, 1);
+    arr.splice(toIndex, 0, element);
+  }
+
   function createTable(chartData, fn) {
     
     if (!chartData) return;
@@ -197,21 +203,28 @@ highed.MapTable = function(parent, props) {
     }, 10)
     
     highed.dom.on(mapBtn, 'click', function(ev) {
-
-      var dataArr = rows.map(function(row){
-        return row.map(function(column){
-          return column.value();
-        });
-      });
-
-      dataArr.unshift(data[0]);
-
+      
       var vals = {};
       selects.forEach(function(s, index) {
         if (s.getSelectedItem().index() > 0) {
           vals[s.getSelectedItem().id()] = index;
         }
       });
+
+      var dataArr = rows.map(function(row) {
+        arraymove(row, vals.labels, 0);
+        arraymove(row, vals.value, 1);
+
+        return row.map(function(column) {
+          return column.value();
+        });
+      });
+
+      dataArr.unshift(data[0]);
+
+      vals.labels = 0;
+      vals.value = 1;
+
       if (fn) fn(vals, dataArr);
     });
   
