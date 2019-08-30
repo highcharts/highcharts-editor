@@ -417,7 +417,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
   function getSeriesType(data, index, aggregatedOptions) { 
     // Change this in future, data should handle 99% of cases but have had to use aggregatedoptions due to users setting chart type through custom code
     // Looks messy using both atm
-    if (data.constructor === 'Map') {
+    if (data.constructor === 'Map' || (data.settings && data.settings.constructor[0] === 'Map')) {
       if (data.config && data.config.series && data.config.series[index] && data.config.series[index].type) return data.config.series[index].type;
       else if (data.config && data.config.chart && data.config.chart.type) return data.config.chart.type;
       else if (data.type) return data.type;
@@ -441,7 +441,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     columnLength = maxColumns;
     var seriesType = getSeriesType(data, 0, aggregatedOptions),
         previousValues = null;
-        
+    
     seriesTypeSelect.updateByIndex(seriesIndex || index, {
       title: 'Series ' + ((seriesIndex || index) + 1) + ' - ' + capitalizeFirstLetter(seriesType)
     });
@@ -479,6 +479,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
 
       if (data.settings && data.settings.dataProvider && data.settings.dataProvider.assignDataFields) {
         const dataFields = data.settings.dataProvider.assignDataFields;
+        
         dataFields.forEach(function(option, index) {
           const seriesType = getSeriesType(data, index);
           if(!options[index]) {

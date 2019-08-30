@@ -46,7 +46,6 @@ highed.templates.add('Map', {
   },
   config: {
     chart: {
-      borderWidth: 1
     },
 
     mapNavigation: {
