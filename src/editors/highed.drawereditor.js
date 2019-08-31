@@ -367,7 +367,9 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     helpModal = highed.HelpModal(builtInOptions.data.help || [])
     mapModal = highed.MapModal(highedChartContainer, dataPage);
 
+
   highed.chartType = chartType;
+  chartPreview.options.togglePlugins('map', chartType === 'Map');
 
   highed.dom.on(helpIcon, 'click', showHelp);
   highed.dom.ap(splitter.bottom, highed.dom.ap(workspaceBody, workspaceRes, workspaceButtons));

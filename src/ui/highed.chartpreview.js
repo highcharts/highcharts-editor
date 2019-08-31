@@ -375,7 +375,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       }) ? 'StockChart' : 'Chart'));
 
       options = highed.merge(options, stockTools.getStockToolsToolbarConfig());
-      //console.log(JSON.stringify(options));
       chart = new Highcharts[chartConstr](pnode || parent, options);
 
       //This is super ugly.
@@ -1174,6 +1173,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       
       if (projectData.options && projectData.options.chart && projectData.options.chart.map){
         events.emit('SetChartAsMap');
+        togglePlugins('map', true);
         events.emit('LoadMapProject', projectData, aggregatedOptions);
       } else events.emit('LoadProject', projectData, aggregatedOptions);
     }
@@ -2101,7 +2101,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     customizedOptions.series[0].mapData = data;
   }
 
-  function updateMap(path, scriptSrc, callback){
+  function updateMap(path, scriptSrc, callback) {
 
     if (customizedOptions && !customizedOptions.chart) {
       customizedOptions.chart = {}
