@@ -36,7 +36,6 @@ highed.templates.add('Map', {
   config: {
     chart: {
       type: 'tilemap',
-      inverted: true,
       height: '80%'
     },
 
@@ -46,7 +45,7 @@ highed.templates.add('Map', {
     },
 
     yAxis: {
-        visible: false
+      visible: false
     },
 
     colorAxis: {

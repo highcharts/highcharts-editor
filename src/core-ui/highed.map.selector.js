@@ -232,7 +232,8 @@ highed.MapSelector = function(chartPreview) {
         });
 
         highed.dom.on(container, 'click', function() {
-          events.emit('LoadDataSet', sample.dataset.join('\n'));  
+          events.emit('LoadDataSet', sample.dataset.join('\n'));
+          if (sample.inverted) chartPreview.options.set('chart--inverted', sample.inverted);
           if (toNextPage) toNextPage();
         });
         

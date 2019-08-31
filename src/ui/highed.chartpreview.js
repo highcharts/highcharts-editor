@@ -328,6 +328,9 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     }, 200);
   }
 
+  function isTileMap(options){
+    return options.series && (options.series || []).some(function(s){return s.type === 'tilemap';});
+  }
   /* Init the chart */
   function init(options, pnode, noAnimation) {
     var i;
@@ -367,7 +370,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     // }
 
     try {
-      const chartConstr = (highed.chartType === 'Map' ? 'Map' : (constr.some(function(a) {
+      const chartConstr = (highed.chartType === 'Map' ? isTileMap(options) ? 'Chart' : 'Map' : (constr.some(function(a) {
         return a === 'StockChart';
       }) ? 'StockChart' : 'Chart'));
 

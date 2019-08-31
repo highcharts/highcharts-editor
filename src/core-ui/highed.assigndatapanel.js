@@ -435,6 +435,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     if (isMap(data)) {
       if (data.config && data.config.series && data.config.series[index] && data.config.series[index].type) return data.config.series[index].type;
       else if (data.config && data.config.chart && data.config.chart.type) return data.config.chart.type;
+      else if (data.options && data.options.series && data.options.series[index] && data.options.series[index].type) return data.options.series[index].type;
       else if (data.type) return data.type;
       else if (isMapBubble(data, index)) return 'mapbubble';
       else if (isPatternFill(data, index)) return 'patternfill'; // Find out if theres a better way for this one

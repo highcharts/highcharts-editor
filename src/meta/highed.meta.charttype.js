@@ -217,45 +217,35 @@ highed.meta.charttype = {
             'linkedTo': 'name',
             'rawValue': [1]
         },
-        'region': {
-            'name': "Region",
-            'desc': 'Region',
+        'x': {
+            'name': "X Value",
+            'desc': 'X Value',
             'default': 'C',
             'value': 'C',
             'mandatory': true,
             'isData': true,
-            'linkedTo': 'region',
-            'rawValue': [2]
-        },
-        'x': {
-            'name': "X Value",
-            'desc': 'X Value',
-            'default': 'D',
-            'value': 'D',
-            'mandatory': true,
-            'isData': true,
             'linkedTo': 'x',
-            'rawValue': [3]
+            'rawValue': [2]
         },
         'y': {
             'name': "Y Value",
             'desc': 'Y Value',
-            'default': 'E',
-            'value': 'E',
+            'default': 'D',
+            'value': 'D',
             'mandatory': true,
             'isData': true,
             'linkedTo': 'y',
-            'rawValue': [4]
+            'rawValue': [3]
         },
         'value': {
             'name': "Value",
             'desc': 'The value of the country',
-            'default': 'F',
-            'value': 'F',
+            'default': 'E',
+            'value': 'E',
             'mandatory': true,
             'isData': true,
             'linkedTo': 'value',
-            'rawValue': [5]
+            'rawValue': [4]
         }
     },
     map: {
