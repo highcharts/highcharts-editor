@@ -57,6 +57,14 @@ highed.templates.add('Map', {
       }
     },
 
+    xAxis: {
+      visible: false
+    },
+
+    yAxis: {
+      visible: false
+    },
+
     legend: {
       enabled: false
     },

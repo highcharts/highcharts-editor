@@ -41,6 +41,14 @@ highed.templates.add('Map', {
       enabled: true
     },
 
+    xAxis: {
+      visible: false
+    },
+
+    yAxis: {
+      visible: false
+    },
+
     colorAxis: {
       min: 1,
       type: 'logarithmic',

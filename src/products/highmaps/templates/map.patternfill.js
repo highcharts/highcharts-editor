@@ -39,7 +39,12 @@ highed.templates.add('Map', {
     },
     // Limit zoom
     xAxis: {
-        minRange: 3500
+        minRange: 3500,
+        visible: false
+    },
+
+    yAxis: {
+      visible: false
     },
 
     // We do not want a legend
