@@ -123,7 +123,8 @@ var highed = {
     if (!props.url) return false;
 
     r.open(props.type, props.url, true);
-    r.setRequestHeader('Content-Type', headers[props.dataType] || headers.text);
+    
+    if (!props.skipContentType) r.setRequestHeader('Content-Type', headers[props.dataType] || headers.text);
 
     Object.keys(props.headers).forEach(function(key) {
       r.setRequestHeader(key, props.headers[key]);

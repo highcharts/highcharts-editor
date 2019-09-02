@@ -12,6 +12,7 @@ var dest = 'dist/',
     rename = require('gulp-rename'),
     uglify = require('gulp-uglify'),
     concat = require('gulp-concat'),
+    replace = require('gulp-replace-task'),
     less = require('gulp-less'),
     electron = require('gulp-electron'),
     jslint = require('gulp-jshint'),
@@ -19,8 +20,10 @@ var dest = 'dist/',
     run = require('gulp-run'),
     header = require('gulp-header'),
     license = fs.readFileSync(__dirname + '/LICENSE'),
+    configDestination = require(__dirname + '/highed.editor.config.json'),
     //The order is important, so we don't do wildcard
     sources = require(__dirname + '/res/filelist.json'),
+    configDest = __dirname + '/src/core',
     products = [
         'highcharts',
         'highstock',
@@ -91,6 +94,21 @@ gulp.task('bundled-modules', ['modules'], function () {
          .pipe(header(license, packageJson))
          .pipe(gulp.dest(dest))
   ;
+});
+
+gulp.task('build-config', function(){
+  return gulp.src(
+    __dirname + '/highed.config.js'
+  )
+  .pipe(replace({
+    patterns: [{
+        match: '<%= config %>',
+        replacement: configDestination
+      }],
+      usePrefix: false
+    })
+  )
+  .pipe(gulp.dest(configDest))
 });
 
 gulp.task('complete', ['default', 'cache-thumbnails', 'bundled-modules', 'with-advanced'], function () {
@@ -357,7 +375,7 @@ gulp.task('electron', function () {
 });
 
 gulp.task('default', function () {
-    gulp.start('minify', 'tinymce', 'ckeditor', 'less', 'move-standalone', 'update-deps', 'plugins', 'wordpress', 'zip-standalone', 'zip-dist', 'zip-standalone-nominify', 'zip-tinymce', 'zip-ckeditor', 'modules');
+    gulp.start('build-config', 'minify', 'tinymce', 'ckeditor', 'less', 'move-standalone', 'update-deps', 'plugins', 'wordpress', 'zip-standalone', 'zip-dist', 'zip-standalone-nominify', 'zip-tinymce', 'zip-ckeditor', 'modules');
 });
 
 gulp.task('with-advanced', function () {

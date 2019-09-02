@@ -364,6 +364,8 @@ highed.DataTable = function(parent, attributes) {
     moveToColumn = null,
     dragHeaderMode = false,
     mapImporter = highed.MapImporter(),
+    mapDataTable = null,
+    dropCSVFileHere = highed.dom.cr('div', 'highed-table-dropzone-title', 'Drop CSV files here'),
     globalContextMenu = highed.ContextMenu([
       {
         title: "Insert Row Above",
@@ -3161,12 +3163,21 @@ highed.DataTable = function(parent, attributes) {
         sampleDataContainer = createSampleData(toNextPage, loading);
         cutAndPasteContainer = createCutAndPasteContainer(toNextPage);
 
+        mapDataTable = highed.MapDataTable(toNextPage).createTable();
         mapImporter.init(container, toNextPage);
 
-    var buttons = [{ title: 'Connect Google Sheet', linkedTo: gSheetContainer}, 
-                   { title: 'Import Live Data', linkedTo: liveContainer, height: 321}, 
-                   { title: 'Cut and Paste Data', linkedTo: cutAndPasteContainer, height: 448, width: 518}, 
-                   { title: 'Load Sample Data', linkedTo: sampleDataContainer}];
+    var buttons = [{ title: 'Load Sample Data', linkedTo: sampleDataContainer}];
+    
+    if (highed.chartType !== 'Map') {
+      [{ title: 'Connect Google Sheet', linkedTo: gSheetContainer}, 
+      { title: 'Import Live Data', linkedTo: liveContainer, height: 321}, 
+      { title: 'Cut and Paste Data', linkedTo: cutAndPasteContainer, height: 448, width: 518}].forEach(function(btnOpt){
+          buttons.unshift(btnOpt);
+      }) 
+    }
+
+    mapDataTable.classList += ' hide';
+    //mapDataTable = highed.dom.cr('div');
 
     buttons.forEach(function(buttonProp) {
       const button = highed.dom.cr('button', 'highed-ok-button highed-import-button', buttonProp.title);
@@ -3179,8 +3190,7 @@ highed.DataTable = function(parent, attributes) {
       highed.dom.ap(buttonsContainer, button);
     });
 
-
-    highed.dom.on(selectFile, 'click', function(){
+    highed.dom.on(selectFile, 'click', function() {
       highed.readLocalFile({
         type: 'text',
         accept: '.csv',
@@ -3241,21 +3251,38 @@ highed.DataTable = function(parent, attributes) {
       //toNextPage();
     };
 
-    highed.dom.ap(container, 
-      highed.dom.ap(
-        highed.dom.cr('div','highed-table-dropzone'),
-        highed.dom.cr('div', 'highed-table-dropzone-title', 'Drop CSV files here'),
+    var dropzoneSpan = highed.dom.cr('span');
+
+    if (highed.chartType !== 'Map') {
+      highed.dom.ap(dropzoneSpan,
         highed.dom.cr('div', 'highed-table-dropzone-subtitle', 'or'),
         highed.dom.ap(
           highed.dom.cr('div', 'highed-table-dropzone-button'),
           selectFile
-        ),
+        )
+      );
+    }
+
+    highed.dom.ap(container, 
+      mapDataTable,
+      highed.dom.ap(
+        highed.dom.cr('div','highed-table-dropzone ' + (highed.chartType === 'Map' ? 'highed-table-map-dropzone' : '')),
+        dropCSVFileHere,
+        dropzoneSpan,
         highed.dom.cr('div', 'highed-table-dropzone-subtitle highed-table-dropzone-message', 'You can also:'),
         buttonsContainer
       )
     );
 
     return container;
+  }
+
+  function showMapDataTable() {
+    if (mapDataTable) {
+      mapDataTable.classList.remove('hide');
+      mapDataTable.classList += ' active';
+      dropCSVFileHere.innerHTML = 'Or drop CSV files here';
+    }
   }
 
   function loadMapData(mapData, code, name, csv, cb) {
@@ -3362,6 +3389,7 @@ highed.DataTable = function(parent, attributes) {
     hideDataTableError: hideDataTableError,
     selectSwitchRowsColumns: selectSwitchRowsColumns,
     loadMapData: loadMapData,
-    getMapValueFromCode: getMapValueFromCode
+    getMapValueFromCode: getMapValueFromCode,
+    showMapDataTable: showMapDataTable
   };
 };

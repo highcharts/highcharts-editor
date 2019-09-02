@@ -65,7 +65,8 @@ highed.templates.add('Map', {
       {
         dataLabels: {
           enabled: false
-        }
+        },
+        joinBy: null
       }
     ]
   }

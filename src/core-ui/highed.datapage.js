@@ -673,6 +673,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   dataTable.on('LoadGSheet', function(settings) {
     assignDataPanel.disable();
+    setSeriesMapping(assignDataPanel.getAllOptions());
     chartPreview.data.gsheet(settings);
   });
   
@@ -718,6 +719,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       true,
       p.dataRefreshRate
     );
+
+    setSeriesMapping(assignDataPanel.getAllOptions());
   });
 
   chartPreview.on('ProviderLiveData', function(p) {
@@ -759,6 +762,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     assignDataPanel.changeAssignDataType(type);
   }
 
+  function showMapDataTable() {
+    dataTable.showMapDataTable();
+  }
+
   return {
     on: events.on,
     destroy: destroy,
@@ -792,6 +799,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     loadSampleData: loadSampleData,
     addSerie: addSerie,
     getMapValueFromCode: getMapValueFromCode,
-    changeAssignDataType: changeAssignDataType
+    changeAssignDataType: changeAssignDataType,
+    showMapDataTable: showMapDataTable
   };
 };

@@ -294,7 +294,6 @@ highed.meta.charttype = {
             'linkedTo': 'z',
             'rawValue': [1]
         }
-
     },
     patternfill: {
         'values': null,

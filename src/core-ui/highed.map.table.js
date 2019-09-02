@@ -31,7 +31,7 @@ highed.MapTable = function(parent, props) {
   var events = highed.events(),
       mapContainer = highed.dom.cr(
         'div',
-        'highed-edit-map-import-container highed-map-geojson-container active'
+        'highed-edit-map-import-container highed-map-geojson-container active ' + props.className
       ),
       mapHeader = highed.dom.cr('div', 'highed-map-value-header highed-map-geojson-header', props.header),
       mapDescription = highed.dom.cr('div', 'highed-map-value-description highed-map-geojson-description', props.description),
@@ -44,9 +44,12 @@ highed.MapTable = function(parent, props) {
       selects = [],
       rows = [],
       mainInput = highed.dom.cr('input'),
-      prevValue = null;
+      prevValue = null,
+      noData = highed.dom.cr('div', 'highed-map-table-no-data', 'No Data'),
+      extra = props.extra;
   //////////////////////////////////////////////////////////////////////////////
-
+  
+  if (!extra) extra = highed.dom.cr('span');
 
   function redrawDOM() {
     parent.innerHTML = '';
@@ -56,12 +59,15 @@ highed.MapTable = function(parent, props) {
       mapContainer,
       mapHeader,
       mapDescription,
+      extra,
       highed.dom.ap(
         mapTableContainer, 
         highed.dom.ap(
           table,
           mapTHeader, 
-          mapTBody
+          mapTBody,
+          noData
+          
         )
       ),
       highed.dom.ap(highed.dom.cr('div', 'highed-map-geojson-btn-container'), mapBtn)
@@ -72,45 +78,51 @@ highed.MapTable = function(parent, props) {
     var tr = highed.dom.cr('tr');
     var selectsTr = highed.dom.cr('tr');
     
-    data.forEach(function(element, index) {
-      highed.dom.ap(tr, highed.dom.cr('th', 'map-table-label-header', element));
-      var select = highed.dom.cr('div');
-      var selectDropdown = highed.DropDown(select, 'highed-map-import-dropdown');
 
-      (mapOptions || []).forEach(function(option, i) {
-        selectDropdown.addItem({
-          id: option.value,
-          title: option.name,
-        });
-      });
+      data.forEach(function(element, index) {
+        highed.dom.ap(tr, highed.dom.cr('th', 'map-table-label-header ' + (selects.length === 0 ? ' no-selects' : ''), element));
+        var select = highed.dom.cr('div');
 
-      selectDropdown.selectByIndex(0);
-
-      if(index === 0) selectDropdown.selectByIndex(1);
-      else if (index === data.length - 1) selectDropdown.selectByIndex(mapOptions.length - 1);
-      
-      selectDropdown.on('Change', function(item) {
-        var selectedId = item.id();
-        var hasSelected = selects.some(function(s) {
-          return (selectedId !== undefined && s !== item && selectedId === s.previousValue);
-        });
-
-        if (selectDropdown.previousValue === item.id()) return;
-        if (hasSelected) {
-          alert("This value has already been assigned to another column. Clear that column first before assigning to this one.");
-          selectDropdown.selectById(selectDropdown.previousValue);
-          return;
+        if (mapOptions.length > 0) {
+          var selectDropdown = highed.DropDown(select, 'highed-map-import-dropdown');
+    
+          (mapOptions || []).forEach(function(option, i) {
+            selectDropdown.addItem({
+              id: option.value,
+              title: option.name,
+            });
+          });
+    
+          selectDropdown.selectByIndex(0);
+    
+          if(index === 0) selectDropdown.selectByIndex(1);
+          else if (index === data.length - 1) selectDropdown.selectByIndex(mapOptions.length - 1);
+          
+          selectDropdown.on('Change', function(item) {
+            var selectedId = item.id();
+            var hasSelected = selects.some(function(s) {
+              return (selectedId !== undefined && s !== item && selectedId === s.previousValue);
+            });
+    
+            if (selectDropdown.previousValue === item.id()) return;
+            if (hasSelected) {
+              alert("This value has already been assigned to another column. Clear that column first before assigning to this one.");
+              selectDropdown.selectById(selectDropdown.previousValue);
+              return;
+            }
+            selectDropdown.previousValue = selectDropdown.getSelectedItem().id();        
+          });
+    
+          selectDropdown.previousValue = selectDropdown.getSelectedItem().id();
+          selects.push(selectDropdown);
+    
+          highed.dom.ap(selectsTr, highed.dom.ap(highed.dom.cr('th', ''), select));
         }
-        selectDropdown.previousValue = selectDropdown.getSelectedItem().id();        
+
+
       });
-
-      selectDropdown.previousValue = selectDropdown.getSelectedItem().id();
-      selects.push(selectDropdown);
-
-      highed.dom.ap(selectsTr, highed.dom.ap(highed.dom.cr('th', ''), select));
-    });
-
-    highed.dom.ap(mapTHeader, selectsTr, tr);
+  
+      highed.dom.ap(mapTHeader, selectsTr, tr);
   }
 
   function handlePreviousValue(td) {
@@ -164,8 +176,10 @@ highed.MapTable = function(parent, props) {
     return exports;
   }
 
-
   function createBody(data){
+
+    if (!noData.classList.contains('hide') && data.length > 1) noData.classList += ' hide';
+
     data.forEach(function(d,index) {
       if (index === 0) return;
       
@@ -236,9 +250,31 @@ highed.MapTable = function(parent, props) {
     })
   }
 
+  function addRow(newData) {
+    data.push(newData);
+
+    if (!noData.classList.contains('hide')) noData.classList += ' hide';
+
+    //newData.forEach(function(d,index) {
+      var rowIndex = rows.length - 1;
+      rows[rowIndex] = [];
+
+      var tr = highed.dom.cr('tr');
+      newData.forEach(function(element) {
+        var td = createCell(element);
+        rows[rowIndex].push(td);
+
+        highed.dom.ap(tr, td.element);
+      });
+      highed.dom.ap(mapTBody, tr);    
+      
+
+  }
+
   return {
     on: events.on,
     createTable: createTable,
-    highlightRows: highlightRows
+    highlightRows: highlightRows,
+    addRow: addRow
   };
 };

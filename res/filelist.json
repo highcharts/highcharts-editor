@@ -11,6 +11,8 @@
     "./src/core/highed.dvalidatorman.js",
     "./src/core/highed.cloud.js",
     "./src/core/highed.stocktools.js",
+    "./src/core/highed.mapapi.js",
+    "./src/core/highed.config.js",
     "./src/core/highed.global.events.js",
 
     "./src/core-ui/highed.dimmer.js",
@@ -50,6 +52,7 @@
     "./src/core-ui/highed.map.modal.js",
     "./src/core-ui/highed.map.importer.js",
     "./src/core-ui/highed.map.table.js",
+    "./src/core-ui/highed.map.datatable.js",
 
     "./src/meta/highed.meta.options.extended.js",
     "./src/meta/highed.meta.charttype.js",

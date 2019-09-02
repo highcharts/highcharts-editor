@@ -64,7 +64,6 @@
     text-align: right;
 }
 
-
 .highed-map-geojson-container {
     position: absolute;
     left: 0px;
@@ -86,6 +85,41 @@
         font-weight: 300;
         margin: 15px 0px;
     }
+}
+
+.highed-map-add-points {
+    position: relative;
+    left: -7px;
+    top: 0px;
+    width: 955px;
+    background-color: white;
+    display: none;
+    border: 1px solid rgba(128, 128, 128, 0.0784313725490196);
+    padding: 17px;
+    .highed-map-table-container {
+        height: 145px;
+        .highed-map-table {
+            width: 99%;
+            max-width: 910px;
+        }
+    }
+
+    .highed-map-add-latlong {
+        height: 29px;
+        width: 290px;
+        margin-bottom: 10px;
+        margin-right: 10px;
+        margin-left: 5px;
+    }
+}
+
+.highed-maps-datatable {
+    top: -57px;
+    position: relative;
+}
+
+.highed-maps-datatable.hide {
+    display: none;
 }
 
 .highed-map-import-geojson-header {
@@ -188,7 +222,11 @@
         width:100%;
         border-collapse: collapse;
         table-layout: fixed;
+        
         thead {
+            th.map-table-label-header.no-selects {
+                top: 0px;
+            }
             th.map-table-label-header {
                 top: 39px;
             }
@@ -231,6 +269,17 @@
             .highed-map-import-failed {
                 background-color: #ffecec;
             }
+        }
+
+        .highed-map-table-no-data {
+            width: 910px;
+            padding: 10px 0px;
+            border: 1px solid #e8e8e8;
+            text-align: center;
+            color: black;
+        }
+        .highed-map-table-no-data.hide {
+            display: none;
         }
     }
 }

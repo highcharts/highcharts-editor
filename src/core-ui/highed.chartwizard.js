@@ -54,13 +54,6 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
         }
       },
       {
-        id: 4,
-        title: 'Import Data',
-        create: function(body) {
-          highed.dom.ap(body, dataTableContainer);
-        }
-      },
-      {
         id: 5,
         title: 'Customize',
         permission: 'customize',
@@ -114,7 +107,25 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
         });
       }
 
-      
+
+      builtInOptions.splice(3, 0, 
+        {
+          id: 4,
+          title: 'Import Data',
+          create: function(body) {
+            highed.dom.ap(body, dataTableContainer);
+          },
+          onload: function() {
+            var options = chartPreview.options.getCustomized();
+            if (options && options.series && (options.series || []).some(function(s){ return s.type === 'mapbubble'})){
+              dataPage.showMapDataTable();
+            }
+
+          }
+        });
+
+
+
       var counter = 1;
       toolbox = highed.Toolbox(userContents);
       builtInOptions.forEach(function(option, index) {
@@ -255,6 +266,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
       highed.dom.on(nextButton, 'click', function() {
         goToNextPage();
       });
+
       highed.dom.ap(dataTableContainer, 
         highed.dom.ap(dataTableDropzoneContainer,
           highed.dom.ap(
