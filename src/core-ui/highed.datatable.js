@@ -346,6 +346,7 @@ highed.DataTable = function(parent, attributes) {
       NOV: 11,
       DEC: 12
     },
+    simpleDataTable = null,
     selectedRowIndex = 0,
     keyValue = "A",
     tempKeyValue = "A",
@@ -2970,7 +2971,7 @@ highed.DataTable = function(parent, attributes) {
 
   function createSimpleDataTable(toNextPage, loading, chartContainer){
 
-    var simpleDataTable = highed.WizardData(importer, mapImporter, chartContainer);
+    simpleDataTable = highed.WizardData(importer, mapImporter, chartContainer);
 
     simpleDataTable.createSimpleDataTable(toNextPage, loading, {
       gsheetID: gsheetID,
@@ -2993,12 +2994,9 @@ highed.DataTable = function(parent, attributes) {
   }
 
   function showMapDataTable() {
-    if (mapDataTable) {
-      mapDataTable.classList.remove('hide');
-      mapDataTable.classList += ' active';
-      dropCSVFileHere.innerHTML = 'Or drop CSV files here';
-    }
+    simpleDataTable.showMapDataTable();
   }
+
 
   function loadMapData(mapData, code, name, csv, cb) {
     const rowLength = rows.length;

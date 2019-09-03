@@ -33,6 +33,8 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
 
     events = highed.events(),
     mapDataTable = null,
+    mapDataTableElement = null,
+    dropzone = null,
     container = highed.dom.cr('div', 'highed-table-dropzone-container'),
     dropCSVFileHere = highed.dom.cr('div', 'highed-table-dropzone-title', 'Drop CSV files here');
 
@@ -231,7 +233,8 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
         sampleDataContainer = createSampleData(toNextPage, loading);
         cutAndPasteContainer = createCutAndPasteContainer(toNextPage);
 
-        mapDataTable = highed.MapDataTable(toNextPage).createTable();
+        mapDataTable = highed.MapDataTable(toNextPage);
+        mapDataTableElement =  mapDataTable.createTable();
         mapImporter.init(container, toNextPage);
 
     var buttons = [{ title: 'Load Sample Data', linkedTo: sampleDataContainer}];
@@ -244,8 +247,8 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
       })
     }
 
-    mapDataTable.classList += ' hide';
-    //mapDataTable = highed.dom.cr('div');
+    mapDataTableElement.classList += ' hide';
+    //mapDataTableElement = highed.dom.cr('div');
 
     buttons.forEach(function(buttonProp) {
       const button = highed.dom.cr('button', 'highed-ok-button highed-import-button', buttonProp.title);
@@ -340,11 +343,14 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
       );
     }
 
+
+    dropzone = highed.dom.cr('div','highed-table-dropzone ' + (highed.chartType === 'Map' ? 'highed-table-map-dropzone' : ''));
+
     highed.dom.ap(container, 
-      mapDataTable,
+      mapDataTableElement,
       //chartContainer,
       highed.dom.ap(
-        highed.dom.cr('div','highed-table-dropzone ' + (highed.chartType === 'Map' ? 'highed-table-map-dropzone' : '')),
+        dropzone,
         dropCSVFileHere,
         dropzoneSpan,
         highed.dom.cr('div', 'highed-table-dropzone-subtitle highed-table-dropzone-message', 'You can also:'),
@@ -357,10 +363,15 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
   }
 
   function showMapDataTable() {
-    if (mapDataTable) {
-      mapDataTable.classList.remove('hide');
-      mapDataTable.classList += ' active';
+    if (mapDataTableElement) {
+      mapDataTableElement.classList.remove('hide');
+      mapDataTableElement.classList += ' active';
       dropCSVFileHere.innerHTML = 'Or drop CSV files here';
+      resize();
+      highed.dom.style(container, {
+        marginLeft: 0 + 'px'
+      })
+
     }
   }
 
@@ -420,10 +431,19 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
     return value;
   }
 
-  function loadSampleData(data) {
-    importer.emitCSVImport(data);
-  }
+  function resize() {
+    
+    setTimeout(function() {
+      highed.dom.style(mapDataTableElement, {
+        width: (highed.dom.size(container).w - highed.dom.size(chartContainer).w) - 13 + 'px'
+      });
+      highed.dom.style(dropzone, {
+        width: highed.dom.size(chartContainer).w + highed.dom.size(mapDataTableElement).w + 3 + 'px'
+      })
+    }, 10);
 
+    mapDataTable.resize();
+  }
   ////////////////////////////////////////////////////////////////////////////
 
   return {
@@ -432,6 +452,7 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
     loadMapData: loadMapData,
     getMapValueFromCode: getMapValueFromCode,
     showMapDataTable: showMapDataTable,
+    resize: resize,
     container: function() {
       return container;
     }

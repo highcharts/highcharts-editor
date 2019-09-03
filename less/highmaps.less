@@ -89,24 +89,30 @@
 
 .highed-map-add-points {
     position: relative;
-    left: -7px;
-    top: 0px;
-    width: 955px;
+    top: 0;
+    width: 100%;
     background-color: white;
     display: none;
-    border: 1px solid rgba(128, 128, 128, 0.0784313725490196);
+    border: 1px solid #e8e8e8;
     padding: 17px;
+    border-radius: 3px;
     .highed-map-table-container {
-        height: 145px;
+        max-height: 118px;
         .highed-map-table {
             width: 99%;
-            max-width: 910px;
+            max-width: 397px;
+        }
+        .highed-map-table.data {
+            float: left;
+        }
+        .highed-map-table-delete {
+            width: 22px;
         }
     }
 
     .highed-map-add-latlong {
         height: 29px;
-        width: 290px;
+        width: 194px;
         margin-bottom: 10px;
         margin-right: 10px;
         margin-left: 5px;
@@ -272,7 +278,7 @@
         }
 
         .highed-map-table-no-data {
-            width: 910px;
+            width: 200px;
             padding: 10px 0px;
             border: 1px solid #e8e8e8;
             text-align: center;

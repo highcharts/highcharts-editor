@@ -43,7 +43,9 @@ highed.MapDataTable = function(toNextPage) {
           highed.dom.cr('span', '', 'Country Name: '),
           addMapPointInput,
           addMapPointBtn
-        )
+        ),
+        noSaveBtn: true,
+        hiddenValues: [0, 1]
       });
   //////////////////////////////////////////////////////////////////////////////
 
@@ -56,7 +58,7 @@ highed.MapDataTable = function(toNextPage) {
     mapApi.getLatLong(location, function (result) {
       if (!result) return;
 
-      table.addRow([result.geometry.lat,result.geometry.lng, addMapPointInput.value, '']);
+      table.addRow([result.geometry.lat,result.geometry.lng, addMapPointInput.value, 10]);
       addMapPointInput.value = '';
     });
   }
@@ -70,8 +72,14 @@ highed.MapDataTable = function(toNextPage) {
     return container;
   }
 
+  function resize(){
+    
+    table.resize();
+  }
+
   return {
     on: events.on,
+    resize: resize,
     createTable: createTable
   };
 };

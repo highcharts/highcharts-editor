@@ -36,10 +36,12 @@ highed.MapTable = function(parent, props) {
       mapHeader = highed.dom.cr('div', 'highed-map-value-header highed-map-geojson-header', props.header),
       mapDescription = highed.dom.cr('div', 'highed-map-value-description highed-map-geojson-description', props.description),
       mapTableContainer = highed.dom.cr('div', 'highed-map-table-container'),
-      table = highed.dom.cr('table', 'highed-map-table ' + (!props.readOnly ? 'edit' : '')),
+      table = highed.dom.cr('table', 'highed-map-table data ' + (!props.readOnly ? 'edit' : '')),
+      deleteTable = highed.dom.cr('table', 'highed-map-table highed-map-table-delete'),
       mapTHeader = highed.dom.cr('thead'),
       mapTBody = highed.dom.cr('tbody'),
-      mapBtn = highed.dom.btn('Save', 'highed-map-geojson-btn highed-ok-button highed-import-button negative', null),
+      deleteTableBody = highed.dom.cr('tbody'),
+      mapBtn = props.noSaveBtn ? highed.dom.cr('span') : highed.dom.btn('Save', 'highed-map-geojson-btn highed-ok-button highed-import-button negative', null),
       mapOptions = props.selects,
       selects = [],
       rows = [],
@@ -68,19 +70,39 @@ highed.MapTable = function(parent, props) {
           mapTBody,
           noData
           
+        ),
+        highed.dom.ap(
+          deleteTable,
+          highed.dom.ap(
+            highed.dom.cr('thead'), 
+            highed.dom.ap(highed.dom.cr('tr'),
+              highed.dom.ap(
+                highed.dom.cr('th', 'map-table-label-header no-selects'), 
+                highed.dom.cr('i', 'fa fa-trash')
+              )
+            )
+          ),
+          deleteTableBody
         )
       ),
       highed.dom.ap(highed.dom.cr('div', 'highed-map-geojson-btn-container'), mapBtn)
     ));
+  
   }
 
   function createHeaders(data) {
     var tr = highed.dom.cr('tr');
     var selectsTr = highed.dom.cr('tr');
     
-
       data.forEach(function(element, index) {
-        highed.dom.ap(tr, highed.dom.cr('th', 'map-table-label-header ' + (selects.length === 0 ? ' no-selects' : ''), element));
+        var th = highed.dom.cr('th', 'map-table-label-header ' + (selects.length === 0 ? ' no-selects' : ''), element);
+        highed.dom.ap(tr, th);
+        
+        if (props.hiddenValues && props.hiddenValues.includes(index)) {
+          highed.dom.style(th, {
+            display: 'none'
+          });
+        }
         var select = highed.dom.cr('div');
 
         if (mapOptions.length > 0) {
@@ -191,6 +213,7 @@ highed.MapTable = function(parent, props) {
         rows[index - 1].push(td);
 
         highed.dom.ap(tr, td.element);
+        highed.dom.ap(deleteTableBody, highed.dom.cr('td','', '<i class="fa fa-trash">'));
       });
       highed.dom.ap(mapTBody, tr);    
     });
@@ -253,25 +276,40 @@ highed.MapTable = function(parent, props) {
     data.push(newData);
 
     if (!noData.classList.contains('hide')) noData.classList += ' hide';
-
+      
       var rowIndex = (rows.length > 0 ? rows.length: 0);
       rows[rowIndex] = [];
 
       var tr = highed.dom.cr('tr');
-      newData.forEach(function(element) {
+      var deleteltr = highed.dom.cr('tr');
+      newData.forEach(function(element, index) {
         var td = createCell(element);
         rows[rowIndex].push(td);
+
+        if (props.hiddenValues && props.hiddenValues.includes(index)) {
+          highed.dom.style(td.element, {
+            display: 'none'
+          });
+        }
 
         highed.dom.ap(tr, td.element);
       });
       highed.dom.ap(mapTBody, tr);    
+      highed.dom.ap(deleteTableBody, highed.dom.ap(deleteltr, highed.dom.cr('td','', '<i class="fa fa-trash">')));
       
+  }
+
+  function resize() {
+    highed.dom.style(noData, {
+      width: (highed.dom.size(table).w + highed.dom.size(deleteTable).w + 1) +  'px'
+    });
   }
 
   return {
     on: events.on,
     createTable: createTable,
     highlightRows: highlightRows,
-    addRow: addRow
+    addRow: addRow,
+    resize: resize
   };
 };
