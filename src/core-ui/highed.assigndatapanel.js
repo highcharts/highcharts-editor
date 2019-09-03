@@ -36,6 +36,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
       'rawValue': [0],
       'previousValue': null,
       'linkedTo': 'x',
+      'isLabel': true,
       'mandatory': true,
       'colors': {
         'light': 'rgba(66, 200, 192, 0.2)',
@@ -184,7 +185,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
         values = [];
 
     Object.keys(options[index]).forEach(function(optionKeys) {
-      if (optionKeys === 'labels') {
+      if (options[index][optionKeys].isLabel) {
         arr.labelColumn = highed.getLetterIndex(options[index][optionKeys].value.charAt(0));
       } else if (options[index][optionKeys].isData) { //(highed.isArr(options[index][optionKeys])) {
 
@@ -213,7 +214,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
       extraColumns = [],
       values = [];
       Object.keys(serie).forEach(function(optionKeys) {
-          if (optionKeys === 'labels') {
+          if (options[i][optionKeys].isLabel) {
             arr.labelColumn = highed.getLetterIndex(options[i][optionKeys].value.charAt(0));
           } else if (options[i][optionKeys].isData) { //(highed.isArr(options[i][optionKeys])) {
             const allData = options[i][optionKeys];
@@ -697,13 +698,20 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     });
   }
 
-  function setValues(values) { //For Maps import data
+  function setValues(values, index) { //For Maps import data
+    if (!index) index = 0;
 
-    Object.keys(values).forEach(function(key, index) {
-      var letter = getLetterFromIndex(values[key]);
-      options[0][key].previousValue = null;
-      options[0][key].value = letter;
-      options[0][key].rawValue = [values[key]];
+    Object.keys(values).forEach(function(key) {
+      if (values[key] === -1) {
+        options[index][key].previousValue = null;
+        options[index][key].value = '';
+        options[index][key].rawValue = null;
+      } else {
+        var letter = getLetterFromIndex(values[key]);
+        options[index][key].previousValue = null;
+        options[index][key].value = letter;
+        options[index][key].rawValue = [values[key]];
+      }
     });
 
     resetDOM();

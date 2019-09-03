@@ -230,7 +230,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
       chartFrame,
       planCode
     ),
-    dataPage = highed.DataPage(  
+    dataPage = highed.DataPage(
       splitter.bottom,
       highed.merge(
         {
@@ -526,7 +526,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
 
   function showChartWizard() {
 
-    createChartPage.init(dataPage, templatePage, customizePage, mapSelector);
+    createChartPage.init(dataPage, templatePage, customizePage, mapSelector, highedChartContainer);
 
     highed.dom.style([workspaceBody, showChartSmallScreen, smallScreenWorkspaceButtons], {
       opacity: 0
@@ -544,6 +544,8 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     }
 
     createChartPage.on('SimpleCreateChartDone', function(goToDataPage) {
+
+      highed.dom.ap(splitter.bottom, highedChartContainer);
       createChartPage.hide();
       highed.dom.style([chartFrame, titleContainer], {
         opacity: '1'

@@ -256,7 +256,7 @@ highed.meta.charttype = {
             'default': 'A',
             'value': 'A',
             'mandatory': true,
-            'isData': true,
+            'isLabel': true,
             'linkedTo': 'hc-key',
             'rawValue': [0]
         },
@@ -279,17 +279,16 @@ highed.meta.charttype = {
             'desc': 'The country name',
             'default': 'A',
             'value': 'A',
-            'mandatory': true,
-            'isData': true,
+            'isLabel': true,
+            'mandatory': false,
             'linkedTo': 'hc-key',
             'rawValue': [0]
-        },/*
+        },
         'latitude': {
             'name': "Latitude",
             'desc': 'Latitude',
             'default': 'A',
             'value': 'A',
-            'mandatory': true,
             'isData': true,
             'linkedTo': 'lat',
             'rawValue': [0]
@@ -299,11 +298,10 @@ highed.meta.charttype = {
             'desc': 'Longitude',
             'default': 'B',
             'value': 'B',
-            'mandatory': true,
             'isData': true,
             'linkedTo': 'lon',
             'rawValue': [1]
-        },*/
+        },
         'value': {
             'name': "Value",
             'desc': 'The value of the country',
@@ -323,7 +321,7 @@ highed.meta.charttype = {
             'default': 'A',
             'value': 'A',
             'mandatory': true,
-            'isData': true,
+            'isLabel': true,
             'linkedTo': 'hc-key',
             'rawValue': [0]
         },

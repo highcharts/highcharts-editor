@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /** Map Data Table (Map Bubble)
  */
 
-highed.MapDataTable = function(toNextPage) {
+highed.MapDataTable = function() {
   var events = highed.events(),
       container = highed.dom.cr('div', 'highed-maps-datatable'),
       mapApi = highed.MapApi(),
@@ -60,6 +60,8 @@ highed.MapDataTable = function(toNextPage) {
 
       table.addRow([result.geometry.lat,result.geometry.lng, addMapPointInput.value, 10]);
       addMapPointInput.value = '';
+
+      events.emit('UpdateDataGridWithLatLong', table.getData());
     });
   }
 
@@ -73,7 +75,6 @@ highed.MapDataTable = function(toNextPage) {
   }
 
   function resize(){
-    
     table.resize();
   }
 

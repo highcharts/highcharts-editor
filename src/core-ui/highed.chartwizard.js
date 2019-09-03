@@ -250,10 +250,15 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
 
     function createImportDataSection(dataPage, chartContainer) {
 
-      var nextButton = highed.dom.cr(
+      var skipButton = highed.dom.cr(
             'button',
             'highed-ok-button highed-import-button negative',
             'No thanks, I will enter my data manually'
+          ),
+          nextButton = highed.dom.cr(
+            'button',
+            'highed-ok-button highed-import-button negative',
+            'Next'
           ),
           loader = highed.dom.cr('span','highed-wizard-loader', '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>'),
           dataTableDropzoneContainer = dataPage.createSimpleDataTable(function() {
@@ -263,7 +268,12 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
             else loader.classList.remove('active');
           }, chartContainer);
 
+
       highed.dom.on(nextButton, 'click', function() {
+        goToNextPage();
+      });
+
+      highed.dom.on(skipButton, 'click', function() {
         goToNextPage();
       });
 
@@ -272,6 +282,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
           highed.dom.ap(
             highed.dom.cr('div','highed-toolbox-button-container'),
             loader,
+            skipButton,
             nextButton
           )
         )

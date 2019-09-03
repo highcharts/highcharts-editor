@@ -593,6 +593,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     });
   });
 
+  dataTable.on('ResetAssignValues', function(values){
+    assignDataPanel.setValues(values, 1);
+  });
+
   dataTable.on('DisableAssignDataPanel', function() {
     assignDataPanel.disable();
   });

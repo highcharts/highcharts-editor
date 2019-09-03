@@ -235,7 +235,7 @@ highed.MapTable = function(parent, props) {
     createBody(data);
 
     setTimeout(function() { //TODO: Fix this later
-        redrawDOM()
+      redrawDOM()
     }, 10)
     
     highed.dom.on(mapBtn, 'click', function(ev) {
@@ -256,6 +256,8 @@ highed.MapTable = function(parent, props) {
         });
       });
 
+      arraymove(data[0], vals.labels, 0);
+      arraymove(data[0], vals.value, 1);
       dataArr.unshift(data[0]);
 
       vals.labels = 0;
@@ -277,7 +279,7 @@ highed.MapTable = function(parent, props) {
 
     if (!noData.classList.contains('hide')) noData.classList += ' hide';
       
-      var rowIndex = (rows.length > 0 ? rows.length: 0);
+      var rowIndex = (rows.length > 0 ? rows.length : 0);
       rows[rowIndex] = [];
 
       var tr = highed.dom.cr('tr');
@@ -299,6 +301,20 @@ highed.MapTable = function(parent, props) {
       
   }
 
+  function getData() {
+    var dataArr = rows.map(function(row) {
+      arraymove(row, 3, 2);
+      return row.map(function(column) {
+        return column.value();
+      });
+    });
+
+    arraymove(data[0], 3, 2);
+
+    dataArr.unshift(data[0]);
+    return dataArr;
+  }
+
   function resize() {
     highed.dom.style(noData, {
       width: (highed.dom.size(table).w + highed.dom.size(deleteTable).w + 1) +  'px'
@@ -310,6 +326,7 @@ highed.MapTable = function(parent, props) {
     createTable: createTable,
     highlightRows: highlightRows,
     addRow: addRow,
+    getData: getData,
     resize: resize
   };
 };

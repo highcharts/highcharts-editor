@@ -2973,6 +2973,20 @@ highed.DataTable = function(parent, attributes) {
 
     simpleDataTable = highed.WizardData(importer, mapImporter, chartContainer);
 
+    simpleDataTable.on('UpdateDataGridWithLatLong', function(data) {
+      loadCSV({ csv: data.map(function(cols) {
+        return cols.join(',');
+      }).join('\n')}, null, false);
+
+      events.emit('ResetAssignValues', {
+        labels: -1,
+        latitude: 0,
+        longitude: 1,
+        value: 2,
+      });
+      
+    });
+
     simpleDataTable.createSimpleDataTable(toNextPage, loading, {
       gsheetID: gsheetID,
       gsheetWorksheetID: gsheetWorksheetID,

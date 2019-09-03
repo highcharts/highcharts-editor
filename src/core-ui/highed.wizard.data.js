@@ -234,6 +234,10 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
         cutAndPasteContainer = createCutAndPasteContainer(toNextPage);
 
         mapDataTable = highed.MapDataTable(toNextPage);
+
+        mapDataTable.on('UpdateDataGridWithLatLong', function(data){
+          events.emit('UpdateDataGridWithLatLong', data);
+        })
         mapDataTableElement =  mapDataTable.createTable();
         mapImporter.init(container, toNextPage);
 
