@@ -91,7 +91,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
     activeOption,
     options = [];
 
-    function init(dataPage,templatePage, customizePage, mapSelector) {
+    function init(dataPage,templatePage, customizePage, mapSelector, chartContainer) {
 
       if (highed.chartType === 'Map') {
         builtInOptions.splice(2, 0, {
@@ -151,7 +151,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
       options[0].expand();
 
       createTitleSection();
-      createImportDataSection(dataPage);
+      createImportDataSection(dataPage, chartContainer);
       createMapDataSection(mapSelector);
       createTemplateSection(templatePage);
       createCustomizeSection();
@@ -248,7 +248,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
       highed.dom.ap(mapContainer, mapSelector.createMapDataSection(goToNextPage));
     }
 
-    function createImportDataSection(dataPage) {
+    function createImportDataSection(dataPage, chartContainer) {
 
       var nextButton = highed.dom.cr(
             'button',
@@ -261,7 +261,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
           }, function(loading) {
             if (loading) loader.classList += ' active';
             else loader.classList.remove('active');
-          });
+          }, chartContainer);
 
       highed.dom.on(nextButton, 'click', function() {
         goToNextPage();

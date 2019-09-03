@@ -179,7 +179,6 @@ highed.MapTable = function(parent, props) {
   function createBody(data){
 
     if (!noData.classList.contains('hide') && data.length > 1) noData.classList += ' hide';
-
     data.forEach(function(d,index) {
       if (index === 0) return;
       
@@ -217,7 +216,6 @@ highed.MapTable = function(parent, props) {
     }, 10)
     
     highed.dom.on(mapBtn, 'click', function(ev) {
-      
       var vals = {};
       selects.forEach(function(s, index) {
         if (s.getSelectedItem().index() > 0) {
@@ -226,6 +224,7 @@ highed.MapTable = function(parent, props) {
       });
 
       var dataArr = rows.map(function(row) {
+
         arraymove(row, vals.labels, 0);
         arraymove(row, vals.value, 1);
 
@@ -255,8 +254,7 @@ highed.MapTable = function(parent, props) {
 
     if (!noData.classList.contains('hide')) noData.classList += ' hide';
 
-    //newData.forEach(function(d,index) {
-      var rowIndex = rows.length - 1;
+      var rowIndex = (rows.length > 0 ? rows.length: 0);
       rows[rowIndex] = [];
 
       var tr = highed.dom.cr('tr');
@@ -268,7 +266,6 @@ highed.MapTable = function(parent, props) {
       });
       highed.dom.ap(mapTBody, tr);    
       
-
   }
 
   return {

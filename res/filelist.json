@@ -53,6 +53,7 @@
     "./src/core-ui/highed.map.importer.js",
     "./src/core-ui/highed.map.table.js",
     "./src/core-ui/highed.map.datatable.js",
+    "./src/core-ui/highed.wizard.data.js",
 
     "./src/meta/highed.meta.options.extended.js",
     "./src/meta/highed.meta.charttype.js",

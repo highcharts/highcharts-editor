@@ -571,7 +571,7 @@ col.no-transition {
 }
 
 .highed-table-dropzone-container {    
-    max-width: 640px;
+    //max-width: 640px;
     margin-left: 38px;
     margin-right: auto;
 
@@ -622,15 +622,17 @@ col.no-transition {
     .highed-maps-datatable.active + .highed-table-map-dropzone {
         min-height: 114px;
     }
-
     .highed-maps-datatable.active + .highed-table-map-dropzone,
-    .highed-maps-datatable.active + .highed-table-map-dropzone + .highed-toolbox-button-container {
-        width: 949px;
-        top: -20px;
+    .highed-maps-datatable.active + .highed-table-map-dropzone + .highed-chart-container + .highed-toolbox-button-container {
+        width: 655px;
+        height: 177px;
         position: relative;
+        clear: both;
+        float: right;
         left: -7px;
+        top: -45px;
         .highed-table-dropzone-title {
-            margin-top: 11px;
+            margin-top: 39px;
         }
         .highed-table-dropzone-message {
             margin-top: 9px;
@@ -638,6 +640,22 @@ col.no-transition {
             padding-bottom: 7px;
         }
     }
+
+    .highed-maps-datatable.active + .highed-table-map-dropzone + .highed-chart-container {
+        width: 31% !important;
+        height: 46% !important;
+        left: 31px;
+        bottom: -137px;
+        margin-right: 0px;
+        .highed-chart-frame {
+            opacity: 1 !important;
+        }
+    }
+
+    .highed-maps-datatable.active + .highed-table-map-dropzone + .highed-chart-container + .highed-toolbox-button-container {
+        width: 100%;
+    }
+
 }
 
 @media (max-width: 1366px) {

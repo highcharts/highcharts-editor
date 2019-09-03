@@ -728,8 +728,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     dataTable.loadLiveDataPanel(p);
   });
 
-  function createSimpleDataTable(toNextPage, cb) {
-    return dataTable.createSimpleDataTable(toNextPage, cb);
+  function createSimpleDataTable(toNextPage, cb, chartContainer) {
+    return dataTable.createSimpleDataTable(toNextPage, cb, chartContainer);
   } 
 
   function selectSwitchRowsColumns() {
