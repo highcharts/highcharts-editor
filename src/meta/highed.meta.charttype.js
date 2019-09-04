@@ -287,20 +287,22 @@ highed.meta.charttype = {
         'latitude': {
             'name': "Latitude",
             'desc': 'Latitude',
-            'default': 'A',
-            'value': 'A',
-            'isData': true,
-            'linkedTo': 'lat',
-            'rawValue': [0]
+            'default': '',
+            'value': '',
+            'rawValue': null,
+            'previousValue': null,
+            'isLabel': true,
+            'linkedTo': 'lat'
         },
         'longitude': {
             'name': "Longitude",
             'desc': 'Longitude',
-            'default': 'B',
-            'value': 'B',
-            'isData': true,
+            'default': '',
+            'value': '',
+            'rawValue': null,
+            'previousValue': null,
+            'isLabel': true,
             'linkedTo': 'lon',
-            'rawValue': [1]
         },
         'value': {
             'name': "Value",

@@ -78,9 +78,14 @@ highed.MapDataTable = function() {
     table.resize();
   }
 
+  function hide(){
+    table.hide(); 
+  }
+
   return {
     on: events.on,
     resize: resize,
-    createTable: createTable
+    createTable: createTable,
+    hide: hide
   };
 };

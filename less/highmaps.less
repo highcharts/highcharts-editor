@@ -29,6 +29,7 @@
 }
 .highed-map-geojson-container.active {
     display: block;
+    z-index: 1;
 }
 
 .highed-map-geojson-option-container {
@@ -68,9 +69,9 @@
     position: absolute;
     left: 0px;
     right: 0px;
-    top: 0px;
+    top: -7px;
     bottom: 0px;
-    width: 960px;
+    width: 100%;
     background-color: white;
     display: none;
     .highed-map-geojson-header {
@@ -80,10 +81,11 @@
         font-family: @font-main;
     }
     .highed-map-geojson-description {
+        background-color: white;
         font-size: 13px;
         color: black;
         font-weight: 300;
-        margin: 15px 0px;
+        padding: 13px 0px;
     }
 }
 

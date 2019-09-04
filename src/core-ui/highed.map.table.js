@@ -53,6 +53,13 @@ highed.MapTable = function(parent, props) {
   
   if (!extra) extra = highed.dom.cr('span');
 
+  if (!props.canDelete) {
+    highed.dom.style(deleteTable, {
+      display: 'none'
+    });
+  }
+
+
   function redrawDOM() {
     parent.innerHTML = '';
       
@@ -95,7 +102,7 @@ highed.MapTable = function(parent, props) {
     var selectsTr = highed.dom.cr('tr');
     
       data.forEach(function(element, index) {
-        var th = highed.dom.cr('th', 'map-table-label-header ' + (selects.length === 0 ? ' no-selects' : ''), element);
+        var th = highed.dom.cr('th', 'map-table-label-header ' + (mapOptions.length === 0 ? ' no-selects' : ''), element);
         highed.dom.ap(tr, th);
         
         if (props.hiddenValues && props.hiddenValues.includes(index)) {
@@ -196,12 +203,17 @@ highed.MapTable = function(parent, props) {
     return exports;
   }
 
-  function createDeleteBtn(rowIndex) {
+  function createDeleteBtn() {
     var trash = highed.dom.cr('td','clickable', '<i class="fa fa-trash">');
     highed.dom.on(trash, 'click', function(){
-      rows[rowIndex][0].destroy();
-      rows.splice(rowIndex, 1);
-      data.splice(rowIndex, 1);
+      
+      const parent = trash.parentNode,
+            table = trash.parentNode.parentNode,
+            index = Array.prototype.indexOf.call(table.childNodes, parent);
+
+      rows[index][0].destroy();
+      rows.splice(index, 1);
+      data.splice(index, 1);
     });
     return trash;
   }
@@ -221,8 +233,10 @@ highed.MapTable = function(parent, props) {
 
         highed.dom.ap(tr, td.element);
 
-        var trash = createDeleteBtn(rowIndex);
-        highed.dom.ap(deleteTableBody, trash);
+        if (props.canDelete) {
+          var trash = createDeleteBtn();
+          highed.dom.ap(deleteTableBody, trash);
+        }
 
         td.destroy = function() {
           tr.remove();
@@ -315,11 +329,11 @@ highed.MapTable = function(parent, props) {
         highed.dom.ap(tr, td.element);
       });
       highed.dom.ap(mapTBody, tr);    
-      
-      var trash = createDeleteBtn(rowIndex);
 
-      highed.dom.ap(deleteTableBody, highed.dom.ap(deleteltr, trash));
-      
+      if (props.canDelete) {
+        var trash = createDeleteBtn(rowIndex);
+        highed.dom.ap(deleteTableBody, highed.dom.ap(deleteltr, trash));
+      }      
   }
 
   function getData() {
@@ -340,8 +354,23 @@ highed.MapTable = function(parent, props) {
   }
 
   function resize() {
-    highed.dom.style(noData, {
-      width: (highed.dom.size(table).w + highed.dom.size(deleteTable).w + 1) +  'px'
+    setTimeout(function(){
+      highed.dom.style(table, {
+        width: (highed.dom.size(mapContainer).w - 56) + 'px'
+      });
+
+      highed.dom.style(noData, {
+        width: (highed.dom.size(table).w + highed.dom.size(deleteTable).w + 1) +  'px'
+      });
+
+    }, 10)
+
+
+  }
+
+  function hide() {
+    highed.dom.style(mapContainer, {
+      display: 'none'
     });
   }
 
@@ -351,6 +380,7 @@ highed.MapTable = function(parent, props) {
     highlightRows: highlightRows,
     addRow: addRow,
     getData: getData,
-    resize: resize
+    resize: resize,
+    hide: hide
   };
 };

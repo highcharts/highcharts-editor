@@ -571,7 +571,7 @@ col.no-transition {
 }
 
 .highed-table-dropzone-container {    
-    //max-width: 640px;
+    max-width: 640px;
     margin-left: 38px;
     margin-right: auto;
 
@@ -611,7 +611,6 @@ col.no-transition {
 
     .highed-toolbox-button-container {
         position: relative;
-        top: -50px;
     }
 
     .highed-maps-datatable.hide + .highed-table-map-dropzone,
@@ -659,6 +658,14 @@ col.no-transition {
         padding-top: 10px;
     }
 
+}
+
+.highed-table-dropzone-container.map-data {
+    max-width: 100%;
+
+    .highed-toolbox-button-container {
+        top: -50px;
+    }
 }
 
 @media (max-width: 1366px) {

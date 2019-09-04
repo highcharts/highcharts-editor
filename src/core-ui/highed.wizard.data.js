@@ -306,33 +306,30 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
         for (i = 0; i < d.items.length; i++) {
           f = d.items[i];
           if (f.kind === 'file') {
+
+            if (f.getAsFile().type !== 'text/csv') return highed.snackBar('The file is not a valid CSV file');
+            
+            hideMapDataSection()
+
             events.emit('HandleFileUpload', f.getAsFile(), function() {
               highed.snackBar('File uploaded');
               toNextPage();
             });
-            /*handleFileUpload(f.getAsFile(), function() {
-              highed.snackBar('File uploaded');
-              toNextPage();
-            });*/
           }
         }
       } else {
         for (i = 0; i < d.files.length; i++) {
           f = d.files[i];
 
+          if (f.type !== 'text/csv') return highed.snackBar('The file is not a valid CSV file');
+          hideMapDataSection()
+
           events.emit('HandleFileUpload', f, function() {
             highed.snackBar('File uploaded');
             toNextPage();
           });
-          /*handleFileUpload(f, function() {
-            highed.snackBar('File uploaded');
-            toNextPage();
-          });*/
         }
       }
-
-      //events.emit('AssignDataForFileUpload');
-      //toNextPage();
     };
 
     var dropzoneSpan = highed.dom.cr('span');
@@ -366,11 +363,22 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
     return container;
   }
 
+  function hideMapDataSection(){
+    mapDataTable.hide();
+    highed.dom.style(dropzone, {
+      display: 'none'
+    })
+  }
+
+
   function showMapDataTable() {
     if (mapDataTableElement) {
       mapDataTableElement.classList.remove('hide');
       mapDataTableElement.classList += ' active';
       dropCSVFileHere.innerHTML = 'Or drop CSV files here';
+      
+      if (!container.classList.contains('map-data')) container.classList += ' map-data';
+
       resize();
       highed.dom.style(container, {
         marginLeft: 0 + 'px'

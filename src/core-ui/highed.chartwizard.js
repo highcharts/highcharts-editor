@@ -86,12 +86,14 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
     titleContainer = highed.dom.cr('div', 'highed-toolbox-title'),
     templateContainer = highed.dom.cr('div', 'highed-toolbox-template'),
     dataTableContainer = highed.dom.cr('div', 'highed-toolbox-data'),
+    dataNextButton = highed.dom.cr('button', 'highed-ok-button highed-import-button negative', 'Next'),
     mapContainer = highed.dom.cr('div', 'highed-toolbox-map'),
     //toolbox = highed.Toolbox(userContents),
     activeOption,
     options = [];
 
     function init(dataPage,templatePage, customizePage, mapSelector, chartContainer) {
+      var dataIndex = 2;
 
       if (highed.chartType === 'Map') {
         builtInOptions.splice(2, 0, {
@@ -105,10 +107,11 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
             mapSelector.showMaps(chartPreview.options.getTemplateSettings()[0], goToNextPage);
           }
         });
+        dataIndex = 3;
       }
 
 
-      builtInOptions.splice(3, 0, 
+      builtInOptions.splice(dataIndex, 0, 
         {
           id: 4,
           title: 'Import Data',
@@ -119,8 +122,11 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
             var options = chartPreview.options.getCustomized();
             if (options && options.series && (options.series || []).some(function(s){ return s.type === 'mapbubble'})){
               dataPage.showMapDataTable();
+            } else {
+              highed.dom.style(dataNextButton, {
+                display: 'none'
+              });
             }
-
           }
         });
 
@@ -255,11 +261,6 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
             'highed-ok-button highed-import-button negative',
             'No thanks, I will enter my data manually'
           ),
-          nextButton = highed.dom.cr(
-            'button',
-            'highed-ok-button highed-import-button negative',
-            'Next'
-          ),
           loader = highed.dom.cr('span','highed-wizard-loader', '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>'),
           dataTableDropzoneContainer = dataPage.createSimpleDataTable(function() {
             goToNextPage();
@@ -269,7 +270,13 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
           }, chartContainer);
 
 
-      highed.dom.on(nextButton, 'click', function() {
+      dataNextButton = highed.dom.cr(
+        'button',
+        'highed-ok-button highed-import-button negative',
+        'Next'
+      );
+
+      highed.dom.on(dataNextButton, 'click', function() {
         goToNextPage();
       });
 
@@ -283,7 +290,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
             highed.dom.cr('div','highed-toolbox-button-container'),
             loader,
             skipButton,
-            nextButton
+            dataNextButton
           )
         )
       );
