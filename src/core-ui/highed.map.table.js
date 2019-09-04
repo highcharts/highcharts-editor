@@ -48,7 +48,8 @@ highed.MapTable = function(parent, props) {
       mainInput = highed.dom.cr('input'),
       prevValue = null,
       noData = highed.dom.cr('div', 'highed-map-table-no-data', 'No Data'),
-      extra = props.extra;
+      extra = props.extra,
+      timeout = null;
   //////////////////////////////////////////////////////////////////////////////
   
   if (!extra) extra = highed.dom.cr('span');
@@ -179,6 +180,14 @@ highed.MapTable = function(parent, props) {
 
         highed.dom.on(mainInput, 'keyup', function(e) {
           setValue(e.target.value);
+
+          clearTimeout(timeout);
+
+          timeout = setTimeout(function () {
+            //Delay just so we dont refresh the chart too much.
+            events.emit("InputChanged");
+          }, 800);
+
           if (e.keyCode === 13) {
             td.innerHTML = e.target.value;
           }
@@ -214,6 +223,7 @@ highed.MapTable = function(parent, props) {
       rows[index][0].destroy();
       rows.splice(index, 1);
       data.splice(index, 1);
+      events.emit("InputChanged");
     });
     return trash;
   }
@@ -356,7 +366,7 @@ highed.MapTable = function(parent, props) {
   function resize() {
     setTimeout(function(){
       highed.dom.style(table, {
-        width: (highed.dom.size(mapContainer).w - 56) + 'px'
+        width: (highed.dom.size(mapContainer).w - 71) + 'px'
       });
 
       highed.dom.style(noData, {

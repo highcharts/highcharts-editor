@@ -2983,6 +2983,7 @@ highed.DataTable = function(parent, attributes) {
         latitude: 0,
         longitude: 1,
         value: 2,
+        label: 3
       });
       
     });

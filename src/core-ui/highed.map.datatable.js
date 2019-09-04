@@ -45,9 +45,15 @@ highed.MapDataTable = function() {
           addMapPointBtn
         ),
         noSaveBtn: true,
+        canDelete: true,
         hiddenValues: [0, 1]
       });
   //////////////////////////////////////////////////////////////////////////////
+
+  table.on('InputChanged', function(){
+    events.emit('UpdateDataGridWithLatLong', table.getData());
+  })
+
 
   highed.dom.on(addMapPointBtn, 'click', function() {
     if (addMapPointInput.value === '') return;
