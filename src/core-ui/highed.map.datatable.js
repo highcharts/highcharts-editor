@@ -63,8 +63,7 @@ highed.MapDataTable = function() {
   function getResult(location) {
     mapApi.getLatLong(location, function (result) {
       if (!result) return;
-
-      table.addRow([result.geometry.lat,result.geometry.lng, addMapPointInput.value, 10]);
+      table.addRow([result.lat,result.lon, addMapPointInput.value, 10]);
       addMapPointInput.value = '';
 
       events.emit('UpdateDataGridWithLatLong', table.getData());
