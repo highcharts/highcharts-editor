@@ -36,7 +36,12 @@ highed.MapDataTable = function() {
       table = highed.MapTable(container, {
         selects: [],
         header: 'Add Data Points',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+        description: [
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit,', 
+          'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, ',
+          'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+          highed.config && highed.config.mapApi && highed.config.mapApi.credit ? ' <a href="' + highed.config.mapApi.credit.href + '">' + highed.config.mapApi.credit.text + '</a>' : '']
+          .join(''),
         className: 'highed-map-add-points',
         extra: highed.dom.ap(
           highed.dom.cr('div', 'highed-add-map-point-container'),
