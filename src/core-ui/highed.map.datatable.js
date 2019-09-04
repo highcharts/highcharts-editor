@@ -40,7 +40,7 @@ highed.MapDataTable = function() {
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit,', 
           'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, ',
           'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-          highed.config && highed.config.mapApi && highed.config.mapApi.credit ? ' <a href="' + highed.config.mapApi.credit.href + '">' + highed.config.mapApi.credit.text + '</a>' : '']
+          highed.config && highed.config.mapApi && highed.config.mapApi.credit ? ' <a target="_blank" href="' + highed.config.mapApi.credit.href + '">' + highed.config.mapApi.credit.text + '</a>' : '']
           .join(''),
         className: 'highed-map-add-points',
         extra: highed.dom.ap(
