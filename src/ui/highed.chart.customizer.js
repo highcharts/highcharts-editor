@@ -318,10 +318,13 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
     } else {
       
       setTimeout(function() {
-        
+
+        var chartType = chartPreview.getConstructor() === 'StockChart'? 'highstock' : 'highcharts';
+
         highed.meta.optionsAdvanced = highed.transform.advanced(
           highed.meta.optionsAdvanced,
-          true
+          true,
+          chartType
         );
 
         const series = chartPreview.options.all().series;

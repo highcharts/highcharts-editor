@@ -159,7 +159,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      * Duplicating children is faster than arrifying and replacing
      *
      */
-  function transformAdv(input, onlyOnce) {
+  function transformAdv(input, onlyOnce, chartType) {
     var res;
     
     if (onlyOnce && hasTransformedAdvanced) {
@@ -167,6 +167,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     }
 
     function visit(node, pname) {
+      
       var children = (node.subtree = node.subtree || {});
       
       node.meta = node.meta || {};
@@ -174,6 +175,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       node.meta.ns = pname;
       node.children = [];
 
+      if (node.meta && node.meta.products && !node.meta.products[chartType]) {
+        return;
+      }
+      
       // Take care of merging
       extend(input, node, (pname ? pname + '.' : '') + node.meta.name);
 
@@ -186,12 +191,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           node.meta.hasSubTree = true;
         }
 
-        node.children.push(
-          visit(
-            children[child],
-            (pname ? pname + '.' : '') + (node.meta.name || '')
-          )
+        const childNode = visit(
+          children[child],
+          (pname ? pname + '.' : '') + (node.meta.name || '')
         );
+
+        if (childNode) node.children.push(childNode);
       });
 
       node.children.sort(function(a, b) {
@@ -204,7 +209,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
       return node;
     }
-
     // console.time('tree transform');
     res = visit(input);
     // console.timeEnd('tree transform');
