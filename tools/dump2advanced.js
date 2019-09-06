@@ -42,6 +42,11 @@ const package = require(__dirname + '/../package.json');
 const license = fs.readFileSync(__dirname + '/../LICENSE', 'utf-8')
                     .replace('<%= version %>', package.version);
 
+const blacklist = ['abands','ad', 'ao', 'apo', 'aroon', 'aroonoscillator', 'atr', 'bb', 'cci', 'chaikin', 'cmf', 'dema', 'dpo', 'ema', 'id', 'ikh', 
+                   'keltnerchannels', 'macd', 'linearregression', 'linearregressionangle', 'linearregressionintercept', 'linearregressionslope',
+                   'mfi', 'natr', 'momentum', 'pc', 'ppo', 'psar', 'roc', 'rsi', 'sma', 'tema', 'trix', 'vbp', 'trendline', 'supertrend', 
+                   'vwap', 'wma', 'williamsr',"pivotpoints", "priceenvelopes", "zigzag"
+                ];
 // Extract array type
 function extractArrayType(def) {
     var s = def.indexOf('<'),
@@ -70,43 +75,53 @@ function processSeries(tree) {
     function process(node) {
         node.doclet = node.doclet || {};
         var ext = [node.doclet.extends || '', 'plotOptions.series'];
-
+        
         Object.keys(node.children).forEach(function (key) {
-            var child = node.children[key],
-                excludes = {}
-            ;
+            if (!blacklist.includes(key)) {
+                var child = node.children[key],
+                excludes = {};
 
-            if (child.doclet && child.doclet.tags) {
-                child.doclet.tags.forEach(function (tag) {
-                    var ar;
-                    if (tag.title === 'excluding') {
-                        ar = tag.value.trim().split(',');
+                if (child.doclet && child.doclet.tags) {
+                    child.doclet.tags.forEach(function (tag) {
+                        var ar;
+                        if (tag.title === 'excluding') {
+                            ar = tag.value.trim().split(',');
 
-                        ar.forEach(function (p) {
-                            excludes[p] = true;
-                        });
-                    }
-                });
-            }
+                            ar.forEach(function (p) {
+                                excludes[p] = true;
+                            });
+                        }
+                    });
+                }
 
-            if (child.doclet && child.doclet.extends) {
-                ext.push(child.doclet.extends.replace('series,', ''));
-            }
+                if (child.doclet && child.doclet.extends) {
+                    ext.push(child.doclet.extends.replace('series,', ''));
+                }
 
-            if (child.children && Object.keys(child.children).length > 0) {
-                // Move to the main child
-                Object.keys(child.children).forEach(function (skey) {
-                    var schild = child.children[skey];
+                if (child.children && Object.keys(child.children).length > 0) {
+                    // Move to the main child
+                    Object.keys(child.children).forEach(function (skey) {
+                        var schild = child.children[skey];
 
-                    node.children[skey] = node.children[skey] || schild;
-                    node.children[skey].meta = node.children[skey].meta || {};
-                    node.children[skey].meta.validFor = node.children[skey].meta.validFor || {};
+                        node.children[skey] = node.children[skey] || schild;
+                        node.children[skey].meta = node.children[skey].meta || {};
+                        node.children[skey].meta.validFor = node.children[skey].meta.validFor || {};
 
-                    node.children[skey].meta.validFor[key] = excludes[key] ? false : true;
-                });
+                        node.children[skey].meta.validFor[key] = excludes[key] ? false : true;
+                    });
 
+                    delete node.children[key];
+                }
+
+
+
+            } else {
                 delete node.children[key];
+                if (tree.children.plotOptions.children[key]) {
+                    delete tree.children.plotOptions.children[key];
+                }
             }
+
         });
 
         node.doclet.extends = ext.join(',');
@@ -116,7 +131,7 @@ function processSeries(tree) {
     if (tree && tree.children.series) {
         process(tree.children.series);
     }
-
+    
     return tree;
 }
 
