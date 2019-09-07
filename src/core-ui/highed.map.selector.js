@@ -35,19 +35,27 @@ highed.MapSelector = function(chartPreview) {
       mapSelectorContainer = highed.dom.cr('div'),
       mapSelectorMapContainer = highed.dom.cr('div', 'highed-map-selector-container'),
       mapSelectorGeojsonContainer = highed.dom.cr('div', 'highed-map-geojson-container'),
+      mapSelectorGeojsonCodeContainer = highed.dom.cr('div', ''),
+      mapSelectorGeojsonNameContainer =  highed.dom.cr('div', ''),
+      mapSelectorGeojsonCodeDropdown = highed.DropDown(mapSelectorGeojsonCodeContainer, 'highed-map-import-dropdown'),
+      mapSelectorGeojsonNameDropdown = highed.DropDown(mapSelectorGeojsonNameContainer, 'highed-map-import-dropdown'),
       mapTable = highed.MapTable(mapSelectorMapContainer, {
-        selects: [{
-          name: '---'
-        }, {
-          name: 'Codes',
-          value: 'codes'
-        }, {
-          name: 'Names',
-          value: 'names'
-        }],
+        selects: [],
         header: 'Link Values',
+        skipOrdering: true,
         readOnly: true,
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+        extra: highed.dom.ap(
+          highed.dom.cr('div', 'highed-map-select-geojson'),
+          highed.dom.ap(
+            highed.dom.cr('div', 'highed-map-geojson-label', 'Code:'),
+            mapSelectorGeojsonCodeContainer
+          ),
+          highed.dom.ap(
+            highed.dom.cr('div', 'highed-map-geojson-label', 'Name:'),
+            mapSelectorGeojsonNameContainer
+          )
+        ),
       });
 
   function createMapDataSection(toNextPage, cb) {
@@ -172,9 +180,37 @@ highed.MapSelector = function(chartPreview) {
                 })
               });
 
+              (keys).forEach(function(option, i) {
+                mapSelectorGeojsonCodeDropdown.addItem({
+                  id: i,
+                  title: option
+                });
+                mapSelectorGeojsonNameDropdown.addItem({
+                  id: i,
+                  title: option
+                });
+              });
+
+              [{dropdown: mapSelectorGeojsonCodeDropdown, color: 'rgba(66, 200, 192, 0.2)'},
+               {dropdown: mapSelectorGeojsonNameDropdown, color: 'rgba(145, 151, 229, 0.2)'}].forEach(function(option) {
+                option.dropdown.on('Change', function(item) {
+                  if (option.dropdown.previousValue) {
+                    mapTable.removeHighlight(option.dropdown.previousValue.index());
+                  }
+                  mapTable.highlightColumns(item.index(), {
+                    light: option.color
+                  });
+                  option.dropdown.previousValue = item;
+                });
+               });
+
               dataArr.unshift(keys);
               mapTable.createTable(dataArr, function(values) {
-                events.emit('LoadMapData', data.features, dataArr[0][values.codes], dataArr[0][values.names]);
+                if (mapSelectorGeojsonCodeDropdown.getSelectedItem() === false || mapSelectorGeojsonNameDropdown.getSelectedItem() === false) {
+                  alert("Please assign the appropriate code/name pair from your dataset before continuing.");
+                  return;
+                }
+                events.emit('LoadMapData', data.features, dataArr[0][mapSelectorGeojsonCodeDropdown.getSelectedItem().id()], dataArr[0][mapSelectorGeojsonNameDropdown.getSelectedItem().id()]);
                 if (toNextPage) toNextPage();
               });
               
@@ -232,6 +268,7 @@ highed.MapSelector = function(chartPreview) {
         });
 
         highed.dom.on(container, 'click', function() {
+          console.log(sample);
           events.emit('LoadDataSet', sample.dataset.join('\n'));
           if (sample.inverted) chartPreview.options.set('chart--inverted', sample.inverted);
           if (toNextPage) toNextPage();

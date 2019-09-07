@@ -245,14 +245,6 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
       width: 100 + '%',
       opacity: 1
     });
-/*
-    highed.dom.style(container, {
-      width: newWidth + '%'
-    });
-*/
-
-
-
 
     if (!highed.onPhone()) {
       const windowWidth = highed.dom.size(parent).w;
@@ -268,7 +260,6 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
       });
 
     }
-
 
     events.emit('BeforeResize', newWidth);
 

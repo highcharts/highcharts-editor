@@ -40,12 +40,21 @@ highed.MapImporter = function() {
         }, {
           name: 'Country Codes/Names',
           value: 'labels',
+          colors: {
+            light: 'rgba(66, 200, 192, 0.2)',
+            dark: 'rgb(66, 200, 192)'
+          },
           mandatory: true
         }, {
           name: 'Values',
           value: 'value',
-          mandatory: true
+          mandatory: true,
+          colors: {
+            light: 'rgba(145, 151, 229, 0.2)',
+            dark: 'rgb(145, 151, 229)'
+          }
         }],
+        highlightColumn: true,
         header: 'Link Data Values',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
       });
@@ -65,17 +74,41 @@ highed.MapImporter = function() {
     );
   }
 
-  function show(chartData) {
+  function show(chartData, dataTableData) {
     data = chartData;
     parsedData = highed.parseCSV(chartData);
     mapContainer.classList += ' active';
 
     mapTable.createTable(parsedData, function(assigns, parsedData) {
       //TODO: check if mandatory fields have been assigned before continuing
-  
+
       var codeIndex = assigns.labels;
       //Convert codes to hc-key
   
+      if (!mapData) {
+        // If no mapdata, the chart type is most likely something that hasnt gone through the mapcollection/geojson route (Tilemap/Honeycomb)
+        // Find a better way to do this in future
+
+        dataTableData = dataTableData.map(function(row, index){
+          var newData = parsedData.filter(function(d){ return d[assigns.labels] === row[0] });
+          row = row.slice(0, 5);
+          
+          row[4] = (newData ? newData[0][assigns.value] : 0);
+          return row;
+        });
+
+        assigns.labels = 1;
+        assigns.value = 4;
+
+        dataTableData.unshift(['hc-a2', 'name', 'x', 'y', 'value']);
+
+        events.emit('HandleTileMapImport', dataTableData.map(function(cols) {
+          return cols.join(',');
+        }).join('\n'), null, toNextPage, assigns);
+
+        return;
+      }
+
       var isCode2 = parsedData.every(function(d, index) { return index === 0 || d[codeIndex].length === 2}),
           isCode3,
           linkedCodes = [],
@@ -90,6 +123,7 @@ highed.MapImporter = function() {
         //hc-key, hc-a2, name  (US)
         
         var found = false;
+        
         mapData.forEach(function(mData) {
           if (mData.properties) {
             
@@ -120,6 +154,7 @@ highed.MapImporter = function() {
       var length = parsedData[0].length;
   
       newData.push(parsedData[0]); // Headers
+
       mapData.forEach(function(data, index) {
         if (data.properties.name) {
           

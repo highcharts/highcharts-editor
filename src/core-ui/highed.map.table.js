@@ -25,6 +25,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // @format
 /** Map Table
+ * 
+ *  @constructor
+ *  @param {domnode} parent - the node to attach to
+ *  @param {object} attributes - the properties
+ *    selects: (Array) select options for selecting column values
+ *    readOnly: (Bool) Cannot edit table
+ *    header: (String) Header of table
+ *    description: (String) Additional description
+ *    className: (String) extra classes for table
+ *    extra: (Node) extra nodes to attach (Probably should be removed from here)
+ *    noSaveBtn: (Bool) handle saving outside of this component
+ *    canDelete: (Bool) Can delete rows inline
+ *    hiddenValues: (Array) Values to not show in the table
+ *    highlightColumn: (Bool) Whether to highlight columns when selected
+ *    skipOrdering: (Bool) Skip all the logic when returning final result of table
  */
 
 highed.MapTable = function(parent, props) {
@@ -98,6 +113,18 @@ highed.MapTable = function(parent, props) {
   
   }
 
+  function highlightColumns(index, color){
+    rows.forEach(function(col) {
+      col[index].highlight(color.light);
+    });
+  }
+
+  function removeHighlight(index){
+    rows.forEach(function(col) {
+      col[index].removeHighlight();
+    });
+  }
+
   function createHeaders(data) {
     var tr = highed.dom.cr('tr');
     var selectsTr = highed.dom.cr('tr');
@@ -119,14 +146,19 @@ highed.MapTable = function(parent, props) {
           (mapOptions || []).forEach(function(option, i) {
             selectDropdown.addItem({
               id: option.value,
-              title: option.name,
+              title: option.name
             });
           });
     
           selectDropdown.selectByIndex(0);
     
-          if(index === 0) selectDropdown.selectByIndex(1);
-          else if (index === data.length - 1) selectDropdown.selectByIndex(mapOptions.length - 1);
+          if(index === 0) {
+            selectDropdown.selectByIndex(1);
+            if (props.highlightColumn) highlightColumns(index, mapOptions[1].colors);
+          } else if (index === data.length - 1) {
+            selectDropdown.selectByIndex(mapOptions.length - 1);
+            if (props.highlightColumn) highlightColumns(index, mapOptions[mapOptions.length - 1].colors);
+          }
           
           selectDropdown.on('Change', function(item) {
             var selectedId = item.id();
@@ -139,6 +171,13 @@ highed.MapTable = function(parent, props) {
               alert("This value has already been assigned to another column. Clear that column first before assigning to this one.");
               selectDropdown.selectById(selectDropdown.previousValue);
               return;
+            }
+
+            if (props.highlightColumn) {
+              removeHighlight(index);
+              if (selectDropdown.getSelectedItem().id() !== undefined) {
+                highlightColumns(index, mapOptions[selectDropdown.getSelectedItem().index()].colors);
+              }
             }
             selectDropdown.previousValue = selectDropdown.getSelectedItem().id();        
           });
@@ -154,8 +193,15 @@ highed.MapTable = function(parent, props) {
   }
 
   function handlePreviousValue(td) {
+    if (prevValue && (prevValue.element === td)) {
+      return;
+    }
+
     if (prevValue) {
-      prevValue.setValue(mainInput.value);
+      var val = mainInput.value;
+      prevValue.element.removeChild(mainInput);
+      prevValue.setValue(val);
+      prevValue.element.innerHTML = val;
     }
   }
 
@@ -203,10 +249,24 @@ highed.MapTable = function(parent, props) {
       value = newValue;
     }
 
+    function highlight(colour) {
+      highed.dom.style(td, {
+        backgroundColor: colour
+      });
+    }
+
+    function removeHighlight() {
+      highed.dom.style(td, {
+        backgroundColor: 'initial'
+      });
+    }
+
     exports = {
       element: td,
       value: getVal,
-      setValue: setValue
+      setValue: setValue,
+      highlight: highlight,
+      removeHighlight: removeHighlight
     }
 
     return exports;
@@ -227,6 +287,7 @@ highed.MapTable = function(parent, props) {
     });
     return trash;
   }
+
   function createBody(data){
 
     if (!noData.classList.contains('hide') && data.length > 1) noData.classList += ' hide';
@@ -268,38 +329,40 @@ highed.MapTable = function(parent, props) {
     if (!chartData) return;
     data = chartData;  
     
-    createHeaders(data[0]);
     createBody(data);
+    createHeaders(data[0]);
 
     setTimeout(function() { //TODO: Fix this later
       redrawDOM()
     }, 10)
     
     highed.dom.on(mapBtn, 'click', function(ev) {
-      var vals = {};
+      var vals = {},
+          dataArr = [];
+          
       selects.forEach(function(s, index) {
         if (s.getSelectedItem().index() > 0) {
           vals[s.getSelectedItem().id()] = index;
         }
       });
 
-      var dataArr = rows.map(function(row) {
-
-        arraymove(row, vals.labels, 0);
-        arraymove(row, vals.value, 1);
-
-        return row.map(function(column) {
-          return column.value();
+      if (!props.skipOrdering) {
+        dataArr = rows.map(function(row) {
+          arraymove(row, vals.labels, 0);
+          arraymove(row, vals.value, 1);
+          return row.map(function(column) {
+            return column.value();
+          });
         });
-      });
-
-      dataArr.unshift(data[0]);
-
-      arraymove(dataArr[0], vals.labels, 0);
-      arraymove(dataArr[0], vals.value, 1);
-
-      vals.labels = 0;
-      vals.value = 1;
+  
+        dataArr.unshift(data[0]);
+  
+        arraymove(dataArr[0], vals.labels, 0);
+        arraymove(dataArr[0], vals.value, 1);
+  
+        vals.labels = 0;
+        vals.value = 1;
+      }
 
       if (fn) fn(vals, dataArr);
     });
@@ -391,6 +454,8 @@ highed.MapTable = function(parent, props) {
     addRow: addRow,
     getData: getData,
     resize: resize,
-    hide: hide
+    hide: hide,
+    highlightColumns: highlightColumns,
+    removeHighlight: removeHighlight
   };
 };

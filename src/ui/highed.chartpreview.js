@@ -1492,19 +1492,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     }
   }
 
-
-  function getPlugins() {
-    var arr = [];
-
-    Object.keys(chartPlugins).filter(function(key) {
-      chartPlugins[key].forEach(function(object) {
-        if (arr.indexOf(object) === -1) arr.push(object);
-      });
-    });
-
-    return arr;
-  }
-
   /**
    * Load raw dataset (array of arrays)
    */

@@ -371,7 +371,7 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
   }
 
 
-  function showMapDataTable() {
+  function showLatLongTable() {
     if (mapDataTableElement) {
       mapDataTableElement.classList.remove('hide');
       mapDataTableElement.classList += ' active';
@@ -463,7 +463,7 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
     createSimpleDataTable: createSimpleDataTable,
     loadMapData: loadMapData,
     getMapValueFromCode: getMapValueFromCode,
-    showMapDataTable: showMapDataTable,
+    showLatLongTable: showLatLongTable,
     resize: resize,
     container: function() {
       return container;

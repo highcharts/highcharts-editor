@@ -766,8 +766,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     assignDataPanel.changeAssignDataType(type);
   }
 
-  function showMapDataTable() {
-    dataTable.showMapDataTable();
+  function showLatLongTable() {
+    dataTable.showLatLongTable();
   }
 
   return {
@@ -804,6 +804,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     addSerie: addSerie,
     getMapValueFromCode: getMapValueFromCode,
     changeAssignDataType: changeAssignDataType,
-    showMapDataTable: showMapDataTable
+    showLatLongTable: showLatLongTable
   };
 };

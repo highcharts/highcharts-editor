@@ -503,11 +503,14 @@ highed.DataTable = function(parent, attributes) {
     var reader = new FileReader();
 
     reader.onload = function(e) {
-      clear();
       //events.emit('ClearSeriesForImport');
       if (highed.chartType === 'Map') {
-        mapImporter.show(e.target.result, cb);
-      } else loadCSV({ csv: e.target.result }, null, true, cb);
+        mapImporter.show(e.target.result, toData());
+        clear();
+      } else {
+        clear();
+        loadCSV({ csv: e.target.result }, null, true, cb);
+      }
     };
 
     reader.readAsText(f);
@@ -1885,7 +1888,7 @@ highed.DataTable = function(parent, attributes) {
     }
     dataFieldsUsed = [];
 
-    function addData(column, arr) {
+    function addData(column, arr) { 
 
       if (quoteStrings && !highed.isNum(column) && highed.isStr(column)) {
         column = '"' + column.replace(/\"/g, '"') + '"';
@@ -1901,7 +1904,6 @@ highed.DataTable = function(parent, attributes) {
 
       arr.push(column);
     }
-
     rows.forEach(function(row) {
       var rarr = [],
         hasData = false;
@@ -1936,6 +1938,7 @@ highed.DataTable = function(parent, attributes) {
         data.push(rarr);
       }
     });
+
     return data;
   }
 
@@ -2002,6 +2005,7 @@ highed.DataTable = function(parent, attributes) {
         .map(function(cols) {
           return cols.join(delimiter);
         }).join('\n');
+    
 
     return toData(quoteStrings, true, section)
       .filter(function(cols) {
@@ -2383,6 +2387,11 @@ highed.DataTable = function(parent, attributes) {
   }
 
   ////////////////////////////////////////////////////////////////////////////
+
+  mapImporter.on('HandleTileMapImport', function(data, linkedCodes, toNextPage, assigns) {
+    loadSampleData(data);
+    toNextPage();
+  });
 
   mapImporter.on('HandleMapImport', function(data, linkedCodes, toNextPage, assigns) {
     loadCSV({ csv: data }, null, false, function() {
@@ -3008,8 +3017,8 @@ highed.DataTable = function(parent, attributes) {
     return simpleDataTable.container();
   }
 
-  function showMapDataTable() {
-    simpleDataTable.showMapDataTable();
+  function showLatLongTable() {
+    simpleDataTable.showLatLongTable();
   }
 
 
@@ -3118,6 +3127,6 @@ highed.DataTable = function(parent, attributes) {
     selectSwitchRowsColumns: selectSwitchRowsColumns,
     loadMapData: loadMapData,
     getMapValueFromCode: getMapValueFromCode,
-    showMapDataTable: showMapDataTable
+    showLatLongTable: showLatLongTable
   };
 };

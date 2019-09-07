@@ -103,7 +103,6 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
             highed.dom.ap(body, mapContainer);
           },
           onload: function() {
-            //const type = chartPreview.options.full.series[0].type;
             mapSelector.showMaps(chartPreview.options.getTemplateSettings()[0], goToNextPage);
           }
         });
@@ -120,13 +119,16 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
           },
           onload: function() {
             var options = chartPreview.options.getCustomized();
+            
             if (options && options.series && (options.series || []).some(function(s){ return s.type === 'mapbubble'})){
-              dataPage.showMapDataTable();
-            } else {
-              highed.dom.style(dataNextButton, {
-                display: 'none'
-              });
+              dataPage.showLatLongTable();
+              return;
             }
+
+            highed.dom.style(dataNextButton, {
+              display: 'none'
+            });
+            
           }
         });
 
@@ -276,11 +278,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
         'Next'
       );
 
-      highed.dom.on(dataNextButton, 'click', function() {
-        goToNextPage();
-      });
-
-      highed.dom.on(skipButton, 'click', function() {
+      highed.dom.on([dataNextButton, skipButton], 'click', function() {
         goToNextPage();
       });
 
