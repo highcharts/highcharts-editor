@@ -2393,21 +2393,22 @@ highed.DataTable = function(parent, attributes) {
     toNextPage();
   });
 
-  mapImporter.on('HandleMapImport', function(data, linkedCodes, toNextPage, assigns) {
+  mapImporter.on('HandleMapImport', function(data, linkedCodes, toNextPage, assigns, serie) {
     loadCSV({ csv: data }, null, false, function() {
       rows.forEach(function(row) {
-        var code = linkedCodes.filter(function(v) { return v.name === row.columns[0].value()});
-        if (code && code.length > 0) {
-          row.columns[0].setHiddenValue(code[0].code.toLowerCase());
+        if (linkedCodes) {
+          var code = linkedCodes.filter(function(v) { return v.name === row.columns[0].value()});
+          if (code && code.length > 0) {
+            row.columns[0].setHiddenValue(code[0].code.toLowerCase());
+          }
+          row.columns[0].setDisabled(true);
         }
-        row.columns[0].setDisabled(true);
       });
 
-      events.emit('SetupAssignData', assigns);
+      events.emit('SetupAssignData', assigns, serie);
       toNextPage();
     });
   });
-
   importer.on('ExportComma', function(data) {
     highed.emit('UIAction', 'ExportComma');
     highed.download('data.csv', toCSV(','), 'application/csv');

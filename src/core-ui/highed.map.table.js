@@ -325,7 +325,6 @@ highed.MapTable = function(parent, props) {
   }
 
   function createTable(chartData, fn) {
-    
     if (!chartData) return;
     data = chartData;  
     
@@ -348,8 +347,16 @@ highed.MapTable = function(parent, props) {
 
       if (!props.skipOrdering) {
         dataArr = rows.map(function(row) {
-          arraymove(row, vals.labels, 0);
-          arraymove(row, vals.value, 1);
+        
+          if (vals.hasOwnProperty('latitude')) {
+            arraymove(row, vals.latitude, 0);
+            arraymove(row, vals.longitude, 1);
+            arraymove(row, vals.value, 2);
+          } else {
+            arraymove(row, vals.labels, 0);
+            arraymove(row, vals.value, 1);
+          }
+
           return row.map(function(column) {
             return column.value();
           });
@@ -357,11 +364,21 @@ highed.MapTable = function(parent, props) {
   
         dataArr.unshift(data[0]);
   
-        arraymove(dataArr[0], vals.labels, 0);
-        arraymove(dataArr[0], vals.value, 1);
+        if (vals.hasOwnProperty('latitude')) {
+          arraymove(dataArr[0], vals.lat, 0);
+          arraymove(dataArr[0], vals.lon, 1);
+          arraymove(dataArr[0], vals.value, 2); 
+          vals.latitude = 0;
+          vals.longitude = 1;
+          vals.value = 2;
+          vals.labels = -1;
+        } else {
+          arraymove(dataArr[0], vals.labels, 0);
+          arraymove(dataArr[0], vals.value, 1);
+          vals.labels = 0;
+          vals.value = 1;
+        }
   
-        vals.labels = 0;
-        vals.value = 1;
       }
 
       if (fn) fn(vals, dataArr);
@@ -447,6 +464,16 @@ highed.MapTable = function(parent, props) {
     });
   }
 
+  function addToSelects(arr, pos) {
+    arr.forEach(function(a, index) {
+      mapOptions.splice(pos + index, 0, arr[index]);
+    });
+  }
+
+  function getOptions(){
+    return mapOptions;
+  }
+
   return {
     on: events.on,
     createTable: createTable,
@@ -456,6 +483,8 @@ highed.MapTable = function(parent, props) {
     resize: resize,
     hide: hide,
     highlightColumns: highlightColumns,
-    removeHighlight: removeHighlight
+    removeHighlight: removeHighlight,
+    addToSelects: addToSelects,
+    getOptions: getOptions
   };
 };

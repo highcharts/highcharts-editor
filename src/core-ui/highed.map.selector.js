@@ -85,7 +85,7 @@ highed.MapSelector = function(chartPreview) {
 
                   highed.dom.ap(mapSelectorOptions, option);
 
-                  if (mapCount < 5) {
+                  if (mapCount < 25) {
                     var mapSelectorImage = highed.dom.cr('img', 'highed-map-selector-image'),
                         mapSelectorImageContainer = highed.dom.cr('div', 'highed-map-selector-image-container'),
                         mapSelectorImageTitle = highed.dom.cr('div', 'highed-map-selector-image-text', desc);
@@ -268,7 +268,6 @@ highed.MapSelector = function(chartPreview) {
         });
 
         highed.dom.on(container, 'click', function() {
-          console.log(sample);
           events.emit('LoadDataSet', sample.dataset.join('\n'));
           if (sample.inverted) chartPreview.options.set('chart--inverted', sample.inverted);
           if (toNextPage) toNextPage();

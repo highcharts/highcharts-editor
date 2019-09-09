@@ -34,26 +34,27 @@ highed.MapImporter = function() {
         'div',
         'highed-edit-map-import-container highed-map-geojson-container'
       ),
+      selects =  [{ //TODO: Take these from assign data
+        name: '---'
+      }, {
+        name: 'Country Codes/Names',
+        value: 'labels',
+        colors: {
+          light: 'rgba(66, 200, 192, 0.2)',
+          dark: 'rgb(66, 200, 192)'
+        },
+        mandatory: true
+      }, {
+        name: 'Values',
+        value: 'value',
+        mandatory: true,
+        colors: {
+          light: 'rgba(145, 151, 229, 0.2)',
+          dark: 'rgb(145, 151, 229)'
+        }
+      }],
       mapTable = highed.MapTable(mapContainer, {
-        selects: [{ //TODO: Take these from assign data
-          name: '---'
-        }, {
-          name: 'Country Codes/Names',
-          value: 'labels',
-          colors: {
-            light: 'rgba(66, 200, 192, 0.2)',
-            dark: 'rgb(66, 200, 192)'
-          },
-          mandatory: true
-        }, {
-          name: 'Values',
-          value: 'value',
-          mandatory: true,
-          colors: {
-            light: 'rgba(145, 151, 229, 0.2)',
-            dark: 'rgb(145, 151, 229)'
-          }
-        }],
+        selects: selects,
         highlightColumn: true,
         header: 'Link Data Values',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
@@ -74,6 +75,27 @@ highed.MapImporter = function() {
     );
   }
 
+  function handleTileMap(parsedData, assigns, dataTableData) {
+    dataTableData = dataTableData.map(function(row, index){
+      var newData = parsedData.filter(function(d){ return d[assigns.labels] === row[0] });
+      row = row.slice(0, 5);
+      
+      row[4] = (newData ? newData[0][assigns.value] : 0);
+      return row;
+    });
+
+    assigns.labels = 1;
+    assigns.value = 4;
+
+    dataTableData.unshift(['hc-a2', 'name', 'x', 'y', 'value']);
+
+    events.emit('HandleTileMapImport', dataTableData.map(function(cols) {
+      return cols.join(',');
+    }).join('\n'), null, toNextPage, assigns);
+
+    return;
+  }
+
   function show(chartData, dataTableData) {
     data = chartData;
     parsedData = highed.parseCSV(chartData);
@@ -83,31 +105,24 @@ highed.MapImporter = function() {
       //TODO: check if mandatory fields have been assigned before continuing
 
       var codeIndex = assigns.labels;
-      //Convert codes to hc-key
   
       if (!mapData) {
         // If no mapdata, the chart type is most likely something that hasnt gone through the mapcollection/geojson route (Tilemap/Honeycomb)
         // Find a better way to do this in future
+        return handleTileMap(parsedData, assigns, dataTableData);
+      }
 
-        dataTableData = dataTableData.map(function(row, index){
-          var newData = parsedData.filter(function(d){ return d[assigns.labels] === row[0] });
-          row = row.slice(0, 5);
+      var hasLatLong = mapTable.getOptions().some(function(opt){ return opt.value === 'latitude'; });
+
+      if (hasLatLong) {
           
-          row[4] = (newData ? newData[0][assigns.value] : 0);
-          return row;
-        });
-
-        assigns.labels = 1;
-        assigns.value = 4;
-
-        dataTableData.unshift(['hc-a2', 'name', 'x', 'y', 'value']);
-
-        events.emit('HandleTileMapImport', dataTableData.map(function(cols) {
+        events.emit('HandleMapImport', parsedData.map(function(cols) {
           return cols.join(',');
-        }).join('\n'), null, toNextPage, assigns);
-
+        }).join('\n'), null, toNextPage, assigns, 1);
         return;
       }
+
+      //Convert codes to hc-key
 
       var isCode2 = parsedData.every(function(d, index) { return index === 0 || d[codeIndex].length === 2}),
           isCode3,
@@ -191,10 +206,15 @@ highed.MapImporter = function() {
     mapData = map;
   }
 
+  function addToSelects(arr, pos){
+    mapTable.addToSelects(arr, pos);
+  }
+
   return {
     on: events.on,
     show: show,
     init: init,
+    addToSelects: addToSelects,
     setMap: setMap
   };
 };

@@ -708,9 +708,11 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
         options[index][key].rawValue = null;
       } else {
         var letter = getLetterFromIndex(values[key]);
-        options[index][key].previousValue = null;
-        options[index][key].value = letter;
-        options[index][key].rawValue = [values[key]];
+        if (options[index][key]) {
+          options[index][key].previousValue = null;
+          options[index][key].value = letter;
+          options[index][key].rawValue = [values[key]];
+        }
       }
     });
 

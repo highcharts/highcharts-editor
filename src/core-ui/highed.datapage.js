@@ -702,8 +702,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     assignDataPanel.restart();
   });
 
-  dataTable.on('SetupAssignData', function(assigns) {
-    assignDataPanel.setValues(assigns);
+  dataTable.on('SetupAssignData', function(assigns, serie) {
+    assignDataPanel.setValues(assigns, serie);
   })
 
   dataTable.on('ClearSeries', function() {
