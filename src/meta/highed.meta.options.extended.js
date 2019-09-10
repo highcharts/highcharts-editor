@@ -106,7 +106,6 @@ highed.meta.optionsExtended = {
       {
         text: 'option.subcat.caption',
         dropdown: true,
-        group: 1,
         options: [
           {
             id: 'caption--text',
