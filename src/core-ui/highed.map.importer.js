@@ -171,16 +171,16 @@ highed.MapImporter = function() {
       newData.push(parsedData[0]); // Headers
 
       mapData.forEach(function(data, index) {
-        if (data.properties.name) {
+        if (data.properties[data.properties.hcname]) {
           
-          var oldData = parsedData.filter(function(d){ return d[0] === data.properties.name; });
+          var oldData = parsedData.filter(function(d){ return d[0] === data.properties[data.properties.hcname] });
   
           if (oldData && oldData.length > 0) {
             newData.push(oldData);
           } else {
             //Not part of data but in map collection. Create vals for it.
             var arr = Array(length).fill(null, 0);
-            arr[0] = data.properties.name;
+            arr[0] = data.properties[data.properties.hcname];
             newData.push(arr);
           }
           linkedCodes.push({
@@ -194,7 +194,7 @@ highed.MapImporter = function() {
         mapTable.highlightRows(failedCodes);
         if (!confirm("There are incompatible values in your dataset. Are you sure you would like to continue?")) return;
       }
-      
+
       events.emit('HandleMapImport', newData.map(function(cols) {
         return cols.join(',');
       }).join('\n'), linkedCodes, toNextPage, assigns);

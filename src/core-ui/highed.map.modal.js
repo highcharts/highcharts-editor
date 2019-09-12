@@ -50,7 +50,7 @@ highed.MapModal = function(container, dataPage) {
   );
   
   function setValue(e) {
-    if (e.keyCode === 13) {
+    if (e.keyCode === 13) { 
       mapValue.setValue(e.target.value);
       editMapContainer.classList.remove('active');
     }

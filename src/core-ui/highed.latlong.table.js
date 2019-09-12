@@ -53,6 +53,8 @@ highed.LatLongTable = function() {
         canDelete: true,
         hiddenValues: [0, 1]
       });
+
+      addMapPointInput.placeholder = 'New York';
   //////////////////////////////////////////////////////////////////////////////
 
   table.on('InputChanged', function(){

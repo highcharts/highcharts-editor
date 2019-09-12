@@ -35,7 +35,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 5) Customize
  */
 
-highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
+highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartType) {
   var events = highed.events(),
     builtInOptions = [
       {
@@ -48,7 +48,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview) {
       },
       {
         id: 2,
-        title: 'Title Your Chart',
+        title: 'Title Your ' + (chartType === 'Map' ? 'Map' : 'Chart'),
         create: function(body) {
           highed.dom.ap(body, titleContainer);
         }

@@ -125,10 +125,48 @@ highed.MapTable = function(parent, props) {
     });
   }
 
+  function getDataIndex(headers){
+    var dataIndex = (headers || []).length - 1;
+    var MAX_ROW_LENGTH = 10,
+        MAX_COL_LENGTH = 60,
+        chartData = data.slice();
+
+    if (chartData.length < MAX_COL_LENGTH && chartData[0].length < MAX_ROW_LENGTH) {
+      chartData.shift();
+      var reversedArr = (chartData[0] || []).map(function(col, i){
+        return chartData.map(function(row) {
+          return row[i];
+        });
+      });
+
+      var predictedValues = reversedArr.map(function(row) {
+        var isString = row.some(function(col) {
+          return typeof col === 'string';
+        });
+
+        var diff = 0;
+        if (!isString) {
+          row.forEach(function(col, i) {
+            diff = (i % 2 === 0 ? diff + col : diff - col);
+          });
+        }
+        return diff;
+      });
+
+      dataIndex = predictedValues.reduce(function(iMax, x, i, arr) {
+        return x > arr[iMax] ? i : iMax
+      }, 0);
+    }
+
+    return dataIndex;
+  }
+
   function createHeaders(data) {
     var tr = highed.dom.cr('tr');
-    var selectsTr = highed.dom.cr('tr');
-    
+    var selectsTr = highed.dom.cr('tr'),
+        dataIndex = getDataIndex(data);
+      
+
       data.forEach(function(element, index) {
         var th = highed.dom.cr('th', 'map-table-label-header ' + (mapOptions.length === 0 ? ' no-selects' : ''), element);
         highed.dom.ap(tr, th);
@@ -138,6 +176,7 @@ highed.MapTable = function(parent, props) {
             display: 'none'
           });
         }
+        
         var select = highed.dom.cr('div');
 
         if (mapOptions.length > 0) {
@@ -155,7 +194,7 @@ highed.MapTable = function(parent, props) {
           if(index === 0) {
             selectDropdown.selectByIndex(1);
             if (props.highlightColumn) highlightColumns(index, mapOptions[1].colors);
-          } else if (index === data.length - 1) {
+          } else if (index === dataIndex) {
             selectDropdown.selectByIndex(mapOptions.length - 1);
             if (props.highlightColumn) highlightColumns(index, mapOptions[mapOptions.length - 1].colors);
           }

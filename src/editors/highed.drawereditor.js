@@ -263,7 +263,8 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
           desktop: 95
         }
       },
-      chartPreview
+      chartPreview,
+      chartType
     ),
     changePlanBtn = highed.dom.cr('button', 'highed-import-button', "Choose a plan"),
     createAccountLink = highed.dom.cr('a', '', 'Create one')
