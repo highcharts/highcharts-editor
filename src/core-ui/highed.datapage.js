@@ -419,6 +419,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     }
 
     function loadMapProject(projectData, aggregated) {
+      assignDataPanel.disable();
       var baseMapPath = "https://code.highcharts.com/mapdata/";
       chartPreview.options.updateMap(projectData.options.chart.map, baseMapPath + projectData.options.chart.map + '.js', function() {
         highed.ajax({

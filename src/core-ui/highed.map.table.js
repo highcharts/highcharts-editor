@@ -321,7 +321,8 @@ highed.MapTable = function(parent, props) {
 
       rows[index][0].destroy();
       rows.splice(index, 1);
-      data.splice(index, 1);
+      data.splice(index + 1, 1); //To account for the header
+
       events.emit("InputChanged");
     });
     return trash;
