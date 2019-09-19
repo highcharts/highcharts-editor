@@ -70,7 +70,7 @@ highed.LatLongTable = function() {
   function getResult(location) {
     mapApi.getLatLong(location, function (result) {
       if (!result) return;
-      table.addRow([result.lat,result.lon, addMapPointInput.value, 10]);
+      table.addRow([result.lat,result.lon, addMapPointInput.value]);
       addMapPointInput.value = '';
 
       events.emit('UpdateDataGridWithLatLong', table.getData());
@@ -80,7 +80,7 @@ highed.LatLongTable = function() {
   function createTable() {
 
     highed.dom.ap(container,
-      table.createTable([['Latitude', 'Longitude', 'Name', 'Value']], function(){
+      table.createTable([['Latitude', 'Longitude', 'Name']], function(){
     }));
 
     return container;

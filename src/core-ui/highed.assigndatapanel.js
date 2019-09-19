@@ -422,6 +422,10 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
   function isMapBubble(data, index) {
     return data.options && data.options.series && data.options.series[index] && data.options.series[index].type === 'mapbubble';
   }
+
+  function isMapPoint(data, index) {
+    return data.options && data.options.series && data.options.series[index] && data.options.series[index].type === 'mappoint';
+  }
   function isPatternFill(data, index) {
     return data.settings && data.settings.dataProvider && data.settings.dataProvider.seriesMapping && 
     Object.keys(data.settings.dataProvider.seriesMapping[index]).some(function(key) {
@@ -439,6 +443,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
       else if (data.options && data.options.series && data.options.series[index] && data.options.series[index].type) return data.options.series[index].type;
       else if (data.type) return data.type;
       else if (isMapBubble(data, index)) return 'mapbubble';
+      else if (isMapPoint(data, index)) return 'mappoint';
       else if (isPatternFill(data, index)) return 'patternfill'; // Find out if theres a better way for this one
       else return 'map';
     } else {

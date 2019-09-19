@@ -120,8 +120,9 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
           onload: function() {
             var options = chartPreview.options.getCustomized();
             
-            if (options && options.series && (options.series || []).some(function(s){ return s.type === 'mapbubble'})){
+            if (options && options.series && (options.series || []).some(function(s){ return s.type === 'mappoint'})){
               dataPage.showLatLongTable();
+              chartPreview.redraw();
               return;
             }
 

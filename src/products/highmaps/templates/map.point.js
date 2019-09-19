@@ -26,7 +26,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 highed.templates.add('Map', {
-  title: 'Map Points',
+  title: 'Point Map',
   description: [
     '',
   ],
@@ -69,15 +69,11 @@ highed.templates.add('Map', {
       enabled: false
     },
 
-    colorAxis: {
-      min: 0
-    },
-
     series: [{
+        _colorIndex: 1,
         joinBy: 'hc-key',
-        type: 'mapbubble',
-        minSize: 4,
-        maxSize: '12%'
+        type: 'mappoint',
+        
     }]
   }
 });

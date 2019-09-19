@@ -2992,8 +2992,7 @@ highed.DataTable = function(parent, attributes) {
         labels: -1,
         latitude: 0,
         longitude: 1,
-        value: 2,
-        label: 3
+        value: 2
       });
       
     });

@@ -272,6 +272,49 @@ highed.meta.charttype = {
         }
 
     },
+    mappoint: {
+        'values': null,
+        'labels': {
+            'name': "Country",
+            'desc': 'The country name',
+            'default': 'A',
+            'value': 'A',
+            'rawValue': [0],
+            'isLabel': true,
+            'mandatory': false,
+            'linkedTo': 'hc-key'
+        },
+        'latitude': {
+            'name': "Latitude",
+            'desc': 'Latitude',
+            'default': 'A',
+            'value': 'A',
+            'rawValue': [0],
+            'previousValue': null,
+            'isLabel': true,
+            'linkedTo': 'lat'
+        },
+        'longitude': {
+            'name': "Longitude",
+            'desc': 'Longitude',
+            'default': 'B',
+            'value': 'B',
+            'rawValue': [1],
+            'previousValue': null,
+            'isLabel': true,
+            'linkedTo': 'lon',
+        },
+        'value': {
+            'name': "Value",
+            'desc': 'The value of the country',
+            'default': 'B',
+            'value': 'B',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo':  ['name', 'x', 'y'],
+            'rawValue': [1]
+        }
+    },
     mapbubble: {
         'values': null,
         'labels': {
