@@ -226,6 +226,7 @@ highed.meta.optionsExtended = {
             context: 'General',
             defaults: 'false',
             parent: 'tooltip',
+            mapDisabled: true,
             width: 50
           },          
           {
@@ -300,6 +301,7 @@ highed.meta.optionsExtended = {
             dataType: 'boolean',
             context: 'General',
             defaults: 'false',
+            mapDisabled: true,
             parent: 'chart'
           },
           {
@@ -352,6 +354,7 @@ highed.meta.optionsExtended = {
       {
         text: 'option.subcat.xaxis',
         dropdown: true,
+        mapDisabled: true,
         options: [          
         {
           id: 'xAxis-title--style',
@@ -417,6 +420,7 @@ highed.meta.optionsExtended = {
       {
         text: 'option.subcat.yaxis',
         dropdown: true,
+        mapDisabled: true,
         options: [          
           {
             id: 'yAxis-title--style',
@@ -943,6 +947,7 @@ highed.meta.optionsExtended = {
       {
         text: 'option.subcat.zoombutton',
         dropdown: true,
+        mapDisabled: true,
         group: 1,
         options: [
           {

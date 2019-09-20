@@ -67,7 +67,7 @@ highed.List = function(parent, responsive, props, planCode) {
      */
   function addItem(item, children, chartPreview) {
     
-    var node = highed.dom.cr('a', 'item', item.title),
+    var node = highed.dom.cr('a', 'item', item.title.replace('Chart', highed.chartType === 'Map' ? 'Map': 'Chart')),
       nodeArrow = highed.dom.cr('span', 'item-arrow', '<i class="fa fa-angle-right" aria-hidden="true"></i>'),
       nodeChildren = highed.dom.cr('span', 'highed-list-suboptions', ''),
       iexports = {};
@@ -135,6 +135,9 @@ highed.List = function(parent, responsive, props, planCode) {
         container,
         masterNode,
         def;
+
+      
+      if (highed.chartType === 'Map' && group.mapDisabled) return;
 
       options = chartPreview.options.getCustomized(); //userOptions;//chartPreview.options.getCustomized();
       
@@ -293,6 +296,7 @@ highed.List = function(parent, responsive, props, planCode) {
 
         //highed.dom.ap(sub, highed.dom.cr('span', '', referenced[0].returnType));
         
+        
         highed.dom.ap(
           table,
           highed.InspectorField(
@@ -303,7 +307,7 @@ highed.List = function(parent, responsive, props, planCode) {
                 ? group.subTypeDefaults[filter]
                 : group.defaults,
             {
-              title: highed.L('option.text.' + group.pid),
+              title: highed.L('option.text.' + group.pid).replace('Chart', highed.chartType ==='Map' ? 'Map' : 'Chart'),
               tooltip: highed.L('option.tooltip.' + group.pid),
               values: group.values,
               custom: group.custom,
@@ -311,7 +315,7 @@ highed.List = function(parent, responsive, props, planCode) {
               width: group.width || 100,
               attributes: group.attributes || [],
               warning: group.warning || [],
-              header: highed.L(group.pid)
+              header: highed.L(group.pid).replace('Chart', highed.chartType ==='Map' ? 'Map' : 'Chart')
             },
             function(newValue) {
               if (group.header) return;

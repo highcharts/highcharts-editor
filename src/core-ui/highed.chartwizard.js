@@ -353,7 +353,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
       var nextButton = highed.dom.cr(
             'button',
             'highed-ok-button highed-import-button negative',
-            'Customize Your Chart'
+            'Customize Your ' + (chartType === 'Map' ? 'Map' : 'Chart')
           );//,
          // dataTableDropzoneContainer = dataPage.createSimpleDataTable();
 

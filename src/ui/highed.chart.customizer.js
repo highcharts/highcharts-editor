@@ -292,7 +292,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
         });
       } else if (
         properties.availableSettings[group.id] ||
-        properties.availableSettings[group.pid]
+        properties.availableSettings[group.pid] 
       ) {
         doInclude = true;
       }
@@ -354,6 +354,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
       if (!shouldInclude(highed.meta.optionsExtended.options[key])) {
         return;
       }
+
       list.addItem({
         id: key,
         title: highed.L(key)
@@ -361,16 +362,6 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
       highed.meta.optionsExtended.options[key],
       chartPreview);
     });
-/*
-    list.addItem({
-      id: "Annotations",
-      annotations: true,
-      title: "Annotations ",
-      onClick: function() {
-        events.emit("AnnotationsClicked");
-      }
-    }, null, chartPreview);*/
-
     // buildTree();
   }
 
