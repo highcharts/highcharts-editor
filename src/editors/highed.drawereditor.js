@@ -72,6 +72,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
       'highed-errorbar-body highed-scrollbar',
       'Oh noes! something is very wrong!'
     ),
+    betaContainer = highed.dom.cr('div', chartType === 'Map' ? 'highed-beta-label' : '', chartType === 'Map' ? 'BETA' : ''),
     lastSetWidth = false,
     fixedSize = false,
     splitter = highed.VSplitter(parent, {
@@ -373,7 +374,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
   chartPreview.options.togglePlugins('map', chartType === 'Map');
 
   highed.dom.on(helpIcon, 'click', showHelp);
-  highed.dom.ap(splitter.bottom, highed.dom.ap(workspaceBody, workspaceRes, workspaceButtons));
+  highed.dom.ap(splitter.bottom, betaContainer, highed.dom.ap(workspaceBody, workspaceRes, workspaceButtons));
 
   highed.dom.ap(splitter.bottom, titleContainer, smallScreenWorkspaceButtons);
   if (!properties.useHeader) {
