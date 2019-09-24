@@ -3048,7 +3048,8 @@ highed.DataTable = function(parent, attributes) {
       newRows.forEach(function(r, n) {
         if (r[0] === data.properties[code]) {
           rows[i].columns.forEach(function(col, x) {
-            if (x === 0) return;
+            if (x === 0 || newRows[n][x] === undefined) return;
+            
             col.setValue(newRows[n][x]);
           })
         }

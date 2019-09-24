@@ -784,8 +784,8 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     dataPage.loadSampleData(data);
   });
 
-  mapSelector.on('LoadMapData', function(data, code, name) {
-    dataPage.loadMapData(data, code, name);
+  mapSelector.on('LoadMapData', function(data, code, name, csv, cb) {
+    dataPage.loadMapData(data, code, name, csv, cb);
     chartPreview.updateMapCodes(data);
   });
 

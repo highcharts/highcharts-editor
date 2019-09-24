@@ -310,7 +310,6 @@ highed.MapSelector = function(chartPreview) {
     var keys = Object.keys(type);
     if (keys.length > 0 && type[keys[0]] && (type[keys[0]].templateTitle !== 'Honeycomb' && type[keys[0]].templateTitle !== 'Tilemap Circle')) {
       var templateTitle = type[keys[0]].templateTitle;
-      console.log(templateTitle);
       const samples = highed.samples.getMap(templateTitle);
       
       Object.keys(samples).forEach(function(key) {
@@ -339,7 +338,13 @@ highed.MapSelector = function(chartPreview) {
               type: 'GET',
               dataType: 'json',
               success: function(data) {
-                events.emit('LoadMapData', data.features);
+                var customized = chartPreview.options.getCustomized();
+
+                if (sample.templateConfig) {
+                  chartPreview.options.setAll(highed.merge(customized, sample.templateConfig));
+                }
+
+                events.emit('LoadMapData', data.features, null, null, sample.dataset.join('\n'));
                 if (toNextPage) toNextPage();
               },
               error: function(e) {
@@ -347,13 +352,8 @@ highed.MapSelector = function(chartPreview) {
             })
           });
 
-
-          //events.emit('LoadDataSet', sample.dataset.join('\n'));
-          //if (toNextPage) toNextPage();
         });
 
-        console.log(thumbnail);
-        
         highed.dom.ap(mapSampleContainer, highed.dom.ap(container, thumbnail, title));
       });
 
