@@ -58,7 +58,20 @@ highed.MapSelector = function(chartPreview) {
             mapSelectorGeojsonNameContainer
           )
         ),
-      });
+      }),
+      blacklist = [
+        "World with Palestine areas, high resolution", 
+        "World with Palestine areas, medium resolution",
+        "World with Palestine areas, low resolution",
+        "World, Eckert III projection, high resolution",
+        "World, Eckert III projection, low resolution",
+        "World, Miller projection, ultra high resolution",
+        "World, Miller projection, very high resolution",
+        "World, Miller projection, high resolution",
+        "World, Miller projection, low resolution",
+        "World, Robinson projection, high resolution",
+        "World, Robinson projection, low resolution",
+      ];
 
   function createMapDataSection(toNextPage, cb) {
 
@@ -78,10 +91,14 @@ highed.MapSelector = function(chartPreview) {
               var found = false;
               var mapSelectorOptions = highed.dom.cr('div', 'highed-map-selector-options');
               Object.keys(Highcharts.mapDataIndex[mapGroup]).forEach(function (desc, path) {
+                if (blacklist.includes(desc)) return;
+
                 var pos = (desc.toLowerCase()).search(query.toLowerCase());
                 if (pos > -1) {
                   //mapOptions += '<option value="' + path + '">' + desc + '</option>';
-                  const option = highed.dom.cr('div', 'highed-map-option', desc);
+
+                  var titleText = desc.replace(', medium resolution', '');
+                  const option = highed.dom.cr('div', 'highed-map-option', titleText);
                   var options = [option];
 
                   highed.dom.ap(mapSelectorOptions, option);
@@ -89,7 +106,7 @@ highed.MapSelector = function(chartPreview) {
                   if (mapCount < 25) {
                     var mapSelectorImage = highed.dom.cr('img', 'highed-map-selector-image'),
                         mapSelectorImageContainer = highed.dom.cr('div', 'highed-map-selector-image-container'),
-                        mapSelectorImageTitle = highed.dom.cr('div', 'highed-map-selector-image-text', desc);
+                        mapSelectorImageTitle = highed.dom.cr('div', 'highed-map-selector-image-text', titleText);
 
                     mapSelectorImage.src = baseMapPath + (Highcharts.mapDataIndex[mapGroup][desc]).replace('.js', '.svg');
                     highed.dom.ap(mapSelectorImageContainer,mapSelectorImageTitle, mapSelectorImage);
@@ -157,7 +174,7 @@ highed.MapSelector = function(chartPreview) {
       var importInput = highed.dom.cr('button', 'highed-ok-button highed-import-button import-geojson-map-btn', 'Import GeoJSON Map');
 
       highed.dom.ap(importContainer, 
-        highed.dom.cr('div', '', 'Or load a sample to try it out:'),
+        highed.dom.cr('div', 'highed-map-load-sample-text', 'Or load a sample to try it out:'),
         mapSampleContainer
       );
 
