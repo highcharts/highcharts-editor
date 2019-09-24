@@ -531,12 +531,14 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     createChartPage.init(dataPage, templatePage, customizePage, mapSelector, highedChartContainer);
 
     highed.dom.style([workspaceBody, showChartSmallScreen, smallScreenWorkspaceButtons], {
-      opacity: 0
+      opacity: 0,
+      maxHeight:'0px'
     });
     panel.getPrev().hide();
     createChartPage.show();
     highed.dom.style([chartFrame, titleContainer], {
-      opacity: '0'
+      opacity: '0',
+      maxHeight: '0px'
     });
 
     if(highed.onPhone()) {
@@ -550,10 +552,12 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
       highed.dom.ap(splitter.bottom, highedChartContainer);
       createChartPage.hide();
       highed.dom.style([chartFrame, titleContainer], {
-        opacity: '1'
+        opacity: '1',
+        maxHeight: 'fit-content'
       });
       highed.dom.style([workspaceBody, showChartSmallScreen, smallScreenWorkspaceButtons], {
-        opacity: 1
+        opacity: 1,
+        maxHeight:'fit-content'
       });
 
       if(highed.onPhone()) {

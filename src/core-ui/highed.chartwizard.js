@@ -103,6 +103,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
             highed.dom.ap(body, mapContainer);
           },
           onload: function() {
+            mapSelector.loadSamples(chartPreview.options.getTemplateSettings(), goToNextPage);            
             mapSelector.showMaps(chartPreview.options.getTemplateSettings()[0], goToNextPage);
           }
         });

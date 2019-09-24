@@ -241,15 +241,14 @@ function createSimpleDataTable(toNextPage, loading, props) {
       mapDataTableElement =  latLongTable.createTable();
       mapImporter.init(container, toNextPage);
 
-  var buttons = [{ title: 'Load Sample Data', linkedTo: sampleDataContainer}];
+  var buttons = []; 
   
   if (highed.chartType !== 'Map') {
-    [{ title: 'Connect Google Sheet', linkedTo: gSheetContainer}, 
-    { title: 'Import Live Data', linkedTo: liveContainer, height: 321}, 
-    { title: 'Cut and Paste Data', linkedTo: cutAndPasteContainer, height: 448, width: 518}].forEach(function(btnOpt){
-        buttons.unshift(btnOpt);
-    })
-  }
+    buttons = [ { title: 'Load Sample Data', linkedTo: sampleDataContainer},
+                { title: 'Connect Google Sheet', linkedTo: gSheetContainer}, 
+                { title: 'Import Live Data', linkedTo: liveContainer, height: 321}, 
+                { title: 'Cut and Paste Data', linkedTo: cutAndPasteContainer, height: 448, width: 518}];
+  };
 
   mapDataTableElement.classList += ' hide';
   //mapDataTableElement = highed.dom.cr('div');
@@ -354,7 +353,7 @@ function createSimpleDataTable(toNextPage, loading, props) {
       dropzone,
       dropCSVFileHere,
       dropzoneSpan,
-      highed.dom.cr('div', 'highed-table-dropzone-subtitle highed-table-dropzone-message', 'You can also:'),
+      highed.dom.cr('div', 'highed-table-dropzone-subtitle highed-table-dropzone-message', buttons.length > 0 ? 'You can also:' : ''),
       buttonsContainer
     ),
     chartContainer

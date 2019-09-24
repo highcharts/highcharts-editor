@@ -30,12 +30,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.MapSelector = function(chartPreview) {
   var events = highed.events(),
       predefinedMaps = highed.dom.cr('div', ''),
-      importContainer = highed.dom.cr('div', ''),
+      importContainer = highed.dom.cr('div', 'highed-map-import-container'),
       container = highed.dom.cr('div', 'highed-table-dropzone-container'),
       mapSelectorContainer = highed.dom.cr('div'),
       mapSelectorMapContainer = highed.dom.cr('div', 'highed-map-selector-container'),
       mapSelectorGeojsonContainer = highed.dom.cr('div', 'highed-map-geojson-container'),
       mapSelectorGeojsonCodeContainer = highed.dom.cr('div', ''),
+      mapSampleContainer = highed.dom.cr('div', 'highed-toolbox-map'),
+      baseMapPath = "https://code.highcharts.com/mapdata/",
       mapSelectorGeojsonNameContainer =  highed.dom.cr('div', ''),
       mapSelectorGeojsonCodeDropdown = highed.DropDown(mapSelectorGeojsonCodeContainer, 'highed-map-import-dropdown'),
       mapSelectorGeojsonNameDropdown = highed.DropDown(mapSelectorGeojsonNameContainer, 'highed-map-import-dropdown'),
@@ -62,8 +64,7 @@ highed.MapSelector = function(chartPreview) {
 
     if (highed.chartType && highed.chartType === 'Map' && Highcharts) {
 
-      var baseMapPath = "https://code.highcharts.com/mapdata/",
-          mapCount = 0,
+      var mapCount = 0,
           mapOptions = highed.dom.cr('div', 'highed-map-selector');
           mapSelectorImages = highed.dom.cr('div', 'highed-map-selector-images-container');
 
@@ -153,17 +154,22 @@ highed.MapSelector = function(chartPreview) {
         else mapOptions.classList += " active";
       });
 
-      var importInput = highed.dom.cr('button', 'highed-ok-button highed-import-button', 'Select File');
+      var importInput = highed.dom.cr('button', 'highed-ok-button highed-import-button import-geojson-map-btn', 'Import GeoJSON Map');
 
       highed.dom.ap(importContainer, 
-                    highed.dom.cr('hr'),
+        highed.dom.cr('div', '', 'Or load a sample to try it out:'),
+        mapSampleContainer
+      );
+
+/*
+      highed.dom.ap(importContainer, 
                     highed.dom.cr('div', 'highed-toolbox-body-title highed-map-import-geojson-header', 'Import GeoJSON Map'),
-                    importInput);
+                    importInput);*/
 
       highed.dom.on(importInput, 'click', function() {
         highed.readLocalFile({
           type: 'text',
-          accept: '.json',
+          accept: '.json,.geojson',
           success: function(info) {
             var data = JSON.parse(info.data);
             chartPreview.data.updateMapData(data);
@@ -223,7 +229,8 @@ highed.MapSelector = function(chartPreview) {
       highed.dom.ap(container, 
                     highed.dom.ap(
                       mapSelectorContainer,
-                      highed.dom.ap(highed.dom.cr('div', ''), input, inputSelector), 
+                      highed.dom.ap(highed.dom.cr('div', 'highed-choose-map-container'), input, inputSelector),
+                      importInput, 
                       highed.dom.ap(highed.dom.cr('div', ''), mapOptions),
                       mapSelectorImages
                     ),
@@ -282,12 +289,67 @@ highed.MapSelector = function(chartPreview) {
     }
   }
 
+  function loadSamples(type, toNextPage) {
+    var keys = Object.keys(type);
+    if (keys.length > 0 && type[keys[0]] && (type[keys[0]].templateTitle !== 'Honeycomb' && type[keys[0]].templateTitle !== 'Tilemap Circle')) {
+      var templateTitle = type[keys[0]].templateTitle;
+      console.log(templateTitle);
+      const samples = highed.samples.getMap(templateTitle);
+      
+      Object.keys(samples).forEach(function(key) {
+        var sample = samples[key];
+        
+        var container = highed.dom.cr('div', 'highed-chart-template-container highed-map-container'),
+            thumbnail = highed.dom.cr('div', 'highed-chart-template-thumbnail'),
+            title = highed.dom.cr('div', 'highed-map-text', sample.title);
+            
+        var mapType = type.templateTitle === 'Honeycomb' ? 'honeycomb' : 'circle';
+
+        highed.dom.style(thumbnail, {
+          'background-image': 'url(' + highed.option('thumbnailURL') + sample.thumbnail + ')'
+        });
+
+        highed.dom.on(container, 'click', function() {
+
+          var mapKey = sample.map,
+          svgPath = baseMapPath + mapKey + '.svg',
+          geojsonPath = baseMapPath + mapKey + '.geo.json',
+          javascriptPath = baseMapPath + sample.map + '.js';
+          
+          chartPreview.options.updateMap(mapKey, javascriptPath, function() {
+            highed.ajax({
+              url: geojsonPath,
+              type: 'GET',
+              dataType: 'json',
+              success: function(data) {
+                events.emit('LoadMapData', data.features);
+                if (toNextPage) toNextPage();
+              },
+              error: function(e) {
+              }
+            })
+          });
+
+
+          //events.emit('LoadDataSet', sample.dataset.join('\n'));
+          //if (toNextPage) toNextPage();
+        });
+
+        console.log(thumbnail);
+        
+        highed.dom.ap(mapSampleContainer, highed.dom.ap(container, thumbnail, title));
+      });
+
+    }
+  }
+
 
   //////////////////////////////////////////////////////////////////////////////
 
   return {
     on: events.on,
     createMapDataSection: createMapDataSection,
-    showMaps: showMaps
+    showMaps: showMaps,
+    loadSamples: loadSamples
   };
 };
