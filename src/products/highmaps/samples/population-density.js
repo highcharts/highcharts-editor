@@ -29,7 +29,6 @@ highed.samples.addMapType('Choropleth', {
   description: '',
   thumbnail: 'population-density.svg',
   map: 'custom/world',
-  type: "Choropleth",
   type: 'csv',
   templateConfig: {
     colorAxis: {

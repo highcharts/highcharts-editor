@@ -37,6 +37,7 @@ highed.MapSelector = function(chartPreview) {
       mapSelectorGeojsonContainer = highed.dom.cr('div', 'highed-map-geojson-container'),
       mapSelectorGeojsonCodeContainer = highed.dom.cr('div', ''),
       mapSampleContainer = highed.dom.cr('div', 'highed-toolbox-map'),
+      loadSampleText = highed.dom.cr('div', 'highed-map-load-sample-text', 'Or load a sample to try it out:'),
       baseMapPath = "https://code.highcharts.com/mapdata/",
       mapSelectorGeojsonNameContainer =  highed.dom.cr('div', ''),
       mapSelectorGeojsonCodeDropdown = highed.DropDown(mapSelectorGeojsonCodeContainer, 'highed-map-import-dropdown'),
@@ -174,7 +175,7 @@ highed.MapSelector = function(chartPreview) {
       var importInput = highed.dom.cr('button', 'highed-ok-button highed-import-button import-geojson-map-btn', 'Import GeoJSON Map');
 
       highed.dom.ap(importContainer, 
-        highed.dom.cr('div', 'highed-map-load-sample-text', 'Or load a sample to try it out:'),
+        loadSampleText,
         mapSampleContainer
       );
 
@@ -308,10 +309,18 @@ highed.MapSelector = function(chartPreview) {
 
   function loadSamples(type, toNextPage) {
     var keys = Object.keys(type);
+    
     if (keys.length > 0 && type[keys[0]] && (type[keys[0]].templateTitle !== 'Honeycomb' && type[keys[0]].templateTitle !== 'Tilemap Circle')) {
       var templateTitle = type[keys[0]].templateTitle;
       const samples = highed.samples.getMap(templateTitle);
       
+      if (!samples) {
+        highed.dom.style(loadSampleText, {
+          display: 'none'
+        });
+        return;
+      }
+
       Object.keys(samples).forEach(function(key) {
         var sample = samples[key];
         

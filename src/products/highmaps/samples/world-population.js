@@ -29,7 +29,6 @@ highed.samples.addMapType('Bubble', {
   description: '',
   thumbnail: 'mapbubble.svg',
   map: 'custom/world',
-  type: "Bubble",
   type: 'csv',
   dataset: [
     "code,z",

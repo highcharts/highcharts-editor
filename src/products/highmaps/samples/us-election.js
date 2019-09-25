@@ -29,7 +29,6 @@ highed.samples.addMapType('Choropleth', {
   description: '',
   thumbnail: 'us-election.svg',
   map: 'countries/us/us-all',
-  type: "Choropleth",
   type: 'csv',
   templateConfig: {
     colorAxis: {
