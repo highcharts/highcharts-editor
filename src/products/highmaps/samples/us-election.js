@@ -31,6 +31,9 @@ highed.samples.addMapType('Choropleth', {
   map: 'countries/us/us-all',
   type: 'csv',
   templateConfig: {
+    title: {
+      text: 'US Presidential Election 2016 Results'
+    },
     colorAxis: {
       type: undefined,
       min: undefined,

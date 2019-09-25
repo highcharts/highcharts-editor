@@ -30,6 +30,11 @@ highed.samples.addMapType('Bubble', {
   thumbnail: 'mapbubble.svg',
   map: 'custom/world',
   type: 'csv',
+  templateConfig: {
+    title: {
+      text: 'World population 2013 by country'
+    }
+  },
   dataset: [
     "code,z",
     "aw,105",

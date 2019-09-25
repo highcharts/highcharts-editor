@@ -31,6 +31,9 @@ highed.samples.addMapType('Choropleth', {
   map: 'custom/europe',
   type: 'csv',
   templateConfig: {
+    title: {
+      text: 'Europe time zones'
+    },
     colorAxis: {
       type: undefined,
       min: undefined,

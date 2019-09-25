@@ -31,6 +31,11 @@ highed.samples.addMapType('Pattern Fill', {
   map: 'countries/us/us-all',
   type: "Pattern Fill",
   type: 'csv',
+  templateConfig: {
+    title: {
+      text: 'US State Flags'
+    }
+  },
   dataset: [
     "us-al,https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Alabama.svg",
     "us-ak,https://upload.wikimedia.org/wikipedia/commons/e/e6/Flag_of_Alaska.svg",

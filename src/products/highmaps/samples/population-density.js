@@ -30,7 +30,11 @@ highed.samples.addMapType('Choropleth', {
   thumbnail: 'population-density.svg',
   map: 'custom/world',
   type: 'csv',
+  
   templateConfig: {
+    title: {
+      text: 'Population density by country (/km²)'
+    },
     colorAxis: {
       type: undefined,
       min: undefined,
