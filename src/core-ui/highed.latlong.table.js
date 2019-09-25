@@ -40,12 +40,12 @@ highed.LatLongTable = function() {
           'With this template type, we use latitude/longitude values to map points.',
           'If you do not know these for a specific point, simply add the address below and we will add it in for you.', 
           'These can be removed from the table by clicking on the trash icon or you can edit the value by selecting it in the table.',
-          highed.config && highed.config.mapApi && highed.config.mapApi.credit ? ' <a target="_blank" href="' + highed.config.mapApi.credit.href + '">' + highed.config.mapApi.credit.text + '</a>' : '']
+          highed.config && highed.config.mapApi && highed.config.mapApi.credit ? ' <a target="_blank" class="highed-sponsored-link" href="' + highed.config.mapApi.credit.href + '">' + highed.config.mapApi.credit.text + '</a>' : '']
           .join(' '),
         className: 'highed-map-add-points',
         extra: highed.dom.ap(
           highed.dom.cr('div', 'highed-add-map-point-container'),
-          highed.dom.cr('span', '', 'Country Name: '),
+          highed.dom.cr('span', '', 'Add New Point: '),
           addMapPointInput,
           addMapPointBtn
         ),

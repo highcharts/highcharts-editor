@@ -87,6 +87,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
     templateContainer = highed.dom.cr('div', 'highed-toolbox-template'),
     dataTableContainer = highed.dom.cr('div', 'highed-toolbox-data'),
     dataNextButton = highed.dom.cr('button', 'highed-ok-button highed-import-button negative', 'Next'),
+    dataSkipButton = highed.dom.cr('button', 'highed-ok-button highed-import-button negative', 'No thanks, I will enter my data manually'),
     mapContainer = highed.dom.cr('div', 'highed-toolbox-map'),
     //toolbox = highed.Toolbox(userContents),
     activeOption,
@@ -126,9 +127,14 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
             if (options && options.series && (options.series || []).some(function(s){ return s.type === 'mappoint'})){
               dataPage.showLatLongTable();
               chartPreview.redraw();
+              
+              highed.dom.style(dataSkipButton, {
+                display: 'none'
+              });
+              
               return;
             }
-
+            
             highed.dom.style(dataNextButton, {
               display: 'none'
             });
@@ -197,8 +203,8 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
           ),
           skipAll = highed.dom.cr('span', 'highed-toolbox-skip-all', 'Skip All');
 
-      titleInput.placeholder = 'Enter chart title';
-      subtitleInput.placeholder = 'Enter chart subtitle';
+      titleInput.placeholder = 'Enter ' + (highed.chartType === 'Map' ? 'map' : 'chart') + ' title';
+      subtitleInput.placeholder = 'Enter ' + (highed.chartType === 'Map' ? 'map' : 'chart') + ' subtitle';
 
       titleInput.value = '';
       subtitleInput.value = '';
@@ -231,7 +237,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
           highed.dom.cr(
             'td',
             'highed-toolbox-label',
-            'Chart Title'
+            (highed.chartType === 'Map' ? 'Map' : 'Chart') + ' Title'
           ), 
           highed.dom.ap(highed.dom.cr('td'), titleInput)
         ),
@@ -262,12 +268,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
 
     function createImportDataSection(dataPage, chartContainer) {
 
-      var skipButton = highed.dom.cr(
-            'button',
-            'highed-ok-button highed-import-button negative',
-            'No thanks, I will enter my data manually'
-          ),
-          loader = highed.dom.cr('span','highed-wizard-loader', '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>'),
+      var loader = highed.dom.cr('span','highed-wizard-loader', '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>'),
           dataTableDropzoneContainer = dataPage.createSimpleDataTable(function() {
             goToNextPage();
           }, function(loading) {
@@ -282,7 +283,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
         'Next'
       );
 
-      highed.dom.on([dataNextButton, skipButton], 'click', function() {
+      highed.dom.on([dataNextButton, dataSkipButton], 'click', function() {
         goToNextPage();
       });
 
@@ -291,7 +292,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
           highed.dom.ap(
             highed.dom.cr('div','highed-toolbox-button-container'),
             loader,
-            skipButton,
+            dataSkipButton,
             dataNextButton
           )
         )

@@ -200,6 +200,11 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       chartPreview.toggleShowAnnotationIcon(false);
       //var bsize = highed.dom.size(bar);
 
+      if (highed.chartType === 'Map') {
+        highed.dom.style([dataExportBtn, dataImportBtn], {
+          display: 'none'
+        });
+      }
       var newWidth = props.widths.desktop;
       if (highed.onTablet() && props.widths.tablet) newWidth = props.widths.tablet;
       else if (highed.onPhone() && props.widths.phone) newWidth = props.widths.phone;

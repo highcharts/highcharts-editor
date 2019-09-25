@@ -248,8 +248,8 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
                   { title: 'Connect Google Sheet', linkedTo: gSheetContainer}, 
                   { title: 'Import Live Data', linkedTo: liveContainer, height: 321}, 
                   { title: 'Cut and Paste Data', linkedTo: cutAndPasteContainer, height: 448, width: 518}];
-    };
-
+    }
+    
     mapDataTableElement.classList += ' hide';
     //mapDataTableElement = highed.dom.cr('div');
 
