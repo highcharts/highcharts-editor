@@ -27,7 +27,7 @@ highed.samples.addMapType('Choropleth', {
   id: 'eu-timezones',
   title: 'Europe time zones',
   description: '',
-  thumbnail: 'us-election.svg',
+  thumbnail: 'eu-timezones.svg',
   map: 'custom/europe',
   type: "Choropleth",
   type: 'csv',
