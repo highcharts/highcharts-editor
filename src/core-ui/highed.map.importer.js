@@ -57,7 +57,11 @@ highed.MapImporter = function() {
         selects: selects,
         highlightColumn: true,
         header: 'Link Data Values',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+        description: [
+          'Use the data table below to select the Country Codes/Names and the Values from your dataset.',
+          'You can also change the dataset directly in the table.<br>',
+          'If the options below are selected correctly then continue by pressing the "Save" button.'
+      ].join(' ')
       });
       data = null,
       toNextPage = null,

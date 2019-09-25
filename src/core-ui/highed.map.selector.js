@@ -47,7 +47,11 @@ highed.MapSelector = function(chartPreview) {
         header: 'Link Values',
         skipOrdering: true,
         readOnly: true,
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+        description: [
+          'Your GEOJSON data is not compatible with our system. We expect there to be a "hc-key" and "name" value.', 
+          'We have listed the first three rows from your dataset below, please select the country code and name so we can link these two together.',
+          'If the options below are selected correctly then continue by pressing the "Save" button.'
+        ].join(' '),
         extra: highed.dom.ap(
           highed.dom.cr('div', 'highed-map-select-geojson'),
           highed.dom.ap(

@@ -24,7 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 // @format
-/** Map Data Table for Lat/Long points (Map Bubble)
+/** Map Data Table for Lat/Long points (Map Point)
  */
 
 highed.LatLongTable = function() {
@@ -37,11 +37,11 @@ highed.LatLongTable = function() {
         selects: [],
         header: 'Add Data Points',
         description: [
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit,', 
-          'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, ',
-          'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+          'With this template type, we use latitude/longitude values to map points.',
+          'If you do not know these for a specific point, simply add the address below and we will add it in for you.', 
+          'These can be removed from the table by clicking on the trash icon or you can edit the value by selecting it in the table.',
           highed.config && highed.config.mapApi && highed.config.mapApi.credit ? ' <a target="_blank" href="' + highed.config.mapApi.credit.href + '">' + highed.config.mapApi.credit.text + '</a>' : '']
-          .join(''),
+          .join(' '),
         className: 'highed-map-add-points',
         extra: highed.dom.ap(
           highed.dom.cr('div', 'highed-add-map-point-container'),
