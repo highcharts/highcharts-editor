@@ -47,7 +47,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
         }
       },
       {
-        id: 2,
+        id: 4,
         title: 'Title Your ' + (chartType === 'Map' ? 'Map' : 'Chart'),
         create: function(body) {
           highed.dom.ap(body, titleContainer);
@@ -80,6 +80,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
       'div',
       'highed-toolbox-body highed-box-size highed-transition'
     ),
+    skippedData = false,
     listContainer = highed.dom.cr('div', 'highed-toolbox-createchart-list'),
     isVisible = false,
     customizerContainer = highed.dom.cr('div', 'highed-toolbox-customise'),
@@ -94,11 +95,11 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
     options = [];
 
     function init(dataPage,templatePage, customizePage, mapSelector, chartContainer) {
-      var dataIndex = 2;
+      var dataIndex = 1;
 
       if (highed.chartType === 'Map') {
-        builtInOptions.splice(2, 0, {
-          id: 3,
+        builtInOptions.splice(1, 0, {
+          id: 2,
           title: 'Choose Map',
           create: function(body) {
             highed.dom.ap(body, mapContainer);
@@ -110,13 +111,13 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
             mapSelector.showMaps(chartPreview.options.getTemplateSettings()[0], goToNextPage);
           }
         });
-        dataIndex = 3;
+        dataIndex = 2;
       }
 
 
       builtInOptions.splice(dataIndex, 0, 
         {
-          id: 4,
+          id: 3,
           title: 'Import Data',
           create: function(body) {
             highed.dom.ap(body, dataTableContainer);
@@ -209,11 +210,11 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
       titleInput.value = '';
       subtitleInput.value = '';
 
-      if (highed.chartType === 'Map') {
+      //if (highed.chartType === 'Map') {
         highed.dom.style(skipAll, {
           display: 'none'
         })
-      }
+      //}
 
       highed.dom.on(nextButton, 'click', function() {
         
@@ -283,7 +284,12 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
         'Next'
       );
 
-      highed.dom.on([dataNextButton, dataSkipButton], 'click', function() {
+      highed.dom.on(dataNextButton, 'click', function(){
+        if (chartType !== 'Map') skippedData = false;
+        goToNextPage();
+      });
+      highed.dom.on(dataSkipButton, 'click', function(){
+        if (chartType !== 'Map') skippedData = true;
         goToNextPage();
       });
 
@@ -362,7 +368,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
          // dataTableDropzoneContainer = dataPage.createSimpleDataTable();
 
       highed.dom.on(nextButton, 'click', function() {
-        events.emit("SimpleCreateChartDone");
+        events.emit("SimpleCreateChartDone", skippedData);
       });
 
       highed.dom.ap(customizerContainer, 
