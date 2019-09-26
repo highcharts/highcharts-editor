@@ -424,7 +424,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     }
 
     function loadMapProject(projectData, aggregated) {
-      assignDataPanel.disable();
+      //assignDataPanel.disable();
       var baseMapPath = "https://code.highcharts.com/mapdata/";
       chartPreview.options.updateMap(projectData.options.chart.map, baseMapPath + projectData.options.chart.map + '.js', function() {
         highed.ajax({
@@ -433,6 +433,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
           dataType: 'json',
           success: function(data) {
             loadMapData(data.features, null, null, projectData.settings.dataProvider.csv, function () {
+              
               assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
               assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
               chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));

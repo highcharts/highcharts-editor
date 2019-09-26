@@ -36,11 +36,11 @@ highed.samples.addMapType('Choropleth', {
       text: 'Population density by country (/km²)'
     },
     colorAxis: {
-      type: undefined,
-      min: undefined,
-      minColor: undefined,
-      maxColor: undefined,
-      stops: undefined,
+      type: null,
+      min: null,
+      minColor: null,
+      maxColor: null,
+      stops: null,
       dataClasses: [{
           to: 3,
           color: 'rgba(19,64,117,0.05)'

@@ -293,7 +293,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
         goToNextPage();
       });
 
-      highed.dom.ap(dataTableContainer, 
+      highed.dom.ap(dataTableContainer,
         highed.dom.ap(dataTableDropzoneContainer,
           highed.dom.ap(
             highed.dom.cr('div','highed-toolbox-button-container'),

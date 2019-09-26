@@ -35,11 +35,11 @@ highed.samples.addMapType('Choropleth', {
       text: 'US Presidential Election 2016 Results'
     },
     colorAxis: {
-      type: undefined,
-      min: undefined,
-      minColor: undefined,
-      maxColor: undefined,
-      stops: undefined,
+      type: null,
+      min: null,
+      minColor: null,
+      maxColor: null,
+      stops: null,
       dataClasses: [{
           from: -100,
           to: 0,

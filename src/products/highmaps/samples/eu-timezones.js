@@ -35,11 +35,11 @@ highed.samples.addMapType('Choropleth', {
       text: 'Europe time zones'
     },
     colorAxis: {
-      type: undefined,
-      min: undefined,
-      minColor: undefined,
-      maxColor: undefined,
-      stops: undefined,
+      type: null,
+      min: null,
+      minColor: null,
+      maxColor: null,
+      stops: null,
       dataClasses: [{
           from: 0,
           to: 0,
