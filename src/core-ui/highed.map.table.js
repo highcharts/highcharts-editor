@@ -40,6 +40,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *    hiddenValues: (Array) Values to not show in the table
  *    highlightColumn: (Bool) Whether to highlight columns when selected
  *    skipOrdering: (Bool) Skip all the logic when returning final result of table
+ *    dynamicWidth: (Bool) Whether the table has dynamically sized columns
  */
 
 highed.MapTable = function(parent, props) {
@@ -51,7 +52,7 @@ highed.MapTable = function(parent, props) {
       mapHeader = highed.dom.cr('div', 'highed-map-value-header highed-map-geojson-header', props.header),
       mapDescription = highed.dom.cr('div', 'highed-map-value-description highed-map-geojson-description', props.description),
       mapTableContainer = highed.dom.cr('div', 'highed-map-table-container'),
-      table = highed.dom.cr('table', 'highed-map-table data ' + (!props.readOnly ? 'edit' : '')),
+      table = highed.dom.cr('table', 'highed-map-table data ' + (!props.readOnly ? ' edit ' : ' ') + (props.dynamicWidth ? ' dynamic-width ' : ' ')),
       deleteTable = highed.dom.cr('table', 'highed-map-table highed-map-table-delete'),
       mapTHeader = highed.dom.cr('thead'),
       mapTBody = highed.dom.cr('tbody'),

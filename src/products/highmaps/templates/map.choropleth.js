@@ -50,7 +50,6 @@ highed.templates.add('Map', {
     },
 
     colorAxis: {
-      min: 1,
       type: 'logarithmic',
       minColor: '#EEEEFF',
       maxColor: '#000022',

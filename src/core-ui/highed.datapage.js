@@ -425,6 +425,20 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     function loadMapProject(projectData, aggregated) {
       //assignDataPanel.disable();
+
+      if (projectData.options && projectData.options.plotOptions && projectData.options.plotOptions.map && projectData.options.plotOptions.map.mapData){
+        loadMapData(projectData.options.plotOptions.map.mapData.features, projectData.options.plotOptions.map.mapData.hccode, projectData.options.plotOptions.map.mapData.hcname, projectData.settings.dataProvider.csv, function () {
+          assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
+          assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+          chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
+          assignDataPanel.updateLinkedToValues({
+            key: 'labels',
+            value: projectData.options.plotOptions.map.mapData.hccode
+          });
+        });
+        return;
+      }
+
       var baseMapPath = "https://code.highcharts.com/mapdata/";
       chartPreview.options.updateMap(projectData.options.chart.map, baseMapPath + projectData.options.chart.map + '.js', function() {
         highed.ajax({
@@ -777,6 +791,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     dataTable.showLatLongTable();
   }
 
+  function updateLinkedToValues(values){
+    assignDataPanel.updateLinkedToValues(values);
+  }
+
   return {
     on: events.on,
     destroy: destroy,
@@ -811,6 +829,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     addSerie: addSerie,
     getMapValueFromCode: getMapValueFromCode,
     changeAssignDataType: changeAssignDataType,
-    showLatLongTable: showLatLongTable
+    showLatLongTable: showLatLongTable,
+    updateLinkedToValues: updateLinkedToValues
   };
 };

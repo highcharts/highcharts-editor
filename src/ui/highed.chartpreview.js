@@ -376,6 +376,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
       options = highed.merge(options, stockTools.getStockToolsToolbarConfig());
       //console.log(highed.merge({},options));
+
       chart = new Highcharts[chartConstr](pnode || parent, options);
 
       //This is super ugly.
@@ -1165,14 +1166,14 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       //     });
       // }
 
-        updateAggregated(null, true);
+      updateAggregated(null, true);
 
-        if (!hasData) {
-          init(aggregatedOptions); 
-        }
-        emitChange();
-      
-      if (projectData.options && projectData.options.chart && projectData.options.chart.map){
+      if (!hasData) {
+        init(aggregatedOptions); 
+      }
+      emitChange();
+
+      if (projectData.options && ((projectData.options.chart && projectData.options.chart.map) || (projectData.options.plotOptions && projectData.options.plotOptions.map)) ){
         events.emit('SetChartAsMap');
         togglePlugins('map', true);
         events.emit('LoadMapProject', projectData, aggregatedOptions);
@@ -2089,8 +2090,19 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     chart.annotationsPopupContainer.style.display = 'none';
   }
 
-  function updateMapData(data){
-    customizedOptions.series[0].mapData = data;
+  function updateMapData(data, code, name){
+    if (!code || code === '') code = 'hc-key';
+    if (!name || name === '') name = 'name';
+    //customizedOptions.series[0].mapData = data;
+    if (!customizedOptions.plotOptions) customizedOptions.plotOptions = {};
+    if (!customizedOptions.plotOptions.map) customizedOptions.plotOptions.map = {};
+
+    data.hccode = code;
+    data.hcname = name;
+
+    customizedOptions.plotOptions.map.mapData = data;
+
+    customizedOptions.series[0].joinBy = [code, code];
   }
 
   function updateMap(path, scriptSrc, callback) {

@@ -27,53 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 highed.AssignDataPanel = function(parent, dataTable, extraClass) {
 
-  var defaultOptions = {
-    'labels': {
-      'name': "Categories",
-      'desc': 'Choose a column for the category types. Can be names or a date.',
-      'default': 'A',
-      'value': 'A',
-      'rawValue': [0],
-      'previousValue': null,
-      'linkedTo': 'x',
-      'isLabel': true,
-      'mandatory': true,
-      'colors': {
-        'light': 'rgba(66, 200, 192, 0.2)',
-        'dark': 'rgb(66, 200, 192)',
-      }
-    },
-    'values': {
-      'name': "Values",
-      'desc': 'Enter column with the values you want to chart.',
-      'default': 'B',
-      'linkedTo': 'y',
-      'isData': true,
-      'value': 'B',
-      'rawValue': [1],
-      'previousValue': null,
-      'mandatory': true,
-      'colors': {
-        'light': 'rgba(145, 151, 229, 0.2)',
-        'dark': 'rgb(145, 151, 229)',
-      }
-    },
-    'label': {
-      'name': "Label",
-      'desc': 'The name of the point as shown in the legend, tooltip, data label etc.',
-      'default': '',
-      'value': '',
-      'rawValue': null,
-      'previousValue': null,
-      'mandatory': false,
-      'linkedTo': 'label',        
-      'colors': {
-        'light': 'rgba(229, 145, 145, 0.2)',
-        'dark': 'rgb(229, 145, 145)',
-      },
-      'noNulls': true
-    }
-  },
+  var defaultOptions = highed.meta.assignDefaults,
   options = [],
   toggled = false,
   columnLength = 0,
@@ -107,10 +61,13 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     seriesTypeSelect = highed.DropDown(selectContainer, ' highed-assigndatapanel-series-dropdown'),
     hidden = highed.dom.cr('div', 'highed-assigndatapanel-hide');
 
-    highed.dom.style(hidden, {
-      display: 'none'
-    });
+
+  highed.dom.style(hidden, {
+    display: 'none'
+  });
+  
   addSerie();
+
   Object.keys(defaultOptions).forEach(function(key) {
     defaultOptions[key].colors = null;
   });
@@ -373,7 +330,6 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     });
   }
 
-
   function disable() {
     highed.dom.style(hidden, {
       display: 'block'
@@ -426,6 +382,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
   function isMapPoint(data, index) {
     return data.options && data.options.series && data.options.series[index] && data.options.series[index].type === 'mappoint';
   }
+
   function isPatternFill(data, index) {
     return data.settings && data.settings.dataProvider && data.settings.dataProvider.seriesMapping && 
     Object.keys(data.settings.dataProvider.seriesMapping[index]).some(function(key) {
@@ -493,8 +450,6 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     if (chartTypeOptions && chartTypeOptions.data) {
       options[seriesIndex || index].data = null;
     }*/
-
-
     highed.merge(options[seriesIndex || index], highed.meta.charttype[seriesType]);
     clean(options[seriesIndex || index]);
 
@@ -730,6 +685,12 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     clean(options[0]);
     resetDOM();
   }
+
+  function updateLinkedToValues(values){
+    if (options[index][values.key]) {
+      options[index][values.key].linkedTo = values.value;
+    }
+  };
   ////////////////////////////////////////////////////////////////////////////////
       
   highed.dom.ap(selectContainer, addNewSeriesBtn, deleteSeriesBtn, toggleHideCellsBtn);
@@ -840,6 +801,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     getElement: getElement,
     restart: restart,
     setValues: setValues,
-    changeAssignDataType: changeAssignDataType
+    changeAssignDataType: changeAssignDataType,
+    updateLinkedToValues: updateLinkedToValues
   };
 };

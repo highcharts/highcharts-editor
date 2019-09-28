@@ -1999,7 +1999,6 @@ highed.DataTable = function(parent, attributes) {
    */
   function toCSV(delimiter, quoteStrings, section) {
     delimiter = delimiter || ','; 
-
     if (highed.chartType !== 'Map') 
       return toData(quoteStrings, true, section)
         .map(function(cols) {
@@ -3028,7 +3027,7 @@ highed.DataTable = function(parent, attributes) {
 
     if (!code || code === '') code = 'hc-key';
     if (!name || name === '') name = 'name';
-
+    
     mapData = mapData.sort(function(a, b){
       if(a.properties['hc-key'] < b.properties['hc-key']) { return -1; }
       if(a.properties['hc-key'] > b.properties['hc-key']) { return 1; }

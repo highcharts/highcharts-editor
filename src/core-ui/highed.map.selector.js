@@ -47,6 +47,7 @@ highed.MapSelector = function(chartPreview) {
         header: 'Link Values',
         skipOrdering: true,
         readOnly: true,
+        dynamicWidth: true,
         description: [
           'Your GEOJSON data is not compatible with our system. We expect there to be a "hc-key" and "name" value.', 
           'We have listed the first three rows from your dataset below, please select the country code and name so we can link these two together.',
@@ -193,9 +194,15 @@ highed.MapSelector = function(chartPreview) {
           type: 'text',
           accept: '.json,.geojson',
           success: function(info) {
+            
+            if (info.size > 2000000) {
+              highed.snackBar("File size cannot exceed 2mb");
+              return;
+            }
+
             var data = JSON.parse(info.data);
-            chartPreview.data.updateMapData(data);
             if (data.features[0].properties.name && data.features[0].properties['hc-key']) {
+              chartPreview.data.updateMapData(data);
               events.emit('LoadMapData', data.features);
               if (toNextPage) toNextPage();
             } else {
@@ -238,6 +245,13 @@ highed.MapSelector = function(chartPreview) {
                   alert("Please assign the appropriate code/name pair from your dataset before continuing.");
                   return;
                 }
+
+                chartPreview.data.updateMapData(data, dataArr[0][mapSelectorGeojsonCodeDropdown.getSelectedItem().id()], dataArr[0][mapSelectorGeojsonNameDropdown.getSelectedItem().id()]);
+                events.emit('ChangeAssignLinkedToValue', {
+                  key: 'labels',
+                  value: dataArr[0][mapSelectorGeojsonCodeDropdown.getSelectedItem().id()]
+                })
+                
                 events.emit('LoadMapData', data.features, dataArr[0][mapSelectorGeojsonCodeDropdown.getSelectedItem().id()], dataArr[0][mapSelectorGeojsonNameDropdown.getSelectedItem().id()]);
                 if (toNextPage) toNextPage();
               });
