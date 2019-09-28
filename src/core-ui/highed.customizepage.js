@@ -420,11 +420,12 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
       resWidth.value = res.width;
       resHeight.value = res.height;
+
+      if (highed.chartType === 'Map') resize();
     });
   });
 
   highed.dom.on(stretchToFitIcon, 'click', function() {
-    
     resWidth.value = '';
     resHeight.value = '';
     highed.dom.style(chartContainer, {
@@ -432,7 +433,10 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       height: '100%',
     });
     setTimeout(chartPreview.resize, 300);
+
+    if (highed.chartType === 'Map') resize();
   }),
+  
   backIcon = highed.dom.cr('div','highed-back-icon', '<i class="fa fa-chevron-circle-left" aria-hidden="true"></i>');
 
 
