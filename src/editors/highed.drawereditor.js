@@ -553,11 +553,11 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
       createChartPage.hide();
       highed.dom.style([chartFrame, titleContainer], {
         opacity: '1',
-        maxHeight: 'fit-content'
+        maxHeight: 'max-content'
       });
       highed.dom.style([workspaceBody, showChartSmallScreen, smallScreenWorkspaceButtons], {
         opacity: 1,
-        maxHeight:'fit-content'
+        maxHeight: 'max-content'
       });
 
       if(highed.onPhone()) {
