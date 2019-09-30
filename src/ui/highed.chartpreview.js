@@ -500,6 +500,17 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         name: theme.name || theme.id
       };
 
+      if (highed.chartType === 'Map') {
+        if (theme.options.series && highed.isArr(theme.options.series)) {
+          theme.options.series.forEach(function(serie) {
+            serie.data = [];
+          });
+        }
+        if (theme.options.chart && theme.options.chart.map) {
+          delete theme.options.chart.map;
+        }
+      }
+
       themeOptions = highed.merge({}, theme.options);
       themeCustomCode = theme.customCode || '';
     } else {
@@ -507,6 +518,14 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         id: highed.uuid(),
         name: 'Untitled Theme'
       };
+
+      if (highed.chartType === 'Map') {
+        if (theme.series && highed.isArr(theme.series)) {
+          theme.series.forEach(function(serie) {
+            serie.data = [];
+          });
+        }
+      }
 
       themeOptions = highed.merge({}, theme);
     }
