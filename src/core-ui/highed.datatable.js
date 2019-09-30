@@ -1659,7 +1659,7 @@ highed.DataTable = function(parent, attributes) {
    */
   function sortRows(column, direction, asMonths) {
     tbody.innerHTML = '';
-
+    
     direction = (direction || '').toUpperCase();
     rows.sort(function(a, b) {
       var ad = a.columns[column].value(),
@@ -1677,7 +1677,13 @@ highed.DataTable = function(parent, attributes) {
         if (direction === 'ASC') {
           return ad - bd;
         }
+
         return bd < ad ? -1 : bd > ad ? 1 : 0;
+      } else if (ad === null){
+        return 1;
+      } 
+      else if (bd === null){
+        return -1;
       }
 
       if (direction === 'ASC') {
@@ -1690,7 +1696,9 @@ highed.DataTable = function(parent, attributes) {
         return bd.localeCompare(ad);
       }
        else {
-         if (ad) return ad.localeCompare(bd);
+         if (ad) {
+           return ad.localeCompare(bd);
+         }
        }
       
     });
