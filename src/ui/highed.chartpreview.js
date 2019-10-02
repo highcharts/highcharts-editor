@@ -51,7 +51,12 @@ highed.ChartPreview = function(parent, attributes, planCode) {
           },
           exporting: {
             //   url: 'http://127.0.0.1:7801'
-          }
+          },
+          credits: {
+            text: 'cloud.highcharts.com',
+            href: 'https://cloud.highcharts.com'
+          },
+          data: {}
         },
         expandTo: parent
       },
@@ -155,7 +160,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     });
 
     stockTools.on('ForceChartRefresh', function(){
-      init();
+      refreshChart();
     });
 
     stockTools.on('StockToolsChanged', function(option, index, type) {
@@ -263,7 +268,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       if (chart !== false) {
         return fn(chart);
       }
-      return fn(init());
+      return fn(refreshChart());
     }
     return false;
   }
@@ -281,7 +286,23 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     }, 200);
   }
 
-  /* Init the chart */
+  /*
+    Refresh the chart
+  */
+
+  function refreshChart(options) {
+    options = options || aggregatedOptions;
+
+    (options.series || []).forEach(function(serie){
+      if (serie.data) delete serie.data;
+    })
+
+    console.log(JSON.stringify(options))
+    chart.update(options);
+  }
+
+
+  /* Refresh the chart */
   function init(options, pnode, noAnimation) {
     var i;
 
@@ -325,6 +346,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       }) ? 'StockChart' : 'Chart');
 
       options = highed.merge(options, stockTools.getStockToolsToolbarConfig());
+      console.log(JSON.stringify(options));
 
       chart = new Highcharts[chartConstr](pnode || parent, options);
 
@@ -414,7 +436,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
     if (!skipEmit) {
       updateAggregated();
-      init(aggregatedOptions);
+      refreshChart(aggregatedOptions);
       emitChange();
       events.emit('SetResizeData');
     }
@@ -462,7 +484,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     if (!skipEmit) {
       events.emit('UpdateCustomCode');
       updateAggregated();
-      init(aggregatedOptions);
+      refreshChart(aggregatedOptions);
       emitChange();
       events.emit('SetResizeData');
     }
@@ -665,7 +687,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     if (customizedOptions && customizedOptions.series) {
       customizedOptions.series = customizedOptions.series.slice(0, length);
       updateAggregated();
-      init(aggregatedOptions);
+      refreshChart(aggregatedOptions);
       emitChange();
     }
   }
@@ -678,7 +700,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     }
 
     updateAggregated();
-    init(aggregatedOptions);
+    refreshChart(aggregatedOptions);
   }
 
   function loadTemplateForSerie(template, seriesIndex) {
@@ -711,7 +733,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     templateOptions[seriesIndex] = highed.merge({}, template.config || {});
     
     updateAggregated();
-    init(aggregatedOptions);
+    refreshChart(aggregatedOptions);
     //loadSeries();
     emitChange();
   }
@@ -747,7 +769,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       templateOptions = [highed.merge({}, template.config || {})];
 
       updateAggregated();
-      init(aggregatedOptions);
+      refreshChart(aggregatedOptions);
       emitChange();
     });
   }
@@ -871,7 +893,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
       updateAggregated();
 
-      init(aggregatedOptions);
+      refreshChart(aggregatedOptions);
       loadSeries();
       emitChange();
 
@@ -887,7 +909,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
       if (mergedExisting) {
         updateAggregated();
-        init(aggregatedOptions);
+        refreshChart(aggregatedOptions);
         loadSeries();
         emitChange();
       }
@@ -1104,12 +1126,12 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       //     });
       // }
 
-        updateAggregated(null, true);
+      updateAggregated(null, true);
 
-        if (!hasData) {
-          init(aggregatedOptions); 
-        }
-        emitChange();
+      if (!hasData) {
+        refreshChart(aggregatedOptions); 
+      }
+      emitChange();
       
       events.emit('LoadProject', projectData, aggregatedOptions);
     }
@@ -1128,7 +1150,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
     events.emit('ProviderLiveData', settings);
     updateAggregated();
-    init(aggregatedOptions);
+    refreshChart(aggregatedOptions);
 
     loadSeries();
     emitChange();
@@ -1171,7 +1193,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
 
     updateAggregated();
-    init(aggregatedOptions);
+    refreshChart(aggregatedOptions);
     loadSeries();
     emitChange();
     // The sheet will be loaded async, so we should listen to the load event.
@@ -1344,7 +1366,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
     if (!skipReinit) {
       updateAggregated();
-      init(aggregatedOptions);
+      refreshChart(aggregatedOptions);
       emitChange();
     }
   }
@@ -1387,7 +1409,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         }
 
         updateAggregated();
-        init(customizedOptions);
+        refreshChart(customizedOptions);
         loadSeries();
         emitChange();
       }
@@ -1506,7 +1528,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     }
 
     updateAggregated();
-    init(aggregatedOptions, false, true);
+    refreshChart(aggregatedOptions, false, true);
     emitChange();
 
     if (doEmitHeightChange) {
@@ -1531,7 +1553,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       });
 
       updateAggregated();
-      init(aggregatedOptions);
+      refreshChart(aggregatedOptions);
       emitChange();
     });
   }
@@ -1589,7 +1611,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     }
 
     updateAggregated();
-    init(aggregatedOptions, false, true);
+    refreshChart(aggregatedOptions, false, true);
     emitChange();
 
     events.emit('AttrChange', {
@@ -1867,7 +1889,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         });
 
         preExpandSize = highed.dom.size(parent);
-        init(chart.options, properties.expandTo);
+        refreshChart(chart.options, properties.expandTo);
         expanded = true;
 
         toggleButton.className =
@@ -1890,7 +1912,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         toggleButton.className =
           'highed-icon highed-chart-preview-expand fa fa-external-link-square';
 
-        init(chart.options, parent);
+        refreshChart(chart.options, parent);
         expanded = false;
       }
     });
@@ -1913,7 +1935,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
     updateAggregated();
 
-    init(aggregatedOptions);
+    refreshChart(aggregatedOptions);
 
     emitChange();
     events.emit('New');
@@ -1936,7 +1958,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
    */
   function changeParent(newParent) {
     parent = newParent;
-    init();
+    refreshChart();
   }
 
   /** Returns the constructor currently in use
@@ -2001,7 +2023,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       if (!customizedOptions.data || (customizedOptions 
          && customizedOptions.data 
          && !customizedOptions.data.googleSpreadsheetKey)) {
-        init(aggregatedOptions);
+        refreshChart(aggregatedOptions);
       }
 
       emitChange();
@@ -2039,14 +2061,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
   ///////////////////////////////////////////////////////////////////////////
 
-  //Init the initial chart
-  updateAggregated();
-  init();
-
-  highed.dom.on(toggleButton, 'click', function() {
-    return expanded ? collapse() : expand();
-  });
-
   function addBlankSeries(index, type) {
     if (!customizedOptions.series[index]) {
       customizedOptions.series[index] = {
@@ -2062,9 +2076,18 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     
     //Init the initial chart
     updateAggregated();
-    init();
+    refreshChart();
   }
-  
+  ///////////////////////////////////////////////////////////////////////////
+
+  //Init the initial chart
+  updateAggregated();
+  init();
+
+  highed.dom.on(toggleButton, 'click', function() {
+    return expanded ? collapse() : expand();
+  });
+
   ///////////////////////////////////////////////////////////////////////////
 
   exports = {
@@ -2091,7 +2114,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     toProject: toProject,
     toProjectStr: toProjectStr,
     loadProject: loadProject,
-    redraw: init,
+    redraw: refreshChart,
 
     toString: toString,
     setIsAnnotating: setIsAnnotating,
