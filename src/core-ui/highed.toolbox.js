@@ -117,7 +117,7 @@ highed.Toolbox = function(parent, attr) {
 
       entryEvents.emit('BeforeExpand');
 
-      body.innerHTML = '';
+      body.textContent = '';
       highed.dom.ap(body, contents);
       
       highed.dom.style(body, {

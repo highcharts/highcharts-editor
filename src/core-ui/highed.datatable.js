@@ -584,7 +584,6 @@ highed.DataTable = function(parent, attributes) {
   }
 
   function makeEditable(target, value, fn, keyup, close, dontFocus) {
-    
     if (mainInputCb.length) {
       mainInputCb = mainInputCb.filter(function(fn) {
         fn();
@@ -636,7 +635,6 @@ highed.DataTable = function(parent, attributes) {
           }
           return;
         }
-
         return highed.isFn(fn) && fn(mainInput.value);
       })
     );
@@ -935,7 +933,7 @@ highed.DataTable = function(parent, attributes) {
       if (disabled) return;
 
       if (lastSelectedCell[0] !== colNumber && lastSelectedCell[1] !== row.number) {
-        focus();
+        //focus();
       }
     
       selectedFirstCell[0] = colNumber;//keyVal; 
@@ -1144,7 +1142,7 @@ highed.DataTable = function(parent, attributes) {
     function addToDOM(number) {
       didAddHTML = true;
       exports.number = number;
-      checker.innerHTML = number + 1;
+      checker.textContent = number + 1;
       checker.value = number;
       leftItem.value = number;
       highed.dom.ap(tbody, row);
@@ -1255,9 +1253,9 @@ highed.DataTable = function(parent, attributes) {
   }
 
   function updateColumns() {
-    colgroup.innerHTML = '';
-    topColumnBar.innerHTML = '';
-    topLetterBar.innerHTML = '';
+    colgroup.textContent = '';
+    topColumnBar.textContent = '';
+    topLetterBar.textContent = '';
     var resetLetters = 'A';
     
     gcolumns.forEach(function(col, i) {      
@@ -1682,7 +1680,7 @@ highed.DataTable = function(parent, attributes) {
    * @param asMonths {boolean} - if true, sort by month
    */
   function sortRows(column, direction, asMonths) {
-    tbody.innerHTML = '';
+    tbody.textContent = '';
 
     direction = (direction || '').toUpperCase();
     rows.sort(function(a, b) {
@@ -1739,11 +1737,11 @@ highed.DataTable = function(parent, attributes) {
       return false;
     });
 
-    tbody.innerHTML = '';
-    leftBar.innerHTML = '';
-    topColumnBar.innerHTML = '';
-    topLetterBar.innerHTML = '';
-    colgroup.innerHTML = '';
+    tbody.textContent = '';
+    leftBar.textContent = '';
+    topColumnBar.textContent = '';
+    topLetterBar.textContent = '';
+    colgroup.textContent = '';
     keyValue = "A";
 
     highed.dom.style(tableTail, {
@@ -1896,10 +1894,6 @@ highed.DataTable = function(parent, attributes) {
 
       if (highed.isNum(column)) {
         column = parseFloat(column);
-      }
-
-      if (highed.isStr(column) && Date.parse(column) !== NaN) {
-        //v = (new Date(v)).getTime();
       }
 
       arr.push(column);
