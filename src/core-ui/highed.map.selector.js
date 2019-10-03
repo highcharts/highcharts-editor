@@ -103,7 +103,7 @@ highed.MapSelector = function(chartPreview) {
           mapOptions = highed.dom.cr('div', 'highed-map-selector');
           mapSelectorImages = highed.dom.cr('div', 'highed-map-selector-images-container');
 
-      function getSearchResults(query) {
+      function getSearchResults(query, skipTiles) {
         mapOptions.innerHTML = '';
         mapSelectorImages.innerHTML = '';
         mapCount = 0;
@@ -125,7 +125,7 @@ highed.MapSelector = function(chartPreview) {
 
                   highed.dom.ap(mapSelectorOptions, option);
 
-                  if (mapCount < 25) {
+                  if (mapCount < 25 && !skipTiles) {
                     var mapSelectorImage = highed.dom.cr('img', 'highed-map-selector-image'),
                         mapSelectorImageContainer = highed.dom.cr('div', 'highed-map-selector-image-container'),
                         mapSelectorImageTitle = highed.dom.cr('div', 'highed-map-selector-image-text', titleText);
@@ -206,6 +206,7 @@ highed.MapSelector = function(chartPreview) {
         })
       }
 
+      getSearchResults('', true);
       getMostPopular();
       searchText = 'Search ' + mapCount + ' maps';
 
