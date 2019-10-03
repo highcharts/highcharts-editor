@@ -3055,18 +3055,18 @@ highed.DataTable = function(parent, attributes) {
 
     highlightCells([0],[0], {
       colors: {
-        light: "hsla(295, 31%, 80%, 0.5)",
-        dark: "hsl(295, 31%, 60%)"
+        'light': 'rgba(66, 200, 192, 0.2)',
+        'dark': 'rgb(66, 200, 192)',
       }
     })
 
     highlightCells([1],[1], {
       colors: {
-        light: "hsla(257, 22%, 80%, 0.5)",
-        dark: "hsl(257, 22%, 60%)"
+        'light': 'rgba(145, 151, 229, 0.2)',
+        'dark': 'rgb(145, 151, 229)',
       }
     })
-
+    
     rows.forEach(function(row) {
       row.columns[0].setDisabled(true);
     });
