@@ -68,6 +68,9 @@ highed.templates.add('Map', {
     legend: {
       enabled: false
     },
+    tooltip: {
+      enabled: false
+    },
 
     series: [{
         _colorIndex: 1,

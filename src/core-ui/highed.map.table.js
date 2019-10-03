@@ -516,6 +516,10 @@ highed.MapTable = function(parent, props) {
     });
   }
 
+  function removeFromSelects(index){
+    mapOptions.splice(index, 1);
+  }
+
   function getOptions(){
     return mapOptions;
   }
@@ -531,6 +535,7 @@ highed.MapTable = function(parent, props) {
     highlightColumns: highlightColumns,
     removeHighlight: removeHighlight,
     addToSelects: addToSelects,
+    removeFromSelects: removeFromSelects,
     getOptions: getOptions
   };
 };

@@ -370,13 +370,8 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
   }
 
 
-  function showLatLongTable() {
+  function showLatLongTable(type) {
     if (mapDataTableElement) {
-      mapDataTableElement.classList.remove('hide');
-      mapDataTableElement.classList += ' active';
-      dropCSVFileHere.innerHTML = 'Or drop CSV files here';
-      
-      if (!container.classList.contains('map-data')) container.classList += ' map-data';
 
       mapImporter.addToSelects([{
         name: 'Latitude',
@@ -394,10 +389,19 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
         }
       }], 2);
 
-      resize();
-      highed.dom.style(container, {
-        marginLeft: 0 + 'px'
-      })
+      if (type === 'mappoint') {
+        mapDataTableElement.classList.remove('hide');
+        mapDataTableElement.classList += ' active';
+        dropCSVFileHere.innerHTML = 'Or drop CSV files here';
+        
+        if (!container.classList.contains('map-data')) container.classList += ' map-data';
+  
+        mapImporter.removeFromSelects(1);
+        resize();
+        highed.dom.style(container, {
+          marginLeft: 0 + 'px'
+        })
+      }
 
     }
   }

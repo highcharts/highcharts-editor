@@ -214,11 +214,16 @@ highed.MapImporter = function() {
     mapTable.addToSelects(arr, pos);
   }
 
+  function removeFromSelects(index){
+    mapTable.removeFromSelects(index);
+  }
+
   return {
     on: events.on,
     show: show,
     init: init,
     addToSelects: addToSelects,
+    removeFromSelects: removeFromSelects,
     setMap: setMap
   };
 };

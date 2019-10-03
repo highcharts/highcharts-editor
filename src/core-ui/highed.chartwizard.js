@@ -126,10 +126,21 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
             var options = chartPreview.options.getCustomized();
             
             if (options && options.series && (options.series || []).some(function(s){ return s.type === 'mappoint'})){
-              dataPage.showLatLongTable();
+              dataPage.showLatLongTable('mappoint');
               chartPreview.redraw();
               
               highed.dom.style(dataSkipButton, {
+                display: 'none'
+              });
+              
+              return;
+            }
+
+
+            if (options && options.series && (options.series || []).some(function(s){ return s.type === 'mapbubble'})){
+              dataPage.showLatLongTable('mapbubble');
+
+              highed.dom.style(dataNextButton, {
                 display: 'none'
               });
               

@@ -3010,8 +3010,8 @@ highed.DataTable = function(parent, attributes) {
     return simpleDataTable.container();
   }
 
-  function showLatLongTable() {
-    simpleDataTable.showLatLongTable();
+  function showLatLongTable(type) {
+    simpleDataTable.showLatLongTable(type);
   }
 
 
@@ -3052,6 +3052,20 @@ highed.DataTable = function(parent, attributes) {
       data.properties.hccode = code; 
       data.properties.hcname = name; 
     });
+
+    highlightCells([0],[0], {
+      colors: {
+        light: "hsla(295, 31%, 80%, 0.5)",
+        dark: "hsl(295, 31%, 60%)"
+      }
+    })
+
+    highlightCells([1],[1], {
+      colors: {
+        light: "hsla(257, 22%, 80%, 0.5)",
+        dark: "hsl(257, 22%, 60%)"
+      }
+    })
 
     rows.forEach(function(row) {
       row.columns[0].setDisabled(true);

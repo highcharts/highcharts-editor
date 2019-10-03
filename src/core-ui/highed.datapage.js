@@ -787,8 +787,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     assignDataPanel.changeAssignDataType(type);
   }
 
-  function showLatLongTable() {
-    dataTable.showLatLongTable();
+  function showLatLongTable(type) {
+    dataTable.showLatLongTable(type);
   }
 
   function updateLinkedToValues(values){
