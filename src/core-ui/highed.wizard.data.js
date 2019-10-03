@@ -270,7 +270,8 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
         accept: '.csv',
         success: function(info) {
           if (highed.chartType === 'Map') {
-            mapImporter.show();
+            hideMapDataSection();
+            mapImporter.show(info.data);
           }
           else {
             highed.snackBar('File uploaded');
@@ -307,8 +308,7 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
           if (f.kind === 'file') {
 
             if (f.getAsFile().type !== 'text/csv') return highed.snackBar('The file is not a valid CSV file');
-            
-            hideMapDataSection()
+            hideMapDataSection();
 
             events.emit('HandleFileUpload', f.getAsFile(), function() {
               highed.snackBar('File uploaded');
@@ -321,7 +321,7 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
           f = d.files[i];
 
           if (f.type !== 'text/csv') return highed.snackBar('The file is not a valid CSV file');
-          hideMapDataSection()
+          hideMapDataSection();
 
           events.emit('HandleFileUpload', f, function() {
             highed.snackBar('File uploaded');
@@ -333,16 +333,13 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
 
     var dropzoneSpan = highed.dom.cr('span');
 
-    if (highed.chartType !== 'Map') {
-      highed.dom.ap(dropzoneSpan,
-        highed.dom.cr('div', 'highed-table-dropzone-subtitle', 'or'),
-        highed.dom.ap(
-          highed.dom.cr('div', 'highed-table-dropzone-button'),
-          selectFile
-        )
-      );
-    }
-
+    highed.dom.ap(dropzoneSpan,
+      highed.dom.cr('div', 'highed-table-dropzone-subtitle', 'or'),
+      highed.dom.ap(
+        highed.dom.cr('div', 'highed-table-dropzone-button'),
+        selectFile
+      )
+    );
 
     dropzone = highed.dom.cr('div','highed-table-dropzone ' + (highed.chartType === 'Map' ? 'highed-table-map-dropzone' : ''));
 

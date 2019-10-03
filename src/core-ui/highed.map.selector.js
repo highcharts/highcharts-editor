@@ -65,6 +65,22 @@ highed.MapSelector = function(chartPreview) {
           )
         ),
       }),
+      mostPopular = [{
+          name: 'World Map',
+          map: 'custom/world'
+        }, {
+          name: 'Europe',
+          map: 'custom/europe'
+        },{
+          name: 'United States of America',
+          map: 'countries/us/us-all'
+        }, {
+          name: 'United Kingdom',
+          map: 'countries/gb/gb-all'
+        }, {
+          name: 'Norway',
+          map: 'countries/no/no-all'
+        }],
       blacklist = [
         "World with Palestine areas, high resolution", 
         "World with Palestine areas, medium resolution",
@@ -154,7 +170,43 @@ highed.MapSelector = function(chartPreview) {
         });
       }
 
-      getSearchResults('');
+      function getMostPopular(){
+        
+        mostPopular.forEach(function(mapOption){
+
+          var mapSelectorImage = highed.dom.cr('img', 'highed-map-selector-image'),
+              mapSelectorImageContainer = highed.dom.cr('div', 'highed-map-selector-image-container'),
+              mapSelectorImageTitle = highed.dom.cr('div', 'highed-map-selector-image-text', mapOption.name);
+
+          mapSelectorImage.src = baseMapPath + mapOption.map + '.svg'; //(Highcharts.mapDataIndex[mapGroup][desc]).replace('.js', '.svg');
+          highed.dom.ap(mapSelectorImageContainer,mapSelectorImageTitle, mapSelectorImage);
+          highed.dom.ap(mapSelectorImages, mapSelectorImageContainer);
+
+          highed.dom.on(mapSelectorImageContainer, 'click', function() {
+
+            var mapKey = mapOption.map, //Highcharts.mapDataIndex[mapGroup][desc].slice(0, -3),
+            svgPath = baseMapPath + mapKey + '.svg',
+            geojsonPath = baseMapPath + mapKey + '.geo.json',
+            javascriptPath = baseMapPath + mapOption.map + '.js'; //Highcharts.mapDataIndex[mapGroup][desc];
+            
+            chartPreview.options.updateMap(mapKey, javascriptPath, function() {
+              highed.ajax({
+                url: geojsonPath,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                  events.emit('LoadMapData', data.features);
+                  if (toNextPage) toNextPage();
+                },
+                error: function(e) {
+                }
+              })
+            });
+          });
+        })
+      }
+
+      getMostPopular();
       searchText = 'Search ' + mapCount + ' maps';
 
       var input = highed.dom.cr('input', 'highed-map-selector-input');
