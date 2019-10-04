@@ -5,6 +5,84 @@
   // transform:translate(0, -50%);
 }
 
+
+.highed-field-multiple-colorpicker {
+  width: 100%;
+  .highed-transition;
+  .highed-box-size;
+  .highed-field-color-gradient {
+    height: 25px;
+    border-radius: 3px;
+    background: blue;
+    border: @input-border;
+  }
+
+   
+  .highed-field-value-markers {
+    height: 10px;
+    .highed-field-value-marker {
+      width: 8px;
+      height: 9px;
+      background-color: black;
+      position: absolute;
+      display: inline-block;
+    }
+  }
+
+  .highed-field-color-markers {
+    height: 20px;
+    position: relative;
+    top: -5px;
+
+    .highed-field-color-marker {
+      background: var(--background);
+      border-left: 1px solid black;
+      border-right: 1px solid black;
+      border-bottom: 1px solid black;
+      display: inline-block;
+      height: 10px;
+      position: absolute;
+      width: 8px;
+    }
+
+    .highed-field-color-marker:before {
+      border-bottom: 9px solid black;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      content: "";
+      height: 0;
+      position: absolute;
+      top: -9px;
+      left: -1px;
+      width: 0;
+    }
+
+    .highed-field-color-marker:after {
+      border-bottom: 7px solid var(--background);
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      content: "";
+      height: 0;
+      left: 0px;
+      position: absolute;
+      top: -7px;
+      width: 0;
+    }
+  
+
+/*
+
+    .highed-field-color-marker {
+      width: 8px;
+      height: 9px;
+      background-color: black;
+      position: absolute;
+      display: inline-block;
+    }*/
+  }
+}
+
+
 .highed-field-colorpicker {
   width: 100%;
   border: @input-border;

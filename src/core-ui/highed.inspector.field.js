@@ -55,6 +55,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *    > font
  *    > options
  *    > object
+ *    > colorstops (Maps)
+ *    > colorcategories (Maps)
  *  @param value {anything} - the current value of the field
  *  @param properties {object} - the properties for the widget
  *  @param fn {function} - the function to call when the field is changed
@@ -186,6 +188,411 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
           input
         );
       },
+
+      colorstops: function(val, callback) {
+        var box = highed.dom.cr('div', 'highed-field-multiple-colorpicker', '', fieldID),
+            gradient = highed.dom.cr('div', 'highed-field-color-gradient', ''),
+            colorMarkers = highed.dom.cr('div', 'highed-field-color-markers', ''),
+            //valueMarkers = highed.dom.cr('div', 'highed-field-value-markers', ''),
+            stops = val || value || [],
+            stopElements = [];
+
+        highed.dom.style(gradient, {
+          background: buildGradient()
+        });
+
+        function buildGradient(){
+          stops = stops.sort(function(a,b){
+            return a[0] - b[0];
+          });
+
+          var style = 'linear-gradient(to right';
+          
+          stops.forEach(function(stop) {
+            style += (',' + stop[1] + (stop[0] ? " " + (stop[0] * 100) + '%': ''));
+          });
+
+          style += ')';
+
+          return style;
+        }
+
+        function update(col, callback) {
+          if (
+            col &&
+            col !== 'null' &&
+            col !== 'undefined' &&
+            typeof col !== 'undefined'
+          ) {
+            box.innerHTML = "";
+            //box.innerHTML = col;
+          } else {
+            box.innerHTML = 'auto';
+            col = '#FFFFFF';
+          }
+
+          highed.dom.style(box, {
+            background: col,
+            color: highed.getContrastedColor(col)
+          });
+        }
+
+        function fixVal() {
+          //This is very ugly
+          try {
+            val = JSON.parse(val);
+          } catch (e) {}
+
+          if (highed.isArr(val)) {
+            val = '#FFF';
+          }
+        }
+
+        function createStop(x, skipAdd, percent, existingOptions, index) {
+          
+          var colorMarker = highed.dom.cr('div', 'highed-field-color-marker');
+          var valueMarker = highed.dom.cr('div', 'highed-field-value-marker');
+          var active = false;
+          var activeIndex = false;
+          var currentX = false,
+              offsetX = highed.dom.pos(gradient, true).x,
+              gradientWidth = highed.dom.size(gradient).w;
+          
+          colorMarker.style.setProperty('--background', '#cacaca');
+          //colorMarker.style.setProperty('--border', '#afafaf');
+          
+          function generateColors() {
+            const hue = Math.floor(Math.random()*(357-202+1)), // Want a blue/red/purple colour
+                  saturation =  Math.floor(Math.random() * 100),
+                  lightness =  60,
+                  alpha = 0.5;
+        
+            return {
+              "light": "hsl(" + hue + ", " + saturation + "%, " + (lightness + 20) + "%)",
+              "dark": "hsl(" + hue + ", " + saturation + "%, " + lightness + "%)",
+            };
+          }
+        
+          highed.dom.on(colorMarkers, 'mousemove', drag);
+          
+          function drag(e) {
+            if (active) {
+              e.preventDefault();
+              currentX = e.pageX;
+      
+              setTranslate(currentX - offsetX, active);
+              updateStops(currentX - offsetX)
+            }
+          }
+
+          function updateStops(xPos){
+            if (xPos < 0) {
+
+            } else if (xPos > gradientWidth){
+
+            } else {
+              stops[activeIndex][0] = xPos/gradientWidth;
+            }
+            tryCallback(callback, stops);
+          }
+
+          function setTranslate(xPos,el) {
+            highed.dom.style(el, {
+              left: xPos + 'px'
+            });
+          }
+
+          highed.dom.ap(colorMarkers, colorMarker);
+          //highed.dom.ap(valueMarkers, valueMarker);
+
+          highed.dom.style([colorMarker, valueMarker], {
+            left: (x - highed.dom.pos(gradient, true).x) + 'px'
+          });
+
+          highed.dom.on(colorMarker, 'mousedown', function(e){
+            active = [colorMarker, valueMarker];
+            activeIndex = index || stops.length;
+            initialX = e.pageX;
+          });
+
+          highed.dom.on(colorMarker, 'mouseup', function(e){
+            active = activeIndex = false
+
+            var newStopPos = (e.pageX - highed.dom.pos(gradient, true).x);
+            var gradientSize = highed.dom.size(gradient, true).w
+
+            if (newStopPos < 0) {
+
+            } else if (newStopPos > gradientSize.w){
+
+            } else {
+            }
+
+          });
+
+          highed.dom.on(colorMarker, 'click', function(e) {
+            highed.pickColor(e.clientX, e.clientY, val || value, function(col) {
+              if (highed.isArr(val)) {
+                val = '#FFFFFF';
+              }
+
+              val = col;
+              //update(col);
+              //tryCallback(callback, col);
+            });
+          });
+
+          if (!skipAdd) {
+            var color = generateColors();
+            
+            stops.push([percent, color.light]);
+
+            colorMarker.style.setProperty('--background', color.light);
+            //colorMarker.style.setProperty('--border', color.dark);
+
+            highed.dom.style(gradient, {
+              background: buildGradient()
+            });
+          }
+
+          if (existingOptions) {
+            colorMarker.style.setProperty('--background', existingOptions[1]);
+          }
+
+        }
+
+        fixVal();
+
+        highed.dom.on(gradient, 'click', function(e) {
+          var gradientSize = highed.dom.size(gradient);
+          createStop(e.pageX, false, ((e.pageX - highed.dom.pos(gradient, true).x) / gradientSize.w));
+          tryCallback(callback, stops);
+        });
+
+        //update(val || value);
+
+        highed.dom.ap(
+          box,
+          //valueMarkers,
+          gradient,
+          colorMarkers
+        );
+
+        setTimeout(function(){
+          stops.forEach(function(stop, index) {
+            createStop(((highed.dom.size(gradient, true).w * stop[0]) + highed.dom.pos(gradient, true).x) - 4, true, null, stop, index); // 4 = half width of indicator
+          })
+        }, 1000);
+
+        return highed.dom.ap(
+          highed.dom.cr('div', 'highed-field-container'),
+          box
+        );
+      },
+      
+      colorcategories: function(val, callback) {
+        var box = highed.dom.cr('div', 'highed-field-multiple-colorpicker', '', fieldID),
+            gradient = highed.dom.cr('div', 'highed-field-color-gradient', ''),
+            colorMarkers = highed.dom.cr('div', 'highed-field-color-markers', ''),
+            //valueMarkers = highed.dom.cr('div', 'highed-field-value-markers', ''),
+            stops = val || value || [],
+            MIN = -86.78,
+            MAX = 41.68;
+
+        highed.dom.style(gradient, {
+          background: buildGradient()
+        });
+
+        function buildGradient(){
+          stops = stops.sort(function(a,b){
+            return a[0] - b[0];
+          });
+
+          var style = 'linear-gradient(to right';
+          
+          stops.forEach(function(stop) {
+            style += (',' + stop[1] + (stop[0] ? " " + (stop[0] * 100) + '%': ''));
+          });
+
+          style += ')';
+
+          return style;
+        }
+
+        function update(col, callback) {
+          if (
+            col &&
+            col !== 'null' &&
+            col !== 'undefined' &&
+            typeof col !== 'undefined'
+          ) {
+            box.innerHTML = "";
+            //box.innerHTML = col;
+          } else {
+            box.innerHTML = 'auto';
+            col = '#FFFFFF';
+          }
+
+          highed.dom.style(box, {
+            background: col,
+            color: highed.getContrastedColor(col)
+          });
+        }
+
+        function fixVal() {
+          //This is very ugly
+          try {
+            val = JSON.parse(val);
+          } catch (e) {}
+
+          if (highed.isArr(val)) {
+            val = '#FFF';
+          }
+        }
+
+        function createStop(x, skipAdd, percent, existingOptions, index) {
+          
+          var colorMarker = highed.dom.cr('div', 'highed-field-color-marker');
+          var valueMarker = highed.dom.cr('div', 'highed-field-value-marker');
+          var active = false;
+          var activeIndex = false;
+          var currentX = false,
+              offsetX = highed.dom.pos(gradient, true).x,
+              gradientWidth = highed.dom.size(gradient).w;
+          
+          colorMarker.style.setProperty('--background', '#cacaca');
+          //colorMarker.style.setProperty('--border', '#afafaf');
+          
+          function generateColors() {
+            const hue = Math.floor(Math.random()*(357-202+1)), // Want a blue/red/purple colour
+                  saturation =  Math.floor(Math.random() * 100),
+                  lightness =  60,
+                  alpha = 0.5;
+        
+            return {
+              "light": "hsl(" + hue + ", " + saturation + "%, " + (lightness + 20) + "%)",
+              "dark": "hsl(" + hue + ", " + saturation + "%, " + lightness + "%)",
+            };
+          }
+        
+          highed.dom.on(colorMarkers, 'mousemove', drag);
+          
+          function drag(e) {
+            if (active) {
+              e.preventDefault();
+              currentX = e.pageX;
+      
+              setTranslate(currentX - offsetX, active);
+              updateStops(currentX - offsetX)
+            }
+          }
+
+          function updateStops(xPos){
+
+            if (xPos < 0) {
+
+            } else if (xPos > gradientWidth){
+
+            } else {
+              stops[activeIndex][0] = xPos/gradientWidth;
+            }
+            tryCallback(callback, stops);
+          }
+
+          function setTranslate(xPos,el) {
+            highed.dom.style(el, {
+              left: xPos + 'px'
+            });
+          }
+
+          highed.dom.ap(colorMarkers, colorMarker);
+          //highed.dom.ap(valueMarkers, valueMarker);
+
+          highed.dom.style([colorMarker, valueMarker], {
+            left: (x - highed.dom.pos(gradient, true).x) + 'px'
+          });
+
+          highed.dom.on(colorMarker, 'mousedown', function(e){
+            active = [colorMarker, valueMarker];
+            activeIndex = index || stops.length;
+            initialX = e.pageX;
+          });
+
+          highed.dom.on(colorMarker, 'mouseup', function(e){
+            active = activeIndex = false
+
+            var newStopPos = (e.pageX - highed.dom.pos(gradient, true).x);
+            var gradientSize = highed.dom.size(gradient, true).w
+
+            if (newStopPos < 0) {
+
+            } else if (newStopPos > gradientSize.w){
+
+            } else {
+            }
+
+          });
+
+          highed.dom.on(colorMarker, 'click', function(e) {
+            highed.pickColor(e.clientX, e.clientY, val || value, function(col) {
+              if (highed.isArr(val)) {
+                val = '#FFFFFF';
+              }
+
+              val = col;
+              //update(col);
+              //tryCallback(callback, col);
+            });
+          });
+
+          if (!skipAdd) {
+            var color = generateColors();
+            
+            stops.push([percent, color.light]);
+
+            colorMarker.style.setProperty('--background', color.light);
+            //colorMarker.style.setProperty('--border', color.dark);
+
+            highed.dom.style(gradient, {
+              background: buildGradient()
+            });
+          }
+
+          if (existingOptions) {
+            colorMarker.style.setProperty('--background', existingOptions[1]);
+          }
+
+        }
+
+        fixVal();
+
+        highed.dom.on(gradient, 'click', function(e) {
+          var gradientSize = highed.dom.size(gradient);
+          createStop(e.pageX, false, ((e.pageX - highed.dom.pos(gradient, true).x) / gradientSize.w));
+          tryCallback(callback, stops);
+        });
+
+        //update(val || value);
+
+        highed.dom.ap(
+          box,
+          //valueMarkers,
+          gradient,
+          colorMarkers
+        );
+
+        setTimeout(function(){
+          stops.forEach(function(stop, index) {
+            createStop(((highed.dom.size(gradient, true).w * stop[0]) + highed.dom.pos(gradient, true).x) - 4, true, null, stop, index); // 4 = half width of indicator
+          })
+        }, 1000);
+
+        return highed.dom.ap(
+          highed.dom.cr('div', 'highed-field-container'),
+          box
+        );
+      },
+      
       color: function(val, callback) {
         var box = highed.dom.cr('div', 'highed-field-colorpicker', '', fieldID),
           reset = highed.dom.cr('div', 'highed-field-reset fa fa-undo'),

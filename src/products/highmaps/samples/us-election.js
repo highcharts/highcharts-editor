@@ -23,7 +23,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-highed.samples.addMapType('Choropleth', {
+highed.samples.addMapType('Categories', {
   id: 'us-presidential',
   title: 'US Presidential Election 2016 Results',
   description: '',

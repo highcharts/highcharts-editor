@@ -133,6 +133,8 @@ highed.installLanguage({
     'option.text.chart.backgroundColor': 'Background color',
     'option.tooltip.chart.backgroundColor':
       'Background color for the full chart area',
+    'option.text.colorAxis.stops': 'Color Stops',
+    'option.tooltip.colorAxis.stops': 'Color stops to be used',
     'option.text.chart.borderWidth': 'Border width',
     'option.tooltip.chart.borderWidth':
       'The pixel width of the outer chart border.',

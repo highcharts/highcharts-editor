@@ -201,8 +201,37 @@ highed.meta.optionsExtended = {
             pid: 'colors',
             dataType: 'array<color>',
             context: 'General',
+            mapDisabled: true,
             defaults:
               '[ "#7cb5ec" , "#434348" , "#90ed7d" , "#f7a35c" , "#8085e9" , "#f15c80" , "#e4d354" , "#2b908f" , "#f45b5b" , "#91e8e1"]'
+          },
+          {
+            id: 'colorAxis--stops',
+            pid: 'colorAxis.stops',
+            dataType: 'colorstops',
+            context: 'General',
+            defaults: [
+              [0, '#EFEFFF'],
+              [0.67, '#4444FF'],
+              [1, '#000022']
+            ]
+          },
+          {
+            id: 'colorAxis--dataClasses',
+            pid: 'colorAxis.dataClasses',
+            dataType: 'colorcategories',
+            context: 'General',
+            dataClasses: [{
+                from: -100,
+                to: 0,
+                color: '#C40401',
+                name: ''
+            }, {
+                from: 0,
+                to: 100,
+                color: '#0200D0',
+                name: ''
+            }]
           }
         ]
       },
