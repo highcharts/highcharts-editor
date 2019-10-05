@@ -981,6 +981,18 @@ var highed = {
     return isOnTablet;
   };
 
+  highed.generateColors = function(){
+    const hue = Math.floor(Math.random()*(357-202+1)), // Want a blue/red/purple colour
+    saturation =  Math.floor(Math.random() * 100),
+    lightness =  60,
+    alpha = 0.5;
+
+    return {
+    "light": "hsl(" + hue + ", " + saturation + "%, " + (lightness + 20) + "%)",
+    "dark": "hsl(" + hue + ", " + saturation + "%, " + lightness + "%)",
+    };
+  };
+
 
   function checkIfPhone() {
     var check = false;

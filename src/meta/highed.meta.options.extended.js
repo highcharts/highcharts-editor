@@ -221,16 +221,14 @@ highed.meta.optionsExtended = {
             pid: 'colorAxis.dataClasses',
             dataType: 'colorcategories',
             context: 'General',
-            dataClasses: [{
-                from: -100,
+            defaults: [{
+                from: -86.78,
                 to: 0,
-                color: '#C40401',
-                name: ''
+                color: '#C40401'
             }, {
                 from: 0,
-                to: 100,
-                color: '#0200D0',
-                name: ''
+                to: 46.3,
+                color: '#0200D0'
             }]
           }
         ]

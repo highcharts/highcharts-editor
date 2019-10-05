@@ -194,6 +194,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
             gradient = highed.dom.cr('div', 'highed-field-color-gradient', ''),
             colorMarkers = highed.dom.cr('div', 'highed-field-color-markers', ''),
             //valueMarkers = highed.dom.cr('div', 'highed-field-value-markers', ''),
+            color = highed.generateColors(),
             stops = val || value || [],
             stopElements = [];
 
@@ -250,29 +251,18 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
 
         function createStop(x, skipAdd, percent, existingOptions, index) {
           
-          var colorMarker = highed.dom.cr('div', 'highed-field-color-marker');
+          var colorMarker = highed.dom.cr('div', 'highed-field-color-marker', '<div></div>');
           var valueMarker = highed.dom.cr('div', 'highed-field-value-marker');
           var active = false;
-          var activeIndex = false;
           var currentX = false,
               offsetX = highed.dom.pos(gradient, true).x,
               gradientWidth = highed.dom.size(gradient).w;
           
+          var stop = existingOptions || [percent, color.light];
+
           colorMarker.style.setProperty('--background', '#cacaca');
           //colorMarker.style.setProperty('--border', '#afafaf');
           
-          function generateColors() {
-            const hue = Math.floor(Math.random()*(357-202+1)), // Want a blue/red/purple colour
-                  saturation =  Math.floor(Math.random() * 100),
-                  lightness =  60,
-                  alpha = 0.5;
-        
-            return {
-              "light": "hsl(" + hue + ", " + saturation + "%, " + (lightness + 20) + "%)",
-              "dark": "hsl(" + hue + ", " + saturation + "%, " + lightness + "%)",
-            };
-          }
-        
           highed.dom.on(colorMarkers, 'mousemove', drag);
           
           function drag(e) {
@@ -282,16 +272,23 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
       
               setTranslate(currentX - offsetX, active);
               updateStops(currentX - offsetX)
+
+              highed.dom.style(colorMarkers, {
+                cursor: 'default'
+              })
             }
           }
 
           function updateStops(xPos){
-            if (xPos < 0) {
+            if (xPos < 0 || xPos > gradientWidth) {
 
-            } else if (xPos > gradientWidth){
+            }
+            else {
+              active[2][0] = xPos/gradientWidth;
 
-            } else {
-              stops[activeIndex][0] = xPos/gradientWidth;
+              highed.dom.style(gradient, {
+                background: buildGradient()
+              });
             }
             tryCallback(callback, stops);
           }
@@ -310,45 +307,63 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
           });
 
           highed.dom.on(colorMarker, 'mousedown', function(e){
-            active = [colorMarker, valueMarker];
-            activeIndex = index || stops.length;
+            active = [colorMarker, valueMarker, stop];
             initialX = e.pageX;
           });
 
+          highed.dom.on(colorMarker, 'contextmenu', function(e){
+            e.preventDefault();
+
+            const index = stops.findIndex(function(s) { return s === stop});
+            stops.splice(index, 1);
+
+            highed.dom.style(gradient, {
+              background: buildGradient()
+            });
+
+            colorMarkers.removeChild(active[0]);  
+            tryCallback(callback, stops);
+            active = false;
+          });
+
           highed.dom.on(colorMarker, 'mouseup', function(e){
-            active = activeIndex = false
 
-            var newStopPos = (e.pageX - highed.dom.pos(gradient, true).x);
-            var gradientSize = highed.dom.size(gradient, true).w
+            if (initialX === e.pageX) return;
 
-            if (newStopPos < 0) {
+            active = false
 
-            } else if (newStopPos > gradientSize.w){
-
-            } else {
-            }
-
+            highed.dom.style(colorMarkers, {
+              cursor: 'copy'
+            })
           });
 
           highed.dom.on(colorMarker, 'click', function(e) {
-            highed.pickColor(e.clientX, e.clientY, val || value, function(col) {
-              if (highed.isArr(val)) {
-                val = '#FFFFFF';
-              }
-
-              val = col;
-              //update(col);
-              //tryCallback(callback, col);
-            });
+            
+            if (active) {
+              const tempActive = active.slice();
+              active = false;
+              highed.pickColor(e.clientX, e.clientY, val || value, function(col) {
+                if (highed.isArr(val)) {
+                  val = '#FFFFFF';
+                }
+                
+                val = col;
+                tempActive[2][1] = col;
+                tempActive[0].style.setProperty('--background', col);
+                //update(col);
+                tryCallback(callback, stops);
+                
+                highed.dom.style(gradient, {
+                  background: buildGradient()
+                });
+              });
+            }
           });
 
           if (!skipAdd) {
-            var color = generateColors();
             
-            stops.push([percent, color.light]);
-
+            stops.push(stop);
             colorMarker.style.setProperty('--background', color.light);
-            //colorMarker.style.setProperty('--border', color.dark);
 
             highed.dom.style(gradient, {
               background: buildGradient()
@@ -363,7 +378,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
 
         fixVal();
 
-        highed.dom.on(gradient, 'click', function(e) {
+        highed.dom.on(colorMarkers, 'dblclick', function(e) {
           var gradientSize = highed.dom.size(gradient);
           createStop(e.pageX, false, ((e.pageX - highed.dom.pos(gradient, true).x) / gradientSize.w));
           tryCallback(callback, stops);
@@ -391,202 +406,116 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
       },
       
       colorcategories: function(val, callback) {
-        var box = highed.dom.cr('div', 'highed-field-multiple-colorpicker', '', fieldID),
-            gradient = highed.dom.cr('div', 'highed-field-color-gradient', ''),
+        
+        var box = highed.dom.cr('div', 'highed-field-colorcategories', '', fieldID),
+            container = highed.dom.cr('div', 'highed-field-color-categories', ''),
+            valueMarkers = highed.dom.cr('div', 'highed-field-value-markers', ''),
             colorMarkers = highed.dom.cr('div', 'highed-field-color-markers', ''),
-            //valueMarkers = highed.dom.cr('div', 'highed-field-value-markers', ''),
-            stops = val || value || [],
+            dataClasses = val || value || [],
             MIN = -86.78,
-            MAX = 41.68;
-
-        highed.dom.style(gradient, {
-          background: buildGradient()
-        });
-
-        function buildGradient(){
-          stops = stops.sort(function(a,b){
-            return a[0] - b[0];
-          });
-
-          var style = 'linear-gradient(to right';
-          
-          stops.forEach(function(stop) {
-            style += (',' + stop[1] + (stop[0] ? " " + (stop[0] * 100) + '%': ''));
-          });
-
-          style += ')';
-
-          return style;
-        }
-
-        function update(col, callback) {
-          if (
-            col &&
-            col !== 'null' &&
-            col !== 'undefined' &&
-            typeof col !== 'undefined'
-          ) {
-            box.innerHTML = "";
-            //box.innerHTML = col;
-          } else {
-            box.innerHTML = 'auto';
-            col = '#FFFFFF';
-          }
-
-          highed.dom.style(box, {
-            background: col,
-            color: highed.getContrastedColor(col)
-          });
-        }
-
-        function fixVal() {
-          //This is very ugly
-          try {
-            val = JSON.parse(val);
-          } catch (e) {}
-
-          if (highed.isArr(val)) {
-            val = '#FFF';
-          }
-        }
-
-        function createStop(x, skipAdd, percent, existingOptions, index) {
-          
-          var colorMarker = highed.dom.cr('div', 'highed-field-color-marker');
-          var valueMarker = highed.dom.cr('div', 'highed-field-value-marker');
-          var active = false;
-          var activeIndex = false;
-          var currentX = false,
-              offsetX = highed.dom.pos(gradient, true).x,
-              gradientWidth = highed.dom.size(gradient).w;
-          
-          colorMarker.style.setProperty('--background', '#cacaca');
-          //colorMarker.style.setProperty('--border', '#afafaf');
-          
-          function generateColors() {
-            const hue = Math.floor(Math.random()*(357-202+1)), // Want a blue/red/purple colour
-                  saturation =  Math.floor(Math.random() * 100),
-                  lightness =  60,
-                  alpha = 0.5;
-        
-            return {
-              "light": "hsl(" + hue + ", " + saturation + "%, " + (lightness + 20) + "%)",
-              "dark": "hsl(" + hue + ", " + saturation + "%, " + lightness + "%)",
-            };
-          }
-        
-          highed.dom.on(colorMarkers, 'mousemove', drag);
-          
-          function drag(e) {
-            if (active) {
-              e.preventDefault();
-              currentX = e.pageX;
-      
-              setTranslate(currentX - offsetX, active);
-              updateStops(currentX - offsetX)
-            }
-          }
-
-          function updateStops(xPos){
-
-            if (xPos < 0) {
-
-            } else if (xPos > gradientWidth){
-
-            } else {
-              stops[activeIndex][0] = xPos/gradientWidth;
-            }
-            tryCallback(callback, stops);
-          }
-
-          function setTranslate(xPos,el) {
-            highed.dom.style(el, {
-              left: xPos + 'px'
-            });
-          }
-
-          highed.dom.ap(colorMarkers, colorMarker);
-          //highed.dom.ap(valueMarkers, valueMarker);
-
-          highed.dom.style([colorMarker, valueMarker], {
-            left: (x - highed.dom.pos(gradient, true).x) + 'px'
-          });
-
-          highed.dom.on(colorMarker, 'mousedown', function(e){
-            active = [colorMarker, valueMarker];
-            activeIndex = index || stops.length;
-            initialX = e.pageX;
-          });
-
-          highed.dom.on(colorMarker, 'mouseup', function(e){
-            active = activeIndex = false
-
-            var newStopPos = (e.pageX - highed.dom.pos(gradient, true).x);
-            var gradientSize = highed.dom.size(gradient, true).w
-
-            if (newStopPos < 0) {
-
-            } else if (newStopPos > gradientSize.w){
-
-            } else {
-            }
-
-          });
-
-          highed.dom.on(colorMarker, 'click', function(e) {
-            highed.pickColor(e.clientX, e.clientY, val || value, function(col) {
-              if (highed.isArr(val)) {
-                val = '#FFFFFF';
-              }
-
-              val = col;
-              //update(col);
-              //tryCallback(callback, col);
-            });
-          });
-
-          if (!skipAdd) {
-            var color = generateColors();
-            
-            stops.push([percent, color.light]);
-
-            colorMarker.style.setProperty('--background', color.light);
-            //colorMarker.style.setProperty('--border', color.dark);
-
-            highed.dom.style(gradient, {
-              background: buildGradient()
-            });
-          }
-
-          if (existingOptions) {
-            colorMarker.style.setProperty('--background', existingOptions[1]);
-          }
-
-        }
-
-        fixVal();
-
-        highed.dom.on(gradient, 'click', function(e) {
-          var gradientSize = highed.dom.size(gradient);
-          createStop(e.pageX, false, ((e.pageX - highed.dom.pos(gradient, true).x) / gradientSize.w));
-          tryCallback(callback, stops);
-        });
-
-        //update(val || value);
+            MAX = 46.3,
+            RANGE = MAX - MIN;
 
         highed.dom.ap(
-          box,
-          //valueMarkers,
-          gradient,
-          colorMarkers
-        );
+          box, 
+          valueMarkers,
+          container,
+          colorMarkers);
 
-        setTimeout(function(){
-          stops.forEach(function(stop, index) {
-            createStop(((highed.dom.size(gradient, true).w * stop[0]) + highed.dom.pos(gradient, true).x) - 4, true, null, stop, index); // 4 = half width of indicator
-          })
-        }, 1000);
+        function draw() {
 
+          setTimeout(function() {
+            dataClasses.forEach(function(data, index) {
+              var colorContainer = highed.dom.cr('div', 'highed-field-category');
+              
+              const width = ((Math.abs(data.to - data.from) / RANGE) * (highed.dom.size(container).w) - 1),
+                    containerWidth = (highed.dom.size(container).w),
+                    offsetX = highed.dom.pos(container, true).x;
+  
+              highed.dom.style(colorContainer, {
+                backgroundColor: data.color,
+                width: ((Math.abs(data.to - data.from) / RANGE) * (containerWidth - 1)) + 'px'
+              });
+            
+              var colorMarker = highed.dom.cr('div', 'highed-field-color-marker'),
+                  valueLabel = highed.dom.cr('span', 'highed-field-colorvalue-label', data.to),
+                  valueMarker = highed.dom.cr('div', 'highed-field-value-marker');
+              
+              highed.dom.style(valueLabel, {
+                left: -(3 + (3 * ((data.to + '').length - 1))) + 'px'
+              });
+  
+              highed.dom.ap(valueMarker, valueLabel);
+  
+              colorMarker.style.setProperty('--background', data.color);
+              setTimeout(function(){
+                const xPos = highed.dom.pos(colorContainer, true).x;
+  
+                highed.dom.style(colorMarker, {
+                  left: ((xPos + (width / 2)) - offsetX) + 'px'
+                });
+  
+                highed.dom.style(valueMarker, {
+                  left: (((xPos + (width)) - offsetX)) - 5 + 'px' //3 is width of value
+                });
+  
+              }, 100);
+  
+              highed.dom.ap(valueMarkers, valueMarker);
+              highed.dom.ap(colorMarkers, colorMarker);
+  
+              highed.dom.on(colorMarker, 'click', function(e) {
+                highed.pickColor(e.clientX, e.clientY, val || value, function(col) {
+                  if (highed.isArr(val)) {
+                    val = '#FFFFFF';
+                  }
+                  data.color = col;
+                  //update(col);
+
+                  highed.dom.style(colorContainer, {
+                    backgroundColor: col
+                  });
+                  colorMarker.style.setProperty('--background', col);
+                  tryCallback(callback, dataClasses);
+                });
+              });
+
+              highed.dom.on(colorContainer, 'click', function(e) {
+                //Change previous to value to the from value of the new created class
+  
+  
+                var clickedX = e.pageX - offsetX;
+                var parentWidth = highed.dom.size(colorContainer).w;
+                var dataRange = data.from + data.to;
+                
+                //console.log(data, parentWidth, clickedX,(clickedX / parentWidth), data.from - ((clickedX / parentWidth) * dataRange));
+
+                var newValue = (data.from - ((clickedX / parentWidth) * dataRange)).toFixed(2);
+                dataClasses.splice(index + 1, 0, {
+                  from: newValue,
+                  to: data.to,
+                  color: highed.generateColors().dark   
+                });
+
+                data.to = newValue; 
+                console.log(dataClasses.slice());
+
+                valueMarkers.innerHTML = '';
+                container.innerHTML = '';
+                colorMarkers.innerHTML = '';
+                draw();
+
+                tryCallback(callback, dataClasses);
+                
+              })
+  
+              highed.dom.ap(container, colorContainer);
+            });
+          }, 1000);
+        }
+
+
+        draw();
         return highed.dom.ap(
           highed.dom.cr('div', 'highed-field-container'),
           box

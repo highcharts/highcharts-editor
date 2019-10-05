@@ -1,33 +1,45 @@
-.highed-field-help {
-  // position: absolute;
-  // top:50%;
-  // left:0px;
-  // transform:translate(0, -50%);
+.highed-field-color-categories {
+  width: 100%;
+  height: 25px;
+  .highed-transition;
+  .highed-box-size;
+
+  .highed-field-category {
+    height: 100%;
+    display: inline-block;
+  }
+
+}
+
+.highed-field-multiple-colorpicker {
+
+  .highed-field-color-markers {
+    position: relative;
+    height: 32px;
+    cursor: copy;
+    top: -30px;
+    .highed-field-color-marker {
+      background: var(--background);
+      border: 2px solid black;
+      display: inline-block;
+      height: 31px;
+      position: absolute;
+      width: 7px;
+      border-radius: 8px;
+      top: -1px;
+      cursor: move;
+      div {
+        width: 3px;
+        height: 27px;
+        border: 2px solid white;
+        border-radius: 14px;
+      }
+    }
+  }
 }
 
 
-.highed-field-multiple-colorpicker {
-  width: 100%;
-  .highed-transition;
-  .highed-box-size;
-  .highed-field-color-gradient {
-    height: 25px;
-    border-radius: 3px;
-    background: blue;
-    border: @input-border;
-  }
-
-   
-  .highed-field-value-markers {
-    height: 10px;
-    .highed-field-value-marker {
-      width: 8px;
-      height: 9px;
-      background-color: black;
-      position: absolute;
-      display: inline-block;
-    }
-  }
+.highed-field-colorcategories {
 
   .highed-field-color-markers {
     height: 20px;
@@ -42,7 +54,7 @@
       display: inline-block;
       height: 10px;
       position: absolute;
-      width: 8px;
+      width: 10px;
     }
 
     .highed-field-color-marker:before {
@@ -68,20 +80,50 @@
       top: -7px;
       width: 0;
     }
-  
+  }
 
-/*
-
-    .highed-field-color-marker {
-      width: 8px;
-      height: 9px;
-      background-color: black;
+  .highed-field-value-markers {
+    height: 10px;
+    .highed-field-value-marker {
       position: absolute;
       display: inline-block;
-    }*/
+      width: 0px;
+      height: 0px;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid black;
+      top: 5px;
+
+      span {
+        position: absolute;
+        top: -17px;
+        left: -3px;
+      }
+    }
   }
 }
 
+.highed-field-colorcategories {
+  .highed-field-color-markers {
+    top: 0px;
+    .highed-field-color-marker {
+      height: 7px;
+    }
+  }
+
+}
+
+.highed-field-multiple-colorpicker {
+  width: 100%;
+  .highed-transition;
+  .highed-box-size;
+  .highed-field-color-gradient {
+    height: 25px;
+    border-radius: 3px;
+    background: blue;
+    border: 1px solid #000;
+  }
+}
 
 .highed-field-colorpicker {
   width: 100%;
