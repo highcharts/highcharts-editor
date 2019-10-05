@@ -485,41 +485,70 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
 
               highed.dom.on(colorContainer, 'click', function(e) {
                 //Change previous to value to the from value of the new created class
-  
-  
-                var clickedX = e.pageX - offsetX;
+
                 var parentWidth = highed.dom.size(colorContainer).w;
+                var parentPos = highed.dom.pos(colorContainer, true).x;
+                var clickedX = e.pageX - parentPos;
                 var dataRange = Math.abs(data.from - data.to);
                 
-                console.log(data, colorContainer, "ParentWidth:", parentWidth, "ClickedXValue:", clickedX, "DataRange: ", dataRange, "FinalSum:", (clickedX / parentWidth), data.from - ((clickedX / parentWidth) * -dataRange));
-
                 var newValue = Number.parseFloat((data.from - ((clickedX / parentWidth) * -dataRange)).toFixed(2));
-                console.log("New From/Old To:",newValue)
 
                 var dataValues = {
                   from: newValue,
                   to: data.to,
-                  color: highed.generateColors().dark   
+                  color: highed.generateColors().light   
                 };
+
+                var index = dataClasses.findIndex(function(d){ return d.from === data.from});
 
                 dataClasses.splice(index + 1, 0, dataValues);
                 data.to = newValue; 
 
-                console.log(dataClasses.slice());
-
                 var newColorContainer = createCategory(dataValues, containers.length);
-                container.insertBefore(newColorContainer, container.children[index + 1]);
-
-                console.log(newColorContainer.style.width, (parseInt(colorContainer.style.width) - parseInt(newColorContainer.style.width)) + 'px'); 
+                container.insertBefore(newColorContainer.container, container.children[index + 1]);
+                
                 highed.dom.style(colorContainer, {
-                  width: (parseInt(colorContainer.style.width) - parseInt(newColorContainer.style.width)) + 'px' //(parseInt(colorContainer.style.width) + newValue) + 'px'
+                  width: (parseInt(colorContainer.style.width) - parseInt(newColorContainer.container.style.width)) + 'px'
                 })
-/*
+
+                valueLabel.textContent = data.to;
+                highed.dom.style(valueLabel, {
+                  left: -(3 + (3 * ((data.to + '').length - 1))) + 'px'
+                });
+
+                setTimeout(function(){
+                  containers.forEach(function(c){
+                    c.redraw();
+                  })
+                  newColorContainer.redraw()
+                }, 300);
+    
+                containers.push(newColorContainer);
+                containers.sort(function(a, b) {a.data.from - b.data.to});
+                dataClasses.sort(function(a, b){ return a.from - b.from });
+
                 tryCallback(callback, dataClasses);
-                */
+                
               })
 
-              return colorContainer;
+              function redraw(){
+                var width = highed.dom.size(colorContainer).w;
+                var posX = highed.dom.pos(colorContainer, true).x;
+
+                highed.dom.style(colorMarker, {
+                  left: (((posX + (width / 2)) - offsetX) - 3) + 'px'
+                });
+
+                highed.dom.style(valueMarker, {
+                  left: (((posX + (width)) - offsetX) - 5) + 'px'
+                });
+              }
+
+              return {
+                container: colorContainer,
+                redraw: redraw,
+                data: data
+              };
             }
 
 
@@ -527,92 +556,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
               
               var colorContainer = createCategory(data, index);
               containers.push(colorContainer);
-              highed.dom.ap(container, colorContainer);
-
-              /*
-              var colorContainer = highed.dom.cr('div', 'highed-field-category');
-              
-              const width = ((Math.abs(data.to - data.from) / RANGE) * (highed.dom.size(container).w) - 1),
-                    containerWidth = (highed.dom.size(container).w),
-                    offsetX = highed.dom.pos(container, true).x;
-  
-              highed.dom.style(colorContainer, {
-                backgroundColor: data.color,
-                width: ((Math.abs(data.to - data.from) / RANGE) * (containerWidth - 1)) + 'px'
-              });
-              containers.push(colorContainer);
-              var colorMarker = highed.dom.cr('div', 'highed-field-color-marker'),
-                  valueLabel = highed.dom.cr('span', 'highed-field-colorvalue-label', data.to),
-                  valueMarker = highed.dom.cr('div', 'highed-field-value-marker');
-              
-              highed.dom.style(valueLabel, {
-                left: -(3 + (3 * ((data.to + '').length - 1))) + 'px'
-              });
-  
-              highed.dom.ap(valueMarker, valueLabel);
-  
-              colorMarker.style.setProperty('--background', data.color);
-              setTimeout(function(){
-                const xPos = highed.dom.pos(colorContainer, true).x;
-  
-                highed.dom.style(colorMarker, {
-                  left: ((xPos + (width / 2)) - offsetX) + 'px'
-                });
-  
-                highed.dom.style(valueMarker, {
-                  left: (((xPos + (width)) - offsetX)) - 5 + 'px' //3 is width of value
-                });
-  
-              }, 100);
-  
-              highed.dom.ap(valueMarkers, valueMarker);
-              highed.dom.ap(colorMarkers, colorMarker);
-  
-              highed.dom.on(colorMarker, 'click', function(e) {
-                highed.pickColor(e.clientX, e.clientY, val || value, function(col) {
-                  if (highed.isArr(val)) {
-                    val = '#FFFFFF';
-                  }
-                  data.color = col;
-                  //update(col);
-
-                  highed.dom.style(colorContainer, {
-                    backgroundColor: col
-                  });
-                  colorMarker.style.setProperty('--background', col);
-                  tryCallback(callback, dataClasses);
-                });
-              });
-
-              highed.dom.on(colorContainer, 'click', function(e) {
-                //Change previous to value to the from value of the new created class
-  
-  
-                var clickedX = e.pageX - offsetX;
-                var parentWidth = highed.dom.size(colorContainer).w;
-                var dataRange = Math.abs(data.from - data.to);
-                
-                console.log(data, colorContainer, "ParentWidth:", parentWidth, "ClickedXValue:", clickedX, "DataRange: ", dataRange, "FinalSum:", (clickedX / parentWidth), data.from - ((clickedX / parentWidth) * -dataRange));
-
-                var newValue = Number.parseFloat((data.from - ((clickedX / parentWidth) * -dataRange)).toFixed(2));
-                console.log("New From/Old To:",newValue)
-                dataClasses.splice(index + 1, 0, {
-                  from: newValue,
-                  to: data.to,
-                  color: highed.generateColors().dark   
-                });
-
-                data.to = newValue; 
-                console.log(dataClasses.slice());
-                container.insertBefore(, container.children[index]);
-                console.log(index);
-
-
-                //tryCallback(callback, dataClasses);
-                
-              })
-  
-              highed.dom.ap(container, colorContainer);*/
+              highed.dom.ap(container, colorContainer.container);
             });
           }, 1000);
         }
