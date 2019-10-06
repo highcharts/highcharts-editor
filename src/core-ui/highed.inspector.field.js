@@ -406,21 +406,33 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
       },
       
       colorcategories: function(val, callback) {
-        
+
         var box = highed.dom.cr('div', 'highed-field-colorcategories', '', fieldID),
             container = highed.dom.cr('div', 'highed-field-color-categories', ''),
             valueMarkers = highed.dom.cr('div', 'highed-field-value-markers', ''),
             colorMarkers = highed.dom.cr('div', 'highed-field-color-markers', ''),
             dataClasses = val || value || [],
             containers = [],
-            MIN = -86.78,
-            MAX = 46.3,
+            MIN = -100,
+            MAX = 100,
             RANGE = MAX - MIN;
+            
+
+        if (properties.dataTableValues) {
+          const sorted = properties.dataTableValues.sort(function(a,b) {return a[0] - b[0]});
+
+          if (sorted[0] && sorted[0][0]) {
+            MIN = sorted[0][0];
+            MAX = sorted[sorted.length - 1][0];
+            RANGE = MAX - MIN;
+
+          }
+        }
 
         highed.dom.ap(
           box, 
-          valueMarkers,
           container,
+          valueMarkers,
           colorMarkers);
 
         function draw() {
@@ -431,6 +443,9 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
 
               var colorContainer = highed.dom.cr('div', 'highed-field-category');
               
+              var active = false;
+              var currentX = false;
+
               const width = ((Math.abs(data.to - data.from) / RANGE) * (highed.dom.size(container).w) - 1),
                     containerWidth = (highed.dom.size(container).w),
                     offsetX = highed.dom.pos(container, true).x;
@@ -442,15 +457,103 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
 
               var colorMarker = highed.dom.cr('div', 'highed-field-color-marker'),
                   valueLabel = highed.dom.cr('span', 'highed-field-colorvalue-label', data.to),
-                  valueMarker = highed.dom.cr('div', 'highed-field-value-marker');
-              
-              highed.dom.style(valueLabel, {
-                left: -(3 + (3 * ((data.to + '').length - 1))) + 'px'
-              });
+                  valueMarker = highed.dom.cr('div', 'highed-field-value-marker', '<div></div>');
   
               highed.dom.ap(valueMarker, valueLabel);
   
               colorMarker.style.setProperty('--background', data.color);
+              valueMarker.style.setProperty('--background', data.color);
+              
+              highed.dom.on(valueMarkers, 'mousemove', drag);
+          
+              function drag(e) {
+                if (active) {
+                  e.preventDefault();
+                  currentX = e.pageX;
+                  setTranslate(currentX - offsetX, active);
+                  highed.dom.style(valueMarkers, {
+                    cursor: 'default'
+                  })
+                }
+              }
+              
+              function setTranslate(xPos,el) {
+
+                var containerWidth = false,
+                    range = false,
+                    newValue = false ;
+                    
+                if (active[3]) {
+                  range = Math.abs(active[1].from - active[3].data.to);
+                  containerWidth = (highed.dom.pos(active[2].container,true).x - offsetX) + highed.dom.size(active[2].container).w + highed.dom.size(active[3].container).w;
+                  newValue = Number.parseFloat((active[1].from + ((xPos * range) / containerWidth)).toFixed(2));
+                } else {
+                  range = Math.abs(MIN - MAX);
+                  containerWidth = highed.dom.size(container).w;
+                  newValue = Number.parseFloat((MIN + ((xPos * range) / containerWidth)).toFixed(2));
+                }
+
+                active[2].data.to = newValue;
+                if (active[3]) active[3].data.from = newValue;
+                active[2].valueLabel.textContent = newValue;
+
+                highed.dom.style(el[0], {
+                  left: xPos + 'px'
+                });
+
+                highed.dom.style(el[2].container, {
+                  width: (((highed.dom.pos(el[0], true).x) - offsetX) - (highed.dom.pos(el[2].container, true).x - offsetX)) + 'px'//(parseInt(el[2].container.style.width) - xPos) + 'px'
+                });
+                
+                if (el[3]) {
+                  highed.dom.style(el[3].container, {
+                    width: (highed.dom.pos(el[3].valueMarker, true).x - offsetX) - ((highed.dom.pos(el[0], true).x) - offsetX) + 'px' //(highed.dom.pos(el[2].container, true).x - offsetX) + ((highed.dom.pos(el[0], true).x) - offsetX) + 'px'//(parseInt(el[2].container.style.width) - xPos) + 'px'
+                  });
+                }
+                
+                tryCallback(callback, dataClasses);
+
+              }
+
+
+              highed.dom.on(valueMarker, 'mousedown', function(e){
+                var index = containers.findIndex(function(d){
+                  return d.data.from === data.from && d.data.to === data.to;
+                });
+
+                active = [valueMarker, data, containers[index], containers[index + 1]];
+
+                initialX = e.pageX;
+              });
+
+/*
+              highed.dom.on(valueMarker, 'contextmenu', function(e){
+                e.preventDefault();
+
+                const index = stops.findIndex(function(s) { return s === stop});
+                stops.splice(index, 1);
+
+                highed.dom.style(gradient, {
+                  background: buildGradient()
+                });
+
+                colorMarkers.removeChild(active[0]);  
+                tryCallback(callback, stops);
+                active = false;
+              });
+*/
+
+              highed.dom.on(valueMarker, 'mouseup', function(e){
+
+                if (initialX === e.pageX) return;
+
+                active = false
+
+                highed.dom.style(valueMarkers, {
+                  cursor: 'copy'
+                })
+              });
+              
               setTimeout(function(){
                 const xPos = highed.dom.pos(colorContainer, true).x;
   
@@ -459,79 +562,38 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
                 });
   
                 highed.dom.style(valueMarker, {
-                  left: (((xPos + (width)) - offsetX)) - 5 + 'px' //3 is width of value
+                  left: (((xPos + (width)) - offsetX)) - 5 + 'px' //5 is width of value
                 });
   
               }, 100);
   
               highed.dom.ap(valueMarkers, valueMarker);
-              highed.dom.ap(colorMarkers, colorMarker);
   
-              highed.dom.on(colorMarker, 'click', function(e) {
-                highed.pickColor(e.clientX, e.clientY, val || value, function(col) {
-                  if (highed.isArr(val)) {
-                    val = '#FFFFFF';
-                  }
-                  data.color = col;
-                  //update(col);
+              highed.dom.on(valueMarker, 'click', function(e) {
 
-                  highed.dom.style(colorContainer, {
-                    backgroundColor: col
+                if (active) {
+                  const tempActive = active.slice();
+                  active = false;
+                  highed.pickColor(e.clientX, e.clientY, val || value, function(col) {
+                    if (highed.isArr(val)) {
+                      val = '#FFFFFF';
+                    }
+                    
+                    val = col;
+                    
+                    tempActive[1].color = col;
+                    tempActive[0].style.setProperty('--background', col);
+                    highed.dom.style(tempActive[2].container, {
+                      backgroundColor: col
+                    })
+                    //update(col);
+                    tryCallback(callback, dataClasses);
+                    
                   });
-                  colorMarker.style.setProperty('--background', col);
-                  tryCallback(callback, dataClasses);
-                });
+                }
               });
 
-              highed.dom.on(colorContainer, 'click', function(e) {
-                //Change previous to value to the from value of the new created class
-
-                var parentWidth = highed.dom.size(colorContainer).w;
-                var parentPos = highed.dom.pos(colorContainer, true).x;
-                var clickedX = e.pageX - parentPos;
-                var dataRange = Math.abs(data.from - data.to);
-                
-                var newValue = Number.parseFloat((data.from - ((clickedX / parentWidth) * -dataRange)).toFixed(2));
-
-                var dataValues = {
-                  from: newValue,
-                  to: data.to,
-                  color: highed.generateColors().light   
-                };
-
-                var index = dataClasses.findIndex(function(d){ return d.from === data.from});
-
-                dataClasses.splice(index + 1, 0, dataValues);
-                data.to = newValue; 
-
-                var newColorContainer = createCategory(dataValues, containers.length);
-                container.insertBefore(newColorContainer.container, container.children[index + 1]);
-                
-                highed.dom.style(colorContainer, {
-                  width: (parseInt(colorContainer.style.width) - parseInt(newColorContainer.container.style.width)) + 'px'
-                })
-
-                valueLabel.textContent = data.to;
-                highed.dom.style(valueLabel, {
-                  left: -(3 + (3 * ((data.to + '').length - 1))) + 'px'
-                });
-
-                setTimeout(function(){
-                  containers.forEach(function(c){
-                    c.redraw();
-                  })
-                  newColorContainer.redraw()
-                }, 300);
-    
-                containers.push(newColorContainer);
-                containers.sort(function(a, b) {a.data.from - b.data.to});
-                dataClasses.sort(function(a, b){ return a.from - b.from });
-
-                tryCallback(callback, dataClasses);
-                
-              })
-
-              function redraw(){
+              function redraw() {
                 var width = highed.dom.size(colorContainer).w;
                 var posX = highed.dom.pos(colorContainer, true).x;
 
@@ -547,7 +609,9 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
               return {
                 container: colorContainer,
                 redraw: redraw,
-                data: data
+                data: data,
+                valueLabel: valueLabel,
+                valueMarker: valueMarker
               };
             }
 
@@ -558,11 +622,68 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
               containers.push(colorContainer);
               highed.dom.ap(container, colorContainer.container);
             });
+
+
+            highed.dom.on(valueMarkers, 'dblclick', function(e) {
+              //Change previous to value to the from value of the new created class
+
+              var clickedContainer = containers.find(function(c){
+                var width = highed.dom.size(c.container).w ;
+                var xPos = highed.dom.pos(c.container, true).x;
+                return (e.pageX > xPos && e.pageX < xPos + width);
+              });
+
+              var colorContainer = clickedContainer.container,
+                  data = clickedContainer.data,
+                  valueLabel = clickedContainer.valueLabel;
+
+              var parentWidth = highed.dom.size(colorContainer).w;
+              var parentPos = highed.dom.pos(colorContainer, true).x;
+              var clickedX = e.pageX - parentPos;
+              var dataRange = Math.abs(data.from - data.to);
+              
+              var newValue = Number.parseFloat((data.from - ((clickedX / parentWidth) * -dataRange)).toFixed(2));
+
+              var dataValues = {
+                from: newValue,
+                to: data.to,
+                color: highed.generateColors().light   
+              };
+
+              var index = dataClasses.findIndex(function(d){ return d.from === data.from});
+
+              dataClasses.splice(index + 1, 0, dataValues);
+              data.to = newValue; 
+
+              var newColorContainer = createCategory(dataValues, containers.length);
+              container.insertBefore(newColorContainer.container, container.children[index + 1]);
+              
+              highed.dom.style(colorContainer, {
+                width: (parseInt(colorContainer.style.width) - parseInt(newColorContainer.container.style.width)) + 'px'
+              })
+
+              valueLabel.textContent = data.to;
+
+              setTimeout(function(){
+                containers.forEach(function(c){
+                  c.redraw();
+                })
+                newColorContainer.redraw()
+              }, 280);
+  
+              containers.push(newColorContainer);
+              containers.sort(function(a, b) { return a.data.from - b.data.from });
+              dataClasses.sort(function(a, b){ return a.from - b.from });
+
+              tryCallback(callback, dataClasses);
+              
+            });
           }, 1000);
+        
         }
 
-
         draw();
+
         return highed.dom.ap(
           highed.dom.cr('div', 'highed-field-container'),
           box

@@ -815,6 +815,7 @@ highed.DataTable = function(parent, attributes) {
           colVal.innerHTML = value;
           if (changed) {
             emitChanged();
+            events.emit('ChangeMapCategoryValue', value);
           }
         },
         handleKeyup,
@@ -1869,7 +1870,7 @@ highed.DataTable = function(parent, attributes) {
 
   function checkSections(sections, index) {
     return (sections || []).some(function(section) {
-      return (section.dataColumns.indexOf(index) > -1 || section.extraColumns.indexOf(index) > -1 || section.labelColumn === index);
+      return (section.dataColumns.indexOf(index) > -1 || (section.extraColumns && section.extraColumns.indexOf(index) > -1) || section.labelColumn === index);
     });
   }
 

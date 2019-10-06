@@ -217,6 +217,18 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     payupModal = highed.SubscribeModal(),
     annotationModal = highed.AnnotationModal(),
     mapSelector = highed.MapSelector(chartPreview),
+    dataPage = highed.DataPage(
+      splitter.bottom,
+      highed.merge(
+        {
+          importer: properties.importer
+        },
+        properties.dataGrid
+      ),
+      chartPreview,
+      highedChartContainer,
+      builtInOptions.data
+    ),
     customizePage = highed.CustomizePage(
       splitter.bottom,
       highed.merge(
@@ -229,19 +241,8 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
       highedChartContainer,
       builtInOptions.customize,
       chartFrame,
-      planCode
-    ),
-    dataPage = highed.DataPage(
-      splitter.bottom,
-      highed.merge(
-        {
-          importer: properties.importer
-        },
-        properties.dataGrid
-      ),
-      chartPreview,
-      highedChartContainer,
-      builtInOptions.data
+      planCode,
+      dataPage
     ),
     templatePage = highed.TemplatePage(     
       splitter.bottom,

@@ -41,7 +41,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @param parent {domnode} - the node to attach the list to
  *  @param responsive {boolean} - set to true to get JS-based responsive functionality
  */
-highed.List = function(parent, responsive, props, planCode) {
+highed.List = function(parent, responsive, props, planCode, dataPage) {
   var container = highed.dom.cr('div', 'highed-list'),
     compactIndicator = highed.dom.cr('div', 'highed-list-compact', 'compact'),
     ctx = highed.ContextMenu(),
@@ -296,6 +296,9 @@ highed.List = function(parent, responsive, props, planCode) {
 
         //highed.dom.ap(sub, highed.dom.cr('span', '', referenced[0].returnType));
         
+        if (group.usesData && dataPage) {
+          group.dataTableValues = dataPage.getValues();
+        }
         
         highed.dom.ap(
           table,
@@ -315,7 +318,8 @@ highed.List = function(parent, responsive, props, planCode) {
               width: group.width || 100,
               attributes: group.attributes || [],
               warning: group.warning || [],
-              header: highed.L(group.pid).replace('Chart', highed.chartType ==='Map' ? 'Map' : 'Chart')
+              header: highed.L(group.pid).replace('Chart', highed.chartType ==='Map' ? 'Map' : 'Chart'),
+              dataTableValues: group.dataTableValues
             },
             function(newValue) {
               if (group.header) return;

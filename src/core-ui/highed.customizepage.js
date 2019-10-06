@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props, chartContainer, planCode) {
+highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props, chartContainer, planCode, dataPage) {
   var events = highed.events(),
     // Main properties
     container = highed.dom.cr(
@@ -192,12 +192,13 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + props.icon;
 
     customizerContainer.innerHTML = '';
-
+    
     customizer = highed.ChartCustomizer(
       customizerContainer,
       options,
       chartPreview,
-      planCode
+      planCode,
+      dataPage
     ),
     helpModal = highed.HelpModal(props.help || []);
 

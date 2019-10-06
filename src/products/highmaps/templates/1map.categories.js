@@ -56,13 +56,13 @@ highed.templates.add('Map', {
       maxColor: null,
       stops: null,
       dataClasses: [{
-          from: -86.78,
+          from: -100,
           to: 0,
           color: '#C40401',
           name: ''
       }, {
           from: 0,
-          to: 41.68,
+          to: 100,
           color: '#0200D0',
           name: ''
       }]

@@ -483,6 +483,16 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       assignDataPanel.addNewSerie(type, extra);
     }
 
+    function getValues(){
+
+      if ( assignDataPanel.getOptions() && assignDataPanel.getOptions().value) {
+          return dataTable.toData(null, null, [{ 
+            dataColumns: assignDataPanel.getOptions().value.rawValue,
+          }]).slice();
+      }
+      return [];
+    }
+
   //////////////////////////////////////////////////////////////////////////////
 
   highed.dom.on(window, 'resize', afterResize(function(e){
@@ -612,6 +622,22 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     }, null, false, function() {
       setSeriesMapping(allOptions);
     });
+  });
+
+  dataTable.on('ChangeMapCategoryValue', function(value){
+    
+    if (highed.chartType === 'Map') {
+      var chartOptions = chartPreview.options.getCustomized();
+
+      if (chartOptions.colorAxis && chartOptions.colorAxis.dataClasses) {
+        value = Number.parseFloat(value);
+        if (chartOptions.colorAxis.dataClasses[0].from > value) {
+          chartOptions.colorAxis.dataClasses[0].from = value;
+        } else if (chartOptions.colorAxis.dataClasses[chartOptions.colorAxis.dataClasses.length - 1].to < value) {
+          chartOptions.colorAxis.dataClasses[chartOptions.colorAxis.dataClasses.length - 1].to = value;
+        }
+      }
+    }
   });
 
   dataTable.on('ResetAssignValues', function(values){
@@ -830,6 +856,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     getMapValueFromCode: getMapValueFromCode,
     changeAssignDataType: changeAssignDataType,
     showLatLongTable: showLatLongTable,
-    updateLinkedToValues: updateLinkedToValues
+    updateLinkedToValues: updateLinkedToValues,
+    getValues: getValues
+
   };
 };
