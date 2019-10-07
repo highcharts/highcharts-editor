@@ -526,22 +526,30 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
                 initialX = e.pageX;
               });
 
-/*
+
               highed.dom.on(valueMarker, 'contextmenu', function(e){
-                e.preventDefault();
+                e.preventDefault(); 
+                const index = containers.findIndex(function(s) { return s.valueMarker === valueMarker});
+                const width = containers[index].container.style.width;
+                const previousContainer = containers[index-1];
+                containers[index-1].data.to = containers[index].data.to;
+                dataClasses.splice(index, 1);
 
-                const index = stops.findIndex(function(s) { return s === stop});
-                stops.splice(index, 1);
+                valueMarkers.removeChild(active[0]);
+                container.removeChild(colorContainer);
 
-                highed.dom.style(gradient, {
-                  background: buildGradient()
-                });
+                if (previousContainer) {
+                  previousContainer.container.style.width = (parseFloat(previousContainer.container.style.width) + Number.parseFloat(width)) + 'px';
 
-                colorMarkers.removeChild(active[0]);  
-                tryCallback(callback, stops);
+                  setTimeout(function() {
+                    previousContainer.redraw();
+                  }, 300);
+                }
+
+                tryCallback(callback, dataClasses);
                 active = false;
               });
-*/
+
 
               highed.dom.on(valueMarker, 'mouseup', function(e){
 

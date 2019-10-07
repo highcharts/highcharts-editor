@@ -628,9 +628,9 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     
     if (highed.chartType === 'Map') {
       var chartOptions = chartPreview.options.getCustomized();
-
+    
+      value = Number.parseFloat(value);  
       if (chartOptions.colorAxis && chartOptions.colorAxis.dataClasses) {
-        value = Number.parseFloat(value);
         if (chartOptions.colorAxis.dataClasses[0].from > value) {
           chartOptions.colorAxis.dataClasses[0].from = value;
         } else if (chartOptions.colorAxis.dataClasses[chartOptions.colorAxis.dataClasses.length - 1].to < value) {
