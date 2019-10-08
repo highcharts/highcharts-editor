@@ -139,8 +139,8 @@ highed.List = function(parent, responsive, props, planCode, dataPage) {
       
       if (highed.chartType === 'Map' && group.mapDisabled) return;
 
-      options = chartPreview.options.full; //userOptions;//chartPreview.options.getCustomized();
-      
+      options = chartPreview.options.all().userOptions;
+
       if (highed.isArr(group.options)) {
         table = highed.dom.cr('div', 'highed-customizer-table');
         warningContainer = highed.dom.cr('div', 'highed-customize-warning-container'),

@@ -36,7 +36,7 @@ highed.templates.add('Map', {
   constructor: 'Map',
   load: function(chart, event) {
     //Create serie if chart only has one
-    if (chart.series && chart.series.length == 1) {
+    if (chart.series && chart.series.length <= 1) {
 
       event.emit('ChangeAssignDataType', 'map', {
         "joinBy": 0

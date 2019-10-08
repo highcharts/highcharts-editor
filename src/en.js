@@ -135,9 +135,19 @@ highed.installLanguage({
       'Background color for the full chart area',
     'option.text.colorAxis.stops': 'Color Stops',
     'option.tooltip.colorAxis.stops': 'Color stops to be used',
-
+    'option.text.plotOptions.series.minSize': 'Min Size',
+    'option.tooltip.plotOptions.series.minSize': 'Minimum size of bubble',
+    'option.text.plotOptions.series.maxSize': 'Max Size',
+    'option.tooltip.plotOptions.series.maxSize': 'Maximum size of bubble',
     'option.text.colorAxis.dataClasses': 'Color Stops',
     'option.tooltip.colorAxis.dataClasses': 'Color stops to be used',
+    'option.text.plotOptions.mappoint.marker.symbol': 'Point Symbol',
+    'option.tooltip.plotOptions.mappoint.marker.symbol': 'Symbol point',
+    'option.text.plotOptions.mappoint.marker.radius': 'Point Size',
+    'option.tooltip.plotOptions.mappoint.marker.radius':
+      'Size of the map point',
+    'option.text.plotOptions.series.color': 'Point Color',
+    'option.tooltip.plotOptions.series.color': 'Colour of the map point',
     'option.text.chart.borderWidth': 'Border width',
     'option.tooltip.chart.borderWidth':
       'The pixel width of the outer chart border.',
