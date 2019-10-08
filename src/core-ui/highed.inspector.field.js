@@ -423,7 +423,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
             MIN = -100,
             MAX = 100,
             RANGE = MAX - MIN;
-            
+
 
         if (properties.dataTableValues) {
           const sorted = properties.dataTableValues.sort(function(a,b) {return a[0] - b[0]});
@@ -433,6 +433,10 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
             MAX = sorted[sorted.length - 1][0];
             RANGE = MAX - MIN;
           }
+        } else if (dataClasses) {
+          MIN = dataClasses[0].from;
+          MAX = dataClasses[dataClasses.length - 1].to;
+          RANGE = MAX - MIN;
         }
 
         highed.dom.ap(
@@ -449,14 +453,17 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
           function createCategory(data, index){
 
             var colorContainer = highed.dom.cr('div', 'highed-field-category');
+           
+           if (!data.to && data.to !== 0) data.to = MAX;
+           if (index === 0 && data.from < MIN) data.from = MIN;
 
-            const width = ((Math.abs(data.to - data.from) / RANGE) * (highed.dom.size(container).w) - 1),
-                  containerWidth = (highed.dom.size(container).w),
+            const containerWidth = (highed.dom.size(container).w) - 1,
+                  width = (((data.to - MIN) * containerWidth) / RANGE) - (((data.from - MIN) * containerWidth) / RANGE) + 1,
                   offsetX = highed.dom.pos(container, true).x;
 
             highed.dom.style(colorContainer, {
               backgroundColor: data.color,
-              width: ((Math.abs(data.to - data.from) / RANGE) * (containerWidth - 1)) + 'px'
+              width: width + 'px' //((Math.abs(data.to - data.from) / RANGE) * (containerWidth - 1)) + 'px'
             });
 
             var colorMarker = highed.dom.cr('div', 'highed-field-color-marker'),

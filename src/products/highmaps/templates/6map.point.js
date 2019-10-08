@@ -61,6 +61,12 @@ highed.templates.add('Map', {
       visible: false
     },
 
+    plotOptions: {
+      series: {
+        fillColor: 'black'
+      }
+    },
+
     yAxis: {
       visible: false
     },
@@ -73,10 +79,8 @@ highed.templates.add('Map', {
     },
 
     series: [{
-        _colorIndex: 1,
         joinBy: 'hc-key',
         type: 'mappoint',
-        
     }]
   }
 });

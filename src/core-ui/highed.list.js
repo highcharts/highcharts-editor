@@ -139,7 +139,7 @@ highed.List = function(parent, responsive, props, planCode, dataPage) {
       
       if (highed.chartType === 'Map' && group.mapDisabled) return;
 
-      options = chartPreview.options.getCustomized(); //userOptions;//chartPreview.options.getCustomized();
+      options = chartPreview.options.full; //userOptions;//chartPreview.options.getCustomized();
       
       if (highed.isArr(group.options)) {
         table = highed.dom.cr('div', 'highed-customizer-table');
@@ -214,10 +214,11 @@ highed.List = function(parent, responsive, props, planCode, dataPage) {
             if (highed.isArr(vals)) {
               
               if (vals.length === 0) {
+                /*
                 highed.dom.ap(
                   parent,
                   highed.dom.cr('i', '', 'No data to display..')
-                );
+                );*/
                 return;
               }
 
@@ -279,6 +280,16 @@ highed.List = function(parent, responsive, props, planCode, dataPage) {
           }
         }
 
+        if (group.templateType) {
+          const templateOptions = chartPreview.options.getTemplateSettings();
+          if (!Object.keys(templateOptions).some(function(key){
+            return group.templateType.includes(templateOptions[key].templateTitle);
+          })) {
+            return;
+          }
+
+        }
+
         if (Object.keys(properties.availableSettings || {}).length > 0) {
           if (
             !properties.availableSettings[group.id] &&
@@ -293,13 +304,12 @@ highed.List = function(parent, responsive, props, planCode, dataPage) {
         }
 
         def = highed.getAttr(options, group.id, detailIndex);
-
         //highed.dom.ap(sub, highed.dom.cr('span', '', referenced[0].returnType));
         
         if (group.usesData && dataPage) {
           group.dataTableValues = dataPage.getValues();
         }
-        
+
         highed.dom.ap(
           table,
           highed.InspectorField(

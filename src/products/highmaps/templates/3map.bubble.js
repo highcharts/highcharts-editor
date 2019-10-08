@@ -70,13 +70,23 @@ highed.templates.add('Map', {
     },
 
     colorAxis: {
-      min: 0
+      minColor: '#EEEEFF',
+      maxColor: '#000022',
+      stops: [
+          [0, '#EFEFFF'],
+          [0.67, '#4444FF'],
+          [1, '#000022']
+      ]
+    },
+    plotOptions: {
+      series: {
+        minSize: 4
+      }
     },
 
     series: [{
         joinBy: 'hc-key',
         type: 'mapbubble',
-        minSize: 4,
         maxSize: '12%'
     }]
   }

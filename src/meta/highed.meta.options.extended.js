@@ -210,6 +210,8 @@ highed.meta.optionsExtended = {
             pid: 'colorAxis.stops',
             dataType: 'colorstops',
             context: 'General',
+            chartType: 'Map',
+            templateType: ['Choropleth', 'Bubble'],
             defaults: [
               [0, '#EFEFFF'],
               [0.67, '#4444FF'],
@@ -217,9 +219,61 @@ highed.meta.optionsExtended = {
             ]
           },
           {
+            id: 'plotOptions--mappoint--marker--symbol',
+            pid: 'plotOptions.mappoint.marker.symbol',
+            dataType: 'string',
+            context: 'General',
+            chartType: 'Map',
+            templateType: ['Point Map'],
+            values: '["circle", "square", "diamond", "triangle", "triangle-down"]',
+            width: 33
+          },
+          {
+            id: 'plotOptions--mappoint--marker--radius',
+            pid: 'plotOptions.mappoint.marker.radius',
+            dataType: 'number',
+            context: 'General',
+            chartType: 'Map',
+            templateType: ['Point Map'],
+            defaults: 4,
+            width: 33
+          },
+          {
+            id: 'plotOptions--series--color',
+            pid: 'plotOptions.series.color',
+            dataType: 'color',
+            context: 'General',
+            chartType: 'Map',
+            templateType: ['Point Map'],
+            defaults: '#0d233a',
+            width: 33
+          },
+          {
+            id: 'plotOptions--series--minSize',
+            pid: 'plotOptions.series.minSize',
+            dataType: 'number',
+            context: 'General',
+            chartType: 'Map',
+            templateType: ['Bubble'],
+            defaults: 4,
+            width: 50
+          },
+          {
+            id: 'plotOptions--series--maxSize',
+            pid: 'plotOptions.series.maxSize',
+            dataType: 'number',
+            context: 'General',
+            chartType: 'Map',
+            templateType: ['Bubble'],
+            defaults: 10,
+            width: 50
+          },
+          {
             id: 'colorAxis--dataClasses',
             pid: 'colorAxis.dataClasses',
             dataType: 'colorcategories',
+            chartType: 'Map',
+            templateType: ['Categories', 'Honeycomb', 'Tilemap Circle'],
             context: 'General',
             usesData: true,
             defaults: [{
