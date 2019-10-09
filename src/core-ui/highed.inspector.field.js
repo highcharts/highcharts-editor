@@ -447,9 +447,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
         var currentX = false;
 
         setTimeout(function() {
-
           function createCategory(data, index){
-
             var colorContainer = highed.dom.cr('div', 'highed-field-category');
            
            if (!data.to && data.to !== 0) data.to = MAX;
@@ -461,7 +459,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
 
             highed.dom.style(colorContainer, {
               backgroundColor: data.color,
-              width: width + 'px'
+              width: width * (containerWidth /((containerWidth + 1) + dataClasses.length - 1)) + 'px'
             });
 
             var colorMarker = highed.dom.cr('div', 'highed-field-color-marker'),
