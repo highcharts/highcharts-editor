@@ -657,7 +657,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
     // Finally, do custom code
     if (!noCustomCode && highed.isFn(customCode)) {
-      customCode(aggregatedOptions);
+      customCode(chart ? chart.userOptions : aggregatedOptions);
     }
   }
 
