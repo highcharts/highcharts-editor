@@ -103,6 +103,51 @@ highed.meta.charttype = {
             'rawValue': [4]
         }
     },
+    ohlc: {
+        'values': null,
+        'close': {
+            'name': "Close",
+            'desc': 'The closing value of each data point.',
+            'default': 'B',
+            'value': 'B',
+            'mandatory': true,
+            'linkedTo': 'close',
+            'isData': true,
+            'rawValue': [1]
+        }, 
+        'open': {
+            'name': "Open",
+            'desc': 'The opening value of each data point.',
+            'default': 'C',
+            'value': 'C',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'open',
+            'rawValue': [2]
+        }, 
+        'low': {
+            'name': "Low",
+            'desc': 'The low or minimum value for each data point.',
+            'default': 'D',
+            'value': 'D',
+            'multipleValues': false,
+            'previousValue': null,
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'low',
+            'rawValue': [3]
+        }, 
+        'high': {
+            'name': "High",
+            'desc': 'The high or maximum value for each data point.',
+            'default': 'E',
+            'value': 'E',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'high',
+            'rawValue': [4]
+        }
+    },
     candlestick: {
         'values': null,
         'close': {
@@ -193,5 +238,28 @@ highed.meta.charttype = {
             'linkedTo': 'high',
             'rawValue': [2]
         }
+    },
+    errorbar: {
+        'values': null,
+        'low': {
+            'name': "Low",
+            'desc': 'The lowest value of each data point.',
+            'default': 'B',
+            'value': 'B',
+            'mandatory': true,
+            'linkedTo': 'low',
+            'isData': true,
+            'rawValue': [1]
+        }, 
+        'high': {
+            'name': "High",
+            'desc': 'The highest value of each data point.',
+            'default': 'C',
+            'value': 'C',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'high',
+            'rawValue': [2]
+        }, 
     },
 };

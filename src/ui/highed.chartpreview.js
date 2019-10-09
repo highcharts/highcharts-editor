@@ -325,7 +325,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       }) ? 'StockChart' : 'Chart');
 
       options = highed.merge(options, stockTools.getStockToolsToolbarConfig());
-
       chart = new Highcharts[chartConstr](pnode || parent, options);
 
       //This is super ugly.

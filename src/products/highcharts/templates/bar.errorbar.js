@@ -33,12 +33,9 @@ highed.templates.add('Bar', {
   sampleSets: [],
   config: {
     chart: {
-      type: 'column',
+      type: 'errorbar',
       inverted: true,
       polar: false
-    },
-    'series[1]': {
-      type: 'errorbar'
     }
   }
 });

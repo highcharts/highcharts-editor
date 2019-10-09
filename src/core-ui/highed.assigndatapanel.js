@@ -498,8 +498,10 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
   
           options[i].labels.rawValue = [0];
           options[i].labels.value = "A";
-          options[i].values.rawValue[0] = i + 1;
-          options[i].values.value = getLetterFromIndex(i + 1);
+          if (options[i].values){
+            options[i].values.rawValue[0] = i + 1;
+            options[i].values.value = getLetterFromIndex(i + 1);
+          } 
         }
       }
       seriesTypeSelect.selectByIndex(0);

@@ -111,7 +111,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     blacklist = [
       'candlestick',
       'bubble',
-      'pie'
+      'pie',
+      'ohlc'
     ];
 
     dataImportBtn.innerHTML += ' <span class="highed-hide-sm">Data</span>';
