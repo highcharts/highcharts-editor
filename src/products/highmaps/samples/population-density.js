@@ -23,7 +23,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-highed.samples.addMapType('Choropleth', {
+highed.samples.addMapType('Categories', {
   id: 'population-density',
   title: 'Population density by country (/km²)',
   description: '',
@@ -42,6 +42,7 @@ highed.samples.addMapType('Choropleth', {
       maxColor: null,
       stops: null,
       dataClasses: [{
+          from: 0,
           to: 3,
           color: 'rgba(19,64,117,0.05)'
       }, {
@@ -201,10 +202,10 @@ highed.samples.addMapType('Choropleth', {
     "lt,46",
     "lu,225",
     "lv,32",
-    "mo,20406",
+    "mo,2000",
     "mf,592",
     "ma,79",
-    "mc,19250",
+    "mc,1900",
     "md,108",
     "mg,43",
     "mv,1392",
@@ -254,7 +255,7 @@ highed.samples.addMapType('Choropleth', {
     "sd,15",
     "sn,17",
     "sg,80",
-    "sb,7909",
+    "sb,3000",
     "sl,21",
     "sv,102",
     "sm,306",

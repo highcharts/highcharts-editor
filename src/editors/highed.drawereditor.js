@@ -370,6 +370,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     helpModal = highed.HelpModal(builtInOptions.data.help || [])
     mapModal = highed.MapModal(highedChartContainer, dataPage);
 
+  betaContainer.title = "Maps functionality is currently in Beta";
 
   highed.chartType = chartType;
   chartPreview.options.togglePlugins('map', chartType === 'Map');

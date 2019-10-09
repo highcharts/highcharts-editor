@@ -350,7 +350,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
             if (active) {
               const tempActive = active.slice();
               active = false;
-              highed.pickColor(e.clientX, e.clientY, val || value, function(col) {
+              highed.pickColor(e.clientX, e.clientY, tempActive[2].color, function(col) {
                 if (highed.isArr(val)) {
                   val = '#FFFFFF';
                 }
@@ -424,21 +424,19 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
             MAX = 100,
             RANGE = MAX - MIN;
 
-
         if (properties.dataTableValues) {
-          const sorted = properties.dataTableValues.sort(function(a,b) {return a[0] - b[0]});
-
+          const sorted = properties.dataTableValues.sort(function(a,b) {return a[0] - b[0]}).filter(function(a) { return a[0] !== undefined; });
           if (sorted[0] && sorted[0][0]) {
             MIN = sorted[0][0];
             MAX = sorted[sorted.length - 1][0];
             RANGE = MAX - MIN;
           }
-        } else if (dataClasses) {
+        } else if (highed.isArr(dataClasses)) {
           MIN = dataClasses[0].from;
           MAX = dataClasses[dataClasses.length - 1].to;
           RANGE = MAX - MIN;
         }
-
+        
         highed.dom.ap(
           box, 
           container,
@@ -463,7 +461,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
 
             highed.dom.style(colorContainer, {
               backgroundColor: data.color,
-              width: width + 'px' //((Math.abs(data.to - data.from) / RANGE) * (containerWidth - 1)) + 'px'
+              width: width + 'px'
             });
 
             var colorMarker = highed.dom.cr('div', 'highed-field-color-marker'),
@@ -557,20 +555,32 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
 
             highed.dom.on(valueMarker, 'contextmenu', function(e){
               e.preventDefault(); 
+
+              if (containers.length <= 1) return;
+
               const index = containers.findIndex(function(s) { return s.valueMarker === valueMarker});
               const width = containers[index].container.style.width;
               const previousContainer = containers[index-1];
-              containers[index-1].data.to = containers[index].data.to;
+              const nextContainer = containers[index+1];
+
+              if (previousContainer) previousContainer.data.to = containers[index].data.to;
+              else if (nextContainer) nextContainer.data.from = containers[index].data.from;
+              
               dataClasses.splice(index, 1);
+              containers.splice(index, 1);
 
               valueMarkers.removeChild(active[0]);
               container.removeChild(colorContainer);
 
               if (previousContainer) {
                 previousContainer.container.style.width = (parseFloat(previousContainer.container.style.width) + Number.parseFloat(width)) + 'px';
-
                 setTimeout(function() {
                   previousContainer.redraw();
+                }, 300);
+              } else if (nextContainer) {
+                nextContainer.container.style.width = (parseFloat(nextContainer.container.style.width) + Number.parseFloat(width)) + 'px';
+                setTimeout(function() {
+                  nextContainer.redraw();
                 }, 300);
               }
 
@@ -607,7 +617,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
               if (active) {
                 const tempActive = active.slice();
                 active = false;
-                highed.pickColor(e.clientX, e.clientY, val || value, function(col) {
+                highed.pickColor(e.clientX, e.clientY, tempActive[1].color, function(col) {
                   if (highed.isArr(val)) {
                     val = '#FFFFFF';
                   }
