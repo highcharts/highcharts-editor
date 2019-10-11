@@ -446,12 +446,27 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
           type: 'GET',
           dataType: 'json',
           success: function(data) {
-            loadMapData(data.features, null, null, projectData.settings.dataProvider.csv, function () {
+            var isLatLongChart = (projectData.settings.dataProvider && projectData.settings.dataProvider.seriesMapping && projectData.settings.dataProvider.seriesMapping.some(function(s){
+              return Object.keys(s).includes('lat');
+            }));
+
+            if (isLatLongChart) {
+              dataTable.loadCSV({
+                csv: projectData.settings.dataProvider.csv
+              }, null, null, function() {
+                assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
+                assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+                chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
+              });
+              return;
+            } else {
+              loadMapData(data.features, null, null, projectData.settings.dataProvider.csv, function () {
               
-              assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
-              assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
-              chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
-            });
+                assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
+                assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+                chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
+              });
+            }
           },
           error: function(e) {
           }
