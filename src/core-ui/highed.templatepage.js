@@ -142,7 +142,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     
     if (options.id) options = highed.templates.getAllInCat(options.id);
 
-    Object.keys(options).forEach(function(key) { 
+    Object.keys(options).forEach(function(key) {
       const templateContainer = highed.dom.cr('div', 'highed-template-container'),
             preview = highed.dom.cr('div', 'highed-chart-template-thumbnail');
 
@@ -179,7 +179,32 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
         }, 1000);
       });
 
-      highed.dom.ap(templatesContainer, highed.dom.ap(templateContainer, preview, highed.dom.cr('div', 'highed-template-title', t.title)));
+      var infoContainer = highed.dom.cr('span', 'highed-tooltip-container fa fa-question-circle');
+
+      highed.dom.style(infoContainer, {
+        display: 'none'
+      });
+
+      if (t.description) {
+        var desc = t.description.join(' ');
+        if (desc !== '') {
+          highed.dom.on(infoContainer, 'mouseover', function(e){
+
+            var hide = highed.Tooltip(
+              e.clientX + 20,
+              e.clientY,
+              desc
+            );
+            highed.dom.on(infoContainer, 'mouseout', hide);
+          })
+
+          highed.dom.style(infoContainer, {
+            display: 'initial'
+          });
+        }
+      }
+
+      highed.dom.ap(templatesContainer, highed.dom.ap(templateContainer, preview, highed.dom.cr('div', 'highed-template-title', t.title), infoContainer));
 
     });
     
@@ -199,6 +224,7 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     Object.keys(templates).forEach(function(key) {
       const t = templates[key];
       if (!usingMaps && t.id === 'Map') return;
+      console.log(t.id, t);
       createTemplates(container, t.id, t, setLoading, toNextPage);
 
     });

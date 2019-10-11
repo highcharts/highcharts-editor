@@ -58,7 +58,8 @@ highed.templates.add('Map', {
     },
 
     xAxis: {
-      visible: false
+      visible: false,
+      type: 'linear'
     },
 
     yAxis: {

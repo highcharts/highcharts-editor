@@ -447,7 +447,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
         var currentX = false;
 
         setTimeout(function() {
-          function createCategory(data, index){
+          function createCategory(data, index) {
             var colorContainer = highed.dom.cr('div', 'highed-field-category');
            
            if (!data.to && data.to !== 0) data.to = MAX;
@@ -615,19 +615,22 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
               if (active) {
                 const tempActive = active.slice();
                 active = false;
-                highed.pickColor(e.clientX, e.clientY, tempActive[1].color, function(col) {
-                  if (highed.isArr(val)) {
-                    val = '#FFFFFF';
+
+                highed.updateCategory(e.clientX, e.clientY, {
+                  color: tempActive[1].color,
+                  name: tempActive[1].name || tempActive[1].from + ' - ' + tempActive[1].to
+                }, function(settings) {
+
+                  if (settings.color) {
+                    tempActive[1].color = settings.color;
+                    tempActive[0].style.setProperty('--background', settings.color);
+                    highed.dom.style(tempActive[2].container, {
+                      backgroundColor: settings.color
+                    })
+                  } else if (settings.name) {
+                    tempActive[1].name = settings.name
                   }
-                  
-                  val = col;
-                  
-                  tempActive[1].color = col;
-                  tempActive[0].style.setProperty('--background', col);
-                  highed.dom.style(tempActive[2].container, {
-                    backgroundColor: col
-                  })
-                  //update(col);
+
                   tryCallback(callback, dataClasses);
                   
                 });

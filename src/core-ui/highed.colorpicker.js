@@ -66,7 +66,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      *  @param fn {function} - the function to call when the color changes
      *    > newColor {string} - the color selected by the user
      */
-  highed.pickColor = function(x, y, current, fn) {
+  highed.pickColor = function(x, y, current, fn, props) {
+    if (!props) props = {};
+    
     var windowSize = highed.dom.size(document.body),
       containerSize = highed.dom.size(container),
       pickerSize = highed.dom.size(canvas),
@@ -74,6 +76,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       pbinder = false,
       cbinder = false,
       dbinder = false;
+
+    if (props.hideCloseBtn) {
+      highed.dom.style(closeBtn, {
+        display: 'none'
+      });
+    } else {
+      highed.dom.style(closeBtn, {
+        display: 'block'
+      });
+    }
 
     ///////////////////////////////////////////////////////////////////////
 
@@ -110,8 +122,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       });
       binder();
       pbinder();
-      cbinder();
-      dbinder();
+
+      if (cbinder) cbinder();
+      if (dbinder) dbinder();
     }
 
     function rgbToHex(r, g, b) {
@@ -127,7 +140,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     function pickColor(e) {
       var px = e.clientX || e.touches[0].clientX || 0,
         py = e.clientY || e.touches[0].clientY || 0,
-        cp = highed.dom.pos(canvas),
+        cp = highed.dom.pos(canvas, props.hasOwnProperty('parent')),
         id = ctx.getImageData(px - cp.x - x, py - cp.y - y, 1, 1).data,
         col = rgbToHex(id[0] || 0, id[1], id[2]);
 
@@ -148,32 +161,43 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     ///////////////////////////////////////////////////////////////////////
 
-    //Make sure we're not off screen
-    if (x > windowSize.w - containerSize.w) {
-      x = windowSize.w - containerSize.w - 10;
+    if (props.parent) {
+      highed.dom.ap(props.parent, container);
+      highed.dom.style(container, {
+        left: 'initial',
+        top: 'initial',
+        opacity: 1,
+        'pointer-events': 'auto'
+      });
+    } else {
+      highed.dom.ap(document.body, container);
+      //Make sure we're not off screen
+      if (x > windowSize.w - containerSize.w) {
+        x = windowSize.w - containerSize.w - 10;
+      }
+
+      if (y > windowSize.h - containerSize.h) {
+        y = windowSize.h - containerSize.h - 10;
+      }
+
+      highed.dom.style(container, {
+        left: x + 'px',
+        top: y + 'px',
+        opacity: 1,
+        'pointer-events': 'auto'
+      });
     }
 
-    if (y > windowSize.h - containerSize.h) {
-      y = windowSize.h - containerSize.h - 10;
+    if (!props.parent) {
+      dbinder = highed.showDimmer(hide, true, true, 5);
+      cbinder = highed.dom.on(closeBtn, 'click', hide);
     }
-
-    highed.dom.style(container, {
-      left: x + 'px',
-      top: y + 'px',
-      opacity: 1,
-      'pointer-events': 'auto'
-    });
-
-    dbinder = highed.showDimmer(hide, true, true, 5);
-
-    cbinder = highed.dom.on(closeBtn, 'click', hide);
-
+    
     binder = highed.dom.on(manualInput, 'keyup', function() {
       if (highed.isFn(fn)) {
         fn(manualInput.value);
       }
     });
-
     pbinder = highed.dom.on(canvas, ['mousedown', 'touchstart'], function(e) {
       var mover = highed.dom.on(canvas, ['mousemove', 'touchmove'], pickColor),
         cancel = highed.dom.on(
@@ -188,6 +212,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       pickColor(e);
     });
 
+
     manualInput.value = current;
     updatePickerBackground(current);
 
@@ -195,7 +220,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     ///////////////////////////////////////////////////////////////////////
 
-    return {};
+    return {
+      hide: hide
+    };
   };
 
   highed.dom.ap(container, canvas, manualInput, closeBtn);

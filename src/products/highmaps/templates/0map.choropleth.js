@@ -28,7 +28,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.templates.add('Map', {
   title: 'Choropleth',
   description: [
-    '',
+    'A choropleth map displays a scalar color axis represented by a gradient'
   ],
   thumbnail: 'mapchoropleth.svg',
   dataValidator: false,

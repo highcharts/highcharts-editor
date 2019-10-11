@@ -28,7 +28,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.templates.add('Map', {
   title: 'Categories',
   description: [
-    '',
+    'A category map splits your data up into different coloured sections based on specified ranges.'
   ],
   thumbnail: 'us-election.svg',
   dataValidator: false,
