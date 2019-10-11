@@ -115,9 +115,8 @@ highed.MapImporter = function() {
         // Find a better way to do this in future
         return handleTileMap(parsedData, assigns, dataTableData);
       }
-
-      var hasLatLong = mapTable.getOptions().some(function(opt){ return opt.value === 'latitude'; });
-
+      
+      var hasLatLong = Object.keys(assigns).some(function(opt){ return opt === 'lat' }); //mapTable.getOptions().some(function(opt){ return opt.value === 'latitude'; });
       if (hasLatLong) {
           
         events.emit('HandleMapImport', parsedData.map(function(cols) {
@@ -151,7 +150,6 @@ highed.MapImporter = function() {
                 (mData.properties['hc-a2'] && mData.properties['hc-a2'] === code))) || 
                 (isCode3 && (mData.properties['iso-a3'] && mData.properties['iso-a3'] === code)) ||
                 ((!isCode3 && !isCode2) && mData.properties[mData.properties.hcname] === code) ) {
-  
               parsedData[index][codeIndex] = mData.properties[mData.properties.hcname];
   
               found = true;

@@ -392,40 +392,25 @@ highed.MapTable = function(parent, props) {
             return [row[vals.latitude],row[vals.longitude],row[vals.value]].map(function(column){
               return column.value();
             });
-
-            //row.length = 3;
           } else {
-            arraymove(row, vals.labels, 0);
-            arraymove(row, vals.value, 1);
+            return [row[vals.labels],row[vals.value]].map(function(column){
+              return column.value();
+            });
           }
-
-
-
-          return row.map(function(column) {
-            return column.value();
-          });
         });
-  
-       // dataArr.unshift(data[0]);
-  
+
         if (vals.hasOwnProperty('latitude')) {
-          /*arraymove(dataArr[0], vals.lat, 0);
-          arraymove(dataArr[0], vals.lon, 1);
-          arraymove(dataArr[0], vals.value, 2); */
           vals.latitude = 0;
           vals.longitude = 1;
           vals.value = 2;
           vals.labels = -1;
+          dataArr.unshift([data[0][vals.latitude], data[0][vals.longitude], data[0][vals.value]]);
         } else {
-          /*
-          arraymove(dataArr[0], vals.labels, 0);
-          arraymove(dataArr[0], vals.value, 1);*/
           vals.labels = 0;
           vals.value = 1;
+          dataArr.unshift([data[0][vals.labels], data[0][vals.value]]);
         }
-  
       }
-
 
       if (fn) fn(vals, dataArr);
     });
