@@ -29,7 +29,6 @@ highed.samples.addMapType('Pattern Fill', {
   description: '',
   thumbnail: 'mappatternfill.png',
   map: 'countries/us/us-all',
-  type: "Pattern Fill",
   type: 'csv',
   templateConfig: {
     title: {
