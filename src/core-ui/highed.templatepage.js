@@ -224,7 +224,6 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
     Object.keys(templates).forEach(function(key) {
       const t = templates[key];
       if (!usingMaps && t.id === 'Map') return;
-      console.log(t.id, t);
       createTemplates(container, t.id, t, setLoading, toNextPage);
 
     });

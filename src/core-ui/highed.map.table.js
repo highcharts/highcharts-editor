@@ -338,8 +338,14 @@ highed.MapTable = function(parent, props) {
       rows[index - 1] = [];
 
       var tr = highed.dom.cr('tr');
-      d.forEach(function(element) {
 
+      if (d.length < data[0].length) {
+        for(var i=d.length;i<data[0].length;i++) {
+          d.push(null);
+        }
+      }
+
+      d.forEach(function(element, i) {
         var td = createCell(element);
         rows[index - 1].push(td);
 

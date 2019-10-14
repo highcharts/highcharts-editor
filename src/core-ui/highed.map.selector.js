@@ -254,21 +254,59 @@ highed.MapSelector = function(chartPreview) {
             }
 
             var data = JSON.parse(info.data);
+
             if (data.features[0].properties.name && data.features[0].properties['hc-key']) {
               chartPreview.data.updateMapData(data);
               events.emit('LoadMapData', data.features);
               if (toNextPage) toNextPage();
             } else {
               // Dont have default keys, find out from user which they are and use them instead.
-              var keys = Object.keys(data.features[0].properties);
+              var keyedData = Object.keys(data.features[0].properties),
+                  length = 0;
 
-              var dataArr = (data.features).slice(0,3).map(function(d) {
-                return Object.keys(d.properties).map(function(key) {
-                  return d.properties[key];
+              function extractProps(data, features, key){ //User has an array value in their geojson props, extract all the values from here into own key
+                features.forEach(function(feature, i){
+                  if (highed.isObj(feature)) {
+                    Object.keys(feature).forEach(function(featureKeys){
+                      data[key + '_' + i + '_' + featureKeys] = feature[featureKeys];
+                    })
+                  }
                 })
+              }
+
+              data.features.forEach(function(d) {
+                if (d.properties) {
+                  Object.keys(d.properties).forEach(function(p, index){
+                    if (highed.isArr(d.properties[p])) {
+                      extractProps(d.properties, d.properties[p], p);
+                      delete d.properties[p];
+                    }
+                  })
+                }
+
+                length = Object.keys(d.properties).length;
+                if (length > keyedData.length) keyedData = Object.keys(d.properties);
+
               });
 
-              (keys).forEach(function(option, i) {
+              keyedData.some(function(key, index) {
+                if (index === 2) return false;
+
+              });
+
+
+              var dataArr = (data.features).slice(0,3).map(function(d) {
+
+                return keyedData.map(function(key){
+                  return d.properties[key];
+                });
+/*
+                return Object.keys(d.properties).map(function(key) {
+                  return d.properties[key];
+                })*/
+              });
+
+              (keyedData).forEach(function(option, i) {
                 mapSelectorGeojsonCodeDropdown.addItem({
                   id: i,
                   title: option
@@ -292,7 +330,8 @@ highed.MapSelector = function(chartPreview) {
                 });
                });
 
-              dataArr.unshift(keys);
+              dataArr.unshift(keyedData);
+
               mapTable.createTable(dataArr, function(values) {
                 if (mapSelectorGeojsonCodeDropdown.getSelectedItem() === false || mapSelectorGeojsonNameDropdown.getSelectedItem() === false) {
                   alert("Please assign the appropriate code/name pair from your dataset before continuing.");
