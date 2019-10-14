@@ -300,10 +300,6 @@ highed.MapSelector = function(chartPreview) {
                 return keyedData.map(function(key){
                   return d.properties[key];
                 });
-/*
-                return Object.keys(d.properties).map(function(key) {
-                  return d.properties[key];
-                })*/
               });
 
               (keyedData).forEach(function(option, i) {
@@ -458,12 +454,12 @@ highed.MapSelector = function(chartPreview) {
               dataType: 'json',
               success: function(data) {
                 var customized = chartPreview.options.getCustomized();
-
                 if (sample.templateConfig) {
                   chartPreview.options.setAll(highed.merge(customized, sample.templateConfig));
                 }
 
-                events.emit('LoadMapData', data.features, null, null, sample.dataset.join('\n'));
+                events.emit('LoadMapData', data.features, null, null, sample.dataset.join('\n'), null, sample.useLatLong);
+
                 if (toNextPage) toNextPage();
               },
               error: function(e) {

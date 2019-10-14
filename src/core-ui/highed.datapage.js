@@ -802,8 +802,24 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     dataTable.selectSwitchRowsColumns()
   }
 
-  function loadMapData(data, code, name, csv, cb) {
-    dataTable.loadMapData(data, code, name, csv, cb);
+  function loadMapData(data, code, name, csv, cb, isLatLongChart) {
+    if (isLatLongChart) {
+      dataTable.loadCSV({
+        csv: csv,
+      }, null, null, function() { 
+        assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+        chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
+
+        assignDataPanel.setValues({
+          labels: -1,
+          latitude: 0,
+          longitude: 1,
+          value: 2
+        }, 1);
+
+      });
+      return;
+    } else dataTable.loadMapData(data, code, name, csv, cb);
   }
 
   function resizeChart(newWidth) {

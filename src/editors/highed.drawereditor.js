@@ -791,8 +791,8 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     dataPage.updateLinkedToValues(values);
   })
 
-  mapSelector.on('LoadMapData', function(data, code, name, csv, cb) {
-    dataPage.loadMapData(data, code, name, csv, cb);
+  mapSelector.on('LoadMapData', function(data, code, name, csv, cb, isLatLongChart) {
+    dataPage.loadMapData(data, code, name, csv, cb, isLatLongChart);
     chartPreview.updateMapCodes(data);
   });
 
