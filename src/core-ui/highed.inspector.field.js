@@ -422,6 +422,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
             containers = [],
             MIN = -100,
             MAX = 100,
+            SCROLLBAR_WIDTH = 20,
             RANGE = MAX - MIN;
 
         if (properties.dataTableValues) {
@@ -469,7 +470,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
             if (!data.to && data.to !== 0) data.to = MAX;
             if (index === 0 && data.from < MIN) data.from = MIN;
 
-            const containerWidth = (highed.dom.size(container).w) - 1,
+            const containerWidth = (highed.dom.size(container).w) - 1 - SCROLLBAR_WIDTH,
                   width = (((data.to - MIN) * containerWidth) / RANGE) - (((data.from - MIN) * containerWidth) / RANGE) + 1,
                   offsetX = highed.dom.pos(container, true).x;
 
@@ -690,7 +691,6 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
             highed.dom.ap(container, colorContainer.container);
           });
 
-
           highed.dom.on(valueMarkers, 'dblclick', function(e) {
             //Change previous to value to the from value of the new created class
 
@@ -746,8 +746,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
             
           });
 
-
-        }, 1000);
+        }, 100);
         
         return highed.dom.ap(
           highed.dom.cr('div', 'highed-field-container'),
