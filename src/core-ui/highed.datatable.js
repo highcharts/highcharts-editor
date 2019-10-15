@@ -3032,6 +3032,12 @@ highed.DataTable = function(parent, attributes) {
     var newRows = [];
     if (csv) newRows = parseCSV(csv);
 
+    gcolumns.forEach(function(col, index){
+      if (newRows && newRows[0] && newRows[0][index]) {
+        col.headerTitle.innerHTML = newRows[0][index] === 'null' ? '' : newRows[0][index];
+      }
+    });
+    
     mapData.forEach(function(data) {
       if (!data.properties[name]) return;
 

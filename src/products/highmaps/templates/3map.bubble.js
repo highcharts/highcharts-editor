@@ -81,14 +81,14 @@ highed.templates.add('Map', {
     },
     plotOptions: {
       series: {
-        minSize: 4
+        minSize: 4,
+        maxSize: 60
       }
     },
 
     series: [{
         joinBy: 'hc-key',
-        type: 'mapbubble',
-        maxSize: '12%'
+        type: 'mapbubble'
     }]
   }
 });

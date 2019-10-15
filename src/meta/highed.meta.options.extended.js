@@ -265,7 +265,7 @@ highed.meta.optionsExtended = {
             context: 'General',
             chartType: 'Map',
             templateType: ['Bubble'],
-            defaults: 10,
+            defaults: 60,
             width: 50
           },
           {

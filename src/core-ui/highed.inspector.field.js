@@ -437,6 +437,22 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
           RANGE = MAX - MIN;
         }
         
+        if (highed.isArr(dataClasses) && dataClasses.length === 0) {
+          // Create min and max default values based on users data
+          dataClasses = [{
+            from: MIN, 
+            to: (MIN + MAX) / 2,
+            color: '#C40401'
+          }, {
+            from: (MIN + MAX) / 2,
+            to: MAX,
+            color: '#0200D0'  
+          }];
+              
+          tryCallback(callback, dataClasses);
+        }
+
+
         highed.dom.ap(
           box, 
           container,
@@ -449,9 +465,9 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
         setTimeout(function() {
           function createCategory(data, index) {
             var colorContainer = highed.dom.cr('div', 'highed-field-category');
-           
-           if (!data.to && data.to !== 0) data.to = MAX;
-           if (index === 0 && data.from < MIN) data.from = MIN;
+
+            if (!data.to && data.to !== 0) data.to = MAX;
+            if (index === 0 && data.from < MIN) data.from = MIN;
 
             const containerWidth = (highed.dom.size(container).w) - 1,
                   width = (((data.to - MIN) * containerWidth) / RANGE) - (((data.from - MIN) * containerWidth) / RANGE) + 1,
@@ -482,10 +498,14 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
             highed.dom.on(valueMarkers, 'mousemove', drag);
 
             function drag(e) {
-              if (active) {
+              if (active && !active[4]) {
                 e.preventDefault();
-                currentX = e.pageX;
-                setTranslate(currentX - offsetX, active);
+                
+                if (!active[4]) {
+                  currentX = e.pageX;
+                  setTranslate(currentX - offsetX, active);
+                }
+
                 highed.dom.style(valueMarkers, {
                   cursor: 'default'
                 })
@@ -512,6 +532,11 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
               
               if (newValue > maxValue) newValue = maxValue;
               else if (newValue < minValue) newValue = minValue;
+
+              if ((active[3] && active[3].data.to < newValue) || (active[2] && active[2].data.from > newValue)) {
+                active = false;
+                return; 
+              }
 
               active[2].data.to = newValue;
               if (active[3]) active[3].data.from = newValue;
@@ -546,7 +571,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
                 return d.data.from === data.from && d.data.to === data.to;
               });
 
-              active = [valueMarker, data, containers[index], containers[index + 1]];
+              active = [valueMarker, data, containers[index], containers[index + 1], index === containers.length - 1];
 
               initialX = e.pageX;
             });

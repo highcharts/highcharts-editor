@@ -55,17 +55,7 @@ highed.templates.add('Map', {
       minColor: null,
       maxColor: null,
       stops: null,
-      dataClasses: [{
-          from: -100,
-          to: 0,
-          color: '#C40401',
-          name: ''
-      }, {
-          from: 0,
-          to: 100,
-          color: '#0200D0',
-          name: ''
-      }]
+      dataClasses: []
     },
 
     series: [

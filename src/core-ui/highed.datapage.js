@@ -425,9 +425,11 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     function loadMapProject(projectData, aggregated) {
       //assignDataPanel.disable();
-
+      
       if (projectData.options && projectData.options.plotOptions && projectData.options.plotOptions.map && projectData.options.plotOptions.map.mapData){
-        loadMapData(projectData.options.plotOptions.map.mapData.features, projectData.options.plotOptions.map.mapData.hccode, projectData.options.plotOptions.map.mapData.hcname, projectData.settings.dataProvider.csv, function () {
+        loadMapData(projectData.options.plotOptions.map.mapData.features, 
+                    projectData.options.plotOptions.map.mapData.hccode, projectData.options.plotOptions.map.mapData.hcname, 
+                    projectData.settings.dataProvider.csv, function () {
           assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
           assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
           chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
@@ -640,7 +642,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
 
   dataTable.on('ChangeMapCategoryValue', function(value){
-    
     if (highed.chartType === 'Map') {
       var chartOptions = chartPreview.options.getCustomized();
     
