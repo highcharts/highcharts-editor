@@ -116,7 +116,7 @@ highed.MapImporter = function() {
         return handleTileMap(parsedData, assigns, dataTableData);
       }
       
-      var hasLatLong = Object.keys(assigns).some(function(opt){ return opt === 'lat' }); //mapTable.getOptions().some(function(opt){ return opt.value === 'latitude'; });
+      var hasLatLong = Object.keys(assigns).some(function(opt){ return opt === 'lat' || opt === 'latitude'}); //mapTable.getOptions().some(function(opt){ return opt.value === 'latitude'; });
       if (hasLatLong) {
           
         events.emit('HandleMapImport', parsedData.map(function(cols) {

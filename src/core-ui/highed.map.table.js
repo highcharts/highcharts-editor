@@ -65,6 +65,7 @@ highed.MapTable = function(parent, props) {
       prevValue = null,
       noData = highed.dom.cr('div', 'highed-map-table-no-data', 'No Data'),
       extra = props.extra,
+      columnsDynamic = 6, // Amount of columns to make the table be dynamically sized
       timeout = null;
   //////////////////////////////////////////////////////////////////////////////
   
@@ -378,6 +379,10 @@ highed.MapTable = function(parent, props) {
     createBody(data);
     createHeaders(data[0]);
 
+    if (data[0].length > columnsDynamic) {
+      if (!table.classList.contains('dynamic-width')) table.classList += ' dynamic-width'
+    }
+
     setTimeout(function() { //TODO: Fix this later
       redrawDOM()
     }, 10)
@@ -406,15 +411,15 @@ highed.MapTable = function(parent, props) {
         });
 
         if (vals.hasOwnProperty('latitude')) {
+          dataArr.unshift([data[0][vals.latitude], data[0][vals.longitude], data[0][vals.value]]);
           vals.latitude = 0;
           vals.longitude = 1;
           vals.value = 2;
           vals.labels = -1;
-          dataArr.unshift([data[0][vals.latitude], data[0][vals.longitude], data[0][vals.value]]);
         } else {
+          dataArr.unshift([data[0][vals.labels], data[0][vals.value]]);
           vals.labels = 0;
           vals.value = 1;
-          dataArr.unshift([data[0][vals.labels], data[0][vals.value]]);
         }
       }
 

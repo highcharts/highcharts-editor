@@ -208,6 +208,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
 
       var titleInput = highed.dom.cr('input', 'highed-imp-input'),
           subtitleInput = highed.dom.cr('input', 'highed-imp-input'),
+          loader = highed.dom.cr('span','highed-wizard-loader', '<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>'),
           nextButton = highed.dom.cr(
             'button',
             'highed-ok-button highed-import-button negative',
@@ -229,11 +230,15 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
 
       highed.dom.on(nextButton, 'click', function() {
         
-        goToNextPage();
-        events.emit("SimpleCreateChangeTitle", {
-          title: titleInput.value,
-          subtitle: subtitleInput.value
-        });
+        loader.classList += ' active';
+        
+        setTimeout(function(){
+          goToNextPage();
+          events.emit("SimpleCreateChangeTitle", {
+            title: titleInput.value,
+            subtitle: subtitleInput.value
+          });
+        }, 50);
       });
 
       highed.dom.on(skipAll, 'click', function() {
@@ -267,6 +272,7 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
           highed.dom.cr('td'),
           highed.dom.ap(
             highed.dom.cr('td','highed-toolbox-button-container'),
+            loader,
             skipAll,
             nextButton
           )

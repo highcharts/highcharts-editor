@@ -351,7 +351,10 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode, da
 
   function build() {
     Object.keys(highed.meta.optionsExtended.options).forEach(function(key) {
-      if (!shouldInclude(highed.meta.optionsExtended.options[key])) {
+      if (!shouldInclude(highed.meta.optionsExtended.options[key]) || (highed.chartType ==='Map' && 
+      highed.meta.optionsExtended.options[key].some(function(opt){ 
+        return opt.mapDisabled === true; 
+      }))) {
         return;
       }
 

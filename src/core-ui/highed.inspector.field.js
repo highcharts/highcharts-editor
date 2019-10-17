@@ -470,7 +470,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
             if (!data.to && data.to !== 0) data.to = MAX;
             if (index === 0 && data.from < MIN) data.from = MIN;
 
-            const containerWidth = (highed.dom.size(container).w) - 1 - SCROLLBAR_WIDTH,
+            const containerWidth = (highed.dom.size(container).w) - 1/* - SCROLLBAR_WIDTH*/,
                   width = (((data.to - MIN) * containerWidth) / RANGE) - (((data.from - MIN) * containerWidth) / RANGE) + 1,
                   offsetX = highed.dom.pos(container, true).x;
 
@@ -485,6 +485,10 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
 
             highed.dom.ap(valueMarker, valueLabel);
 
+            highed.dom.style(valueLabel, {
+              display: 'none'
+            })
+
             colorMarker.style.setProperty('--background', data.color);
             valueMarker.style.setProperty('--background', data.color);
             
@@ -497,6 +501,18 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
             });
 
             highed.dom.on(valueMarkers, 'mousemove', drag);
+
+            highed.dom.on(valueMarker, 'mouseenter', function(){
+              highed.dom.style(valueLabel, {
+                display: 'block'
+              });
+            });
+
+            highed.dom.on(valueMarker, 'mouseleave', function() {
+              highed.dom.style(valueLabel, {
+                display: 'none'
+              });
+            });
 
             function drag(e) {
               if (active && !active[4]) {
@@ -746,7 +762,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
             
           });
 
-        }, 100);
+        }, 1000);
         
         return highed.dom.ap(
           highed.dom.cr('div', 'highed-field-container'),

@@ -206,6 +206,18 @@ highed.meta.optionsExtended = {
               '[ "#7cb5ec" , "#434348" , "#90ed7d" , "#f7a35c" , "#8085e9" , "#f15c80" , "#e4d354" , "#2b908f" , "#f45b5b" , "#91e8e1"]'
           },
           {
+            id: 'plotOptions--series--dashStyle',
+            pid: 'series.dashStyle',
+            dataType: 'string',
+            context: 'General',
+            defaults: 'Solid',
+            chartType: 'Map',
+            values:
+              '["Solid", "ShortDash", "ShortDot", "ShortDashDot", "ShortDashDotDot", "Dot", "Dash" ,"LongDash", "DashDot", "LongDashDot", "LongDashDotDot"]',
+            templateType: ['Choropleth', 'Categories'],
+            width: 100
+          },
+          {
             id: 'colorAxis--stops',
             pid: 'colorAxis.stops',
             dataType: 'colorstops',
@@ -572,6 +584,7 @@ highed.meta.optionsExtended = {
         id: 'series',
         array: true,
         text: 'option.cat.series',
+        mapDisabled: true,
         controlledBy: {
           title: 'Select Series',
           options: 'series',
@@ -614,7 +627,6 @@ highed.meta.optionsExtended = {
             subTypeDefaults: {},
             width: 50
           },
-
           {
             id: 'series--dashStyle',
             pid: 'series.dashStyle',
