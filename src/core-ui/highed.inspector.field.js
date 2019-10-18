@@ -266,8 +266,19 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
           highed.dom.on(colorMarkers, 'mousemove', drag);
 
           highed.dom.on(colorMarkers, 'mouseout', function(e){
-            if ((e.pageX > highed.dom.size(gradient).w + offsetX) || 
-                (e.pageX < highed.dom.pos(gradient, true).x)) {
+
+            const pos = highed.dom.pos(gradient, true),
+                  size = highed.dom.size(gradient);
+
+            var x1 = pos.x,
+                x2 = pos.x + size.w,
+                y1 = pos.y,
+                y2 = pos.y + size.h,
+                mousePosX = e.pageX,
+                mousePosY = e.pageY;
+
+            
+            if (!(mousePosX > x1 && mousePosX < x2 && mousePosY > y1 && mousePosY < y2)) {           
               active = false;
               return;
             }
@@ -498,6 +509,25 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
                 active = false;
                 return;
               }
+
+              const pos = highed.dom.pos(container, true),
+              size = highed.dom.size(container);
+
+              var x1 = pos.x,
+                  x2 = pos.x + size.w,
+                  y1 = pos.y,
+                  y2 = pos.y + size.h,
+                  mousePosX = e.pageX,
+                  mousePosY = e.pageY;
+
+              
+              if (!(mousePosX > x1 && mousePosX < x2 && mousePosY > y1 && mousePosY < y2)) {           
+                active = false;
+                return;
+              }
+
+
+
             });
 
             highed.dom.on(valueMarkers, 'mousemove', drag);
