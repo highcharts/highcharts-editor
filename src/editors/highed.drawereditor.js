@@ -731,19 +731,16 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
   }
   
   function showError(title, message, warning, code) {
+    
+    if (suppressWarning) return;
+      
+    highed.dom.style(errorBarClose, {
+      display: 'inline-block'
+    });
+
     if (warning) {
-      if (suppressWarning) return;
-      
-      highed.dom.style(errorBarClose, {
-        display: 'inline-block'
-      });
-      
       if (!errorBar.classList.contains('highed-warningbar')) errorBar.classList += ' highed-warningbar';
     } else {
-      highed.dom.style(errorBarClose, {
-        display: 'none'
-      });
-  
       errorBar.classList.remove('highed-warningbar');
     }
     
@@ -785,6 +782,10 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
   
   mapSelector.on('LoadDataSet', function(data) {
     dataPage.loadSampleData(data);
+  });
+
+  mapSelector.on('ChangeTitle', function(title) {
+    setChartTitle(title);
   });
 
   mapSelector.on('ChangeAssignLinkedToValue', function(values){

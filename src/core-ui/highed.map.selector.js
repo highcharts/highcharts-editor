@@ -456,6 +456,9 @@ highed.MapSelector = function(chartPreview) {
                 var customized = chartPreview.options.getCustomized();
                 if (sample.templateConfig) {
                   chartPreview.options.setAll(highed.merge(customized, sample.templateConfig));
+                  if (sample.templateConfig.title) {
+                    events.emit('ChangeTitle', sample.templateConfig.title.text);
+                  }
                 }
 
                 events.emit('LoadMapData', data.features, null, null, sample.dataset.join('\n'), null, sample.useLatLong);
