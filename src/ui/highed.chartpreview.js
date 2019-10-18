@@ -527,6 +527,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       }
 
       themeOptions = highed.merge({}, theme);
+
     }
 
     if (!skipEmit) {
@@ -698,6 +699,10 @@ highed.ChartPreview = function(parent, attributes, planCode) {
           }
         });
       }
+    }
+
+    if (themeOptions && themeOptions.colorAxis) {
+      aggregatedOptions.colorAxis = themeOptions.colorAxis;
     }
 
     if (aggregatedOptions.yAxis && !highed.isArr(aggregatedOptions.yAxis)) {

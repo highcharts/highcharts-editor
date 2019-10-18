@@ -2393,7 +2393,7 @@ highed.DataTable = function(parent, attributes) {
         if (linkedCodes) {
           var code = linkedCodes.filter(function(v) { return v.name === row.columns[0].value()});
           if (code && code.length > 0) {
-            row.columns[0].setHiddenValue(code[0].code.toLowerCase());
+            row.columns[0].setHiddenValue(code[0].code/*.toLowerCase()*/);
           }
           row.columns[0].setDisabled(true);
         }

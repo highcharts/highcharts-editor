@@ -28,7 +28,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.templates.add('Map', {
   title: 'Tilemap Circle',
   description: [
-    '',
+    'Tilemaps are maps where each area is represented by tiles of equal shape. You can choose from circle or honeycomb which uses hexagonal tiles.',
   ],
   thumbnail: 'mapcircle.svg',
   dataValidator: false,

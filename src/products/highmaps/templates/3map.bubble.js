@@ -28,7 +28,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.templates.add('Map', {
   title: 'Bubble',
   description: [
-    '',
+    'The bubble map uses circles of different size to represent a numeric value on a territory. It displays one bubble per region. The bubble is displayed in the baricentre of the region).',
   ],
   thumbnail: 'mapbubble.svg',
   dataValidator: false,

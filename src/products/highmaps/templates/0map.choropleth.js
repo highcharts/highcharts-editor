@@ -28,7 +28,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.templates.add('Map', {
   title: 'Choropleth',
   description: [
-    'A choropleth map displays a scalar color axis represented by a gradient'
+    'Choropleth Maps display divided geographical areas or regions that are coloured in relation to a data variable.', 
+    'This provides a way to visualise values over a geographical area, which can show variation across the displayed location.',
+    'The Choropleth template displays a color axis represented by a gradient'
   ],
   thumbnail: 'mapchoropleth.svg',
   dataValidator: false,

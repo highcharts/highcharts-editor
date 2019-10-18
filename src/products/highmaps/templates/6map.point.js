@@ -28,7 +28,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.templates.add('Map', {
   title: 'Point Map',
   description: [
-    '',
+    'Point Maps can be used to show the distribution of data over a geographical region, by placing equally sized markers over the region.',
   ],
   thumbnail: 'mappoint.svg',
   dataValidator: false,

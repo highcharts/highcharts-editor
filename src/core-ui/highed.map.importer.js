@@ -100,6 +100,14 @@ highed.MapImporter = function() {
     return;
   }
 
+  function isShortCode(mData, code) {
+    return (mData.properties['iso-a2'] && mData.properties['iso-a2'] === code) || (mData.properties['hc-a2'] && mData.properties['hc-a2'] === code);
+  }
+
+  function isLongCode(mData, code){
+    return mData.properties['iso-a3'] && mData.properties['iso-a3'] === code;
+  }
+
   function show(chartData, dataTableData) {
     data = chartData;
     parsedData = highed.parseCSV(chartData);
@@ -144,12 +152,11 @@ highed.MapImporter = function() {
         
         mapData.forEach(function(mData) {
           if (mData.properties) {
-            
-            if ( (isCode2 && 
-                ((mData.properties['iso-a2'] && mData.properties['iso-a2'] === code) || 
-                (mData.properties['hc-a2'] && mData.properties['hc-a2'] === code))) || 
-                (isCode3 && (mData.properties['iso-a3'] && mData.properties['iso-a3'] === code)) ||
+            if ((isCode2 && isShortCode(mData, code)) || 
+                (isCode3 && isLongCode(mData, code)) ||
+                (mData.properties[mData.properties.hccode] === code) ||
                 ((!isCode3 && !isCode2) && mData.properties[mData.properties.hcname] === code) ) {
+                  
               parsedData[index][codeIndex] = mData.properties[mData.properties.hcname];
   
               found = true;

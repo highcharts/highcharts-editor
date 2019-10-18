@@ -28,7 +28,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.templates.add('Map', {
   title: 'Categories',
   description: [
-    'A category map splits your data up into different coloured sections based on specified ranges.'
+    'Similar to the Choropleth, except that the geographical regions colors are split based on specific ranges.'
   ],
   thumbnail: 'us-election.svg',
   dataValidator: false,
