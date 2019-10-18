@@ -203,15 +203,14 @@ highed.MapTable = function(parent, props) {
           
           selectDropdown.on('Change', function(item) {
             var selectedId = item.id();
-            var hasSelected = selects.some(function(s) {
+            var hasSelected = selects.filter(function(s) {
               return (selectedId !== undefined && s !== item && selectedId === s.previousValue);
             });
     
             if (selectDropdown.previousValue === item.id()) return;
-            if (hasSelected) {
-              alert("This value has already been assigned to another column. Clear that column first before assigning to this one.");
-              selectDropdown.selectById(selectDropdown.previousValue);
-              return;
+            
+            if (hasSelected.length > 0) {
+              hasSelected[0].selectByIndex(0);
             }
 
             if (props.highlightColumn) {
