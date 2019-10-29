@@ -290,12 +290,8 @@ highed.meta.optionsExtended = {
             usesData: true,
             defaults: [{
                 from: -100,
-                to: 0,
-                color: '#C40401'
-            }, {
-                from: 0,
                 to: 100,
-                color: '#0200D0'
+                color: '#C40401'
             }]
           }
         ]

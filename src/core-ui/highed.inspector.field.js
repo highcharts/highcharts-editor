@@ -193,10 +193,8 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
         var box = highed.dom.cr('div', 'highed-field-multiple-colorpicker', '', fieldID),
             gradient = highed.dom.cr('div', 'highed-field-color-gradient', ''),
             colorMarkers = highed.dom.cr('div', 'highed-field-color-markers', ''),
-            //valueMarkers = highed.dom.cr('div', 'highed-field-value-markers', ''),
             color = highed.generateColors(),
-            stops = val || value || [],
-            stopElements = [];
+            stops = val || value || [];
 
         highed.dom.style(gradient, {
           background: buildGradient()
@@ -436,12 +434,51 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
             SCROLLBAR_WIDTH = 20,
             RANGE = MAX - MIN;
 
+        function createDefaultValues(){
+
+          if (highed.isArr(dataClasses) && dataClasses.length === 0) {
+            // Create min and max default values based on users data
+            dataClasses = [{
+              from: MIN, 
+              to: MAX,
+              color: '#C40401'
+            }];
+            tryCallback(callback, dataClasses);
+          }
+        }
+
         if (properties.dataTableValues) {
           const sorted = properties.dataTableValues.sort(function(a,b) {return a[0] - b[0]}).filter(function(a) { return a[0] !== undefined; });
           if (sorted[0] && sorted[0][0]) {
-            MIN = sorted[0][0];
-            MAX = sorted[sorted.length - 1][0];
-            RANGE = MAX - MIN;
+
+            if (sorted.length === 1) {
+              if (sorted[0][0] >= MAX) MAX = sorted[sorted.length - 1][0];
+              else {
+                MIN = sorted[sorted.length - 1][0];
+                if (MIN > dataClasses[0].to) {
+                  dataClasses[0].to = MIN;
+                  dataClasses[dataClasses.length - 1].from = MIN;
+                }
+              }
+              RANGE = MAX - MIN;
+              
+              if (dataClasses[0].from < MIN) dataClasses[0].from = MIN;
+              if (dataClasses[dataClasses.length - 1].to > MAX) dataClasses[dataClasses.length - 1].to = MAX;
+            } else {
+              
+              MIN = sorted[0][0];
+              MAX = sorted[sorted.length - 1][0];
+
+              if (dataClasses.length === 0) {
+                createDefaultValues();
+              }
+              
+              if (dataClasses[0].from < MIN) dataClasses[0].from = MIN;
+              if (dataClasses[dataClasses.length - 1].to > MAX) dataClasses[dataClasses.length - 1].to = MAX;
+
+              RANGE = MAX - MIN;
+
+            }
           }
         } else if (highed.isArr(dataClasses)) {
           MIN = dataClasses[0].from;
@@ -453,14 +490,9 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
           // Create min and max default values based on users data
           dataClasses = [{
             from: MIN, 
-            to: (MIN + MAX) / 2,
-            color: '#C40401'
-          }, {
-            from: (MIN + MAX) / 2,
             to: MAX,
-            color: '#0200D0'  
+            color: '#C40401'
           }];
-              
           tryCallback(callback, dataClasses);
         }
 
@@ -478,8 +510,14 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
           function createCategory(data, index) {
             var colorContainer = highed.dom.cr('div', 'highed-field-category');
 
-            if (!data.to && data.to !== 0) data.to = MAX;
-            if (index === 0 && data.from < MIN) data.from = MIN;
+            if (!data.to && data.to !== 0) {
+              data.to = MAX;
+              RANGE = MAX - MIN;
+            }
+            if (index === 0 && data.from > MIN) {
+              data.from = MIN;
+              RANGE = MAX - MIN;
+            }
 
             const containerWidth = (highed.dom.size(container).w) - 1/* - SCROLLBAR_WIDTH*/,
                   width = (((data.to - MIN) * containerWidth) / RANGE) - (((data.from - MIN) * containerWidth) / RANGE) + 1,
@@ -525,9 +563,6 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
                 active = false;
                 return;
               }
-
-
-
             });
 
             highed.dom.on(valueMarkers, 'mousemove', drag);
