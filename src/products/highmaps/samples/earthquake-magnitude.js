@@ -23,7 +23,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-highed.samples.addMapType('Point Map', {
+highed.samples.addMapType('Point Maps', { //Not using anymore
   id: 'earthquake',
   title: 'Earthquake Magnitude',
   description: '',
