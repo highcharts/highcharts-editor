@@ -24,7 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
 // @format
-/** Map Table
+/** Map Table - This needs to be refactor to be just the table
  * 
  *  @constructor
  *  @param {domnode} parent - the node to attach to
@@ -41,6 +41,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *    highlightColumn: (Bool) Whether to highlight columns when selected
  *    skipOrdering: (Bool) Skip all the logic when returning final result of table
  *    dynamicWidth: (Bool) Whether the table has dynamically sized columns
+ *    ellipsesCounter: (Int) When to show ellipses in table - Used for the geojson import table
  */
 
 highed.MapTable = function(parent, props) {
@@ -345,6 +346,17 @@ highed.MapTable = function(parent, props) {
         }
       }
 
+      if (props.ellipsesCounter && props.ellipsesCounter === index) {
+        var ellipseTd = highed.dom.cr('td', '', '<i class="fa fa-ellipsis-v" aria-hidden="true"></i>');
+        ellipseTd.setAttribute('colspan', d.length);
+        
+        highed.dom.style(ellipseTd, {
+          'text-align': 'center'
+        });
+
+        highed.dom.ap(mapTBody, highed.dom.ap(highed.dom.cr('tr'), ellipseTd));
+      }
+
       d.forEach(function(element, i) {
         var td = createCell(element);
         rows[index - 1].push(td);
@@ -360,7 +372,7 @@ highed.MapTable = function(parent, props) {
           tr.remove();
         }
       });
-      highed.dom.ap(mapTBody, tr);    
+      highed.dom.ap(mapTBody, tr);
     });
 
   }

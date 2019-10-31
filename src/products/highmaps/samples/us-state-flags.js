@@ -36,6 +36,7 @@ highed.samples.addMapType('Pattern Fill', {
     }
   },
   dataset: [
+    "state,flag",
     "us-al,https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Alabama.svg",
     "us-ak,https://upload.wikimedia.org/wikipedia/commons/e/e6/Flag_of_Alaska.svg",
     "us-az,https://upload.wikimedia.org/wikipedia/commons/9/9d/Flag_of_Arizona.svg",

@@ -48,9 +48,10 @@ highed.MapSelector = function(chartPreview) {
         skipOrdering: true,
         readOnly: true,
         dynamicWidth: true,
+        ellipsesCounter: 4,
         description: [
           'Your GEOJSON data is not compatible with our system. We expect there to be a "hc-key" and "name" value.', 
-          'We have listed the first three rows from your dataset below, please select the country code and name so we can link these two together.',
+          'We have listed the first and last three rows from your dataset below, please select the country code and name so we can link these two together.',
           'If the options below are selected correctly then continue by pressing the "Save" button.'
         ].join(' '),
         extra: highed.dom.ap(
@@ -341,13 +342,15 @@ highed.MapSelector = function(chartPreview) {
 
             });
 
-
-            var dataArr = (data.features).slice(0,3).map(function(d) {
-
+            function formatData(d) {
               return keyedData.map(function(key){
                 return d.properties[key];
               });
-            });
+            }
+
+            var dataArr = (data.features).slice(0,3).map(formatData);
+
+            if (data.features.length >= 6) dataArr = dataArr.concat(data.features.slice(-3).map(formatData));
 
             (keyedData).forEach(function(option, i) {
               mapSelectorGeojsonCodeDropdown.addItem({
