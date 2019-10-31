@@ -239,7 +239,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
   function attachMapClickHandler() {
     (mapData || []).forEach(function(d) {
       if (d.id) {
-        highed.dom.on(document.querySelector('.highcharts-key-' + (d.id).toString().toLowerCase().replace('.', '-')), 'dblclick', function(e) {
+        highed.dom.on(document.querySelector('.highcharts-key-' + (d.id).toString().toLowerCase().replace(/\./g, "-")), 'dblclick', function(e) {
           events.emit('EditMap', d);
         });
       }

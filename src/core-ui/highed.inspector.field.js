@@ -725,7 +725,8 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
 
                 highed.updateCategory(e.clientX, e.clientY, {
                   color: tempActive[1].color,
-                  name: tempActive[1].name || tempActive[1].from + ' - ' + tempActive[1].to
+                  name: tempActive[1].name || tempActive[1].from + ' - ' + tempActive[1].to,
+                  to: tempActive[1].to
                 }, function(settings) {
 
                   if (settings.color) {
@@ -736,6 +737,41 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
                     })
                   } else if (settings.name) {
                     tempActive[1].name = settings.name
+                  } else if (settings.to) {
+                    
+                    console.log(settings.to, MIN, MAX, tempActive);
+
+                    settings.to = parseInt(settings.to);
+                    if (settings.to < MIN || settings.to > MAX) return;
+
+                    const containerWidth = (highed.dom.size(container).w) - 1,
+                    nextWidth = highed.dom.size(tempActive[3].container).w,
+                    oldWidth = highed.dom.size(tempActive[2].container).w,
+                    width = (((settings.to - MIN) * containerWidth) / RANGE) - (((tempActive[1].from - MIN) * containerWidth) / RANGE) + 1;
+
+                    tempActive[3].data.from = settings.to;
+                    tempActive[1].to = settings.to;
+                    
+                    console.log(oldWidth, nextWidth);
+                    
+                    tempActive[2].valueLabel.innerHTML = settings.to;
+
+                    highed.dom.style(tempActive[2].container, {
+                      width: width * (containerWidth /((containerWidth + 1) + dataClasses.length - 1)) + 'px'
+                    });
+
+                    highed.dom.style(tempActive[3].container, {
+                      width: (nextWidth + (oldWidth - (width * (containerWidth /((containerWidth + 1) + dataClasses.length - 1))))) + 'px'
+                    });
+
+                    setTimeout(function() {
+
+                      containers.forEach(function(container) {
+                        container.redraw();
+                      });
+  
+                    }, 200);
+
                   }
 
                   tryCallback(callback, dataClasses);

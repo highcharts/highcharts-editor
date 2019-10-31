@@ -31,7 +31,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       'highed-category-modal highed-colorpicker-responsive'
     ),
     nameInput = highed.dom.cr('input', ''),
-    callback = false,
+    valueInput = highed.dom.cr('input', ''),
+    nameCallback = false,
+    valueCallback = false,
     picker;
 
   //Attach the container to the document when the document is ready
@@ -45,6 +47,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       dbinder = false;
 
     nameInput.value = current.name;
+    valueInput.value = current.to;
 
     //Make sure we're not off screen
     if (x > windowSize.w - containerSize.w) {
@@ -69,12 +72,19 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       parent: container
     });
 
-    if (callback) nameInput.removeEventListener('keyup', callback);
-    callback = function() {
+    if (nameCallback) nameInput.removeEventListener('keyup', nameCallback);
+    if (valueCallback) valueInput.removeEventListener('keyup', valueCallback);
+
+    nameCallback = function() {
       fn({ name: nameInput.value });
+    };    
+    
+    valueCallback = function() {
+      fn({ to: valueInput.value });
     };
 
-    nameInput.addEventListener('keyup', callback);
+    nameInput.addEventListener('keyup', nameCallback);
+    valueInput.addEventListener('keyup', valueCallback);
 
     dbinder = highed.showDimmer(hide, true, true, 5);
 
@@ -94,5 +104,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     return {};
   };
 
-  highed.dom.ap(container, highed.dom.ap(highed.dom.cr('div'), highed.dom.cr('div', 'highed-category-label', 'Name:'), nameInput));
+  highed.dom.ap(container, 
+                highed.dom.ap(highed.dom.cr('div'), highed.dom.cr('div', 'highed-category-label', 'Name:'), nameInput),
+                highed.dom.ap(highed.dom.cr('div'), highed.dom.cr('div', 'highed-category-label', 'Value:'), valueInput));
 })();

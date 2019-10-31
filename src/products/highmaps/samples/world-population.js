@@ -33,10 +33,13 @@ highed.samples.addMapType('Bubble', {
   templateConfig: {
     title: {
       text: 'World population 2013 by country'
+    },
+    tooltip: {
+      valueSuffix: "M"
     }
   },
   dataset: [
-    "code,z",
+    "code,Population",
     "aw,105",
     "af,34656",
     "ao,28813",

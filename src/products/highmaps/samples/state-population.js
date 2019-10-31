@@ -33,6 +33,9 @@ highed.samples.addMapType('Choropleth', {
   templateConfig: {
     title: {
       text: 'US State Population'
+    },
+    tooltip: {
+      valueSuffix: 'M'
     }
   },
   dataset: [

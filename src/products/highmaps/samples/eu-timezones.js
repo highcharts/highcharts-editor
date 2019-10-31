@@ -61,10 +61,13 @@ highed.samples.addMapType('Categories', {
         color: '#F7A35B',
         name: 'UTC+3'
       }]
+    },
+    tooltip: {
+      pointFormat: 'UTC +{point.value}'
     }
   },
   dataset: [
-    "code,value",
+    "code,Timezone",
     "ie,1",
     "is,1",
     "gb,1",

@@ -780,6 +780,10 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     }
   });
   
+  mapSelector.on('AddSerie', function(extra) {
+    dataPage.addSerie(null, extra);
+  })
+
   mapSelector.on('LoadDataSet', function(data) {
     dataPage.loadSampleData(data);
   });

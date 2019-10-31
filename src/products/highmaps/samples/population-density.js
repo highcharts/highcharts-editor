@@ -81,10 +81,13 @@ highed.samples.addMapType('Categories', {
       valueDecimals: 0,
       symbolRadius: 0,
       symbolHeight: 14
+    },
+    tooltip: {
+      valueSuffix: "/km2"
     }
   },
   dataset: [
-    "code,value",
+    "code,Population Density",
     "aw,582",
     "af,53",
     "ao,23",

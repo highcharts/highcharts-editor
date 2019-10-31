@@ -138,19 +138,24 @@ highed.MapSelector = function(chartPreview) {
 
                   highed.dom.on(options, 'click', function() {
 
-                    var mapKey = Highcharts.mapDataIndex[mapGroup][desc].slice(0, -3),
-                    svgPath = baseMapPath + mapKey + '.svg',
-                    geojsonPath = baseMapPath + mapKey + '.geo.json',
-                    javascriptPath = baseMapPath + Highcharts.mapDataIndex[mapGroup][desc];
-                    
                     chartPreview.options.updateMap(mapKey, javascriptPath, function() {
                       highed.ajax({
                         url: geojsonPath,
                         type: 'GET',
                         dataType: 'json',
                         success: function(data) {
+
                           events.emit('LoadMapData', data.features);
                           if (toNextPage) toNextPage();
+
+                          events.emit('AddSerie', {
+                            name: 'Separators',
+                            type: 'mapline',
+                            color: 'silver',
+                            showInLegend: false,
+                            enableMouseTracking: false
+                          });
+                          
                         },
                         error: function(e) {
                         }
@@ -197,6 +202,15 @@ highed.MapSelector = function(chartPreview) {
                 success: function(data) {
                   events.emit('LoadMapData', data.features);
                   if (toNextPage) toNextPage();
+
+                  events.emit('AddSerie', {
+                    name: 'Separators',
+                    type: 'mapline',
+                    color: 'silver',
+                    showInLegend: false,
+                    enableMouseTracking: false
+                  });
+
                 },
                 error: function(e) {
                 }
@@ -255,97 +269,129 @@ highed.MapSelector = function(chartPreview) {
 
             var data = JSON.parse(info.data);
 
-            if (data.features[0].properties.name && data.features[0].properties['hc-key']) {
+            if (data.type && data.type === 'Topology') {
+              // Project the data using Proj4
+              
+              function project(geojson, projection) {
+                const projectPolygon = function(coordinate) {
+                    coordinate.forEach(function(lonLat, i) {
+                        coordinate[i] = window.proj4(projection, lonLat);
+                    });
+                };
+                geojson.features.forEach(function (feature) {
+                    if (feature.geometry.type === 'Polygon') {
+                        feature.geometry.coordinates.forEach(projectPolygon);
+                    } else if (feature.geometry.type === 'MultiPolygon') {
+                        feature.geometry.coordinates.forEach(function(items) {
+                            items.forEach(projectPolygon);
+                        });
+                    }
+                });
+              }
+
+              data = window.topojson.feature(
+                data,
+                // For this demo, get the first of the named objects
+                data.objects[Object.keys(data.objects)[0]]
+              );
+
+              project(
+                data,
+                '+proj=lcc +lat_1=33 +lat_2=45 +lat_0=39 +lon_0=-96'
+              );
+
+            } else if (data.features[0].properties.name && data.features[0].properties['hc-key']) {
               chartPreview.data.updateMapData(data);
               events.emit('LoadMapData', data.features);
               if (toNextPage) toNextPage();
-            } else {
-              // Dont have default keys, find out from user which they are and use them instead.
-              var keyedData = Object.keys(data.features[0].properties),
-                  length = 0;
+              return;
+            }
 
-              function extractProps(data, features, key){ //User has an array value in their geojson props, extract all the values from here into own key
-                features.forEach(function(feature, i){
-                  if (highed.isObj(feature)) {
-                    Object.keys(feature).forEach(function(featureKeys){
-                      data[key + '_' + i + '_' + featureKeys] = feature[featureKeys];
-                    })
+            // Dont have default keys, find out from user which they are and use them instead.
+            var keyedData = Object.keys(data.features[0].properties),
+                length = 0;
+
+            function extractProps(data, features, key){ //User has an array value in their geojson props, extract all the values from here into own key
+              features.forEach(function(feature, i){
+                if (highed.isObj(feature)) {
+                  Object.keys(feature).forEach(function(featureKeys){
+                    data[key + '_' + i + '_' + featureKeys] = feature[featureKeys];
+                  })
+                }
+              })
+            }
+
+            data.features.forEach(function(d) {
+              if (d.properties) {
+                Object.keys(d.properties).forEach(function(p, index){
+                  if (highed.isArr(d.properties[p])) {
+                    extractProps(d.properties, d.properties[p], p);
+                    delete d.properties[p];
                   }
                 })
               }
 
-              data.features.forEach(function(d) {
-                if (d.properties) {
-                  Object.keys(d.properties).forEach(function(p, index){
-                    if (highed.isArr(d.properties[p])) {
-                      extractProps(d.properties, d.properties[p], p);
-                      delete d.properties[p];
-                    }
-                  })
+              length = Object.keys(d.properties).length;
+              if (length > keyedData.length) keyedData = Object.keys(d.properties);
+
+            });
+
+            keyedData.some(function(key, index) {
+              if (index === 2) return false;
+
+            });
+
+
+            var dataArr = (data.features).slice(0,3).map(function(d) {
+
+              return keyedData.map(function(key){
+                return d.properties[key];
+              });
+            });
+
+            (keyedData).forEach(function(option, i) {
+              mapSelectorGeojsonCodeDropdown.addItem({
+                id: i,
+                title: option
+              });
+              mapSelectorGeojsonNameDropdown.addItem({
+                id: i,
+                title: option
+              });
+            });
+
+            [{dropdown: mapSelectorGeojsonCodeDropdown, color: 'rgba(66, 200, 192, 0.2)'},
+              {dropdown: mapSelectorGeojsonNameDropdown, color: 'rgba(145, 151, 229, 0.2)'}].forEach(function(option) {
+              option.dropdown.on('Change', function(item) {
+                if (option.dropdown.previousValue) {
+                  mapTable.removeHighlight(option.dropdown.previousValue.index());
                 }
-
-                length = Object.keys(d.properties).length;
-                if (length > keyedData.length) keyedData = Object.keys(d.properties);
-
-              });
-
-              keyedData.some(function(key, index) {
-                if (index === 2) return false;
-
-              });
-
-
-              var dataArr = (data.features).slice(0,3).map(function(d) {
-
-                return keyedData.map(function(key){
-                  return d.properties[key];
+                mapTable.highlightColumns(item.index(), {
+                  light: option.color
                 });
+                option.dropdown.previousValue = item;
+              });
               });
 
-              (keyedData).forEach(function(option, i) {
-                mapSelectorGeojsonCodeDropdown.addItem({
-                  id: i,
-                  title: option
-                });
-                mapSelectorGeojsonNameDropdown.addItem({
-                  id: i,
-                  title: option
-                });
-              });
+            dataArr.unshift(keyedData);
 
-              [{dropdown: mapSelectorGeojsonCodeDropdown, color: 'rgba(66, 200, 192, 0.2)'},
-               {dropdown: mapSelectorGeojsonNameDropdown, color: 'rgba(145, 151, 229, 0.2)'}].forEach(function(option) {
-                option.dropdown.on('Change', function(item) {
-                  if (option.dropdown.previousValue) {
-                    mapTable.removeHighlight(option.dropdown.previousValue.index());
-                  }
-                  mapTable.highlightColumns(item.index(), {
-                    light: option.color
-                  });
-                  option.dropdown.previousValue = item;
-                });
-               });
+            mapTable.createTable(dataArr, function(values) {
+              if (mapSelectorGeojsonCodeDropdown.getSelectedItem() === false || mapSelectorGeojsonNameDropdown.getSelectedItem() === false) {
+                alert("Please assign the appropriate code/name pair from your dataset before continuing.");
+                return;
+              }
 
-              dataArr.unshift(keyedData);
-
-              mapTable.createTable(dataArr, function(values) {
-                if (mapSelectorGeojsonCodeDropdown.getSelectedItem() === false || mapSelectorGeojsonNameDropdown.getSelectedItem() === false) {
-                  alert("Please assign the appropriate code/name pair from your dataset before continuing.");
-                  return;
-                }
-
-                chartPreview.data.updateMapData(data, dataArr[0][mapSelectorGeojsonCodeDropdown.getSelectedItem().id()], dataArr[0][mapSelectorGeojsonNameDropdown.getSelectedItem().id()]);
-                events.emit('ChangeAssignLinkedToValue', {
-                  key: 'labels',
-                  value: dataArr[0][mapSelectorGeojsonCodeDropdown.getSelectedItem().id()]
-                })
-                
-                events.emit('LoadMapData', data.features, dataArr[0][mapSelectorGeojsonCodeDropdown.getSelectedItem().id()], dataArr[0][mapSelectorGeojsonNameDropdown.getSelectedItem().id()]);
-                if (toNextPage) toNextPage();
-              });
+              chartPreview.data.updateMapData(data, dataArr[0][mapSelectorGeojsonCodeDropdown.getSelectedItem().id()], dataArr[0][mapSelectorGeojsonNameDropdown.getSelectedItem().id()]);
+              events.emit('ChangeAssignLinkedToValue', {
+                key: 'labels',
+                value: dataArr[0][mapSelectorGeojsonCodeDropdown.getSelectedItem().id()]
+              })
               
-              mapSelectorGeojsonContainer.classList += ' active';
-            }
+              events.emit('LoadMapData', data.features, dataArr[0][mapSelectorGeojsonCodeDropdown.getSelectedItem().id()], dataArr[0][mapSelectorGeojsonNameDropdown.getSelectedItem().id()]);
+              if (toNextPage) toNextPage();
+            });
+            
+            mapSelectorGeojsonContainer.classList += ' active';
           }
         });
       });
@@ -402,6 +448,7 @@ highed.MapSelector = function(chartPreview) {
           events.emit('LoadDataSet', sample.dataset.join('\n'));
           if (sample.inverted) chartPreview.options.set('chart--inverted', sample.inverted);
           if (toNextPage) toNextPage();
+          
         });
         
         highed.dom.ap(predefinedMaps, highed.dom.ap(container, thumbnail, title));
@@ -460,6 +507,14 @@ highed.MapSelector = function(chartPreview) {
                     events.emit('ChangeTitle', sample.templateConfig.title.text);
                   }
                 }
+                
+                events.emit('AddSerie', {
+                  name: 'Separators',
+                  type: 'mapline',
+                  color: 'silver',
+                  showInLegend: false,
+                  enableMouseTracking: false
+                });
 
                 events.emit('LoadMapData', data.features, null, null, sample.dataset.join('\n'), null, sample.useLatLong);
 
