@@ -739,10 +739,8 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
                     tempActive[1].name = settings.name
                   } else if (settings.to) {
                     
-                    console.log(settings.to, MIN, MAX, tempActive);
-
                     settings.to = parseInt(settings.to);
-                    if (settings.to < MIN || settings.to > MAX) return;
+                    if (settings.to < MIN || settings.to > MAX || tempActive[4]) return;
 
                     const containerWidth = (highed.dom.size(container).w) - 1,
                     nextWidth = highed.dom.size(tempActive[3].container).w,
@@ -751,9 +749,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
 
                     tempActive[3].data.from = settings.to;
                     tempActive[1].to = settings.to;
-                    
-                    console.log(oldWidth, nextWidth);
-                    
+
                     tempActive[2].valueLabel.innerHTML = settings.to;
 
                     highed.dom.style(tempActive[2].container, {
