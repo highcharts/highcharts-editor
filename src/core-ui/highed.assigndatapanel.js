@@ -686,9 +686,12 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     resetDOM();
   }
 
-  function updateLinkedToValues(values){
-    if (options[index][values.key]) {
-      options[index][values.key].linkedTo = values.value;
+  function updateLinkedToValues(values, i){
+
+    if (isNaN(i)) i = index;
+    
+    if (options[i][values.key]) {
+      options[i][values.key].linkedTo = values.value;
     }
   };
   ////////////////////////////////////////////////////////////////////////////////

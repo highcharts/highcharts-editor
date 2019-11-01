@@ -375,7 +375,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       }) ? 'StockChart' : 'Chart'));
 
       options = highed.merge(options, stockTools.getStockToolsToolbarConfig());
-
+      //console.log(highed.merge({}, options));
       chart = new Highcharts[chartConstr](pnode || parent, options);
 
       //This is super ugly.
@@ -2117,15 +2117,23 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     if (!code || code === '') code = 'hc-key';
     if (!name || name === '') name = 'name';
     //customizedOptions.series[0].mapData = data;
+    /*
     if (!customizedOptions.plotOptions) customizedOptions.plotOptions = {};
     if (!customizedOptions.plotOptions.map) customizedOptions.plotOptions.map = {};
-
+*/
     data.hccode = code;
     data.hcname = name;
 
-    customizedOptions.plotOptions.map.mapData = data;
 
-    customizedOptions.series[0].joinBy = [code, code];
+    if (!customizedOptions.chart) customizedOptions.chart = {};
+
+    //customizedOptions.plotOptions.map.mapData = data;
+    customizedOptions.chart.map = data;
+
+    customizedOptions.series.forEach(function(s){
+      s.joinBy = [code, code];
+    })
+    //customizedOptions.series[0].joinBy = [code, code];
   }
 
   function updateMap(path, scriptSrc, callback) {

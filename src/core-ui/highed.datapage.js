@@ -426,17 +426,22 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     function loadMapProject(projectData, aggregated) {
       //assignDataPanel.disable();
       
-      if (projectData.options && projectData.options.plotOptions && projectData.options.plotOptions.map && projectData.options.plotOptions.map.mapData){
-        loadMapData(projectData.options.plotOptions.map.mapData.features, 
-                    projectData.options.plotOptions.map.mapData.hccode, projectData.options.plotOptions.map.mapData.hcname, 
+      if (projectData.options && projectData.options.chart && projectData.options.chart.map && highed.isObj(projectData.options.chart.map)){
+        loadMapData(projectData.options.chart.map.features, 
+                    projectData.options.chart.map.hccode, projectData.options.chart.map.hcname, 
                     projectData.settings.dataProvider.csv, function () {
           assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
           assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
           chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
+
+          var isBubble = projectData.options && projectData.options.series && projectData.options.series.some(function(s){
+            return s.type === 'mapbubble';
+          });
+
           assignDataPanel.updateLinkedToValues({
             key: 'labels',
-            value: projectData.options.plotOptions.map.mapData.hccode
-          });
+            value: projectData.options.chart.map.hccode
+          }, isBubble ? 1 : null);
         });
         return;
       }

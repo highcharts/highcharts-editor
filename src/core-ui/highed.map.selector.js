@@ -270,35 +270,30 @@ highed.MapSelector = function(chartPreview) {
 
             var data = JSON.parse(info.data);
 
+            function project(geojson, projection) {
+              const projectPolygon = function(coordinate) {
+                  coordinate.forEach(function(lonLat, i) {
+                      coordinate[i] = window.proj4(projection, lonLat);
+                  });
+              };
+              geojson.features.forEach(function (feature) {
+                  if (feature.geometry.type === 'Polygon') {
+                      feature.geometry.coordinates.forEach(projectPolygon);
+                  } else if (feature.geometry.type === 'MultiPolygon') {
+                      feature.geometry.coordinates.forEach(function(items) {
+                          items.forEach(projectPolygon);
+                      });
+                  }
+              });
+            }
+
             if (data.type && data.type === 'Topology') {
               // Project the data using Proj4
               
-              function project(geojson, projection) {
-                const projectPolygon = function(coordinate) {
-                    coordinate.forEach(function(lonLat, i) {
-                        coordinate[i] = window.proj4(projection, lonLat);
-                    });
-                };
-                geojson.features.forEach(function (feature) {
-                    if (feature.geometry.type === 'Polygon') {
-                        feature.geometry.coordinates.forEach(projectPolygon);
-                    } else if (feature.geometry.type === 'MultiPolygon') {
-                        feature.geometry.coordinates.forEach(function(items) {
-                            items.forEach(projectPolygon);
-                        });
-                    }
-                });
-              }
-
               data = window.topojson.feature(
                 data,
                 // For this demo, get the first of the named objects
                 data.objects[Object.keys(data.objects)[0]]
-              );
-
-              project(
-                data,
-                '+proj=lcc +lat_1=33 +lat_2=45 +lat_0=39 +lon_0=-96'
               );
 
             } else if (data.features[0].properties.name && data.features[0].properties['hc-key']) {
@@ -322,6 +317,10 @@ highed.MapSelector = function(chartPreview) {
               })
             }
 
+            project(
+              data,
+              '+proj=lcc +lat_1=33 +lat_2=45 +lat_0=39 +lon_0=-96'
+            );
             data.features.forEach(function(d) {
               if (d.properties) {
                 Object.keys(d.properties).forEach(function(p, index){
