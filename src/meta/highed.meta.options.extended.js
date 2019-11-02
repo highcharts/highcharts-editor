@@ -104,6 +104,39 @@ highed.meta.optionsExtended = {
         ]
       },
       {
+        text: 'option.subcat.caption',
+        dropdown: true,
+        options: [
+          {
+            id: 'caption--text',
+            pid: 'caption.text',
+            dataType: 'text',
+            context: 'General',
+            defaults: '',
+            parent: 'caption',
+            width: 100
+          },
+          {
+            id: 'caption--style',
+            dataType: 'font',
+            pid: 'caption.style',
+            context: 'General',
+            defaults: '{ "color": "#333333", "fontSize": "12px" }',
+            parent: 'caption'
+          },
+
+          {
+            id: 'caption--margin',
+            pid: 'caption.margin',
+            dataType: 'number',
+            context: 'General',
+            defaults: 15,
+            parent: 'caption',
+            width: 25
+          }
+        ]
+      },
+      {
         text: 'option.subcat.appearance',
         dropdown: true,
         options: [
@@ -155,7 +188,7 @@ highed.meta.optionsExtended = {
             defaults: '0',
             parent: 'chart',
             width: 50
-          }, 
+          },
           {
             header: true,
             pid: 'option.subcat.plotarea',
@@ -299,7 +332,7 @@ highed.meta.optionsExtended = {
       {
         text: 'option.subcat.tooltip',
         dropdown: true,
-        options: [         
+        options: [
           {
             id: 'tooltip--enabled',
             pid: 'tooltip.enabled',
@@ -318,7 +351,7 @@ highed.meta.optionsExtended = {
             parent: 'tooltip',
             mapDisabled: true,
             width: 50
-          },          
+          },
           {
             id: 'tooltip--backgroundColor',
             pid: 'tooltip.backgroundColor',
@@ -445,7 +478,7 @@ highed.meta.optionsExtended = {
         text: 'option.subcat.xaxis',
         dropdown: true,
         mapDisabled: true,
-        options: [          
+        options: [
         {
           id: 'xAxis-title--style',
           dataType: 'font',
@@ -510,8 +543,8 @@ highed.meta.optionsExtended = {
       {
         text: 'option.subcat.yaxis',
         dropdown: true,
-        mapDisabled: true,
-        options: [          
+        mapDisabled: true,  
+        options: [
           {
             id: 'yAxis-title--style',
             dataType: 'font',
@@ -844,7 +877,7 @@ highed.meta.optionsExtended = {
             defaults: 'true',
             parent: 'exporting',
             width: 50
-          },      
+          },
           {
             id: 'exporting--offlineExporting',
             pid: 'exporting.offlineExporting',
@@ -1033,7 +1066,7 @@ highed.meta.optionsExtended = {
             width: 50
           }
         ]
-      },      
+      },
       {
         text: 'option.subcat.zoombutton',
         dropdown: true,

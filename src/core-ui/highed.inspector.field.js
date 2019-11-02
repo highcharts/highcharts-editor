@@ -57,6 +57,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *    > object
  *    > colorstops (Maps)
  *    > colorcategories (Maps)
+ *    > text
  *  @param value {anything} - the current value of the field
  *  @param properties {object} - the properties for the widget
  *  @param fn {function} - the function to call when the field is changed
@@ -83,6 +84,29 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
       return node;
     },
     fields = {
+      text: function(val, callback) {
+        var textarea = highed.dom.cr('textarea', 'highed-field-textarea', '', fieldID),
+            reset = createReset(properties.defaults || val || value, function(v) {
+              textarea.value = val = v;
+              tryCallback(callback, v);
+            });
+
+        highed.dom.on(textarea, 'change', function(e) {
+          tryCallback(callback, textarea.value);
+          e.cancelBubble = true;
+        });
+
+        if (typeof (val || value || '') === 'string' && (val || value || '').indexOf('\\u') > -1) {
+          textarea.value = decodeURIComponent(JSON.parse('"' + (val || value).replace(/\"/g, '\\"') + '"'));
+        } else {
+          textarea.value = (val || value);
+        }
+
+        return highed.dom.ap(
+            highed.dom.cr('div', 'highed-field-container'),
+            textarea
+        );
+      },
       string: function(val, callback) {
         var input = highed.dom.cr('input', 'highed-field-input', '', fieldID),
           reset = createReset(properties.defaults || val || value, function(v) {
@@ -95,15 +119,15 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
           e.cancelBubble = true;
         });
 
-        if (typeof (val || value || '') === 'string' && 
-            (val || value || '').indexOf('\\u') > -1) input.value = decodeURIComponent(JSON.parse('"' + (val || value).replace(/\"/g, '\\"') + '"')); 
+        if (typeof (val || value || '') === 'string' &&
+            (val || value || '').indexOf('\\u') > -1) input.value = decodeURIComponent(JSON.parse('"' + (val || value).replace(/\"/g, '\\"') + '"'));
         else input.value = (val || value);
 
-  
+
         if (properties.warning && properties.warning.length > 0 && planCode && properties.warning.indexOf(planCode) > -1) {
           input.disabled = true;
         }
-      
+
         return highed.dom.ap(
           highed.dom.cr('div', 'highed-field-container'),/*
           reset,*/
@@ -177,7 +201,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
         highed.dom.on(input, 'change', function() {
           tryCallback(callback, input.checked);
         });
-        
+
         if (properties.warning && properties.warning.length > 0 && planCode && properties.warning.indexOf(planCode) > -1) {
           input.disabled = true;
         }
@@ -872,7 +896,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
           reset = highed.dom.cr('div', 'highed-field-reset fa fa-undo'),
           resetTo = val || value || properties.defaults;
 
-        
+
         if (resetTo === 'null') {
           resetTo = null;
         }
@@ -1029,7 +1053,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
           reset = createReset(properties.defaults || val || value, function(v) {
             val = v;
             picker.set(val);
-            
+
             tryCallback(callback, v);
           });
 
@@ -1450,7 +1474,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
     // properties.tooltip = properties.tooltip.replace(/\n/g, '<br/><br/>');
   }
 
-  
+
   if (highed.onPhone()) {
     highed.dom.on(help, 'click', function() {
       var hide = highed.Tooltip(0, 0, properties.tooltip || properties.tooltipText, true);
@@ -1463,7 +1487,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
         e.clientY,
         properties.tooltip || properties.tooltipText
       );
-      
+
       highed.dom.on([help], 'mouseout', hide);
       // highed.showDimmer(highed.hideAllTooltips, true, true);
     });
@@ -1476,15 +1500,15 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
 
   typeIndicator.className += ' highed-customize-type-' + type;
   const parent = highed.dom.cr('div', 'highed-customizer-table-parent', '', fieldID + '_container');
-  
+
   highed.dom.style(parent,
   {
     width: (properties.width || 100) + '%'
   });
 
-  
-  if (type === 'header') {   
-    
+
+  if (type === 'header') {
+
     return highed.dom.ap(
       highed.dom.ap(
         parent, //tr
@@ -1498,7 +1522,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
     return highed.dom.ap(
       highed.dom.ap(
         parent, //tr
-        highed.dom.ap(widgetTD, 
+        highed.dom.ap(widgetTD,
           highed.dom.ap(fields[type] ? fields[type]() : fields.string(),
           highed.dom.ap(
             titleCol,
@@ -1513,7 +1537,7 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
           ))
       )
       )
-    ); 
+    );
   } else {
     return highed.dom.ap(
       highed.dom.ap(

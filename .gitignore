@@ -9,5 +9,7 @@ output
 docs/
 demos/
 generated_src
+highed.editor.config.json
+src/core/highed.config.js
 *.log
 

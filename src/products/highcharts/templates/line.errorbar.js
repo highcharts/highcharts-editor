@@ -33,14 +33,8 @@ highed.templates.add('Line', {
   sampleSets: [],
   config: {
     chart: {
-      type: 'line',
+      type: 'errorbar',
       polar: false
-    },
-    'series[0]': {
-      type: 'line'
-    },
-    'series[1]': {
-      type: 'errorbar'
     }
   }
 });
