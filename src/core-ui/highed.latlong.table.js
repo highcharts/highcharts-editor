@@ -52,9 +52,31 @@ highed.LatLongTable = function() {
         noSaveBtn: true,
         canDelete: true,
         hiddenValues: [0, 1]
+      }),
+      resultModal = highed.OverlayModal(false, {
+        width: 450,
+        height: 350, 
+        class: ' highed-annotations-modal highcharts-popup highcharts-popup-annotations',
+        showOnInit: true
+      }),
+      results = [],
+      resultContainer = highed.dom.cr('div', 'highed-latlong-results'),
+      resultBtn = highed.dom.btn('Select', 'highed-ok-button highed-import-button negative highed-latlong-result-btn', 'highed-latlong-result-btn', function(){
+
+        const val = document.querySelector('input[name="results"]:checked').value;
+        table.addRow([results[val].lat,results[val].lon, addMapPointInput.value]);
+        addMapPointInput.value = '';
+
+        events.emit('UpdateDataGridWithLatLong', table.getData());
+        hideModal()
+        results = [];
+
       });
 
       addMapPointInput.placeholder = 'New York';
+
+      highed.dom.ap(resultModal.body, highed.dom.cr('div', 'highed-premium-feature-header', 'Select Point'),resultContainer, resultBtn);
+
   //////////////////////////////////////////////////////////////////////////////
 
   table.on('InputChanged', function(){
@@ -67,13 +89,45 @@ highed.LatLongTable = function() {
     getResult(addMapPointInput.value);
   });
 
-  function getResult(location) {
-    mapApi.getLatLong(location, function (result) {
-      if (!result) return;
-      table.addRow([result.lat,result.lon, addMapPointInput.value]);
-      addMapPointInput.value = '';
+  function hideModal(){
+    resultModal.hide();
+  }
+  
+  function truncate(input, length) {
+    if (input.length > length) return input.substring(0,length) + '...';
+    return input;
+  }
 
-      events.emit('UpdateDataGridWithLatLong', table.getData());
+  function showModal(results){
+
+    resultContainer.innerHTML = '';
+    results.forEach(function(result, index) {
+      var radioContainer = highed.dom.cr('div', 'latlong-result-container');
+
+      var radio = highed.dom.cr('input', '');
+      radio.type = 'radio';
+      radio.value = index;
+      radio.name = 'results';
+      
+      if (index === 0) radio.checked = true;
+
+      var span = highed.dom.cr('span', '', truncate(result.name, 50));
+      span.title = result.name;
+
+      highed.dom.ap(resultContainer, highed.dom.ap(radioContainer, radio, span));
+    });
+
+    resultModal.show();
+  }
+
+  function getResult(location) {
+    mapApi.getLatLong(location, function (latlongResults) {
+      if (!latlongResults) return;
+
+      results = latlongResults;
+      showModal(latlongResults);
+
+
     });
   }
 

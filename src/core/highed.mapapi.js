@@ -46,12 +46,18 @@ highed.MapApi = function() {
       success: function(request){
         var latKey = config.latKey || 'lat';
         var longKey = config.longKey || 'lon';
+        var nameKey = config.nameKey || 'display_name';
 
         if (request && request.length > 0) {
-          cb({
-            lat: request[0][latKey], 
-            lon: request[0][longKey]
-          });
+          console.log(request, nameKey);
+          cb(
+            request.map(function(r){
+              return {
+                lat: r[latKey], 
+                lon: r[longKey],
+                name: r[nameKey]
+              }
+            }));
         } else {
           alert("We are unable to find any results that match the search query.");
           cb(false);
