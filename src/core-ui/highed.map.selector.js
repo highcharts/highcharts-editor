@@ -140,6 +140,11 @@ highed.MapSelector = function(chartPreview, planCode) {
 
                   highed.dom.on(options, 'click', function() {
 
+                    var mapKey = Highcharts.mapDataIndex[mapGroup][desc].slice(0, -3),
+                    svgPath = baseMapPath + mapKey + '.svg',
+                    geojsonPath = baseMapPath + mapKey + '.geo.json',
+                    javascriptPath = baseMapPath + mapKey + '.js'; //Highcharts.mapDataIndex[mapGroup][desc];
+
                     chartPreview.options.updateMap(mapKey, javascriptPath, function() {
                       highed.ajax({
                         url: geojsonPath,

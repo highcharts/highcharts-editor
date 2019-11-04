@@ -872,6 +872,10 @@ highed.DataTable = function(parent, attributes) {
       return colVal.getAttribute('data-value') || value;
     }
 
+    function getCellValue(){
+      return value;
+    }
+
     function addToDOM(me) {
       colNumber = me || colNumber;
       highed.dom.ap(row.node, highed.dom.ap(col, colVal));
@@ -956,6 +960,7 @@ highed.DataTable = function(parent, attributes) {
     exports = {
       focus: focus,
       value: getVal,
+      cellValue: getCellValue, 
       destroy: destroy,
       addToDOM: addToDOM,
       selectCell: selectCell,
@@ -2002,6 +2007,7 @@ highed.DataTable = function(parent, attributes) {
    */
   function toCSV(delimiter, quoteStrings, section) {
     delimiter = delimiter || ','; 
+    
     if (highed.chartType !== 'Map') 
       return toData(quoteStrings, true, section)
         .map(function(cols) {
@@ -2984,6 +2990,14 @@ highed.DataTable = function(parent, attributes) {
   function createSimpleDataTable(toNextPage, loading, chartContainer){
 
     simpleDataTable = highed.WizardData(importer, mapImporter, chartContainer);
+    simpleDataTable.on('DownloadMapCSVStub', function(){
+
+      downloadRows = rows.map(function(row){
+          return row.columns[0].cellValue();
+      }).join('\n');
+
+      highed.download('data.csv', downloadRows, 'application/csv');
+    });
 
     simpleDataTable.on('UpdateDataGridWithLatLong', function(data) {
       loadCSV({ csv: data.map(function(cols) {

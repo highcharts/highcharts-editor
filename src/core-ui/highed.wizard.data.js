@@ -36,9 +36,15 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
   mapDataTableElement = null,
   dropzone = null,
   container = highed.dom.cr('div', 'highed-table-dropzone-container'),
+  downloadCSVLink = highed.dom.cr('a', 'highed-download-csv', 'Download Map Data'),
   dropCSVFileHere = highed.dom.cr('div', 'highed-table-dropzone-title', 'Drop CSV files here');
 
 ////////////////////////////////////////////////////////////////////////////
+
+
+  highed.dom.on(downloadCSVLink, 'click', function(){
+    events.emit('DownloadMapCSVStub');
+  });
 
   function createTableInputs(inputs, maxColSpan, extraClass) {
 
@@ -343,6 +349,12 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
 
     dropzone = highed.dom.cr('div','highed-table-dropzone ' + (highed.chartType === 'Map' ? 'highed-table-map-dropzone' : ''));
 
+    if (highed.chartType !== 'Map') {
+      highed.dom.style(downloadCSVLink, {
+        display: 'none'
+      });
+    }
+
     highed.dom.ap(container, 
       mapDataTableElement,
       //chartContainer,
@@ -351,7 +363,8 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
         dropCSVFileHere,
         dropzoneSpan,
         highed.dom.cr('div', 'highed-table-dropzone-subtitle highed-table-dropzone-message', buttons.length > 0 ? 'You can also:' : ''),
-        buttonsContainer
+        buttonsContainer,
+        downloadCSVLink
       ),
       chartContainer
     );
@@ -369,6 +382,10 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
 
   function showLatLongTable(type) {
     if (mapDataTableElement) {
+
+      highed.dom.style(downloadCSVLink, {
+        display: 'none'
+      });
 
       mapImporter.addToSelects([{
         name: 'Latitude',
