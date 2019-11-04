@@ -33,6 +33,9 @@ highed.samples.addMapType('Point Map', {
   templateConfig: {
     title: {
       text: 'Top 25 Destinations in Europe'
+    },
+    subtitle: {
+        text: 'According to Tripadvisor (2019)'
     }
   },
   useLatLong: true,

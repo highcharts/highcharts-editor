@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /** Map selector
  */
 
-highed.MapSelector = function(chartPreview) {
+highed.MapSelector = function(chartPreview, planCode) {
   var events = highed.events(),
       predefinedMaps = highed.dom.cr('div', ''),
       importContainer = highed.dom.cr('div', 'highed-map-import-container'),
@@ -94,7 +94,8 @@ highed.MapSelector = function(chartPreview) {
         "World, Miller projection, low resolution",
         "World, Robinson projection, high resolution",
         "World, Robinson projection, low resolution",
-      ];
+      ],
+      projectionsConvert = ["EPSG::31493"];
 
   function createMapDataSection(toNextPage, cb) {
 
@@ -247,6 +248,8 @@ highed.MapSelector = function(chartPreview) {
 
       var importInput = highed.dom.cr('button', 'highed-ok-button highed-import-button import-geojson-map-btn', 'Import GeoJSON Map');
 
+      if (planCode && planCode === 1) importInput.innerHTML += '&nbsp; <i class="fa fa-lock" aria-hidden="true"></i>';
+
       highed.dom.ap(importContainer, 
         loadSampleText,
         mapSampleContainer
@@ -258,6 +261,12 @@ highed.MapSelector = function(chartPreview) {
                     importInput);*/
 
       highed.dom.on(importInput, 'click', function() {
+
+        if (planCode && planCode === 1) {
+          events.emit('Payup')
+          return;
+        }
+
         highed.readLocalFile({
           type: 'text',
           accept: '.json,.geojson',
@@ -317,10 +326,18 @@ highed.MapSelector = function(chartPreview) {
               })
             }
 
+            var projectionType = "EPSG:3857";
+            if (data.crs && data.crs.properties && projectionsConvert.some(function(p){
+              return data.crs.properties.name.indexOf(p) > -1;
+            })) {
+              projectionType = "EPSG:4269";
+            }
+            
             project(
               data,
-              '+proj=lcc +lat_1=33 +lat_2=45 +lat_0=39 +lon_0=-96'
+              projectionType
             );
+
             data.features.forEach(function(d) {
               if (d.properties) {
                 Object.keys(d.properties).forEach(function(p, index){

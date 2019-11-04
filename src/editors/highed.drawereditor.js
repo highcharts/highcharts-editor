@@ -217,7 +217,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
     payupModal = highed.SubscribeModal(),
     annotationModal = highed.AnnotationModal(),
-    mapSelector = highed.MapSelector(chartPreview),
+    mapSelector = highed.MapSelector(chartPreview, planCode),
     dataPage = highed.DataPage(
       splitter.bottom,
       highed.merge(
@@ -1019,6 +1019,11 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
   customizePage.on('Payup', function() {
     payupModal.show();
   });
+
+  mapSelector.on('Payup', function() {
+    payupModal.show();
+  });
+
 
   chartPreview.on('ShowAnnotationModal', function(type) {
     annotationModal.show(type);

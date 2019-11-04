@@ -71,11 +71,18 @@ highed.LatLongTable = function() {
         hideModal()
         results = [];
 
+      }),
+      selectPointHeader = highed.dom.cr('div', 'highed-premium-feature-header'),
+      selectPointCloseBtn = highed.dom.btn('', 'close-btn', '', function(){
+        resultModal.hide();
       });
+
+      highed.dom.ap(selectPointCloseBtn, highed.dom.cr('span', 'fas fa-times'));
+      highed.dom.ap(selectPointHeader, highed.dom.cr('span', '', 'Select Point'), selectPointCloseBtn)
 
       addMapPointInput.placeholder = 'New York';
 
-      highed.dom.ap(resultModal.body, highed.dom.cr('div', 'highed-premium-feature-header', 'Select Point'),resultContainer, resultBtn);
+      highed.dom.ap(resultModal.body,selectPointHeader,resultContainer, resultBtn);
 
   //////////////////////////////////////////////////////////////////////////////
 
