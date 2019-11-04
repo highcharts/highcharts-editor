@@ -234,8 +234,98 @@ highed.meta.optionsExtended = {
             pid: 'colors',
             dataType: 'array<color>',
             context: 'General',
+            mapDisabled: true,
             defaults:
               '[ "#7cb5ec" , "#434348" , "#90ed7d" , "#f7a35c" , "#8085e9" , "#f15c80" , "#e4d354" , "#2b908f" , "#f45b5b" , "#91e8e1"]'
+          },
+          {
+            id: 'plotOptions--series--dashStyle',
+            pid: 'series.dashStyle',
+            dataType: 'string',
+            context: 'General',
+            defaults: 'Solid',
+            chartType: 'Map',
+            values:
+              '["Solid", "ShortDash", "ShortDot", "ShortDashDot", "ShortDashDotDot", "Dot", "Dash" ,"LongDash", "DashDot", "LongDashDot", "LongDashDotDot"]',
+            templateType: ['Choropleth', 'Categories'],
+            width: 100
+          },
+          {
+            id: 'colorAxis--stops',
+            pid: 'colorAxis.stops',
+            dataType: 'colorstops',
+            context: 'General',
+            chartType: 'Map',
+            templateType: ['Choropleth', 'Bubble'],
+            defaults: [
+              [0, '#EFEFFF'],
+              [0.67, '#4444FF'],
+              [1, '#000022']
+            ]
+          },
+          {
+            id: 'plotOptions--mappoint--marker--symbol',
+            pid: 'plotOptions.mappoint.marker.symbol',
+            dataType: 'string',
+            context: 'General',
+            chartType: 'Map',
+            templateType: ['Point Map'],
+            values: '["circle", "square", "diamond", "triangle", "triangle-down"]',
+            width: 33
+          },
+          {
+            id: 'plotOptions--mappoint--marker--radius',
+            pid: 'plotOptions.mappoint.marker.radius',
+            dataType: 'number',
+            context: 'General',
+            chartType: 'Map',
+            templateType: ['Point Map'],
+            defaults: 4,
+            width: 33
+          },
+          {
+            id: 'plotOptions--series--color',
+            pid: 'plotOptions.series.color',
+            dataType: 'color',
+            context: 'General',
+            chartType: 'Map',
+            templateType: ['Point Map'],
+            defaults: '#0d233a',
+            width: 33
+          },
+          {
+            id: 'plotOptions--series--minSize',
+            pid: 'plotOptions.series.minSize',
+            dataType: 'number',
+            context: 'General',
+            chartType: 'Map',
+            templateType: ['Bubble'],
+            defaults: 4,
+            width: 50
+          },
+          {
+            id: 'plotOptions--series--maxSize',
+            pid: 'plotOptions.series.maxSize',
+            dataType: 'number',
+            context: 'General',
+            chartType: 'Map',
+            templateType: ['Bubble'],
+            defaults: 60,
+            width: 50
+          },
+          {
+            id: 'colorAxis--dataClasses',
+            pid: 'colorAxis.dataClasses',
+            dataType: 'colorcategories',
+            chartType: 'Map',
+            templateType: ['Categories', 'Honeycomb', 'Tilemap Circle'],
+            context: 'General',
+            usesData: true,
+            defaults: [{
+                from: -100,
+                to: 100,
+                color: '#C40401'
+            }]
           }
         ]
       },
@@ -259,6 +349,7 @@ highed.meta.optionsExtended = {
             context: 'General',
             defaults: 'false',
             parent: 'tooltip',
+            mapDisabled: true,
             width: 50
           },
           {
@@ -333,6 +424,7 @@ highed.meta.optionsExtended = {
             dataType: 'boolean',
             context: 'General',
             defaults: 'false',
+            mapDisabled: true,
             parent: 'chart'
           },
           {
@@ -385,6 +477,7 @@ highed.meta.optionsExtended = {
       {
         text: 'option.subcat.xaxis',
         dropdown: true,
+        mapDisabled: true,
         options: [
         {
           id: 'xAxis-title--style',
@@ -450,6 +543,7 @@ highed.meta.optionsExtended = {
       {
         text: 'option.subcat.yaxis',
         dropdown: true,
+        mapDisabled: true,  
         options: [
           {
             id: 'yAxis-title--style',
@@ -519,6 +613,7 @@ highed.meta.optionsExtended = {
         id: 'series',
         array: true,
         text: 'option.cat.series',
+        mapDisabled: true,
         controlledBy: {
           title: 'Select Series',
           options: 'series',
@@ -561,7 +656,6 @@ highed.meta.optionsExtended = {
             subTypeDefaults: {},
             width: 50
           },
-
           {
             id: 'series--dashStyle',
             pid: 'series.dashStyle',
@@ -976,6 +1070,7 @@ highed.meta.optionsExtended = {
       {
         text: 'option.subcat.zoombutton',
         dropdown: true,
+        mapDisabled: true,
         group: 1,
         options: [
           {

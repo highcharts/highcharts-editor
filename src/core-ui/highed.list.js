@@ -41,7 +41,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *  @param parent {domnode} - the node to attach the list to
  *  @param responsive {boolean} - set to true to get JS-based responsive functionality
  */
-highed.List = function(parent, responsive, props, planCode) {
+highed.List = function(parent, responsive, props, planCode, dataPage) {
   var container = highed.dom.cr('div', 'highed-list'),
     compactIndicator = highed.dom.cr('div', 'highed-list-compact', 'compact'),
     ctx = highed.ContextMenu(),
@@ -67,7 +67,7 @@ highed.List = function(parent, responsive, props, planCode) {
      */
   function addItem(item, children, chartPreview) {
     
-    var node = highed.dom.cr('a', 'item', item.title),
+    var node = highed.dom.cr('a', 'item', item.title.replace('Chart', highed.chartType === 'Map' ? 'Map': 'Chart')),
       nodeArrow = highed.dom.cr('span', 'item-arrow', '<i class="fa fa-angle-right" aria-hidden="true"></i>'),
       nodeChildren = highed.dom.cr('span', 'highed-list-suboptions', ''),
       iexports = {};
@@ -136,8 +136,11 @@ highed.List = function(parent, responsive, props, planCode) {
         masterNode,
         def;
 
-      options = chartPreview.options.getCustomized(); //userOptions;//chartPreview.options.getCustomized();
       
+      if (highed.chartType === 'Map' && group.mapDisabled) return;
+
+      options = chartPreview.options.all().userOptions;
+
       if (highed.isArr(group.options)) {
         table = highed.dom.cr('div', 'highed-customizer-table');
         warningContainer = highed.dom.cr('div', 'highed-customize-warning-container'),
@@ -211,10 +214,11 @@ highed.List = function(parent, responsive, props, planCode) {
             if (highed.isArr(vals)) {
               
               if (vals.length === 0) {
+                /*
                 highed.dom.ap(
                   parent,
                   highed.dom.cr('i', '', 'No data to display..')
-                );
+                );*/
                 return;
               }
 
@@ -276,6 +280,16 @@ highed.List = function(parent, responsive, props, planCode) {
           }
         }
 
+        if (group.templateType) {
+          const templateOptions = chartPreview.options.getTemplateSettings();
+          if (!Object.keys(templateOptions).some(function(key){
+            return group.templateType.includes(templateOptions[key].templateTitle);
+          })) {
+            return;
+          }
+
+        }
+
         if (Object.keys(properties.availableSettings || {}).length > 0) {
           if (
             !properties.availableSettings[group.id] &&
@@ -290,9 +304,12 @@ highed.List = function(parent, responsive, props, planCode) {
         }
 
         def = highed.getAttr(options, group.id, detailIndex);
-
         //highed.dom.ap(sub, highed.dom.cr('span', '', referenced[0].returnType));
         
+        if (group.usesData && dataPage) {
+          group.dataTableValues = dataPage.getValues();
+        }
+
         highed.dom.ap(
           table,
           highed.InspectorField(
@@ -303,7 +320,7 @@ highed.List = function(parent, responsive, props, planCode) {
                 ? group.subTypeDefaults[filter]
                 : group.defaults,
             {
-              title: highed.L('option.text.' + group.pid),
+              title: highed.L('option.text.' + group.pid).replace('Chart', highed.chartType ==='Map' ? 'Map' : 'Chart'),
               tooltip: highed.L('option.tooltip.' + group.pid),
               values: group.values,
               custom: group.custom,
@@ -311,7 +328,8 @@ highed.List = function(parent, responsive, props, planCode) {
               width: group.width || 100,
               attributes: group.attributes || [],
               warning: group.warning || [],
-              header: highed.L(group.pid)
+              header: highed.L(group.pid).replace('Chart', highed.chartType ==='Map' ? 'Map' : 'Chart'),
+              dataTableValues: group.dataTableValues
             },
             function(newValue) {
               if (group.header) return;
@@ -488,7 +506,7 @@ highed.List = function(parent, responsive, props, planCode) {
   }
 
   function selectDropdown(dropdownKey) {
-
+    if (!dropdowns[dropdownKey]) return;
 
     if (dropdowns[dropdownKey].classList.contains('active')) {
       return true;

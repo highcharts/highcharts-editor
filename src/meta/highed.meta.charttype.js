@@ -262,4 +262,194 @@ highed.meta.charttype = {
             'rawValue': [2]
         }, 
     },
+
+    //Maps
+    tilemap: {
+        'values': null,
+        'labels': null,
+        'country_code': {
+            'name': "Country Code",
+            'desc': 'The country code',
+            'default': 'A',
+            'value': 'A',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'hc-a2',
+            'rawValue': [0]
+        },
+        'name': {
+            'name': "Name",
+            'desc': 'Name',
+            'default': 'B',
+            'value': 'B',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'name',
+            'rawValue': [1]
+        },
+        'x': {
+            'name': "X Value",
+            'desc': 'X Value',
+            'default': 'C',
+            'value': 'C',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'x',
+            'rawValue': [2]
+        },
+        'y': {
+            'name': "Y Value",
+            'desc': 'Y Value',
+            'default': 'D',
+            'value': 'D',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'y',
+            'rawValue': [3]
+        },
+        'value': {
+            'name': "Value",
+            'desc': 'The value of the country',
+            'default': 'E',
+            'value': 'E',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'value',
+            'rawValue': [4]
+        }
+    },
+    map: {
+        'values': null,
+        'labels': {
+            'name': "Country Code",
+            'desc': 'The country code',
+            'default': 'A',
+            'value': 'A',
+            'mandatory': true,
+            'isLabel': true,
+            'linkedTo': 'hc-key',
+            'rawValue': [0]
+        },
+        'value': {
+            'name': "Value",
+            'desc': 'The value of the country',
+            'default': 'B',
+            'value': 'B',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'value',
+            'rawValue': [1]
+        }
+
+    },
+    mappoint: {
+        'values': null,
+        'labels': {
+            'name': "Country",
+            'desc': 'The country name',
+            'default': 'A',
+            'value': 'A',
+            'rawValue': [0],
+            'isLabel': true,
+            'mandatory': false,
+            'linkedTo': 'hc-key'
+        },
+        'latitude': {
+            'name': "Latitude",
+            'desc': 'Latitude',
+            'default': 'A',
+            'value': 'A',
+            'rawValue': [0],
+            'previousValue': null,
+            'isLabel': true,
+            'linkedTo': 'lat'
+        },
+        'longitude': {
+            'name': "Longitude",
+            'desc': 'Longitude',
+            'default': 'B',
+            'value': 'B',
+            'rawValue': [1],
+            'previousValue': null,
+            'isLabel': true,
+            'linkedTo': 'lon',
+        },
+        'value': {
+            'name': "Value",
+            'desc': 'The value of the country',
+            'default': 'B',
+            'value': 'B',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo':  ['name', 'x', 'y'],
+            'rawValue': [1]
+        }
+    },
+    mapbubble: {
+        'values': null,
+        'labels': {
+            'name': "Country",
+            'desc': 'The country name',
+            'default': 'A',
+            'value': 'A',
+            'isLabel': true,
+            'mandatory': false,
+            'linkedTo': 'hc-key',
+            'rawValue': [0]
+        },
+        'latitude': {
+            'name': "Latitude",
+            'desc': 'Latitude',
+            'default': '',
+            'value': '',
+            'rawValue': null,
+            'previousValue': null,
+            'isLabel': true,
+            'linkedTo': 'lat'
+        },
+        'longitude': {
+            'name': "Longitude",
+            'desc': 'Longitude',
+            'default': '',
+            'value': '',
+            'rawValue': null,
+            'previousValue': null,
+            'isLabel': true,
+            'linkedTo': 'lon',
+        },
+        'value': {
+            'name': "Value",
+            'desc': 'The value of the country',
+            'default': 'B',
+            'value': 'B',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'z',
+            'rawValue': [1]
+        }
+    },
+    patternfill: {
+        'values': null,
+        'labels': {
+            'name': "Country",
+            'desc': 'The country name',
+            'default': 'A',
+            'value': 'A',
+            'mandatory': true,
+            'isLabel': true,
+            'linkedTo': 'hc-key',
+            'rawValue': [0]
+        },
+        'value': {
+            'name': "Links",
+            'desc': 'The image path',
+            'default': 'B',
+            'value': 'B',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': ['value', 'color.pattern.image'],
+            'rawValue': [1]
+        }
+
+    }
 };

@@ -97,6 +97,10 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
 
     templates.on('Select', function(template) {
       //chartPreview.loadTemplate(template);
+      if (template.load && highed.isFn(template.load)) {
+        template.load(chartPreview.options.full, events); 
+      }
+ 
       events.emit('TemplateChanged', template);
     });
 
@@ -135,10 +139,10 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
           templatesContainer = highed.dom.cr('div', 'highed-templates-container');
 
           highed.dom.ap(container, highed.dom.ap(highed.dom.cr('div', 'highed-toolbox-template-container'), headerBar, templatesContainer));
-          
+    
     if (options.id) options = highed.templates.getAllInCat(options.id);
 
-    Object.keys(options).forEach(function(key) { 
+    Object.keys(options).forEach(function(key) {
       const templateContainer = highed.dom.cr('div', 'highed-template-container'),
             preview = highed.dom.cr('div', 'highed-chart-template-thumbnail');
 
@@ -161,31 +165,65 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
       highed.dom.on(templateContainer, 'click', function() {
         setLoading(true);
         setTimeout(function() {
+
           t.header =  t.parent;
-          events.emit('TemplateChanged', highed.merge({}, t), true, function() {
+
+          if (t.load && highed.isFn(t.load)) {
+           t.load(chartPreview.options.full, events); 
+          }
+
+          events.emit('TemplateChanged', highed.merge({}, t), ('loadForEachSeries' in t ? t['loadForEachSeries'] : true), function() {
             setLoading(false);
             toNextPage();
           });
         }, 1000);
       });
 
-      highed.dom.ap(templatesContainer, highed.dom.ap(templateContainer, preview, highed.dom.cr('div', 'highed-template-title', t.title)));
+      var infoContainer = highed.dom.cr('span', 'highed-tooltip-container fa fa-question-circle');
+
+      highed.dom.style(infoContainer, {
+        display: 'none'
+      });
+
+      if (t.description) {
+        var desc = t.description.join(' ');
+        if (desc !== '') {
+          highed.dom.on(infoContainer, 'mouseover', function(e){
+
+            var hide = highed.Tooltip(
+              e.clientX + 20,
+              e.clientY,
+              desc
+            );
+            highed.dom.on(infoContainer, 'mouseout', hide);
+          })
+
+          highed.dom.style(infoContainer, {
+            display: 'initial'
+          });
+        }
+      }
+
+      highed.dom.ap(templatesContainer, highed.dom.ap(templateContainer, preview, highed.dom.cr('div', 'highed-template-title', t.title), infoContainer));
 
     });
     
   }
 
   function createMostPopularTemplates(toNextPage, setLoading) {
-    const templates = highed.templates.getCatArray();
-    const container = highed.dom.cr('div', 'highed-toolbox-templates-container');
-    
+    const templates = highed.chartType === 'Map' ? highed.templates.getCatObj('Map') : highed.templates.getCatArray(),
+          container = highed.dom.cr('div', 'highed-toolbox-templates-container'),
+          usingMaps = (highed.chartType === 'Map');
+
     const mostPopular = highed.templates.getMostPopular();
 
-    createTemplates(container, 'Most Popular', mostPopular, setLoading, toNextPage);
-    
+    if (!usingMaps) {
+      createTemplates(container, 'Most Popular', mostPopular, setLoading, toNextPage);
+    }
+
     Object.keys(templates).forEach(function(key) {
       const t = templates[key];
-
+      if (!usingMaps && t.id === 'Map') return;
       createTemplates(container, t.id, t, setLoading, toNextPage);
 
     });
@@ -232,14 +270,6 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
       width: 100 + '%',
       opacity: 1
     });
-/*
-    highed.dom.style(container, {
-      width: newWidth + '%'
-    });
-*/
-
-
-
 
     if (!highed.onPhone()) {
       const windowWidth = highed.dom.size(parent).w;
@@ -255,7 +285,6 @@ highed.TemplatePage = function(parent, options, chartPreview, chartFrame, props)
       });
 
     }
-
 
     events.emit('BeforeResize', newWidth);
 

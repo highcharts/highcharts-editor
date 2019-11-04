@@ -26,64 +26,46 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 highed.templates.add('Map', {
-  title: 'Basic US Map',
+  title: 'Choropleth',
   description: [
-    'Basic map of the US.',
-    'Good starting point for US geographical data.'
+    'Choropleth Maps display divided geographical areas or regions that are coloured in relation to a data variable.', 
+    'This provides a way to visualise values over a geographical area, which can show variation across the displayed location.',
+    'The Choropleth template displays a color axis represented by a gradient'
   ],
-  thumbnail: '',
+  thumbnail: 'mapchoropleth.svg',
   dataValidator: false,
-  sampleSets: [],
   constructor: 'Map',
   config: {
     chart: {
-      borderWidth: 1
     },
 
     mapNavigation: {
       enabled: true
     },
 
-    legend: {
-      layout: 'horizontal',
-      borderWidth: 0,
-      backgroundColor: 'rgba(255,255,255,0.85)',
-      verticalAlign: 'bottom'
+    xAxis: {
+      visible: false
+    },
+
+    yAxis: {
+      visible: false
     },
 
     colorAxis: {
-      min: 1,
       type: 'logarithmic',
       minColor: '#EEEEFF',
       maxColor: '#000022',
-      stops: [[0, '#EFEFFF'], [0.67, '#4444FF'], [1, '#000022']]
+      stops: [
+          [0, '#EFEFFF'],
+          [0.67, '#4444FF'],
+          [1, '#000022']
+      ]
     },
 
     series: [
       {
-        animation: {
-          duration: 1000
-        },
-        data: [
-          {
-            value: 2000,
-            code: 'TX'
-          }
-        ],
-        mapData: 'countries/us/us-all',
-        joinBy: ['postal-code', 'code'],
         dataLabels: {
-          enabled: true,
-          color: '#FFFFFF',
-          format: '{point.code}'
-        },
-        dataLabels: {
-          enabled: true,
-          color: '#FFFFFF',
-          format: '{point.code}'
-        },
-        tooltip: {
-          pointFormat: '{point.code}: {point.value{/km2'
+          enabled: false
         }
       }
     ]

@@ -26,57 +26,47 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 highed.templates.add('Map', {
-  title: 'Basic World Map',
+  title: 'Pattern Fill',
   description: [
-    'Basic world map.',
-    'Good starting point for global geographical data.'
+    'Pattern Fill Maps display divided geographical areas or regions that are patterned in relation to an image source. This provides a way to visualise values over a geographical area.',
   ],
-  thumbnail: '',
+  thumbnail: 'mappatternfill.png',
   dataValidator: false,
-  sampleSets: [],
   constructor: 'Map',
+  type: 'patternfill',
   config: {
     chart: {
-      borderWidth: 1
+    },
+    // Limit zoom
+    xAxis: {
+        minRange: 3500,
+        visible: false
     },
 
-    mapNavigation: {
-      enabled: true
+    yAxis: {
+      visible: false
     },
 
+    // We do not want a legend
     legend: {
-      layout: 'horizontal',
-      borderWidth: 0,
-      backgroundColor: 'rgba(255,255,255,0.85)',
-      verticalAlign: 'bottom'
+        enabled: false
     },
-
-    colorAxis: {
-      min: 1,
-      type: 'logarithmic',
-      minColor: '#EEEEFF',
-      maxColor: '#000022',
-      stops: [[0, '#EFEFFF'], [0.67, '#4444FF'], [1, '#000022']]
-    },
-
-    series: [
-      {
-        mapData: 'custom/world-continents',
-        joinBy: 'name',
-        dataLabels: {
-          enabled: true,
-          color: '#FFFFFF',
-          format: '{point.code}'
-        },
-        dataLabels: {
-          enabled: true,
-          color: '#FFFFFF',
-          format: '{point.code}'
-        },
-        tooltip: {
-          pointFormat: '{point.code}: {point.value{/km2'
+    plotOptions: {
+      series: {
+        states: {
+          hover: {
+            color: ''
+          },
         }
       }
-    ]
+    },
+
+    // Make tooltip show full image
+    tooltip: {
+        useHTML: true,
+        borderColor: '#aaa',
+        headerFormat: '<b>{point.point.name}</b><br>',
+        pointFormat: '<img style="width: 150px; height: 100px;" src=\'{point.options.color.pattern.image}\'>'
+    }
   }
 });

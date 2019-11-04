@@ -28,6 +28,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 (function() {
   // Samples, keyed on ID
   var samples = {};
+  var mapSamples = {};
 
   highed.samples = {
     /**
@@ -69,6 +70,36 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     },
 
     /**
+         * Add a map sample, only really used for the honeycomb/circle tilemap in the chart wizard select chart step
+         *
+         * @param {object} sample - the sample definition
+         *    > id {anything} - the ID of the sample
+         *    > title {anything} - the sample title
+         *    > description {string} - the sample description
+         *    > dataset {array<array<object>>} - the sample data
+         */
+      addMapType: function(type, sample) {
+        var options = highed.merge(
+          {
+            title: 'Untitled Sample',
+            description: 'Untitled Sample',
+            dataset: [],
+            thumbnail: ''
+          },
+          sample
+        );
+  
+        mapSamples[type] = mapSamples[type] || {};
+    
+        if (options.id.length) {
+          mapSamples[type][options.id] = options;
+          return true;
+        }
+    
+        return false;
+      },
+
+    /**
          * Do something for each sample
          * @param fn {function} - the callback
          * @param productFilter {string} - the product(s) to include (optional)
@@ -89,6 +120,16 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
          */
     get: function(id) {
       return samples[id] || false;
+    },
+
+    /**
+         * Get a single map type sample set
+         * @param type {string} - the type of the sample set to get
+         * @returns {sample|false} - false if 404, sample if found
+         */
+
+    getMap: function(type) {
+      return mapSamples[type] || false;
     }
   };
 })();

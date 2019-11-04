@@ -1,0 +1,333 @@
+.highed-map-selector {
+    max-height: 400px;
+    width: 472px;
+    overflow: auto;
+    color: black;
+    border: 1px solid rgba(128, 128, 128, 0.11);
+    position: absolute;
+    z-index: 1;
+    background-color: white;
+    display: none;
+}
+
+.highed-map-geojson-label {
+    margin: 0px 10px 15px 0px;
+    width: 48%;
+    color: black;
+    font-weight: 300;
+    display: inline-block;
+    font-size: 14px;
+}
+
+.highed-map-container{
+    height: 141px;
+    width: 132px;
+    margin-right: 15px;
+    margin-top: 20px;
+    border: 0px;
+    .highed-chart-template-thumbnail {
+        width: 100%;
+    }
+    .highed-map-text {
+        font-size: 13px;
+        color: #233272;
+        font-weight: 500;
+        margin-top: 15px;
+        text-align: center;
+    }
+}
+.highed-map-geojson-container.active {
+    display: block;
+    z-index: 1;
+}
+
+.highed-map-geojson-option-container {
+    display: inline-block;
+    width: 406px;
+    padding: 15px;
+    margin-right: 20px;
+    border: 1px solid #ececec;
+    border-radius: 2px;
+    margin-top: 15px;
+    margin-bottom: 25px;
+    .highed-map-geojson-option-header {
+        color: #37376f;
+        font-weight: 700;
+        font-size: 15px;
+    }
+    .highed-map-geojson-options {
+        height: 400px;
+        overflow: auto;
+        padding-left: 2px;
+    }
+    .highed-map-radio-option {
+        padding-top: 5px;
+        span {
+            color: black;
+            font-size: 12px;
+            padding-left: 8px;
+        }
+    }
+}
+.highed-map-geojson-btn-container {
+    text-align: right;
+}
+
+.highed-map-geojson-container {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: -7px;
+    bottom: 0px;
+    width: 100%;
+    background-color: white;
+    display: none;
+    .highed-map-geojson-header {
+        color: #37386f;
+        font-weight: 700;
+        font-size: 24px;
+        font-family: @font-main;
+    }
+    .highed-map-geojson-description {
+        background-color: white;
+        font-size: 13px;
+        color: black;
+        font-weight: 300;
+        padding: 13px 0px;
+    }
+}
+
+.highed-map-add-points {
+    position: relative;
+    top: 0;
+    width: 100%;
+    background-color: white;
+    display: none;
+    border: 1px solid #e8e8e8;
+    padding: 17px;
+    border-radius: 3px;
+    .highed-map-table-container {
+        max-height: 118px;
+        .highed-map-table {
+            width: 99%;
+            max-width: 397px;
+        }
+        .highed-map-table.data {
+            float: left;
+        }
+        .highed-map-table-delete {
+            width: 22px;
+        }
+    }
+
+    .highed-map-add-latlong {
+        height: 29px;
+        width: 194px;
+        margin-bottom: 10px;
+        margin-right: 10px;
+        margin-left: 5px;
+    }
+}
+
+.highed-maps-datatable {
+    top: -57px;
+    position: relative;
+}
+
+.highed-maps-datatable.hide {
+    display: none;
+}
+
+.highed-map-import-geojson-header {
+    margin-left: 0px;
+    padding-left: 0px;
+}
+
+.highed-map-selector.active {
+    display: block;
+}
+.highed-map-option-header {
+    color: #26386e;
+    font-weight: 800;
+    height: 35px;
+    padding-top: 10px;
+    font-size: 16px;
+    padding-left: 5px;
+}
+
+.highed-map-option {    
+    padding-top: 10px;
+    font-size: 14px;
+    height: 35px;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.35);
+    padding-left: 5px;
+    cursor: pointer;
+}
+
+.highed-map-option:hover {
+    background-color: rgba(37, 56, 111, 0.09)
+}
+
+.highed-map-selector-input {
+    width: 437px;
+    vertical-align: top;
+    top: -1px;
+    position: relative;
+    border: 1px solid rgba(0, 0, 0, 0.22);
+    padding-left: 10px;
+    display: inline-block;
+    height: 100%;
+}
+
+.highed-map-selector:focus {
+    outline: none;
+}
+.highed-choose-map-container {
+    display: inline-block;
+    height: 33px;
+}
+.import-geojson-map-btn {
+    margin-left: 12px;
+    margin-top: 3px;
+}
+
+.highed-map-load-sample-text {
+    color: #25386f;
+    font-weight: 700;
+}
+
+.highed-map-import-container {
+    margin-top: 25px;
+}
+
+.highed-map-selector-arrow {
+    display: inline-block;
+    padding: 8px 11px;
+    border-right: 1px solid rgba(0, 0, 0, 0.22);
+    border-top: 1px solid rgba(0, 0, 0, 0.22);
+    vertical-align: top;
+    margin: 0px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.22);
+    position: relative;
+    top: -1px;
+    cursor: pointer;
+    height: 100%;
+}
+
+.highed-map-selector-images-container {
+    margin-top: 20px;
+    height: 200px;
+    overflow: auto;
+    width: 100%;
+    white-space: nowrap;
+    overflow-y: hidden;
+    .highed-map-selector-image-container {
+        width: 18%;
+        display: inline-block;
+        padding: 0px 7px;
+        cursor: pointer;
+        margin-top: 27px;
+    }
+    .highed-map-selector-image {
+        width: 100%;
+    }
+    .highed-map-selector-image-text {
+        position: relative;
+        white-space: initial;
+        top: -10px;
+        margin-bottom: 6px;
+        color: black;
+        font-size: 11px;
+        vertical-align: top;
+        height: 35px;
+        padding-left: 10px;
+    }
+}
+
+.highed-map-table-container {  
+    height: 350px;
+    overflow: auto;
+    margin-bottom: 15px;
+    .highed-map-table.edit {
+        tbody {
+            tr {
+                td {
+                    cursor: text;
+                }
+            }
+        }
+    }
+
+    .highed-map-table.dynamic-width {
+        table-layout: auto !important;
+        .highed-dropdown-body {
+            min-width: 165px;
+        }
+    }
+    .highed-map-table {
+        width:100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        
+        thead {
+            th.map-table-label-header.no-selects {
+                top: 0px;
+            }
+            th.map-table-label-header {
+                top: 39px;
+            }
+            th {
+                text-align: left;
+                position: sticky;
+                top: -1px;
+                color: black;
+                text-transform: capitalize;
+                font-weight: 400;
+                padding: 4px;
+                font-size: 14px;
+                margin: 0px;
+                background: #f3f3f3;
+                border: 1px solid #e8e8e8;
+            }
+        }
+        tbody {
+            tr {
+                color: black;
+                font-size: 13px;
+                font-weight: 300;
+                td {
+                    border-right: 1px solid #e8e8e8;
+                    border-bottom: 1px solid #e8e8e8;
+                    padding: 5px;
+                    height: 22px;
+                    
+                    input {
+                        width: 100%;
+                        height: 22px;
+                        margin: -5px;
+                        padding: 3px 5px;
+                        border: 0px;
+                        font-size: 13px;
+                        font-weight: 300;
+                        font-family: inherit;
+                    }
+                }
+            }
+            .highed-map-import-failed {
+                background-color: #ffecec;
+            }
+        }
+
+        .highed-map-table-no-data {
+            width: 200px;
+            padding: 10px 0px;
+            border: 1px solid #e8e8e8;
+            text-align: center;
+            color: black;
+        }
+        .highed-map-table-no-data.hide {
+            display: none;
+        }
+    }
+}
+

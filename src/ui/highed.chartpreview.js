@@ -49,8 +49,27 @@ highed.ChartPreview = function(parent, attributes, planCode) {
           subtitle: {
             text: ''
           },
+          plotOptions: {
+            series: {
+              allowPointSelect: true, //Maps
+              states: {
+                hover: {
+                    color: '#a4edba'
+                },
+                select: {
+                    color: '#EFFFEF',
+                    borderColor: 'black',
+                    dashStyle: 'dot'
+                }
+            }
+            }
+          }, 
           exporting: {
             //   url: 'http://127.0.0.1:7801'
+          },
+          credits: {
+            text: 'cloud.highcharts.com',
+            href: 'https://cloud.highcharts.com'
           }
         },
         expandTo: parent
@@ -140,11 +159,24 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     inputField = highed.dom.cr('input', 'highed-chart-input-field'),*/
     stockToolsContainer,
     isAnnotating = true,
+    mapData, 
     stockTools = highed.StockTools(planCode);
 
     if (planCode && planCode === 1) {
       stockTools.hide();
     }
+
+    if (highed.chartType === 'Map') {
+      highed.merge(properties, 
+        {
+          mapNavigation: {
+            enabled: true,
+            enableDoubleClickZoomTo: true
+          }
+        }
+      );
+    }
+
 
   stockTools.on('ShowAnnotationModal', function(options) {
       events.emit('ShowAnnotationModal', options);
@@ -189,7 +221,8 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         }
       }
     }, false);
-  ///////////////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////////
 
   function closeAnnotationPopup() {
     stockTools.closeAnnotationPopup()
@@ -199,8 +232,22 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     stockTools.toggleAnnotationIcon(toggle);
   }
 
+  function updateMapCodes(data) {
+    mapData = data;
+  }
+
+  function attachMapClickHandler() {
+    (mapData || []).forEach(function(d) {
+      if (d.id) {
+        highed.dom.on(document.querySelector('.highcharts-key-' + (d.id).toString().toLowerCase().replace(/\./g, "-")), 'dblclick', function(e) {
+          events.emit('EditMap', d);
+        });
+      }
+    });
+  }
+
   function attachWYSIWYG() {
-    
+
     Object.keys(wysiwyg).forEach(function(key) {
       highed.dom.on(parent.querySelector(key), 'click', function(e) {
         
@@ -281,6 +328,9 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     }, 200);
   }
 
+  function isTileMap(options){
+    return options.series && (options.series || []).some(function(s){return s.type === 'tilemap';});
+  }
   /* Init the chart */
   function init(options, pnode, noAnimation) {
     var i;
@@ -320,11 +370,12 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     // }
 
     try {
-      const chartConstr = (constr.some(function(a) {
+      const chartConstr = (highed.chartType === 'Map' ? isTileMap(options) ? 'Chart' : 'Map' : (constr.some(function(a) {
         return a === 'StockChart';
-      }) ? 'StockChart' : 'Chart');
+      }) ? 'StockChart' : 'Chart'));
 
       options = highed.merge(options, stockTools.getStockToolsToolbarConfig());
+      
       chart = new Highcharts[chartConstr](pnode || parent, options);
 
       //This is super ugly.
@@ -339,6 +390,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       }
 
       attachWYSIWYG();
+      attachMapClickHandler();
 
       if (chart && chart.reflow) {
         //chart.reflow();
@@ -447,6 +499,17 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         name: theme.name || theme.id
       };
 
+      if (highed.chartType === 'Map') {
+        if (theme.options.series && highed.isArr(theme.options.series)) {
+          theme.options.series.forEach(function(serie) {
+            serie.data = [];
+          });
+        }
+        if (theme.options.chart && theme.options.chart.map) {
+          delete theme.options.chart.map;
+        }
+      }
+
       themeOptions = highed.merge({}, theme.options);
       themeCustomCode = theme.customCode || '';
     } else {
@@ -455,7 +518,16 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         name: 'Untitled Theme'
       };
 
+      if (highed.chartType === 'Map') {
+        if (theme.series && highed.isArr(theme.series)) {
+          theme.series.forEach(function(serie) {
+            serie.data = [];
+          });
+        }
+      }
+
       themeOptions = highed.merge({}, theme);
+
     }
 
     if (!skipEmit) {
@@ -500,7 +572,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     highed.clearObj(aggregatedOptions);
 
     highed.merge(aggregatedOptions, properties.defaultChartOptions);
-
     // Apply theme first
     if (themeOptions && Object.keys(themeOptions).length) {
       highed.merge(
@@ -601,9 +672,10 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       });
     }
 
+    /*
     if (aggregatedTemplate.series) {
       aggregatedOptions.series = aggregatedOptions.series || [];
-
+      
       aggregatedTemplate.series.forEach(function(obj, i) {
         if (i < aggregatedOptions.series.length) {
           highed.merge(aggregatedOptions.series[i], obj);
@@ -611,12 +683,12 @@ highed.ChartPreview = function(parent, attributes, planCode) {
           aggregatedOptions.series.push(highed.merge({}, obj));
         }
       });
-    }
-
+    }*/
+    /*
     highed.merge(
       aggregatedOptions,
       highed.merge({}, customizedOptions)
-    );
+    );*/
 
 
     if (themeOptions && themeOptions.series) {
@@ -629,6 +701,9 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       }
     }
 
+    if (themeOptions && themeOptions.colorAxis) {
+      aggregatedOptions.colorAxis = themeOptions.colorAxis;
+    }
 
     if (aggregatedOptions.yAxis && !highed.isArr(aggregatedOptions.yAxis)) {
       aggregatedOptions.yAxis = [aggregatedOptions.yAxis];
@@ -656,7 +731,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
     // Finally, do custom code
     if (!noCustomCode && highed.isFn(customCode)) {
-      customCode(chart ? chart.userOptions : aggregatedOptions);
+      customCode(aggregatedOptions);
     }
   }
 
@@ -681,10 +756,14 @@ highed.ChartPreview = function(parent, attributes, planCode) {
   }
 
   function loadTemplateForSerie(template, seriesIndex) {
-    const type = template.config.chart.type;
+    var type = template.config.chart.type;
     delete template.config.chart.type;
 
     constr[seriesIndex] = template.constructor || 'Chart';
+
+    if (template.config.series && template.config.series[0]) {
+      type = template.config.series[0].type
+    }
 
     seriesIndex.forEach(function(index) {
 
@@ -694,7 +773,11 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       templateSettings[index].templateHeader = template.header;
       
       if (customizedOptions.series[index]) {
-        customizedOptions.series[index].type = type; //template.config.chart.type;
+        if (template.config.series && template.config.series[0]) {
+          highed.merge(customizedOptions.series[index], template.config.series[0]);
+        } else {
+          customizedOptions.series[index].type = type; //template.config.chart.type;
+        }
       } else {
         customizedOptions.series[index] = {
           type: type, //template.config.chart.type,
@@ -704,6 +787,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
           compare: undefined
         };
       }
+    
     });
     
     //templateOptions = highed.merge({}, template.config || {});
@@ -884,6 +968,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         });
       }
 
+
       if (mergedExisting) {
         updateAggregated();
         init(aggregatedOptions);
@@ -944,8 +1029,9 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         highed.snackBar('Invalid project');
       }
     }
-    
+
     if (projectData) {
+
       templateOptions = [{}];
       if (projectData.template) {
         if (highed.isArr(projectData.template)) templateOptions = projectData.template;
@@ -1103,14 +1189,18 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       //     });
       // }
 
-        updateAggregated(null, true);
+      updateAggregated(null, true);
 
-        if (!hasData) {
-          init(aggregatedOptions); 
-        }
-        emitChange();
-      
-      events.emit('LoadProject', projectData, aggregatedOptions);
+      if (!hasData) {
+        init(aggregatedOptions); 
+      }
+      emitChange();
+
+      if (projectData.options && ((projectData.options.chart && projectData.options.chart.map) || (projectData.options.plotOptions && projectData.options.plotOptions.map)) ){
+        events.emit('SetChartAsMap');
+        togglePlugins('map', true);
+        events.emit('LoadMapProject', projectData, aggregatedOptions);
+      } else events.emit('LoadProject', projectData, aggregatedOptions);
     }
   }
 
@@ -1167,7 +1257,11 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       data: lastLoadedSheet
     });
 
-
+    if (highed.chartType === 'Map' && customizedOptions.series) {
+      addBlankSeries(customizedOptions.series.length,null,{
+        joinBy: null
+      });
+    }
 
     updateAggregated();
     init(aggregatedOptions);
@@ -1420,19 +1514,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     } else {
       delete chartPlugins[groupId];
     }
-  }
-
-
-  function getPlugins() {
-    var arr = [];
-
-    Object.keys(chartPlugins).filter(function(key) {
-      chartPlugins[key].forEach(function(object) {
-        if (arr.indexOf(object) === -1) arr.push(object);
-      });
-    });
-
-    return arr;
   }
 
   /**
@@ -2017,9 +2098,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       chart.currentAnnotation.shapes[0].update(config);
       chart.currentAnnotation.userOptions.typeOptions.line.stroke = config.stroke;
       chart.currentAnnotation.userOptions.typeOptions.line.strokeWidth = config.strokeWidth;
-
-    }
-    else if (type === 'verticalCounter') {
+    } else if (type === 'verticalCounter') {
       //There must be a better way to do this
       chart.currentAnnotation.shapes[0].update(config);
       chart.currentAnnotation.labels[0].update(config);
@@ -2028,14 +2107,62 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       chart.currentAnnotation.userOptions.typeOptions.connector.stroke = config.stroke;
       chart.currentAnnotation.userOptions.typeOptions.connector.fill = config.stroke;
       chart.currentAnnotation.userOptions.typeOptions.connector.strokeWidth = config.strokeWidth;
-    }
-    else 
-      chart.currentAnnotation.update(config);
+    } 
+    else chart.currentAnnotation.update(config);
     
     chart.annotationsPopupContainer.style.display = 'none';
   }
 
+  function updateMapData(data, code, name){
+    if (!code || code === '') code = 'hc-key';
+    if (!name || name === '') name = 'name';
+    //customizedOptions.series[0].mapData = data;
+    /*
+    if (!customizedOptions.plotOptions) customizedOptions.plotOptions = {};
+    if (!customizedOptions.plotOptions.map) customizedOptions.plotOptions.map = {};
+*/
+    data.hccode = code;
+    data.hcname = name;
 
+
+    if (!customizedOptions.chart) customizedOptions.chart = {};
+
+    //customizedOptions.plotOptions.map.mapData = data;
+    customizedOptions.chart.map = data;
+
+    customizedOptions.series.forEach(function(s){
+      s.joinBy = [code, code];
+    })
+    //customizedOptions.series[0].joinBy = [code, code];
+  }
+
+  function updateMap(path, scriptSrc, callback) {
+
+    if (customizedOptions && !customizedOptions.chart) {
+      customizedOptions.chart = {}
+    }
+
+    customizedOptions.chart.map = path;
+    
+    var s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = scriptSrc
+
+    s.onload = s.onreadystatechange = function( _, isAbort ) {
+      if(isAbort || !s.readyState || /loaded|complete/.test(s.readyState) ) {
+        s.onload = s.onreadystatechange = null;
+        s = undefined;
+
+        if(!isAbort && callback) setTimeout(callback, 0);
+      }
+    };
+
+    document.getElementsByTagName('head')[0].appendChild(s);
+    
+    updateAggregated();
+    init(aggregatedOptions);
+  }
   ///////////////////////////////////////////////////////////////////////////
 
   //Init the initial chart
@@ -2046,24 +2173,33 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     return expanded ? collapse() : expand();
   });
 
-  function addBlankSeries(index, type) {
+  function addBlankSeries(index, type, extra) {
+    
+    if (!extra) {
+      extra = {};
+    }
+
     if (!customizedOptions.series[index]) {
-      customizedOptions.series[index] = {
+      customizedOptions.series[index] = highed.merge({
         data:[],
         turboThreshold: 0,
         _colorIndex: index,
         _symbolIndex: 0,
         compare: undefined
-      };
+      }, extra);
     }
 
     if(type) customizedOptions.series[index].type = type;
     
+    if (extra) {
+      customizedOptions.series[index] = highed.merge(customizedOptions.series[index], extra);
+    }
+
     //Init the initial chart
     updateAggregated();
     init();
   }
-  
+
   ///////////////////////////////////////////////////////////////////////////
 
   exports = {
@@ -2098,6 +2234,8 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     updateAnnotation: updateAnnotation,
     closeAnnotationPopup: closeAnnotationPopup,
 
+    updateMapCodes: updateMapCodes,
+
     options: {
       set: set,
       setAll: setChartOptions,
@@ -2114,7 +2252,8 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       },
       addBlankSeries: addBlankSeries,
       togglePlugins: togglePlugins,
-      getTemplateSettings: getTemplateSettings
+      getTemplateSettings: getTemplateSettings,
+      updateMap: updateMap
     },
 
     data: {
@@ -2128,7 +2267,8 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       setDataTableCSV: setDataTableCSV,
       setAssignDataFields: setAssignDataFields,
       deleteSerie: deleteSerie,
-      deleteSeries: deleteSeries
+      deleteSeries: deleteSeries,
+      updateMapData: updateMapData
     },
 
     export: {

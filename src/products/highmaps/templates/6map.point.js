@@ -26,57 +26,61 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 highed.templates.add('Map', {
-  title: 'Basic North America Map',
+  title: 'Point Map',
   description: [
-    'Basic map of North America.',
-    'Good starting point for North American geographical data.'
+    'Point Maps can be used to show the distribution of data over a geographical region, by placing equally sized markers over the region.',
   ],
-  thumbnail: '',
+  thumbnail: 'mappoint.svg',
   dataValidator: false,
-  sampleSets: [],
+  loadForEachSeries: false,
   constructor: 'Map',
+  load: function(chart, event) {
+    //Create serie if chart only has one
+    if (chart.series && chart.series.length <= 1) {
+
+      event.emit('ChangeAssignDataType', 'map', {
+        "joinBy": 0
+      });
+
+      event.emit('AddDefaultSeries');
+
+    }
+  },
   config: {
     chart: {
-      borderWidth: 1
     },
 
     mapNavigation: {
-      enabled: true
+      enabled: true,
+      buttonOptions: {
+          verticalAlign: 'bottom'
+      }
+    },
+
+    xAxis: {
+      visible: false
+    },
+
+    plotOptions: {
+      series: {
+        fillColor: 'black'
+      }
+    },
+
+    yAxis: {
+      visible: false
     },
 
     legend: {
-      layout: 'horizontal',
-      borderWidth: 0,
-      backgroundColor: 'rgba(255,255,255,0.85)',
-      verticalAlign: 'bottom'
+      enabled: false
+    },
+    tooltip: {
+      enabled: false
     },
 
-    colorAxis: {
-      min: 1,
-      type: 'logarithmic',
-      minColor: '#EEEEFF',
-      maxColor: '#000022',
-      stops: [[0, '#EFEFFF'], [0.67, '#4444FF'], [1, '#000022']]
-    },
-
-    series: [
-      {
-        mapData: 'custom/north-america',
-        joinBy: ['postal-code', 'code'],
-        dataLabels: {
-          enabled: true,
-          color: '#FFFFFF',
-          format: '{point.code}'
-        },
-        dataLabels: {
-          enabled: true,
-          color: '#FFFFFF',
-          format: '{point.code}'
-        },
-        tooltip: {
-          pointFormat: '{point.code}: {point.value{/km2'
-        }
-      }
-    ]
+    series: [{
+        joinBy: 'hc-key',
+        type: 'mappoint',
+    }]
   }
 });

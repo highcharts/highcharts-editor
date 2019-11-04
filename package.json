@@ -21,13 +21,14 @@
   },
   "devDependencies": {
     "async": "^2.0.0",
-    "gulp": "3.9.1",
+    "gulp": "^3.9.1",
     "gulp-concat": "2.6.0",
     "gulp-electron": "0.1.3",
     "gulp-header": "*",
     "gulp-jshint": "*",
     "gulp-less": "3.1.0",
     "gulp-rename": "1.2.2",
+    "gulp-replace": "^1.0.0",
     "gulp-run": "1.7.1",
     "gulp-uglify": "2.0.0",
     "gulp-zip": "3.2.0",
@@ -35,7 +36,9 @@
     "husky": "^0.14.3",
     "jshint": "^2.9.3",
     "lint-staged": "^6.1.0",
+    "gulp-replace-task": "^0.11.0",
     "prettier": "^1.10.2",
+    "replace": "^1.1.1",
     "request": "2.74.0"
   },
   "dependencies": {

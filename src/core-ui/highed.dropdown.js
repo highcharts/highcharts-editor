@@ -50,6 +50,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       body = highed.dom.cr('div', 'highed-dropdown-body'),
       arrow = highed.dom.cr('div', 'highed-dropdown-arrow fa fa-caret-down'),
       items = [],
+      disabled = false,
       selectedItem = false,
       expanded = false,
       catcher = false;
@@ -169,6 +170,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     //Toggle expansion
     function toggle(e) {
+      if (disabled) return;
       expanded = !expanded;
       if (expanded) {
         return expand(e);
@@ -293,6 +295,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       }
 
       highed.dom.on(node, 'click', function(e) {
+        if (disabled) return;
         itemInstance.select();
         e.cancelBubble = true;
         e.preventDefault();
@@ -368,6 +371,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       return selectedItem;
     }
 
+    function disable(){
+      disabled = true;
+    }
+
     ///////////////////////////////////////////////////////////////////////////
 
     if (parent) {
@@ -382,6 +389,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     return {
       container: container,
       selectById: selectById,
+      disable: disable,
       selectByIndex: selectByIndex,
       selectAll: selectAll,
       updateByIndex: updateByIndex,

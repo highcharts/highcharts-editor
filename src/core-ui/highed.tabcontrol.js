@@ -250,7 +250,8 @@ highed.TabControl = function(parent, noOverflow, extraPadding, skipTabs) {
       highed.dom.style(tbody, {
         opacity: 1,
         //                'pointer-events': 'auto',
-        display: 'block'
+        display: 'block',
+        'overflow-x': 'hidden'
       });
 
       selectedTab = texports;

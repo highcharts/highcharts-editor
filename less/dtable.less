@@ -570,10 +570,11 @@ col.no-transition {
     max-height: 62px;
 }
 
-.highed-table-dropzone-container {
+.highed-table-dropzone-container {    
     max-width: 640px;
     margin-left: 38px;
     margin-right: auto;
+
     .highed-table-dropzone {
         border: 2px dashed rgb(140, 140, 140);
         border-radius: 4px;
@@ -598,7 +599,74 @@ col.no-transition {
             font-size: 12px;
         }
     }
-    
+
+    .highed-table-map-dropzone {
+        min-height: 166px;
+
+
+        position: relative;
+        top: -40px;
+        width: 100%;
+    }    
+
+    .highed-toolbox-button-container {
+        position: relative;
+    }
+
+    .highed-maps-datatable.hide + .highed-table-map-dropzone,
+    .highed-maps-datatable.hide + .highed-table-map-dropzone + .highed-toolbox-button-container  {
+        top: 0px;
+    }
+
+    .highed-maps-datatable.active + .highed-table-map-dropzone {
+        min-height: 114px;
+        border: 2px dashed #e8e8e8;
+    }
+    .highed-maps-datatable.active + .highed-table-map-dropzone,
+    .highed-maps-datatable.active + .highed-table-map-dropzone + .highed-chart-container + .highed-toolbox-button-container {
+        width: 946px;
+        height: 177px;
+        position: relative;
+        clear: both;
+        float: right;
+        left: -9px;
+        top: -53px;
+        .highed-table-dropzone-title {
+            margin-top: 39px;
+        }
+        .highed-table-dropzone-message {
+            margin-top: 9px;
+            padding-top: 5px;
+            padding-bottom: 7px;
+        }
+    }
+
+    .highed-maps-datatable.active + .highed-table-map-dropzone + .highed-chart-container {
+        right: 9px;
+        width: 49% !important;
+        height: 88% !important;
+        top: -12px;
+        margin-right: 0;
+        .highed-chart-frame {
+            opacity: 1 !important;
+            max-height: max-content !important;
+        }
+    }
+
+    .highed-maps-datatable.active + .highed-table-map-dropzone + .highed-chart-container + .highed-toolbox-button-container {
+        width: 100%;
+        height: 35px;
+        padding-top: 10px;
+    }
+
+}
+
+.highed-table-dropzone-container.map-data {
+    max-width: 100%;
+
+    .highed-toolbox-button-container {
+        top: -50px;
+    }
 }
 
 @media (max-width: 1366px) {

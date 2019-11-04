@@ -1,6 +1,4 @@
-/*
-
-Highcharts Editor 
+/*******************************************************************************
 
 Copyright (c) 2016-2017, Highsoft
 
@@ -23,45 +21,33 @@ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-*/
+******************************************************************************/
 
-highed.templates.add('Map', {
-  title: 'Basic European Map',
-  description: [
-    'Basic European map.',
-    'Good starting point for European geographical data.'
-  ],
-  thumbnail: '',
-  dataValidator: false,
-  sampleSets: ['eu-gdp'],
-  constructor: 'Map',
-  config: {
-    chart: {
-      borderWidth: 1
-    },
-
-    mapNavigation: {
-      enabled: true
-    },
-
-    legend: {
-      layout: 'horizontal',
-      verticalAlign: 'bottom'
-    },
-
-    colorAxis: {
-      min: 0
-    },
-
-    series: [
-      {
-        mapData: 'custom/europe',
-        joinBy: 'name',
-        dataLabels: {
-          enabled: false,
-          format: '{point.name}'
-        }
-      }
-    ]
-  }
+highed.samples.addMapType('Tilemap', {
+  id: 'honeycomb-southamerica',
+  title: 'South America',
+  description: '',
+  thumbnail: {
+    honeycomb: 'maphoneycomb_southamerica.svg',
+    circle: 'mapcircle_southamerica.svg'
+  },
+  type: 'csv',
+  inverted: true, 
+  dataset: [
+    "iso-a3,capital,x,y,value",
+    "ARG,Buenos Aires,7,15,4849377",
+    "FLK,Stanley,6,16,737732",
+    "CHL,Santiago,5,14,6745408",
+    "URY,Montevideo,6,14,2994079",
+    "PRY,Asunción,5,15,39250017",
+    "BOL,Sucre,4,14,5540545",
+    "PRU,Lima,4,13,3596677",
+    "BRA,Brasília,4,15,935614",
+    "SUR,Paramaribo,3,16,7288000",
+    "GUF,Cayenne,2,15,20612439",
+    "GUY,Georgetown,3,15,10310371",
+    "VEN,Caracas,2,14,1419561",
+    "COL,Bogotá,4,13,1634464",
+    "ECU,Quito,3,14,12801539"
+  ]
 });

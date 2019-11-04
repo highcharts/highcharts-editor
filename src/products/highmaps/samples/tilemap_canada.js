@@ -1,6 +1,4 @@
-/*
-
-Highcharts Editor 
+/*******************************************************************************
 
 Copyright (c) 2016-2017, Highsoft
 
@@ -23,44 +21,32 @@ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-*/
+******************************************************************************/
 
-highed.templates.add('Map', {
-  title: 'Basic Asian Map',
-  description: [
-    'Basic map of Asia.',
-    'Good starting point for Asian geographical data.'
-  ],
-  thumbnail: '',
-  dataValidator: false,
-  sampleSets: ['asia-gdp'],
-  constructor: 'Map',
-  config: {
-    chart: {
-      borderWidth: 1
-    },
-
-    mapNavigation: {
-      enabled: true
-    },
-
-    legend: {
-      layout: 'horizontal',
-      verticalAlign: 'bottom'
-    },
-
-    colorAxis: {
-      min: 0
-    },
-
-    series: [
-      {
-        mapData: 'custom/asia',
-        joinBy: 'name',
-        dataLabels: {
-          enabled: false
-        }
-      }
-    ]
-  }
+highed.samples.addMapType('Tilemap', {
+  id: 'honeycomb-canada',
+  title: 'Canada',
+  description: '',
+  thumbnail: {
+    honeycomb: 'maphoneycomb_canada.svg',
+    circle: 'mapcircle_canada.svg'
+  },
+  type: 'csv',
+  inverted: true, 
+  dataset: [
+    "hc-a2,name,x,y,value",
+    "BC,British Columbia,2,10,4849377",
+    "AB,Alberta,2,11,737732",
+    "SK,Saskatchewan,2,12,6745408",
+    "MB,Manitoba,2,13,2994079",
+    "ON,Ontario,2,14,39250017",
+    "NS,Nova Scotia,3,17,5540545",
+    "YT,Yukon,1,11,3596677",
+    "NT,Northwest Territories,1,13,935614",
+    "NU,Nunavut,1,12,7288000",
+    "QC,Quebec,2,15,20612439",
+    "NB,New Brunswick,1,17,10310371",
+    "NL, Newfoundland and Labrador,1,16,1419561",
+    "PE,Prince Edward Island,2,17,1634464"
+  ]
 });
