@@ -477,8 +477,8 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode, da
     events.emit("PropertyChange", groupId, newValue, detailIndex);
   });
 
-  list.on('TogglePlugins', function(groupId, newValue) {
-    events.emit("TogglePlugins", groupId, newValue);
+  list.on('TogglePlugins', function(groupId, newValue, type) {
+    events.emit("TogglePlugins", groupId, newValue, type);
   });
 
   list.on('Select', function(id) {

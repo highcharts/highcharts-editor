@@ -331,12 +331,16 @@ highed.List = function(parent, responsive, props, planCode, dataPage) {
               header: highed.L(group.pid).replace('Chart', highed.chartType ==='Map' ? 'Map' : 'Chart'),
               dataTableValues: group.dataTableValues
             },
-            function(newValue) {
+            function(newValue, extra) {
               if (group.header) return;
               if (group.plugins && group.plugins.length > 0) {
                 events.emit('TogglePlugins', group.id, newValue);
               }
               
+              if (extra) {
+                events.emit('TogglePlugins', group.id, extra.id, 'css');
+              }
+
               if (!group.noChange) events.emit('PropertyChange', group.id, newValue, detailIndex);
               
               highed.emit(

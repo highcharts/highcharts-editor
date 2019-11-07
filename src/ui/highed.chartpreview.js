@@ -1031,6 +1031,9 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     }
 
     if (projectData) {
+      
+      if (projectData.settings && projectData.settings.plugins && projectData.settings.plugins.cssModules)
+        loadModules(projectData.settings.plugins.cssModules);
 
       templateOptions = [{}];
       if (projectData.template) {
@@ -1202,6 +1205,18 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         events.emit('LoadMapProject', projectData, aggregatedOptions);
       } else events.emit('LoadProject', projectData, aggregatedOptions);
     }
+  }
+
+  function loadModules(paths){
+    paths.forEach(function(path){
+
+      var s = document.createElement('link');
+      s.rel = 'stylesheet';
+      s.async = true;
+      s.href = path;
+
+      document.getElementsByTagName('head')[0].appendChild(s);
+    })
   }
 
   function loadLiveData(settings) {
@@ -1508,9 +1523,16 @@ highed.ChartPreview = function(parent, attributes, planCode) {
    * Add/Remove a module from the charts config
    */
 
-  function togglePlugins(groupId, newValue) {
-    if (newValue) {
-      chartPlugins[groupId] = 1;
+  function togglePlugins(groupId, isNewValue, type) {
+    
+    if (type && type === 'css') {
+      if (!chartPlugins['cssModules']) chartPlugins.cssModules = [];
+      if (!chartPlugins.cssModules.some(function(mod) {
+        return mod === isNewValue;
+      })) chartPlugins.cssModules.push(isNewValue);
+
+    } else if (isNewValue) {
+      chartPlugins[groupId] = isNewValue || 1;
     } else {
       delete chartPlugins[groupId];
     }

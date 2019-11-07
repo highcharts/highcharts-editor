@@ -69,9 +69,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     ///////////////////////////////////////////////////////////////////////
 
-    function callback() {
+    function callback(customFont) {
       if (highed.isFn(fn)) {
-        fn(style);
+        fn(style, customFont);
       }
     }
 
@@ -123,6 +123,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     //Add fonts to font selector
     fontFamily.addItems(highed.meta.fonts);
+    fontFamily.addItems(highed.meta.customFonts);
     //Add font sizes
     fontSize.addItems([8, 10, 12, 14, 16, 18, 20, 22, 25, 26, 28, 30, 32, 34]);
 
@@ -130,11 +131,41 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     //Listen to font changes
     fontFamily.on('Change', function(selected) {
-      
-      if (selected.id() === 'Default') style.fontFamily = '"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif';
-      else style.fontFamily = selected.id();
+      customFont = highed.meta.customFonts.filter(function(font) {
+        return font.id === selected.id();
+      });
 
-      return callback();
+      if (customFont.length > 0) {
+        if (!customFont[0].loaded) {
+          var s = document.createElement('link');
+          s.rel = 'stylesheet';
+          s.async = true;
+          s.href = selected.id();
+  
+          s.onload = s.onreadystatechange = function( _, isAbort ) {
+            if(isAbort || !s.readyState || /loaded|complete/.test(s.readyState) ) {
+              s.onload = s.onreadystatechange = null;
+              s = undefined;
+  
+              if(!isAbort) setTimeout(function() {
+                style.fontFamily = selected.title();
+                customFont[0].loaded = true;
+                return callback(customFont[0]);
+              }, 100);
+            }
+          };
+          document.getElementsByTagName('head')[0].appendChild(s);
+        } else {
+          style.fontFamily = selected.title();
+          return callback(customFont[0]);
+        }
+      } else if (selected.id() === 'Default') {
+        style.fontFamily = '"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif';
+        return callback();
+      } else {
+        style.fontFamily = selected.id();
+        return callback();
+      }
     });
 
     //Listen to font size changes

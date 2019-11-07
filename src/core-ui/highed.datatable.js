@@ -2991,11 +2991,9 @@ highed.DataTable = function(parent, attributes) {
 
     simpleDataTable = highed.WizardData(importer, mapImporter, chartContainer);
     simpleDataTable.on('DownloadMapCSVStub', function(){
-
       downloadRows = rows.map(function(row){
           return row.columns[0].cellValue();
       }).join('\n');
-
       highed.download('data.csv', downloadRows, 'application/csv');
     });
 
