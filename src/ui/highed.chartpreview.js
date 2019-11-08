@@ -684,11 +684,11 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         }
       });
     }*/
-    /*
+    
     highed.merge(
       aggregatedOptions,
       highed.merge({}, customizedOptions)
-    );*/
+    );
 
 
     if (themeOptions && themeOptions.series) {
