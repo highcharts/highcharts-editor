@@ -55,7 +55,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     icon = highed.dom.cr('div', iconClass),
     helpModal,
     // Data table
-    customizerContainer = highed.dom.cr('div', 'highed-box-size highed-fill'), 
+    customizerContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
     customizer,
     body = highed.dom.cr(
       'div',
@@ -148,7 +148,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     isVisible = false,
     searchAdvancedOptions = highed.SearchAdvancedOptions(parent),
     resolutionSettings = highed.dom.cr('span', 'highed-resolution-settings'),
-    phoneIcon = highed.dom.cr('span', '', '<i class="fa fa-mobile" aria-hidden="true"></i>');
+    phoneIcon = highed.dom.cr('span', '', '<i class="fa fa-mobile" aria-hidden="true"></i>'),
     tabletIcon = highed.dom.cr('span', '', '<i class="fa fa-tablet" aria-hidden="true"></i>'),
     tabletIcon = highed.dom.cr('span', '', '<i class="fa fa-tablet" aria-hidden="true"></i>'),
     stretchToFitIcon = highed.dom.cr('span', '', '<i class="fa fa-laptop" aria-hidden="true"></i>'),
@@ -168,7 +168,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
         height: 768
       }
     ];
-    
+
     resWidth.placeholder = 'W';
     resHeight.placeholder = 'H';
 
@@ -192,7 +192,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + props.icon;
 
     customizerContainer.innerHTML = '';
-    
+
     customizer = highed.ChartCustomizer(
       customizerContainer,
       options,
@@ -205,7 +205,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     customizer.on('PropertyChange', chartPreview.options.set);
     customizer.on('PropertySetChange', chartPreview.options.setAll);
     customizer.on('TogglePlugins', chartPreview.options.togglePlugins);
-    
+
     customizer.on('AdvancedBuilt', function() {
 
       var bsize = highed.dom.size(body),
@@ -217,16 +217,16 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       };
 
       searchAdvancedOptions.resize(width, (size.h - highed.dom.size(chartFrame).h) - 15);
-    
+
       searchAdvancedOptions.setOptions(customizer.getAdvancedOptions());
     });
 
     customizer.on('AnnotationsClicked', function() {
       chartPreview.options.togglePlugins('annotations', 1);
     });
-  
+
     customizer.on('AdvanceClicked', function() {
-  
+
       width = 66;
       if (highed.onTablet()) width = 64;
 
@@ -234,26 +234,26 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       highed.dom.style(backIcon, {
         display: "inline-block"
       });
-  
+
       expand();
       resizeChart(300);
-  
+
       setTimeout(chartPreview.resize, 1000);
       searchAdvancedOptions.show();
     });
-    
+
     highed.dom.ap(resolutionSettings, chartSizeText, stretchToFitIcon, tabletIcon, phoneIcon, resWidth, resHeight);
-    
+
     title.innerHTML = '';
-    
+
     iconsContainer.innerHTML = '';
 
     if (!highed.onPhone()) {
       buttons.forEach(function(button, i) {
         if (button.noPermission) return;
-        
+
         button.element = highed.dom.cr('span', 'highed-toolbox-custom-code-icon highed-template-tooltip ' + ( i === 0 ? ' active' : ''), '<i class="fa fa-' + button.icon + '" aria-hidden="true"></i><span class="highed-tooltip-text">' + button.tooltip + '</span>');
-        
+
         highed.dom.on(button.element, 'click', function() {
           buttons.forEach(function(b){
             if (!b.noPermission)  b.element.classList.remove('active');
@@ -290,9 +290,9 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       highed.dom.ap(annotationContainer, annotationButton);
 
       annotationOptions.forEach(function(option) {
-        var btn = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons ' + option.icon + ' ' + option.className + ' ' + (usingSafari() ? ' usingsafari ' : '') + (option.className ? ' highed-svg-icon' : ''), 
+        var btn = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons ' + option.icon + ' ' + option.className + ' ' + (usingSafari() ? ' usingsafari ' : '') + (option.className ? ' highed-svg-icon' : ''),
                                 '<i class="fa fa-' + option.icon + '" aria-hidden="true"></i><span class="highed-tooltip-text">' + option.tooltip + '</span>');
-        
+
         if (option.imageIcon) {
           var img = highed.dom.cr('img');
           img.src = option.imageIcon;
@@ -309,10 +309,10 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
           option.submenu.forEach(function(submenuOption) {
 
             var subBtn = highed.dom.cr('span', 'highed-template-tooltip annotation-buttons ' + submenuOption.className + '-icon ' + (usingSafari() ? ' usingsafari ' : ''));
-            
+
             highed.dom.on(subBtn, 'click', function() {
               if (disableAnnotation) return;
-        
+
               btn.innerHTML = '<span class="highed-tooltip-text">' + option.tooltip + '</span>';
               btn.className = 'highed-template-tooltip annotation-buttons ' + submenuOption.icon + ' ' + submenuOption.className + ' ' + (usingSafari() ? ' usingsafari ' : '') + (submenuOption.className ? ' highed-svg-icon' : '')
               var img = highed.dom.cr('img');
@@ -332,8 +332,8 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
           highed.dom.ap(ellipses, subContainer);
 
           highed.dom.on(ellipses, 'click', function(event){
-            if (disableAnnotation) return;      
-            
+            if (disableAnnotation) return;
+
             var isActive = subContainer.classList.contains('active');
             closeAnnotationDropdown();
 
@@ -343,7 +343,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
           //highed.dom.ap(btn, ellipses);
 
         }
-        
+
         if (option.onClick || !option.draggable) {
           highed.dom.on(btn, 'click', function() {
             if (option.onClick) option.onClick();
@@ -354,14 +354,14 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
         highed.dom.ap(annotationContainer, btn, ellipses);
       });
     }
-    
+
     highed.dom.ap(iconsContainer, annotationContainer);
     highed.dom.ap(contents, userContents);
     highed.dom.ap(body, contents);
-  
+
     highed.dom.ap(userContents, customizerContainer);
     highed.dom.ap(parent, highed.dom.ap(container,body));
-  
+
     //customizer.resize();
 
     expand();
@@ -371,7 +371,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
   function getResolutionContainer() {
     return resolutionSettings;
   }
-  
+
   function afterResize(func){
     var timer;
     return function(event){
@@ -384,7 +384,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     width = props.widths.desktop;
     if (highed.onTablet() && props.widths.tablet) width = props.widths.tablet;
     else if (highed.onPhone() && props.widths.phone) width = props.widths.phone;
-    
+
     chartWidth = 68;
 
     expand();
@@ -408,7 +408,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       //expand();
     }
   }
-  
+
   if (!highed.onPhone()) {
     highed.dom.on(window, 'resize', afterResize(function(e){
       resize();
@@ -437,7 +437,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
     if (highed.chartType === 'Map') resize();
   }),
-  
+
   backIcon = highed.dom.cr('div','highed-back-icon', '<i class="fa fa-chevron-circle-left" aria-hidden="true"></i>');
 
 
@@ -447,13 +447,13 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
 
   highed.dom.on(backIcon, 'click', function(){
-    
+
     width = props.widths.desktop;
     if (highed.onTablet() && props.widths.tablet) width = props.widths.tablet;
     else if (highed.onPhone() && props.widths.phone) width = props.widths.phone;
-    
+
     chartWidth = 68;
-    
+
     highed.dom.style(backIcon, {
       display: "none"
     });
@@ -475,7 +475,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       disableAnnotation = chartPreview.options.full.series.some(function(series) {
         return blacklist.includes(series.type);
       });
-    
+
       if (!disableAnnotation)
         annotationContainer.classList.remove('disable')
       else
@@ -485,7 +485,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
   }
 
   function expand() {
-    
+
     var newWidth = width; //props.width;
 
     highed.dom.style(body, {
@@ -497,7 +497,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     if (!highed.onPhone()) {
       const windowWidth = highed.dom.size(parent).w;
       const percentage = ((100 - chartWidth) / 100);
-  
+
       var styles =  window.getComputedStyle(chartFrame);
       var containerStyles =  window.getComputedStyle(container);
       var chartMargin = parseFloat(styles['marginLeft']) + parseFloat(styles['marginRight']),
@@ -530,7 +530,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       return size;
     }
 
-    setTimeout(resizeBody, 300);  
+    setTimeout(resizeBody, 300);
     highed.emit('UIAction', 'ToolboxNavigation', props.title);
   }
 
@@ -560,17 +560,17 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     }
 
   }
-  
+
   function hide() {
 
     customizer.showSimpleEditor();
-      
+
     width = props.widths.desktop;
     if (highed.onTablet() && props.widths.tablet) width = props.widths.tablet;
     else if (highed.onPhone() && props.widths.phone) width = props.widths.phone;
 
     chartWidth = 68;
-   
+
     highed.dom.style(backIcon, {
       display: "none"
     });
@@ -583,7 +583,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     });
     isVisible = false;
     searchAdvancedOptions.hide();
-    
+
     if (resolutionSettings) {
       highed.dom.style(resolutionSettings, {
         display: 'none'
@@ -623,8 +623,8 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
     errorBarHeadline.innerHTML = title;
     errorBarBody.innerHTML = message;
-  }  
-  
+  }
+
   function sizeChart(w, h) {
     if ((!w || w.length === 0) && (!h || h.length === 0)) {
       fixedSize = false;
@@ -686,7 +686,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     setTimeout(chartPreview.resize, 200);
   }
 
-  
+
   chartPreview.on('SetResizeData', function () {
     //setToActualSize();
   });
