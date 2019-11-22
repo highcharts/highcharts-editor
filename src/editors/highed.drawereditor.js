@@ -374,6 +374,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
   betaContainer.title = "Maps functionality is currently in Beta";
 
   highed.chartType = chartType;
+  chartPreview.init();
   chartPreview.options.togglePlugins('map', chartType === 'Map');
 
   highed.dom.on(helpIcon, 'click', showHelp);

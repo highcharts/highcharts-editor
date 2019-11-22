@@ -71,7 +71,8 @@ highed.ChartPreview = function(parent, attributes, planCode) {
             text: 'cloud.highcharts.com',
             href: 'https://cloud.highcharts.com'
           },
-          data: {}
+          data: {},
+          colorAxis: {}
         },
         expandTo: parent
       },
@@ -334,14 +335,12 @@ highed.ChartPreview = function(parent, attributes, planCode) {
   */
 
   function refreshChart(options) {
-    console.trace("REFRESHING CHART....")
     options = options || aggregatedOptions;
 
     (options.series || []).forEach(function(serie){
       if (serie.data) delete serie.data;
     })
 
-    //console.log(JSON.stringify(options))
     chart.update(options);
   }
 
@@ -350,6 +349,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
   function isTileMap(options){
     return options.series && (options.series || []).some(function(s){return s.type === 'tilemap';});
   }
+
   /* Init the chart */
   function init(options, pnode, noAnimation) {
     var i;
@@ -394,7 +394,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       }) ? 'StockChart' : 'Chart'));
 
       options = highed.merge(options, stockTools.getStockToolsToolbarConfig());
-      
       chart = new Highcharts[chartConstr](pnode || parent, options);
 
       //This is super ugly.
@@ -744,7 +743,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
   
       aggregatedOptions.annotations = annotations.slice();
     }
-
 
     highed.merge(aggregatedOptions, highed.option('stickyChartProperties'));
 
@@ -2227,7 +2225,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
   //Init the initial chart
   updateAggregated();
-  init();
 
   highed.dom.on(toggleButton, 'click', function() {
     return expanded ? collapse() : expand();
@@ -2268,6 +2265,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     closeAnnotationPopup: closeAnnotationPopup,
 
     updateMapCodes: updateMapCodes,
+    init: init,
 
     options: {
       set: set,
