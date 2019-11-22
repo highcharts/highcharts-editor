@@ -136,10 +136,8 @@ highed.List = function(parent, responsive, props, planCode, dataPage) {
         masterNode,
         def;
 
-      
       if (highed.chartType === 'Map' && group.mapDisabled) return;
-
-      options = chartPreview.options.all().userOptions;
+      options = chartPreview.options.getCustomized(); //userOptions;//chartPreview.options.getCustomized();
 
       if (highed.isArr(group.options)) {
         table = highed.dom.cr('div', 'highed-customizer-table');

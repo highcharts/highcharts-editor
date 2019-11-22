@@ -731,7 +731,11 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
     // Finally, do custom code
     if (!noCustomCode && highed.isFn(customCode)) {
-      customCode(aggregatedOptions);
+      try{
+        customCode(aggregatedOptions);
+      } catch(e) {
+        console.log("Error in Custom Code:", e);
+      }
     }
   }
 
