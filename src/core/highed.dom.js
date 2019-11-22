@@ -352,5 +352,24 @@ highed.dom = {
       return node;
     }
     return document.getElementById(node) || false;
-  }
+  },
+
+  /** Create a button
+     * @namespace highed.dom
+     * @param type {string} - the name of the button
+     * @param cssClass {string} (optional) - the css class to use for the button
+     * @param id {string} (optional) - the id of the new button
+     * @param func {string} (optional) - the function to call when button clicked
+     *
+     * @return {domnode} - the new button
+     */
+   btn: function(name, className, id, func) {
+     var btn = highed.dom.cr('button', className, name, id);
+
+     highed.dom.on(btn, 'click', function(e){
+      if (func && highed.isFn(func)) func();
+     });
+
+     return btn;
+   }
 };

@@ -26,41 +26,47 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 highed.templates.add('Map', {
-  title: 'Basic Asian Map',
+  title: 'Pattern Fill',
   description: [
-    'Basic map of Asia.',
-    'Good starting point for Asian geographical data.'
+    'Pattern Fill Maps display divided geographical areas or regions that are patterned in relation to an image source. This provides a way to visualise values over a geographical area.',
   ],
-  thumbnail: '',
+  thumbnail: 'mappatternfill.png',
   dataValidator: false,
-  sampleSets: ['asia-gdp'],
   constructor: 'Map',
+  type: 'patternfill',
   config: {
     chart: {
-      borderWidth: 1
+    },
+    // Limit zoom
+    xAxis: {
+        minRange: 3500,
+        visible: false
     },
 
-    mapNavigation: {
-      enabled: true
+    yAxis: {
+      visible: false
     },
 
+    // We do not want a legend
     legend: {
-      layout: 'horizontal',
-      verticalAlign: 'bottom'
+        enabled: false
     },
-
-    colorAxis: {
-      min: 0
-    },
-
-    series: [
-      {
-        mapData: 'custom/asia',
-        joinBy: 'name',
-        dataLabels: {
-          enabled: false
+    plotOptions: {
+      series: {
+        states: {
+          hover: {
+            color: ''
+          },
         }
       }
-    ]
+    },
+
+    // Make tooltip show full image
+    tooltip: {
+        useHTML: true,
+        borderColor: '#aaa',
+        headerFormat: '<b>{point.point.name}</b><br>',
+        pointFormat: '<img style="width: 150px; height: 100px;" src=\'{point.options.color.pattern.image}\'>'
+    }
   }
 });

@@ -24,16 +24,16 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
-
+/*
 highed.templates.add('Map', {
-  title: 'Basic World Map',
+  title: 'Flight',
   description: [
-    'Basic world map.',
-    'Good starting point for global geographical data.'
+    'Basic map of Asia.',
+    'Good starting point for Asian geographical data.'
   ],
-  thumbnail: '',
+  thumbnail: 'mapasia.svg',
   dataValidator: false,
-  sampleSets: [],
+  sampleSets: ['asia-gdp'],
   constructor: 'Map',
   config: {
     chart: {
@@ -46,37 +46,22 @@ highed.templates.add('Map', {
 
     legend: {
       layout: 'horizontal',
-      borderWidth: 0,
-      backgroundColor: 'rgba(255,255,255,0.85)',
       verticalAlign: 'bottom'
     },
 
     colorAxis: {
-      min: 1,
-      type: 'logarithmic',
-      minColor: '#EEEEFF',
-      maxColor: '#000022',
-      stops: [[0, '#EFEFFF'], [0.67, '#4444FF'], [1, '#000022']]
+      min: 0
     },
 
     series: [
       {
-        mapData: 'custom/world-continents',
+        mapData: 'custom/asia',
         joinBy: 'name',
         dataLabels: {
-          enabled: true,
-          color: '#FFFFFF',
-          format: '{point.code}'
-        },
-        dataLabels: {
-          enabled: true,
-          color: '#FFFFFF',
-          format: '{point.code}'
-        },
-        tooltip: {
-          pointFormat: '{point.code}: {point.value{/km2'
+          enabled: false
         }
       }
     ]
   }
 });
+*/

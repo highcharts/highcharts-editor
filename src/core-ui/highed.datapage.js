@@ -111,7 +111,9 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     blacklist = [
       'candlestick',
       'bubble',
-      'pie'
+      'tilemap',
+      'pie',
+      'ohlc'
     ];
 
     dataImportBtn.innerHTML += ' <span class="highed-hide-sm">Data</span>';
@@ -119,12 +121,11 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     
     addRowInput.value = 1;
     highed.dom.on(addRowBtn, 'click', function(e) {
-      
-    assignDataPanel.getFieldsToHighlight(dataTable.removeAllCellsHighlight, true);
+      assignDataPanel.getFieldsToHighlight(dataTable.removeAllCellsHighlight, true);
       for(var i=0;i<addRowInput.value; i++) {
         dataTable.addRow();
       }
-    assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+      assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
     });
 
     highed.dom.on(dataImportBtn, 'click', function() {
@@ -168,7 +169,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       highed.dom.ap(parent, highed.dom.ap(container, body));
       
       assignDataPanel.init(dataTable.getColumnLength());
-
+      if (highed.chartType === 'Map') assignDataPanel.disableMaps();
       expand();
       resizeChart();
     }
@@ -180,6 +181,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         timer = setTimeout(func,100,event);
       };
     }
+
     function resize() {
       if (isVisible) {
         resizeChart();
@@ -190,11 +192,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       }
     }
 
-    highed.dom.on(window, 'resize', afterResize(function(e){
-      resize();
-    }));
-    
-
     function showHelp() {
       helpModal.show();
     }
@@ -204,6 +201,11 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       chartPreview.toggleShowAnnotationIcon(false);
       //var bsize = highed.dom.size(bar);
 
+      if (highed.chartType === 'Map') {
+        highed.dom.style([dataExportBtn, dataImportBtn], {
+          display: 'none'
+        });
+      }
       var newWidth = props.widths.desktop;
       if (highed.onTablet() && props.widths.tablet) newWidth = props.widths.tablet;
       else if (highed.onPhone() && props.widths.phone) newWidth = props.widths.phone;
@@ -212,7 +214,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         return;
       }
 
-   //console.log(bsize.h);
       highed.dom.style(body, {
         width: 100 + '%',
         //height: //(bsize.h - 55) + 'px',
@@ -252,34 +253,274 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       highed.emit('UIAction', 'ToolboxNavigation', props.title);
     }
 
-  function show() {
-    chartPreview.toggleShowAnnotationIcon(false);
-    highed.dom.style(container, {
-      display: 'block'
-    });
-    assignDataPanel.show();
-    isVisible = true;
-    resizeChart();
-    resize(); 
-  }
+    function show() {
+      chartPreview.toggleShowAnnotationIcon(false);
+      highed.dom.style(container, {
+        display: 'block'
+      });
+      assignDataPanel.show();
+      isVisible = true;
+      resizeChart();
+      resize(); 
+    }
 
-  function hide() {
-    highed.dom.style(container, {
-      display: 'none'
-    });
-    assignDataPanel.hide();
-    isVisible = false;
-  }
+    function hide() {
+      highed.dom.style(container, {
+        display: 'none'
+      });
+      assignDataPanel.hide();
+      isVisible = false;
+    }
 
-  function destroy() {}
+    function destroy() {}
+      
+    function addImportTab(tabOptions) {
+      dataTable.addImportTab(tabOptions);
+    }
 
-  function addImportTab(tabOptions) {
-    dataTable.addImportTab(tabOptions);
-  }
+    function hideImportModal() {
+      dataTable.hideImportModal();
+    }
+    
+    function changeAssignDataTemplate(newTemplate, loadTemplateForEachSeries, cb) {
+      
+      if (dataTable.isInCSVMode()) {
+        
+        clearSeriesMapping();        
+        
+        var seriesIndex = [];
+        assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, null, true);
+        if (loadTemplateForEachSeries) {
+          const length = assignDataPanel.getAllOptions().length;
+          
+          for(var i=0;i<length;i++) {
+            seriesIndex.push(i);
+            assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, i, true, i + 1);
+          }
+        } else seriesIndex = [assignDataPanel.getActiveSerie()];
 
-  function hideImportModal() {
-    dataTable.hideImportModal();
-  }
+        chartPreview.loadTemplateForSerie(newTemplate, seriesIndex);
+
+        const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
+        
+        chartPreview.data.csv({
+          csv: data
+        }, null, function() {
+          setSeriesMapping(assignDataPanel.getAllOptions());
+          redrawGrid(true);
+          if (cb) cb();
+        });
+      } else {
+        chartPreview.loadTemplate(newTemplate);
+      }
+
+      //assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+    }
+    
+    function getIcons() {
+      return null;
+    }
+
+    function setChartTitle(title) {
+      chartTitleInput.value = title;
+    }
+
+    function showDataTableError() {
+      dataTable.showDataTableError();
+    }
+
+    function hideDataTableError() {
+      dataTable.hideDataTableError();
+    }
+
+    function getChartTitle() {
+      return chartTitleInput.value;
+    }
+
+    function clearSeriesMapping() {
+
+      var chartOptions = chartPreview.options.getCustomized();
+      if (chartOptions.data && chartOptions.data.seriesMapping) {
+        // Causes an issue when a user has added a assigndata input with seriesmapping, so just clear and it will add it in again later
+        chartOptions.data.seriesMapping = null;
+        chartPreview.options.setAll(chartOptions);  
+      }
+
+    }
+    function setSeriesMapping(allOptions) {
+
+      var tempOption = [],
+          chartOptions = chartPreview.options.getCustomized(),
+          dataTableFields = dataTable.getDataFieldsUsed(),
+          hasLabels = false;
+      
+      var series = allOptions.length;
+
+      for(var i = 0; i < series; i++) {
+        var serieOption = {};
+        Object.keys(allOptions[i]).forEach(function(key) {
+          const option = allOptions[i][key];
+          if (option.value !== '') {
+            if (option.isData) { //(highed.isArr(option)) { // Data assigndata
+              if (dataTableFields.indexOf(option.rawValue[0]) > -1) {
+                var linkedTo = highed.isArr(option.linkedTo) ? option.linkedTo : [option.linkedTo];
+                linkedTo.forEach(function(linked){
+                  serieOption[linked] = dataTableFields.indexOf(option.rawValue[0]);
+                });
+              }
+            } else {
+              if (option.linkedTo === 'label') hasLabels = true;
+              if (dataTableFields.indexOf(option.rawValue[0]) > -1) {
+                serieOption[option.linkedTo] = dataTableFields.indexOf(option.rawValue[0]);
+              }
+              //serieOption[option.linkedTo] = option.rawValue[0];
+            }
+          }
+        });
+        tempOption.push(serieOption);
+      };
+      
+      if (tempOption.length > 0) {
+        if (hasLabels) {
+          const dataLabelOptions = {
+            dataLabels: {
+                enabled: true,
+                format: '{point.label}'
+            }
+          };
+
+          if(chartOptions.plotOptions) {
+            const seriesPlotOptions = chartOptions.plotOptions.series;
+            highed.merge(seriesPlotOptions, dataLabelOptions);
+            chartPreview.options.setAll(chartOptions);
+          } else {
+            chartPreview.options.setAll(highed.merge({
+              plotOptions: {
+                series: dataLabelOptions
+              }
+            }, chartOptions));
+          }
+        }
+
+        if (chartOptions.data) {
+          chartOptions.data.seriesMapping = tempOption;
+          chartPreview.options.setAll(chartOptions);
+        }
+      }
+    }
+
+    function redrawGrid(clearGridFirst) {
+      if (clearGridFirst) {
+        var columns = [];
+        for(var i = 0; i < dataTable.getColumnLength(); i++) {
+          columns.push(i);
+        }
+        dataTable.removeAllCellsHighlight(null, columns);
+      }
+      
+      assignDataPanel.checkToggleCells();
+      
+      assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true, true);
+      chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
+    }
+
+    function loadMapProject(projectData, aggregated) {
+      //assignDataPanel.disable();
+      
+      if (projectData.options && projectData.options.chart && projectData.options.chart.map && highed.isObj(projectData.options.chart.map)){
+        loadMapData(projectData.options.chart.map.features, 
+                    projectData.options.chart.map.hccode, projectData.options.chart.map.hcname, 
+                    projectData.settings.dataProvider.csv, function () {
+          assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
+          assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+          chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
+
+          var isBubble = projectData.options && projectData.options.series && projectData.options.series.some(function(s){
+            return s.type === 'mapbubble';
+          });
+
+          assignDataPanel.updateLinkedToValues({
+            key: 'labels',
+            value: projectData.options.chart.map.hccode
+          }, isBubble ? 1 : null);
+        });
+        return;
+      }
+
+      var baseMapPath = "https://code.highcharts.com/mapdata/";
+      chartPreview.options.updateMap(projectData.options.chart.map, baseMapPath + projectData.options.chart.map + '.js', function() {
+        highed.ajax({
+          url: baseMapPath + projectData.options.chart.map + '.geo.json',
+          type: 'GET',
+          dataType: 'json',
+          success: function(data) {
+            var isLatLongChart = (projectData.settings.dataProvider && projectData.settings.dataProvider.seriesMapping && projectData.settings.dataProvider.seriesMapping.some(function(s){
+              return Object.keys(s).includes('lat');
+            }));
+
+            if (isLatLongChart) {
+              dataTable.loadCSV({
+                csv: projectData.settings.dataProvider.csv
+              }, null, null, function() {
+                assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
+                assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+                chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
+              });
+              return;
+            } else {
+              loadMapData(data.features, null, null, projectData.settings.dataProvider.csv, function () {
+              
+                assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
+                assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+                chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
+              });
+            }
+          },
+          error: function(e) {
+          }
+        })
+      });
+    }
+
+    function loadProject(projectData, aggregated) {
+      if (projectData.settings && projectData.settings.dataProvider && projectData.settings.dataProvider.csv) {
+        
+        dataTable.loadCSV({
+          csv: projectData.settings.dataProvider.csv
+        }, null, null, function() {
+            if (highed.chartType !== 'Map') assignDataPanel.enable();
+            assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
+            assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+            chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
+        });
+
+        //chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
+      }
+    }
+
+    function loadSampleData(data){
+      dataTable.loadSampleData(data);
+    }
+
+    function addSerie(type, extra) {
+      assignDataPanel.addNewSerie(type, extra);
+    }
+
+    function getValues(){
+
+      if ( assignDataPanel.getOptions() && assignDataPanel.getOptions().value) {
+          return dataTable.toData(null, null, [{ 
+            dataColumns: assignDataPanel.getOptions().value.rawValue,
+          }]).slice();
+      }
+      return [];
+    }
+
+  //////////////////////////////////////////////////////////////////////////////
+
+  highed.dom.on(window, 'resize', afterResize(function(e){
+    resize();
+  }));
 
   assignDataPanel.on('RemoveSeries', function(length) {
     clearSeriesMapping();
@@ -291,7 +532,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       csv: data
     }, null, function() {
       
-
       var chartOptions = chartPreview.options.getCustomized();
       var assignDataOptions = assignDataPanel.getAllOptions();    
       
@@ -313,172 +553,13 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       setSeriesMapping(assignDataPanel.getAllOptions());
     });
   });
-  
-  function changeAssignDataTemplate(newTemplate, loadTemplateForEachSeries, cb) {
-    
-    if (dataTable.isInCSVMode()) {
-      
-      clearSeriesMapping();        
-      
-      var seriesIndex = [];
-      assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, null, true);
-      if (loadTemplateForEachSeries) {
-        const length = assignDataPanel.getAllOptions().length;
-        
-        for(var i=0;i<length;i++) {
-          seriesIndex.push(i);
-          assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, i, true, i + 1);
-        }
-      } else seriesIndex = [assignDataPanel.getActiveSerie()];
-
-      chartPreview.loadTemplateForSerie(newTemplate, seriesIndex);
-
-      const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
-      
-      chartPreview.data.csv({
-        csv: data
-      }, null, function() {
-        setSeriesMapping(assignDataPanel.getAllOptions());
-        redrawGrid(true);
-        if (cb) cb();
-      });
-    } else {
-      chartPreview.loadTemplate(newTemplate);
-    }
-
-    //assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
-  }
-
-  function getIcons() {
-    return null;
-  }
-
-  function setChartTitle(title) {
-    chartTitleInput.value = title;
-  }
-
-  function showDataTableError() {
-    dataTable.showDataTableError();
-  }
-  function hideDataTableError() {
-    dataTable.hideDataTableError();
-  }
-
-  function getChartTitle() {
-    return chartTitleInput.value;
-  }
-
-  function clearSeriesMapping() {
-
-    var chartOptions = chartPreview.options.getCustomized();
-    if (chartOptions.data && chartOptions.data.seriesMapping) {
-      // Causes an issue when a user has added a assigndata input with seriesmapping, so just clear and it will add it in again later
-      chartOptions.data.seriesMapping = null;
-      chartPreview.options.setAll(chartOptions);  
-    }
-
-  }
-  function setSeriesMapping(allOptions) {
-
-    var tempOption = [],
-        chartOptions = chartPreview.options.getCustomized(),
-        dataTableFields = dataTable.getDataFieldsUsed(),
-        hasLabels = false;
-    
-    var dataValues  = allOptions.data,
-        series = allOptions.length;
-
-    for(var i = 0; i < series; i++) {
-      var serieOption = {};
-      Object.keys(allOptions[i]).forEach(function(key) {
-        const option = allOptions[i][key];
-        if (option.value !== '') {
-          if (option.isData) { //(highed.isArr(option)) { // Data assigndata
-            if (dataTableFields.indexOf(option.rawValue[0]) > -1) {
-              serieOption[option.linkedTo] = dataTableFields.indexOf(option.rawValue[0]);
-            }
-          } else {
-            if (option.linkedTo === 'label') hasLabels = true;
-            if (dataTableFields.indexOf(option.rawValue[0]) > -1) {
-              serieOption[option.linkedTo] = dataTableFields.indexOf(option.rawValue[0]);
-            }
-            //serieOption[option.linkedTo] = option.rawValue[0];
-          }
-        }
-      });
-      tempOption.push(serieOption);
-    };
-    
-    if (tempOption.length > 0) {
-      if (hasLabels) {
-        const dataLabelOptions = {
-          dataLabels: {
-              enabled: true,
-              format: '{point.label}'
-          }
-        };
-
-        if(chartOptions.plotOptions) {
-          const seriesPlotOptions = chartOptions.plotOptions.series;
-          highed.merge(seriesPlotOptions, dataLabelOptions);
-          chartPreview.options.setAll(chartOptions);
-        } else {
-          chartPreview.options.setAll(highed.merge({
-            plotOptions: {
-              series: dataLabelOptions
-            }
-          }, chartOptions));
-        }
-      }
-
-      if (chartOptions.data) {
-        chartOptions.data.seriesMapping = tempOption;
-        chartPreview.options.setAll(chartOptions);
-      }
-    }
-  }
-
-  function redrawGrid(clearGridFirst) {
-    if (clearGridFirst) {
-      var columns = [];
-      for(var i = 0; i < dataTable.getColumnLength(); i++) {
-        columns.push(i);
-      }
-      dataTable.removeAllCellsHighlight(null, columns);
-    }
-    
-    assignDataPanel.checkToggleCells();
-    
-    assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true, true);
-    chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
-  }
-
-  function loadProject(projectData, aggregated) {
-    
-    if (projectData.settings && projectData.settings.dataProvider && projectData.settings.dataProvider.csv) {
-      dataTable.loadCSV({
-        csv: projectData.settings.dataProvider.csv
-      }, null, null, function() {
-        
-          assignDataPanel.enable();
-          
-          assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
-          assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
-          chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
-      });
-
-      //chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
-    }
-  }
-
-  //////////////////////////////////////////////////////////////////////////////
 
   assignDataPanel.on('GoToTemplatePage', function() {
     events.emit("GoToTemplatePage");
   })
   
-  assignDataPanel.on('AddSeries', function(index, type) {
-    chartPreview.options.addBlankSeries(index, type);
+  assignDataPanel.on('AddSeries', function(index, type, extra) {
+    chartPreview.options.addBlankSeries(index, type, extra);
   })
   
   assignDataPanel.on('GetLastType', function() {
@@ -565,12 +646,31 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     });
   });
 
+  dataTable.on('ChangeMapCategoryValue', function(value){
+    if (highed.chartType === 'Map') {
+      var chartOptions = chartPreview.options.getCustomized();
+    
+      value = Number.parseFloat(value);  
+      if (chartOptions.colorAxis && chartOptions.colorAxis.dataClasses) {
+        if (chartOptions.colorAxis.dataClasses[0].from > value) {
+          chartOptions.colorAxis.dataClasses[0].from = value;
+        } else if (chartOptions.colorAxis.dataClasses[chartOptions.colorAxis.dataClasses.length - 1].to < value) {
+          chartOptions.colorAxis.dataClasses[chartOptions.colorAxis.dataClasses.length - 1].to = value;
+        }
+      }
+    }
+  });
+
+  dataTable.on('ResetAssignValues', function(values){
+    assignDataPanel.setValues(values, 1);
+  });
+
   dataTable.on('DisableAssignDataPanel', function() {
     assignDataPanel.disable();
   });
 
   dataTable.on('EnableAssignDataPanel', function() {
-    assignDataPanel.enable();
+    if (highed.chartType !== 'Map') assignDataPanel.enable();
   });
 
   dataTable.on('ColumnMoving', function() {
@@ -645,6 +745,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   dataTable.on('LoadGSheet', function(settings) {
     assignDataPanel.disable();
+    setSeriesMapping(assignDataPanel.getAllOptions());
     chartPreview.data.gsheet(settings);
   });
   
@@ -669,6 +770,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     assignDataPanel.restart();
   });
 
+  dataTable.on('SetupAssignData', function(assigns, serie) {
+    assignDataPanel.setValues(assigns, serie);
+  })
+
   dataTable.on('ClearSeries', function() {
     var options = chartPreview.options.getCustomized();
     options.series = [];
@@ -686,6 +791,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       true,
       p.dataRefreshRate
     );
+
+    setSeriesMapping(assignDataPanel.getAllOptions());
   });
 
   chartPreview.on('ProviderLiveData', function(p) {
@@ -693,13 +800,32 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     dataTable.loadLiveDataPanel(p);
   });
 
-
-  function createSimpleDataTable(toNextPage, cb) {
-    return dataTable.createSimpleDataTable(toNextPage, cb);
+  function createSimpleDataTable(toNextPage, cb, chartContainer) {
+    return dataTable.createSimpleDataTable(toNextPage, cb, chartContainer);
   } 
 
   function selectSwitchRowsColumns() {
     dataTable.selectSwitchRowsColumns()
+  }
+
+  function loadMapData(data, code, name, csv, cb, isLatLongChart) {
+    if (isLatLongChart) {
+      dataTable.loadCSV({
+        csv: csv,
+      }, null, null, function() { 
+        assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+        chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
+
+        assignDataPanel.setValues({
+          labels: -1,
+          latitude: 0,
+          longitude: 1,
+          value: 2
+        }, 1);
+
+      });
+      return;
+    } else dataTable.loadMapData(data, code, name, csv, cb);
   }
 
   function resizeChart(newWidth) {
@@ -716,6 +842,21 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     //setToActualSize();
   });
 
+  function getMapValueFromCode(key) {
+    return dataTable.getMapValueFromCode(key, assignDataPanel.getMergedLabelAndData());
+  }
+
+  function changeAssignDataType(type) {
+    assignDataPanel.changeAssignDataType(type);
+  }
+
+  function showLatLongTable(type) {
+    dataTable.showLatLongTable(type);
+  }
+
+  function updateLinkedToValues(values){
+    assignDataPanel.updateLinkedToValues(values);
+  }
 
   return {
     on: events.on,
@@ -742,8 +883,18 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     changeAssignDataTemplate: changeAssignDataTemplate,
     createSimpleDataTable: createSimpleDataTable,
     loadProject: loadProject,
+    loadMapProject: loadMapProject,
     showDataTableError: showDataTableError,
     hideDataTableError: hideDataTableError,
-    selectSwitchRowsColumns: selectSwitchRowsColumns
+    selectSwitchRowsColumns: selectSwitchRowsColumns,
+    loadMapData: loadMapData,
+    loadSampleData: loadSampleData,
+    addSerie: addSerie,
+    getMapValueFromCode: getMapValueFromCode,
+    changeAssignDataType: changeAssignDataType,
+    showLatLongTable: showLatLongTable,
+    updateLinkedToValues: updateLinkedToValues,
+    getValues: getValues
+
   };
 };

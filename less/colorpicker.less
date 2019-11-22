@@ -14,6 +14,36 @@
 	.highed-box-size;
 }
 
+.highed-category-modal {
+	position: fixed;
+	background: @background-panel;
+	color: @text-panel;
+	border: @border-main;
+	z-index: 10010;
+	width:223px;
+	height:350px;
+	padding: 10px;
+	opacity: 0;
+	left:-20000px;
+	pointer-events: none;
+	.highed-transition-opacity;
+	.highed-box-size;
+	.highed-colorpicker {
+		width: 199px;
+    height: 227px;
+	}
+	.highed-category-label {
+    font-size: 12px;
+    color: black;
+	}
+	input {
+    width: 96%;
+    height: 22px;
+    margin-top: 3px;
+    margin-bottom: 7px;
+	}
+}
+
 .highed-colorpicker .picker {
 	width: 100%;
 	height:180px;

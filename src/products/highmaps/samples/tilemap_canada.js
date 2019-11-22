@@ -1,6 +1,6 @@
-/******************************************************************************
+/*******************************************************************************
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2017, Highsoft
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -23,8 +23,30 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ******************************************************************************/
 
-highed.templates.addCategory('Map', {
-  description: ['Maps are used to display data in maps.'],
-
-  samples: []
+highed.samples.addMapType('Tilemap', {
+  id: 'honeycomb-canada',
+  title: 'Canada',
+  description: '',
+  thumbnail: {
+    honeycomb: 'maphoneycomb_canada.svg',
+    circle: 'mapcircle_canada.svg'
+  },
+  type: 'csv',
+  inverted: true, 
+  dataset: [
+    "hc-a2,name,x,y,value",
+    "BC,British Columbia,2,10,4849377",
+    "AB,Alberta,2,11,737732",
+    "SK,Saskatchewan,2,12,6745408",
+    "MB,Manitoba,2,13,2994079",
+    "ON,Ontario,2,14,39250017",
+    "NS,Nova Scotia,3,17,5540545",
+    "YT,Yukon,1,11,3596677",
+    "NT,Northwest Territories,1,13,935614",
+    "NU,Nunavut,1,12,7288000",
+    "QC,Quebec,2,15,20612439",
+    "NB,New Brunswick,1,17,10310371",
+    "NL, Newfoundland and Labrador,1,16,1419561",
+    "PE,Prince Edward Island,2,17,1634464"
+  ]
 });

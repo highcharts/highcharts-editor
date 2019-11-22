@@ -26,57 +26,66 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 highed.templates.add('Map', {
-  title: 'Basic Africa Map',
+  title: 'Honeycomb',
   description: [
-    'Basic map of Africa.',
-    'Good starting point for African geographical data.'
+    'Tilemaps are maps where each area is represented by tiles of equal shape. You can choose from circle or honeycomb which uses hexagonal tiles.',
   ],
-  thumbnail: '',
+  thumbnail: 'maphoneycomb.svg',
   dataValidator: false,
-  sampleSets: [],
   constructor: 'Map',
   config: {
     chart: {
-      borderWidth: 1
+      type: 'tilemap'
     },
 
-    mapNavigation: {
-      enabled: true
+
+    xAxis: {
+      visible: false
+    },
+
+    yAxis: {
+      visible: false
+    },
+
+    colorAxis: {
+      dataClasses: [{
+          from: 0,
+          to: 1000000,
+          color: '#F9EDB3',
+          name: '< 1M'
+      }, {
+          from: 1000000,
+          to: 5000000,
+          color: '#FFC428',
+          name: '1M - 5M'
+      }, {
+          from: 5000000,
+          to: 20000000,
+          color: '#FF7987',
+          name: '5M - 20M'
+      }, {
+          from: 20000000,
+          color: '#FF2371',
+          name: '> 20M'
+      }]
+    },
+
+    plotOptions: {
+      series: {
+        dataLabels: {
+          enabled: true,
+          format: '{point.hc-a2}',
+          color: '#000000',
+          style: {
+            textOutline: false
+          }
+        }
+      }
     },
 
     legend: {
       layout: 'horizontal',
-      borderWidth: 0,
-      backgroundColor: 'rgba(255,255,255,0.85)',
       verticalAlign: 'bottom'
-    },
-
-    colorAxis: {
-      min: 1,
-      type: 'logarithmic',
-      minColor: '#EEEEFF',
-      maxColor: '#000022',
-      stops: [[0, '#EFEFFF'], [0.67, '#4444FF'], [1, '#000022']]
-    },
-
-    series: [
-      {
-        mapData: 'custom/africa',
-        joinBy: ['postal-code', 'code'],
-        dataLabels: {
-          enabled: true,
-          color: '#FFFFFF',
-          format: '{point.code}'
-        },
-        dataLabels: {
-          enabled: true,
-          color: '#FFFFFF',
-          format: '{point.code}'
-        },
-        tooltip: {
-          pointFormat: '{point.code}: {point.value{/km2'
-        }
-      }
-    ]
+    }
   }
 });

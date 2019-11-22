@@ -43,3 +43,30 @@ highed.meta.fonts = [
   'Monaco',
   'Monospace'
 ];
+
+highed.meta.customFonts = [/*
+  {
+    title: 'DWSSlab-Light',
+    id: 'https://cloud.highcharts.com/static/fonts/DWSSlabWeb-Light.css'
+  },
+  {
+    title: 'DWSSlab-Regular',
+    id: 'https://cloud.highcharts.com/static/fonts/DWSSlabWeb-Regular.css'
+  },
+  {
+    title: 'DWSSlab-Bold',
+    id: 'https://cloud.highcharts.com/static/fonts/DWSSlabWeb-Bold.css'
+  },
+  {
+    title: 'DWSSans-Light',
+    id: 'https://cloud.highcharts.com/static/fonts/DWSSansWeb-Light.css'
+  },
+  {
+    title: 'DWSSans-Regular',
+    id: 'https://cloud.highcharts.com/static/fonts/DWSSansWeb-Regular.css'
+  },
+  {
+    title: 'DWSSans-Bold',
+    id: 'https://cloud.highcharts.com/static/fonts/DWSSansWeb-Bold.css'
+  }*/
+];

@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props, chartContainer, planCode) {
+highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props, chartContainer, planCode, dataPage) {
   var events = highed.events(),
     // Main properties
     container = highed.dom.cr(
@@ -192,12 +192,13 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     iconClass = 'highed-box-size highed-toolbox-bar-icon fa ' + props.icon;
 
     customizerContainer.innerHTML = '';
-
+    
     customizer = highed.ChartCustomizer(
       customizerContainer,
       options,
       chartPreview,
-      planCode
+      planCode,
+      dataPage
     ),
     helpModal = highed.HelpModal(props.help || []);
 
@@ -420,11 +421,12 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
       resWidth.value = res.width;
       resHeight.value = res.height;
+
+      if (highed.chartType === 'Map') resize();
     });
   });
 
   highed.dom.on(stretchToFitIcon, 'click', function() {
-    
     resWidth.value = '';
     resHeight.value = '';
     highed.dom.style(chartContainer, {
@@ -432,7 +434,10 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
       height: '100%',
     });
     setTimeout(chartPreview.resize, 300);
+
+    if (highed.chartType === 'Map') resize();
   }),
+  
   backIcon = highed.dom.cr('div','highed-back-icon', '<i class="fa fa-chevron-circle-left" aria-hidden="true"></i>');
 
 

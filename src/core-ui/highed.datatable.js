@@ -346,6 +346,7 @@ highed.DataTable = function(parent, attributes) {
       NOV: 11,
       DEC: 12
     },
+    simpleDataTable = null,
     selectedRowIndex = 0,
     keyValue = "A",
     tempKeyValue = "A",
@@ -363,6 +364,9 @@ highed.DataTable = function(parent, attributes) {
     inCopyOverCellMode = false;
     moveToColumn = null,
     dragHeaderMode = false,
+    mapImporter = highed.MapImporter(),
+    mapDataTable = null,
+    dropCSVFileHere = highed.dom.cr('div', 'highed-table-dropzone-title', 'Drop CSV files here'),
     globalContextMenu = highed.ContextMenu([
       {
         title: "Insert Row Above",
@@ -443,9 +447,8 @@ highed.DataTable = function(parent, attributes) {
     
   const DEFAULT_COLUMN = 9,
         DEFAULT_ROW = 20;
-    
 
-  highed.dom.ap(hideCellsDiv, switchRowColumns)
+  if (highed.chartType !== 'Map') highed.dom.ap(hideCellsDiv, switchRowColumns)
 
   highed.dom.on(mainInput, 'click', function(e) {
     return highed.dom.nodefault(e);
@@ -500,9 +503,14 @@ highed.DataTable = function(parent, attributes) {
     var reader = new FileReader();
 
     reader.onload = function(e) {
-      clear();
       //events.emit('ClearSeriesForImport');
-      loadCSV({ csv: e.target.result }, null, true, cb);
+      if (highed.chartType === 'Map') {
+        mapImporter.show(e.target.result, toData());
+        clear();
+      } else {
+        clear();
+        loadCSV({ csv: e.target.result }, null, true, cb);
+      }
     };
 
     reader.readAsText(f);
@@ -576,7 +584,6 @@ highed.DataTable = function(parent, attributes) {
   }
 
   function makeEditable(target, value, fn, keyup, close, dontFocus) {
-    
     if (mainInputCb.length) {
       mainInputCb = mainInputCb.filter(function(fn) {
         fn();
@@ -628,7 +635,6 @@ highed.DataTable = function(parent, attributes) {
           }
           return;
         }
-
         return highed.isFn(fn) && fn(mainInput.value);
       })
     );
@@ -670,12 +676,13 @@ highed.DataTable = function(parent, attributes) {
 
   ////////////////////////////////////////////////////////////////////////////
   function Column(row, colNumber, val, keyVal) {
-
     var value = typeof val === 'undefined' || typeof val === 'object' || (val === 'null') ? null : val, //object check for ie11/edge
-      col = highed.dom.cr('td', 'highed-dtable-cell'),
+    col = highed.dom.cr('td', 'highed-dtable-cell'),
       colVal = highed.dom.cr('div', 'highed-dtable-col-val', value),
       input = highed.dom.cr('input'),
+      disabled = false,
       exports = {};
+
     function goLeft() {
       if (colNumber >= 1) {
         row.columns[colNumber - 1].focus();
@@ -772,6 +779,14 @@ highed.DataTable = function(parent, attributes) {
       emitChanged();
     }
 
+    function setHiddenValue(newValue) {
+      colVal.setAttribute('data-value', newValue);
+    }
+
+    function setDisabled(){
+      disabled = true;
+    }
+
     function focus(dontFocus) {
 
       deselectAllCells();
@@ -800,6 +815,7 @@ highed.DataTable = function(parent, attributes) {
           colVal.innerHTML = value;
           if (changed) {
             emitChanged();
+            events.emit('ChangeMapCategoryValue', value);
           }
         },
         handleKeyup,
@@ -853,6 +869,10 @@ highed.DataTable = function(parent, attributes) {
     }
 
     function getVal() {
+      return colVal.getAttribute('data-value') || value;
+    }
+
+    function getCellValue(){
       return value;
     }
 
@@ -862,6 +882,8 @@ highed.DataTable = function(parent, attributes) {
     }
 
     highed.dom.on(col, 'mouseup', function(e) {
+      
+      if (disabled) return;
       if (inCopyOverCellMode) {
         inCopyOverCellMode = false;
         
@@ -912,8 +934,11 @@ highed.DataTable = function(parent, attributes) {
       }
     });
     highed.dom.on(col, 'mousedown', function() {
+      
+      if (disabled) return;
+
       if (lastSelectedCell[0] !== colNumber && lastSelectedCell[1] !== row.number) {
-        focus();
+        //focus();
       }
     
       selectedFirstCell[0] = colNumber;//keyVal; 
@@ -935,6 +960,7 @@ highed.DataTable = function(parent, attributes) {
     exports = {
       focus: focus,
       value: getVal,
+      cellValue: getCellValue, 
       destroy: destroy,
       addToDOM: addToDOM,
       selectCell: selectCell,
@@ -943,6 +969,8 @@ highed.DataTable = function(parent, attributes) {
       deselectCopyCell: deselectCopyCell,
       element: col,
       setValue: setValue,
+      setHiddenValue: setHiddenValue,
+      setDisabled: setDisabled,
       rowNumber: row.number,
       colNumber: colNumber,
       selectCellToCopy: selectCellToCopy,
@@ -968,7 +996,7 @@ highed.DataTable = function(parent, attributes) {
     selectedFirstCell[1] = null;
   }
 
-  function selectCellsToMove(firstCell, endCell){ // selectedCopyFirstCell, selectedCopyEndCell
+  function selectCellsToMove(firstCell, endCell) { // selectedCopyFirstCell, selectedCopyEndCell
 
     allSelectedCopyCells = allSelectedCopyCells.filter(function(cell) {
       if ((cell.rowNumber > endCell[1] || cell.colNumber > endCell[0]) || (cell.rowNumber < firstCell[1] || cell.colNumber < firstCell[0])) {
@@ -1120,7 +1148,7 @@ highed.DataTable = function(parent, attributes) {
     function addToDOM(number) {
       didAddHTML = true;
       exports.number = number;
-      checker.innerHTML = number + 1;
+      checker.textContent = number + 1;
       checker.value = number;
       leftItem.value = number;
       highed.dom.ap(tbody, row);
@@ -1231,9 +1259,9 @@ highed.DataTable = function(parent, attributes) {
   }
 
   function updateColumns() {
-    colgroup.innerHTML = '';
-    topColumnBar.innerHTML = '';
-    topLetterBar.innerHTML = '';
+    colgroup.textContent = '';
+    topColumnBar.textContent = '';
+    topLetterBar.textContent = '';
     var resetLetters = 'A';
     
     gcolumns.forEach(function(col, i) {      
@@ -1658,7 +1686,7 @@ highed.DataTable = function(parent, attributes) {
    * @param asMonths {boolean} - if true, sort by month
    */
   function sortRows(column, direction, asMonths) {
-    tbody.innerHTML = '';
+    tbody.textContent = '';
     
     direction = (direction || '').toUpperCase();
     rows.sort(function(a, b) {
@@ -1723,11 +1751,11 @@ highed.DataTable = function(parent, attributes) {
       return false;
     });
 
-    tbody.innerHTML = '';
-    leftBar.innerHTML = '';
-    topColumnBar.innerHTML = '';
-    topLetterBar.innerHTML = '';
-    colgroup.innerHTML = '';
+    tbody.textContent = '';
+    leftBar.textContent = '';
+    topColumnBar.textContent = '';
+    topLetterBar.textContent = '';
+    colgroup.textContent = '';
     keyValue = "A";
 
     highed.dom.style(tableTail, {
@@ -1855,7 +1883,7 @@ highed.DataTable = function(parent, attributes) {
 
   function checkSections(sections, index) {
     return (sections || []).some(function(section) {
-      return (section.dataColumns.indexOf(index) > -1 || section.extraColumns.indexOf(index) > -1 || section.labelColumn === index);
+      return (section.dataColumns.indexOf(index) > -1 || (section.extraColumns && section.extraColumns.indexOf(index) > -1) || section.labelColumn === index);
     });
   }
 
@@ -1872,7 +1900,7 @@ highed.DataTable = function(parent, attributes) {
     }
     dataFieldsUsed = [];
 
-    function addData(column, arr) {
+    function addData(column, arr) { 
 
       if (quoteStrings && !highed.isNum(column) && highed.isStr(column)) {
         column = '"' + column.replace(/\"/g, '"') + '"';
@@ -1882,13 +1910,8 @@ highed.DataTable = function(parent, attributes) {
         column = parseFloat(column);
       }
 
-      if (highed.isStr(column) && Date.parse(column) !== NaN) {
-        //v = (new Date(v)).getTime();
-      }
-
       arr.push(column);
     }
-
     rows.forEach(function(row) {
       var rarr = [],
         hasData = false;
@@ -1923,6 +1946,7 @@ highed.DataTable = function(parent, attributes) {
         data.push(rarr);
       }
     });
+
     return data;
   }
 
@@ -1983,11 +2007,20 @@ highed.DataTable = function(parent, attributes) {
    */
   function toCSV(delimiter, quoteStrings, section) {
     delimiter = delimiter || ','; 
+    
+    if (highed.chartType !== 'Map') 
+      return toData(quoteStrings, true, section)
+        .map(function(cols) {
+          return cols.join(delimiter);
+        }).join('\n');
+    
+
     return toData(quoteStrings, true, section)
-      .map(function(cols) {
+      .filter(function(cols) {
+        return cols[1] !== null && cols[1] !== undefined;
+      }).map(function(cols) {
         return cols.join(delimiter);
-      })
-      .join('\n');
+      }).join('\n');
   }
 
   function loadRows(rows, done) {
@@ -2012,7 +2045,7 @@ highed.DataTable = function(parent, attributes) {
     });
 
     if (Object.keys(sanityCounts).length > 4) {
-      // Four or more rows have varrying amounts of columns.
+      // Four or more rows have varying amounts of columns.
       // Something is wrong.
       showDataImportError();
     }
@@ -2048,16 +2081,13 @@ highed.DataTable = function(parent, attributes) {
       rows.forEach(function(cols, i) {
         var row;
 
-        if (i) {
-          row = Row();
-        }
+        if (i) row = Row();
+        
         tempKeyValue = "A";
+        
         cols.forEach(function(c) {
-          if (i === 0) {
-            addCol(c);
-          } else {
-            row.addCol(c, tempKeyValue);
-          }
+          if (i === 0) addCol(c);
+          else row.addCol(c, tempKeyValue);
           tempKeyValue = getNextLetter(tempKeyValue);
         });
       });
@@ -2130,11 +2160,11 @@ highed.DataTable = function(parent, attributes) {
     importModal.hide();
 
     surpressChangeEvents = true;
-
     rawCSV = data.csv;
 
     if (data && data.csv) {
       rows = parseCSV(data.csv, data.delimiter);
+
       if (updateAssignData && rows[0].length < DEFAULT_COLUMN) events.emit('AssignDataForFileUpload', rows[0].length);
 
       var counter = DEFAULT_ROW - rows.length,
@@ -2157,12 +2187,8 @@ highed.DataTable = function(parent, attributes) {
         if (updateAssignData && rows[0].length > DEFAULT_COLUMN) events.emit('AssignDataForFileUpload', rows[0].length);
         if (cb) cb();
       });
-    } else {
-      // surpressChangeEvents = false;
-      // if (!surpressEvents) {
-      //   emitChanged(true);
-      // }
-    }
+    } 
+
     surpressChangeEvents = false;
     if (!surpressEvents) {
       emitChanged(true);
@@ -2369,6 +2395,28 @@ highed.DataTable = function(parent, attributes) {
   }
 
   ////////////////////////////////////////////////////////////////////////////
+
+  mapImporter.on('HandleTileMapImport', function(data, linkedCodes, toNextPage, assigns) {
+    loadSampleData(data);
+    toNextPage();
+  });
+
+  mapImporter.on('HandleMapImport', function(data, linkedCodes, toNextPage, assigns, serie) {
+    loadCSV({ csv: data }, null, false, function() {
+      rows.forEach(function(row) {
+        if (linkedCodes) {
+          var code = linkedCodes.filter(function(v) { return v.name === row.columns[0].value()});
+          if (code && code.length > 0) {
+            row.columns[0].setHiddenValue(code[0].code/*.toLowerCase()*/);
+          }
+          row.columns[0].setDisabled(true);
+        }
+      });
+
+      events.emit('SetupAssignData', assigns, serie);
+      toNextPage();
+    });
+  });
   importer.on('ExportComma', function(data) {
     highed.emit('UIAction', 'ExportComma');
     highed.download('data.csv', toCSV(','), 'application/csv');
@@ -2771,6 +2819,7 @@ highed.DataTable = function(parent, attributes) {
     emitChanged();
     if (rows.length > 0) rows[0].columns[0].focus();
   }
+
   function colorHeader(values, color) {
     var tempValue = values[0];
     if (values.length > 0) {
@@ -2938,289 +2987,134 @@ highed.DataTable = function(parent, attributes) {
     return (!isInGSheetMode && !isInLiveDataMode);
   }
 
-  // Getting kinda long, probably need to move this all out of here to createchartpage
-  function createTableInputs(inputs, maxColSpan, extraClass) {
+  function createSimpleDataTable(toNextPage, loading, chartContainer){
 
-    var table = highed.dom.cr('table', 'highed-createchartwizard-table'),
-    maxColSpan = maxColSpan,
-    currentColSpan = maxColSpan,
-    tr;
+    simpleDataTable = highed.WizardData(importer, mapImporter, chartContainer);
+    simpleDataTable.on('DownloadMapCSVStub', function(){
+      downloadRows = rows.map(function(row){
+          return row.columns[0].cellValue();
+      }).join('\n');
+      highed.download('data.csv', downloadRows, 'application/csv');
+    });
 
-    inputs.forEach(function(input) {
-      if (currentColSpan >= maxColSpan) {
-        tr = highed.dom.cr('tr', extraClass);
-        highed.dom.ap(table, tr);
-        currentColSpan = 0;
-      }
+    simpleDataTable.on('UpdateDataGridWithLatLong', function(data) {
+      loadCSV({ csv: data.map(function(cols) {
+        return cols.join(',');
+      }).join('\n')}, null, false);
 
-      currentColSpan += input.colspan;
-      input.element = {};
-
-      if (input.type && input.type === 'select') {
-        input.element.dropdown = highed.DropDown(null, 'highed-wizard-dropdown-container');
-        input.element.dropdown.addItems([
-          {id: 'columnsURL', title: "JSON (Column Ordered)"},
-          {id: 'rowsURL', title: "JSON (Row Ordered)"},
-          {id: 'csvURL', title: "CSV"}
-        ]);
-        input.element.dropdown.selectByIndex(0);
-        input.element.dropdown.on('Change', function(selected) {
-          detailValue = selected.id();
-        });
-
-        input.element.input = input.element.dropdown.container;
-
-      } else input.element.input = highed.dom.cr('input','highed-imp-input-stretch');
-      if (input.placeholder) input.element.input.placeholder = input.placeholder
-      input.element.label = highed.dom.cr('span', '', input.label);
+      events.emit('ResetAssignValues', {
+        labels: -1,
+        latitude: 0,
+        longitude: 1,
+        value: 2
+      });
       
-      const tdLabel = highed.dom.ap(highed.dom.cr('td', 'highed-modal-label'), input.element.label),
-            tdInput = highed.dom.ap(highed.dom.cr('td', ''), input.element.input);
-      
-      tdLabel.colSpan = 1;
-      tdInput.colSpan = input.colspan - 1;
-
-      highed.dom.ap(tr, tdLabel, tdInput);
     });
-    return table;
+
+    simpleDataTable.createSimpleDataTable(toNextPage, loading, {
+      gsheetID: gsheetID,
+      gsheetWorksheetID: gsheetWorksheetID,
+      gsheetRefreshTime: gsheetRefreshTime,
+      gsheetStartRow: gsheetStartRow,
+      gsheetEndRow: gsheetEndRow,
+      gsheetStartCol: gsheetStartCol,
+      gsheetEndCol: gsheetEndCol,
+      liveDataInput: liveDataInput,
+      liveDataIntervalInput: liveDataIntervalInput,
+      liveDataTypeSelect: liveDataTypeSelect
+    });
+
+    simpleDataTable.on('HandleFileUpload', function(file, cb) {
+      handleFileUpload(file, cb);
+    });
+
+    return simpleDataTable.container();
   }
 
-  function createCancelBtn() {
-    cancel = highed.dom.cr('button', 'highed-ok-button highed-import-button grey', 'Cancel');
-    highed.dom.on(cancel, 'click', function() {
-      dataModal.hide();
-    });
-    return cancel;
+  function showLatLongTable(type) {
+    simpleDataTable.showLatLongTable(type);
   }
 
-  function createLiveDataContainer(toNextPage) {
-    const container = highed.dom.cr('div', 'highed-modal-container'),
-    inputs = [
-      { label: 'URL', placeholder: 'Spreadsheet ID', colspan: 2, linkedTo: liveDataInput},
-      { label: 'Refresh Time in Seconds', placeholder: 'Refresh time  (leave blank for no refresh)', colspan: 2, linkedTo: liveDataIntervalInput},
-      { label: 'Type', colspan: 2, linkedTo: liveDataTypeSelect, type:'select'}],
-    table = createTableInputs(inputs, 2, 'highed-live-data'),
-    importData = highed.dom.cr('button', 'highed-ok-button highed-import-button negative', 'Import Data'),
-    cancel = createCancelBtn();
 
-    highed.dom.on(importData, 'click', function() {
-      showLiveData(true);
-      dataModal.hide();
-      inputs.forEach(function(input) {
-        if (input.type && input.type === 'select') {
-          input.linkedTo.selectByIndex(input.element.dropdown.getSelectedItem().index());
-        }
-        else input.linkedTo.value = input.element.input.value;
-      });
-      liveDataLoadButton.click();
-      toNextPage();
-    });
-    highed.dom.ap(container, 
-      highed.dom.cr('div', 'highed-modal-title highed-help-toolbar', 'Import Live Data'),
-      highed.dom.ap(highed.dom.cr('div'), 
-        highed.dom.cr('div', 'highed-modal-text', 'Live data needs a url to your JSON data to reference.'),
-        highed.dom.cr('div', 'highed-modal-text', 'This means that the published chart always loads the latest version of your data.')),
-      highed.dom.ap(highed.dom.cr('div', 'highed-table-container'), table),
-      highed.dom.ap(highed.dom.cr('div', 'highed-button-container'), importData, cancel));
+  function loadMapData(mapData, code, name, csv, cb) {
+    const rowLength = rows.length;
+    var i = 0;
+
+    if (!code || code === '') code = 'hc-key';
+    if (!name || name === '') name = 'name';
     
-    return container;
-  }
-
-  function createGSheetContainer(toNextPage) {
-    const container = highed.dom.cr('div', 'highed-modal-container');
-    inputs = [
-      { label: 'Google Spreadsheet ID', placeholder: 'Spreadsheet ID', colspan: 4, linkedTo: gsheetID},
-      { label: 'Worksheet', placeholder: 'Worksheet (leave blank for first)', colspan: 4, linkedTo: gsheetWorksheetID},
-      { label: 'Refresh Time in Seconds', placeholder: 'Refresh time  (leave blank for no refresh)', colspan: 4, linkedTo: gsheetRefreshTime},
-      { label: 'Start Row', colspan: 2, linkedTo: gsheetStartRow},
-      { label: 'End Row', colspan: 2, linkedTo: gsheetEndRow},
-      { label: 'Start Column', colspan: 2, linkedTo: gsheetStartCol},
-      { label: 'End Column', colspan: 2, linkedTo: gsheetEndCol}],
-    table = createTableInputs(inputs, 4),
-    connectSheet = highed.dom.cr('button', 'highed-ok-button highed-import-button negative', 'Connect Sheet');
-    cancel = createCancelBtn();
-
-    highed.dom.on(connectSheet, 'click', function() {
-      showGSheet(true);
-      dataModal.hide();
-      inputs.forEach(function(input) {
-        input.linkedTo.value = input.element.input.value;
-      });
-      gsheetLoadButton.click();
-      toNextPage();
+    mapData = mapData.sort(function(a, b){
+      if(a.properties['hc-key'] < b.properties['hc-key']) { return -1; }
+      if(a.properties['hc-key'] > b.properties['hc-key']) { return 1; }
+      return 0;
     });
 
-    highed.dom.ap(container, 
-                  highed.dom.cr('div', 'highed-modal-title highed-help-toolbar', 'Connect Google Sheet'),
-                  highed.dom.ap(highed.dom.cr('div'), 
-                    highed.dom.cr('div', 'highed-modal-text', 'When using Google Spreadsheet, Highcharts references the sheet directly.'),
-                    highed.dom.cr('div', 'highed-modal-text', 'This means that the published chart always loads the latest version of the sheet.'),
-                    highed.dom.cr('div', 'highed-modal-text', 'For more information on how to set up your spreadsheet, visit the documentation.')),
-                  highed.dom.ap(highed.dom.cr('div', 'highed-table-container'), table),
-                  highed.dom.ap(highed.dom.cr('div', 'highed-button-container'), connectSheet, cancel));
+    var newRows = [];
+    if (csv) newRows = parseCSV(csv);
 
-    return container;
-  }
-
-  function createCutAndPasteContainer(toNextPage) {
-    const container = highed.dom.cr('div', 'highed-modal-container');
-    importData = highed.dom.cr('button', 'highed-ok-button highed-import-button negative', 'Import Data');
-    input = highed.dom.cr('textarea', 'highed-table-input'),
-    cancel = createCancelBtn();
-
-    highed.dom.on(importData, 'click', function() {
-      importer.emitCSVImport(input.value);
-      dataModal.hide();
-      toNextPage();
-    });
-
-    highed.dom.ap(container, 
-                  highed.dom.cr('div', 'highed-modal-title highed-help-toolbar', 'Cut And Paste Data'),
-                  highed.dom.ap(
-                    highed.dom.cr('div'), 
-                    highed.dom.cr('div', 'highed-modal-text', 'Paste CSV into the below box, or upload a file. Click Import to import your data.')
-                  ),
-                  highed.dom.ap(highed.dom.cr('div'), input),
-                  highed.dom.ap(highed.dom.cr('div', 'highed-button-container'), importData, cancel));
-
-    return container;
-  }
-
-  function createSampleData(toNextPage, loading) {
-    const container = highed.dom.cr('div', 'highed-modal-container'),
-          buttonsContainer = highed.dom.cr('div', 'highed-modal-buttons-container');
-
-    highed.samples.each(function(sample) {
-      var data = sample.dataset.join('\n'),
-        loadBtn = highed.dom.cr(
-          'button',
-          'highed-box-size highed-imp-button',
-          sample.title
-        );
-
-      highed.dom.style(loadBtn, { width: '99%' });
-
-      highed.dom.on(loadBtn, 'click', function() {
-        loading(true);
-        dataModal.hide();
-        importer.emitCSVImport(data, function() {
-          loading(false);
-          if (toNextPage) toNextPage();
-        });
-      });
-
-      highed.dom.ap(
-        buttonsContainer,
-        //highed.dom.cr('div', '', name),
-        //highed.dom.cr('br'),
-        loadBtn,
-        highed.dom.cr('br')
-      );
-    });
-
-    highed.dom.ap(container, buttonsContainer);
-    
-    return container;
-  }
-
-  function createSimpleDataTable(toNextPage, loading) {
-    var container = highed.dom.cr('div', 'highed-table-dropzone-container'),
-        selectFile = highed.dom.cr('button', 'highed-ok-button highed-import-button', 'Select File'),
-        buttonsContainer = highed.dom.cr('div'),
-        modalContainer = highed.dom.cr('div', 'highed-table-modal'),
-        gSheetContainer = createGSheetContainer(toNextPage),
-        liveContainer = createLiveDataContainer(toNextPage),
-        sampleDataContainer = createSampleData(toNextPage, loading);
-        cutAndPasteContainer = createCutAndPasteContainer(toNextPage);
-
-    var buttons = [{ title: 'Connect Google Sheet', linkedTo: gSheetContainer}, 
-                   { title: 'Import Live Data', linkedTo: liveContainer, height: 321}, 
-                   { title: 'Cut and Paste Data', linkedTo: cutAndPasteContainer, height: 448, width: 518}, 
-                   { title: 'Load Sample Data', linkedTo: sampleDataContainer}];
-
-    buttons.forEach(function(buttonProp) {
-      const button = highed.dom.cr('button', 'highed-ok-button highed-import-button', buttonProp.title);
-      highed.dom.on(button, 'click', function() {
-        dataModal.resize(buttonProp.width || 530, buttonProp.height || 530);
-        modalContainer.innerHTML = '';
-        highed.dom.ap(modalContainer, buttonProp.linkedTo);
-        dataModal.show();
-      });
-      highed.dom.ap(buttonsContainer, button);
-    });
-
-
-    highed.dom.on(selectFile, 'click', function(){
-      highed.readLocalFile({
-        type: 'text',
-        accept: '.csv',
-        success: function(info) {
-          highed.snackBar('File uploaded');
-          importer.emitCSVImport(info.data);
-          //events.emit("AssignDataForFileUpload", info.data); - Does this later in loadCSV
-          toNextPage();
-        }
-      });
-    });
-    
-    dataModal = highed.OverlayModal(false, {
-      minWidth: 530,
-      minHeight: 530,
-      showCloseIcon: true
-    });
-
-    highed.dom.ap(dataModal.body, modalContainer);
-
-    container.ondragover = function(e) {
-      e.preventDefault();
-    };
-
-    container.ondrop = function(e) {
-      e.preventDefault();
-
-      var d = e.dataTransfer;
-      var f;
-      var i;
-
-      if (d.items) {
-        for (i = 0; i < d.items.length; i++) {
-          f = d.items[i];
-          if (f.kind === 'file') {
-            handleFileUpload(f.getAsFile(), function() {
-              highed.snackBar('File uploaded');
-              toNextPage();
-            });
-          }
-        }
-      } else {
-        for (i = 0; i < d.files.length; i++) {
-          f = d.files[i];
-          handleFileUpload(f, function() {
-            highed.snackBar('File uploaded');
-            toNextPage();
-          });
-        }
+    gcolumns.forEach(function(col, index){
+      if (newRows && newRows[0] && newRows[0][index]) {
+        col.headerTitle.innerHTML = newRows[0][index] === 'null' ? '' : newRows[0][index];
       }
+    });
+    
+    mapData.forEach(function(data) {
+      if (!data.properties[name]) return;
 
-      //events.emit('AssignDataForFileUpload');
-      //toNextPage();
-    };
+      if (i >= rowLength) addRow();
+      rows[i].columns[0].setValue(data.properties[name]);
+      rows[i].columns[0].setHiddenValue(data.properties[code]);
 
-    highed.dom.ap(container, 
-      highed.dom.ap(
-        highed.dom.cr('div','highed-table-dropzone'),
-        highed.dom.cr('div', 'highed-table-dropzone-title', 'Drop CSV files here'),
-        highed.dom.cr('div', 'highed-table-dropzone-subtitle', 'or'),
-        highed.dom.ap(
-          highed.dom.cr('div', 'highed-table-dropzone-button'),
-          selectFile
-        ),
-        highed.dom.cr('div', 'highed-table-dropzone-subtitle highed-table-dropzone-message', 'You can also:'),
-        buttonsContainer
-      )
-    );
+      newRows.forEach(function(r, n) {
+        if (r[0] === data.properties[code]) {
+          rows[i].columns.forEach(function(col, x) {
+            if (x === 0 || newRows[n][x] === undefined) return;
+            
+            col.setValue(newRows[n][x]);
+          })
+        }
+      });
 
-    return container;
+      i++;
+      data.properties.hccode = code; 
+      data.properties.hcname = name; 
+    });
+
+    highlightCells([0],[0], {
+      colors: {
+        'light': 'rgba(66, 200, 192, 0.2)',
+        'dark': 'rgb(66, 200, 192)',
+      }
+    })
+
+    highlightCells([1],[1], {
+      colors: {
+        'light': 'rgba(145, 151, 229, 0.2)',
+        'dark': 'rgb(145, 151, 229)',
+      }
+    })
+    
+    rows.forEach(function(row) {
+      row.columns[0].setDisabled(true);
+    });
+
+    mapImporter.setMap(mapData);
+
+    if (cb && highed.isFn(cb)) cb();
+  }
+
+  function getMapValueFromCode(key, assignedValue) {
+    rows.some(function(row) {
+      if (row.columns[0].element.children[0].getAttribute('data-value') === key) {
+        value = row.columns[assignedValue.dataColumns[0]];
+        return true;
+      }
+    });
+    return value;
+  }
+
+  function loadSampleData(data) {
+    importer.emitCSVImport(data);
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -3250,6 +3144,7 @@ highed.DataTable = function(parent, attributes) {
     initGSheet: initGSheet,
     on: events.on,
     resize: resize,
+    loadSampleData: loadSampleData,
     loadLiveDataFromURL: loadLiveDataFromURL,
     loadLiveDataPanel: loadLiveDataPanel,
     isInCSVMode: isInCSVMode,
@@ -3264,6 +3159,9 @@ highed.DataTable = function(parent, attributes) {
     clearData: clearData,
     showDataTableError: showDataTableError,
     hideDataTableError: hideDataTableError,
-    selectSwitchRowsColumns: selectSwitchRowsColumns
+    selectSwitchRowsColumns: selectSwitchRowsColumns,
+    loadMapData: loadMapData,
+    getMapValueFromCode: getMapValueFromCode,
+    showLatLongTable: showLatLongTable
   };
 };

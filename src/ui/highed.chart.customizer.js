@@ -45,7 +45,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *    > availableSettings {string|array} - whitelist of exposed settings
  *  @param chartPreview {ChartPreview} - the chart preview instance
  */
-highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
+highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode, dataPage) {
   var properties = highed.merge(
       {
         noAdvanced: false,
@@ -88,7 +88,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
       responsive: true
     }),
     */
-    list = highed.List(splitter, true, properties, planCode),
+    list = highed.List(splitter, true, properties, planCode, dataPage),
     body = highed.dom.cr('div'),//splitter.right,
     advSplitter = highed.HSplitter(advancedTab.body, {
       leftWidth: 30
@@ -292,7 +292,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
         });
       } else if (
         properties.availableSettings[group.id] ||
-        properties.availableSettings[group.pid]
+        properties.availableSettings[group.pid] 
       ) {
         doInclude = true;
       }
@@ -354,9 +354,13 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
 
   function build() {
     Object.keys(highed.meta.optionsExtended.options).forEach(function(key) {
-      if (!shouldInclude(highed.meta.optionsExtended.options[key])) {
+      if (!shouldInclude(highed.meta.optionsExtended.options[key]) || (highed.chartType ==='Map' && 
+      highed.meta.optionsExtended.options[key].some(function(opt){ 
+        return opt.mapDisabled === true; 
+      }))) {
         return;
       }
+
       list.addItem({
         id: key,
         title: highed.L(key)
@@ -364,16 +368,6 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
       highed.meta.optionsExtended.options[key],
       chartPreview);
     });
-/*
-    list.addItem({
-      id: "Annotations",
-      annotations: true,
-      title: "Annotations ",
-      onClick: function() {
-        events.emit("AnnotationsClicked");
-      }
-    }, null, chartPreview);*/
-
     // buildTree();
   }
 
@@ -483,8 +477,8 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode) {
     events.emit("PropertyChange", groupId, newValue, detailIndex);
   });
 
-  list.on('TogglePlugins', function(groupId, newValue) {
-    events.emit("TogglePlugins", groupId, newValue);
+  list.on('TogglePlugins', function(groupId, newValue, type) {
+    events.emit("TogglePlugins", groupId, newValue, type);
   });
 
   list.on('Select', function(id) {

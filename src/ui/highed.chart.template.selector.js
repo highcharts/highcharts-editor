@@ -280,7 +280,7 @@ highed.ChartTemplateSelector = function(parent, chartPreview) {
 
   /* Build the UI */
   function build() {
-    templateTypeSelect.addItems(highed.templates.getCatArray());
+    templateTypeSelect.addItems(highed.chartType === 'Map' ? highed.templates.getCatObj('Map') : highed.templates.getCatArray().filter(function(type){ return type.id !== 'Map'}));
     templateTypeSelect.selectByIndex(0); // TODO: Need to change this later
 
     //highed.dom.ap(container, templateTypeSelect);

@@ -27,7 +27,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /* global window */
 
-highed.DrawerEditor = function(parent, options, planCode) {
+highed.DrawerEditor = function(parent, options, planCode, chartType) {
   var events = highed.events(),
     // Main properties
     properties = highed.merge(
@@ -72,6 +72,8 @@ highed.DrawerEditor = function(parent, options, planCode) {
       'highed-errorbar-body highed-scrollbar',
       'Oh noes! something is very wrong!'
     ),
+    betaContainer = highed.dom.cr('div', 'highed-beta-container'),
+    betaLabel = highed.dom.cr('div', chartType === 'Map' ? 'highed-beta-label' : '', chartType === 'Map' ? 'BETA' : ''),
     lastSetWidth = false,
     fixedSize = false,
     splitter = highed.VSplitter(parent, {
@@ -215,6 +217,19 @@ highed.DrawerEditor = function(parent, options, planCode) {
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
     payupModal = highed.SubscribeModal(),
     annotationModal = highed.AnnotationModal(),
+    mapSelector = highed.MapSelector(chartPreview, planCode),
+    dataPage = highed.DataPage(
+      splitter.bottom,
+      highed.merge(
+        {
+          importer: properties.importer
+        },
+        properties.dataGrid
+      ),
+      chartPreview,
+      highedChartContainer,
+      builtInOptions.data
+    ),
     customizePage = highed.CustomizePage(
       splitter.bottom,
       highed.merge(
@@ -227,19 +242,8 @@ highed.DrawerEditor = function(parent, options, planCode) {
       highedChartContainer,
       builtInOptions.customize,
       chartFrame,
-      planCode
-    ),
-    dataPage = highed.DataPage(  
-      splitter.bottom,
-      highed.merge(
-        {
-          importer: properties.importer
-        },
-        properties.dataGrid
-      ),
-      chartPreview,
-      highedChartContainer,
-      builtInOptions.data
+      planCode,
+      dataPage
     ),
     templatePage = highed.TemplatePage(     
       splitter.bottom,
@@ -253,7 +257,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
       highedChartContainer,
       builtInOptions.templates
     );
-    createChartPage = highed.CreateChartPage(
+    createChartPage = highed.ChartWizard(
       splitter.bottom,
       properties.features,
       {
@@ -261,7 +265,9 @@ highed.DrawerEditor = function(parent, options, planCode) {
         widths: {
           desktop: 95
         }
-      }
+      },
+      chartPreview,
+      chartType
     ),
     changePlanBtn = highed.dom.cr('button', 'highed-import-button', "Choose a plan"),
     createAccountLink = highed.dom.cr('a', '', 'Create one')
@@ -362,10 +368,16 @@ highed.DrawerEditor = function(parent, options, planCode) {
     titleHeader = highed.dom.cr('h3', '', 'Data'),
     iconContainer = highed.dom.cr('div', ''),
     titleContainer = highed.dom.ap(highed.dom.cr('div', 'highed-page-title'), titleHeader, helpIcon, iconContainer),
-    helpModal = highed.HelpModal(builtInOptions.data.help || []);
+    helpModal = highed.HelpModal(builtInOptions.data.help || [])
+    mapModal = highed.MapModal(highedChartContainer, dataPage);
+
+  betaContainer.title = "Maps functionality is currently in Beta";
+
+  highed.chartType = chartType;
+  chartPreview.options.togglePlugins('map', chartType === 'Map');
 
   highed.dom.on(helpIcon, 'click', showHelp);
-  highed.dom.ap(splitter.bottom, highed.dom.ap(workspaceBody, workspaceRes, workspaceButtons));
+  highed.dom.ap(splitter.bottom, highed.dom.ap(betaContainer, betaLabel), highed.dom.ap(workspaceBody, workspaceRes, workspaceButtons));
 
   highed.dom.ap(splitter.bottom, titleContainer, smallScreenWorkspaceButtons);
   if (!properties.useHeader) {
@@ -388,7 +400,17 @@ highed.DrawerEditor = function(parent, options, planCode) {
   // Alias import to data
   builtInOptions.import = builtInOptions.data;
   panel.setDefault(dataPage);
-  dataPage.show()
+  dataPage.show();
+
+  chartPreview.on('EditMap', function(data) {
+    mapModal.editMapValues(data)
+  });
+
+  chartPreview.on('SetChartAsMap', function() {
+    chartType = 'Map';
+    highed.chartType = chartType;
+    createFeatures();
+  });
   /**
    * Creates the features defined in property.features
    * Call this after changing properties.features to update the options.
@@ -507,17 +529,19 @@ highed.DrawerEditor = function(parent, options, planCode) {
     });
   }
 
-  function showCreateChartPage() {
+  function showChartWizard() {
 
-    createChartPage.init(dataPage, templatePage, customizePage);
+    createChartPage.init(dataPage, templatePage, customizePage, mapSelector, highedChartContainer);
 
     highed.dom.style([workspaceBody, showChartSmallScreen, smallScreenWorkspaceButtons], {
-      opacity: 0
+      opacity: 0,
+      maxHeight:'0px'
     });
     panel.getPrev().hide();
     createChartPage.show();
     highed.dom.style([chartFrame, titleContainer], {
-      opacity: '0'
+      opacity: '0',
+      maxHeight: '0px'
     });
 
     if(highed.onPhone()) {
@@ -527,12 +551,16 @@ highed.DrawerEditor = function(parent, options, planCode) {
     }
 
     createChartPage.on('SimpleCreateChartDone', function(goToDataPage) {
+
+      highed.dom.ap(splitter.bottom, highedChartContainer);
       createChartPage.hide();
       highed.dom.style([chartFrame, titleContainer], {
-        opacity: '1'
+        opacity: '1',
+        maxHeight: 'max-content'
       });
       highed.dom.style([workspaceBody, showChartSmallScreen, smallScreenWorkspaceButtons], {
-        opacity: 1
+        opacity: 1,
+        maxHeight: 'max-content'
       });
 
       if(highed.onPhone()) {
@@ -703,19 +731,16 @@ highed.DrawerEditor = function(parent, options, planCode) {
   }
   
   function showError(title, message, warning, code) {
+    
+    if (suppressWarning) return;
+      
+    highed.dom.style(errorBarClose, {
+      display: 'inline-block'
+    });
+
     if (warning) {
-      if (suppressWarning) return;
-      
-      highed.dom.style(errorBarClose, {
-        display: 'inline-block'
-      });
-      
       if (!errorBar.classList.contains('highed-warningbar')) errorBar.classList += ' highed-warningbar';
     } else {
-      highed.dom.style(errorBarClose, {
-        display: 'none'
-      });
-  
       errorBar.classList.remove('highed-warningbar');
     }
     
@@ -743,6 +768,44 @@ highed.DrawerEditor = function(parent, options, planCode) {
   //////////////////////////////////////////////////////////////////////////////
   // Event attachments
 
+  templatePage.on('AddDefaultSeries', function(extra) {
+    dataPage.addSerie(null, extra);
+  });
+
+  templatePage.on('ChangeAssignDataType', function(type, extra) {
+    dataPage.changeAssignDataType(type);
+
+    if (extra) {
+      chartPreview.options.addBlankSeries(0, null, extra);
+    }
+  });
+  
+  mapSelector.on('AddSerie', function(extra) {
+    dataPage.addSerie(null, extra);
+  })
+
+  mapSelector.on('LoadDataSet', function(data) {
+    dataPage.loadSampleData(data);
+  });
+
+  mapSelector.on('ChangeTitle', function(title) {
+    setChartTitle(title);
+  });
+
+  mapSelector.on('ChangeAssignLinkedToValue', function(values){
+    dataPage.updateLinkedToValues(values);
+  })
+
+  mapSelector.on('LoadMapData', function(data, code, name, csv, cb, isLatLongChart) {
+    dataPage.loadMapData(data, code, name, csv, cb, isLatLongChart);
+    chartPreview.updateMapCodes(data);
+  });
+
+  chartPreview.on('LoadMapData', function(data, code, name) {
+    dataPage.loadMapData(data, code, name);
+    chartPreview.updateMapCodes(data);
+  });
+
   dataPage.on('GoToTemplatePage', function() {
     const templates = panel.getOptions().templates;
     if (templates) templates.click();
@@ -754,12 +817,17 @@ highed.DrawerEditor = function(parent, options, planCode) {
     }
   });
 
-  chartPreview.on('LoadProject', function (projectData, aggregated) { 
+  chartPreview.on('LoadProject', function (projectData, aggregated) {
     dataPage.loadProject(projectData, aggregated);
     templatePage.selectSeriesTemplate(0, projectData);
   });
 
-  templatePage.on('TemplateChanged', function(newTemplate, loadTemplateForEachSerie, cb){
+  chartPreview.on(['LoadMapProject'], function (projectData, aggregated) {
+    dataPage.loadMapProject(projectData, aggregated);
+    templatePage.selectSeriesTemplate(0, projectData);
+  });
+
+  templatePage.on('TemplateChanged', function(newTemplate, loadTemplateForEachSerie, cb) {
     dataPage.changeAssignDataTemplate(newTemplate, loadTemplateForEachSerie, cb);
   })
   chartPreview.on('ChartChange', function(newData) {
@@ -910,6 +978,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
   // Create the features
   createFeatures();
   createToolbar();
+  //showChartWizard();
 
   resize();
 
@@ -951,6 +1020,11 @@ highed.DrawerEditor = function(parent, options, planCode) {
     payupModal.show();
   });
 
+  mapSelector.on('Payup', function() {
+    payupModal.show();
+  });
+
+
   chartPreview.on('ShowAnnotationModal', function(type) {
     annotationModal.show(type);
   });
@@ -983,7 +1057,7 @@ highed.DrawerEditor = function(parent, options, planCode) {
     toolbar: toolbar,
     getChartTitle: dataPage.getChartTitle,
     setChartTitle: setChartTitle,
-    showCreateChartPage: showCreateChartPage,
+    showChartWizard: showChartWizard,
     addToWorkspace: addToWorkspace,
     data: {
       on: function() {}, //dataTable.on,

@@ -26,57 +26,69 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 highed.templates.add('Map', {
-  title: 'Basic Oceania Map',
+  title: 'Bubble',
   description: [
-    'Basic Oceania map.',
-    'Good starting point for Oceanic geographical data.'
+    'The bubble map uses circles of different size to represent a numeric value on a territory. It displays one bubble per region. The bubble is displayed in the baricentre of the region).',
   ],
-  thumbnail: '',
+  thumbnail: 'mapbubble.svg',
   dataValidator: false,
-  sampleSets: [],
+  loadForEachSeries: false,
   constructor: 'Map',
+  load: function(chart, event) {
+    //Create serie if chart only has one
+    if (chart.series && chart.series.length <= 1) {
+
+      event.emit('ChangeAssignDataType', 'map', {
+        "joinBy": 0
+      });
+
+      event.emit('AddDefaultSeries');
+
+    }
+  },
   config: {
     chart: {
-      borderWidth: 1
     },
 
     mapNavigation: {
-      enabled: true
+      enabled: true,
+      buttonOptions: {
+          verticalAlign: 'bottom'
+      }
+    },
+
+    xAxis: {
+      visible: false,
+      type: 'linear'
+    },
+
+    yAxis: {
+      visible: false
     },
 
     legend: {
-      layout: 'horizontal',
-      borderWidth: 0,
-      backgroundColor: 'rgba(255,255,255,0.85)',
-      verticalAlign: 'bottom'
+      enabled: false
     },
 
     colorAxis: {
-      min: 1,
-      type: 'logarithmic',
       minColor: '#EEEEFF',
       maxColor: '#000022',
-      stops: [[0, '#EFEFFF'], [0.67, '#4444FF'], [1, '#000022']]
+      stops: [
+          [0, '#EFEFFF'],
+          [0.67, '#4444FF'],
+          [1, '#000022']
+      ]
+    },
+    plotOptions: {
+      series: {
+        minSize: 4,
+        maxSize: 60
+      }
     },
 
-    series: [
-      {
-        mapData: 'custom/oceania',
-        joinBy: ['postal-code', 'code'],
-        dataLabels: {
-          enabled: true,
-          color: '#FFFFFF',
-          format: '{point.code}'
-        },
-        dataLabels: {
-          enabled: true,
-          color: '#FFFFFF',
-          format: '{point.code}'
-        },
-        tooltip: {
-          pointFormat: '{point.code}: {point.value{/km2'
-        }
-      }
-    ]
+    series: [{
+        joinBy: 'hc-key',
+        type: 'mapbubble'
+    }]
   }
 });

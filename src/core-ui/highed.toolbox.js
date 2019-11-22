@@ -71,14 +71,15 @@ highed.Toolbox = function(parent, attr) {
       circle = highed.dom.cr('div', 'highed-toolbox-list-circle', props.number);
 
     highed.dom.on(circle, 'click', function() {
-      props.onClick(props.number);
-      expand();
-
+      if (highed.chartType !== 'Map') {
+        props.onClick(props.number);
+        expand();
+      }
     });
 
     highed.dom.ap(icon, circle, highed.dom.cr('div', 'highed-toolbox-list-title', props.title));
     highed.dom.on(icon, 'click', function() {
-      entryEvents.emit('Click');
+      if (highed.chartType !== 'Map') entryEvents.emit('Click');
     });
 
     function resizeBody() {
@@ -116,7 +117,7 @@ highed.Toolbox = function(parent, attr) {
 
       entryEvents.emit('BeforeExpand');
 
-      body.innerHTML = '';
+      body.textContent = '';
       highed.dom.ap(body, contents);
       
       highed.dom.style(body, {
@@ -131,7 +132,10 @@ highed.Toolbox = function(parent, attr) {
       events.emit('BeforeResize', newWidth);
 
       expanded = true;
-
+      
+      if (props.onload && highed.isFn(props.onload)) {
+        props.onload();
+      }
       setTimeout(function() {
         var height = resizeBody().h;
 
@@ -147,6 +151,7 @@ highed.Toolbox = function(parent, attr) {
       }
 
       highed.emit('UIAction', 'ToolboxNavigation', props.title);
+      
     }
 
     function collapse() {
