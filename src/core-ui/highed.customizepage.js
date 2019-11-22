@@ -436,9 +436,9 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     setTimeout(chartPreview.resize, 300);
 
     if (highed.chartType === 'Map') resize();
-  }),
+  });
 
-  backIcon = highed.dom.cr('div','highed-back-icon', '<i class="fa fa-chevron-circle-left" aria-hidden="true"></i>');
+  var backIcon = highed.dom.cr('div','highed-back-icon', '<i class="fa fa-chevron-circle-left" aria-hidden="true"></i>');
 
 
   highed.dom.style(backIcon, {

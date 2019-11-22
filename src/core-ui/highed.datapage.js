@@ -85,12 +85,12 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         },
         properties.dataGrid
       )
-    ),   
+    ),
     addRowInput = highed.dom.cr('input', 'highed-field-input highed-add-row-input'),
     addRowBtn = highed.dom.cr('button', 'highed-import-button highed-ok-button highed-add-row-btn small', 'Add'),
     addRowDiv = highed.dom.ap(highed.dom.cr('div', 'highed-dtable-extra-options'),
-                highed.dom.ap(highed.dom.cr('div', 'highed-add-row-container'),     
-                  highed.dom.cr('span', 'highed-add-row-text highed-hide-sm', 'Add Rows'),            
+                highed.dom.ap(highed.dom.cr('div', 'highed-add-row-container'),
+                  highed.dom.cr('span', 'highed-add-row-text highed-hide-sm', 'Add Rows'),
                   addRowInput,
                   addRowBtn
                 )
@@ -99,11 +99,11 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     dataImportBtn = highed.dom.cr(
       'button',
       'highed-import-button highed-ok-button highed-sm-button',
-      'Import');
+      'Import'),
     dataExportBtn = highed.dom.cr(
       'button',
       'highed-import-button highed-ok-button highed-hide-sm',
-      'Export Data');
+      'Export Data'),
     dataClearBtn = highed.dom.cr(
       'button',
       'highed-import-button highed-ok-button highed-sm-button',
@@ -118,7 +118,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     dataImportBtn.innerHTML += ' <span class="highed-hide-sm">Data</span>';
     dataClearBtn.innerHTML += ' <span class="highed-hide-sm">Data</span>';
-    
+
     addRowInput.value = 1;
     highed.dom.on(addRowBtn, 'click', function(e) {
       assignDataPanel.getFieldsToHighlight(dataTable.removeAllCellsHighlight, true);
@@ -134,14 +134,14 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     highed.dom.on(dataExportBtn, 'click', function() {
       dataTable.showImportModal(1);
     }),
-    
+
     highed.dom.on(dataClearBtn, 'click', function() {
       if (confirm('Start from scratch?')) {
         dataTable.clearData();
         assignDataPanel.init();
       }
     }),
-    
+
     iconsContainer = highed.dom.cr('div', 'highed-toolbox-icons'),
     isVisible = true;
 
@@ -155,7 +155,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
       highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(chartTitle, chartTitleInput), iconsContainer), userContents);
       highed.dom.ap(body, contents);
-  
+
       highed.dom.ap(userContents, dataTableContainer);
       dataTable.resize();
 
@@ -165,9 +165,9 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
           position: 'relative'
         });
       }
-      
+
       highed.dom.ap(parent, highed.dom.ap(container, body));
-      
+
       assignDataPanel.init(dataTable.getColumnLength());
       if (highed.chartType === 'Map') assignDataPanel.disableMaps();
       expand();
@@ -197,7 +197,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     }
 
     function expand() {
-      
+
       chartPreview.toggleShowAnnotationIcon(false);
       //var bsize = highed.dom.size(bar);
 
@@ -222,7 +222,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
       if (!highed.onPhone()) {
         //(highed.dom.pos(assignDataPanel.getElement(), true).x - highed.dom.pos(dataTableContainer, true).x) - 10
-        highed.dom.style(container, {        
+        highed.dom.style(container, {
           //width: newWidth + '%'
           width:((highed.dom.pos(assignDataPanel.getElement(), true).x - highed.dom.pos(dataTableContainer, true).x) + 14) + 'px'
         });
@@ -239,13 +239,13 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
                 || document.documentElement.clientHeight
                 || document.body.clientHeight) - highed.dom.pos(body, true).y
             };
-          
+
         highed.dom.style(contents, {
           width: '100%',
           height: ((size.h - 16)) + 'px'
         });
 
-        dataTable.resize();   
+        dataTable.resize();
         if(!highed.onPhone()) assignDataPanel.resize(newWidth, highed.dom.pos(chartFrame, true).y - highed.dom.pos(body, true).y)
       }
 
@@ -261,7 +261,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       assignDataPanel.show();
       isVisible = true;
       resizeChart();
-      resize(); 
+      resize();
     }
 
     function hide() {
@@ -281,18 +281,18 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     function hideImportModal() {
       dataTable.hideImportModal();
     }
-    
+
     function changeAssignDataTemplate(newTemplate, loadTemplateForEachSeries, cb) {
-      
+
       if (dataTable.isInCSVMode()) {
-        
-        clearSeriesMapping();        
-        
+
+        clearSeriesMapping();
+
         var seriesIndex = [];
         assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, null, true);
         if (loadTemplateForEachSeries) {
           const length = assignDataPanel.getAllOptions().length;
-          
+
           for(var i=0;i<length;i++) {
             seriesIndex.push(i);
             assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, i, true, i + 1);
@@ -302,7 +302,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         chartPreview.loadTemplateForSerie(newTemplate, seriesIndex);
 
         const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
-        
+
         chartPreview.data.csv({
           csv: data
         }, null, false, function() {
@@ -343,7 +343,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       if (chartOptions.data && chartOptions.data.seriesMapping) {
         // Causes an issue when a user has added a assigndata input with seriesmapping, so just clear and it will add it in again later
         chartOptions.data.seriesMapping = null;
-        chartPreview.options.setAll(chartOptions);  
+        chartPreview.options.setAll(chartOptions);
       }
 
     }
@@ -353,7 +353,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
           chartOptions = chartPreview.options.getCustomized(),
           dataTableFields = dataTable.getDataFieldsUsed(),
           hasLabels = false;
-      
+
       var series = allOptions.length;
 
       for(var i = 0; i < series; i++) {
@@ -379,7 +379,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         });
         tempOption.push(serieOption);
       };
-      
+
       if (tempOption.length > 0) {
         if (hasLabels) {
           const dataLabelOptions = {
@@ -417,19 +417,19 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         }
         dataTable.removeAllCellsHighlight(null, columns);
       }
-      
+
       assignDataPanel.checkToggleCells();
-      
+
       assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true, true);
       chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
     }
 
     function loadMapProject(projectData, aggregated) {
       //assignDataPanel.disable();
-      
+
       if (projectData.options && projectData.options.chart && projectData.options.chart.map && highed.isObj(projectData.options.chart.map)){
-        loadMapData(projectData.options.chart.map.features, 
-                    projectData.options.chart.map.hccode, projectData.options.chart.map.hcname, 
+        loadMapData(projectData.options.chart.map.features,
+                    projectData.options.chart.map.hccode, projectData.options.chart.map.hcname,
                     projectData.settings.dataProvider.csv, function () {
           assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
           assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
@@ -469,7 +469,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
               return;
             } else {
               loadMapData(data.features, null, null, projectData.settings.dataProvider.csv, function () {
-              
+
                 assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
                 assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
                 chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
@@ -484,7 +484,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     function loadProject(projectData, aggregated) {
       if (projectData.settings && projectData.settings.dataProvider && projectData.settings.dataProvider.csv) {
-        
+
         dataTable.loadCSV({
           csv: projectData.settings.dataProvider.csv
         }, null, null, function() {
@@ -509,7 +509,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     function getValues(){
 
       if ( assignDataPanel.getOptions() && assignDataPanel.getOptions().value) {
-          return dataTable.toData(null, null, [{ 
+          return dataTable.toData(null, null, [{
             dataColumns: assignDataPanel.getOptions().value.rawValue,
           }]).slice();
       }
@@ -531,11 +531,11 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     chartPreview.data.csv({
       csv: data
     }, null, false, function() {
-      
+
 
       var chartOptions = chartPreview.options.getCustomized();
-      var assignDataOptions = assignDataPanel.getAllOptions();    
-      
+      var assignDataOptions = assignDataPanel.getAllOptions();
+
       if (chartOptions && chartOptions.series) {
         if (chartOptions.series.length < assignDataOptions.length) {
           var optionsLength = chartOptions.series.length
@@ -558,11 +558,11 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   assignDataPanel.on('GoToTemplatePage', function() {
     events.emit("GoToTemplatePage");
   })
-  
+
   assignDataPanel.on('AddSeries', function(index, type, extra) {
     chartPreview.options.addBlankSeries(index, type, extra);
   })
-  
+
   assignDataPanel.on('GetLastType', function() {
     var chartOptions = chartPreview.options.getCustomized();
     var type = chartOptions.series[chartOptions.series.length - 1].type;
@@ -571,9 +571,9 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     assignDataPanel.setColumnLength(dataTable.getColumnLength());
     assignDataPanel.addNewSerie(type);
-    
+
   })
-  
+
   chartPreview.on('LoadProjectData', function(csv) {
     dataTable.loadCSV(
       {
@@ -616,7 +616,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
 
   assignDataPanel.on('AssignDataChanged', function() {
-    
+
     clearSeriesMapping();
     const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
     chartPreview.data.csv({
@@ -650,8 +650,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   dataTable.on('ChangeMapCategoryValue', function(value){
     if (highed.chartType === 'Map') {
       var chartOptions = chartPreview.options.getCustomized();
-    
-      value = Number.parseFloat(value);  
+
+      value = Number.parseFloat(value);
       if (chartOptions.colorAxis && chartOptions.colorAxis.dataClasses) {
         if (chartOptions.colorAxis.dataClasses[0].from > value) {
           chartOptions.colorAxis.dataClasses[0].from = value;
@@ -710,14 +710,14 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     if (!blacklist.includes(type)) {
       assignDataPanel.addSeries(rowsLength, type);
     }
-  }); 
+  });
 
   dataTable.on('AssignDataChanged', function(input, options) {
     chartOptions = chartPreview.toProject().options;
-    if (chartOptions.data && chartOptions.data.seriesMapping) { 
+    if (chartOptions.data && chartOptions.data.seriesMapping) {
       // Causes an issue when a user has added a assigndata input with seriesmapping, so just clear and it will add it in again later
       chartOptions.data.seriesMapping = null;
-      chartPreview.options.setAll(chartOptions);  
+      chartPreview.options.setAll(chartOptions);
     }
 
     chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
@@ -749,7 +749,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     setSeriesMapping(assignDataPanel.getAllOptions());
     chartPreview.data.gsheet(settings);
   });
-  
+
   dataTable.on('Change', function(headers, data) {
 
     chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true));
@@ -803,7 +803,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   function createSimpleDataTable(toNextPage, cb, chartContainer) {
     return dataTable.createSimpleDataTable(toNextPage, cb, chartContainer);
-  } 
+  }
 
   function selectSwitchRowsColumns() {
     dataTable.selectSwitchRowsColumns()
@@ -813,7 +813,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     if (isLatLongChart) {
       dataTable.loadCSV({
         csv: csv,
-      }, null, null, function() { 
+      }, null, null, function() {
         assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
         chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
 
