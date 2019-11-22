@@ -291,13 +291,14 @@ highed.ChartPreview = function(parent, attributes, planCode) {
   */
 
   function refreshChart(options) {
+    console.trace("REFRESHING CHART....")
     options = options || aggregatedOptions;
 
     (options.series || []).forEach(function(serie){
       if (serie.data) delete serie.data;
     })
 
-    console.log(JSON.stringify(options))
+    //console.log(JSON.stringify(options))
     chart.update(options);
   }
 
@@ -808,7 +809,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
    *  @name data.csv
    *  @param data {object} - the data to load
    */
-  function loadCSVData(data, emitLoadSignal, bypassClearSeries, cb) {
+  function loadCSVData(data, emitLoadSignal, cb) {
     var mergedExisting = false,
       seriesClones = [];
     if (!data || !data.csv) {
@@ -826,102 +827,88 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     lastLoadedCSV = data.csv;
     lastLoadedSheet = false;
     lastLoadedLiveData = false;
-    gc(function(chart) {
-      var axis;
+    var axis;
 
-      // highed.setAttr(customizedOptions, 'series', []);
-      // highed.setAttr(aggregatedOptions, 'series', []);
-
-      // highed.setAttr(customizedOptions, 'plotOptions--series--animation', true);
-      // highed.setAttr(customizedOptions, 'data--csv', data.csv);
-      // highed.setAttr(customizedOptions, 'data--googleSpreadsheetKey', undefined);
-      // highed.setAttr(customizedOptions, 'data--itemDelimiter', data.itemDelimiter);
-      // highed.setAttr(customizedOptions, 'data--firstRowAsNames', data.firstRowAsNames);
-      // highed.setAttr(customizedOptions, 'data--dateFormat', data.dateFormat);
-      // highed.setAttr(customizedOptions, 'data--decimalPoint', data.decimalPoint);
-
-      if (customizedOptions && customizedOptions.series) {
-        (highed.isArr(customizedOptions.series)
-          ? customizedOptions.series
-          : [customizedOptions.series]
-        ).forEach(function(series) {
-          seriesClones.push(
-            highed.merge({}, series, false, {
-              data: 1,
-              name: 1
-            })
-          );
-        });
-      }
-      
-      customizedOptions.series = [];
-
-      if (customizedOptions.xAxis) {
-        (highed.isArr(customizedOptions.xAxis)
-          ? customizedOptions.xAxis
-          : [customizedOptions.xAxis]
-        ).forEach(function(axis) {
-          if (axis.categories) axis.categories = [];
-        });
-      }
-
-      if (customizedOptions.yAxis) {
-        (highed.isArr(customizedOptions.yAxis)
-          ? customizedOptions.yAxis
-          : [customizedOptions.yAxis]
-        ).forEach(function(axis) {
-          if (axis.categories) axis.categories = [];
-        });
-      }
-
-      highed.merge(customizedOptions, {
-        plotOptions: {
-          series: {
-            animation: false
-          }
-        },
-        data: {
-          csv: data.csv,
-          itemDelimiter: data.itemDelimiter,
-          firstRowAsNames: data.firstRowAsNames,
-          dateFormat: data.dateFormat,
-          decimalPoint: data.decimalPoint,
-          googleSpreadsheetKey: undefined,
-          url: data.url
-        }
+    if (customizedOptions && customizedOptions.series) {
+      (highed.isArr(customizedOptions.series)
+        ? customizedOptions.series
+        : [customizedOptions.series]
+      ).forEach(function(series) {
+        seriesClones.push(
+          highed.merge({}, series, false, {
+            data: 1,
+            name: 1
+          })
+        );
       });
+    }
+    
+    customizedOptions.series = [];
 
+    if (customizedOptions.xAxis) {
+      (highed.isArr(customizedOptions.xAxis)
+        ? customizedOptions.xAxis
+        : [customizedOptions.xAxis]
+      ).forEach(function(axis) {
+        if (axis.categories) axis.categories = [];
+      });
+    }
+
+    if (customizedOptions.yAxis) {
+      (highed.isArr(customizedOptions.yAxis)
+        ? customizedOptions.yAxis
+        : [customizedOptions.yAxis]
+      ).forEach(function(axis) {
+        if (axis.categories) axis.categories = [];
+      });
+    }
+
+    highed.merge(customizedOptions, {
+      plotOptions: {
+        series: {
+          animation: false
+        }
+      },
+      data: {
+        csv: data.csv,
+        itemDelimiter: data.itemDelimiter,
+        firstRowAsNames: data.firstRowAsNames,
+        dateFormat: data.dateFormat,
+        decimalPoint: data.decimalPoint,
+        googleSpreadsheetKey: undefined,
+        url: data.url
+      }
+    });
+
+    updateAggregated();
+
+    //refreshChart(aggregatedOptions);
+    //loadSeries();
+    //emitChange();
+    
+    if (highed.isArr(seriesClones)) {
+      (seriesClones || []).forEach(function(series, i) {
+        mergedExisting = true;
+        if (!customizedOptions.series[i]) {
+          addBlankSeries(i, null, true);
+        }
+        highed.merge(customizedOptions.series[i], series);
+      });
+    }
+
+    if (mergedExisting) {
       updateAggregated();
-
       refreshChart(aggregatedOptions);
       loadSeries();
       emitChange();
+    }
 
-      if (highed.isArr(seriesClones)) {
-        (seriesClones || []).forEach(function(series, i) {
-          mergedExisting = true;
-          if (!customizedOptions.series[i]) {
-            addBlankSeries(i);
-          }
-          highed.merge(customizedOptions.series[i], series);
-        });
-      }
+    if (emitLoadSignal) {
+      events.emit('LoadProjectData', data.csv);
+    }
 
-      if (mergedExisting) {
-        updateAggregated();
-        refreshChart(aggregatedOptions);
-        loadSeries();
-        emitChange();
-      }
-
-      if (emitLoadSignal) {
-        events.emit('LoadProjectData', data.csv);
-      }
-
-      if (cb) cb();
+    if (cb) cb();
       
-    });
-
     // setTimeout(function () {
     // gc(function (chart) {
     //   if (chart && highed.isArr(chart.xAxis) && chart.xAxis.length > 0) {
@@ -2061,7 +2048,8 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
   ///////////////////////////////////////////////////////////////////////////
 
-  function addBlankSeries(index, type) {
+  function addBlankSeries(index, type, skipEmit) {
+    console.trace(index, type);
     if (!customizedOptions.series[index]) {
       customizedOptions.series[index] = {
         data:[],
@@ -2075,6 +2063,8 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     if(type) customizedOptions.series[index].type = type;
     
     //Init the initial chart
+    if (skipEmit) return;
+
     updateAggregated();
     refreshChart();
   }
