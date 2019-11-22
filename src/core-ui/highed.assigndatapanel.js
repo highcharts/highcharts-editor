@@ -121,7 +121,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     resetDOM();
     highed.dom.ap(parent, highed.dom.ap(container, bar, body));
     if (!disabled) {
-      events.emit('AssignDataChanged', options[index]);
+      //events.emit('AssignDataChanged', options[index]);
     }
   }
   
