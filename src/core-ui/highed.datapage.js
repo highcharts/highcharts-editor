@@ -299,7 +299,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
           }
         } else seriesIndex = [assignDataPanel.getActiveSerie()];
 
-        chartPreview.loadTemplateForSerie(newTemplate, seriesIndex);
+        chartPreview.loadTemplateForSerie(newTemplate, seriesIndex, true);
 
         const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
         
@@ -309,7 +309,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
           setSeriesMapping(assignDataPanel.getAllOptions());
           redrawGrid(true);
           if (cb) cb();
-        });
+        }, true);
       } else {
         chartPreview.loadTemplate(newTemplate);
       }
@@ -755,9 +755,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     chartPreview.data.csv({
       csv: dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData())
-    }, null, function() {
-      setSeriesMapping(assignDataPanel.getAllOptions()); // Not the most efficient way to do this but errors if a user just assigns a column with no data in.
-    });
+    }, null);
   });
 
   dataTable.on('ClearData', function() {

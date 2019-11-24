@@ -341,6 +341,8 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       if (serie.data) delete serie.data;
     })
 
+    console.trace("REFRESH CHART")
+
     chart.update(options);
   }
 
@@ -454,7 +456,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
    *  @memberof highed.ChartPreview
    */
   function resize(width, height) {
-    gc(function(chart) {
 
       if (chart && chart.reflow) {
         // && chart.options) {
@@ -471,7 +472,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
           // No idea why this keeps failing
         }
       }
-    });
   }
 
   /**
@@ -776,7 +776,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     refreshChart(aggregatedOptions);
   }
 
-  function loadTemplateForSerie(template, seriesIndex) {
+  function loadTemplateForSerie(template, seriesIndex, skipEmit) {
     var type = template.config.chart.type;
     delete template.config.chart.type;
 
@@ -814,10 +814,13 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     //templateOptions = highed.merge({}, template.config || {});
     templateOptions[seriesIndex] = highed.merge({}, template.config || {});
     
-    updateAggregated();
-    refreshChart(aggregatedOptions);
-    //loadSeries();
-    emitChange();
+    if (!skipEmit) {
+      updateAggregated();
+      refreshChart(aggregatedOptions);
+      //loadSeries();
+      emitChange();
+    }
+
   }
 
   /** Load a template from the meta
@@ -890,7 +893,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
    *  @name data.csv
    *  @param data {object} - the data to load
    */
-  function loadCSVData(data, emitLoadSignal, cb) {
+  function loadCSVData(data, emitLoadSignal, cb, skipEmit) {
     var mergedExisting = false,
       seriesClones = [];
     if (!data || !data.csv) {
@@ -977,7 +980,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       });
     }
 
-    if (mergedExisting) {
+    if (mergedExisting && !skipEmit) {
       updateAggregated();
       refreshChart(aggregatedOptions);
       loadSeries();
@@ -2189,7 +2192,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     document.getElementsByTagName('head')[0].appendChild(s);
     
     updateAggregated();
-    refreshChart(aggregatedOptions);
+    //refreshChart(aggregatedOptions);
   }
   ///////////////////////////////////////////////////////////////////////////
 

@@ -590,9 +590,13 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     });
 
     createChartPage.on('SimpleCreateChangeTitle', function(options) {
-      chartPreview.options.set('title--text', options.title);
-      chartPreview.options.set('subtitle--text', options.subtitle);
-      setChartTitle(options.title);
+      if (options.title !== '') {
+        chartPreview.options.set('title--text', options.title);
+        setChartTitle(options.title);
+      }
+      if (options.subtitle !== '') 
+        chartPreview.options.set('subtitle--text', options.subtitle);
+      
     });
   }
 
