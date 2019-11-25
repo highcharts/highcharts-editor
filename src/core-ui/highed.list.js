@@ -137,7 +137,13 @@ highed.List = function(parent, responsive, props, planCode, dataPage) {
         def;
 
       if (highed.chartType === 'Map' && group.mapDisabled) return;
-      options = chartPreview.options.getCustomized(); //userOptions;//chartPreview.options.getCustomized();
+      if ((highed.chartType === undefined || highed.chartType === 'Chart') && group.chartType === 'Map') return;
+
+      options = chartPreview.options.all().userOptions;
+      const usersOptions = chartPreview.options.getCustomized();
+      if (usersOptions.series && usersOptions.series.length === 0) {
+        chartPreview.options.addBlankSeries(0); // Should always have at least 1 series
+      }
 
       if (highed.isArr(group.options)) {
         table = highed.dom.cr('div', 'highed-customizer-table');

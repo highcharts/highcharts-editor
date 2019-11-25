@@ -416,7 +416,24 @@ highed.meta.optionsExtended = {
             dataType: 'string',
             context: 'General',
             parent: 'chart',
-            values: '[null, "x", "y", "xy"]'
+            values: '[null, "x", "y", "xy"]',
+            mapDisabled: true
+          }, 
+          {
+            id: 'mapNavigation--enabled',
+            pid: 'mapNavigation.enabled',
+            dataType: 'boolean',
+            context: 'General',
+            defaults: 'true',
+            chartType: 'Map'
+          },
+          {
+            id: 'mapNavigation--enableMouseWheelZoom',
+            pid: 'mapNavigation.enableMouseWheelZoom',
+            dataType: 'boolean',
+            context: 'General',
+            defaults: 'true',
+            chartType: 'Map'
           },
           {
             id: 'chart--polar',

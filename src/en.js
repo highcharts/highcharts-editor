@@ -112,6 +112,11 @@ highed.installLanguage({
     'option.text.chart.height': 'Chart height',
     'option.tooltip.chart.height':
       "An explicit height for the chart. By default (when <code>null</code>) the height is calculated from the offset height of the containing element, or 400 pixels if the containing element's height is 0.",
+    'option.text.mapNavigation.enabled': 'Enable Map Navigation',
+    'option.tooltip.mapNavigation.enabled': 'Enable Map Navigation',
+    'option.text.mapNavigation.enableMouseWheelZoom': 'Enable mouse wheel zoom',
+    'option.tooltip.mapNavigation.enableMouseWheelZoom':
+      'Enables zooming by mouse wheel.',
     'option.text.chart.zoomType': 'Allow zooming',
     'option.tooltip.chart.zoomType':
       'Decides in what dimensions the user can zoom by dragging the mouse. Can be one of <code>x</code>, <code>y</code> or <code>xy</code>.',
