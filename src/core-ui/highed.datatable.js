@@ -2899,7 +2899,7 @@ highed.DataTable = function(parent, attributes) {
     });
 
     var newRows = [];
-    if (csv) newRows = parseCSV(csv);
+    if (csv) newRows = highed.parseCSV(csv);
 
     gcolumns.forEach(function(col, index){
       if (newRows && newRows[0] && newRows[0][index]) {

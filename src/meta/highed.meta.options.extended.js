@@ -408,7 +408,6 @@ highed.meta.optionsExtended = {
       {
         text: 'option.subcat.interaction',
         dropdown: true,
-        group: 2,
         options: [
           {
             id: 'chart--zoomType',
@@ -457,7 +456,6 @@ highed.meta.optionsExtended = {
       {
         text: 'option.subcat.credit',
         dropdown: true,
-        group: 2,
         warning: [1],
         options: [
           {
