@@ -145,6 +145,11 @@ highed.DataTable = function(parent, attributes) {
       'highed-import-button green padded',
       'Detach Sheet From Chart'
     ),
+    gsheetPluginButton = highed.dom.cr(
+      'a',
+    'highed-import-button green padded gsheet-plugin-btn',
+      'Google Sheet Plugin'
+    ),
     switchRowColumns = highed.dom.cr(
       'button',
       'switch-column-button highed-template-tooltip',
@@ -297,6 +302,9 @@ highed.DataTable = function(parent, attributes) {
     
   const DEFAULT_COLUMN = 9,
         DEFAULT_ROW = 20;
+  
+  gsheetPluginButton.href = "https://gsuite.google.com/marketplace/app/highcharts_cloud/629254340466";
+  gsheetPluginButton.target = "_blank";
 
   if (highed.chartType !== 'Map') highed.dom.ap(hideCellsDiv, switchRowColumns)
 
@@ -2533,7 +2541,8 @@ highed.DataTable = function(parent, attributes) {
         highed.dom.ap(
           highed.dom.cr('div', 'highed-gsheet-btn-container'),
           gsheetLoadButton,
-          gsheetCancelButton
+          gsheetCancelButton,
+          gsheetPluginButton
         ),
         highed.dom.cr(
           'div',
@@ -2543,7 +2552,9 @@ highed.DataTable = function(parent, attributes) {
             'This means that the published chart always loads the latest version of the sheet.<br/><br/>',
 
             'For more information on how to set up your spreadsheet, visit',
-            '<a target="_blank" href="https://cloud.highcharts.com/docs/#/google-spread-sheet-setting">the documentation</a>.'
+            '<a target="_blank" href="https://cloud.highcharts.com/docs/#/google-spread-sheet-setting">the documentation</a>.<br/><br/>',
+            'We also have a <a target="_blank" href="https://gsuite.google.com/marketplace/app/highcharts_cloud/629254340466">Google Sheets plugin</a>',
+            'that can be used to simplify the import process.',
           ].join(' ')
         )
       )
