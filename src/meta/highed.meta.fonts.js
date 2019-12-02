@@ -44,7 +44,7 @@ highed.meta.fonts = [
   'Monospace'
 ];
 
-highed.meta.customFonts = [
+highed.meta.customFonts = [/*
   {
     title: 'DWSSlab-Light',
     id: 'https://cloud.highcharts.com/static/fonts/DWSSlabWeb-Light.css'
@@ -68,5 +68,5 @@ highed.meta.customFonts = [
   {
     title: 'DWSSans-Bold',
     id: 'https://cloud.highcharts.com/static/fonts/DWSSansWeb-Bold.css'
-  }
+  }*/
 ];

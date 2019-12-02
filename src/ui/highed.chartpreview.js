@@ -375,7 +375,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       }) ? 'StockChart' : 'Chart'));
 
       options = highed.merge(options, stockTools.getStockToolsToolbarConfig());
-      
       chart = new Highcharts[chartConstr](pnode || parent, options);
 
       //This is super ugly.
@@ -731,7 +730,11 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
     // Finally, do custom code
     if (!noCustomCode && highed.isFn(customCode)) {
-      customCode(aggregatedOptions);
+      try{
+        customCode(aggregatedOptions);
+      } catch(e) {
+        console.log("Error in Custom Code:", e);
+      }
     }
   }
 
@@ -766,23 +769,25 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     }
 
     seriesIndex.forEach(function(index) {
-
       if (!templateSettings[index]) templateSettings[index] = {};
 
       templateSettings[index].templateTitle = template.title;
       templateSettings[index].templateHeader = template.header;
       
-      if (customizedOptions.series[index]) {
+      if (customizedOptions.series && customizedOptions.series[index]) {
         if (template.config.series && template.config.series[0]) {
           highed.merge(customizedOptions.series[index], template.config.series[0]);
         } else {
           customizedOptions.series[index].type = type; //template.config.chart.type;
         }
       } else {
+        if (!customizedOptions.series) {
+          customizedOptions.series = [];
+        }
         customizedOptions.series[index] = {
           type: type, //template.config.chart.type,
           turboThreshold: 0,
-          _colorIndex: customizedOptions.series.length,
+          _colorIndex: (customizedOptions.series || []).length,
           _symbolIndex: 0,
           compare: undefined
         };
@@ -914,7 +919,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
           );
         });
       }
-      
       customizedOptions.series = [];
 
       if (customizedOptions.xAxis) {
@@ -1021,7 +1025,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     lastLoadedCSV = false;
     lastLoadedSheet = false;
     lastLoadedLiveData = false;
-    
+
     if (highed.isStr(projectData)) {
       try {
         return loadProject(JSON.parse(projectData));
@@ -2135,22 +2139,19 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     chart.annotationsPopupContainer.style.display = 'none';
   }
 
-  function updateMapData(data, code, name){
+  function updateMapData(data, code, name) {
     if (!code || code === '') code = 'hc-key';
     if (!name || name === '') name = 'name';
-    //customizedOptions.series[0].mapData = data;
-    /*
-    if (!customizedOptions.plotOptions) customizedOptions.plotOptions = {};
-    if (!customizedOptions.plotOptions.map) customizedOptions.plotOptions.map = {};
-*/
-    data.hccode = code;
-    data.hcname = name;
-
+    
+    if (data) {
+      data.hccode = code;
+      data.hcname = name;
+    }
 
     if (!customizedOptions.chart) customizedOptions.chart = {};
 
     //customizedOptions.plotOptions.map.mapData = data;
-    customizedOptions.chart.map = data;
+    if (data) customizedOptions.chart.map = data;
 
     customizedOptions.series.forEach(function(s){
       s.joinBy = [code, code];

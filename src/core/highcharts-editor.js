@@ -721,9 +721,10 @@ var highed = {
 
         if (c === '"') {
           if (inStr) {
-            pushToken();
-          } else {
             inStr = false;
+            //pushToken();
+          } else {
+            inStr = true;
           }
 
           //Everything is allowed inside quotes

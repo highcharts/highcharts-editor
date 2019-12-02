@@ -35,8 +35,7 @@ highed.templates.add('Map', {
   constructor: 'Map',
   config: {
     chart: {
-      type: 'tilemap',
-      height: '80%'
+      type: 'tilemap'
     },
 
 

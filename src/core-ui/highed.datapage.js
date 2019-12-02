@@ -428,6 +428,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       //assignDataPanel.disable();
 
       if (projectData.options && projectData.options.chart && projectData.options.chart.map && highed.isObj(projectData.options.chart.map)){
+        // loading a GEOJSON Imported project
         loadMapData(projectData.options.chart.map.features,
                     projectData.options.chart.map.hccode, projectData.options.chart.map.hcname,
                     projectData.settings.dataProvider.csv, function () {
@@ -468,11 +469,35 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
               });
               return;
             } else {
-              loadMapData(data.features, null, null, projectData.settings.dataProvider.csv, function () {
+
+              var code = null,
+                  hasCustomMapKey = false;
+              if (isMapKeyCompatible(data.features)) {
+                code = getCompatibleMapKey(data.features);
+                chartPreview.data.updateMapData(null, code);
+                hasCustomMapKey = true;
+              }
+
+              loadMapData(data.features, code, null, projectData.settings.dataProvider.csv, function () {
 
                 assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
                 assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
                 chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
+
+
+                if (hasCustomMapKey) {
+
+                  const customized = chartPreview.options.getCustomized();
+                  var isBubble = customized.options && customized.series && customized.series.some(function(s){
+                    return s.type === 'mapbubble';
+                  });
+
+                  assignDataPanel.updateLinkedToValues({
+                    key: 'labels',
+                    value: code
+                  }, isBubble ? 1 : null);
+                }
+
               });
             }
           },
@@ -809,6 +834,24 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     dataTable.selectSwitchRowsColumns()
   }
 
+
+  function isMapKeyCompatible(mapData) {
+    return mapData.some(function(d){
+      return d.properties && d.properties['hc-key'] && (d.properties['hc-key'].split("-").length - 1) >= 2
+    });
+  }
+
+  function getCompatibleMapKey(mapData) {
+    var foundCode;
+    mapData.some(function(d){
+      if (d.id && d.properties && d.properties['hc-a2']) {
+        foundCode = 'hc-a2';
+        return true;
+      }
+    });
+    return foundCode;
+  }
+
   function loadMapData(data, code, name, csv, cb, isLatLongChart) {
     if (isLatLongChart) {
       dataTable.loadCSV({
@@ -826,7 +869,25 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
       });
       return;
-    } else dataTable.loadMapData(data, code, name, csv, cb);
+    } else {
+
+      if (code === undefined && isMapKeyCompatible(data)) {
+        code = getCompatibleMapKey(data);
+        const customized = chartPreview.options.getCustomized();
+        var isBubble = customized.options && customized.series && customized.series.some(function(s){
+          return s.type === 'mapbubble';
+        });
+
+        assignDataPanel.updateLinkedToValues({
+          key: 'labels',
+          value: code
+        }, isBubble ? 1 : null);
+
+        chartPreview.data.updateMapData(null, code);
+      }
+
+      dataTable.loadMapData(data, code, name, csv, cb);
+    }
   }
 
   function resizeChart(newWidth) {
