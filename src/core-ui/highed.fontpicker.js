@@ -159,7 +159,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           };
           document.getElementsByTagName('head')[0].appendChild(s);
         } else {
-          style.fontFamily = selected.title();
+          style.fontFamily = selected.item().uuid;
           return callback(customFont[0]);
         }
       } else if (selected.id() === 'Default') {
