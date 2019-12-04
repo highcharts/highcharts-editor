@@ -118,12 +118,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       italicBtn.set(style.fontStyle === 'italic');
       updateColor(style.color, true);
       fontFamily.selectById(style.fontFamily);
+      
+      if (style && style.fontSize && !isNaN(style.fontSize)) return;
+
       fontSize.selectById(style.fontSize.replace('px', ''));
     }
 
     //Add fonts to font selector
-    fontFamily.addItems(highed.meta.fonts);
     fontFamily.addItems(highed.meta.customFonts);
+    fontFamily.addItems(highed.meta.fonts);
     //Add font sizes
     fontSize.addItems([8, 10, 12, 14, 16, 18, 20, 22, 25, 26, 28, 30, 32, 34]);
 
@@ -148,7 +151,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
               s = undefined;
   
               if(!isAbort) setTimeout(function() {
-                style.fontFamily = selected.title();
+                style.fontFamily = selected.item().uuid;
                 customFont[0].loaded = true;
                 return callback(customFont[0]);
               }, 100);

@@ -374,6 +374,8 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
   betaContainer.title = "Maps functionality is currently in Beta";
 
   highed.chartType = chartType;
+  if (options.customFonts) highed.meta.customFonts = options.customFonts;
+  
   chartPreview.options.togglePlugins('map', chartType === 'Map');
 
   highed.dom.on(helpIcon, 'click', showHelp);
@@ -1065,6 +1067,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
       hideLiveStatus: function() {} //toolbox.hideLiveStatus
     },
     //dataTable: dataTable,
-    toolbar: toolbar
+    toolbar: toolbar,
+    payupModal: payupModal
   };
 };

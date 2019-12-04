@@ -235,6 +235,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             return highed.isStr(item) ? item : item.title || '';
           },
 
+          item: function() {
+            return item;
+          },
+
           //Unselect the item
           unselect: function() {
             node.className = 'highed-dropdown-item';
