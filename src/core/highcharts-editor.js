@@ -785,6 +785,17 @@ var highed = {
     });
 
     return newDataArr;
+  },
+
+  loadModules: function(paths) {
+    paths.forEach(function(path){
+      var s = document.createElement('link');
+      s.rel = 'stylesheet';
+      s.async = true;
+      s.href = path;
+
+      document.getElementsByTagName('head')[0].appendChild(s);
+    })
   }
 
 };

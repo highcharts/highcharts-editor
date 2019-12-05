@@ -495,8 +495,13 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       // Assume that this uses the new format
       themeMeta = {
         id: theme.id,
-        name: theme.name || theme.id
+        name: theme.name || theme.id,
+        plugins: theme.plugins
       };
+
+      if (theme.plugins && theme.plugins.cssModules && theme.plugins.cssModules.length > 0) {
+        highed.loadModules(theme.plugins.cssModules);
+      }
 
       if (highed.chartType === 'Map') {
         if (theme.options.series && highed.isArr(theme.options.series)) {
@@ -1036,8 +1041,12 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
     if (projectData) {
       
+      if (projectData.theme && projectData.theme.plugins && projectData.theme.plugins.cssModules) {
+        highed.loadModules(projectData.theme.plugins.cssModules);
+      }
+
       if (projectData.settings && projectData.settings.plugins && projectData.settings.plugins.cssModules)
-        loadModules(projectData.settings.plugins.cssModules);
+        highed.loadModules(projectData.settings.plugins.cssModules);
 
       templateOptions = [{}];
       if (projectData.template) {
@@ -1211,18 +1220,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     }
   }
 
-  function loadModules(paths){
-    paths.forEach(function(path){
-
-      var s = document.createElement('link');
-      s.rel = 'stylesheet';
-      s.async = true;
-      s.href = path;
-
-      document.getElementsByTagName('head')[0].appendChild(s);
-    })
-  }
-
   function loadLiveData(settings) {
 
     lastLoadedLiveData = settings;
@@ -1375,7 +1372,8 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         id: themeMeta.id,
         name: themeMeta.name,
         options: themeOptions || {},
-        customCode: themeCustomCode || ''
+        customCode: themeCustomCode || '',
+        plugins: themeMeta.plugins
       };
     }
     
@@ -2059,7 +2057,8 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     return {
       id: themeMeta.id,
       name: themeMeta.name,
-      options: themeOptions
+      options: themeOptions,
+      plugins: themeMeta.plugins
     };
   }
 
