@@ -844,6 +844,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   function getCompatibleMapKey(mapData) {
     var foundCode;
     mapData.some(function(d){
+      if (d.id && d.properties && d.properties['name']) {
+        foundCode = 'name';
+        return true;
+      }
       if (d.id && d.properties && d.properties['hc-a2']) {
         foundCode = 'hc-a2';
         return true;

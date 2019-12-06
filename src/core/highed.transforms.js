@@ -178,7 +178,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       if (node.meta && node.meta.products && !node.meta.products[chartType]) {
         return;
       }
-      
+
       // Take care of merging
       extend(input, node, (pname ? pname + '.' : '') + node.meta.name);
 
