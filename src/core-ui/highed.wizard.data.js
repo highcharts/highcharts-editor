@@ -401,6 +401,13 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
           light: 'rgba(247, 161, 170, 0.5)',
           dark: 'rgb(66, 200, 192)'
         }
+      },{
+        name: 'Labels',
+        value: 'label',
+        colors: {
+          light: 'rgba(247, 161, 170, 0.5)',
+          dark: 'rgb(66, 200, 192)'
+        }
       }], 2);
 
       if (type === 'mappoint') {

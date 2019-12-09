@@ -126,9 +126,8 @@ highed.MapImporter = function() {
       
       var hasLatLong = Object.keys(assigns).some(function(opt){ return opt === 'lat' || opt === 'latitude'}); //mapTable.getOptions().some(function(opt){ return opt.value === 'latitude'; });
       if (hasLatLong) {
-          
         events.emit('HandleMapImport', parsedData.map(function(cols) {
-          return cols.join(',');
+          return '"' + cols.join('","') + '"';
         }).join('\n'), null, toNextPage, assigns, 1);
         return;
       }
