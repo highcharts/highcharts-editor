@@ -337,7 +337,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     function selectById(id, dontEmit) {
       items.some(function(item) {
         //This is not a typo..
-        if (item.id() == id) {
+        if (item.id() == id || item.item().font_name == id) {
           item.select(dontEmit);
           return true;
         }

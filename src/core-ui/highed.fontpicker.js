@@ -151,15 +151,15 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
               s = undefined;
   
               if(!isAbort) setTimeout(function() {
-                style.fontFamily = selected.item().uuid;
+                style.fontFamily = selected.item().font_name;
                 customFont[0].loaded = true;
                 return callback(customFont[0]);
-              }, 100);
+              }, 500);
             }
           };
           document.getElementsByTagName('head')[0].appendChild(s);
         } else {
-          style.fontFamily = selected.item().uuid;
+          style.fontFamily = selected.item().font_name;
           return callback(customFont[0]);
         }
       } else if (selected.id() === 'Default') {
