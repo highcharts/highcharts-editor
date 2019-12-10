@@ -292,7 +292,8 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode, da
         });
       } else if (
         properties.availableSettings[group.id] ||
-        properties.availableSettings[group.pid] 
+        properties.availableSettings[group.pid] ||
+        group.isHeader
       ) {
         doInclude = true;
       }

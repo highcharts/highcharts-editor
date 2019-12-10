@@ -141,7 +141,7 @@ highed.meta.optionsExtended = {
         dropdown: true,
         options: [
           {
-            header: true,
+            isHeader: true,
             pid: 'option.subcat.chartarea',
             width: 100,
             id: 'chartarea-header',
@@ -190,7 +190,7 @@ highed.meta.optionsExtended = {
             width: 50
           },
           {
-            header: true,
+            isHeader: true,
             pid: 'option.subcat.plotarea',
             width: 100,
             id: 'plotarea-header',

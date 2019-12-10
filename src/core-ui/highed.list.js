@@ -100,7 +100,8 @@ highed.List = function(parent, responsive, props, planCode, dataPage) {
           });
         } else if (
           properties.availableSettings[group.id] ||
-          properties.availableSettings[group.pid]
+          properties.availableSettings[group.pid] ||
+          group.isHeader
         ) {
           doInclude = true;
         }
@@ -150,7 +151,7 @@ highed.List = function(parent, responsive, props, planCode, dataPage) {
         warningContainer = highed.dom.cr('div', 'highed-customize-warning-container'),
         warning = highed.dom.cr('div', 'highed-customize-warning', 'You need to be on a paid plan for this to work in production');
         doInclude = shouldInclude(group);
-
+        
         if (group.warning && group.warning.length > 0 && 
           planCode && group.warning.indexOf(planCode) > -1) {
           highed.dom.ap(table, highed.dom.ap(warningContainer, warning));
@@ -297,7 +298,8 @@ highed.List = function(parent, responsive, props, planCode, dataPage) {
         if (Object.keys(properties.availableSettings || {}).length > 0) {
           if (
             !properties.availableSettings[group.id] &&
-            !properties.availableSettings[group.pid]
+            !properties.availableSettings[group.pid] &&
+            !group.isHeader
           ) {
             return;
           }
@@ -313,7 +315,7 @@ highed.List = function(parent, responsive, props, planCode, dataPage) {
         if (group.usesData && dataPage) {
           group.dataTableValues = dataPage.getValues();
         }
-
+      
         highed.dom.ap(
           table,
           highed.InspectorField(
@@ -336,7 +338,7 @@ highed.List = function(parent, responsive, props, planCode, dataPage) {
               dataTableValues: group.dataTableValues
             },
             function(newValue, extra) {
-              if (group.header) return;
+              if (group.isHeader) return;
               if (group.plugins && group.plugins.length > 0) {
                 events.emit('TogglePlugins', group.id, newValue);
               }
