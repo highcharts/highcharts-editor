@@ -85,12 +85,12 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
         },
         properties.dataGrid
       )
-    ),   
+    ),
     addRowInput = highed.dom.cr('input', 'highed-field-input highed-add-row-input'),
     addRowBtn = highed.dom.cr('button', 'highed-import-button highed-ok-button highed-add-row-btn small', 'Add'),
     addRowDiv = highed.dom.ap(highed.dom.cr('div', 'highed-dtable-extra-options'),
-                highed.dom.ap(highed.dom.cr('div', 'highed-add-row-container'),     
-                  highed.dom.cr('span', 'highed-add-row-text highed-hide-sm', 'Add Rows'),            
+                highed.dom.ap(highed.dom.cr('div', 'highed-add-row-container'),
+                  highed.dom.cr('span', 'highed-add-row-text highed-hide-sm', 'Add Rows'),
                   addRowInput,
                   addRowBtn
                 )
@@ -99,11 +99,11 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
     dataImportBtn = highed.dom.cr(
       'button',
       'highed-import-button highed-ok-button highed-sm-button',
-      'Import');
+      'Import'),
     dataExportBtn = highed.dom.cr(
       'button',
       'highed-import-button highed-ok-button highed-hide-sm',
-      'Export Data');
+      'Export Data'),
     dataClearBtn = highed.dom.cr(
       'button',
       'highed-import-button highed-ok-button highed-sm-button',
@@ -116,10 +116,10 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
 
     dataImportBtn.innerHTML += ' <span class="highed-hide-sm">Data</span>';
     dataClearBtn.innerHTML += ' <span class="highed-hide-sm">Data</span>';
-    
+
     addRowInput.value = 1;
     highed.dom.on(addRowBtn, 'click', function(e) {
-      
+
     assignDataPanel.getFieldsToHighlight(dataTable.removeAllCellsHighlight, true);
       for(var i=0;i<addRowInput.value; i++) {
         dataTable.addRow();
@@ -133,14 +133,14 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
     highed.dom.on(dataExportBtn, 'click', function() {
       dataTable.showImportModal(1);
     }),
-    
+
     highed.dom.on(dataClearBtn, 'click', function() {
       if (confirm('Start from scratch?')) {
         dataTable.clearData();
         assignDataPanel.init();
       }
     }),
-    
+
     iconsContainer = highed.dom.cr('div', 'highed-toolbox-icons'),
     isVisible = true;
 
@@ -154,7 +154,7 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
 
       highed.dom.ap(contents, highed.dom.ap(title, highed.dom.ap(chartTitle, chartTitleInput), iconsContainer), userContents);
       highed.dom.ap(body, contents);
-  
+
       highed.dom.ap(userContents, dataTableContainer);
       dataTable.resize();
 
@@ -164,9 +164,9 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
           position: 'relative'
         });
       }
-      
+
       highed.dom.ap(parent, highed.dom.ap(container, body));
-      
+
       assignDataPanel.init(dataTable.getColumnLength());
 
       expand();
@@ -191,7 +191,7 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
     highed.dom.on(window, 'resize', afterResize(function(e){
       resize();
     }));
-    
+
 
     function showHelp() {
       helpModal.show();
@@ -204,7 +204,7 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
 
       if (!highed.onPhone()) {
         //(highed.dom.pos(assignDataPanel.getElement(), true).x - highed.dom.pos(dataTableContainer, true).x) - 10
-        highed.dom.style(container, {   
+        highed.dom.style(container, {
           //width: newWidth + '%'
           width: '100%'
         });
@@ -221,13 +221,13 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
               || document.documentElement.clientHeight
               || document.body.clientHeight) - highed.dom.pos(body, true).y
           };
-        
+
       highed.dom.style(contents, {
         width: '100%',
         height: ((size.h - 16)) + 'px'
       });
 
-      dataTable.resize();   
+      dataTable.resize();
       if(!highed.onPhone()) assignDataPanel.resize(newWidth, highed.dom.pos(chartFrame, true).y - highed.dom.pos(body, true).y)
     }
 
@@ -241,7 +241,7 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
     });
     assignDataPanel.show();
     isVisible = true;
-    resize(); 
+    resize();
   }
 
   function hide() {
@@ -271,11 +271,11 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
     chartPreview.data.csv({
       csv: data
     }, null, false, function() {
-      
+
 
       var chartOptions = chartPreview.options.getCustomized();
-      var assignDataOptions = assignDataPanel.getAllOptions();    
-      
+      var assignDataOptions = assignDataPanel.getAllOptions();
+
       if (chartOptions && chartOptions.series) {
         if (chartOptions.series.length < assignDataOptions.length) {
           var optionsLength = chartOptions.series.length
@@ -294,18 +294,18 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
       setSeriesMapping(assignDataPanel.getAllOptions());
     });
   });
-  
+
   function changeAssignDataTemplate(newTemplate, loadTemplateForEachSeries, cb) {
-    
+
     if (dataTable.isInCSVMode()) {
-      
-      clearSeriesMapping();        
-      
+
+      clearSeriesMapping();
+
       var seriesIndex = [];
       assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, null, true);
       if (loadTemplateForEachSeries) {
         const length = assignDataPanel.getAllOptions().length;
-        
+
         for(var i=0;i<length;i++) {
           seriesIndex.push(i);
           assignDataPanel.setAssignDataFields(newTemplate, dataTable.getColumnLength(), null, i, true, i + 1);
@@ -315,7 +315,7 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
       chartPreview.loadTemplateForSerie(newTemplate, seriesIndex);
 
       const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
-      
+
       chartPreview.data.csv({
         csv: data
       }, null, false, function() {
@@ -355,7 +355,7 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
     if (chartOptions.data && chartOptions.data.seriesMapping) {
       // Causes an issue when a user has added a assigndata input with seriesmapping, so just clear and it will add it in again later
       chartOptions.data.seriesMapping = null;
-      chartPreview.options.setAll(chartOptions);  
+      chartPreview.options.setAll(chartOptions);
     }
 
   }
@@ -365,7 +365,7 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
         chartOptions = chartPreview.options.getCustomized(),
         dataTableFields = dataTable.getDataFieldsUsed(),
         hasLabels = false;
-    
+
     var dataValues  = allOptions.data,
         series = allOptions.length;
 
@@ -389,7 +389,7 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
       });
       tempOption.push(serieOption);
     };
-    
+
     if (tempOption.length > 0) {
       if (hasLabels) {
         const dataLabelOptions = {
@@ -433,14 +433,14 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
   }
 
   function loadProject(projectData, aggregated) {
-    
+
     if (projectData.settings && projectData.settings.dataProvider && projectData.settings.dataProvider.csv) {
       dataTable.loadCSV({
         csv: projectData.settings.dataProvider.csv
       }, null, null, function() {
-        
+
           assignDataPanel.enable();
-          
+
           assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
           assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
           chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
@@ -455,15 +455,15 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
   assignDataPanel.on('GoToTemplatePage', function() {
     events.emit("GoToTemplatePage");
   })
-  
+
   assignDataPanel.on('AddSeries', function(index, type) {
     chartPreview.options.addBlankSeries(index, type);
   })
-  
+
   assignDataPanel.on('GetLastType', function() {
     var chartOptions = chartPreview.options.getCustomized();
     var type = chartOptions.series[chartOptions.series.length - 1];
-    
+
     if (type){
       type = type.type;
     }
@@ -472,9 +472,9 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
 
     assignDataPanel.setColumnLength(dataTable.getColumnLength());
     assignDataPanel.addNewSerie(type);
-    
+
   })
-  
+
   chartPreview.on('LoadProjectData', function(csv) {
     dataTable.loadCSV(
       {
@@ -517,7 +517,7 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
   });
 
   assignDataPanel.on('AssignDataChanged', function() {
-    
+
     clearSeriesMapping();
     const data = dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData());
     chartPreview.data.csv({
@@ -592,14 +592,14 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
     if (!blacklist.includes(type)) {
       assignDataPanel.addSeries(rowsLength, type);
     }
-  }); 
+  });
 
   dataTable.on('AssignDataChanged', function(input, options) {
     chartOptions = chartPreview.toProject().options;
-    if (chartOptions.data && chartOptions.data.seriesMapping) { 
+    if (chartOptions.data && chartOptions.data.seriesMapping) {
       // Causes an issue when a user has added a assigndata input with seriesmapping, so just clear and it will add it in again later
       chartOptions.data.seriesMapping = null;
-      chartPreview.options.setAll(chartOptions);  
+      chartPreview.options.setAll(chartOptions);
     }
 
     chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
@@ -630,7 +630,7 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
     assignDataPanel.disable();
     chartPreview.data.gsheet(settings);
   });
-  
+
   dataTable.on('Change', function(headers, data) {
 
     chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true));
@@ -679,7 +679,7 @@ highed.SimpleDataPage = function(parent,assignDataParent, options, chartPreview,
 
   function createSimpleDataTable(toNextPage, cb) {
     return dataTable.createSimpleDataTable(toNextPage, cb);
-  } 
+  }
 
   function selectSwitchRowsColumns() {
     dataTable.selectSwitchRowsColumns()
