@@ -71,8 +71,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
             text: 'cloud.highcharts.com',
             href: 'https://cloud.highcharts.com'
           },
-          data: {},
-          colorAxis: {}
+          data: {}
         },
         expandTo: parent
       },
@@ -337,13 +336,12 @@ highed.ChartPreview = function(parent, attributes, planCode) {
   function refreshChart(options) {
     options = options || aggregatedOptions;
 
+    console.log("REFRESHING...");
     (options.series || []).forEach(function(serie){
       if (serie.data) delete serie.data;
     })
 
-    console.trace("REFRESH CHART")
-
-    chart.update(options);
+    chart.update(options, true, true);
   }
 
 
