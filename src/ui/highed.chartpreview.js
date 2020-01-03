@@ -49,6 +49,13 @@ highed.ChartPreview = function(parent, attributes, planCode) {
           subtitle: {
             text: ''
           },
+          series: [{
+            data:[],
+            turboThreshold: 0,
+            _colorIndex: 0,
+            _symbolIndex: 0,
+            compare: undefined
+          }],
           plotOptions: {
             series: {
               allowPointSelect: true, //Maps
@@ -336,7 +343,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
   function refreshChart(options) {
     options = options || aggregatedOptions;
 
-    console.log("REFRESHING...");
+    console.trace("REFRESHING...");
     (options.series || []).forEach(function(serie){
       if (serie.data) delete serie.data;
     })
@@ -1553,7 +1560,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
   /** Set chart options from an object
    *
    */
-  function setChartOptions(options) {
+  function setChartOptions(options, skipEmit) {
     function emitWidthChange() {
       events.emit('AttrChange', {
         id: 'chart.width'
@@ -1614,9 +1621,11 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       events.emit('LoadedGoogleSpreadsheet');
     }
 
-    updateAggregated();
-    refreshChart(aggregatedOptions, false, true);
-    emitChange();
+    if (!skipEmit) {
+      updateAggregated();
+      refreshChart(aggregatedOptions, false, true);
+      emitChange();
+    }
 
     if (doEmitHeightChange) {
       emitHeightChange();
@@ -2196,6 +2205,10 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     
     if (!extra) {
       extra = {};
+    }
+
+    if (!customizedOptions.series) {
+      customizedOptions.series = {};
     }
 
     if (!customizedOptions.series[index]) {

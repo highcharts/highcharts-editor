@@ -141,9 +141,9 @@ highed.List = function(parent, responsive, props, planCode, dataPage) {
       if ((highed.chartType === undefined || highed.chartType === 'Chart') && group.chartType === 'Map') return;
 
       options = chartPreview.options.all().userOptions;
-      const usersOptions = chartPreview.options.getCustomized();
-      if (usersOptions.series && usersOptions.series.length === 0) {
-        chartPreview.options.addBlankSeries(0); // Should always have at least 1 series
+      const usersOptions = chartPreview.options.getCustomized();      
+      if ((usersOptions.series && usersOptions.series.length === 0) || !usersOptions.series) {
+        chartPreview.options.addBlankSeries(0, null, null, true); // Should always have at least 1 series
       }
 
       if (highed.isArr(group.options)) {

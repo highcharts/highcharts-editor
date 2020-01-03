@@ -343,7 +343,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       if (chartOptions.data && chartOptions.data.seriesMapping) {
         // Causes an issue when a user has added a assigndata input with seriesmapping, so just clear and it will add it in again later
         chartOptions.data.seriesMapping = null;
-        chartPreview.options.setAll(chartOptions);  
+        chartPreview.options.setAll(chartOptions, true);  
       }
 
     }
@@ -583,8 +583,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     events.emit("GoToTemplatePage");
   })
   
-  assignDataPanel.on('AddSeries', function(index, type, extra) {
-    chartPreview.options.addBlankSeries(index, type, extra);
+  assignDataPanel.on('AddSeries', function(index, type, extra, skipRender) {
+    chartPreview.options.addBlankSeries(index, type, extra, skipRender);
   })
   
   assignDataPanel.on('GetLastType', function() {
@@ -646,8 +646,8 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     chartPreview.data.csv({
       csv: data
     }, null, function() {
-      setSeriesMapping(assignDataPanel.getAllOptions());
-    });
+      //setSeriesMapping(assignDataPanel.getAllOptions());
+    }, true);
 
     assignDataPanel.getFieldsToHighlight(dataTable.highlightCells);
     chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());

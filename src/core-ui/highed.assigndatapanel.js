@@ -321,7 +321,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     if (!skipSelect) seriesTypeSelect.selectById(options.length - 1);
     if (redrawDOM) resetDOM();
 
-    events.emit('AddSeries', options.length - 1, seriesType, extra);
+    events.emit('AddSeries', options.length - 1, seriesType, extra, true);
   }
 
   function hide() {
