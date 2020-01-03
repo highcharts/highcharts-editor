@@ -512,8 +512,13 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       // Assume that this uses the new format
       themeMeta = {
         id: theme.id,
-        name: theme.name || theme.id
+        name: theme.name || theme.id,
+        plugins: theme.plugins
       };
+
+      if (theme.plugins && theme.plugins.cssModules && theme.plugins.cssModules.length > 0) {
+        highed.loadModules(theme.plugins.cssModules);
+      }
 
       if (highed.chartType === 'Map') {
         if (theme.options.series && highed.isArr(theme.options.series)) {
@@ -785,23 +790,25 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     }
 
     seriesIndex.forEach(function(index) {
-
       if (!templateSettings[index]) templateSettings[index] = {};
 
       templateSettings[index].templateTitle = template.title;
       templateSettings[index].templateHeader = template.header;
       
-      if (customizedOptions.series[index]) {
+      if (customizedOptions.series && customizedOptions.series[index]) {
         if (template.config.series && template.config.series[0]) {
           highed.merge(customizedOptions.series[index], template.config.series[0]);
         } else {
           customizedOptions.series[index].type = type; //template.config.chart.type;
         }
       } else {
+        if (!customizedOptions.series) {
+          customizedOptions.series = [];
+        }
         customizedOptions.series[index] = {
           type: type, //template.config.chart.type,
           turboThreshold: 0,
-          _colorIndex: customizedOptions.series.length,
+          _colorIndex: (customizedOptions.series || []).length,
           _symbolIndex: 0,
           compare: undefined
         };
@@ -911,22 +918,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     lastLoadedLiveData = false;
     var axis;
 
-    if (customizedOptions && customizedOptions.series) {
-      (highed.isArr(customizedOptions.series)
-        ? customizedOptions.series
-        : [customizedOptions.series]
-      ).forEach(function(series) {
-        seriesClones.push(
-          highed.merge({}, series, false, {
-            data: 1,
-            name: 1
-          })
-        );
-      });
-    }
-    
-    customizedOptions.series = [];
-
     if (customizedOptions.xAxis) {
       (highed.isArr(customizedOptions.xAxis)
         ? customizedOptions.xAxis
@@ -944,6 +935,22 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         if (axis.categories) axis.categories = [];
       });
     }
+
+    if (customizedOptions && customizedOptions.series) {
+      (highed.isArr(customizedOptions.series)
+        ? customizedOptions.series
+        : [customizedOptions.series]
+      ).forEach(function(series) {
+        seriesClones.push(
+          highed.merge({}, series, false, {
+            data: 1,
+            name: 1
+          })
+        );
+      });
+    }
+    customizedOptions.series = [];
+
 
     highed.merge(customizedOptions, {
       plotOptions: {
@@ -1028,7 +1035,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     lastLoadedCSV = false;
     lastLoadedSheet = false;
     lastLoadedLiveData = false;
-    
+
     if (highed.isStr(projectData)) {
       try {
         return loadProject(JSON.parse(projectData));
@@ -1039,8 +1046,12 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
     if (projectData) {
       
+      if (projectData.theme && projectData.theme.plugins && projectData.theme.plugins.cssModules) {
+        highed.loadModules(projectData.theme.plugins.cssModules);
+      }
+
       if (projectData.settings && projectData.settings.plugins && projectData.settings.plugins.cssModules)
-        loadModules(projectData.settings.plugins.cssModules);
+        highed.loadModules(projectData.settings.plugins.cssModules);
 
       templateOptions = [{}];
       if (projectData.template) {
@@ -1214,18 +1225,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     }
   }
 
-  function loadModules(paths){
-    paths.forEach(function(path){
-
-      var s = document.createElement('link');
-      s.rel = 'stylesheet';
-      s.async = true;
-      s.href = path;
-
-      document.getElementsByTagName('head')[0].appendChild(s);
-    })
-  }
-
   function loadLiveData(settings) {
 
     lastLoadedLiveData = settings;
@@ -1378,7 +1377,8 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         id: themeMeta.id,
         name: themeMeta.name,
         options: themeOptions || {},
-        customCode: themeCustomCode || ''
+        customCode: themeCustomCode || '',
+        plugins: themeMeta.plugins
       };
     }
     
@@ -2062,7 +2062,8 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     return {
       id: themeMeta.id,
       name: themeMeta.name,
-      options: themeOptions
+      options: themeOptions,
+      plugins: themeMeta.plugins
     };
   }
 
@@ -2142,22 +2143,19 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     chart.annotationsPopupContainer.style.display = 'none';
   }
 
-  function updateMapData(data, code, name){
+  function updateMapData(data, code, name) {
     if (!code || code === '') code = 'hc-key';
     if (!name || name === '') name = 'name';
-    //customizedOptions.series[0].mapData = data;
-    /*
-    if (!customizedOptions.plotOptions) customizedOptions.plotOptions = {};
-    if (!customizedOptions.plotOptions.map) customizedOptions.plotOptions.map = {};
-*/
-    data.hccode = code;
-    data.hcname = name;
-
+    
+    if (data) {
+      data.hccode = code;
+      data.hcname = name;
+    }
 
     if (!customizedOptions.chart) customizedOptions.chart = {};
 
     //customizedOptions.plotOptions.map.mapData = data;
-    customizedOptions.chart.map = data;
+    if (data) customizedOptions.chart.map = data;
 
     customizedOptions.series.forEach(function(s){
       s.joinBy = [code, code];

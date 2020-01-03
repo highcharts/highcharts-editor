@@ -235,6 +235,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             return highed.isStr(item) ? item : item.title || '';
           },
 
+          item: function() {
+            return item;
+          },
+
           //Unselect the item
           unselect: function() {
             node.className = 'highed-dropdown-item';
@@ -333,7 +337,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     function selectById(id, dontEmit) {
       items.some(function(item) {
         //This is not a typo..
-        if (item.id() == id) {
+        if (item.id() == id || item.item().font_name == id) {
           item.select(dontEmit);
           return true;
         }

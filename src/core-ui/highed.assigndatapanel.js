@@ -372,7 +372,9 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
   }
 
   function isMap(data){
-    return data.constructor === 'Map' || (data.settings && data.settings.constructor.some(function(constr){ return constr === 'Map' }));
+    return data.constructor === 'Map' || 
+    (data.settings && !highed.isFn(data.settings.constructor) && 
+    (highed.isArr(data.settings.constructor) ? data.settings.constructor : [data.settings.constructor]).some(function(constr){ return constr === 'Map' }));
   }
 
   function isMapBubble(data, index) {
@@ -690,7 +692,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
 
   function updateLinkedToValues(values, i){
 
-    if (isNaN(i)) i = index;
+    if (isNaN(i) || i === null) i = index;
     
     if (options[i][values.key]) {
       options[i][values.key].linkedTo = values.value;

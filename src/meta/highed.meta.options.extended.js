@@ -141,7 +141,7 @@ highed.meta.optionsExtended = {
         dropdown: true,
         options: [
           {
-            header: true,
+            isHeader: true,
             pid: 'option.subcat.chartarea',
             width: 100,
             id: 'chartarea-header',
@@ -190,7 +190,7 @@ highed.meta.optionsExtended = {
             width: 50
           },
           {
-            header: true,
+            isHeader: true,
             pid: 'option.subcat.plotarea',
             width: 100,
             id: 'plotarea-header',
@@ -408,7 +408,6 @@ highed.meta.optionsExtended = {
       {
         text: 'option.subcat.interaction',
         dropdown: true,
-        group: 2,
         options: [
           {
             id: 'chart--zoomType',
@@ -416,7 +415,24 @@ highed.meta.optionsExtended = {
             dataType: 'string',
             context: 'General',
             parent: 'chart',
-            values: '[null, "x", "y", "xy"]'
+            values: '[null, "x", "y", "xy"]',
+            mapDisabled: true
+          }, 
+          {
+            id: 'mapNavigation--enabled',
+            pid: 'mapNavigation.enabled',
+            dataType: 'boolean',
+            context: 'General',
+            defaults: 'true',
+            chartType: 'Map'
+          },
+          {
+            id: 'mapNavigation--enableMouseWheelZoom',
+            pid: 'mapNavigation.enableMouseWheelZoom',
+            dataType: 'boolean',
+            context: 'General',
+            defaults: 'true',
+            chartType: 'Map'
           },
           {
             id: 'chart--polar',
@@ -440,7 +456,6 @@ highed.meta.optionsExtended = {
       {
         text: 'option.subcat.credit',
         dropdown: true,
-        group: 2,
         warning: [1],
         options: [
           {

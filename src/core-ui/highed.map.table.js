@@ -411,26 +411,30 @@ highed.MapTable = function(parent, props) {
       if (!props.skipOrdering) {
         dataArr = rows.map(function(row) {
           if (vals.hasOwnProperty('latitude')) {
-            return [row[vals.latitude],row[vals.longitude],row[vals.value]].map(function(column){
-              return column.value();
+            return [row[vals.latitude],row[vals.longitude],row[vals.value], row[vals.label]].map(function(column){
+              return column ? column.value() : null;
             });
           } else {
-            return [row[vals.labels],row[vals.value]].map(function(column){
-              return column.value();
+            return [row[vals.labels],row[vals.value], row[vals.label]].map(function(column){
+              return column ? column.value() : null;
             });
           }
         });
 
         if (vals.hasOwnProperty('latitude')) {
-          dataArr.unshift([data[0][vals.latitude], data[0][vals.longitude], data[0][vals.value]]);
+          dataArr.unshift([data[0][vals.latitude], data[0][vals.longitude], data[0][vals.value], data[0][vals.label]]);
           vals.latitude = 0;
           vals.longitude = 1;
           vals.value = 2;
+          
+          if (vals.hasOwnProperty('label')) vals.label = 3;
+
           vals.labels = -1;
         } else {
-          dataArr.unshift([data[0][vals.labels], data[0][vals.value]]);
+          dataArr.unshift([data[0][vals.labels], data[0][vals.value], data[0][vals.label]]);
           vals.labels = 0;
           vals.value = 1;
+          if (vals.hasOwnProperty('label')) vals.label = 2;
         }
       }
 

@@ -25,156 +25,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // @format
 
-function parseCSV(inData, delimiter) {
-  var isStr = highed.isStr,
-    isArr = highed.isArray,
-    isNum = highed.isNum,
-    csv = inData || '',
-    result = [],
-    options = {
-      delimiter: delimiter
-    },
-    potentialDelimiters = {
-      ',': true,
-      ';': true,
-      '\t': true
-    },
-    delimiterCounts = {
-      ',': 0,
-      ';': 0,
-      '\t': 0
-    };
-  //The only thing CSV formats have in common..
-  rows = (csv || '').replace(/\r\n/g, '\n').split('\n');
-  // If there's no delimiter, look at the first few rows to guess it.
-
-  if (!options.delimiter) {
-    rows.some(function(row, i) {
-      if (i > 10) return true;
-
-      var inStr = false,
-        c,
-        cn,
-        cl,
-        token = '';
-
-      for (var j = 0; j < row.length; j++) {
-        c = row[j];
-        cn = row[j + 1];
-        cl = row[j - 1];
-
-        if (c === '"') {
-          if (inStr) {
-            if (cl !== '"' && cn !== '"') {
-              // The next non-blank character is likely the delimiter.
-
-              while (cn === ' ') {
-                cn = row[++j];
-              }
-
-              if (potentialDelimiters[cn]) {
-                delimiterCounts[cn]++;
-                return true;
-              }
-
-              inStr = false;
-            }
-          } else {
-            inStr = true;
-          }
-        } else if (potentialDelimiters[c]) {
-          if (!isNaN(Date.parse(token))) {
-            // Yup, likely the right delimiter
-            token = '';
-            delimiterCounts[c]++;
-          } else if (!isNum(token) && token.length) {
-            token = '';
-            delimiterCounts[c]++;
-          }
-        } else {
-          token += c;
-        }
-      }
-    });
-
-    options.delimiter = ';';
-
-    if (
-      delimiterCounts[','] > delimiterCounts[';'] &&
-      delimiterCounts[','] > delimiterCounts['\t']
-    ) {
-      options.delimiter = ',';
-    }
-
-    if (
-      delimiterCounts['\t'] >= delimiterCounts[';'] &&
-      delimiterCounts['\t'] >= delimiterCounts[',']
-    ) {
-      options.delimiter = '\t';
-    }
-  }
-
-  rows.forEach(function(row, rowNumber) {
-    var cols = [],
-      inStr = false,
-      i = 0,
-      j,
-      token = '',
-      guessedDel,
-      c,
-      cp,
-      cn;
-
-    function pushToken() {
-      token = (token || '').replace(/\,/g, '');
-      if (!token.length) {
-        token = null;
-        // return;
-      }
-
-      if (isNum(token)) {
-        token = parseFloat(token);
-      }
-
-      cols.push(token);
-      token = '';
-    }
-
-    for (i = 0; i < row.length; i++) {
-      c = row[i];
-      cn = row[i + 1];
-      cp = row[i - 1];
-
-      if (c === '"') {
-        if (inStr) {
-          pushToken();
-        } else {
-          inStr = false;
-        }
-
-        //Everything is allowed inside quotes
-      } else if (inStr) {
-        token += c;
-        //Check if we're done reading a token
-      } else if (c === options.delimiter) {
-        pushToken();
-
-        //Append to token
-      } else {
-        token += c;
-      }
-
-      // Push if this was the last character
-      if (i === row.length - 1) {
-        pushToken();
-      }
-    }
-
-    result.push(cols);
-  });
-  return result;
-}
-
 /** Data table
  *  @constructor
  *  @param {domnode} parent - the node to attach to
@@ -294,6 +144,11 @@ highed.DataTable = function(parent, attributes) {
       'button',
       'highed-import-button green padded',
       'Detach Sheet From Chart'
+    ),
+    gsheetPluginButton = highed.dom.cr(
+      'a',
+    'highed-import-button green padded gsheet-plugin-btn',
+      'Google Sheet Plugin'
     ),
     switchRowColumns = highed.dom.cr(
       'button',
@@ -447,6 +302,9 @@ highed.DataTable = function(parent, attributes) {
     
   const DEFAULT_COLUMN = 9,
         DEFAULT_ROW = 20;
+  
+  gsheetPluginButton.href = "https://gsuite.google.com/marketplace/app/highcharts_cloud/629254340466";
+  gsheetPluginButton.target = "_blank";
 
   if (highed.chartType !== 'Map') highed.dom.ap(hideCellsDiv, switchRowColumns)
 
@@ -2163,7 +2021,7 @@ highed.DataTable = function(parent, attributes) {
     rawCSV = data.csv;
 
     if (data && data.csv) {
-      rows = parseCSV(data.csv, data.delimiter);
+      rows = highed.parseCSV(data.csv, data.delimiter);
 
       if (updateAssignData && rows[0].length < DEFAULT_COLUMN) events.emit('AssignDataForFileUpload', rows[0].length);
 
@@ -2683,7 +2541,8 @@ highed.DataTable = function(parent, attributes) {
         highed.dom.ap(
           highed.dom.cr('div', 'highed-gsheet-btn-container'),
           gsheetLoadButton,
-          gsheetCancelButton
+          gsheetCancelButton,
+          gsheetPluginButton
         ),
         highed.dom.cr(
           'div',
@@ -2693,7 +2552,9 @@ highed.DataTable = function(parent, attributes) {
             'This means that the published chart always loads the latest version of the sheet.<br/><br/>',
 
             'For more information on how to set up your spreadsheet, visit',
-            '<a target="_blank" href="https://cloud.highcharts.com/docs/#/google-spread-sheet-setting">the documentation</a>.'
+            '<a target="_blank" href="https://cloud.highcharts.com/docs/#/google-spread-sheet-setting">the documentation</a>.<br/><br/>',
+            'We also have a <a target="_blank" href="https://gsuite.google.com/marketplace/app/highcharts_cloud/629254340466">Google Sheets plugin</a>',
+            'that can be used to simplify the import process.',
           ].join(' ')
         )
       )
@@ -3035,22 +2896,21 @@ highed.DataTable = function(parent, attributes) {
     simpleDataTable.showLatLongTable(type);
   }
 
-
   function loadMapData(mapData, code, name, csv, cb) {
     const rowLength = rows.length;
     var i = 0;
 
     if (!code || code === '') code = 'hc-key';
     if (!name || name === '') name = 'name';
-    
-    mapData = mapData.sort(function(a, b){
+
+    mapData = mapData.sort(function(a, b) {
       if(a.properties['hc-key'] < b.properties['hc-key']) { return -1; }
       if(a.properties['hc-key'] > b.properties['hc-key']) { return 1; }
       return 0;
     });
 
     var newRows = [];
-    if (csv) newRows = parseCSV(csv);
+    if (csv) newRows = highed.parseCSV(csv);
 
     gcolumns.forEach(function(col, index){
       if (newRows && newRows[0] && newRows[0][index]) {

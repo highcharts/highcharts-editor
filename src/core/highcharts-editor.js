@@ -721,9 +721,10 @@ var highed = {
 
         if (c === '"') {
           if (inStr) {
-            pushToken();
-          } else {
             inStr = false;
+            //pushToken();
+          } else {
+            inStr = true;
           }
 
           //Everything is allowed inside quotes
@@ -784,6 +785,17 @@ var highed = {
     });
 
     return newDataArr;
+  },
+
+  loadModules: function(paths) {
+    paths.forEach(function(path){
+      var s = document.createElement('link');
+      s.rel = 'stylesheet';
+      s.async = true;
+      s.href = path;
+
+      document.getElementsByTagName('head')[0].appendChild(s);
+    })
   }
 
 };
