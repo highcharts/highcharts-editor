@@ -49,13 +49,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
           subtitle: {
             text: ''
           },
-          series: [{
-            data:[],
-            turboThreshold: 0,
-            _colorIndex: 0,
-            _symbolIndex: 0,
-            compare: undefined
-          }],
           plotOptions: {
             series: {
               allowPointSelect: true, //Maps
