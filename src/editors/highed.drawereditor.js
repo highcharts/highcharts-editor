@@ -814,19 +814,20 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
   });
 
   dataPage.on('SeriesChanged', function(index) {
-    if (((options && !options.features) || (options && options.features && options.features.indexOf('templates') > -1)) && templatePage) {
+    if (((options && !options.features) || (options && options.features && options.features.indexOf('templates') > -1)) && templatePage) 
       templatePage.selectSeriesTemplate(index, chartPreview.options.getTemplateSettings());
-    }
   });
 
   chartPreview.on('LoadProject', function (projectData, aggregated) {
     dataPage.loadProject(projectData, aggregated);
-    templatePage.selectSeriesTemplate(0, projectData);
+    if (((options && !options.features) || (options && options.features && options.features.indexOf('templates') > -1)) && templatePage)
+      templatePage.selectSeriesTemplate(0, projectData);
   });
 
   chartPreview.on(['LoadMapProject'], function (projectData, aggregated) {
     dataPage.loadMapProject(projectData, aggregated);
-    templatePage.selectSeriesTemplate(0, projectData);
+    if (((options && !options.features) || (options && options.features && options.features.indexOf('templates') > -1)) && templatePage) 
+      templatePage.selectSeriesTemplate(0, projectData);
   });
 
   templatePage.on('TemplateChanged', function(newTemplate, loadTemplateForEachSerie, cb) {
