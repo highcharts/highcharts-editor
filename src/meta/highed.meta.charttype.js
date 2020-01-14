@@ -330,6 +330,16 @@ highed.meta.charttype = {
             'linkedTo': 'hc-key',
             'rawValue': [0]
         },
+        'index': {
+            'name': "Index",
+            'desc': 'Index',
+            'default': 'B',
+            'value': 'B',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'x',
+            'rawValue': [1]
+        },
         'value': {
             'name': "Value",
             'desc': 'The value of the country',
@@ -340,7 +350,6 @@ highed.meta.charttype = {
             'linkedTo': 'value',
             'rawValue': [1]
         }
-
     },
     mappoint: {
         'values': null,
@@ -416,6 +425,16 @@ highed.meta.charttype = {
             'previousValue': null,
             'isLabel': true,
             'linkedTo': 'lon',
+        },        
+        'index': {
+            'name': "Index",
+            'desc': 'Index',
+            'default': 'B',
+            'value': 'B',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'x',
+            'rawValue': [1]
         },
         'value': {
             'name': "Value",
