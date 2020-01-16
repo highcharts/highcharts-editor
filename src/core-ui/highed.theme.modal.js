@@ -35,8 +35,8 @@ highed.ThemeModal = function(chartPreview) {
   customizedOptions,
   matchValues,
   events = highed.events(),
-  useManualOptionsBtn = highed.dom.cr('button', 'highed-import-button', "Use manually set options"),
-  useThemeOptionsBtn = highed.dom.cr('button', 'highed-import-button', "Use theme options (Default)"),
+  useManualOptionsBtn = highed.dom.cr('button', 'highed-import-button', "Use manually set options (Default)"),
+  useThemeOptionsBtn = highed.dom.cr('button', 'highed-import-button', "Use theme options"),
   headerLabel = highed.dom.cr('span', '', 'Conflicts'),
   body = highed.dom.cr('div', 'highed-modal-body highed-modal-theme-body'),
   closeBtn = highed.dom.ap(highed.dom.cr('span', 'fa fa-times close-btn'));
@@ -68,6 +68,7 @@ highed.ThemeModal = function(chartPreview) {
       const value = highed.getObjectValueByString(theme.options, id);
       highed.setAttr(customizedOptions, id, value);
     });
+
     chartPreview.assignTheme(theme);
     modalWindow.hide();
   });
