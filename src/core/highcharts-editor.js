@@ -796,6 +796,39 @@ var highed = {
 
       document.getElementsByTagName('head')[0].appendChild(s);
     })
+  },
+
+
+  keyifyNestedObject: function(object) {
+    function iter(o, p) {
+        if (Array.isArray(o)) { return; }
+        if (o && typeof o === 'object') {
+            var keys = Object.keys(o);
+            if (keys.length) {
+                keys.forEach(function (k) { iter(o[k], p.concat(k)); });
+            }
+            return;
+        }
+        result.push(p.join('--'));
+    }
+    var result = [];
+    iter(object, []);
+    return result;
+  },
+
+  getObjectValueByString: function(o, s) {
+    s = s.replace(/\[(\w+)\]/g, '--$1');
+    s = s.replace(/^\--/, '');
+    var a = s.split('--');
+    for (var i = 0, n = a.length; i < n; ++i) {
+        var k = a[i];
+        if (k in o) {
+            o = o[k];
+        } else {
+            return;
+        }
+    }
+    return o;
   }
 
 };
