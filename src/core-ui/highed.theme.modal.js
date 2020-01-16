@@ -58,6 +58,14 @@ highed.ThemeModal = function(chartPreview) {
   
   highed.dom.on(useManualOptionsBtn, 'click', function() {
     //Default setting
+    matchValues.forEach(function(id) {
+      var val = document.querySelector('input[name="' + (id + '_radio') + '"]:checked').value;
+      if (val === 'theme') {
+        const value = highed.getObjectValueByString(theme.options, id);
+        highed.setAttr(customizedOptions, id, value);
+      }
+    });
+
     chartPreview.assignTheme(theme);
     modalWindow.hide();
   });
@@ -73,7 +81,7 @@ highed.ThemeModal = function(chartPreview) {
     modalWindow.hide();
   });
 
-  function show(matched, themeConfig, customizedOptionsConfig){
+  function show(matched, themeConfig, customizedOptionsConfig) {
     body.innerHTML = '';
 
     matchValues = matched;
@@ -84,18 +92,35 @@ highed.ThemeModal = function(chartPreview) {
       const container = highed.dom.cr('div', 'highed-modal-theme-option-container'), 
             title = highed.dom.cr('div', 'highed-modal-theme-title', value.split('--').join('<i class="fa fa-circle highed-parent-splitter" aria-hidden="true"></i>')),
             themeVal = highed.dom.cr('div', 'highed-modal-theme-value-container'),
-            userVal = highed.dom.cr('div', 'highed-modal-theme-value-container');
+            userVal = highed.dom.cr('div', 'highed-modal-theme-value-container'),
+            userValRadio = highed.dom.cr('input', 'highed-modal-theme-radio'),
+            themeValRadio = highed.dom.cr('input', 'highed-modal-theme-radio');
+
+      userValRadio.type = themeValRadio.type = 'radio';
+      userValRadio.name = themeValRadio.name = value + '_radio';
+      userValRadio.checked = true;
+
+      userValRadio.value = 'user';
+      themeValRadio.value = 'theme';
 
       highed.dom.ap(
         body,
         highed.dom.ap(container, title),
         highed.dom.ap(highed.dom.cr('div', 'highed-modal-theme-values-container'),
           highed.dom.ap(themeVal, 
-            highed.dom.cr('div', 'highed-modal-theme-value-header', 'Theme Options'), 
-            highed.dom.cr('div', 'highed-modal-theme-value', highed.getObjectValueByString(theme.options, value))
+            highed.dom.ap(
+              highed.dom.cr('div', 'highed-modal-theme-value-header'),
+              highed.dom.cr('span', '', 'Theme Options'), 
+              themeValRadio
+            ),
+            highed.dom.ap(
+              highed.dom.cr('div', 'highed-modal-theme-value-header'),
+              highed.dom.cr('span', '', 'User Options'), 
+              userValRadio
+            )
           ),
           highed.dom.ap(userVal, 
-            highed.dom.cr('div', 'highed-modal-theme-value-header', 'User Options'), 
+            highed.dom.cr('div', 'highed-modal-theme-value', highed.getObjectValueByString(theme.options, value)),
             highed.dom.cr('div', 'highed-modal-theme-value', highed.getObjectValueByString(customizedOptions, value))
           )
         )
