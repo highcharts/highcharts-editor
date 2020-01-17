@@ -28,34 +28,42 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 highed.ThemeModal = function(chartPreview) {
 
   var modalWindow = highed.OverlayModal(false, {
-    width: 700,
-    height: 500 
+    width: 321,
+    height: 219
   }),
   theme,
   customizedOptions,
   matchValues,
   events = highed.events(),
-  useManualOptionsBtn = highed.dom.cr('button', 'highed-import-button', "Use manually set options (Default)"),
-  useThemeOptionsBtn = highed.dom.cr('button', 'highed-import-button', "Use theme options"),
-  headerLabel = highed.dom.cr('span', '', 'Conflicts'),
-  body = highed.dom.cr('div', 'highed-modal-body highed-modal-theme-body'),
+  //useManualOptionsBtn = highed.dom.cr('button', 'highed-import-button', "Use manually set options (Default)"),
+  useThemeOptionsBtn = highed.dom.cr('button', 'highed-import-button', "Continue"),//"Use theme options"),
+  headerLabel = highed.dom.cr('span', '', 'Attention'),//'Conflicts'),
+  //body = highed.dom.cr('div', 'highed-modal-body highed-modal-theme-body'),
   closeBtn = highed.dom.ap(highed.dom.cr('span', 'fa fa-times close-btn'));
 
   highed.dom.ap(modalWindow.body, 
-      highed.dom.ap(highed.dom.cr("div", 'highed-premium-feature-header'), headerLabel, closeBtn),
-      highed.dom.cr("div", 'highed-premium-feature-text highed-theme-modal-text', "This theme has some options set that you have also set manually. Would you like to overide these with the theme properties?"),
-      body,
-      highed.dom.ap(
-        highed.dom.cr('div', 'highed-theme-modal-buttons'),
-        highed.dom.ap(highed.dom.cr("div", ''), useManualOptionsBtn),
-        highed.dom.ap(highed.dom.cr("div", ''), useThemeOptionsBtn)
-      )
+    highed.dom.ap(highed.dom.cr("div", 'highed-premium-feature-header'), headerLabel, closeBtn),
+    highed.dom.cr("div", 'highed-premium-feature-text highed-theme-modal-text', "This theme has some options set that you have also set manually. These settings will be overwritten"),
+
+    highed.dom.ap(
+      highed.dom.cr('div', 'highed-theme-modal-buttons'),
+      highed.dom.ap(highed.dom.cr("div", ''), useThemeOptionsBtn)
+    )
+    /*
+    highed.dom.cr("div", 'highed-premium-feature-text highed-theme-modal-text', "This theme has some options set that you have also set manually. Would you like to overide these with the theme properties?"),
+    body,
+    highed.dom.ap(
+      highed.dom.cr('div', 'highed-theme-modal-buttons'),
+      highed.dom.ap(highed.dom.cr("div", ''), useManualOptionsBtn),
+      highed.dom.ap(highed.dom.cr("div", ''), useThemeOptionsBtn)
+    )*/
   );
 
   highed.dom.on(closeBtn, 'click', function() {
     modalWindow.hide();
   });
   
+  /*
   highed.dom.on(useManualOptionsBtn, 'click', function() {
     //Default setting
     matchValues.forEach(function(id) {
@@ -68,7 +76,7 @@ highed.ThemeModal = function(chartPreview) {
 
     chartPreview.assignTheme(theme);
     modalWindow.hide();
-  });
+  });*/
   
   highed.dom.on(useThemeOptionsBtn, 'click', function() {
     //Override customized options with theme options
@@ -82,6 +90,11 @@ highed.ThemeModal = function(chartPreview) {
   });
 
   function show(matched, themeConfig, customizedOptionsConfig) {
+
+    matchValues = matched;
+    theme = themeConfig;
+    customizedOptions = customizedOptionsConfig;
+    /*
     body.innerHTML = '';
 
     matchValues = matched;
@@ -126,7 +139,7 @@ highed.ThemeModal = function(chartPreview) {
         )
       );
     });
-
+*/
     modalWindow.show();
   }
 

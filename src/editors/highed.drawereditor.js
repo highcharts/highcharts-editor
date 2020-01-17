@@ -732,8 +732,6 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
   function hideImportModal() {
     //dataTable.hideImportModal();
   }
-  
-
 
   /**
    * Assign a theme to the chart
@@ -750,16 +748,20 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     });
 
     if (matchingValues.length > 0) {
-      //Theme config clashes with users options, load a popup asking which user wants to keep
-      themePopup.show(matchingValues, theme, chartPreview.options.getCustomized());
-      //events.emit('LoadThemePopup', matchingValues, theme, customizedOptions);
+      /*
+      matchingValues.forEach(function(id) {
+        const value = highed.getObjectValueByString(theme.options, id);
+        highed.setAttr(chartPreview.options.getCustomized(), id, value);
+      });
+
+      chartPreview.assignTheme(theme);
+      */
+     themePopup.show(matchingValues, theme, chartPreview.options.getCustomized());
     } else {
       chartPreview.assignTheme(theme, skipEmit);
       //applyTheme(theme, skipEmit);
     }
   }
-
-
 
   function showError(title, message, warning, code) {
     
