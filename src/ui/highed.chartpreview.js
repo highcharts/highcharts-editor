@@ -88,6 +88,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     themeCustomCode = '',
     themeMeta = {},
     exports = {},
+    prevConstr = 'Chart',
     chartPlugins = {},
     customCodeDefault = [
       '/*',
@@ -341,7 +342,20 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       if (serie.data) delete serie.data;
     })
 
-    chart.update(options, true, true);
+    if (highed.isArr(constr)) constr = constr;
+    else constr = ['Chart'];
+
+    const chartConstr = (highed.chartType === 'Map' ? isTileMap(options) ? 'Chart' : 'Map' : (constr.some(function(a) {
+      return a === 'StockChart';
+    }) ? 'StockChart' : 'Chart'));
+
+    if (chartConstr === prevConstr) {
+      chart.update(options, true, true);
+    } else {
+      init(options);
+    }
+
+    prevConstr = chartConstr
   }
 
 
