@@ -217,6 +217,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     dataTableContainer = highed.dom.cr('div', 'highed-box-size highed-fill'),
     payupModal = highed.SubscribeModal(),
     annotationModal = highed.AnnotationModal(),
+    themePopup = highed.ThemeModal(chartPreview),
     mapSelector = highed.MapSelector(chartPreview, planCode),
     dataPage = highed.DataPage(
       splitter.bottom,
@@ -736,7 +737,37 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
   function hideImportModal() {
     //dataTable.hideImportModal();
   }
-  
+
+  /**
+   * Assign a theme to the chart
+   * theme can either be a straight-up option set, or a theme object with
+   * ID and so on.
+   */
+  function assignTheme(theme, skipEmit) {
+    
+    const themeKeys = highed.keyifyNestedObject(theme.options),
+          customizedKeys = highed.keyifyNestedObject(chartPreview.options.getCustomized());
+          
+    const matchingValues = customizedKeys.filter(function(key){
+      return themeKeys.includes(key) && (highed.getObjectValueByString(chartPreview.options.getCustomized(), key) !== highed.getObjectValueByString(theme.options, key));
+    });
+
+    if (matchingValues.length > 0) {
+      /*
+      matchingValues.forEach(function(id) {
+        const value = highed.getObjectValueByString(theme.options, id);
+        highed.setAttr(chartPreview.options.getCustomized(), id, value);
+      });
+
+      chartPreview.assignTheme(theme);
+      */
+     themePopup.show(matchingValues, theme, chartPreview.options.getCustomized());
+    } else {
+      chartPreview.assignTheme(theme, skipEmit);
+      //applyTheme(theme, skipEmit);
+    }
+  }
+
   function showError(title, message, warning, code) {
     
     if (suppressWarning) return;
@@ -819,19 +850,20 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
   });
 
   dataPage.on('SeriesChanged', function(index) {
-    if (((options && !options.features) || (options && options.features && options.features.indexOf('templates') > -1)) && templatePage) {
+    if (((options && !options.features) || (options && options.features && options.features.indexOf('templates') > -1)) && templatePage) 
       templatePage.selectSeriesTemplate(index, chartPreview.options.getTemplateSettings());
-    }
   });
 
   chartPreview.on('LoadProject', function (projectData, aggregated) {
     dataPage.loadProject(projectData, aggregated);
-    templatePage.selectSeriesTemplate(0, projectData);
+    if (((options && !options.features) || (options && options.features && options.features.indexOf('templates') > -1)) && templatePage)
+      templatePage.selectSeriesTemplate(0, projectData);
   });
 
   chartPreview.on(['LoadMapProject'], function (projectData, aggregated) {
     dataPage.loadMapProject(projectData, aggregated);
-    templatePage.selectSeriesTemplate(0, projectData);
+    if (((options && !options.features) || (options && options.features && options.features.indexOf('templates') > -1)) && templatePage) 
+      templatePage.selectSeriesTemplate(0, projectData);
   });
 
   templatePage.on('TemplateChanged', function(newTemplate, loadTemplateForEachSerie, cb) {
@@ -1045,7 +1077,6 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     chartPreview.closeAnnotationPopup();
   });
 
-
   return {
     on: events.on,
     resize: resize,
@@ -1066,6 +1097,7 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     setChartTitle: setChartTitle,
     showChartWizard: showChartWizard,
     addToWorkspace: addToWorkspace,
+    assignTheme: assignTheme,
     data: {
       on: function() {}, //dataTable.on,
       showLiveStatus: function() {}, //toolbox.showLiveStatus,

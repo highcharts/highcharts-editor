@@ -1113,6 +1113,14 @@ highed.InspectorField = function(type, value, properties, fn, nohint, fieldID, p
         }
 
         if (properties && highed.isArr(properties.attributes)) {
+          
+          highed.meta.defaultStyles.forEach(function(style) {
+            const hasStyle = properties.attributes.filter(function(prop){ return prop.id === style.id });
+            if (hasStyle.length === 0) {
+              properties.attributes.push(style);
+            }
+          });
+
           properties.attributes.forEach(function(attr) {
             val[attr.name || attr.id] =
               val[attr.name || attr.id] ||

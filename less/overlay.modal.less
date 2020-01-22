@@ -125,6 +125,67 @@
     text-decoration: underline;
   }
 }
+.highed-theme-modal-text {
+  max-width: 500px;
+  padding: 12px 31px;
+}
+.highed-modal-theme-body {    
+  min-height: 338px;
+  max-height: 338px;
+  height: 338px;
+  overflow: auto;
+  margin: 5px 10px;
+  .highed-modal-theme-option-container {
+    margin: 6px 0px;
+    .highed-modal-theme-title {
+      text-transform: capitalize;
+      color: #25386f;
+      font-weight: 800;
+      .highed-parent-splitter {
+        margin-left: 5px;
+        margin-right: 5px;
+      }
+    }
+  }
+  
+  .highed-modal-theme-values-container {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    .highed-modal-theme-value-container{
+      color: black;
+      vertical-align: top;
+      display: table-row;
+      .highed-modal-theme-value {
+        border: 1px solid rgba(218, 218, 218, 0.5);
+        border-top: 0;
+        padding: 4px;
+        word-wrap: break-word;
+        display: table-cell;
+        width: 50%;
+      }
+      .highed-modal-theme-value-header {
+        width: 50%;
+        background-color: #24386f;
+        color: white;
+        font-weight: 500;
+        padding: 4px 0;
+        padding-left: 3px;
+        display: table-cell;
+        input.highed-modal-theme-radio {
+          float: right;
+          position: relative;
+          top: -2px;
+          right: 7px;
+        }
+      }
+    }
+  }
+}
+
+.highed-theme-modal-buttons {
+  text-align: center;
+}
 
 .highcharts-popup-wrapper {
   padding: 10px;

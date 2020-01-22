@@ -315,7 +315,7 @@ highed.List = function(parent, responsive, props, planCode, dataPage) {
         if (group.usesData && dataPage) {
           group.dataTableValues = dataPage.getValues();
         }
-      
+
         highed.dom.ap(
           table,
           highed.InspectorField(

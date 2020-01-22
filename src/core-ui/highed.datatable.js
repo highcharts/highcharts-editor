@@ -1784,13 +1784,13 @@ highed.DataTable = function(parent, attributes) {
 
         var v = col.value();
 
-        if (v) {
+        if (v || v === 0) {
           hasData = true;
         }
 
         if (dataFieldsUsed.indexOf(index) === -1) {
           dataFieldsUsed.push(index);
-          if (!v) {
+          if (!v && v !== 0) {
             hasData = true;
             v = undefined;
           }
@@ -1866,12 +1866,12 @@ highed.DataTable = function(parent, attributes) {
   function toCSV(delimiter, quoteStrings, section) {
     delimiter = delimiter || ','; 
     
-    if (highed.chartType !== 'Map') 
+    if (highed.chartType !== 'Map') {
       return toData(quoteStrings, true, section)
         .map(function(cols) {
           return cols.join(delimiter);
         }).join('\n');
-    
+    }
 
     return toData(quoteStrings, true, section)
       .filter(function(cols) {

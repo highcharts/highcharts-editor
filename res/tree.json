@@ -86059,7 +86059,8 @@
                 "names": [
                   "Highcharts.CSSObject"
                 ]
-              }
+              },
+              "defaultvalue": "{\"color\": \"#666666\"}"
             },
             "meta": {
               "fullname": "xAxis.title.style",
@@ -86070,26 +86071,6 @@
               "filename": "highcharts/js/parts/Axis.js"
             },
             "children": {
-              "color": {
-                "doclet": {
-                  "internal": true,
-                  "type": {
-                    "names": [
-                      "string"
-                    ]
-                  }
-                },
-                "meta": {
-                  "fullname": "xAxis.title.style.color",
-                  "name": "color",
-                  "line": 1987,
-                  "lineEnd": 1987,
-                  "column": 16,
-                  "filename": "highcharts/js/parts/Axis.js",
-                  "default": "#666666"
-                },
-                "children": {}
-              }
             }
           },
           "text": {
