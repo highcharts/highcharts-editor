@@ -1152,7 +1152,7 @@ highed.DataTable = function(parent, attributes) {
     return key;
   };
 
-  function addCol(value, where) {
+  function addCol(value, where, suppressEvents) {
     //The header columns control the colgroup
     var col = highed.dom.cr('col'),
       colNumber = gcolumns.length,
@@ -1520,7 +1520,7 @@ highed.DataTable = function(parent, attributes) {
       gcolumns.push(exports);
     }
 
-    emitChanged();
+    if (!suppressEvents) emitChanged();
   }
 
   function showDropzone() {
@@ -1599,7 +1599,7 @@ highed.DataTable = function(parent, attributes) {
   /** Clear the table
    * @memberof highed.DataTable
    */
-  function clear(noWait) {
+  function clear(noWait, surpressEvents) {
     rows = rows.filter(function(row) {
       row.destroy();
       return false;
@@ -1621,9 +1621,11 @@ highed.DataTable = function(parent, attributes) {
       display: ''
     });
 
-    events.emit('ClearData', true);
-
-    emitChanged(noWait);
+    if (!surpressEvents) {
+      events.emit('ClearData', true);
+      emitChanged(noWait);
+    }
+    
     showDropzone();
   }
 
@@ -1882,9 +1884,9 @@ highed.DataTable = function(parent, attributes) {
       }).join('\n');
   }
 
-  function loadRows(rows, done) {
+  function loadRows(rows, done, suppressEvents) {
     var sanityCounts = {};
-    clear();
+    clear(null, suppressEvents);
 
     if (rows.length > 1) {
       hideDropzone();
@@ -1945,7 +1947,7 @@ highed.DataTable = function(parent, attributes) {
         tempKeyValue = "A";
         
         cols.forEach(function(c) {
-          if (i === 0) addCol(c);
+          if (i === 0) addCol(c, null, suppressEvents);
           else row.addCol(c, tempKeyValue);
           tempKeyValue = getNextLetter(tempKeyValue);
         });
@@ -2045,7 +2047,7 @@ highed.DataTable = function(parent, attributes) {
       loadRows(rows, function() {
         if (updateAssignData && rows[0].length > DEFAULT_COLUMN) events.emit('AssignDataForFileUpload', rows[0].length);
         if (cb) cb();
-      });
+      }, surpressEvents);
     } 
 
     surpressChangeEvents = false;

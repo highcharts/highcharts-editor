@@ -340,7 +340,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
   function init(options, pnode, noAnimation) {
     var i;
 
-    console.trace("Here...", JSON.stringify(options));
     //We want to work on a copy..
     options = options || aggregatedOptions;
 
@@ -1230,17 +1229,18 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       //     });
       // }
 
-      if (projectData.options && ((projectData.options.chart && projectData.options.chart.map) || (projectData.options.plotOptions && projectData.options.plotOptions.map)) ){
+      var isMapChart = projectData.options && ((projectData.options.chart && projectData.options.chart.map) || (projectData.options.plotOptions && projectData.options.plotOptions.map)) ;
+
+      if (isMapChart) {
         events.emit('SetChartAsMap');
         togglePlugins('map', true);
         events.emit('LoadMapProject', projectData, aggregatedOptions);
-      } else events.emit('LoadProject', projectData, aggregatedOptions);
-
+      } else {
+        events.emit('LoadProject', projectData, aggregatedOptions);
+      }
 
       updateAggregated(null, true);
-
       //if (!hasData) {
-      
       init(aggregatedOptions); 
       
       //}

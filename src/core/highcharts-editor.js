@@ -862,7 +862,6 @@ var highed = {
           }
       });
       arr.extraColumns = extraColumns.sort();
-      console.log(arr);
       seriesValues.push(highed.merge({}, arr));
     });
     return seriesValues;

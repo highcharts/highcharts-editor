@@ -512,10 +512,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         
         dataTable.loadCSV({
           csv: projectData.settings.dataProvider.csv
-        }, null, null, function() {
+        }, true, null, function() {
             if (highed.chartType !== 'Map') assignDataPanel.enable();
             assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
-            assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+            assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true, true);
             chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
         });
 
