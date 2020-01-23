@@ -598,11 +598,8 @@ var highed = {
      * @return {string} - delimiter 
      */
 
-  parseCSV: function(inData, delimiter) {
-    var isStr = highed.isStr,
-      isArr = highed.isArray,
-      isNum = highed.isNum,
-      csv = inData || '',
+  parseCSV:  function(inData, delimiter, section) {
+    var csv = inData || '',
       result = [],
       options = {
         delimiter: delimiter
@@ -622,7 +619,6 @@ var highed = {
     rows = (csv || '').replace(/\r\n/g, '\n').split('\n');
 
     // If there's no delimiter, look at the first few rows to guess it.
-
     if (!options.delimiter) {
       rows.some(function(row, i) {
         if (i > 10) return true;
@@ -662,7 +658,7 @@ var highed = {
               // Yup, likely the right delimiter
               token = '';
               delimiterCounts[c]++;
-            } else if (!isNum(token) && token.length) {
+            } else if (!highed.isNum(token) && token.length) {
               token = '';
               delimiterCounts[c]++;
             }
@@ -691,6 +687,7 @@ var highed = {
 
     rows.forEach(function(row, rowNumber) {
       var cols = [],
+        columnCount,
         inStr = false,
         i = 0,
         j,
@@ -701,15 +698,22 @@ var highed = {
         cn;
 
       function pushToken() {
+        columnCount = columnCount + 1 || 0;
+        token = (token || '').replace(/\,/g, '');
         if (!token.length) {
           token = null;
           // return;
         }
-
-        if (isNum(token)) {
+  
+        if (highed.isNum(token)) {
           token = parseFloat(token);
         }
-
+  
+        if (section && !highed.checkSections(section, columnCount)) {
+          token = '';
+          return;
+        }
+        
         cols.push(token);
         token = '';
       }
@@ -732,7 +736,7 @@ var highed = {
           token += c;
           //Check if we're done reading a token
         } else if (c === options.delimiter) {
-          pushToken();
+          pushToken(rowNumber);
 
           //Append to token
         } else {
@@ -741,7 +745,7 @@ var highed = {
 
         // Push if this was the last character
         if (i === row.length - 1) {
-          pushToken();
+          pushToken(rowNumber);
         }
       }
 
@@ -829,8 +833,48 @@ var highed = {
         }
     }
     return o;
-  }
+  },
 
+
+  getLetterIndex: function(char) {
+    return char.charCodeAt() - 65; 
+  },
+
+  getAllMergedLabelAndData: function(options) {
+    var seriesValues = [];
+    options.forEach(function(serie, i) {
+      var arr = {},
+      extraColumns = [],
+      values = [];
+      Object.keys(serie).forEach(function(optionKeys) {
+          if (optionKeys === 'labels') {
+            arr.labelColumn = highed.getLetterIndex(options[i][optionKeys]);
+          } else if (optionKeys === 'values') {
+            const allData = options[i][optionKeys];
+            values.push(highed.getLetterIndex(allData));
+            arr.dataColumns = values;
+            arr.dataColumns.sort();
+          } else {
+            const extraValue = options[i][optionKeys];
+            if (extraValue !== '') {
+              extraColumns.push(highed.getLetterIndex(extraValue));
+            }
+          }
+      });
+      arr.extraColumns = extraColumns.sort();
+      console.log(arr);
+      seriesValues.push(highed.merge({}, arr));
+    });
+    return seriesValues;
+  },
+
+  checkSections: function(sections, index) {
+    return (sections || []).some(function(section) {
+      return (section.dataColumns && section.dataColumns.includes(index)) || 
+             (section.extraColumns && section.extraColumns.includes(index)) || 
+             section.labelColumn === index;
+    });
+  }
 };
 
 // Stateful functions

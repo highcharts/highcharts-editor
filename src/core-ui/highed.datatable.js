@@ -630,11 +630,12 @@ highed.DataTable = function(parent, attributes) {
       emitChanged();
     }
 
-    function setValue(newValue) {
+    function setValue(newValue, suppressEvent) {
       colVal.innerHTML = newValue;
       mainInput.value = newValue;
       value = newValue;
-      emitChanged();
+      if (!suppressEvent) 
+        emitChanged();
     }
 
     function setHiddenValue(newValue) {
@@ -2896,7 +2897,7 @@ highed.DataTable = function(parent, attributes) {
     simpleDataTable.showLatLongTable(type);
   }
 
-  function loadMapData(mapData, code, name, csv, cb) {
+  function loadMapData(mapData, code, name, csv, cb, suppressEvents) {
     const rowLength = rows.length;
     var i = 0;
 
@@ -2921,8 +2922,8 @@ highed.DataTable = function(parent, attributes) {
     mapData.forEach(function(data) {
       if (!data.properties[name]) return;
 
-      if (i >= rowLength) addRow();
-      rows[i].columns[0].setValue(data.properties[name]);
+      if (i >= rowLength) addRow(suppressEvents);
+      rows[i].columns[0].setValue(data.properties[name], suppressEvents);
       rows[i].columns[0].setHiddenValue(data.properties[code]);
 
       newRows.forEach(function(r, n) {
@@ -2930,7 +2931,7 @@ highed.DataTable = function(parent, attributes) {
           rows[i].columns.forEach(function(col, x) {
             if (x === 0 || newRows[n][x] === undefined) return;
             
-            col.setValue(newRows[n][x]);
+            col.setValue(newRows[n][x], suppressEvents);
           })
         }
       });

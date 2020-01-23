@@ -481,7 +481,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
               loadMapData(data.features, code, null, projectData.settings.dataProvider.csv, function () {
               
                 assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
-                assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+                assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true, true);
                 chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
 
 
@@ -498,7 +498,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
                   }, isBubble ? 1 : null);
                 }
 
-              });
+              }, null, true);
             }
           },
           error: function(e) {
@@ -853,7 +853,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     return foundCode;
   }
 
-  function loadMapData(data, code, name, csv, cb, isLatLongChart) {
+  function loadMapData(data, code, name, csv, cb, isLatLongChart, suppressEvent) {
     if (isLatLongChart) {
       dataTable.loadCSV({
         csv: csv,
@@ -887,7 +887,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         chartPreview.data.updateMapData(null, code);
       }
 
-      dataTable.loadMapData(data, code, name, csv, cb);
+      dataTable.loadMapData(data, code, name, csv, cb, suppressEvent);
     }
   }
 

@@ -839,11 +839,6 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
     chartPreview.updateMapCodes(data);
   });
 
-  chartPreview.on('LoadMapData', function(data, code, name) {
-    dataPage.loadMapData(data, code, name);
-    chartPreview.updateMapCodes(data);
-  });
-
   dataPage.on('GoToTemplatePage', function() {
     const templates = panel.getOptions().templates;
     if (templates) templates.click();
