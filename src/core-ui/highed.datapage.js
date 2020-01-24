@@ -449,74 +449,73 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       }
 
       var baseMapPath = "https://code.highcharts.com/mapdata/";
-      chartPreview.options.updateMap(projectData.options.chart.map, baseMapPath + projectData.options.chart.map + '.js', function() {
-        highed.ajax({
-          url: baseMapPath + projectData.options.chart.map + '.geo.json',
-          type: 'GET',
-          dataType: 'json',
-          success: function(data) {
-            var isLatLongChart = (projectData.settings.dataProvider && projectData.settings.dataProvider.seriesMapping && projectData.settings.dataProvider.seriesMapping.some(function(s){
-              return Object.keys(s).includes('lat');
-            }));
+      highed.ajax({
+        url: baseMapPath + projectData.options.chart.map + '.geo.json',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+          var isLatLongChart = (projectData.settings.dataProvider && projectData.settings.dataProvider.seriesMapping && projectData.settings.dataProvider.seriesMapping.some(function(s){
+            return Object.keys(s).includes('lat');
+          }));
 
-            if (isLatLongChart) {
-              dataTable.loadCSV({
-                csv: projectData.settings.dataProvider.csv
-              }, null, null, function() {
-                assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
-                assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
-                chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
-              });
-              return;
-            } else {
+          if (isLatLongChart) {
+            dataTable.loadCSV({
+              csv: projectData.settings.dataProvider.csv
+            }, null, null, function() {
+              assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
+              assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true);
+              chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
+            });
+            return;
+          } else {
 
-              var code = null,
-                  hasCustomMapKey = false;
-              if (isMapKeyCompatible(data.features)) {
-                code = getCompatibleMapKey(data.features);
-                chartPreview.data.updateMapData(null, code);
-                hasCustomMapKey = true;
+            var code = null,
+                hasCustomMapKey = false;
+            if (isMapKeyCompatible(data.features)) {
+              code = getCompatibleMapKey(data.features);
+              chartPreview.data.updateMapData(null, code);
+              hasCustomMapKey = true;
+            }
+
+            loadMapData(data.features, code, null, projectData.settings.dataProvider.csv, function () {
+            
+              assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
+              assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true, true);
+              chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
+
+
+              if (hasCustomMapKey) {
+
+                const customized = chartPreview.options.getCustomized();
+                var isBubble = customized.options && customized.series && customized.series.some(function(s){
+                  return s.type === 'mapbubble';
+                });
+
+                assignDataPanel.updateLinkedToValues({
+                  key: 'labels',
+                  value: code
+                }, isBubble ? 1 : null);
               }
 
-              loadMapData(data.features, code, null, projectData.settings.dataProvider.csv, function () {
-              
-                assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
-                assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true, true);
-                chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
-
-
-                if (hasCustomMapKey) {
-
-                  const customized = chartPreview.options.getCustomized();
-                  var isBubble = customized.options && customized.series && customized.series.some(function(s){
-                    return s.type === 'mapbubble';
-                  });
-
-                  assignDataPanel.updateLinkedToValues({
-                    key: 'labels',
-                    value: code
-                  }, isBubble ? 1 : null);
-                }
-
-              }, null, true);
-            }
-          },
-          error: function(e) {
+            }, null, true);
           }
-        })
+        },
+        error: function(e) {
+        }
       });
     }
 
-    function loadProject(projectData, aggregated) {
+    function loadProject(projectData, aggregated, columnsLength) {
       if (projectData.settings && projectData.settings.dataProvider && projectData.settings.dataProvider.csv) {
-        
+
+        assignDataPanel.setAssignDataFields(projectData, columnsLength, true, null, true, true, aggregated);
+        assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true, true);
         dataTable.loadCSV({
           csv: projectData.settings.dataProvider.csv
         }, true, null, function() {
-            if (highed.chartType !== 'Map') assignDataPanel.enable();
-            assignDataPanel.setAssignDataFields(projectData, dataTable.getColumnLength(), true, null, true, true, aggregated);
-            assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true, true);
-            chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
+            //if (highed.chartType !== 'Map') assignDataPanel.enable();
+            //assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true, true);
+            //chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
         });
 
         //chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());

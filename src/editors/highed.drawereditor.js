@@ -849,8 +849,8 @@ highed.DrawerEditor = function(parent, options, planCode, chartType) {
       templatePage.selectSeriesTemplate(index, chartPreview.options.getTemplateSettings());
   });
 
-  chartPreview.on('LoadProject', function (projectData, aggregated) {
-    dataPage.loadProject(projectData, aggregated);
+  chartPreview.on('LoadProject', function (projectData, aggregated, columnsLength) {
+    dataPage.loadProject(projectData, aggregated, columnsLength);
     if (((options && !options.features) || (options && options.features && options.features.indexOf('templates') > -1)) && templatePage)
       templatePage.selectSeriesTemplate(0, projectData);
   });

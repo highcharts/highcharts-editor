@@ -61,6 +61,7 @@
     "./src/meta/highed.meta.charttype.js",
     "./src/meta/highed.meta.assign.defaults.js",
     "./src/meta/highed.meta.default.styles.js",
+    "./src/meta/highed.meta.customcode.default.js",
     "./src/meta/highed.meta.colors.js",
     "./src/meta/highed.meta.fonts.js",
     "./src/meta/errors.js",

@@ -90,29 +90,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     exports = {},
     prevConstr = 'Chart',
     chartPlugins = {},
-    customCodeDefault = [
-      '/*',
-      '// Sample of extending options:',
-      'Highcharts.merge(true, options, {',
-      '    chart: {',
-      '        backgroundColor: "#bada55"',
-      '    },',
-      '    plotOptions: {',
-      '        series: {',
-      '            cursor: "pointer",',
-      '            events: {',
-      '                click: function(event) {',
-      '                    alert(this.name + " clicked\\n" +',
-      '                          "Alt: " + event.altKey + "\\n" +',
-      '                          "Control: " + event.ctrlKey + "\\n" +',
-      '                          "Shift: " + event.shiftKey + "\\n");',
-      '                }',
-      '            }',
-      '        }',
-      '    }',
-      '});',
-      '*/'
-    ].join('\n'),
+    customCodeDefault = highed.meta.customCodeDefault.join('\n'),
     customCode = '',
     customCodeStr = '',
     lastLoadedCSV = false,
@@ -1030,8 +1008,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       }
     }
 
-    console.log("Project: ", JSON.stringify(projectData));
-
     if (projectData) {
 
       if (projectData.theme && projectData.theme.plugins && projectData.theme.plugins.cssModules) {
@@ -1095,6 +1071,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       events.emit('LoadCustomCode');
       
       constr = ['Chart'];
+      var columnLength = 8;
 
       // Support legacy format
       if (projectData.settings && projectData.settings.templateView) {
@@ -1196,8 +1173,13 @@ highed.ChartPreview = function(parent, attributes, planCode) {
                 return cols.join(';');
               }).join('\n');
             } else {
-              csv = highed.parseCSV(csv, null, sections)
-              .filter(function(cols) {
+              csv = highed.parseCSV(csv, null, sections);
+              
+              if (csv[0] && csv[0][0]) {
+                columnLength = csv[0].length;
+              }
+
+              csv = csv.filter(function(cols) {
                 return cols[1] !== null && cols[1] !== undefined;
               }).map(function(cols) {
                 return cols.join(';');
@@ -1232,16 +1214,30 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       var isMapChart = projectData.options && ((projectData.options.chart && projectData.options.chart.map) || (projectData.options.plotOptions && projectData.options.plotOptions.map)) ;
 
       if (isMapChart) {
-        events.emit('SetChartAsMap');
-        togglePlugins('map', true);
-        events.emit('LoadMapProject', projectData, aggregatedOptions);
-      } else {
-        events.emit('LoadProject', projectData, aggregatedOptions);
-      }
+        if (projectData.options && projectData.options.chart && projectData.options.chart.map && !highed.isObj(projectData.options.chart.map)){
+          console.log("HERE??")
+          events.emit('SetChartAsMap');
 
-      updateAggregated(null, true);
-      //if (!hasData) {
-      init(aggregatedOptions); 
+          var baseMapPath = "https://code.highcharts.com/mapdata/";
+          updateMap(projectData.options.chart.map, baseMapPath + projectData.options.chart.map + '.js', function() {
+            togglePlugins('map', true);
+            events.emit('LoadMapProject', projectData, aggregatedOptions);  
+            updateAggregated(null, true);
+            init(aggregatedOptions); 
+          });
+        } else {
+          events.emit('SetChartAsMap');
+          togglePlugins('map', true);
+          events.emit('LoadMapProject', projectData, aggregatedOptions);  
+          updateAggregated(null, true);
+          init(aggregatedOptions); 
+        }
+
+      } else {
+        events.emit('LoadProject', projectData, aggregatedOptions, columnLength);
+        updateAggregated(null, true);
+        init(aggregatedOptions); 
+      }
       
       //}
     }
