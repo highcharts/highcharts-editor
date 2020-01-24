@@ -220,6 +220,7 @@ highed.DataTable = function(parent, attributes) {
     moveToColumn = null,
     dragHeaderMode = false,
     mapImporter = highed.MapImporter(),
+    highlighter = highed.Highlighter(),
     mapDataTable = null,
     dropCSVFileHere = highed.dom.cr('div', 'highed-table-dropzone-title', 'Drop CSV files here'),
     globalContextMenu = highed.ContextMenu([
@@ -2684,128 +2685,12 @@ highed.DataTable = function(parent, attributes) {
     if (rows.length > 0) rows[0].columns[0].focus();
   }
 
-  function colorHeader(values, color) {
-    var tempValue = values[0];
-    if (values.length > 0) {
-      while (tempValue <= values[values.length - 1]) {
-        if (gcolumns[tempValue]) {
-          highed.dom.style(gcolumns[tempValue].letter, {
-            "background-color": color.light,
-            "border-left": "1px double " + color.dark,
-            "border-top": "1px double " + color.dark,
-            "border-bottom": "1px double " + color.dark,
-            "border-right": "1px double " + color.dark,
-          });        
-          highed.dom.style(gcolumns[tempValue].header, {
-            "background-color": color.light,
-            "border-left": "1px double " + color.dark,
-            "border-right": "1px double " + color.dark,
-            "border-bottom": "1px double " + color.dark,
-          });
-        }
-        tempValue++;
-      }
-    }
-  }
-
-  function colorCells(values, color) {
-    if (values.length > 0) {
-      rows.forEach(function(row) {
-        var tempValue = values[0];
-        while (tempValue <= values[values.length - 1]) {
-          if (row.columns[tempValue]) {
-            highed.dom.style(row.columns[tempValue].element, {
-              "background-color": color.light 
-            });      
-          }  
-          tempValue++;
-        }
-      });
-    }
-  }
-
-  function outlineCell(values, color) {
-    values.forEach(function(value, index) {
-      rows.forEach(function(row) {
-        if (row.columns[value]) {
-          highed.dom.style(row.columns[value].element, {
-            "border-right": (index === (values.length - 1) ? '1px double ' + color.dark : ''),
-            "border-left": (index === 0 ? '1px double ' + color.dark : ''),
-          });
-        }
-      });
-    });
-  }
-
-  function decolorCells(previousValues) {
-    if (previousValues && previousValues.length > 0) {
-      
-      rows.forEach(function(row) {
-        var tempValue = previousValues[0];
-        if (previousValues.length > 0) {
-          while (tempValue <= previousValues[previousValues.length - 1]) {
-            if (row.columns[tempValue]) {
-              highed.dom.style(row.columns[tempValue].element, {
-                "background-color": ''
-              });
-            }
-            tempValue++; //= getNextLetter(tempValue);
-          }
-        }
-      });
-    }
-  }
-
-  function decolorHeader(previousValues) {
-    if (previousValues && previousValues.length > 0){
-      var tempValue = previousValues[0];
-      if (previousValues.length > 0) {
-        while (tempValue <= previousValues[previousValues.length - 1]) {
-          if (gcolumns[tempValue]) {
-            highed.dom.style([gcolumns[tempValue].letter, gcolumns[tempValue].header], {
-              "background-color": '',
-              "border": '',
-            });
-          }
-          tempValue++; //= getNextLetter(tempValue);
-        }
-      }
-    }
-  }
-
-  function removeOutlineFromCell(values) {
-    (values || []).forEach(function(value) {
-      (rows || []).forEach(function(row){
-        if (row.columns[value]) { //May have been deleted on startup
-          highed.dom.style(row.columns[value].element, {
-            "border-right": '',
-            "border-left": '',
-          });
-        }
-      });
-    });
-  }
-
-  function removeCellColoring(previousValues) {
-    removeOutlineFromCell(previousValues);
-    decolorHeader(previousValues);
-    decolorCells(previousValues);
-  }
-
-  function colorFields(values, color) {
-    outlineCell(values, color);
-    colorCells(values, color);
-    colorHeader(values, color);
-  }
-
   function highlightCells(previousValues, values, input, newOptions) {
-    removeCellColoring(previousValues);
-    colorFields(values, input.colors);
-    //events.emit('AssignDataChanged', input, newOptions);
+    highlighter.highlightCells(rows, gcolumns, previousValues, values, input, newOptions);
   }
 
   function removeAllCellsHighlight(previousValues, values, input, newOptions) {
-    removeCellColoring(values);
+    highlighter.removeAllCellsHighlight(rows, gcolumns, previousValues, values, input, newOptions)
   }
 
   function toggleUnwantedCells(values, toggle) {
@@ -2943,14 +2828,14 @@ highed.DataTable = function(parent, attributes) {
       data.properties.hcname = name; 
     });
 
-    highlightCells([0],[0], {
+    highlighter.highlightCells(rows, gcolumns, [0],[0], {
       colors: {
         'light': 'rgba(66, 200, 192, 0.2)',
         'dark': 'rgb(66, 200, 192)',
       }
     })
 
-    highlightCells([1],[1], {
+    highlighter.highlightCells(rows, gcolumns, [1],[1], {
       colors: {
         'light': 'rgba(145, 151, 229, 0.2)',
         'dark': 'rgb(145, 151, 229)',

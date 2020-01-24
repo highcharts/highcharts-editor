@@ -36,6 +36,7 @@
     "./src/core-ui/highed.mover.js",
     "./src/core-ui/highed.slider.js",
     "./src/core-ui/highed.datatable.js",
+    "./src/core-ui/highed.highlighter.js",
     "./src/core-ui/highed.map.selector.js",
     "./src/core-ui/highed.datapage.js",
     "./src/core-ui/highed.simple.datapage.js",
