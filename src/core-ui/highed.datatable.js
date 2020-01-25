@@ -43,7 +43,7 @@ highed.DataTable = function(parent, attributes) {
     frame = highed.dom.cr('div', 'highed-dtable-table-frame highed-scrollbar'),
     movementBar = highed.dom.cr('div', 'highed-dtable-movement-bar', ''),
     table = highed.dom.cr('table', 'highed-dtable-table'),
-    thead = highed.dom.cr('thead', 'highed-dtable-head'),
+    thead = highed.dom.cr('thead', 'highed-dtable-head highed-dtable-top-bar'),
     tbody = highed.dom.cr('tbody', 'highed-dtable-body'),
     tableTail = highed.dom.cr(
       'div',
@@ -54,8 +54,8 @@ highed.DataTable = function(parent, attributes) {
     leftBar = highed.dom.cr('div', 'highed-dtable-left-bar'),
     hideCellsDiv = highed.dom.cr('div', 'highed-dtable-hide-cells'),
     topBar = highed.dom.cr('div', 'highed-dtable-top-bar'),
-    topLetterBar = highed.dom.cr('div', 'highed-dtable-top-letter-bar'),
-    topColumnBar = highed.dom.cr('div', 'highed-dtable-top-column-bar'),
+    topLetterBar = highed.dom.cr('tr', 'highed-dtable-top-letter-bar'),
+    topColumnBar = highed.dom.cr('tr', 'highed-dtable-top-column-bar'),
     topLeftPanel = highed.dom.cr('div', 'highed-dtable-top-left-panel'),
     //checkAll = highed.dom.cr('input'),
     mainInput = highed.dom.cr('textarea', 'highed-dtable-input'),
@@ -1157,8 +1157,8 @@ highed.DataTable = function(parent, attributes) {
     //The header columns control the colgroup
     var col = highed.dom.cr('col'),
       colNumber = gcolumns.length,
-      header = highed.dom.cr('span', 'highed-dtable-top-bar-col'),
-      letter = highed.dom.cr('span', 'highed-dtable-top-bar-letter'),
+      header = highed.dom.cr('th', 'highed-dtable-top-bar-col'),
+      letter = highed.dom.cr('th', 'highed-dtable-top-bar-letter'),
       headerTitle = highed.dom.cr('div', '', (typeof value === 'undefined' || value === 'null' ? null : value)),
       moveHandle = highed.dom.cr('div', 'highed-dtable-resize-handle'),
       options = highed.dom.cr(
@@ -1690,11 +1690,11 @@ highed.DataTable = function(parent, attributes) {
       //tb = highed.dom.size(toolbar.container);
     
     highed.dom.style(frame, {
-      height: ps.h - hs.h - 55 - 17 + 'px' //55 is padding from top for data column and letter
+      height: ps.h - hs.h - 52 - 17 + 'px'
     });
 
     highed.dom.style([container, gsheetFrame, liveDataFrame], {
-      height: ps.h - hs.h - 22 /*- tb.h*/ + 'px'
+      height: ps.h - hs.h - 22 - 52 /*- tb.h*/ + 'px'
     });
 
 
@@ -2437,7 +2437,7 @@ highed.DataTable = function(parent, attributes) {
 
   highed.dom.on(frame, 'scroll', function(e) {
     leftBar.style.top = -frame.scrollTop + 'px';
-    topBar.style.left = -frame.scrollLeft + 40 + 'px';
+    //topBar.style.left = -frame.scrollLeft + 40 + 'px';
   });
 
   parent = highed.dom.get(parent);
@@ -2449,14 +2449,18 @@ highed.DataTable = function(parent, attributes) {
       container,
       highed.dom.ap(
         frame,
-        highed.dom.ap(table, colgroup, thead, tbody),
+        highed.dom.ap(table, 
+         // colgroup, 
+          highed.dom.ap(thead,   
+            topLetterBar, topColumnBar
+          ),
+        tbody),
         tableTail,
         dropZone,
         movementBar
       ),
       hideCellsDiv,
-      leftBar,
-      highed.dom.ap(topBar, topLetterBar, topColumnBar)
+      leftBar
       //highed.dom.ap(topLeftPanel, checkAll)
     ),
     highed.dom.ap(

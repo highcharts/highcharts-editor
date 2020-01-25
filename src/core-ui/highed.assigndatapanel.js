@@ -250,16 +250,27 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     });
     if (!disabled && !dontEmit) events.emit("ChangeData", options);
   }
+  
+  function getRandomRgb() {
+    var num = Math.round(0xffffff * Math.random());
+    var r = num >> 16;
+    var g = num >> 8 & 255;
+    var b = num & 255;
+
+    return [r,g,b];
+  }
+
+  function generateLighterColor(fg, o) {
+    return fg.map(function(colFg,idx) {
+      return Math.round(o*colFg+(1-o)*[255,255,255][idx])
+    }).join(',');
+  }
 
   function generateColors() {
-    const hue = Math.floor(Math.random()*(357-202+1)+202), // Want a blue/red/purple colour
-          saturation =  Math.floor(Math.random() * 100),
-          lightness =  60,
-          alpha = 0.5;
-
+    var randomRGB = getRandomRgb();
     return {
-      "light": "hsla(" + hue + ", " + saturation + "%, " + (lightness + 20) + "%, " + alpha + ")",
-      "dark": "hsl(" + hue + ", " + saturation + "%, " + lightness + "%)",
+      "light": "rgb(" + generateLighterColor(randomRGB, 0.2) + ")",
+      "dark": "rgb(" + randomRGB.join(',') + ")"
     };
   }
 

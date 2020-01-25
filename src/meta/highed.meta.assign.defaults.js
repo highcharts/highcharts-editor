@@ -37,7 +37,7 @@ highed.meta.assignDefaults = {
       'isLabel': true,
       'mandatory': true,
       'colors': {
-        'light': 'rgba(66, 200, 192, 0.2)',
+        'light': 'rgb(217, 244, 242)',
         'dark': 'rgb(66, 200, 192)',
       }
     },
@@ -52,7 +52,7 @@ highed.meta.assignDefaults = {
       'previousValue': null,
       'mandatory': true,
       'colors': {
-        'light': 'rgba(145, 151, 229, 0.2)',
+        'light': 'rgb(233,234,250)',
         'dark': 'rgb(145, 151, 229)',
       }
     },
@@ -66,7 +66,7 @@ highed.meta.assignDefaults = {
       'mandatory': false,
       'linkedTo': 'label',        
       'colors': {
-        'light': 'rgba(229, 145, 145, 0.2)',
+        'light': 'rgb(250,233,233)',
         'dark': 'rgb(229, 145, 145)',
       },
       'noNulls': true
