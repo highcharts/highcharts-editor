@@ -365,7 +365,7 @@ highed.DataTable = function(parent, attributes) {
       //events.emit('ClearSeriesForImport');
       if (highed.chartType === 'Map') {
         mapImporter.show(e.target.result, toData());
-        clear();
+        //clear();
       } else {
         loadCSV({ csv: e.target.result }, null, true, cb);
       }
