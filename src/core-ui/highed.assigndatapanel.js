@@ -59,7 +59,8 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
     deleteSeriesBtn = highed.dom.cr('button', 'highed-assigndatapanel-add-series', '<i class="fa fa-trash"/>'),
     toggleHideCellsBtn = highed.dom.cr('button', 'highed-assigndatapanel-add-series', '<i class="fa fa-eye-slash"/>'),
     seriesTypeSelect = highed.DropDown(selectContainer, ' highed-assigndatapanel-series-dropdown'),
-    hidden = highed.dom.cr('div', 'highed-assigndatapanel-hide');
+    hidden = highed.dom.cr('div', 'highed-assigndatapanel-hide'),
+    suppressSelectEmits = false;
 
 
   highed.dom.style(hidden, {
@@ -282,8 +283,14 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
       seriesTypeSelect.sliceList(length + 1);
       resetDOM();
     } else {
+      suppressSelectEmits = true;
+      var redraw = null;
       for(var i=options.length - 1; i<length; i++) {
-        addSerie(type, null, null, extra);
+        if (i >= length - 1) {
+          redraw = true;
+          suppressSelectEmits = false;
+        }
+        addSerie(type, redraw, null, extra);
       }
     }
 
@@ -307,7 +314,6 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
 
   function addSerie(seriesType, redrawDOM, skipSelect, extra) {
     var type = seriesType;
-
     if (!type) type = (highed.chartType === 'Map' ? 'map' : 'Line');
     
     seriesTypeSelect.addItems([{
@@ -756,6 +762,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
   });
   
   seriesTypeSelect.on('Change', function(selected) {
+    if (suppressSelectEmits) return;
     if (index !== selected.id()) {
       index = selected.id();
       resetDOM();  

@@ -367,7 +367,6 @@ highed.DataTable = function(parent, attributes) {
         mapImporter.show(e.target.result, toData());
         clear();
       } else {
-        clear();
         loadCSV({ csv: e.target.result }, null, true, cb);
       }
     };
@@ -1515,7 +1514,7 @@ highed.DataTable = function(parent, attributes) {
       tempKeyValue = getNextLetter(tempKeyValue);
     });
 
-    if (!isNaN(where)) {
+    if (where !== null && !isNaN(where)) {
       gcolumns.splice(where, 0, exports);
     } else {
       gcolumns.push(exports);
