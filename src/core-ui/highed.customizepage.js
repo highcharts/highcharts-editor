@@ -32,7 +32,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
     // Main properties
     container = highed.dom.cr(
       'div',
-      'highed-transition highed-toolbox highed-box-size'
+      'highed-customize-page highed-transition highed-toolbox highed-box-size'
     ),
     title = highed.dom.cr('div', 'highed-toolbox-body-title'),
     customizeTitle,
@@ -543,7 +543,7 @@ highed.CustomizePage = function(parent, options, chartPreview, chartFrame, props
 
     resizeChart(((window.innerHeight
       || document.documentElement.clientHeight
-      || document.body.clientHeight) - highed.dom.pos(body, true).y) - 16);
+      || document.body.clientHeight) - highed.dom.pos(body, true).y) - 21);
 
     isVisible = true;
     highed.dom.style(resolutionSettings, {

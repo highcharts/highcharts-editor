@@ -175,7 +175,7 @@ highed.DefaultPage = function(parent, options, chartPreview, chartFrame) {
     setTimeout(function() {
       resizeChart(((window.innerHeight
         || document.documentElement.clientHeight
-        || document.body.clientHeight) - highed.dom.pos(body, true).y) - 16);
+        || document.body.clientHeight) - highed.dom.pos(body, true).y) - 15);
     }, 200);
 
     isVisible = true;
