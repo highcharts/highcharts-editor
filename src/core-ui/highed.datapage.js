@@ -247,6 +247,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
         dataTable.resize();   
         if(!highed.onPhone()) assignDataPanel.resize(newWidth, highed.dom.pos(chartFrame, true).y - highed.dom.pos(body, true).y)
+        resizeChart();
       }
 
       setTimeout(resizeBody, 300);
@@ -260,7 +261,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       });
       assignDataPanel.show();
       isVisible = true;
-      resizeChart();
+      //resizeChart();
       resize(); 
     }
 
@@ -892,7 +893,6 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
   function resizeChart(newWidth) {
     highed.dom.style(chartFrame, {
-      /*left: newWidth + 'px',*/
       width: '28%',
       height: '38%'
     });

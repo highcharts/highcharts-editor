@@ -61,9 +61,9 @@ highed.ChartPreview = function(parent, attributes, planCode) {
                     borderColor: 'black',
                     dashStyle: 'dot'
                 }
+              }
             }
-            }
-          }, 
+          },
           exporting: {
             //   url: 'http://127.0.0.1:7801'
           },
@@ -2219,7 +2219,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     }
 
     if (!customizedOptions.series) {
-      customizedOptions.series = {};
+      customizedOptions.series = [];
     }
 
     if (!customizedOptions.series[index]) {

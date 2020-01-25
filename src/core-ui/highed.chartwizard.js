@@ -112,6 +112,12 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
           }
         });
         dataIndex = 2;
+      } else {
+        const usersOptions = chartPreview.options.getCustomized();    
+        if ((usersOptions.series && usersOptions.series.length === 0) || !usersOptions.series) {
+          chartPreview.options.addBlankSeries(0, null, null, true); // Should always have at least 1 series
+        }
+
       }
 
 
