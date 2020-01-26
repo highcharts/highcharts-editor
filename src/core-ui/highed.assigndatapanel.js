@@ -699,6 +699,7 @@ highed.AssignDataPanel = function(parent, dataTable, extraClass) {
 
     resetDOM();
     events.emit('RedrawGrid', true);
+    events.emit("ResetSeriesMapping", options);
   }
 
   function changeAssignDataType(type) {

@@ -1773,6 +1773,7 @@ highed.DataTable = function(parent, attributes) {
 
       arr.push(column);
     }
+
     rows.forEach(function(row) {
       var rarr = [],
         hasData = false;
@@ -1938,7 +1939,7 @@ highed.DataTable = function(parent, attributes) {
           rows.push(Array(length).fill(null, 0));
         }
       }
-
+      
       rows.forEach(function(cols, i) {
         var row;
 
@@ -2263,18 +2264,20 @@ highed.DataTable = function(parent, attributes) {
   });
 
   mapImporter.on('HandleMapImport', function(data, linkedCodes, toNextPage, assigns, serie) {
-    loadCSV({ csv: data }, null, false, function() {
+
+    loadCSV({ csv: data }, true, false, function() {
       rows.forEach(function(row) {
         if (linkedCodes) {
           var code = linkedCodes.filter(function(v) { return v.name === row.columns[0].value()});
           if (code && code.length > 0) {
-            row.columns[0].setHiddenValue(code[0].code/*.toLowerCase()*/);
+            row.columns[0].setHiddenValue(code[0].code);
           }
           row.columns[0].setDisabled(true);
         }
       });
 
-      events.emit('SetupAssignData', assigns, serie);
+      events.emit('HandleMapImport', assigns, serie, data);
+      //events.emit('SetupAssignData', assigns, serie);
       toNextPage();
     });
   });

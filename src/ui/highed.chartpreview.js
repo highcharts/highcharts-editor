@@ -547,6 +547,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       customizedOptions.xAxis = [customizedOptions.xAxis || {}];
     }
 
+
    // templateOptions = templateOptions || {};
     templateOptions = templateOptions || [];
     var aggregatedTemplate = {}; 
@@ -566,7 +567,9 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     }
 
     templateOptions.forEach(function(arr) {
+
       if (arr) {
+        
         if (arr.yAxis && !highed.isArr(arr.yAxis)) {
           arr.yAxis = [arr.yAxis];
         }
@@ -583,7 +586,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       aggregatedOptions,
       highed.merge(highed.merge({}, aggregatedTemplate), customizedOptions)
     );
-
     aggregatedOptions = highed.merge(aggregatedOptions, stockTools.getStockToolsToolbarConfig());
     //aggregatedOptions.stockTools = stockToolsToolbarConfig;
 
@@ -611,7 +613,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         }
       });
     }
-
     if (themeOptions && themeOptions.xAxis) {
       themeOptions.xAxis = highed.isArr(themeOptions.xAxis)
         ? themeOptions.xAxis
@@ -712,6 +713,13 @@ highed.ChartPreview = function(parent, attributes, planCode) {
     }
 
     highed.merge(aggregatedOptions, highed.option('stickyChartProperties'));
+
+    if (highed.isArr(aggregatedOptions.yAxis) && aggregatedOptions.yAxis.length === 1) {
+      aggregatedOptions.yAxis = aggregatedOptions.yAxis[0]
+    }
+    if (highed.isArr(aggregatedOptions.xAxis) && aggregatedOptions.xAxis.length === 1) {
+      aggregatedOptions.xAxis = aggregatedOptions.xAxis[0]
+    }
 
     // Finally, do custom code
     if (!noCustomCode && highed.isFn(customCode)) {
@@ -1572,6 +1580,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
    *
    */
   function setChartOptions(options, skipEmit) {
+
     function emitWidthChange() {
       events.emit('AttrChange', {
         id: 'chart.width'

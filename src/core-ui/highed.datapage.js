@@ -380,7 +380,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
         });
         tempOption.push(serieOption);
       };
-      
+
       if (tempOption.length > 0) {
         if (hasLabels) {
           const dataLabelOptions = {
@@ -671,6 +671,11 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
     });
   });
 
+  assignDataPanel.on('ResetSeriesMapping', function(allOptions){
+    clearSeriesMapping();
+    setSeriesMapping(allOptions)
+  })
+
   dataTable.on('ChangeMapCategoryValue', function(value){
     if (highed.chartType === 'Map') {
       var chartOptions = chartPreview.options.getCustomized();
@@ -782,6 +787,14 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       csv: dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData())
     }, null);
   });
+
+  dataTable.on('HandleMapImport', function(assigns, serie, data){
+    
+    chartPreview.data.csv({
+      csv: data//dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData())
+    }, null);
+    assignDataPanel.setValues(assigns, serie);
+  })
 
   dataTable.on('ClearData', function() {
     chartPreview.data.clear();
