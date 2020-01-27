@@ -789,11 +789,14 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
   });
 
   dataTable.on('HandleMapImport', function(assigns, serie, data){
-    
-    chartPreview.data.csv({
-      csv: data//dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData())
-    }, null);
+    clearSeriesMapping();
     assignDataPanel.setValues(assigns, serie);
+
+    chartPreview.data.csv({
+      csv: dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData())
+    }, null, function() {
+      setSeriesMapping(assignDataPanel.getAllOptions());
+    }, true);
   })
 
   dataTable.on('ClearData', function() {
