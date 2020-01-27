@@ -296,7 +296,12 @@ highed.ChartWizard = function(parent, userOptions, props, chartPreview, chartTyp
           dataTableDropzoneContainer = dataPage.createSimpleDataTable(function() {
             goToNextPage();
           }, function(loading) {
-            if (loading) loader.classList += ' active';
+            if (loading) {
+              loader.classList += ' active';
+              highed.dom.style(dataSkipButton, {
+                display: 'none'
+              });
+            }
             else loader.classList.remove('active');
           }, chartContainer);
 

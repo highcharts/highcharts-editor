@@ -276,7 +276,7 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
         accept: '.csv',
         success: function(info) {
           if (highed.chartType === 'Map') {
-            hideMapDataSection();
+            hideMapDataSection(loading);
             mapImporter.show(info.data);
           }
           else {
@@ -314,7 +314,7 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
           if (f.kind === 'file') {
 
             if (f.getAsFile().type !== 'text/csv') return highed.snackBar('The file is not a valid CSV file');
-            hideMapDataSection();
+            hideMapDataSection(loading);
 
             events.emit('HandleFileUpload', f.getAsFile(), function() {
               highed.snackBar('File uploaded');
@@ -327,7 +327,7 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
           f = d.files[i];
 
           if (f.type !== 'text/csv') return highed.snackBar('The file is not a valid CSV file');
-          hideMapDataSection();
+          hideMapDataSection(loading);
 
           events.emit('HandleFileUpload', f, function() {
             highed.snackBar('File uploaded');
@@ -372,11 +372,12 @@ highed.WizardData = function(importer, mapImporter, chartContainer) {
     return container;
   }
 
-  function hideMapDataSection(){
+  function hideMapDataSection(loading){
     latLongTable.hide();
     highed.dom.style(dropzone, {
       display: 'none'
     })
+    loading(true);
   }
 
 
