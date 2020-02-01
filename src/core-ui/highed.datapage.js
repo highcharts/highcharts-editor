@@ -785,7 +785,10 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
 
     chartPreview.data.csv({
       csv: dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData())
-    }, null);
+    }, null, function() {
+      setSeriesMapping(assignDataPanel.getAllOptions());  
+      chartPreview.data.setAssignDataFields(assignDataPanel.getAssignDataFields());
+    }, true);
   });
 
   dataTable.on('HandleMapImport', function(assigns, serie, data){
