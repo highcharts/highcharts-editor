@@ -1187,9 +1187,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
                 columnLength = csv[0].length;
               }
 
-              csv = csv.filter(function(cols) {
-                return cols[1] !== null && cols[1] !== undefined;
-              }).map(function(cols) {
+              csv = csv.map(function(cols) {
                 return cols.join(';');
               }).join('\n');
             }
@@ -1223,7 +1221,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
       if (isMapChart) {
         if (projectData.options && projectData.options.chart && projectData.options.chart.map && !highed.isObj(projectData.options.chart.map)){
-          console.log("HERE??")
           events.emit('SetChartAsMap');
 
           var baseMapPath = "https://code.highcharts.com/mapdata/";
