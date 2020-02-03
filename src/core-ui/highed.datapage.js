@@ -515,7 +515,7 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
           csv: projectData.settings.dataProvider.csv
         }, true, null, function() {
             //if (highed.chartType !== 'Map') assignDataPanel.enable();
-            //assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true, true);
+            assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true, true);
             //chartPreview.data.setDataTableCSV(dataTable.toCSV(';', true, assignDataPanel.getAllMergedLabelAndData()));
         });
 
