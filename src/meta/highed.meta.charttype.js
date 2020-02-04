@@ -318,6 +318,39 @@ highed.meta.charttype = {
             'rawValue': [4]
         }
     },
+    mapline: {
+        'values': null,
+        'labels': {
+            'name': "Country Code",
+            'desc': 'The country code',
+            'default': 'A',
+            'value': 'A',
+            'mandatory': true,
+            'isLabel': true,
+            'linkedTo': 'hc-key',
+            'rawValue': [0]
+        },
+        'index': {
+            'name': "Index",
+            'desc': 'Index',
+            'default': 'B',
+            'value': 'B',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'x',
+            'rawValue': [1]
+        },
+        'value': {
+            'name': "Value",
+            'desc': 'The value of the country',
+            'default': 'B',
+            'value': 'B',
+            'mandatory': true,
+            'isData': true,
+            'linkedTo': 'value',
+            'rawValue': [1]
+        }        
+    },
     map: {
         'values': null,
         'labels': {

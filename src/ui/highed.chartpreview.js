@@ -358,7 +358,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       }) ? 'StockChart' : 'Chart'));
 
       options = highed.merge(options, stockTools.getStockToolsToolbarConfig());
-
       chart = new Highcharts[chartConstr](pnode || parent, options);
 
       //This is super ugly.
@@ -1173,6 +1172,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
             projectData.options.data  = projectData.settings.dataProvider;
             sections = highed.getAllMergedLabelAndData(sections);
+            var parsedCSV;
 
             if (projectData.options && ((projectData.options.chart && projectData.options.chart.map) || (projectData.options.plotOptions && projectData.options.plotOptions.map)) ){
               highed.chartType = 'Map';
@@ -1180,19 +1180,20 @@ highed.ChartPreview = function(parent, attributes, planCode) {
               .map(function(cols) {
                 return cols.join(';');
               }).join('\n');
+              parsedCSV = csv;
             } else {
-              csv = highed.parseCSV(csv, null, sections);
+              parsedCSV = highed.parseCSV(csv, null, sections);
               
-              if (csv[0] && csv[0][0]) {
-                columnLength = csv[0].length;
+              if (parsedCSV[0] && parsedCSV[0][0]) {
+                columnLength = parsedCSV[0].length;
               }
 
-              csv = csv.map(function(cols) {
+              parsedCSV = parsedCSV.map(function(cols) {
                 return cols.join(';');
               }).join('\n');
             }
             
-            projectData.options.data.csv  = csv;
+            projectData.options.data.csv = parsedCSV;
             customizedOptions.data = projectData.options.data;
           } else {
             projectData.options.data  = projectData.settings.dataProvider;
@@ -1219,9 +1220,9 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
       var isMapChart = projectData.options && ((projectData.options.chart && projectData.options.chart.map) || (projectData.options.plotOptions && projectData.options.plotOptions.map)) ;
 
-      if (isMapChart) {
+      if (isMapChart) {          
+        events.emit('SetChartAsMap');
         if (projectData.options && projectData.options.chart && projectData.options.chart.map && !highed.isObj(projectData.options.chart.map)){
-          events.emit('SetChartAsMap');
 
           var baseMapPath = "https://code.highcharts.com/mapdata/";
           updateMap(projectData.options.chart.map, baseMapPath + projectData.options.chart.map + '.js', function() {
@@ -1231,7 +1232,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
             init(aggregatedOptions); 
           });
         } else {
-          events.emit('SetChartAsMap');
           togglePlugins('map', true);
           events.emit('LoadMapProject', projectData, aggregatedOptions);  
           updateAggregated(null, true);
@@ -1239,7 +1239,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
         }
 
       } else {
-        events.emit('LoadProject', projectData, aggregatedOptions, columnLength);
+        events.emit('LoadProject', projectData, aggregatedOptions, columnLength, csv);
         updateAggregated(null, true);
         init(aggregatedOptions); 
       }

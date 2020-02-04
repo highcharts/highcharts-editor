@@ -506,13 +506,16 @@ highed.DataPage = function(parent, options, chartPreview, chartFrame, props) {
       });
     }
 
-    function loadProject(projectData, aggregated, columnsLength) {
+    function loadProject(projectData, aggregated, columnsLength, csv) {
+      // Cant use projectData.settings.dataProvider.csv for a data source as this has been used for loading the chart quickly
+      // Use passed in raw CSV values
+
       if (projectData.settings && projectData.settings.dataProvider && projectData.settings.dataProvider.csv) {
 
         assignDataPanel.setAssignDataFields(projectData, columnsLength, true, null, true, true, aggregated);
         assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true, true);
         dataTable.loadCSV({
-          csv: projectData.settings.dataProvider.csv
+          csv: csv //projectData.settings.dataProvider.csv
         }, true, null, function() {
             //if (highed.chartType !== 'Map') assignDataPanel.enable();
             assignDataPanel.getFieldsToHighlight(dataTable.highlightCells, true, true);
