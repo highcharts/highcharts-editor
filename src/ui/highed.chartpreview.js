@@ -700,12 +700,13 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
 
     if (aggregatedOptions.data && Object.keys(aggregatedOptions.data).length > 0 && aggregatedOptions.data.csv){ //&& chart && chart.annotations && chart.annotations.length !== 0) {
-      if (chart) {
-        annotations = [];
-
-        chart.annotations.forEach(function(annotation, index) {
-          annotations.push(annotation.userOptions);
-        });
+      if (chart && chart.annotations) {
+        if (chart.annotations.length > 0) {
+          annotations = [];
+          chart.annotations.forEach(function(annotation, index) {
+            annotations.push(annotation.userOptions);
+          });
+        }
       }
   
       aggregatedOptions.annotations = annotations.slice();
@@ -1207,7 +1208,6 @@ highed.ChartPreview = function(parent, attributes, planCode) {
       if (projectData.options && projectData.options.annotations) {
         annotations = projectData.options.annotations.slice()
         //chart.annotations = annotations.slice();
-        
         //delete customizedOptions.annotations
       }
       
@@ -1220,7 +1220,7 @@ highed.ChartPreview = function(parent, attributes, planCode) {
 
       var isMapChart = projectData.options && ((projectData.options.chart && projectData.options.chart.map) || (projectData.options.plotOptions && projectData.options.plotOptions.map)) ;
 
-      if (isMapChart) {          
+      if (isMapChart) {        
         events.emit('SetChartAsMap');
         if (projectData.options && projectData.options.chart && projectData.options.chart.map && !highed.isObj(projectData.options.chart.map)){
 

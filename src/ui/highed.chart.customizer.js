@@ -216,6 +216,7 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode, da
         theme: highed.option('codeMirrorTheme')
       });
       codeMirrorBox.setSize('100%', '100%');
+      /*
       codeMirrorBox.on('change', function(a, b) {
         if (JSON.stringify(b.text) !== JSON.stringify(b.removed) && JSON.stringify(b.text) !== JSON.stringify(highed.meta.customCodeDefault)) {
           clearTimeout(timeout);
@@ -223,6 +224,12 @@ highed.ChartCustomizer = function(parent, attributes, chartPreview, planCode, da
             setCustomCode();
           }, 500);
         }
+      });*/
+      codeMirrorBox.on('change', function() {
+        clearTimeout(timeout);
+        timeout = setTimeout(function () {
+          setCustomCode();
+        }, 500);
       });
     } else {
       highed.dom.on(customCodeBox, 'change', function() {
