@@ -331,8 +331,8 @@ highed.dom = {
       var b = node.getBoundingClientRect();
       
       return {
-        x: b.left + (window.scrollX || 0),
-        y: b.top + (window.scrollY || 0)
+        x: b.left,
+        y: b.top
       };
     }
 
